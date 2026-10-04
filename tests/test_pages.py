@@ -159,6 +159,15 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert 'data-checkout="monthly"' in plans and 'data-checkout="annual"' in plans
     assert "stripe.com" not in plans and "checkout.stripe" not in plans
     assert "Paid plans are coming soon." not in plans
+    assert 'data-checkout="test"' in plans and "$1 test purchase" in plans
+    assert 'src="../js/plans.js"' in plans and 'src="../js/stripe-config.js"' in plans
+    stripe_cfg = (ROOT / "src" / "js" / "stripe-config.js").read_text(encoding="utf-8")
+    plans_js = (ROOT / "src" / "js" / "plans.js").read_text(encoding="utf-8")
+    assert 'monthlyLink: ""' in stripe_cfg and 'annualLink: ""' in stripe_cfg
+    assert "buy.stripe.com/test_28E5kDdBaf6iab58vO8Vi00" in stripe_cfg
+    assert "portalUrl:" in stripe_cfg
+    assert "client_reference_id" in plans_js and "prefilled_email" in plans_js
+    assert "login/" in plans_js and "next=plans/" in plans_js
     assert "create table public.subscriptions" in (ROOT / "supabase" / "migrations" / "20261004210000_access_tiers.sql").read_text(encoding="utf-8")
     assert "apply_subscription" in (ROOT / "supabase" / "migrations" / "20261004210000_access_tiers.sql").read_text(encoding="utf-8")
     alerts_sql = (ROOT / "supabase" / "migrations" / "20261004220000_alert_funds.sql").read_text(encoding="utf-8")
@@ -180,6 +189,7 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert 'id="nameIn"' in settings and 'id="siteIn"' in settings
     assert "Change email" in settings and "Delete account" in settings
     assert "No card on file" in settings and "No payments yet." in settings
+    assert "Manage card" in settings
     assert 'data-stripe="checkout"' in settings and 'data-stripe="portal"' in settings
     assert 'id="payFail"' in settings and "payment_failed" in settings_js
     assert "signInWithPassword" in settings_js and "updateUser" in settings_js

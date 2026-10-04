@@ -66,8 +66,8 @@
 
   function paintBilling(row) {
     const data = row || {};
-    const paid = data.plan === 'Paid' || data.tier === 'paid';
-    $('planName').textContent = paid ? 'Paid' : 'Free';
+    const paid = data.tier === 'paid' || data.plan === 'Paid' || data.plan === 'Monthly' || data.plan === 'Annual';
+    $('planName').textContent = data.plan || (paid ? 'Paid' : 'Free');
     $('planDetail').textContent = data.price_label || (paid ? 'Your paid plan is active.' : 'No charge.');
     if (data.payment_failed && data.next_charge_label) {
       $('nxLabel').textContent = 'Charge failed';
@@ -83,7 +83,13 @@
     $('cardBrand').textContent = card ? (card.brand || '') : '';
     $('cardLabel').textContent = card ? (card.label || 'Card on file') : 'No card on file';
     $('cardMeta').textContent = card && card.expires ? 'Expires ' + card.expires : '';
-    $('cardChange').hidden = !card;
+    const manage = !!(data.manage_card || card);
+    if (!card && manage) {
+      $('cardLabel').textContent = 'Card on file';
+      $('cardMeta').textContent = '';
+    }
+    $('cardChange').hidden = !manage;
+    $('cardChange').textContent = 'Manage card';
     $('cardDelete').hidden = !card;
     const payments = Array.isArray(data.payments) ? data.payments : [];
     $('payEmpty').hidden = payments.length > 0;

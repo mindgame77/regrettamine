@@ -576,6 +576,7 @@ def render_fund_page(fund, prefix):
         f'<script id="ask-copy" type="application/json">{embed(fund["ask"]["clipboard"])}</script>\n'
         f'{extra}'
         f'<script src="{prefix}js/supabase-config.js"></script>'
+        f'<script src="{prefix}js/stripe-config.js"></script>'
         f'<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>'
         f'<script src="{prefix}js/auth.js"></script>'
         f'<script src="{prefix}js/gate.js"></script>'
@@ -784,6 +785,7 @@ def render_fund_shell(fund, prefix):
 <div class="scrim"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="Details"><div class="dh"><div><div class="dk" id="dk"></div><div class="dtt" id="dt"></div></div><button class="dx" id="dx" aria-label="Close">×</button></div><div class="db" id="db"></div></aside><div class="toast"></div>'''
     scripts = (
         f'<script src="{prefix}js/supabase-config.js"></script>'
+        f'<script src="{prefix}js/stripe-config.js"></script>'
         f'<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>'
         f'<script src="{prefix}js/auth.js"></script>'
         f'<script src="{prefix}js/gate.js"></script>'

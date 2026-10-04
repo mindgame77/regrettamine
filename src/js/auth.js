@@ -100,6 +100,19 @@
     if (text) text.textContent = notice;
     banner.hidden = false;
   }
+  async function refreshPayNotice() {
+    const clientNow = sb();
+    if (!user || !clientNow) {
+      paintPayFail('');
+      return;
+    }
+    const { data, error } = await clientNow.rpc('my_billing');
+    if (error || !data || !data.payment_failed) {
+      paintPayFail('');
+      return;
+    }
+    paintPayFail('We couldn\'t charge your card. Update it within 24 hours or your account moves to the free plan.');
+  }
   function paintNav(person) {
     const slot = document.getElementById('navSlot');
     if (!slot) return;
@@ -549,6 +562,14 @@
       if (open) open.classList.remove('open');
     }
   });
+  document.addEventListener('click', e => {
+    const portal = e.target.closest && e.target.closest('[data-stripe="portal"]');
+    if (!portal) return;
+    const stripe = global.REGRET_STRIPE || {};
+    if (!stripe.portalUrl) return;
+    e.preventDefault();
+    location.href = stripe.portalUrl;
+  });
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
     const av = document.querySelector('.av.open');
@@ -568,6 +589,7 @@
         await refreshWatch();
         await refreshAlerts();
         await refreshProfile();
+        await refreshPayNotice();
       }
       clientNow.auth.onAuthStateChange(async (event, session) => {
         const next = session && session.user;
@@ -589,7 +611,9 @@
           await refreshWatch();
           await refreshAlerts();
           await refreshProfile();
+          await refreshPayNotice();
         }
+        if (!user) paintPayFail('');
         paintNav(user);
         paintSave();
         await paintAlert();
