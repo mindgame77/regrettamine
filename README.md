@@ -49,7 +49,7 @@ The model is `docs/data-model.md`. A **firm** is the management company (the `/v
 One-time setup:
 
 1. Create a free project at [supabase.com](https://supabase.com).
-2. In the SQL editor, run the files in `supabase/migrations/` in name order (`20261004120000_schema.sql`, `20261004120100_rls.sql`, then `20261004140000_auth_account.sql`). Or, with the database URL from **Project Settings → Database**:
+2. In the SQL editor, run the files in `supabase/migrations/` in name order (`20261004120000_schema.sql`, `20261004120100_rls.sql`, `20261004140000_auth_account.sql`, then `20261004180000_share_review.sql`). Or, with the database URL from **Project Settings → Database**:
 
    ```bash
    pip install -r requirements-dev.txt
@@ -57,7 +57,7 @@ One-time setup:
    DATABASE_URL="…" python3 scripts/seed.py
    ```
 
-   `seed.py` loads the 11 list rows and the full a16z report from `data/`. It replaces those content tables. It does not invent vehicles, portfolio companies, reviews, or users. It does not load `templates/csv/`. The account migration adds the signup trigger, the watchlist cap, alert preferences, and the rule that a founder review stays hidden until it is approved.
+   `seed.py` loads the 11 list rows and the full a16z report from `data/`. It replaces those content tables. It does not invent vehicles, portfolio companies, reviews, or users. It does not load `templates/csv/`. The account migration adds the signup trigger, the watchlist cap, alert preferences, and the rule that a founder review stays hidden until it is approved. `20261004180000_share_review.sql` adds the share-form columns (connection type, five ratings, LinkedIn URL). The LinkedIn URL is not selectable by anon or signed-in users and is omitted from the public bundle. `first_hand` and `verification_status` stay at the server defaults for those roles.
 
 3. **Project Settings → API**: copy the project URL and the `anon` public key.
 4. GitHub → this repo → **Settings → Secrets and variables → Actions**. Add:

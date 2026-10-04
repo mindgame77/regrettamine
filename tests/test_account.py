@@ -121,5 +121,73 @@ def test_watchlist_cap_profile_and_review_rls():
             cur.execute("set role authenticated")
             cur.execute("select body from reviews where id = %s", (review_id,))
             assert cur.fetchone()[0] == "kept private"
+
+            cur.execute("savepoint server_fields")
+            with pytest.raises(psycopg.errors.InsufficientPrivilege):
+                cur.execute(
+                    """
+                    insert into reviews (firm_id, profile_id, first_hand, verification_status)
+                    values (%s, %s, true, 'verified')
+                    """,
+                    (a16z, ada),
+                )
+            cur.execute("rollback to savepoint server_fields")
+            cur.execute("savepoint bad_link")
+            with pytest.raises(psycopg.errors.CheckViolation):
+                cur.execute(
+                    "insert into reviews (firm_id, profile_id, linkedin_url) values (%s, %s, 'https://example.com/in/ada')",
+                    (a16z, ada),
+                )
+            cur.execute("rollback to savepoint bad_link")
+            cur.execute("savepoint bad_score")
+            with pytest.raises(psycopg.errors.CheckViolation):
+                cur.execute(
+                    "insert into reviews (firm_id, profile_id, honesty) values (%s, %s, 6)",
+                    (a16z, ada),
+                )
+            cur.execute("rollback to savepoint bad_score")
+            cur.execute(
+                """
+                insert into reviews (
+                  firm_id, profile_id, connection_type, linkedin_url, honesty,
+                  support_after_check, founder_friendly_terms, responsiveness, hard_times,
+                  round_label, anonymous, moderation_status
+                ) values (
+                  %s, %s, 'founder_ceo', 'https://www.linkedin.com/in/ada-example', 4,
+                  3, 5, 2, 1, 'Seed', true, 'pending'
+                )
+                returning id, first_hand, verification_status, moderation_status
+                """,
+                (a16z, ada),
+            )
+            share_id, first_hand, verification, moderation = cur.fetchone()
+            assert (first_hand, verification, moderation) == (False, "unverified", "pending")
+            cur.execute("savepoint own_url")
+            with pytest.raises(psycopg.errors.InsufficientPrivilege):
+                cur.execute("select linkedin_url from reviews where id = %s", (share_id,))
+            cur.execute("rollback to savepoint own_url")
+            cur.execute("reset role")
+
+            cur.execute(
+                """
+                update reviews
+                set moderation_status = 'approved', first_hand = true, verification_status = 'verified'
+                where id = %s
+                """,
+                (share_id,),
+            )
+            cur.execute("select first_hand, verification_status from reviews where id = %s", (share_id,))
+            assert cur.fetchone() == (True, "verified")
+            cur.execute("set role anon")
+            cur.execute("savepoint hide_url")
+            with pytest.raises(psycopg.errors.InsufficientPrivilege):
+                cur.execute("select linkedin_url from reviews where id = %s", (share_id,))
+            cur.execute("rollback to savepoint hide_url")
+            cur.execute("select honesty, hard_times from reviews where id = %s", (share_id,))
+            assert cur.fetchone() == (4, 1)
+            cur.execute("select published_site_bundle()::text")
+            blob = cur.fetchone()[0]
+            assert "ada-example" not in blob
+            assert '"honesty": 4' in blob or '"honesty":4' in blob
             cur.execute("reset role")
         conn.rollback()
