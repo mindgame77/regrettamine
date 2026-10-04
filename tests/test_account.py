@@ -255,7 +255,11 @@ def test_settings_website_billing_and_delete():
                 (ada, a16z),
             )
             cur.execute(
-                "insert into fund_alert_settings (profile_id, firm_id, enabled) values (%s, %s, true)",
+                """
+                insert into fund_alert_settings (profile_id, firm_id, enabled)
+                values (%s, %s, true)
+                on conflict (profile_id, firm_id) do update set enabled = true
+                """,
                 (ada, a16z),
             )
 

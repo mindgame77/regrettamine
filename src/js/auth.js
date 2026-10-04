@@ -35,7 +35,7 @@
   let profileName = '';
   let isAdmin = false;
   let profileGen = 0;
-  const alerts = { slugs: new Set(), opened: new Set(), rows: [] };
+  const alerts = { slugs: new Set(), opened: new Set(), rows: [], prefs: { new_legal_matter: false, score_change: false } };
   function capFor(person) {
     if (tier === 'paid') return Infinity;
     if (!person) return limits.anon;
@@ -270,6 +270,7 @@
     alerts.slugs = new Set();
     alerts.opened = new Set();
     alerts.rows = [];
+    alerts.prefs = { new_legal_matter: false, score_change: false };
     const clientNow = sb();
     if (!user || !clientNow) return alerts;
     const { data } = await clientNow.rpc('my_alert_funds');
@@ -279,6 +280,13 @@
       if (row.alerts) alerts.slugs.add(row.slug);
       if (row.opened) alerts.opened.add(row.slug);
     });
+    const prefs = await clientNow.rpc('my_watch_alerts');
+    if (prefs.data && typeof prefs.data === 'object') {
+      alerts.prefs = {
+        new_legal_matter: !!prefs.data.new_legal_matter,
+        score_change: !!prefs.data.score_change
+      };
+    }
     return alerts;
   }
   async function refreshWatch() {
@@ -352,6 +360,24 @@
     });
     if (error) return { error: error.message };
     if (data && data.ok) await refreshAlerts();
+    return data || { error: 'Could not update alerts' };
+  }
+  async function setWatchAlertKind(kind, on) {
+    if (!user) return { needAuth: true };
+    const clientNow = sb();
+    if (!clientNow) return { error: 'Sign-in is not configured on this build.' };
+    const { data, error } = await clientNow.rpc('set_watch_alert_kind', {
+      p_kind: kind,
+      p_on: !!on
+    });
+    if (error) return { error: error.message };
+    if (data && data.ok) {
+      alerts.prefs = {
+        new_legal_matter: !!data.new_legal_matter,
+        score_change: !!data.score_change
+      };
+      await refreshAlerts();
+    }
     return data || { error: 'Could not update alerts' };
   }
 
@@ -732,7 +758,7 @@
     get user() { return user; },
     get tier() { return tier; },
     confirmed, capFor, anonState, seen, record, touch, firmId, firmMap,
-    addWatch, removeWatch, refreshWatch, refreshAlerts, setFundAlert, setFundAlertKind, landingFunds, loadReport, paintAccountNav,
+    addWatch, removeWatch, refreshWatch, refreshAlerts, setFundAlert, setFundAlertKind, setWatchAlertKind, landingFunds, loadReport, paintAccountNav,
     refreshProfile, paintNav: function () { paintNav(user); }, paintPayFail, authError, openBillingPortal,
     onChange(fn) { listeners.push(fn); }
   };

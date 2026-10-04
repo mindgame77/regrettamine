@@ -28,6 +28,52 @@ function rank(row: Record<string, unknown>): number {
   return 3;
 }
 
+async function rememberCard(url: string, service: string, stripeKey: string, customer: string) {
+  try {
+    const custRes = await fetch(`https://api.stripe.com/v1/customers/${customer}`, {
+      headers: { Authorization: `Bearer ${stripeKey}` },
+    });
+    if (!custRes.ok) return;
+    const cust = await custRes.json();
+    let brand = "";
+    let last4 = "";
+    const preset = cust && cust.invoice_settings && cust.invoice_settings.default_payment_method;
+    const pmId = typeof preset === "string" ? preset : (preset && preset.id);
+    if (pmId) {
+      const pmRes = await fetch(`https://api.stripe.com/v1/payment_methods/${pmId}`, {
+        headers: { Authorization: `Bearer ${stripeKey}` },
+      });
+      if (pmRes.ok) {
+        const pm = await pmRes.json();
+        brand = pm && pm.card && pm.card.brand || "";
+        last4 = pm && pm.card && pm.card.last4 || "";
+      }
+    }
+    if (!/^[0-9]{4}$/.test(last4)) {
+      const list = await fetch(`https://api.stripe.com/v1/customers/${customer}/payment_methods?type=card&limit=1`, {
+        headers: { Authorization: `Bearer ${stripeKey}` },
+      });
+      if (list.ok) {
+        const payload = await list.json();
+        const card = payload && payload.data && payload.data[0] && payload.data[0].card;
+        brand = card && card.brand || "";
+        last4 = card && card.last4 || "";
+      }
+    }
+    if (!/^[0-9]{4}$/.test(last4)) return;
+    await fetch(`${url}/rest/v1/subscriptions?stripe_customer_id=eq.${customer}`, {
+      method: "PATCH",
+      headers: {
+        apikey: service,
+        Authorization: `Bearer ${service}`,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify({ card_brand: brand || null, card_last4: last4 }),
+    });
+  } catch (_e) { /* the stored webhook card remains */ }
+}
+
 function pickCustomer(rows: unknown): string {
   const list = (Array.isArray(rows) ? rows : []).filter((row) => {
     const id = row && row.stripe_customer_id;
@@ -81,6 +127,16 @@ Deno.serve(async (req: Request) => {
   const secretRows = await secretRes.json();
   const stripeKey = Array.isArray(secretRows) && secretRows[0] && secretRows[0].value;
   if (!stripeKey) return json(502, { message: "Could not open the billing portal." });
+
+  let cardOnly = false;
+  try {
+    const incoming = await req.json();
+    cardOnly = !!(incoming && incoming.cardOnly);
+  } catch (_e) { /* a portal open sends no body */ }
+
+  await rememberCard(url, service, stripeKey, customer);
+
+  if (cardOnly) return json(200, { ok: true });
 
   const body = new URLSearchParams({
     customer,

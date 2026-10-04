@@ -120,8 +120,25 @@ def render_takeaways(fund):
     return "".join(cards)
 
 
+def grouped_matter_ids(fund):
+    ids = set()
+    for group in fund.get("legalGroups") or []:
+        ids.update(group.get("ids") or [])
+        ids.update((group.get("more") or {}).get("ids") or [])
+    return ids
+
+
+def fund_heading(fund):
+    name = esc(fund["name"])
+    short = (fund.get("short") or "").strip()
+    if short and short.lower() != (fund.get("name") or "").strip().lower():
+        return f"{name} <span>{esc(short)}</span>"
+    return name
+
+
 def render_overview(fund, matters):
-    top = "".join(leg_row(matters[i]) for i in fund["topLegal"])
+    grouped = grouped_matter_ids(fund)
+    top = "".join(leg_row(matters[i]) for i in fund["topLegal"] if i not in grouped)
     n = len(matters)
     if fund["takeaways"]:
         take_block = (
@@ -134,10 +151,11 @@ def render_overview(fund, matters):
             '<p class="empty-state">No takeaways yet.</p>'
         )
     if n:
+        rows = f'<div class="pc lstc"><div class="lst">{top}</div></div>' if top else ''
         legal_block = (
             f'<div class="sech"><h2 class="h2">Top legal matters</h2>'
             f'<button class="lnk" data-go="legal">See all {n} →</button></div>'
-            f'<div class="pc lstc"><div class="lst">{top}</div></div>'
+            f'{rows}'
         )
     else:
         legal_block = (
@@ -171,14 +189,16 @@ def render_score(fund):
     return f'<div class="scbs">{"".join(blocks)}</div><p class="note">{esc(fund["scoreFooter"])}</p>'
 
 
-def render_regulatory(reg):
+def render_regulatory(reg, matters=None):
     icons = {"ok": "✓", "am": "!", "gy": "i", "red": "!"}
+    known = set(matters or {})
     buttons = []
     for rec in reg["records"]:
+        detail = "See the matter on this tab." if rec.get("ev") in known else rec["detail"]
         buttons.append(
             f'<button class="rr" data-ev="{esc(rec["ev"])}">'
             f'<i class="ri {esc(rec["icon"])}">{icons[rec["icon"]]}</i>'
-            f'<span><b>{esc(rec["title"])}</b><small>{esc(rec["detail"])}</small></span>'
+            f'<span><b>{esc(rec["title"])}</b><small>{esc(detail)}</small></span>'
             f'<span class="lr"><span class="rt {esc(rec["tone"])}">{esc(rec["points"])}</span>'
             f'<span class="chev">›</span></span></button>'
         )
@@ -204,7 +224,7 @@ def render_regulatory(reg):
 
 
 def render_legal(fund, matters):
-    parts = [render_regulatory(fund["regulatory"])]
+    parts = [render_regulatory(fund["regulatory"], matters)]
     for group in fund["legalGroups"]:
         rows = "".join(leg_row(matters[i]) for i in group["ids"])
         more = ""
@@ -548,7 +568,7 @@ def render_fund_page(fund, prefix):
  <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#watchlist">Get alerts</a></div></nav>
 <div class="ftop"><div class="wrap">
  <div class="crumb np"><a href="{home}">← All VCs</a></div>
- <div class="fh np"><div><h1>{esc(fund["name"])} <span>{esc(fund["short"])}</span><button type="button" class="save" id="save" data-tip="Save" aria-label="Save to watchlist" aria-pressed="false">{SAVE_SVG}</button></h1>
+ <div class="fh np"><div><h1>{fund_heading(fund)}<button type="button" class="save" id="save" data-tip="Save" aria-label="Save to watchlist" aria-pressed="false">{SAVE_SVG}</button></h1>
   {ALERT_LINE}
   <div class="meta">{"".join(meta)}</div></div>
   <div class="upd">Updated {esc(fund["updated"])}<br>{esc(fund["method"])}</div></div>
@@ -772,8 +792,6 @@ def render_report_payload(fund, prefix):
 def render_fund_shell(fund, prefix):
     """Public fund URL. The score, legal record, and evidence stay on the server."""
     home = prefix
-    name = esc(fund["name"])
-    short = esc(fund.get("short") or "")
     title = f'{fund["name"]} · Regrettamine'
     body = f'''<div class="blobs np" style="height:420px"><div class="blob" style="width:520px;height:520px;background:#CDBBFF;left:-180px;top:-120px"></div><div class="blob" style="width:460px;height:460px;background:#FFC7B8;right:-140px;top:-40px"></div></div>
 <nav class="pillnav np"><a class="logo" href="{home}"><i></i><span class="wm">regrett<em>amine</em></span></a>
@@ -781,7 +799,7 @@ def render_fund_shell(fund, prefix):
  <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#watchlist">Get alerts</a></div></nav>
 <div class="ftop"><div class="wrap" id="report">
  <div class="crumb np"><a href="{home}">← All VCs</a></div>
- <div class="fh np"><div><h1>{name} <span>{short}</span><button type="button" class="save" id="save" data-tip="Save" aria-label="Save to watchlist" aria-pressed="false">{SAVE_SVG}</button></h1>
+ <div class="fh np"><div><h1>{fund_heading(fund)}<button type="button" class="save" id="save" data-tip="Save" aria-label="Save to watchlist" aria-pressed="false">{SAVE_SVG}</button></h1>
   {ALERT_LINE}</div></div>
  <p class="report-wait">Loading the report…</p>
 </div></div>
@@ -872,6 +890,9 @@ def main():
     build_shell("plans.html", SITE / "plans" / "index.html")
     build_shell("settings.html", SITE / "settings" / "index.html")
     build_shell("admin.html", SITE / "admin" / "index.html")
+    build_shell("deleted.html", SITE / "deleted" / "index.html")
+    not_found = SITE / "404.html"
+    not_found.write_text((SRC / "404.html").read_text(encoding="utf-8"), encoding="utf-8")
     build_scoring(funds)
     for slug, fund in funds.items():
         dest = SITE / "vc" / slug / "index.html"

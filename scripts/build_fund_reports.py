@@ -20,7 +20,7 @@ from regrettamine.score_v2 import score_v2  # noqa: E402
 UPDATED = "Oct 4, 2026"
 SHORTS = {
     "lux": "Lux",
-    "accel": "Accel",
+    "accel": "I",
     "bessemer": "BVP",
     "battery": "Battery",
     "insightpartners": "Insight",
