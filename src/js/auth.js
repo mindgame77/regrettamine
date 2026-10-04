@@ -81,6 +81,7 @@
       + '<div class="menu"><small>' + esc(person.email || '') + '</small>'
       + '<a href="' + base + 'account/#watchlist">Watchlist</a>'
       + '<a href="' + base + 'account/#alerts">Alerts</a>'
+      + '<a href="' + base + 'plans/">Pricing</a>'
       + '<a href="' + base + 'account/#share">Share / Report a VC</a>'
       + '<button type="button" id="logout">Log out</button></div></div>';
     document.getElementById('av').onclick = function (e) {
