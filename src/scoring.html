@@ -23,14 +23,25 @@
 <tr><td>Regulators and sanctions</td><td>SEC Form ADV and Form D, SEC and DOJ actions, OFAC, EU, UK and UN sanctions lists (exact identity matches only).</td></tr>
 <tr><td>Press</td><td>Named, dated reporting from outlets such as TechCrunch, Bloomberg and Reuters. Anonymous-only claims don't count.</td></tr>
 <tr><td>Founder experiences</td><td>First-hand reviews from founders and executives, verified via LinkedIn and anonymous by default.</td></tr></table>
-<div class="cols" style="margin-top:52px">
+<div class="cols one" id="accessRow" style="margin-top:52px">
  <div><h2 class="h2" style="margin-bottom:18px">Reports</h2><div class="card meter"><div class="segs">
   <div class="grp"><div class="bar"><i class="u"></i><i class="u"></i></div><small>Free · 2</small></div>
   <div class="grp g5"><div class="bar"><i class="u ac"></i><i class="u ac"></i><i class="u ac"></i><i class="u ac"></i><i class="u ac"></i></div><small>Free account · 5 more</small></div>
   <div class="grp pd"><div class="bar"><i class="inf"></i></div><small>Plans</small></div></div>
   <div class="mb"><span>Reopening a fund you've seen is free.</span><a class="b c" style="height:40px" href="../login/?mode=signup">Create account</a></div></div></div>
- <div><h2 class="h2" style="margin-bottom:18px">Corrections</h2><div class="card meter"><p style="font-size:15px;color:var(--ink2)">Run a fund or named in a report? Send the page, what's wrong and a source. It's free, and we review every request.</p>
-  <div class="mb"><span>No account needed.</span><a class="b w" style="height:40px" href="../account/#share">Request a correction</a></div></div></div>
+ <div id="correctionsCard" hidden><h2 class="h2" style="margin-bottom:18px">Corrections</h2><div class="card meter"><p style="font-size:15px;color:var(--ink2)">Spotted a wrong fact? Send the page, what's wrong and a source. We review every request.</p>
+  <div class="mb"><button class="b w" type="button" id="correctOpen" style="height:40px;margin-left:auto">Request a correction</button></div></div>
+  <form class="card form" id="correctForm" hidden>
+   <div class="fl" id="correctFund"><span>Fund</span>
+    <p class="picked" id="correctPicked" hidden></p>
+    <div class="ac-wrap" id="correctPick"><label class="fld srch"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8C88A3" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="correctIn" placeholder="Search fund name" aria-label="Fund" autocomplete="off"></label><div class="dd" id="correctDD"></div></div>
+   </div>
+   <label class="fl"><span>What's wrong</span><textarea class="fld ta" id="correctMsg" required maxlength="4000"></textarea></label>
+   <label class="fl"><span>Source</span><input class="fld" id="correctSource" type="url" required placeholder="https://…" autocomplete="off"></label>
+   <p class="err" id="correctErr" hidden></p>
+   <div class="bar2"><button class="b c" type="submit">Send correction</button></div>
+  </form>
+ </div>
 </div></main>
 <header class="lhero" id="rules"><div class="wrap"><span class="kick">Scoring</span><h1>How the score works.</h1><p>It measures how a fund treats its own founders, not its portfolio's luck.</p><div class="eff">Version 2 · agreed Oct 2, 2026</div></div></header>
 <main class="wrap" style="position:relative;z-index:1"><section class="stats s6"><div class="stat"><div class="n">60</div><div class="l">Fund vs. founders</div><div class="s">Its own startups, founders and executives</div></div><div class="stat"><div class="n">17.5</div><div class="l">Ability to support you</div><div class="s">Money, media reach, help after the check</div></div><div class="stat"><div class="n">17.5</div><div class="l">Founder experience</div><div class="s">First-hand accounts only</div></div><div class="stat"><div class="n">5</div><div class="l">Conflicts of interest</div><div class="s">Competing boards and in-house rivals</div></div><div class="stat"><div class="n">+3</div><div class="l">Track record bonus</div><div class="s">Years investing without a pattern of harm</div></div><div class="stat"><div class="n">0 to −50</div><div class="l">Regulatory penalty</div><div class="s">Probes, charges, fines, sanctions</div></div></section>
@@ -72,4 +83,5 @@ __SCORE_EXAMPLE__
 <script src="../js/stripe-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../js/auth.js"></script>
+<script src="../js/scoring.js"></script>
 </body></html>

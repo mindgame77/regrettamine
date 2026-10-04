@@ -4,6 +4,10 @@ body{background:#fff}
 table.dt{display:table;height:auto;border-radius:0;color:inherit;font-weight:400;place-items:normal}
 table.dt td.pt{display:table-cell;font-family:'Bricolage Grotesque';font-weight:800;color:var(--ink);white-space:nowrap;width:1%;text-align:right}
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.cols.one{grid-template-columns:1fr}
+#correctionsCard .picked{font-size:15px;font-weight:600}
+#correctionsCard .picked small{display:block;font-weight:500;color:var(--mute);font-size:13px}
+#correctForm{margin-top:16px}
 .card2{background:#fff;border:1.5px solid var(--line);border-radius:22px;padding:20px 22px}
 .card2 h3{font-family:'Bricolage Grotesque';font-size:20px;font-weight:800;letter-spacing:-.02em;margin-bottom:4px;display:flex;align-items:center;gap:10px}
 .card2 h3 em{font-style:normal;margin-left:auto;font-size:15px;color:var(--vio)}

@@ -135,10 +135,17 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "What we check" in scoring
     assert 'href="#rules"' in scoring
     assert 'href="../login/?mode=signup"' in scoring
-    assert 'href="../account/#share">Request a correction' in scoring
+    assert 'href="../account/#share">Request a correction' not in scoring
+    assert 'id="correctionsCard" hidden' in scoring
+    assert 'id="correctForm"' in scoring and 'id="correctSource"' in scoring
+    assert "No account needed." not in scoring and "It's free" not in scoring
+    assert "Spotted a wrong fact?" in scoring
     assert "How the score works." in scoring
     assert "Plans are coming" not in scoring
     assert "Request a correction" in scoring
+    admin = (ROOT / "site" / "admin" / "index.html").read_text(encoding="utf-8")
+    assert 'id="reviewQueue"' in admin and 'id="correctionQueue"' in admin
+    assert "Founder reviews" in admin and "Corrections" in admin
     assert "−0.5 for each calendar year with at least one partner departure, up to −2" in scoring
     assert "Partner departures cost points, up to" not in scoring
     assert "Old method." not in scoring

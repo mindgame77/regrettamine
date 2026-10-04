@@ -398,3 +398,93 @@ def test_open_report_reads_bundle_and_hides_it():
             assert again["repeat"] is True
             cur.execute("reset role")
         conn.rollback()
+
+
+def _correction(cur, uid, firm):
+    cur.execute(
+        """
+        insert into corrections (user_id, fund_id, page_url, message, source_url)
+        values (%s, %s, 'https://example.com/vc/a16z/', 'The date is wrong', 'https://example.com/source')
+        returning id
+        """,
+        (uid, firm),
+    )
+    return cur.fetchone()[0]
+
+
+def test_corrections_are_paid_only():
+    import psycopg
+
+    from scripts.seed import main as seed_main
+
+    seed_main()
+    with psycopg.connect(DATABASE_URL) as conn:
+        with conn.cursor() as cur:
+            ada = _user(cur, "correct-ada@example.com")
+            bea = _user(cur, "correct-bea@example.com")
+            mod = _user(cur, "correct-mod@example.com")
+            cur.execute("select id from firms where slug = 'a16z'")
+            a16z = cur.fetchone()[0]
+            cur.execute("update profiles set is_admin = true where id = %s", (mod,))
+            cur.execute("select set_config('request.jwt.claim.sub', %s, true)", (str(ada),))
+            cur.execute("set role authenticated")
+            cur.execute("savepoint free_insert")
+            with pytest.raises(psycopg.errors.InsufficientPrivilege):
+                _correction(cur, ada, a16z)
+            cur.execute("rollback to savepoint free_insert")
+            cur.execute("reset role")
+
+            cur.execute(
+                "select apply_subscription(%s, 'monthly', 'active', now() + interval '1 month')",
+                (ada,),
+            )
+            cur.execute("set role authenticated")
+            saved = _correction(cur, ada, a16z)
+            cur.execute("select status from corrections where id = %s", (saved,))
+            assert cur.fetchone()[0] == "pending"
+            cur.execute("savepoint bad_source")
+            with pytest.raises(psycopg.errors.CheckViolation):
+                cur.execute(
+                    """
+                    insert into corrections (user_id, fund_id, page_url, message, source_url)
+                    values (%s, %s, 'https://example.com/vc/a16z/', 'Wrong', 'javascript:alert(1)')
+                    """,
+                    (ada, a16z),
+                )
+            cur.execute("rollback to savepoint bad_source")
+            cur.execute("reset role")
+
+            cur.execute("select set_config('request.jwt.claim.sub', %s, true)", (str(bea),))
+            cur.execute("set role authenticated")
+            cur.execute("select count(*) from corrections where id = %s", (saved,))
+            assert cur.fetchone()[0] == 0
+            cur.execute("reset role")
+
+            cur.execute(
+                "update subscriptions set payment_failed_at = now() - interval '25 hours' where profile_id = %s",
+                (ada,),
+            )
+            cur.execute("select set_config('request.jwt.claim.sub', %s, true)", (str(ada),))
+            cur.execute("set role authenticated")
+            cur.execute("savepoint lapsed_insert")
+            with pytest.raises(psycopg.errors.InsufficientPrivilege):
+                _correction(cur, ada, a16z)
+            cur.execute("rollback to savepoint lapsed_insert")
+            cur.execute("reset role")
+
+            cur.execute(
+                "update subscriptions set payment_failed_at = now() - interval '1 hour' where profile_id = %s",
+                (ada,),
+            )
+            cur.execute("set role authenticated")
+            grace = _correction(cur, ada, a16z)
+            assert grace is not None
+            cur.execute("reset role")
+
+            cur.execute("select set_config('request.jwt.claim.sub', %s, true)", (str(mod),))
+            cur.execute("set role authenticated")
+            cur.execute("update corrections set status = 'approved' where id = %s", (saved,))
+            cur.execute("select status from corrections where id = %s", (saved,))
+            assert cur.fetchone()[0] == "approved"
+            cur.execute("reset role")
+        conn.rollback()

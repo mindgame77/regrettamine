@@ -24,7 +24,7 @@ SITE = ROOT / "site"
 EXT_SVG = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3H3.5A.5.5 0 0 0 3 3.5v9a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V10M9 3h4v4M13 3 7.5 8.5"/></svg>'
 OPEN_SVG = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h4v4M13 3 7.5 8.5"/></svg>'
 SAVE_SVG = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14l-6-4.2L6 20z"/></svg>'
-ALERT_LINE = '<div class="alert-line"><div class="tog" id="alertTog" role="switch" aria-checked="false"><span>Alerts</span><span class="sw2"></span></div><p class="fnote" id="alertNote" hidden>Open this report to get alerts</p></div>'
+ALERT_LINE = '<div class="alert-line"><div class="tog" id="alertTog" role="switch" aria-checked="false"><span>Alerts</span><span class="sw2"></span></div><p class="fnote" id="alertNote" hidden>Open this report to get alerts</p><a class="lnk" id="correctLink" hidden>Request a correction</a></div>'
 SENT_LABEL = {"pos": "Positive", "neu": "Neutral", "neg": "Negative"}
 PAGE_SIZE = 24
 LIST_CAP = 8
@@ -871,6 +871,7 @@ def main():
     build_shell("how.html", SITE / "how" / "index.html")
     build_shell("plans.html", SITE / "plans" / "index.html")
     build_shell("settings.html", SITE / "settings" / "index.html")
+    build_shell("admin.html", SITE / "admin" / "index.html")
     build_scoring(funds)
     for slug, fund in funds.items():
         dest = SITE / "vc" / slug / "index.html"

@@ -33,6 +33,7 @@
   }
   let tier = 'visitor';
   let profileName = '';
+  let isAdmin = false;
   let profileGen = 0;
   const alerts = { slugs: new Set(), opened: new Set(), rows: [] };
   function capFor(person) {
@@ -77,12 +78,13 @@
     const gen = ++profileGen;
     const clientNow = sb();
     if (!user || !clientNow) {
-      if (gen === profileGen) profileName = '';
+      if (gen === profileGen) { profileName = ''; isAdmin = false; }
       return;
     }
-    const { data } = await clientNow.from('profiles').select('display_name').eq('id', user.id).maybeSingle();
+    const { data } = await clientNow.from('profiles').select('display_name, is_admin').eq('id', user.id).maybeSingle();
     if (gen !== profileGen) return;
     profileName = (data && data.display_name) || '';
+    isAdmin = !!(data && data.is_admin);
   }
   function paintPayFail(notice) {
     let banner = document.getElementById('payFail');
@@ -129,6 +131,7 @@
       + '<a href="' + base + 'account/#watchlist">Watchlist</a>'
       + '<a href="' + base + 'plans/">Pricing</a>'
       + '<a href="' + base + 'account/#share">Share / Report a VC</a>'
+      + (isAdmin ? '<a href="' + base + 'admin/">Review</a>' : '')
       + '<a href="' + base + 'settings/#account">Settings</a>'
       + '<button type="button" id="logout">Log out</button></div></div>';
     document.getElementById('av').onclick = function (e) {
@@ -174,6 +177,12 @@
     const on = !!(slug && watch.slugs.has(slug));
     paintOneAlert(tog, on, locked);
     if (note) note.hidden = !locked;
+    const link = document.getElementById('correctLink');
+    if (link) {
+      const show = !!(user && tier === 'paid' && slug);
+      link.hidden = !show;
+      if (show) link.href = new URL('scoring/?fund=' + encodeURIComponent(slug) + '#correction', siteRoot()).href;
+    }
   }
   async function firmMap() {
     return {};
@@ -644,6 +653,7 @@
           alerts.rows = [];
           tier = 'visitor';
           profileName = '';
+          isAdmin = false;
           carriedFor = null;
         }
         if (user && changed) {

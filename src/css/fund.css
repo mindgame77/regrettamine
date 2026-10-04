@@ -298,5 +298,7 @@ body:not([data-tab=overview]) .ovx{display:none!important}
 .alert-line .tog.on .sw2:after{left:21px}
 .alert-line .tog.off{cursor:not-allowed;opacity:.55}
 .alert-line .fnote{font-size:12.5px;color:var(--mute);margin:8px 0 0;text-align:left;border:0;padding:0}
+.alert-line #correctLink{display:inline-block;margin-top:8px}
+.alert-line #correctLink[hidden]{display:none}
 body.gated .tabsW,body.gated [data-panel],body.gated .fnote,body.gated footer{filter:blur(8px);pointer-events:none;user-select:none}
 body.gated .alert-line,body.gated .alert-line .fnote{filter:none;pointer-events:auto;user-select:auto}
