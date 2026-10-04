@@ -81,3 +81,48 @@ $$('.sf').forEach(b => b.onclick = () => {
   $$('.pubc').forEach(c => { const on = k === 'all' || c.dataset.sent === k; c.hidden = !on; if (on) n++; });
   $('.sempty').hidden = n > 0;
 });
+
+function pageJson(id) {
+  const el = document.getElementById(id);
+  return el ? JSON.parse(el.textContent) : null;
+}
+function showMore(buttonId, listId, rows, renderRow) {
+  const btn = document.getElementById(buttonId);
+  const list = document.getElementById(listId);
+  if (!btn || !list || !rows) return;
+  const size = +btn.dataset.pageSize || 24;
+  let shown = list.children.length;
+  btn.addEventListener('click', () => {
+    rows.slice(shown, shown + size).forEach(row => list.insertAdjacentHTML('beforeend', renderRow(row)));
+    shown = Math.min(rows.length, shown + size);
+    const note = document.getElementById(btn.id === 'moreCos' ? 'coCount' : btn.id === 'moreReviews' ? 'reviewCount' : 'pressCount');
+    if (note) note.textContent = 'Showing ' + shown + ' of ' + rows.length;
+    if (shown >= rows.length) btn.remove();
+    const on = document.querySelector('.sf.on');
+    if (on && btn.id === 'morePress') on.click();
+  });
+}
+showMore('moreCos', 'coList', pageJson('portfolio-data'), row => {
+  const bits = [row.round, row.outcome].filter(Boolean);
+  if (row.lead) bits.push('lead');
+  if (row.board) bits.push('board seat');
+  return '<div class="it"><b>' + esc(row.name) + '</b><span>' + esc(bits.join(' · ')) + '</span></div>';
+});
+showMore('moreReviews', 'reviewList', pageJson('review-data'), row => {
+  const who = [row.founder, row.company, row.partner].filter(Boolean).join(' · ') || 'Founder';
+  const flags = [];
+  if (row.firstHand) flags.push('first-hand');
+  if (row.verification) flags.push(row.verification);
+  const dims = (row.ratings || []).map(r => esc(r.dimension) + ' ' + esc(r.score)).join(' ');
+  return '<div class="it review"><div><b>' + esc(who) + '</b><div class="sm">' + esc(row.body || '') + '</div></div><span class="rt gray">' + esc(flags.join(' · ')) + '</span><span class="sm">' + dims + '</span></div>';
+});
+showMore('morePress', 'pressList', pageJson('press-data'), row => {
+  const prefix = (document.getElementById('morePress') || {}).dataset.prefix || '';
+  const initial = esc((row.publisher || '?').slice(0, 1));
+  const fav = '<span class="fav"><img src="' + esc(prefix) + 'assets/fav/' + esc(row.domain) + '.png" alt="" onerror="this.parentNode.classList.add(\'nofav\');this.remove()"><em>' + initial + '</em></span>';
+  const sent = {pos: 'Positive', neu: 'Neutral', neg: 'Negative'}[row.sentiment] || row.sentiment;
+  return '<a class="pubc" data-sent="' + esc(row.sentiment) + '" href="' + esc(row.url) + '" target="_blank" rel="noopener">'
+    + '<span class="pt">' + fav + '<span class="pn"><b>' + esc(row.publisher) + '</b><small>' + esc(row.domain) + ' · ' + esc(row.date) + '</small></span></span>'
+    + '<span class="ph4">' + esc(row.headline) + '</span>'
+    + '<span class="sw2"><span class="snt ' + esc(row.sentiment) + '">' + esc(sent) + '</span><span class="swy">' + esc(row.why || '') + '</span></span></a>';
+});
