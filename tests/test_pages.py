@@ -31,6 +31,8 @@ def test_shared_list_and_auth_pages(monkeypatch):
     fund = (ROOT / "site" / "vc" / "a16z" / "index.html").read_text(encoding="utf-8")
     assert "css/list.css" in index and "js/fund-list.js" in index
     assert 'id="wlOut"' in account and 'id="hsOut"' not in account
+    assert 'class="acc pane"' in account
+    assert account.index('data-view="watchlist"') < account.index('id="wlOut"') < account.index('data-view="share"')
     assert 'data-v="history"' not in account and ">History<" not in account
     assert 'data-view="watchlist"' in account and 'data-view="share"' in account
     assert 'data-view="alerts"' not in account and 'id="fundAlerts"' not in account

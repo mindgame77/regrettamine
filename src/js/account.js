@@ -14,8 +14,6 @@
     const name = ['watchlist', 'share'].includes(v) ? v : 'watchlist';
     document.querySelectorAll('.view').forEach(el => el.classList.toggle('on', el.dataset.view === name));
     if (window.Regret && Regret.paintAccountNav) Regret.paintAccountNav();
-    const board = $('wlOut');
-    if (board) board.classList.toggle('on', name === 'watchlist');
     if (name === 'share') window.scrollTo(0, 0);
   }
   addEventListener('hashchange', go);
