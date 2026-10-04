@@ -8,7 +8,8 @@ ROOT = Path(__file__).resolve().parents[1]
 def test_shared_list_and_auth_pages(monkeypatch):
     monkeypatch.delenv("SUPABASE_URL", raising=False)
     monkeypatch.delenv("SUPABASE_ANON_KEY", raising=False)
-    from build import main
+    monkeypatch.setenv("SUPABASE_SERVICE_ROLE_KEY", "sb_secret_service_role_test")
+    from build import main, render_fund_page, load_local
 
     main()
     home_js = (ROOT / "src" / "js" / "home.js").read_text(encoding="utf-8")
@@ -35,11 +36,23 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert 'id="share"' not in account
     assert "js/fund-list.js" in account and "css/list.css" in account
     assert 'class="save"' in fund and 'data-firm="a16z"' in fund
+    assert 'id="alertTog"' in fund and "Open this report to get alerts" in fund
+    full_report = render_fund_page(load_local()[1]["a16z"], "../../")
+    assert "out of 100" in full_report and 'id="evidence"' in full_report
+    assert "out of 100" not in fund and 'id="evidence"' not in fund
+    assert "Loading the report…" in fund
+    assert not (ROOT / "site" / "data" / "funds").exists()
     assert (ROOT / "site" / "login" / "index.html").is_file()
     assert (ROOT / "site" / "login" / "reset" / "index.html").is_file()
     config = (ROOT / "site" / "js" / "supabase-config.js").read_text(encoding="utf-8")
     assert "REGRET_CONFIG" in config
     assert "sb_secret" not in config
+    assert "service_role" not in config
+    shipped = []
+    for path in (ROOT / "site").rglob("*"):
+        if path.is_file():
+            shipped.append(path.read_text(encoding="utf-8", errors="ignore"))
+    assert "sb_secret_service_role_test" not in "\n".join(shipped)
 
     login = (ROOT / "site" / "login" / "index.html").read_text(encoding="utf-8")
     reset = (ROOT / "site" / "login" / "reset" / "index.html").read_text(encoding="utf-8")
@@ -130,6 +143,23 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "font-size:64px" in (ROOT / "src" / "css" / "home.css").read_text(encoding="utf-8")
     assert "Log in to see all" in home_js and "fact_record_count" in home_js and "FEED_SHOWN = 7" in home_js
     assert "landing_funds" in auth_js and "list-only" in auth_js
+    assert "loadReport" in auth_js and "open_report" in auth_js
+    assert "search_funds" in home_js and "plans/" in home_js
+    gate_js = (ROOT / "src" / "js" / "gate.js").read_text(encoding="utf-8")
+    assert "plans/" in gate_js and "loadReport" in gate_js
+    plans = (ROOT / "site" / "plans" / "index.html").read_text(encoding="utf-8")
+    assert "<h1>Plans</h1>" in plans
+    assert "Paid plans are coming soon." in plans
+    assert 'href="../">Back to funds' in plans
+    assert "Stripe" not in plans and "$" not in plans.split("<h1>Plans</h1>", 1)[1].split("</main>", 1)[0]
+    assert "create table public.subscriptions" in (ROOT / "supabase" / "migrations" / "20261004210000_access_tiers.sql").read_text(encoding="utf-8")
+    assert "apply_subscription" in (ROOT / "supabase" / "migrations" / "20261004210000_access_tiers.sql").read_text(encoding="utf-8")
+    alerts_sql = (ROOT / "supabase" / "migrations" / "20261004220000_alert_funds.sql").read_text(encoding="utf-8")
+    assert "create table public.fund_alert_settings" in alerts_sql
+    assert "can_alert_fund" in alerts_sql
+    assert "Open this report to get alerts" in account_js
+    assert "set_fund_alert" in auth_js
+    assert 'id="fundAlerts"' in account
     assert "create table public.fact_events" in (ROOT / "supabase" / "migrations" / "20261004200000_fact_events.sql").read_text(encoding="utf-8")
 
     assert "account/#watchlist" in auth_js and "account/#alerts" in auth_js
@@ -151,10 +181,11 @@ def test_shared_list_and_auth_pages(monkeypatch):
         "privacy": ("../scoring/", "../account/#share"),
         "terms": ("../scoring/", "../account/#share"),
         "scoring": ("../scoring/", "../account/#share"),
+        "plans": ("../scoring/", "../account/#share"),
     }
     pages = {
         "index": index, "account": account, "fund": fund, "login": login, "reset": reset,
-        "privacy": privacy, "terms": terms, "scoring": scoring,
+        "privacy": privacy, "terms": terms, "scoring": scoring, "plans": plans,
     }
     for name, html in pages.items():
         scoring_href, share_href = linked[name]

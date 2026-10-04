@@ -44,6 +44,7 @@ button{font:inherit;color:inherit}
 .tog .sw2:after{content:'';position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .15s}
 .tog.on .sw2{background:var(--vio)}
 .tog.on .sw2:after{left:21px}
+.tog.off{cursor:not-allowed;opacity:.55}
 .fnote{font-size:12.5px;color:var(--mute);border-top:1.5px solid var(--line);padding-top:12px}
 .meter{padding:24px 26px;margin-bottom:22px}
 .mt{display:flex;align-items:center;gap:40px}

@@ -53,17 +53,26 @@ def test_seed_matches_json_and_hides_stress():
             assert cur.fetchone()[0] == recorded
             assert recorded > 0
             cur.execute("select landing_funds()")
-            assert cur.fetchone()[0] == []
+            visitor = cur.fetchone()[0]
+            assert visitor["tier"] == "visitor"
+            assert visitor["limit"] == 3
+            assert visitor["total"] == 11
+            assert [row["id"] for row in visitor["funds"]] == ["a16z", "battery", "bessemer"]
             cur.execute("select set_config('request.jwt.claim.sub', '11111111-1111-1111-1111-111111111111', true)")
-            cur.execute("select jsonb_array_length(landing_funds())")
-            assert cur.fetchone()[0] == 11
+            cur.execute("select landing_funds()")
+            free = cur.fetchone()[0]
+            assert free["tier"] == "free"
+            assert free["limit"] == 11
+            assert len(free["funds"]) == 11
             cur.execute("select set_config('request.jwt.claim.sub', '', true)")
             cur.execute("savepoint anon_list")
             cur.execute("set role anon")
             cur.execute("select fact_record_count()")
             assert cur.fetchone()[0] == recorded
+            cur.execute("select landing_funds()")
+            assert cur.fetchone()[0]["tier"] == "visitor"
             with pytest.raises(psycopg.Error):
-                cur.execute("select landing_funds()")
+                cur.execute("select published_site_bundle()")
             cur.execute("rollback to savepoint anon_list")
 
         with conn.cursor() as cur:
@@ -134,7 +143,7 @@ def test_seed_matches_json_and_hides_stress():
             with conn2.cursor() as cur:
                 cur.execute("set role anon")
                 cur.execute("select count(*) from firms")
-                assert cur.fetchone()[0] == 11
+                assert cur.fetchone()[0] == 0
                 cur.execute("select count(*) from firms where is_test")
                 assert cur.fetchone()[0] == 0
                 cur.execute("savepoint anon_write")

@@ -8,6 +8,9 @@ const BANDS = FundList.BANDS;
 const SIZES = [['s', 'Under $20B', a => a < 20], ['m', '$20–50B', a => a >= 20 && a < 50], ['l', '$50B+', a => a >= 50]];
 const S = {q: '', band: new Set(), size: new Set(), legal: false, min: 0, max: 100, sort: 'score'};
 const $ = id => document.getElementById(id);
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+}
 
 function match(f, skip) {
   if (skip != 'q' && S.q && !(f.name + ' ' + (f.short || '')).toLowerCase().includes(S.q.toLowerCase())) return false;
@@ -36,7 +39,16 @@ function render() {
   $('rfill').style.left = lo + '%';
   $('rfill').style.width = (hi - lo) + '%';
   $('rvTxt').textContent = lo + '–' + hi;
-  let L = VCS.filter(f => match(f));
+  let nameOnly = [];
+  let L;
+  if (S.q && searchHits) {
+    const filtering = S.band.size || S.size.size || S.legal || S.min > 0 || S.max < 100;
+    const detailed = searchHits.filter(f => f.score != null);
+    nameOnly = filtering ? [] : searchHits.filter(f => f.score == null);
+    L = detailed.filter(f => match(f, 'q'));
+  } else {
+    L = VCS.filter(f => match(f));
+  }
   const cmp = {
     score: (a, b) => b.score - a.score || a.name.localeCompare(b.name),
     name: (a, b) => a.name.localeCompare(b.name),
@@ -44,8 +56,8 @@ function render() {
     upd: (a, b) => b.updatedTs.localeCompare(a.updatedTs) || a.name.localeCompare(b.name)
   }[S.sort];
   L.sort(cmp);
-  const total = fullList ? VCS.length : (HOME.fundTotal || VCS.length);
-  $('cnt').innerHTML = FundList.countHtml(L.length, total);
+  const total = (catalog && catalog.total) || HOME.fundTotal || VCS.length;
+  $('cnt').innerHTML = FundList.countHtml(L.length + nameOnly.length, total);
   const A = [];
   if (S.q) A.push(['q', '“' + S.q + '”']);
   S.band.forEach(b => A.push(['band:' + b, b]));
@@ -65,30 +77,54 @@ function render() {
   });
   if ($('clr')) $('clr').onclick = reset;
   $('out').innerHTML = FundList.table(L, {});
+  if (nameOnly.length) {
+    const table = $('out').querySelector('.tbl');
+    if (table) nameOnly.forEach(f => table.insertAdjacentHTML('beforeend', nameRow(f)));
+  }
   lockRows();
 }
 const FREE_ROWS = 3;
-let fullList = false;
+let catalog = null;
+let searchHits = null;
+let searchTimer = null;
+function nameRow(f) {
+  const slug = f.slug || f.id;
+  return '<a class="tr2" href="vc/' + esc(slug) + '/"><div class="nm"><b>' + esc(f.name) + '</b><div class="m">' + esc(slug) + '</div></div><div></div><div></div><div></div><div></div></a>';
+}
 function skeletonRow() {
   return '<div class="tr2 skel" aria-hidden="true"><div class="nm"><b></b><div class="m"></div></div><div class="sc"><span class="ring"></span><span class="tag"></span></div><div><span class="lgc"></span></div><div><b></b><div class="m"></div></div><div></div></div>';
 }
+function filtersOn() {
+  return S.q || S.band.size || S.size.size || S.legal || S.min > 0 || S.max < 100;
+}
 function lockRows() {
-  if (fullList || (window.Regret && Regret.user)) return;
-  const total = HOME.fundTotal || VCS.length;
-  const hidden = total - FREE_ROWS;
+  if (filtersOn()) return;
+  const tier = catalog ? catalog.tier : 'visitor';
+  if (tier === 'paid' || (catalog && catalog.limit == null)) return;
+  const total = (catalog && catalog.total) || HOME.fundTotal || VCS.length;
+  const limit = catalog && catalog.limit != null ? catalog.limit : FREE_ROWS;
+  const hidden = total - Math.min(VCS.length, limit);
   if (hidden <= 0) return;
   const table = $('out').querySelector('.tbl');
   if (!table) return;
+  const loggedIn = window.Regret && Regret.user;
   const lock = document.createElement('div');
   lock.className = 'lock';
-  lock.setAttribute('role', 'button');
-  lock.tabIndex = 0;
-  lock.setAttribute('aria-label', 'Log in to see all ' + total + ' funds');
   let bars = '';
   for (let i = 0; i < hidden; i++) bars += skeletonRow();
-  lock.innerHTML = bars + '<span class="lockpill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Log in to see all ' + total + ' funds</span>';
-  lock.onclick = openListLogin;
-  lock.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openListLogin(); } };
+  if (!loggedIn) {
+    const label = 'Log in to see all ' + total + ' funds';
+    lock.setAttribute('role', 'button');
+    lock.tabIndex = 0;
+    lock.setAttribute('aria-label', label);
+    lock.innerHTML = bars + '<span class="lockpill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>' + label + '</span>';
+    lock.onclick = openListLogin;
+    lock.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openListLogin(); } };
+  } else {
+    const base = window.Regret && Regret.root ? Regret.root() : '';
+    lock.setAttribute('aria-label', 'More funds are on a paid plan');
+    lock.innerHTML = bars + '<a class="lockpill" href="' + base + 'plans/">See plans</a>';
+  }
   table.appendChild(lock);
 }
 function openListLogin() {
@@ -99,11 +135,23 @@ function openListLogin() {
   if (card) card.classList.add('is-list');
 }
 async function revealFunds() {
-  if (!window.Regret || !Regret.user || !Regret.landingFunds) return;
+  if (!window.Regret || !Regret.landingFunds) return;
   const rows = await Regret.landingFunds();
-  if (!rows || !rows.length) return;
-  VCS.splice(0, VCS.length, ...rows);
-  fullList = true;
+  if (!rows || !Array.isArray(rows.funds)) return;
+  catalog = rows;
+  VCS.splice(0, VCS.length, ...rows.funds);
+  render();
+}
+async function loadSearch(q) {
+  const client = window.Regret && Regret.sb && Regret.sb();
+  if (!client) {
+    searchHits = null;
+    render();
+    return;
+  }
+  const { data, error } = await client.rpc('search_funds', { q: q });
+  if (S.q.trim() !== q) return;
+  searchHits = error ? null : (data || []);
   render();
 }
 function reset() {
@@ -113,7 +161,24 @@ function reset() {
   $('smin').value = 0; $('smax').value = 100;
   render();
 }
-function setQ(v) { S.q = v; $('q').value = v; $('hq').value = v; render(); }
+function setQ(v) {
+  S.q = v;
+  $('q').value = v;
+  $('hq').value = v;
+  if (searchTimer) clearTimeout(searchTimer);
+  if (!String(v || '').trim()) {
+    searchHits = null;
+    render();
+    return;
+  }
+  const client = window.Regret && Regret.sb && Regret.sb();
+  if (!client) {
+    searchHits = null;
+    render();
+    return;
+  }
+  searchTimer = setTimeout(() => loadSearch(String(v).trim()), 200);
+}
 $('q').oninput = e => setQ(e.target.value);
 $('hq').oninput = e => setQ(e.target.value);
 $('hgo').onclick = () => $('list').scrollIntoView({behavior: 'smooth'});
@@ -154,6 +219,6 @@ $('reset').onclick = reset;
 paintFeed();
 if (window.Regret) {
   Regret.ready.then(() => { revealFunds(); loadRecordCount(); });
-  Regret.onChange(() => { if (Regret.user) revealFunds(); });
+  Regret.onChange(() => { revealFunds(); });
 }
 render();

@@ -184,10 +184,10 @@ def test_watchlist_cap_profile_and_review_rls():
                 cur.execute("select linkedin_url from reviews where id = %s", (share_id,))
             cur.execute("rollback to savepoint hide_url")
             cur.execute("select honesty, hard_times from reviews where id = %s", (share_id,))
-            assert cur.fetchone() == (4, 1)
+            assert cur.fetchone() is None
+            cur.execute("reset role")
             cur.execute("select published_site_bundle()::text")
             blob = cur.fetchone()[0]
             assert "ada-example" not in blob
             assert '"honesty": 4' in blob or '"honesty":4' in blob
-            cur.execute("reset role")
         conn.rollback()
