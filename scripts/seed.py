@@ -800,6 +800,28 @@ def seed_report(loader, fund, firm_id, version_ids, score_inputs, old_score, com
         )
 
 
+def seed_report_bundles(cur):
+    """Store the rendered report body. open_report reads it; the site build does not upload it."""
+    from build import render_report_payload
+
+    cur.execute("select id, slug from firms where published and not is_test")
+    rows = cur.fetchall()
+    for firm_id, slug in rows:
+        path = ROOT / "data" / "funds" / f"{slug}.json"
+        if not path.exists():
+            continue
+        html = render_report_payload(load(path), "../../")
+        cur.execute(
+            """
+            insert into report_bundles (firm_id, payload)
+            values (%s, jsonb_build_object('html', %s::text))
+            on conflict (firm_id) do update
+              set payload = excluded.payload, updated_at = now()
+            """,
+            (firm_id, html),
+        )
+
+
 def main():
     url = os.environ.get("DATABASE_URL", "").strip()
     if not url:
@@ -833,6 +855,7 @@ def main():
                     computed_at,
                     checked_on,
                 )
+            seed_report_bundles(cur)
         conn.commit()
     print(f"seeded {len(home['funds'])} firms, {sum(1 for row in home['funds'] if row.get('report'))} reports, {len(home['updates'])} updates")
 

@@ -354,3 +354,39 @@ def test_alerts_require_an_opened_report_or_paid():
             assert cur.fetchone()[0] == 0
             cur.execute("reset role")
         conn.rollback()
+
+
+def test_open_report_reads_bundle_and_hides_it():
+    import psycopg
+
+    from scripts.seed import main as seed_main
+
+    seed_main()
+    with psycopg.connect(DATABASE_URL) as conn:
+        with conn.cursor() as cur:
+            cur.execute("select id from firms where slug = 'a16z'")
+            a16z = cur.fetchone()[0]
+            cur.execute("delete from report_pages where slug = 'a16z'")
+            cur.execute("delete from report_bundles where firm_id = %s", (a16z,))
+            cur.execute(
+                """
+                insert into report_bundles (firm_id, payload)
+                values (%s, jsonb_build_object('html', '<article id="evidence">bundle-a16z</article>'))
+                """,
+                (a16z,),
+            )
+            cur.execute("select set_config('request.jwt.claim.sub', '', true)")
+            cur.execute("set role anon")
+            cur.execute("savepoint no_read")
+            with pytest.raises(psycopg.errors.InsufficientPrivilege):
+                cur.execute("select payload from report_bundles")
+            cur.execute("rollback to savepoint no_read")
+            opened = _open(cur, "a16z", ANON)
+            assert opened["ok"] is True
+            assert opened["tier"] == "visitor"
+            assert "bundle-a16z" in opened["html"]
+            assert "id=\"evidence\"" in opened["html"]
+            again = _open(cur, "a16z", ANON)
+            assert again["repeat"] is True
+            cur.execute("reset role")
+        conn.rollback()
