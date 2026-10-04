@@ -451,6 +451,31 @@ def render_ask(ask):
     )
 
 
+def render_score_bars(fund):
+    bars = []
+    legends = []
+    for part in fund["parts"]:
+        bars.append(
+            f'<button class="sb {esc(part["barClass"])}" data-ev="{esc(part["id"])}" '
+            f'style="flex:{esc(part["heroFlex"])} 0 0" aria-label="{esc(part["aria"])}">'
+            f'<span class="fill" style="width:{esc(part["heroFill"])}"></span></button>'
+        )
+        legends.append(
+            f'<button data-ev="{esc(part["id"])}" class="{esc(part["legendClass"])}">'
+            f'<span><i></i>{esc(part["legend"])}</span>{legend_value(part)}</button>'
+        )
+    return f'<div class="stk">{"".join(bars)}</div><div class="sleg">{"".join(legends)}</div>'
+
+
+def render_worked_example(fund):
+    return (
+        f'<div class="ex"><div class="exh"><div class="big">{esc(fund["scoreExact"])}'
+        f'<small>{esc(fund["band"])} · coverage 39%</small></div>'
+        f'<div style="flex:1">{render_score_bars(fund)}</div></div>'
+        f'{render_score(fund)}</div>'
+    )
+
+
 def render_hero(fund):
     lo, hi = fund["range"]
     rank = fund["rank"]
@@ -465,18 +490,6 @@ def render_hero(fund):
     for b in fund["badges"]:
         badges.append(
             f'<button class="bdg" data-ev="{esc(b["ev"])}"><i class="dt {esc(b["icon"])}"></i>{esc(b["text"])}</button>'
-        )
-    bars = []
-    legends = []
-    for part in fund["parts"]:
-        bars.append(
-            f'<button class="sb {esc(part["barClass"])}" data-ev="{esc(part["id"])}" '
-            f'style="flex:{esc(part["heroFlex"])} 0 0" aria-label="{esc(part["aria"])}">'
-            f'<span class="fill" style="width:{esc(part["heroFill"])}"></span></button>'
-        )
-        legends.append(
-            f'<button data-ev="{esc(part["id"])}" class="{esc(part["legendClass"])}">'
-            f'<span><i></i>{esc(part["legend"])}</span>{legend_value(part)}</button>'
         )
     shown = esc(fund["scoreShown"])
     return (
@@ -495,7 +508,7 @@ def render_hero(fund):
         f'<div class="bdgs">{"".join(badges)}</div>'
         f'<div class="ovx"><div class="bart"><span>{esc(fund["scoreBarNote"])}</span>'
         f'<button class="lnk" data-ev="rules">How scoring works</button></div>'
-        f'<div class="stk">{"".join(bars)}</div><div class="sleg">{"".join(legends)}</div></div>'
+        f'{render_score_bars(fund)}</div>'
         f'</div></div></div>'
     )
 
@@ -531,7 +544,7 @@ def render_fund_page(fund, prefix):
     home = prefix
     body = f'''<div class="blobs np" style="height:900px"><div class="blob" style="width:520px;height:520px;background:#CDBBFF;left:-180px;top:-120px"></div><div class="blob" style="width:460px;height:460px;background:#FFC7B8;right:-140px;top:-40px"></div><div class="blob" style="width:380px;height:380px;background:#FFEBA0;left:42%;top:420px;opacity:.35"></div></div>
 <nav class="pillnav np"><a class="logo" href="{home}"><i></i><span class="wm">regrett<em>amine</em></span></a>
- <div class="links"><a class="on" href="{home}">VCs</a><a href="#">How it works</a><a href="#">Scoring</a></div>
+ <div class="links"><a class="on" href="{home}">VCs</a><a href="{home}how/">How it works</a><a href="{home}scoring/">Scoring</a></div>
  <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#alerts">Get alerts</a></div></nav>
 <div class="ftop"><div class="wrap">
  <div class="crumb np"><a href="{home}">← All VCs</a></div>
@@ -543,7 +556,7 @@ def render_fund_page(fund, prefix):
  {sections}
  <p class="fnote np">{esc(fund["footnote"])}</p>
 </div></div>
-<footer class="np"><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regrett<em>amine</em></span></span><span>regrettamine.com</span><span style="margin-left:auto">Scoring · Sources · Corrections · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>
+<footer class="np"><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regrett<em>amine</em></span></span><span>regrettamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">Scoring</a> · Sources · <a href="{home}account/#share">Corrections</a> · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>
 <div class="scrim"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="Details"><div class="dh"><div><div class="dk" id="dk"></div><div class="dtt" id="dt"></div></div><button class="dx" id="dx" aria-label="Close">×</button></div><div class="db" id="db"></div></aside><div class="toast"></div>'''
     title = fund.get("title") or f'{fund["name"]} · Regrettamine'
     extra = ""
@@ -623,6 +636,16 @@ def apply_legal(raw):
     return raw.replace("__CONTACT_EMAIL__", email).replace("__JURISDICTION__", place)
 
 
+def build_scoring(funds):
+    fund = funds.get("a16z")
+    if not fund:
+        raise SystemExit("scoring page needs the a16z fund report")
+    raw = (SRC / "scoring.html").read_text(encoding="utf-8").replace("__SCORE_EXAMPLE__", render_worked_example(fund))
+    dest = SITE / "scoring" / "index.html"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(raw, encoding="utf-8")
+
+
 def build_shell(name, dest):
     raw = (SRC / name).read_text(encoding="utf-8")
     if "__HOME_JSON__" in raw:
@@ -697,6 +720,8 @@ def main():
     build_shell("reset.html", SITE / "login" / "reset" / "index.html")
     build_legal("privacy.html", SITE / "privacy" / "index.html")
     build_legal("terms.html", SITE / "terms" / "index.html")
+    build_shell("how.html", SITE / "how" / "index.html")
+    build_scoring(funds)
     for slug, fund in funds.items():
         dest = SITE / "vc" / slug / "index.html"
         dest.parent.mkdir(parents=True, exist_ok=True)

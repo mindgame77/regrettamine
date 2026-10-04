@@ -40,6 +40,8 @@
 .auth .plans span{font-size:13.5px;color:var(--ink2)}
 .auth .mark{background:linear-gradient(transparent 58%,var(--sun) 58%,var(--sun) 92%,transparent 92%);padding:0 3px;margin:0 -1px 0 -3px}
 .auth[data-mode=signup] .in-only,.auth[data-mode=login] .up-only,.auth[data-mode=forgot] .in-only,.auth[data-mode=forgot] .up-only{display:none}
+.auth .pw2-row{display:none}.auth[data-mode=signup] .pw2-row,.auth[data-mode=reset] .pw2-row{display:flex}
+.auth[data-mode=reset] .in-only,.auth[data-mode=reset] .up-only,.auth[data-mode=reset] .email-row{display:none}
 .auth[data-mode=forgot] .pw-row,.auth[data-mode=forgot] .google,.auth[data-mode=forgot] .or{display:none}
 .auth[data-mode=paywall] .google,.auth[data-mode=paywall] .or,.auth[data-mode=paywall] .pf,.auth[data-mode=paywall] .fine,.auth[data-mode=plans] .google,.auth[data-mode=plans] .or,.auth[data-mode=plans] .pf,.auth[data-mode=plans] .fine,.auth[data-mode=confirm] .google,.auth[data-mode=confirm] .or,.auth[data-mode=confirm] .pf,.auth[data-mode=confirm] .fine,.auth[data-mode=reset] .google,.auth[data-mode=reset] .or,.auth[data-mode=reset] .fine{display:none}
 .auth .gate-only,.auth .pay-only,.auth .plans-only,.auth .confirm-only,.auth .forgot-only,.auth .reset-only,.auth .page-only{display:none}
