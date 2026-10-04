@@ -191,3 +191,98 @@ def test_watchlist_cap_profile_and_review_rls():
             assert "ada-example" not in blob
             assert '"honesty": 4' in blob or '"honesty":4' in blob
         conn.rollback()
+
+
+def test_settings_website_billing_and_delete():
+    import psycopg
+
+    from scripts.seed import main as seed_main
+
+    seed_main()
+    with psycopg.connect(DATABASE_URL) as conn:
+        with conn.cursor() as cur:
+            ada = _user(cur, "ada@example.com")
+            bea = _user(cur, "bea@example.com")
+            cur.execute("update profiles set website = 'example.com' where id = %s", (ada,))
+            cur.execute("select website from profiles where id = %s", (ada,))
+            assert cur.fetchone()[0] == "https://example.com"
+            cur.execute("update profiles set website = 'http://fund.example/path' where id = %s", (ada,))
+            cur.execute("select website from profiles where id = %s", (ada,))
+            assert cur.fetchone()[0] == "http://fund.example/path"
+            cur.execute("update profiles set website = '  ' where id = %s", (ada,))
+            cur.execute("select website from profiles where id = %s", (ada,))
+            assert cur.fetchone()[0] is None
+            cur.execute("savepoint bad_site")
+            with pytest.raises(psycopg.errors.CheckViolation):
+                cur.execute("update profiles set website = 'javascript:alert(1)' where id = %s", (ada,))
+            cur.execute("rollback to savepoint bad_site")
+
+            cur.execute("select set_config('request.jwt.claim.sub', %s, true)", (str(ada),))
+            cur.execute("set role authenticated")
+            cur.execute("select my_billing()")
+            billing = cur.fetchone()[0]
+            assert billing["plan"] == "Free" and billing["tier"] == "free"
+            assert billing["card"] is None and billing["payments"] == []
+            assert billing["payment_failed"] is False and billing["next_charge_label"] is None
+            cur.execute("reset role")
+
+            cur.execute(
+                "select apply_subscription(%s, 'founder', 'active', now() + interval '1 month')",
+                (ada,),
+            )
+            cur.execute("set role authenticated")
+            cur.execute("select my_billing()")
+            assert cur.fetchone()[0]["plan"] == "Paid"
+            cur.execute("reset role")
+
+            cur.execute("select id from firms where slug = 'a16z'")
+            a16z = cur.fetchone()[0]
+            cur.execute(
+                """
+                insert into reviews (firm_id, profile_id, body, moderation_status)
+                values (%s, %s, 'mine', 'pending') returning id
+                """,
+                (a16z, ada),
+            )
+            review_id = cur.fetchone()[0]
+            cur.execute(
+                "insert into review_ratings (review_id, dimension, score) values (%s, 'honesty', 3)",
+                (review_id,),
+            )
+            cur.execute("insert into watchlist (profile_id, firm_id) values (%s, %s)", (ada, a16z))
+            cur.execute(
+                "insert into report_views (profile_id, firm_id, counted) values (%s, %s, true)",
+                (ada, a16z),
+            )
+            cur.execute(
+                "insert into fund_alert_settings (profile_id, firm_id, enabled) values (%s, %s, true)",
+                (ada, a16z),
+            )
+
+            cur.execute("set role anon")
+            cur.execute("savepoint no_delete")
+            with pytest.raises(psycopg.errors.InsufficientPrivilege):
+                cur.execute("select delete_my_account()")
+            cur.execute("rollback to savepoint no_delete")
+            cur.execute("reset role")
+
+            cur.execute("select set_config('request.jwt.claim.sub', %s, true)", (str(ada),))
+            cur.execute("set role authenticated")
+            cur.execute("select delete_my_account()")
+            cur.execute("reset role")
+
+            cur.execute("select count(*) from auth.users where id = %s", (ada,))
+            assert cur.fetchone()[0] == 0
+            cur.execute("select count(*) from profiles where id = %s", (ada,))
+            assert cur.fetchone()[0] == 0
+            cur.execute("select count(*) from reviews where id = %s", (review_id,))
+            assert cur.fetchone()[0] == 0
+            cur.execute("select count(*) from watchlist where profile_id = %s", (ada,))
+            assert cur.fetchone()[0] == 0
+            cur.execute("select count(*) from report_views where profile_id = %s", (ada,))
+            assert cur.fetchone()[0] == 0
+            cur.execute("select count(*) from fund_alert_settings where profile_id = %s", (ada,))
+            assert cur.fetchone()[0] == 0
+            cur.execute("select count(*) from profiles where id = %s", (bea,))
+            assert cur.fetchone()[0] == 1
+        conn.rollback()

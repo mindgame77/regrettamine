@@ -32,6 +32,8 @@
     return !!(person && (person.email_confirmed_at || person.confirmed_at));
   }
   let tier = 'visitor';
+  let profileName = '';
+  let profileGen = 0;
   const alerts = { slugs: new Set(), opened: new Set(), rows: [] };
   function capFor(person) {
     if (tier === 'paid') return Infinity;
@@ -53,20 +55,50 @@
   function saveAnon(state) {
     localStorage.setItem(ANON_KEY, JSON.stringify(state));
   }
+  function personName(person) {
+    if (profileName && profileName.trim()) return profileName.trim();
+    const meta = (person && person.user_metadata) || {};
+    return (meta.full_name || meta.name || '').trim();
+  }
   function initials(person) {
-    const meta = person.user_metadata || {};
-    const name = meta.full_name || meta.name || '';
-    if (name.trim()) {
-      const bits = name.trim().split(/\s+/);
+    const name = personName(person);
+    if (name) {
+      const bits = name.split(/\s+/);
       return ((bits[0][0] || '') + (bits[1] ? bits[1][0] : bits[0][1] || '')).toUpperCase();
     }
     return (person.email || 'ME').slice(0, 2).toUpperCase();
   }
   function label(person) {
-    const meta = person.user_metadata || {};
-    const name = meta.full_name || meta.name || '';
-    if (name.trim()) return name.trim().split(/\s+/)[0];
+    const name = personName(person);
+    if (name) return name.split(/\s+/)[0];
     return (person.email || 'You').split('@')[0];
+  }
+  async function refreshProfile() {
+    const gen = ++profileGen;
+    const clientNow = sb();
+    if (!user || !clientNow) {
+      if (gen === profileGen) profileName = '';
+      return;
+    }
+    const { data } = await clientNow.from('profiles').select('display_name').eq('id', user.id).maybeSingle();
+    if (gen !== profileGen) return;
+    profileName = (data && data.display_name) || '';
+  }
+  function paintPayFail(notice) {
+    let banner = document.getElementById('payFail');
+    if (!notice) {
+      if (banner) banner.hidden = true;
+      return;
+    }
+    if (!banner) {
+      const nav = document.querySelector('nav.pillnav');
+      if (!nav) return;
+      nav.insertAdjacentHTML('afterend', '<div class="fail" id="payFail" data-pay-fail><i>!</i><span></span><button class="b d sm" type="button" data-stripe="portal">Update card</button></div>');
+      banner = document.getElementById('payFail');
+    }
+    const text = banner.querySelector('span');
+    if (text) text.textContent = notice;
+    banner.hidden = false;
   }
   function paintNav(person) {
     const slot = document.getElementById('navSlot');
@@ -83,6 +115,7 @@
       + '<a href="' + base + 'account/#alerts">Alerts</a>'
       + '<a href="' + base + 'plans/">Pricing</a>'
       + '<a href="' + base + 'account/#share">Share / Report a VC</a>'
+      + '<a href="' + base + 'settings/#account">Settings</a>'
       + '<button type="button" id="logout">Log out</button></div></div>';
     document.getElementById('av').onclick = function (e) {
       if (e.target.closest('#logout') || e.target.closest('a')) return;
@@ -534,6 +567,7 @@
         await refreshTier();
         await refreshWatch();
         await refreshAlerts();
+        await refreshProfile();
       }
       clientNow.auth.onAuthStateChange(async (event, session) => {
         const next = session && session.user;
@@ -546,6 +580,7 @@
           alerts.opened = new Set();
           alerts.rows = [];
           tier = 'visitor';
+          profileName = '';
           carriedFor = null;
         }
         if (user && changed) {
@@ -553,6 +588,7 @@
           await refreshTier();
           await refreshWatch();
           await refreshAlerts();
+          await refreshProfile();
         }
         paintNav(user);
         paintSave();
@@ -594,6 +630,7 @@
     get tier() { return tier; },
     confirmed, capFor, anonState, seen, record, touch, firmId, firmMap,
     addWatch, removeWatch, refreshWatch, refreshAlerts, setFundAlert, landingFunds, loadReport,
+    refreshProfile, paintNav: function () { paintNav(user); }, paintPayFail,
     onChange(fn) { listeners.push(fn); }
   };
   global.RegretAuth = { open: setMode, close, setMode };

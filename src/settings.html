@@ -1,0 +1,107 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Settings · Regrettamine</title>
+<link rel="icon" href="../assets/favicon.svg">
+<link rel="stylesheet" href="../css/common.css">
+<link rel="stylesheet" href="../css/auth.css">
+<link rel="stylesheet" href="../css/account.css">
+<link rel="stylesheet" href="../css/settings.css">
+<meta name="regret-root" content="../">
+</head><body>
+<div class="blobs" style="height:420px"><div class="blob" style="width:420px;height:420px;background:#CDBBFF;left:-160px;top:-180px"></div><div class="blob" style="width:380px;height:380px;background:#FFC7B8;right:-140px;top:-160px"></div></div>
+<nav class="pillnav"><a class="logo" href="../"><i></i><span class="wm">regrett<em>amine</em></span></a>
+ <div class="links"><a href="../">VCs</a><a href="../scoring/">Scoring</a><a href="../plans/">Pricing</a><a href="../account/#share">Report a VC</a></div>
+ <div class="r" id="navSlot"><a class="b w" href="../login/">Log in</a><a class="b v" href="../account/#alerts">Get alerts</a></div></nav>
+
+<main class="wrap"><div class="acc">
+<aside class="anav">
+ <a href="#account" data-v="account"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Account</a>
+ <a href="#billing" data-v="billing"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 15h4"/></svg>Billing</a>
+</aside>
+<div class="setcol">
+
+<div class="fail" id="payFail" data-pay-fail hidden><i>!</i><span>We couldn't charge your card. Update it within 24 hours or your account moves to the free plan.</span><button class="b d sm" type="button" data-stripe="portal">Update card</button></div>
+
+<section id="account" class="view">
+ <div class="vh"><h1>Account</h1></div>
+ <form class="card set prof" id="profileForm">
+  <b class="pt">Profile</b>
+  <div class="pgrid">
+   <label class="fl"><span>Name</span><input class="fld" id="nameIn" autocomplete="name" maxlength="120"></label>
+   <label class="fl"><span>Website</span><input class="fld" id="siteIn" type="text" inputmode="url" autocomplete="url" placeholder="example.com"></label>
+   <button class="b c sm" type="submit" id="saveProfile">Save</button>
+  </div>
+  <p class="err" id="profileErr" hidden></p>
+ </form>
+ <div class="card set">
+  <div class="srow"><div><b>Email</b><span id="emailNow"></span></div><button class="b w sm" type="button" id="emailOpen" data-open="emailForm">Change email</button></div>
+  <form class="sform" id="emailForm" hidden>
+   <label class="fl"><span>New email</span><input class="fld" id="emailIn" type="email" placeholder="you@company.com" autocomplete="email"></label>
+   <label class="fl" id="emailPw"><span>Current password</span><input class="fld" id="emailPwIn" type="password" placeholder="Password" autocomplete="current-password"></label>
+   <p class="help">We'll send a confirmation link to the new email. The change applies once you click it.</p>
+   <p class="err" id="emailErr" hidden></p>
+   <div class="acts"><button class="b c sm" type="submit">Send confirmation link</button><button class="b s sm" type="button" data-close="emailForm">Cancel</button></div>
+  </form>
+  <div class="srow"><div><b>Password</b><span id="pwHint">••••••••••</span></div><button class="b w sm" type="button" id="pwOpen" data-open="pwForm">Change password</button></div>
+  <form class="sform" id="pwForm" hidden>
+   <label class="fl" id="pwCurrent"><span>Current password</span><input class="fld" id="pwCurrentIn" type="password" placeholder="Password" autocomplete="current-password"></label>
+   <label class="fl"><span>New password</span><input class="fld" id="pwIn" type="password" placeholder="At least 6 characters" autocomplete="new-password"></label>
+   <label class="fl"><span>Confirm new password</span><input class="fld" id="pw2In" type="password" placeholder="Repeat it" autocomplete="new-password"></label>
+   <p class="err" id="pwErr" hidden></p>
+   <div class="acts"><button class="b c sm" type="submit" id="pwSubmit">Update password</button><button class="b s sm" type="button" data-close="pwForm">Cancel</button></div>
+  </form>
+ </div>
+ <h2 class="sh2 danger">Danger zone</h2>
+ <div class="card set">
+  <div class="srow"><div><b>Delete account</b><span>Permanently deletes your account and everything in it.</span></div><button class="b quiet sm" type="button" data-modal="delAcc">Delete account</button></div>
+ </div>
+</section>
+
+<section id="billing" class="view" data-billing-root>
+ <div class="vh"><h1>Billing</h1></div>
+ <div class="card set" data-billing="plan">
+  <div class="srow plan"><div><b id="planName">Free</b><span id="planDetail"></span></div>
+   <div class="nx"><small id="nxLabel">Next charge</small><b id="nxVal">—</b></div></div>
+  <div class="srow"><div><span>Switch between monthly and annual billing.</span></div><a class="lnk2" href="../plans/" data-stripe="checkout">Change plan →</a></div>
+ </div>
+ <h2 class="sh2">Payment method</h2>
+ <div class="card set" data-billing="card">
+  <div class="srow"><div class="cc"><span class="brand" id="cardBrand" hidden></span><div><b id="cardLabel">No card on file</b><span id="cardMeta"></span></div></div>
+   <div class="acts"><button class="b w sm" type="button" data-stripe="portal" id="cardChange" hidden>Change card</button><button class="b ghost sm" type="button" data-stripe="delete-card" data-modal="delCard" id="cardDelete" hidden>Delete card</button></div></div>
+ </div>
+ <h2 class="sh2">Payments</h2>
+ <div class="card ptab" data-billing="payments">
+  <div class="pr th"><div>Date</div><div>Description</div><div>Amount</div><div>Status</div><div></div></div>
+  <div id="payRows"></div>
+  <p class="payempty" id="payEmpty">No payments yet.</p>
+ </div>
+</section>
+</div></div></main>
+
+<div class="auth-veil" id="delAcc" hidden><div class="auth mod">
+ <button type="button" class="x" data-x aria-label="Close"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+ <span class="dic">!</span>
+ <h2>Delete your account?</h2>
+ <p class="sub">Everything about you is deleted permanently. This can't be undone.</p>
+ <ul class="gone"><li>Profile and login</li><li>Watchlist</li><li>Alerts and alert settings</li><li>Report history</li><li>Shared experiences</li><li>Billing info and saved card</li></ul>
+ <p class="note">Your plan is cancelled with it. No more charges.</p>
+ <label class="fld cfm"><input id="cfmIn" placeholder="Type DELETE or your email" aria-label="Confirm" autocomplete="off"></label>
+ <p class="err" id="delErr" hidden></p>
+ <button class="b d" type="button" id="cfmBtn" disabled>Delete my account</button>
+ <button class="b s" type="button" data-x>Cancel</button>
+</div></div>
+
+<div class="auth-veil" id="delCard" hidden><div class="auth mod" data-stripe="delete-card-modal">
+ <button type="button" class="x" data-x aria-label="Close"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+ <span class="dic">!</span>
+ <h2>Delete this card?</h2>
+ <p class="sub">Without a card we can't charge you. If your next charge fails, we'll email you. After 24 hours without a card, your account moves to the free plan.</p>
+ <button class="b d" type="button" data-stripe="delete-card-confirm">Delete card</button>
+ <button class="b s" type="button" data-x>Keep card</button>
+</div></div>
+
+<footer><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regrett<em>amine</em></span></span><span>regrettamine.com</span><span style="margin-left:auto"><a href="../scoring/">Scoring</a> · <a href="../privacy/">Privacy</a> · <a href="../terms/">Terms</a></span></div></footer>
+<script src="../js/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/settings.js"></script>
+</body></html>
