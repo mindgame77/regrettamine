@@ -664,9 +664,14 @@ def apply_legal(raw):
     legal = {}
     if path.exists():
         legal = load_json(path).get("legal") or {}
+    company = legal_html(legal.get("company"), "company")
     email = legal_html(legal.get("contact_email"), "contact email", email=True)
     place = legal_html(legal.get("jurisdiction"), "jurisdiction")
-    return raw.replace("__CONTACT_EMAIL__", email).replace("__JURISDICTION__", place)
+    return (
+        raw.replace("__COMPANY__", company)
+        .replace("__CONTACT_EMAIL__", email)
+        .replace("__JURISDICTION__", place)
+    )
 
 
 def build_scoring(funds):

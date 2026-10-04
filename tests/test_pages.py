@@ -67,10 +67,12 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "terms/" in auth_js and "privacy/" in auth_js
     assert 'class="agree up-only"' in auth_js
     assert "Privacy Policy" in privacy and "Terms of Service" in terms
-    assert privacy.count('class="ph"') == 3
-    assert ">contact email<" in privacy and "mailto:" not in privacy
-    assert terms.count('class="ph"') == 3
-    assert ">jurisdiction<" in terms and ">contact email<" in terms
+    mailto = '<a href="mailto:malytskyyo@gmail.com">malytskyyo@gmail.com</a>'
+    assert "Know Your Group INC." in privacy and "Alex Malytskyy" not in privacy
+    assert privacy.count(mailto) == 3 and privacy.count('class="ph"') == 0
+    assert "Know Your Group INC." in terms and "Alex Malytskyy" not in terms
+    assert terms.count(mailto) == 1 and terms.count('class="ph"') == 2
+    assert ">jurisdiction<" in terms and ">contact email<" not in terms
     assert "within 30 days of account deletion, and from backups within 90 days" in privacy
     assert "at most 30 days after you submit them" in privacy
     assert 'class="ph">30 days' not in privacy and 'class="ph">90 days' not in privacy
