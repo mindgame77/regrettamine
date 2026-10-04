@@ -45,31 +45,29 @@
 </section>
 <section id="share" class="view">
  <div class="vh"><h1>Share your experience</h1></div>
- <form class="card form" id="shareForm">
-  <div class="row2">
-   <label class="fl"><span>Fund</span><span class="fld"><select id="revFund" required></select></span></label>
-   <div class="fl"><span>When they invested</span><div class="duo">
-    <span class="fld"><select id="revRole"><option>Founder / CEO</option><option>Founder</option><option>Employee</option><option>Operator</option></select></span>
-    <span class="fld"><select id="revRound"><option>Pre-seed</option><option selected>Seed</option><option>Series A</option><option>Series B</option><option>Series C+</option><option>Growth</option></select></span>
-   </div></div>
-  </div>
-  <div class="fl"><span>Rate them</span><div class="rates">
-   <div class="rt"><span>Transparency</span><div class="pips" data-dim="transparency"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button></div></div>
-   <div class="rt"><span>Support after the check</span><div class="pips" data-dim="support"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button></div></div>
+ <form class="card form" id="shareForm" autocomplete="off">
+  <div class="fl"><span>Fund</span><div class="ac-wrap"><label class="fld srch"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8C88A3" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="fundIn" placeholder="Search fund name" aria-label="Fund" autocomplete="off"></label><div class="dd" id="fundDD"></div></div></div>
+  <div class="fl"><span>How are you connected?</span><div class="chips" id="connect">
+   <button type="button" class="chip on" data-connection="founder_ceo">Founder / CEO</button>
+   <button type="button" class="chip" data-connection="co_founder">Co-founder</button>
+   <button type="button" class="chip" data-connection="executive">Executive</button>
+   <button type="button" class="chip" data-connection="employee">Employee</button>
+   <button type="button" class="chip" data-connection="pitched">Pitched but no deal</button>
+   <button type="button" class="chip" data-connection="co_investor">Co-investor</button>
+  </div></div>
+  <div class="fl stage"><span>Stage when they invested</span><label class="fld sel"><select id="revRound" aria-label="Stage when they invested"><option>Pre-seed</option><option selected>Seed</option><option>Series A</option><option>Series B</option><option>Series C+</option><option>Growth</option></select><svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke="#8C88A3" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg></label></div>
+  <div class="fl"><span>Rate the VC</span><div class="rates">
+   <div class="rt"><span>Honesty</span><div class="pips" data-dim="honesty"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button></div></div>
+   <div class="rt"><span>Support after the check</span><div class="pips" data-dim="support_after_check"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button></div></div>
+   <div class="rt"><span>Founder-friendly terms</span><div class="pips" data-dim="founder_friendly_terms"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button></div></div>
+   <div class="rt"><span>Responsiveness</span><div class="pips" data-dim="responsiveness"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button></div></div>
    <div class="rt"><span>In hard times</span><div class="pips" data-dim="hard_times"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button></div></div>
   </div></div>
   <div class="fl again"><span>Would you take their money again?</span><div class="seg" id="again"><button type="button" class="on" data-yes="yes">Yes</button><button type="button" data-yes="no">No</button></div></div>
   <label class="fl"><span>What should the next founder know?</span><textarea class="fld ta" id="revBody" placeholder="Optional"></textarea></label>
-  <div class="foot">
-   <div class="tog on" id="anonTog"><span><b>Post anonymously</b><small id="anonHint">Shown as "Founder / CEO, Seed"</small></span><span class="sw2"></span></div>
-   <div class="ver"><b>Verify you took their money</b><div class="chips" id="verify">
-    <button type="button" class="chip" data-method="work_email">Work email</button>
-    <button type="button" class="chip" data-method="linkedin">LinkedIn</button>
-    <button type="button" class="chip" data-method="cap_table">Cap table</button>
-   </div><small>Used only to confirm. Never shown.</small></div>
-  </div>
+  <div class="fl"><span>Verify with LinkedIn</span><label class="fld srch"><svg width="17" height="17" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="4" fill="#0A66C2"/><path d="M7 10v7M7 7v.01M11 17v-4a2 2 0 0 1 4 0v4M11 10v7" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/></svg><input id="revLinkedin" placeholder="linkedin.com/in/your-name" aria-label="LinkedIn profile" autocomplete="off"></label><small class="help">Used only to confirm you worked with this fund. Never shown.</small></div>
   <p class="err" id="shareErr" hidden></p>
-  <div class="sub"><button class="b c" type="submit">Submit review</button></div>
+  <div class="bar2"><div class="tog on" id="anonTog"><span><b>Post anonymously</b><small id="anonHint">Shown as "Founder, Seed"</small></span><span class="sw2"></span></div><button class="b c" type="submit">Submit review</button></div>
  </form>
 </section>
 </div></div></main>

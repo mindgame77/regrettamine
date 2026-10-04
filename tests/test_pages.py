@@ -61,6 +61,15 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "by emailing us" in terms
     assert "account settings" not in terms
     assert 'href="../terms/#corrections"' in privacy
+    assert "How are you connected?" in account
+    assert "Pitched but no deal" in account and "Co-investor" in account
+    assert 'data-dim="honesty"' in account and 'data-dim="support_after_check"' in account
+    assert 'data-dim="founder_friendly_terms"' in account and 'data-dim="responsiveness"' in account
+    assert 'data-dim="hard_times"' in account
+    assert "linkedin.com/in/your-name" in account
+    assert "work_email" not in account and "cap_table" not in account
+    assert "FundList.ring" in account_js and "connection_type" in account_js
+    assert "first_hand" not in account_js and "verification_status" not in account_js
 
 
 def test_legal_config_values():

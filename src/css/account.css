@@ -66,12 +66,12 @@ button{font:inherit;color:inherit}
 .b.sm{height:40px;padding:0 18px;font-size:14.5px}
 .mark-read{font-size:14px;font-weight:600;color:var(--ink2);border-bottom:1.5px dashed #D6D1E8;background:none;border-top:0;border-left:0;border-right:0;cursor:pointer;padding:0}
 .form{padding:28px;display:flex;flex-direction:column;gap:22px}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .fl{display:flex;flex-direction:column;gap:8px}
 .fl>span,.fl>label>span{font-size:13px;font-weight:700;color:var(--ink2)}
 .fld{display:flex;align-items:center;justify-content:space-between;height:48px;border:1.5px solid var(--line);border-radius:14px;padding:0 16px;background:#FBFAFE;font:15px 'DM Sans';color:var(--ink);width:100%}
-.fld select{border:0;outline:0;background:transparent;font:15px 'DM Sans';width:100%;color:var(--ink)}
-.duo{display:grid;grid-template-columns:1.3fr 1fr;gap:10px}
+.fld.sel{position:relative;width:280px;padding-right:36px;cursor:pointer}
+.fld.sel select{appearance:none;-webkit-appearance:none;border:0;outline:0;background:transparent;font:15px 'DM Sans';width:100%;color:var(--ink);cursor:pointer}
+.fld.sel svg{position:absolute;right:16px;pointer-events:none}
 .rates{display:flex;flex-direction:column;border:1.5px solid var(--line);border-radius:16px;overflow:hidden}
 .rt{display:flex;align-items:center;justify-content:space-between;padding:10px 10px 10px 18px;font-size:15px;font-weight:500}
 .rt+.rt{border-top:1.5px solid var(--line)}
@@ -83,19 +83,40 @@ button{font:inherit;color:inherit}
 .seg{display:flex;background:#F4F2FA;border-radius:999px;padding:4px}
 .seg button{height:36px;padding:0 22px;border-radius:999px;border:0;background:transparent;font:700 14.5px 'DM Sans';color:var(--ink2);cursor:pointer}
 .seg button.on{background:var(--ink);color:#fff}
-.ta{height:96px;padding:12px 16px;resize:vertical;outline:0;align-items:flex-start;font:15px 'DM Sans'}
-.foot{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.foot>div{border:1.5px solid var(--line);border-radius:16px;padding:14px 18px}
-.foot .tog b,.ver b{display:block;font-size:14.5px}
-.foot small{display:block;font-size:12.5px;color:var(--mute);font-weight:500}
-.ver .chips{display:flex;gap:6px;margin:8px 0 6px;flex-wrap:wrap}
-.ver .chip{height:32px;font-size:13.5px;font-family:inherit}
-.form .sub{display:flex;justify-content:flex-end}
+.ta{height:96px;padding:12px 16px;resize:none;outline:0;align-items:flex-start;font:15px 'DM Sans'}
+.srch{justify-content:flex-start;gap:10px}
+.srch input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:15px 'DM Sans';color:var(--ink)}
+.srch input::placeholder{color:var(--mute)}
+.srch:focus-within{border-color:var(--vio2);box-shadow:0 0 0 4px var(--viobg);background:#fff}
+.ac-wrap{position:relative;z-index:4}
+.dd{display:none;position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:10;background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:6px;box-shadow:0 24px 48px -20px rgba(60,40,140,.4)}
+.dd.on{display:block}
+.dd .opt{display:flex;align-items:center;gap:12px;width:100%;padding:8px 10px;border:0;border-radius:12px;background:transparent;cursor:pointer;text-align:left;font:inherit;color:inherit}
+.dd .opt:hover,.dd .opt.hi{background:#F7F5FD}
+.dd .opt .mring{width:32px;height:32px}
+.dd .opt .mring b{font-size:12px}
+.dd .opt .on2{flex:1;line-height:1.25;min-width:0}
+.dd .opt .on2 b{font-family:'Bricolage Grotesque';font-weight:700;font-size:15px}
+.dd .opt .on2 b mark{background:var(--viobg);color:var(--vio);border-radius:4px;padding:0 1px}
+.dd .opt .on2 small{display:block;font-size:12.5px;color:var(--mute)}
+.dd .none{padding:10px;font-size:14px;color:var(--mute)}
+.form .chips{display:flex;flex-wrap:wrap;gap:8px}
+.form .chip{height:38px;padding:0 16px;font:500 14.5px 'DM Sans'}
+.help{font-size:12.5px;color:var(--mute)}
+.bar2{display:flex;align-items:center;justify-content:space-between;gap:20px;border-top:1.5px solid var(--line);padding-top:20px}
+.bar2 .tog{justify-content:flex-start;gap:14px}
+.bar2 .tog b{display:block;font-size:14.5px}
+.bar2 .tog small{display:block;font-size:12.5px;color:var(--mute);font-weight:500}
+.bar2 .tog .sw2{order:-1}
 .form .err{color:#C43D1F;font-size:14px;font-weight:600}
 .done{padding:28px}
 .done b{font-family:'Bricolage Grotesque';font-size:22px}
 @media(max-width:900px){
-  .acc,.two,.row2,.foot{grid-template-columns:1fr}
+  .acc,.two{grid-template-columns:minmax(0,1fr)}
+  .acc>*{min-width:0}
   .anav{position:static}
   .mt{flex-direction:column;align-items:flex-start;gap:16px}
+  .fld.sel{width:100%}
+  .again,.bar2,.rt{flex-wrap:wrap}
+  .vh h1{font-size:32px}
 }

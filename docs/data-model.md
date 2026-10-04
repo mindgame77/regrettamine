@@ -79,9 +79,13 @@ The fund page never paints every company into the first screen. It shows a page 
 
 ## Reviews
 
-`reviews` is one row per account: firm, optional vehicle, optional company, optional founder, optional partner, body, `first_hand`, `verification_status`, `moderation_status`, date.
+`reviews` is one row per account: firm, optional vehicle, optional company, optional founder, optional partner, body, `first_hand`, `verification_status`, `moderation_status`, date. A review sent from the account form also stores `connection_type` (founder / CEO, co-founder, executive, employee, pitched, co-investor), the stage in `round_label`, and five rating columns: `honesty`, `support_after_check`, `founder_friendly_terms`, `responsiveness`, `hard_times`, each 1–5 or empty.
 
-`review_ratings` is one row per dimension (`treatment`, `support`, …). Dimensions are not columns, so a review can carry any set of them.
+`linkedin_url` is stored only to check the review. `anon` and `authenticated` cannot select that column, and `published_site_bundle()` leaves it out, so it never reaches a public page.
+
+`first_hand` and `verification_status` are not settable by a signed-in visitor. Those roles have no insert or update privilege on the two columns, and a before-trigger resets them to the server defaults (`false`, `unverified`). A moderator sets them later. Public reads still require `moderation_status = approved`. The author can read their own pending row, except the LinkedIn URL.
+
+`review_ratings` is one row per dimension for reviews loaded as content (`treatment`, `support`, …). The account form writes the five ratings above as columns on `reviews` instead.
 
 Reviews feed the founder-experience section of Toxy Score v2 when they are first-hand and verified. The a16z seed has no review rows, because the source file does not list any. The score uses the published inputs (2 negative first-hand accounts, under 1% of 1,456 companies) instead of invented reviews.
 

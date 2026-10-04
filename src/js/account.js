@@ -101,12 +101,52 @@
     });
   }
 
-  function fillFunds() {
-    const sel = $('revFund');
-    sel.innerHTML = HOME.funds.map(f => '<option value="' + Regret.esc(f.id) + '">' + Regret.esc(f.name) + '</option>').join('');
+  const CONNECTIONS = [
+    ['founder_ceo', 'Founder / CEO', 'Founder'],
+    ['co_founder', 'Co-founder', 'Co-founder'],
+    ['executive', 'Executive', 'Executive'],
+    ['employee', 'Employee', 'Employee'],
+    ['pitched', 'Pitched but no deal', 'Pitched'],
+    ['co_investor', 'Co-investor', 'Co-investor']
+  ];
+  const LI_URL = /^(https?:\/\/)?((www|[a-z]{2})\.)?linkedin\.com\/in\/[a-z0-9\-_%]+\/?$/i;
+
+  function selectedConnection() {
+    const on = document.querySelector('#connect .chip.on');
+    return CONNECTIONS.find(row => row[0] === (on && on.dataset.connection)) || CONNECTIONS[0];
   }
   function anonHint() {
-    $('anonHint').textContent = 'Shown as "' + $('revRole').value + ', ' + $('revRound').value + '"';
+    $('anonHint').textContent = 'Shown as "' + selectedConnection()[2] + ', ' + $('revRound').value + '"';
+  }
+  function ensureGrad() {
+    if (!document.getElementById('g2')) document.body.insertAdjacentHTML('afterbegin', FundList.grad());
+  }
+  function highlight(name, q) {
+    const at = name.toLowerCase().indexOf(q.toLowerCase());
+    if (at < 0) return Regret.esc(name);
+    return Regret.esc(name.slice(0, at)) + '<mark>' + Regret.esc(name.slice(at, at + q.length)) + '</mark>' + Regret.esc(name.slice(at + q.length));
+  }
+  function showFunds() {
+    const input = $('fundIn');
+    const dd = $('fundDD');
+    const q = input.value.trim();
+    if (!q) { dd.classList.remove('on'); dd.innerHTML = ''; return; }
+    ensureGrad();
+    const rows = HOME.funds.filter(f => (f.name + ' ' + (f.short || '') + ' ' + f.id).toLowerCase().includes(q.toLowerCase()))
+      .sort((a, b) => a.name.localeCompare(b.name));
+    if (!rows.length) {
+      dd.innerHTML = '<div class="none">No fund found</div>';
+      dd.classList.add('on');
+      return;
+    }
+    dd.innerHTML = rows.map((f, i) => {
+      const color = f.v2 ? 'url(#g2)' : '#C9C5D9';
+      return '<button type="button" class="opt' + (i ? '' : ' hi') + '" data-firm="' + Regret.esc(f.id) + '" data-name="' + Regret.esc(f.name) + '">'
+        + '<div class="mring">' + FundList.ring(f.score, 32, 3.5, color) + '<b style="' + (f.v2 ? '' : 'color:#A9A5BD') + '">' + Regret.esc(f.score) + '</b></div>'
+        + '<div class="on2"><b>' + highlight(f.name, q) + '</b><small>' + Regret.esc(f.hq) + '</small></div>'
+        + '<span class="bands"><i style="background:' + FundList.bandColor(f.band) + '"></i>' + Regret.esc(f.band) + '</span></button>';
+    }).join('');
+    dd.classList.add('on');
   }
 
   async function loadPrefs() {
@@ -178,51 +218,65 @@
     b.onclick = () => { document.querySelectorAll('#again button').forEach(x => x.classList.toggle('on', x === b)); };
   });
   $('anonTog').onclick = () => $('anonTog').classList.toggle('on');
-  $('revRole').onchange = anonHint;
   $('revRound').onchange = anonHint;
-  document.querySelectorAll('#verify .chip').forEach(chip => {
-    chip.onclick = () => {
-      const on = chip.classList.contains('on');
-      document.querySelectorAll('#verify .chip').forEach(x => x.classList.remove('on'));
-      if (!on) chip.classList.add('on');
+  document.querySelectorAll('#connect .chip').forEach(chip => {
+    chip.onclick = e => {
+      e.preventDefault();
+      document.querySelectorAll('#connect .chip').forEach(x => x.classList.toggle('on', x === chip));
+      anonHint();
     };
+  });
+  $('fundIn').addEventListener('input', () => { $('fundIn').dataset.firm = ''; showFunds(); });
+  $('fundIn').addEventListener('focus', showFunds);
+  $('fundIn').addEventListener('blur', () => $('fundDD').classList.remove('on'));
+  $('fundDD').addEventListener('mousedown', e => {
+    const opt = e.target.closest('.opt');
+    if (!opt) return;
+    e.preventDefault();
+    $('fundIn').value = opt.dataset.name;
+    $('fundIn').dataset.firm = opt.dataset.firm;
+    $('fundDD').classList.remove('on');
   });
 
   $('shareForm').onsubmit = async e => {
     e.preventDefault();
     const err = $('shareErr');
     err.hidden = true;
-    if (!Regret.user || !Regret.sb()) {
-      err.hidden = false;
-      err.textContent = 'Log in before you send a review.';
-      return;
-    }
-    const slug = $('revFund').value;
+    const fail = text => { err.hidden = false; err.textContent = text; };
+    const slug = $('fundIn').dataset.firm;
+    if (!slug) { fail('Pick a fund from the list.'); return; }
+    const linkedin = $('revLinkedin').value.trim();
+    if (!LI_URL.test(linkedin)) { fail('Use a LinkedIn profile URL like linkedin.com/in/your-name.'); return; }
+    const again = document.querySelector('#again button.on');
+    if (!again) { fail('Say whether you would take their money again.'); return; }
+    if (!Regret.user || !Regret.sb()) { fail('Log in before you send a review.'); return; }
     const firm = await Regret.firmId(slug);
-    if (!firm) { err.hidden = false; err.textContent = 'That fund is not in the database yet.'; return; }
-    const method = (document.querySelector('#verify .chip.on') || {}).dataset;
-    const ratings = [...document.querySelectorAll('.pips')].map(p => {
-      const on = [...p.querySelectorAll('button.on')].length;
-      return on ? { dimension: p.dataset.dim, score: on } : null;
-    }).filter(Boolean);
-    const { data, error } = await Regret.sb().from('reviews').insert({
+    if (!firm) { fail('That fund is not in the database yet.'); return; }
+    const ratings = {};
+    document.querySelectorAll('.pips').forEach(p => {
+      const on = p.querySelectorAll('button.on').length;
+      if (on) ratings[p.dataset.dim] = on;
+    });
+    const who = selectedConnection();
+    const { error } = await Regret.sb().from('reviews').insert({
       firm_id: firm,
       profile_id: Regret.user.id,
       body: $('revBody').value.trim() || null,
-      first_hand: true,
-      verification_status: 'unverified',
       moderation_status: 'pending',
       anonymous: $('anonTog').classList.contains('on'),
-      role_label: $('revRole').value,
+      role_label: who[1],
       round_label: $('revRound').value,
-      would_again: document.querySelector('#again button.on').dataset.yes === 'yes',
-      verification_method: method && method.method ? method.method : null
+      would_again: again.dataset.yes === 'yes',
+      verification_method: 'linkedin',
+      connection_type: who[0],
+      linkedin_url: linkedin,
+      honesty: ratings.honesty || null,
+      support_after_check: ratings.support_after_check || null,
+      founder_friendly_terms: ratings.founder_friendly_terms || null,
+      responsiveness: ratings.responsiveness || null,
+      hard_times: ratings.hard_times || null
     }).select('id').single();
-    if (error) { err.hidden = false; err.textContent = error.message; return; }
-    if (ratings.length) {
-      const { error: rateErr } = await Regret.sb().from('review_ratings').insert(ratings.map(r => ({ review_id: data.id, dimension: r.dimension, score: r.score })));
-      if (rateErr) { err.hidden = false; err.textContent = rateErr.message; return; }
-    }
+    if (error) { fail(error.message); return; }
     $('shareForm').outerHTML = '<div class="card done"><b>Submitted.</b><p>It stays hidden until we review it. Nothing here is shown on the fund page before that.</p></div>';
   };
 
@@ -236,7 +290,6 @@
       location.href = new URL('login/', Regret.siteRoot()).href + '?next=account/&view=' + encodeURIComponent(view);
       return;
     }
-    fillFunds();
     anonHint();
     renderWatch();
     renderAlerts();
