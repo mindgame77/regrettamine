@@ -32,13 +32,24 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "css/list.css" in index and "js/fund-list.js" in index
     assert 'id="wlOut"' in account and 'id="hsOut"' not in account
     assert 'data-v="history"' not in account and ">History<" not in account
-    assert 'data-view="watchlist"' in account and 'data-view="alerts"' in account and 'data-view="share"' in account
+    assert 'data-view="watchlist"' in account and 'data-view="share"' in account
+    assert 'data-view="alerts"' not in account and 'id="fundAlerts"' not in account
+    redirect = (ROOT / "site" / "account" / "alerts" / "index.html").read_text(encoding="utf-8")
+    assert "#watchlist" in redirect
     assert 'id="share"' not in account
     assert "js/fund-list.js" in account and "css/list.css" in account
     assert 'class="save"' in fund and 'data-firm="a16z"' in fund
     assert 'id="alertTog"' in fund and "Open this report to get alerts" in fund
     full_report = render_fund_page(load_local()[1]["a16z"], "../../")
     assert "out of 100" in full_report and 'id="evidence"' in full_report
+    from build import assign_list_ranks
+    _, ranked_funds = load_local()
+    assign_list_ranks(ranked_funds)
+    assert '<i>#1</i> of 11 funds' in render_fund_page(ranked_funds["a16z"], "../../")
+    assert "Top 1" not in render_fund_page(ranked_funds["a16z"], "../../")
+    assert '<i>#2</i> of 11 funds' in render_fund_page(ranked_funds["battery"], "../../")
+    assert '<i>#3</i> of 11 funds' in render_fund_page(ranked_funds["bessemer"], "../../")
+    assert '<i>#6</i> of 11 funds' in render_fund_page(ranked_funds["generalcatalyst"], "../../")
     assert "out of 100" not in fund and 'id="evidence"' not in fund
     assert "Loading the report…" in fund
     assert not (ROOT / "site" / "data" / "funds").exists()
@@ -72,13 +83,21 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert privacy.count(mailto) == 3 and privacy.count('class="ph"') == 0
     assert "Know Your Group INC." in terms and "Alex Malytskyy" not in terms
     assert terms.count(mailto) == 1 and terms.count('class="ph"') == 0
-    assert terms.count("State of Delaware, USA") == 2
+    assert terms.count("the State of Delaware") == 2
+    assert "State of Delaware, USA" not in terms
     assert ">jurisdiction<" not in terms and ">contact email<" not in terms
     assert "within 30 days of account deletion, and from backups within 90 days" in privacy
+    assert "Payments (later)" not in privacy and "once paid plans launch" not in privacy
+    assert "We never store card numbers" in privacy and "<b>Stripe</b>" in privacy
+    assert "name and website" in privacy
     assert "at most 30 days after you submit them" in privacy
     assert 'class="ph">30 days' not in privacy and 'class="ph">90 days' not in privacy
     assert "limited to the greater of USD 100 or the amount you paid us in the 12 months before the claim" in terms
-    assert "by emailing us" in terms
+    assert "delete your account yourself in Settings" in terms
+    assert "by emailing us" not in terms
+    assert "Monthly at $49" in terms and "Annual at $352.80" in terms
+    assert "Settings &gt; Billing" in terms or "Settings > Billing" in terms
+    assert "24 hours" in terms and "Stripe processes payments" in terms
     assert "account settings" not in terms
     assert 'href="../terms/#corrections"' in privacy
     assert "How are you connected?" in account
@@ -118,6 +137,8 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert 'href="../login/?mode=signup"' in scoring
     assert 'href="../account/#share">Request a correction' in scoring
     assert "How the score works." in scoring
+    assert "Plans are coming" not in scoring
+    assert "Request a correction" in scoring
     assert "−0.5 for each calendar year with at least one partner departure, up to −2" in scoring
     assert "Partner departures cost points, up to" not in scoring
     assert "Old method." not in scoring
@@ -180,12 +201,16 @@ def test_shared_list_and_auth_pages(monkeypatch):
     alerts_sql = (ROOT / "supabase" / "migrations" / "20261004220000_alert_funds.sql").read_text(encoding="utf-8")
     assert "create table public.fund_alert_settings" in alerts_sql
     assert "can_alert_fund" in alerts_sql
-    assert "Open this report to get alerts" in account_js
-    assert "set_fund_alert" in auth_js
-    assert 'id="fundAlerts"' in account
+    assert "Open this report to get alerts" in (ROOT / "src" / "js" / "fund-list.js").read_text(encoding="utf-8")
+    assert "New legal matter" in (ROOT / "src" / "js" / "fund-list.js").read_text(encoding="utf-8")
+    assert "Score change" in (ROOT / "src" / "js" / "fund-list.js").read_text(encoding="utf-8")
+    assert "set_fund_alert" in auth_js and "set_fund_alert_kind" in auth_js
+    assert 'id="fundAlerts"' not in account
+    assert 'data-v="alerts"' not in account
+    assert "v === 'alerts'" in account_js and "#watchlist" in account_js
     assert "create table public.fact_events" in (ROOT / "supabase" / "migrations" / "20261004200000_fact_events.sql").read_text(encoding="utf-8")
 
-    assert "account/#watchlist" in auth_js and "account/#alerts" in auth_js
+    assert "account/#watchlist" in auth_js and "account/#alerts" not in auth_js
     assert 'plans/">Pricing' in auth_js
     assert 'plans/">See plans' in home_js
     assert "Share / Report a VC" in auth_js

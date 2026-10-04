@@ -318,6 +318,14 @@ def test_alerts_require_an_opened_report_or_paid():
                 (ada, a16z),
             )
             assert cur.fetchone()[0] is True
+            cur.execute(
+                "select new_legal_matter, score_change from fund_alert_settings where profile_id = %s and firm_id = %s",
+                (ada, a16z),
+            )
+            assert cur.fetchone() == (True, True)
+            cur.execute("select set_fund_alert_kind('a16z', 'score_change', false)")
+            kind = cur.fetchone()[0]
+            assert kind["ok"] is True and kind["score_change"] is False and kind["new_legal_matter"] is True
             cur.execute("select set_fund_alert('battery', true)")
             still = cur.fetchone()[0]
             assert still["ok"] is False and still["reason"] == "unopened"

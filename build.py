@@ -495,8 +495,7 @@ def render_hero(fund):
     shown = esc(fund["scoreShown"])
     return (
         f'<div class="heroW">'
-        f'<button class="rankb" data-ev="rank"><i>#{esc(rank["place"])}</i>{esc(rank["tier"])} fund '
-        f'<small>of {esc(rank["of"])}</small>{example}</button>'
+        f'<button class="rankb" data-ev="rank"><i>#{esc(rank["place"])}</i> of {esc(rank["of"])} funds{example}</button>'
         f'{"".join(floats)}'
         f'<div class="hero"><div>'
         f'<button class="ringBtn" id="ringBtn" aria-label="Score {shown}. See why on the Score tab">'
@@ -546,7 +545,7 @@ def render_fund_page(fund, prefix):
     body = f'''<div class="blobs np" style="height:900px"><div class="blob" style="width:520px;height:520px;background:#CDBBFF;left:-180px;top:-120px"></div><div class="blob" style="width:460px;height:460px;background:#FFC7B8;right:-140px;top:-40px"></div><div class="blob" style="width:380px;height:380px;background:#FFEBA0;left:42%;top:420px;opacity:.35"></div></div>
 <nav class="pillnav np"><a class="logo" href="{home}"><i></i><span class="wm">regrett<em>amine</em></span></a>
  <div class="links"><a class="on" href="{home}">VCs</a><a href="{home}scoring/">Scoring</a><a href="{home}plans/">Pricing</a><a href="{home}account/#share">Report a VC</a></div>
- <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#alerts">Get alerts</a></div></nav>
+ <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#watchlist">Get alerts</a></div></nav>
 <div class="ftop"><div class="wrap">
  <div class="crumb np"><a href="{home}">← All VCs</a></div>
  <div class="fh np"><div><h1>{esc(fund["name"])} <span>{esc(fund["short"])}</span><button type="button" class="save" id="save" data-tip="Save" aria-label="Save to watchlist" aria-pressed="false">{SAVE_SVG}</button></h1>
@@ -779,7 +778,7 @@ def render_fund_shell(fund, prefix):
     body = f'''<div class="blobs np" style="height:420px"><div class="blob" style="width:520px;height:520px;background:#CDBBFF;left:-180px;top:-120px"></div><div class="blob" style="width:460px;height:460px;background:#FFC7B8;right:-140px;top:-40px"></div></div>
 <nav class="pillnav np"><a class="logo" href="{home}"><i></i><span class="wm">regrett<em>amine</em></span></a>
  <div class="links"><a class="on" href="{home}">VCs</a><a href="{home}scoring/">Scoring</a><a href="{home}plans/">Pricing</a><a href="{home}account/#share">Report a VC</a></div>
- <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#alerts">Get alerts</a></div></nav>
+ <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#watchlist">Get alerts</a></div></nav>
 <div class="ftop"><div class="wrap" id="report">
  <div class="crumb np"><a href="{home}">← All VCs</a></div>
  <div class="fh np"><div><h1>{name} <span>{short}</span><button type="button" class="save" id="save" data-tip="Save" aria-label="Save to watchlist" aria-pressed="false">{SAVE_SVG}</button></h1>
@@ -825,11 +824,26 @@ def publish_report_pages(funds):
         print(f"stored report {slug}")
 
 
+def assign_list_ranks(funds):
+    """Same order as the landing list: higher shown score first, then name."""
+    ranked = sorted(
+        funds.values(),
+        key=lambda fund: (-int(fund.get("scoreShown") or 0), fund.get("name") or ""),
+    )
+    total = len(ranked)
+    for place, fund in enumerate(ranked, start=1):
+        rank = dict(fund.get("rank") or {})
+        rank["place"] = place
+        rank["of"] = total
+        fund["rank"] = rank
+
+
 def main():
     if SITE.exists():
         shutil.rmtree(SITE)
     SITE.mkdir(parents=True)
     home, funds = load_site()
+    assign_list_ranks(funds)
     linked = [f.get("report") for f in home["funds"] if f.get("report")]
     missing = [slug for slug in linked if slug not in funds]
     if missing:
@@ -839,6 +853,17 @@ def main():
     account = (SRC / "account.html").read_text(encoding="utf-8").replace("__HOME_JSON__", embed(public))
     (SITE / "account").mkdir(parents=True, exist_ok=True)
     (SITE / "account" / "index.html").write_text(account, encoding="utf-8")
+    alerts = SITE / "account" / "alerts" / "index.html"
+    alerts.parent.mkdir(parents=True, exist_ok=True)
+    alerts.write_text(
+        '<!doctype html><html lang="en"><head><meta charset="utf-8">'
+        '<meta http-equiv="refresh" content="0;url=../#watchlist">'
+        '<link rel="canonical" href="../#watchlist">'
+        '<title>Watchlist · Regrettamine</title>'
+        '<script>location.replace("../#watchlist")</script></head>'
+        '<body><p><a href="../#watchlist">Watchlist</a></p></body></html>\n',
+        encoding="utf-8",
+    )
     build_shell("login.html", SITE / "login" / "index.html")
     build_shell("reset.html", SITE / "login" / "reset" / "index.html")
     build_legal("privacy.html", SITE / "privacy" / "index.html")

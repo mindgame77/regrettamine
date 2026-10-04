@@ -10,33 +10,16 @@
 <div class="blobs" style="height:420px"><div class="blob" style="width:420px;height:420px;background:#CDBBFF;left:-160px;top:-180px"></div><div class="blob" style="width:380px;height:380px;background:#FFC7B8;right:-140px;top:-160px"></div></div>
 <nav class="pillnav"><a class="logo" href="../"><i></i><span class="wm">regrett<em>amine</em></span></a>
  <div class="links"><a href="../">VCs</a><a href="../scoring/">Scoring</a><a href="../plans/">Pricing</a><a href="../account/#share">Report a VC</a></div>
- <div class="r" id="navSlot"><a class="b w" href="../login/">Log in</a><a class="b v" href="#alerts">Get alerts</a></div></nav>
+ <div class="r" id="navSlot"><a class="b w" href="../login/">Log in</a><a class="b v" href="#watchlist">Get alerts</a></div></nav>
 <main class="wrap"><div class="acc">
 <aside class="anav">
  <a href="#watchlist" data-v="watchlist"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14l-6-4.2L6 20z"/></svg>Watchlist</a>
- <a href="#alerts" data-v="alerts"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0112 0v5l1.5 2h-15zM10 20.5a2 2 0 004 0"/></svg>Alerts<em id="alertCount" hidden>0</em></a>
  <a href="#share" data-v="share"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19.5l1-4L16 5.5a2.1 2.1 0 013 3L9 18.5zM14 7.5l3 3"/></svg>Share experience</a>
 </aside>
 <div>
 <section id="watchlist" class="view" data-view="watchlist">
  <div class="vh"><h1>Watchlist</h1>
   <div class="addwrap"><label class="sinput add"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8C88A3" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><input id="addFund" placeholder="Add a fund" autocomplete="off"></label><div class="adds" id="addList" hidden></div></div>
- </div>
- <div id="wlOut"></div>
-</section>
-<section id="alerts" class="view" data-view="alerts">
- <div class="vh"><h1>Alerts</h1><button type="button" class="mark-read" id="markRead">Mark all read</button></div>
- <div class="two">
-  <div class="card alert-feed" id="alertFeed"></div>
-  <aside class="card prefs"><h3>Email me</h3>
-   <div class="tog" data-pref="new_legal_matter"><span>New legal matter</span><span class="sw2"></span></div>
-   <div class="tog" data-pref="regulatory_record"><span>Regulatory record</span><span class="sw2"></span></div>
-   <div class="tog" data-pref="partner_exit"><span>Partner exit</span><span class="sw2"></span></div>
-   <div class="tog" data-pref="score_change"><span>Score change</span><span class="sw2"></span></div>
-   <p class="fnote" id="prefNote">Only for funds with alerts on. Email sending comes later.</p>
-   <h3>Fund alerts</h3>
-   <div id="fundAlerts"></div>
-  </aside>
  </div>
 </section>
 <section class="view" data-view="share">
@@ -66,7 +49,9 @@
   <div class="bar2"><div class="tog on" id="anonTog"><span><b>Post anonymously</b><small id="anonHint">Shown as "Founder, Seed"</small></span><span class="sw2"></span></div><button class="b c" type="submit">Submit review</button></div>
  </form>
 </section>
-</div></div></main>
+</div></div>
+<div id="wlOut" class="wlboard"></div>
+</main>
 <footer><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regrett<em>amine</em></span></span><span>regrettamine.com</span><span style="margin-left:auto"><a href="../scoring/">Scoring</a> · <a href="../privacy/">Privacy</a> · <a href="../terms/">Terms</a></span></div></footer>
 <script id="home-data" type="application/json">__HOME_JSON__</script>
 <script src="../js/supabase-config.js"></script>

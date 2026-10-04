@@ -111,21 +111,22 @@
       paintPayFail('');
       return;
     }
-    paintPayFail('We couldn\'t charge your card. Update it within 24 hours or your account moves to the free plan.');
+    paintPayFail(data.lapsed
+      ? 'Your payment didn\'t go through, so you\'re on the free plan now. Update your card to restore access.'
+      : 'We couldn\'t charge your card. Update it within 24 hours or your account moves to the free plan.');
   }
   function paintNav(person) {
     const slot = document.getElementById('navSlot');
     if (!slot) return;
     const base = root();
     if (!person) {
-      slot.innerHTML = '<a class="b w" href="' + base + 'login/">Log in</a><a class="b v" href="' + base + 'account/#alerts">Get alerts</a>';
+      slot.innerHTML = '<a class="b w" href="' + base + 'login/">Log in</a><a class="b v" href="' + base + 'account/#watchlist">Get alerts</a>';
       return;
     }
     slot.innerHTML = '<div class="av" id="av"><i>' + esc(initials(person)) + '</i>' + esc(label(person))
       + '<svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke="#8C88A3" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>'
       + '<div class="menu"><small>' + esc(person.email || '') + '</small>'
       + '<a href="' + base + 'account/#watchlist">Watchlist</a>'
-      + '<a href="' + base + 'account/#alerts">Alerts</a>'
       + '<a href="' + base + 'plans/">Pricing</a>'
       + '<a href="' + base + 'account/#share">Share / Report a VC</a>'
       + '<a href="' + base + 'settings/#account">Settings</a>'
@@ -154,9 +155,9 @@
     else btn.removeAttribute('aria-disabled');
   }
   function paintOneAlert(tog, on, locked) {
-    tog.classList.toggle('on', !!on && !locked);
+    tog.classList.toggle('on', !!on);
     tog.classList.toggle('off', !!locked);
-    tog.setAttribute('aria-checked', on && !locked ? 'true' : 'false');
+    tog.setAttribute('aria-checked', on ? 'true' : 'false');
     if (locked) tog.setAttribute('aria-disabled', 'true');
     else tog.removeAttribute('aria-disabled');
   }
@@ -170,7 +171,7 @@
       const opened = alerts.opened.has(slug) || (await seen()).has(slug);
       locked = !opened;
     }
-    const on = !!(slug && alerts.slugs.has(slug));
+    const on = !!(slug && watch.slugs.has(slug));
     paintOneAlert(tog, on, locked);
     if (note) note.hidden = !locked;
   }
@@ -301,6 +302,19 @@
       if (data.on) watch.slugs.add(slug);
       await refreshAlerts();
     }
+    return data || { error: 'Could not update alerts' };
+  }
+  async function setFundAlertKind(slug, kind, on) {
+    if (!user) return { needAuth: true };
+    const clientNow = sb();
+    if (!clientNow) return { error: 'Sign-in is not configured on this build.' };
+    const { data, error } = await clientNow.rpc('set_fund_alert_kind', {
+      p_slug: slug,
+      p_kind: kind,
+      p_on: !!on
+    });
+    if (error) return { error: error.message };
+    if (data && data.ok) await refreshAlerts();
     return data || { error: 'Could not update alerts' };
   }
 
@@ -553,15 +567,15 @@
       const slug = alertTog.dataset.alert || document.body.dataset.firm;
       if (!user) { setMode('login', false); return; }
       if (alertTog.classList.contains('off') || alertTog.getAttribute('aria-disabled') === 'true') return;
-      const next = !alertTog.classList.contains('on');
-      const result = await setFundAlert(slug, next);
-      if (result && result.reason === 'unopened') {
-        alertTog.classList.add('off');
-        alertTog.setAttribute('aria-disabled', 'true');
-        const note = alertTog.parentElement && alertTog.parentElement.querySelector('.fnote');
-        if (note) note.hidden = false;
+      if (watch.slugs.has(slug)) {
+        await removeWatch(slug);
+      } else {
+        const saved = await addWatch(slug);
+        if (saved && (saved.saved || watch.slugs.has(slug))) await setFundAlert(slug, true);
+        if (saved && saved.full && watch.slugs.size >= 100) paintSave();
       }
       await paintAlert();
+      paintSave();
       listeners.forEach(fn => fn(user));
       return;
     }
@@ -680,7 +694,7 @@
     get user() { return user; },
     get tier() { return tier; },
     confirmed, capFor, anonState, seen, record, touch, firmId, firmMap,
-    addWatch, removeWatch, refreshWatch, refreshAlerts, setFundAlert, landingFunds, loadReport,
+    addWatch, removeWatch, refreshWatch, refreshAlerts, setFundAlert, setFundAlertKind, landingFunds, loadReport,
     refreshProfile, paintNav: function () { paintNav(user); }, paintPayFail, authError, openBillingPortal,
     onChange(fn) { listeners.push(fn); }
   };
