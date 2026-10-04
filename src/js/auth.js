@@ -33,6 +33,7 @@
   }
   let tier = 'visitor';
   let profileName = '';
+  let profileGen = 0;
   const alerts = { slugs: new Set(), opened: new Set(), rows: [] };
   function capFor(person) {
     if (tier === 'paid') return Infinity;
@@ -73,10 +74,14 @@
     return (person.email || 'You').split('@')[0];
   }
   async function refreshProfile() {
-    profileName = '';
+    const gen = ++profileGen;
     const clientNow = sb();
-    if (!user || !clientNow) return;
+    if (!user || !clientNow) {
+      if (gen === profileGen) profileName = '';
+      return;
+    }
     const { data } = await clientNow.from('profiles').select('display_name').eq('id', user.id).maybeSingle();
+    if (gen !== profileGen) return;
     profileName = (data && data.display_name) || '';
   }
   function paintPayFail(notice) {

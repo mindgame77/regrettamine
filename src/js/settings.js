@@ -210,8 +210,8 @@
     }
     paintAuth(Regret.user);
     const { data } = await Regret.sb().from('profiles').select('display_name, website').eq('id', Regret.user.id).maybeSingle();
-    $('nameIn').value = (data && data.display_name) || '';
-    $('siteIn').value = (data && data.website) || '';
+    if (document.activeElement !== $('nameIn')) $('nameIn').value = (data && data.display_name) || '';
+    if (document.activeElement !== $('siteIn')) $('siteIn').value = (data && data.website) || '';
     const billing = await Regret.sb().rpc('my_billing');
     paintBilling(billing.data || { plan: Regret.tier === 'paid' ? 'Paid' : 'Free' });
   });
