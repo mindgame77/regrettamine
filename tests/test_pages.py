@@ -93,7 +93,7 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert 'href="../account/#share">Request a correction' in how
     assert "−0.5 for each calendar year with at least one partner departure, up to −2" in scoring
     assert "Partner departures cost points, up to" not in scoring
-    assert "Old method." in scoring
+    assert "Old method." not in scoring
     assert "95.4" in scoring and "coverage 39%" in scoring
     assert 'class="stk"' in scoring and 'class="scbs"' in scoring
     assert 'href="../vc/a16z/"' in scoring
