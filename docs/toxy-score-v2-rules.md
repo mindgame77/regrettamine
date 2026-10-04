@@ -38,7 +38,7 @@ Extra deduction: −3 per case where the fund lost or fraud was found, applied e
 | Media reach (capped) | 6 | Social posts about its companies, a YouTube channel, a podcast, its own media |
 | Help after the check | 5.5 | Platform team, recruiting help, customer intros, partner stability |
 
-Claims the fund makes about itself count at half until founders confirm them. Partner departures cost −0.5 each, up to −2.
+Claims the fund makes about itself count at half until founders confirm them. Partner departures cost −0.5 for each calendar year with at least one departure, up to −2 in total.
 
 ### 3. Founder experience (17.5 points)
 Only first-hand accounts count, from a founder or a named ex-executive. Anonymous gossip does not count.

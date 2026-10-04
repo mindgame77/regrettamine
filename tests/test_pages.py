@@ -71,6 +71,61 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "FundList.ring" in account_js and "connection_type" in account_js
     assert "first_hand" not in account_js and "verification_status" not in account_js
 
+    auth_css = (ROOT / "src" / "css" / "auth.css").read_text(encoding="utf-8")
+    assert ".auth .pw2-row{display:none}" in auth_css
+    assert ".auth[data-mode=signup] .pw2-row,.auth[data-mode=reset] .pw2-row{display:flex}" in auth_css
+    assert ".auth[data-mode=reset] .email-row{display:none}" in auth_css
+    assert ".auth[data-mode=forgot] .pw-row" in auth_css
+    assert auth_js.count("Those passwords don\\'t match.") == 2
+    assert 'id="authPassword2"' in auth_js
+    assert "Confirm password" in auth_js
+
+    how = (ROOT / "site" / "how" / "index.html").read_text(encoding="utf-8")
+    scoring = (ROOT / "site" / "scoring" / "index.html").read_text(encoding="utf-8")
+    assert "Court dockets, regulator filings, press and founder reviews" not in how
+    assert "We pull the public record." in how
+    assert "It counts only if it links, names the fund and shows its role." in how
+    assert "0 to 100, higher is safer, from published rules." in how
+    assert "Read the report, save the fund, get alerts when it changes." in how
+    assert "What we check" in how
+    assert 'href="../scoring/">How scoring works' in how
+    assert 'href="../login/?mode=signup"' in how
+    assert 'href="../account/#share">Request a correction' in how
+    assert "−0.5 for each calendar year with at least one partner departure, up to −2" in scoring
+    assert "Partner departures cost points, up to" not in scoring
+    assert "Old method." in scoring
+    assert "95.4" in scoring and "coverage 39%" in scoring
+    assert 'class="stk"' in scoring and 'class="scbs"' in scoring
+    assert 'href="../vc/a16z/"' in scoring
+    assert "__SCORE_EXAMPLE__" not in scoring
+
+    linked = {
+        "index": ("how/", "scoring/", "account/#share"),
+        "account": ("../how/", "../scoring/", "../account/#share"),
+        "fund": ("../../how/", "../../scoring/", "../../account/#share"),
+        "login": (None, "../scoring/", "../account/#share"),
+        "reset": (None, "../../scoring/", "../../account/#share"),
+        "privacy": ("../how/", "../scoring/", "../account/#share"),
+        "terms": ("../how/", "../scoring/", "../account/#share"),
+        "how": ("../how/", "../scoring/", "../account/#share"),
+        "scoring": ("../how/", "../scoring/", "../account/#share"),
+    }
+    pages = {
+        "index": index, "account": account, "fund": fund, "login": login, "reset": reset,
+        "privacy": privacy, "terms": terms, "how": how, "scoring": scoring,
+    }
+    for name, html in pages.items():
+        how_href, scoring_href, share_href = linked[name]
+        assert f'href="{scoring_href}">Scoring' in html, name
+        assert f'href="{share_href}">Corrections' in html, name
+        assert 'href="#">How it works' not in html, name
+        assert 'href="#">Scoring' not in html, name
+        if how_href:
+            assert f'href="{how_href}">How it works' in html, name
+        if "Report a VC" in html:
+            assert f'href="{share_href}">Report a VC' in html, name
+            assert 'href="#">Report a VC' not in html, name
+
 
 def test_legal_config_values():
     from build import legal_html

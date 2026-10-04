@@ -353,6 +353,7 @@
     }
     if (password.length < 6) { msg('Use at least 6 characters.'); return; }
     if (mode === 'signup') {
+      if (password !== password2) { msg('Those passwords don\'t match.'); return; }
       const { data, error } = await clientNow.auth.signUp({
         email: email,
         password: password,

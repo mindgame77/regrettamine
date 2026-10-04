@@ -61,3 +61,19 @@ def test_young_fund_age_default_and_cap():
     assert banned["sections"]["pen"] == Decimal("-50")
     assert banned["total"] == Decimal("47.9")
     assert banned["sanctions_banner"] is True
+
+
+def test_partner_departures_count_per_year_capped():
+    import copy
+    from regrettamine.score_v2 import A16Z_SCORE_INPUTS, score_v2
+
+    def with_years(n):
+        rows = copy.deepcopy(A16Z_SCORE_INPUTS)
+        for r in rows:
+            if r["name"] == "partner_departure_years":
+                r["value_numeric"] = n
+        return score_v2(rows)["total"]
+
+    assert with_years(1) == Decimal("95.4")
+    assert with_years(0) - with_years(1) == Decimal("0.5")
+    assert with_years(4) == with_years(9)

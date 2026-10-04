@@ -46,7 +46,7 @@ A16Z_SCORE_INPUTS = [
     {"section_code": "s2", "name": "help_platform", "value_numeric": 1, "max_numeric": 2},
     {"section_code": "s2", "name": "help_intros", "value_numeric": Decimal("0.75"), "max_numeric": Decimal("1.5")},
     {"section_code": "s2", "name": "help_stability", "value_numeric": 2, "max_numeric": 2},
-    {"section_code": "s2", "name": "partner_departures", "value_numeric": 1},
+    {"section_code": "s2", "name": "partner_departure_years", "value_numeric": 1},
     {"section_code": "s3", "name": "portfolio_companies", "value_numeric": 1456},
     {"section_code": "s3", "name": "fund_age_years", "value_numeric": 16},
     {"section_code": "s3", "name": "negative_first_hand", "value_numeric": 2},
@@ -131,7 +131,10 @@ def _section_support(inputs):
     money = min(Decimal("6"), max(Decimal("0"), money))
     media = min(Decimal("6"), max(Decimal("0"), _num(rows, "media_points")))
     # help_platform and help_intros are already at half when the only source is the fund.
-    deduction = min(Decimal("2"), Decimal("0.5") * _num(rows, "partner_departures"))
+    # −0.5 per calendar year with any partner departure, capped at −2.
+    # "partner_departures" is the old input name; it already held a year count.
+    years = _num(rows, "partner_departure_years") if "partner_departure_years" in rows else _num(rows, "partner_departures")
+    deduction = min(Decimal("2"), Decimal("0.5") * years)
     stability = max(Decimal("0"), _num(rows, "help_stability") - deduction)
     help_score = _num(rows, "help_platform") + _num(rows, "help_intros") + stability
     help_score = min(Decimal("5.5"), max(Decimal("0"), help_score))

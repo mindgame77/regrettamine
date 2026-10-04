@@ -1,6 +1,6 @@
 /* Privacy and Terms. Layout only; the page shell lives in common.css. */
 .lhero{position:relative;z-index:1;padding:56px 0 8px}
-.lhero .kick{display:inline-flex;font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--vio);background:var(--viobg);border-radius:999px;padding:4px 12px}
+.lhero .kick{display:inline-flex;font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--vio);background:var(--viobg);border-radius:999px;padding:4px 12px;border:0}
 .lhero h1{font-size:56px;line-height:1;font-weight:800;margin:14px 0 12px}
 .lhero p{font-size:18px;color:var(--ink2);max-width:680px}
 .lhero .eff{margin-top:12px;font-size:14px;color:var(--mute)}

@@ -1,0 +1,38 @@
+/* Layout glue for /how/ and /scoring/. Loaded only on those pages.
+   Score bars, the legal hero and table, the stats strip, and the account meter stay in their own files. */
+body{background:#fff}
+table.dt{display:table;height:auto;border-radius:0;color:inherit;font-weight:400;place-items:normal}
+table.dt td.pt{display:table-cell;font-family:'Bricolage Grotesque';font-weight:800;color:var(--ink);white-space:nowrap;width:1%;text-align:right}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.card2{background:#fff;border:1.5px solid var(--line);border-radius:22px;padding:20px 22px}
+.card2 h3{font-family:'Bricolage Grotesque';font-size:20px;font-weight:800;letter-spacing:-.02em;margin-bottom:4px;display:flex;align-items:center;gap:10px}
+.card2 h3 em{font-style:normal;margin-left:auto;font-size:15px;color:var(--vio)}
+.card2 p,.card2 li{font-size:14.5px;color:var(--ink2);line-height:1.55}
+.card2 ul{padding-left:18px;margin-top:6px}
+.card2 li{margin:3px 0}
+.card2 table.dt{margin-top:10px}
+.card2 table.dt td:first-child{width:auto;font-weight:500}
+.card2 table.dt th:last-child{text-align:right}
+.card2 table.dt td{padding:8px 10px}
+.mas{display:block;columns:2;column-gap:16px}
+.mas .card2{break-inside:avoid;margin-bottom:16px;display:block}
+.stats{margin:8px 0 0}
+.stats.s6{grid-template-columns:repeat(6,1fr)}
+.formula{margin-top:14px;font-size:15px;color:var(--ink2)}
+.formula b{color:var(--ink)}
+.tkg.k4{grid-template-columns:repeat(4,1fr)}
+.tkg.k4 .tkc{cursor:default}
+.tkg.k4 .tkc:hover{transform:none;box-shadow:none}
+.tkc .lnk{margin-top:auto;padding-top:10px}
+.exh{display:flex;align-items:center;gap:22px;margin-bottom:18px}
+.exh .big{font-family:'Bricolage Grotesque';font-weight:800;font-size:44px;line-height:1;letter-spacing:-.03em}
+.exh .big small{font-size:15px;color:var(--mute);font-weight:600;margin-left:8px;letter-spacing:0}
+.ex .wr,.ex .sm2,.ex .note{display:none}
+.banner{margin-top:16px;max-width:none}
+.card.meter{margin-bottom:0}
+@media(max-width:900px){
+  .tkg.k4,.stats.s6,.cols{grid-template-columns:1fr}
+  .mas{columns:1}
+  .exh{flex-direction:column;align-items:stretch}
+  .ex .scbs{grid-template-columns:1fr}
+}
