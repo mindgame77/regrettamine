@@ -71,8 +71,9 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "Know Your Group INC." in privacy and "Alex Malytskyy" not in privacy
     assert privacy.count(mailto) == 3 and privacy.count('class="ph"') == 0
     assert "Know Your Group INC." in terms and "Alex Malytskyy" not in terms
-    assert terms.count(mailto) == 1 and terms.count('class="ph"') == 2
-    assert ">jurisdiction<" in terms and ">contact email<" not in terms
+    assert terms.count(mailto) == 1 and terms.count('class="ph"') == 0
+    assert terms.count("State of Delaware, USA") == 2
+    assert ">jurisdiction<" not in terms and ">contact email<" not in terms
     assert "within 30 days of account deletion, and from backups within 90 days" in privacy
     assert "at most 30 days after you submit them" in privacy
     assert 'class="ph">30 days' not in privacy and 'class="ph">90 days' not in privacy
