@@ -1,0 +1,22 @@
+Custom SMTP is not turned on. The built-in Supabase mailer is what returns
+"email rate limit exceeded". Switch it on in the Supabase dashboard after a
+Resend account exists. Do not commit the API key.
+
+Authentication → Emails → SMTP Settings
+  Enable custom SMTP
+  Host: smtp.resend.com
+  Port: 465
+  Username: resend
+  Password: the Resend API key
+  Sender email: noreply@<the domain verified in Resend>
+  Sender name: Regrettamine
+
+Authentication → Emails → Templates
+  Confirm signup:     supabase/templates/confirmation.html
+    Subject: Confirm your Regrettamine account
+  Reset password:     supabase/templates/recovery.html
+    Subject: Reset your Regrettamine password
+  Change email:       supabase/templates/email_change.html
+    Subject: Confirm your new email for Regrettamine
+
+The Resend domain has to be verified before messages will send.

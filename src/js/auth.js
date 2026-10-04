@@ -356,11 +356,19 @@
     bindCard(veil.querySelector('.auth'));
     return veil.querySelector('.auth');
   }
+  function authError(text) {
+    const raw = String(text || '');
+    if (/email rate limit exceeded|over_email_send_rate_limit/i.test(raw)) {
+      return 'Too many sign-ups right now, try again in a few minutes';
+    }
+    return raw;
+  }
   function msg(text, ok) {
+    const shown = ok ? text : authError(text);
     const err = document.getElementById('authErr');
     const good = document.getElementById('authOk');
-    if (err) { err.hidden = !text || !!ok; err.textContent = ok ? '' : (text || ''); }
-    if (good) { good.hidden = !text || !ok; good.textContent = ok ? text : ''; }
+    if (err) { err.hidden = !shown || !!ok; err.textContent = ok ? '' : (shown || ''); }
+    if (good) { good.hidden = !shown || !ok; good.textContent = ok ? shown : ''; }
   }
   function setMode(mode, gate) {
     const card = ensureCard();
@@ -654,7 +662,7 @@
     get tier() { return tier; },
     confirmed, capFor, anonState, seen, record, touch, firmId, firmMap,
     addWatch, removeWatch, refreshWatch, refreshAlerts, setFundAlert, landingFunds, loadReport,
-    refreshProfile, paintNav: function () { paintNav(user); }, paintPayFail,
+    refreshProfile, paintNav: function () { paintNav(user); }, paintPayFail, authError,
     onChange(fn) { listeners.push(fn); }
   };
   global.RegretAuth = { open: setMode, close, setMode };

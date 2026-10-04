@@ -84,5 +84,34 @@ Deno.serve(async (req: Request) => {
     const detail = await applied.text();
     return json(500, { error: "event was not applied", detail: detail.slice(0, 300) });
   }
+
+  let result: { cancel_at_period_end?: unknown } = {};
+  try {
+    result = await applied.json();
+  } catch (_err) {
+    result = {};
+  }
+  const cancelIds = Array.isArray(result.cancel_at_period_end) ? result.cancel_at_period_end : [];
+  if (cancelIds.length) {
+    const keyRes = await fetch(
+      `${url}/rest/v1/app_secrets?key=eq.stripe_secret_key&select=value`,
+      { headers: { apikey: key, Authorization: `Bearer ${key}` } },
+    );
+    const keyRows = keyRes.ok ? await keyRes.json() : [];
+    const stripeKey = Array.isArray(keyRows) && keyRows[0] && keyRows[0].value;
+    if (stripeKey) {
+      for (const id of cancelIds) {
+        if (typeof id !== "string" || !id.startsWith("sub_")) continue;
+        await fetch(`https://api.stripe.com/v1/subscriptions/${encodeURIComponent(id)}`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${stripeKey}`,
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: "cancel_at_period_end=true",
+        });
+      }
+    }
+  }
   return json(200, { received: true });
 });

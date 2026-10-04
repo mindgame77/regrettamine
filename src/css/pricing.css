@@ -14,6 +14,7 @@
 .bill{font-size:14px;color:var(--mute);margin-top:8px;min-height:22px}
 .bill s{margin-left:6px;color:#ABA7BF}
 .pbtn{width:100%;justify-content:center;height:52px;margin-top:24px;font-size:16px}
+.pbtn:disabled{opacity:.55;cursor:not-allowed;box-shadow:none}
 .feat{list-style:none;margin:24px 0 0;padding:24px 0 0;border-top:1.5px solid var(--line);display:flex;flex-direction:column;gap:12px}
 .feat li{display:flex;gap:10px;font-size:15px;line-height:1.4;color:var(--ink)}
 .feat i{flex:none;width:24px;height:24px;border-radius:50%;background:var(--viobg);color:var(--vio);display:grid;place-items:center;margin-top:-1px}
