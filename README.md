@@ -2,7 +2,7 @@
 
 Founder tool for background-checking a VC fund before taking their money. This repo is the static site for [regrettamine.com](https://regrettamine.com): the fund list at `/` and the Andreessen Horowitz report at `/vc/a16z/`.
 
-The pages are plain HTML, CSS, and JavaScript. `build.py` turns either the JSON in `data/` or a Supabase Postgres database into the site. Login, alerts, registration, and the paywall are not built. Those buttons are visual only. The database has the tables the gate will use later (`profiles`, `report_views`, `gating_policies`: 2 free reports, then 5 more after register).
+The pages are plain HTML, CSS, and JavaScript. `build.py` turns either the JSON in `data/` or a Supabase Postgres database into the site. Login is Google or email and password (`/login/`). A free account is at `/account/` (watchlist, alerts, report history, share experience). Anonymous visitors get 2 reports, an account gets 5 more, then a plans placeholder with no prices and no checkout. Watchlist and history use the same fund list as the homepage.
 
 ## Run it locally
 
@@ -47,7 +47,7 @@ The model is `docs/data-model.md`. A **firm** is the management company (the `/v
 One-time setup:
 
 1. Create a free project at [supabase.com](https://supabase.com).
-2. In the SQL editor, run the files in `supabase/migrations/` in name order (`20261004120000_schema.sql`, then `20261004120100_rls.sql`). Or, with the database URL from **Project Settings → Database**:
+2. In the SQL editor, run the files in `supabase/migrations/` in name order (`20261004120000_schema.sql`, `20261004120100_rls.sql`, then `20261004140000_auth_account.sql`). Or, with the database URL from **Project Settings → Database**:
 
    ```bash
    pip install -r requirements-dev.txt
@@ -55,14 +55,29 @@ One-time setup:
    DATABASE_URL="…" python3 scripts/seed.py
    ```
 
-   `seed.py` loads the 11 list rows and the full a16z report from `data/`. It replaces those content tables. It does not invent vehicles, portfolio companies, or reviews. It does not load `templates/csv/`.
+   `seed.py` loads the 11 list rows and the full a16z report from `data/`. It replaces those content tables. It does not invent vehicles, portfolio companies, reviews, or users. It does not load `templates/csv/`. The account migration adds the signup trigger, the watchlist cap, alert preferences, and the rule that a founder review stays hidden until it is approved.
+
 3. **Project Settings → API**: copy the project URL and the `anon` public key.
 4. GitHub → this repo → **Settings → Secrets and variables → Actions**. Add:
    - `SUPABASE_URL` — the project URL
    - `SUPABASE_ANON_KEY` — the publishable key (`sb_publishable_...`) is recommended. The legacy anon JWT also works. Both were tested against the live project and the build matched the JSON output. `SUPABASE_URL` and `SUPABASE_ANON_KEY` are set on this repo.
 5. Re-run **Deploy to GitHub Pages** (or push to `main`). The workflow passes the secrets into `build.py`. If either secret is missing, the workflow keeps building from `data/`.
 
-Anon can read published firms only. Writes in the Table Editor use the logged-in dashboard role, which bypasses row-level security. The anon key cannot insert or update.
+Anon can read published firms only. A signed-in person can insert their own watchlist rows, alert preferences, report views, and pending reviews. Writes in the Table Editor use the logged-in dashboard role, which bypasses row-level security. The anon key cannot insert or update content.
+
+### Auth in the Supabase dashboard
+
+The site talks to Supabase Auth from the browser (`@supabase/supabase-js` on a CDN). `build.py` writes `site/js/supabase-config.js` from `SUPABASE_URL` and `SUPABASE_ANON_KEY`. Only the publishable key is embedded.
+
+In the Supabase dashboard for this project:
+
+1. **Authentication → Providers → Google**: turn it on. Create an OAuth client in Google Cloud (authorized redirect `https://<project-ref>.supabase.co/auth/v1/callback`) and paste the Client ID and Client secret. Leave GitHub off. Leave magic link / email OTP off. Email + password stays on.
+2. **Authentication → URL configuration**
+   - Site URL: `https://mindgame77.github.io/regrettamine/`
+   - Redirect URLs: `https://mindgame77.github.io/regrettamine/` and `https://mindgame77.github.io/regrettamine/login/reset/`
+3. If **Confirm email** is on, the extra 5 reports stay locked until the person confirms. Google accounts are already confirmed.
+
+No Stripe and no prices. The plans card says the price is not set.
 
 ### Add or edit a firm
 

@@ -23,6 +23,7 @@ SITE = ROOT / "site"
 
 EXT_SVG = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3H3.5A.5.5 0 0 0 3 3.5v9a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V10M9 3h4v4M13 3 7.5 8.5"/></svg>'
 OPEN_SVG = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h4v4M13 3 7.5 8.5"/></svg>'
+SAVE_SVG = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14l-6-4.2L6 20z"/></svg>'
 SENT_LABEL = {"pos": "Positive", "neu": "Neutral", "neg": "Negative"}
 PAGE_SIZE = 24
 LIST_CAP = 8
@@ -531,10 +532,10 @@ def render_fund_page(fund, prefix):
     body = f'''<div class="blobs np" style="height:900px"><div class="blob" style="width:520px;height:520px;background:#CDBBFF;left:-180px;top:-120px"></div><div class="blob" style="width:460px;height:460px;background:#FFC7B8;right:-140px;top:-40px"></div><div class="blob" style="width:380px;height:380px;background:#FFEBA0;left:42%;top:420px;opacity:.35"></div></div>
 <nav class="pillnav np"><a class="logo" href="{home}"><i></i><span class="wm">regrett<em>amine</em></span></a>
  <div class="links"><a class="on" href="{home}">VCs</a><a href="#">How it works</a><a href="#">Scoring</a></div>
- <div class="r"><a class="b w" href="#">Log in</a><a class="b v" href="#">Get alerts</a></div></nav>
+ <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#alerts">Get alerts</a></div></nav>
 <div class="ftop"><div class="wrap">
  <div class="crumb np"><a href="{home}">← All VCs</a></div>
- <div class="fh np"><div><h1>{esc(fund["name"])} <span>{esc(fund["short"])}</span></h1>
+ <div class="fh np"><div><h1>{esc(fund["name"])} <span>{esc(fund["short"])}</span><button type="button" class="save" id="save" data-tip="Save" aria-label="Save to watchlist" aria-pressed="false">{SAVE_SVG}</button></h1>
   <div class="meta">{"".join(meta)}</div></div>
   <div class="upd">Updated {esc(fund["updated"])}<br>{esc(fund["method"])}</div></div>
  <div class="np">{render_hero(fund)}</div>
@@ -559,6 +560,10 @@ def render_fund_page(fund, prefix):
         f'<script id="evidence" type="application/json">{embed(fund["evidence"])}</script>\n'
         f'<script id="ask-copy" type="application/json">{embed(fund["ask"]["clipboard"])}</script>\n'
         f'{extra}'
+        f'<script src="{prefix}js/supabase-config.js"></script>'
+        f'<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>'
+        f'<script src="{prefix}js/auth.js"></script>'
+        f'<script src="{prefix}js/gate.js"></script>'
         f'<script src="{prefix}js/fund.js"></script>'
     )
     page = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -566,7 +571,9 @@ def render_fund_page(fund, prefix):
 <link rel="icon" href="{prefix}assets/favicon.svg">
 <link rel="stylesheet" href="{prefix}css/common.css">
 <link rel="stylesheet" href="{prefix}css/fund.css">
-</head><body>
+<link rel="stylesheet" href="{prefix}css/auth.css">
+<meta name="regret-root" content="{prefix}">
+</head><body data-firm="{esc(fund["slug"])}" data-report="1">
 {body}{scripts}</body></html>
 '''
     referenced = set()
@@ -584,6 +591,24 @@ def build_home(home):
     if "__HOME_JSON__" not in raw:
         raise SystemExit("src/home.html is missing the __HOME_JSON__ placeholder")
     return raw.replace("__HOME_JSON__", embed(home))
+
+
+def write_config():
+    url = os.environ.get("SUPABASE_URL", "").strip()
+    key = os.environ.get("SUPABASE_ANON_KEY", "").strip()
+    payload = {"url": url, "key": key}
+    (SITE / "js" / "supabase-config.js").write_text(
+        "window.REGRET_CONFIG=" + json.dumps(payload) + ";\n",
+        encoding="utf-8",
+    )
+
+
+def build_shell(name, dest):
+    raw = (SRC / name).read_text(encoding="utf-8")
+    if "__HOME_JSON__" in raw:
+        raise SystemExit(f"{name} should not carry fund data")
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(raw, encoding="utf-8")
 
 
 def copy_static():
@@ -639,6 +664,11 @@ def main():
     if missing:
         raise SystemExit("home.json links reports that have no data file: " + ", ".join(missing))
     (SITE / "index.html").write_text(build_home(home), encoding="utf-8")
+    account = (SRC / "account.html").read_text(encoding="utf-8").replace("__HOME_JSON__", embed(home))
+    (SITE / "account").mkdir(parents=True, exist_ok=True)
+    (SITE / "account" / "index.html").write_text(account, encoding="utf-8")
+    build_shell("login.html", SITE / "login" / "index.html")
+    build_shell("reset.html", SITE / "login" / "reset" / "index.html")
     for slug, fund in funds.items():
         dest = SITE / "vc" / slug / "index.html"
         dest.parent.mkdir(parents=True, exist_ok=True)
@@ -646,6 +676,7 @@ def main():
         dest.write_text(render_fund_page(fund, "../../"), encoding="utf-8")
         print(f"built /vc/{slug}/")
     copy_static()
+    write_config()
     print(f"built {SITE} ({len(list(SITE.rglob('*')))} files)")
 
 

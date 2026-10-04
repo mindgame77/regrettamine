@@ -1,0 +1,74 @@
+/* Login card, gate modal, and the signed-in avatar. Matches the approved auth mockup. */
+.auth-veil{position:fixed;inset:0;z-index:40;backdrop-filter:blur(7px) saturate(1.1);-webkit-backdrop-filter:blur(7px) saturate(1.1);background:rgba(250,248,255,.55);display:grid;place-items:center;padding:24px}
+.auth-veil[hidden]{display:none}
+.auth{position:relative;width:min(440px,100%);background:#fff;border:1.5px solid var(--line);border-radius:28px;padding:36px 36px 26px;box-shadow:0 40px 80px -30px rgba(60,40,140,.45);text-align:center}
+.auth .x{position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:var(--mute);cursor:pointer;background:transparent;border:0;padding:0}
+.auth .x:hover{background:var(--viobg);color:var(--vio)}
+.dots{display:flex;justify-content:center;align-items:center;gap:6px;margin-bottom:18px}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--line);font-style:normal}
+.dots i.used{background:var(--ink)}
+.dots i.more{background:var(--viobg);border:2px solid var(--vio2)}
+.dots b{margin-left:6px;font-size:12px;font-weight:700;color:var(--vio);background:var(--viobg);border-radius:999px;padding:2px 9px}
+.auth h2{font-size:31px;line-height:1.05;font-weight:800;margin-bottom:10px}
+.auth .sub{font-size:15px;color:var(--ink2);margin-bottom:24px}
+.auth .b{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;height:50px;border-radius:999px;font:700 15.5px 'DM Sans';border:0;cursor:pointer;white-space:nowrap;padding:0 20px}
+.auth .b+.b{margin-top:10px}
+.auth .b.w{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.auth .b.w:hover{border-color:#D6D1E8}
+.auth .b.v{background:var(--ink);color:#fff;box-shadow:0 10px 22px -10px rgba(20,17,43,.6)}
+.auth .b.v .g{width:26px;height:26px;border-radius:50%;background:#fff;display:grid;place-items:center;margin-left:-6px}
+.auth .b.s{background:var(--viobg);color:var(--vio)}
+.auth .b.s:hover{background:#E6DDFF}
+.auth .b.c{background:var(--vio);color:#fff;box-shadow:0 8px 20px -8px rgba(108,59,255,.7)}
+.auth .or{display:flex;align-items:center;gap:12px;margin:18px 0;font-size:12.5px;font-weight:600;color:var(--mute);text-transform:uppercase;letter-spacing:.07em}
+.auth .or:before,.auth .or:after{content:'';flex:1;height:1.5px;background:var(--line)}
+.auth .pf{display:flex;flex-direction:column;gap:10px}
+.auth .fld{display:flex;align-items:center;height:50px;border:1.5px solid var(--line);border-radius:14px;padding:0 16px;background:#FBFAFE}
+.auth .fld:focus-within{border-color:var(--vio2);box-shadow:0 0 0 4px var(--viobg);background:#fff}
+.auth .fld input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:15.5px 'DM Sans';color:var(--ink);width:100%}
+.auth .fld input::placeholder{color:var(--mute)}
+.auth .fld .fp{font-size:13px;font-weight:600;color:var(--vio);white-space:nowrap;margin-left:10px;background:none;border:0;cursor:pointer;font-family:inherit;padding:0}
+.auth .pf .b{margin-top:4px}
+.auth .fine{margin-top:18px;font-size:13.5px;color:var(--mute)}
+.auth .fine a,.auth .fine button.link{color:var(--vio);font-weight:700;cursor:pointer;background:none;border:0;font:inherit;padding:0}
+.auth .err{margin-top:12px;font-size:13.5px;color:#C43D1F;font-weight:600}
+.auth .ok{margin-top:12px;font-size:13.5px;color:#0B8A57;font-weight:600}
+.auth .plans{text-align:left;display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.auth .plans div{border:1.5px solid var(--line);border-radius:16px;padding:12px 14px}
+.auth .plans b{display:block;font-family:'Bricolage Grotesque';font-size:16px}
+.auth .plans span{font-size:13.5px;color:var(--ink2)}
+.auth .mark{background:linear-gradient(transparent 58%,var(--sun) 58%,var(--sun) 92%,transparent 92%);padding:0 3px;margin:0 -1px 0 -3px}
+.auth[data-mode=signup] .in-only,.auth[data-mode=login] .up-only,.auth[data-mode=forgot] .in-only,.auth[data-mode=forgot] .up-only{display:none}
+.auth[data-mode=forgot] .pw-row,.auth[data-mode=forgot] .google,.auth[data-mode=forgot] .or{display:none}
+.auth[data-mode=paywall] .google,.auth[data-mode=paywall] .or,.auth[data-mode=paywall] .pf,.auth[data-mode=paywall] .fine,.auth[data-mode=plans] .google,.auth[data-mode=plans] .or,.auth[data-mode=plans] .pf,.auth[data-mode=plans] .fine,.auth[data-mode=confirm] .google,.auth[data-mode=confirm] .or,.auth[data-mode=confirm] .pf,.auth[data-mode=confirm] .fine,.auth[data-mode=reset] .google,.auth[data-mode=reset] .or,.auth[data-mode=reset] .fine{display:none}
+.auth .gate-only,.auth .pay-only,.auth .plans-only,.auth .confirm-only,.auth .forgot-only,.auth .reset-only,.auth .page-only{display:none}
+.auth[data-mode=login] .page-only,.auth[data-mode=signup] .page-only{display:block}
+.auth.is-gate[data-mode=signup] .page-only,.auth.is-gate[data-mode=login] .page-only{display:none}
+.auth.is-gate[data-mode=signup] .gate-only,.auth.is-gate[data-mode=login] .gate-only{display:block}
+.auth.is-gate[data-mode=signup] .gate-flex,.auth.is-gate[data-mode=login] .gate-flex{display:flex}
+.auth[data-mode=paywall] .pay-only{display:block}
+.auth[data-mode=paywall] .pay-flex{display:flex}
+.auth[data-mode=plans] .plans-only{display:block}
+.auth[data-mode=confirm] .confirm-only{display:block}
+.auth[data-mode=forgot] .forgot-only{display:block}
+.auth[data-mode=reset] .reset-only{display:block}
+body.is-auth-page .auth .x,body.is-auth-page .dots,body.is-auth-page .gate-only{display:none!important}
+body.is-auth-page .auth[data-mode=login] .page-only,body.is-auth-page .auth[data-mode=signup] .page-only{display:block}
+body.is-auth-page .auth[data-mode=login] h2.page-only,body.is-auth-page .auth[data-mode=signup] h2.page-only{margin-bottom:24px}
+body.is-auth-page .auth{box-shadow:0 30px 70px -34px rgba(60,40,140,.4)}
+.nudge{position:relative;z-index:3;margin:0 0 16px;background:var(--sunbg);border-radius:12px;padding:10px 14px;font-size:14.5px;font-weight:600;color:var(--ink2)}
+
+.av{display:flex;align-items:center;gap:8px;padding:4px 10px 4px 4px;border-radius:999px;border:1.5px solid var(--line);background:#fff;cursor:pointer;font-weight:700;font-size:14.5px;position:relative;height:44px}
+.av i{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#8F6BFF,#FF8A6B);color:#fff;display:grid;place-items:center;font-style:normal;font-size:13px;font-weight:800;font-family:'Bricolage Grotesque'}
+.av .menu{display:none;position:absolute;right:0;top:50px;width:220px;background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:8px;box-shadow:0 20px 40px -20px rgba(60,40,140,.4);font-weight:500;text-align:left;z-index:30}
+.av.open .menu{display:block}
+.av .menu small{display:block;padding:6px 10px 8px;color:var(--mute);border-bottom:1.5px solid var(--line);margin-bottom:6px;font-size:12.5px;word-break:break-all}
+.av .menu button{display:block;width:100%;text-align:left;padding:8px 10px;border-radius:10px;font-size:14.5px;font-weight:600;background:none;border:0;cursor:pointer;font-family:inherit;color:var(--ink)}
+.av .menu button:hover{background:var(--viobg);color:var(--vio)}
+
+.auth-page{min-height:100vh;position:relative;overflow:hidden}
+.auth-page .top{position:relative;z-index:2;max-width:1080px;margin:28px auto 0;padding:0 28px;display:flex;align-items:center}
+.auth-page .top .back{margin-left:auto;font-size:14.5px;font-weight:600;color:var(--ink2)}
+.auth-page .center{position:relative;z-index:2;display:grid;place-items:center;min-height:calc(100vh - 140px);padding:32px 16px 64px}
+.logo .wm{font-family:'Bricolage Grotesque';font-weight:800;letter-spacing:-.035em}
+.logo .wm em{font-style:normal;color:var(--vio)}
