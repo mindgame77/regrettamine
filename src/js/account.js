@@ -3,32 +3,37 @@
   const HOME = JSON.parse(document.getElementById('home-data').textContent);
   let funds = HOME.funds.slice();
   let BY_ID = Object.fromEntries(funds.map(f => [f.id, f]));
-  const READ_KEY = 'regret.alerts.read';
-  const KINDS = { Court: 'Legal', Regulator: 'Regulator', Rescore: 'Score' };
   const $ = id => document.getElementById(id);
 
   function go() {
-    const v = (location.hash || '#watchlist').replace('#', '') || 'watchlist';
-    const name = ['watchlist', 'alerts', 'share'].includes(v) ? v : 'watchlist';
+    let v = (location.hash || '#watchlist').replace('#', '') || 'watchlist';
+    if (v === 'alerts') {
+      history.replaceState(null, '', location.pathname + location.search + '#watchlist');
+      v = 'watchlist';
+    }
+    const name = ['watchlist', 'share'].includes(v) ? v : 'watchlist';
     document.querySelectorAll('.view').forEach(el => el.classList.toggle('on', el.dataset.view === name));
     document.querySelectorAll('.anav a').forEach(a => a.classList.toggle('on', a.dataset.v === name));
+    const board = $('wlOut');
+    if (board) board.classList.toggle('on', name === 'watchlist');
     if (name === 'share') window.scrollTo(0, 0);
   }
   addEventListener('hashchange', go);
   addEventListener('load', () => { if (location.hash === '#share') window.scrollTo(0, 0); });
   go();
 
-  function readKeys() {
-    try { return new Set(JSON.parse(localStorage.getItem(READ_KEY) || '[]')); }
-    catch (e) { return new Set(); }
-  }
-  function storeKeys(set) {
-    localStorage.setItem(READ_KEY, JSON.stringify([...set]));
-  }
-  function alertKey(u) { return (u.no || '') + '|' + (u.fid || '') + '|' + u.k; }
-
   function watchedFunds() {
     return [...Regret.watch.slugs].map(id => BY_ID[id]).filter(Boolean);
+  }
+
+  function alertRow(id) {
+    const rows = (Regret.alerts && Regret.alerts.rows) || [];
+    return rows.find(row => row.slug === id) || {};
+  }
+
+  function alertLocked(id) {
+    if (Regret.tier === 'paid') return false;
+    return !alertRow(id).opened;
   }
 
   function renderWatch() {
@@ -39,30 +44,13 @@
     FundList.mount($('wlOut'), rows, {
       total: 100,
       bookmark: true,
+      toggles: true,
       prefix: '../',
+      alertOf: alertRow,
+      alertLocked: alertLocked,
       note: '<span class="none">Saved funds. The bookmark removes one.</span>',
       empty: '<div class="empty"><b>Nothing saved yet.</b>Open a fund and tap the bookmark.</div>'
     });
-  }
-
-  function renderAlerts() {
-    const read = readKeys();
-    const items = HOME.updates.filter(u => u.fid && Regret.alerts.slugs.has(u.fid) && KINDS[u.k]);
-    const unread = items.filter(u => !read.has(alertKey(u)));
-    const badge = $('alertCount');
-    badge.hidden = unread.length === 0;
-    badge.textContent = String(unread.length);
-    badge.classList.toggle('hot', unread.length > 0);
-    if (!items.length) {
-      $('alertFeed').innerHTML = '<div class="empty"><b>No alerts yet.</b>Legal, regulatory, and score changes for funds with alerts on show up here.</div>';
-      return;
-    }
-    $('alertFeed').innerHTML = items.map(u => {
-      const fresh = !read.has(alertKey(u));
-      const href = String(u.u).startsWith('http') ? u.u : '../' + u.u;
-      const ext = String(u.u).startsWith('http') ? ' target="_blank" rel="noopener"' : '';
-      return '<div class="fi' + (fresh ? ' new' : '') + '"><i class="ud"></i><div class="dt">' + Regret.esc(u.ds) + '</div><div class="bd"><div class="fd"><span class="k ' + u.k + '">' + KINDS[u.k] + '</span>' + Regret.esc(u.f) + '</div><div class="ev">' + Regret.esc(u.t) + '</div><div class="sr">' + Regret.esc(u.src) + '<a href="' + Regret.esc(href) + '"' + ext + '>Open →</a></div></div></div>';
-    }).join('');
   }
 
   const CONNECTIONS = [
@@ -128,33 +116,19 @@
     dd.classList.add('on');
   }
 
-  async function loadPrefs() {
-    const client = Regret.sb();
-    const { data } = await client.from('alert_preferences').select('*').eq('profile_id', Regret.user.id).maybeSingle();
-    const prefs = data || { new_legal_matter: true, regulatory_record: true, partner_exit: false, score_change: true };
-    document.querySelectorAll('[data-pref]').forEach(el => {
-      el.classList.toggle('on', !!prefs[el.dataset.pref]);
-    });
-    $('prefNote').textContent = 'To ' + (Regret.user.email || 'you') + ', only for funds with alerts on.';
-  }
-
-  function renderFundAlerts() {
-    const host = $('fundAlerts');
-    if (!host) return;
-    const rows = (Regret.alerts && Regret.alerts.rows) || [];
-    if (!rows.length) {
-      host.innerHTML = '<p class="fnote">Open a report to get alerts for that fund.</p>';
+  $('wlOut').addEventListener('click', async e => {
+    const tog = e.target.closest('.wtog');
+    if (tog) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (tog.disabled || tog.classList.contains('off')) return;
+      const next = !tog.classList.contains('on');
+      const result = await Regret.setFundAlertKind(tog.dataset.slug, tog.dataset.kind, next);
+      if (result && result.reason === 'unopened') tog.classList.add('off');
+      await Regret.refreshAlerts();
+      renderWatch();
       return;
     }
-    host.innerHTML = rows.map(row => {
-      const locked = Regret.tier !== 'paid' && !row.opened;
-      const on = !!row.alerts && !locked;
-      return '<div class="fund-alert"><div class="tog' + (on ? ' on' : '') + (locked ? ' off' : '') + '" data-alert="' + Regret.esc(row.slug) + '" role="switch" aria-checked="' + (on ? 'true' : 'false') + '"' + (locked ? ' aria-disabled="true"' : '') + '><span>' + Regret.esc(row.name) + '</span><span class="sw2"></span></div>'
-        + (locked ? '<p class="fnote">Open this report to get alerts</p>' : '') + '</div>';
-    }).join('');
-  }
-
-  $('wlOut').addEventListener('click', async e => {
     const btn = e.target.closest('.bm');
     if (!btn) return;
     e.preventDefault();
@@ -162,8 +136,6 @@
     await Regret.removeWatch(btn.dataset.remove);
     await Regret.refreshAlerts();
     renderWatch();
-    renderAlerts();
-    renderFundAlerts();
   });
 
   let addToken = 0;
@@ -193,26 +165,6 @@
     if (result && result.full) $('addFund').placeholder = 'Watchlist full (100/100)';
     await Regret.refreshAlerts();
     renderWatch();
-    renderAlerts();
-    renderFundAlerts();
-  });
-
-  $('markRead').onclick = () => {
-    const keys = readKeys();
-    HOME.updates.forEach(u => { if (u.fid && Regret.alerts.slugs.has(u.fid) && KINDS[u.k]) keys.add(alertKey(u)); });
-    storeKeys(keys);
-    renderAlerts();
-  };
-
-  document.querySelectorAll('[data-pref]').forEach(el => {
-    el.onclick = async () => {
-      if (!Regret.user || !Regret.sb()) return;
-      el.classList.toggle('on');
-      const patch = {};
-      patch[el.dataset.pref] = el.classList.contains('on');
-      const { error } = await Regret.sb().from('alert_preferences').update(patch).eq('profile_id', Regret.user.id);
-      if (error) el.classList.toggle('on');
-    };
   });
 
   document.querySelectorAll('.pips').forEach(p => {
@@ -306,15 +258,10 @@
     }
     anonHint();
     renderWatch();
-    renderAlerts();
-    renderFundAlerts();
-    await loadPrefs();
   });
 
   Regret.onChange(() => {
-    if (!Regret.user || !document.getElementById('fundAlerts')) return;
+    if (!Regret.user || !$('wlOut')) return;
     renderWatch();
-    renderAlerts();
-    renderFundAlerts();
   });
 })();

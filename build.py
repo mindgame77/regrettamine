@@ -24,7 +24,7 @@ SITE = ROOT / "site"
 EXT_SVG = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3H3.5A.5.5 0 0 0 3 3.5v9a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V10M9 3h4v4M13 3 7.5 8.5"/></svg>'
 OPEN_SVG = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h4v4M13 3 7.5 8.5"/></svg>'
 SAVE_SVG = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14l-6-4.2L6 20z"/></svg>'
-ALERT_LINE = '<div class="alert-line"><div class="tog" id="alertTog" role="switch" aria-checked="false"><span>Alerts</span><span class="sw2"></span></div><p class="fnote" id="alertNote" hidden>Open this report to get alerts</p></div>'
+ALERT_LINE = '<div class="alert-line"><div class="tog" id="alertTog" role="switch" aria-checked="false"><span>Alerts</span><span class="sw2"></span></div><p class="fnote" id="alertNote" hidden>Open this report to get alerts</p><a class="lnk" id="correctLink" hidden>Request a correction</a></div>'
 SENT_LABEL = {"pos": "Positive", "neu": "Neutral", "neg": "Negative"}
 PAGE_SIZE = 24
 LIST_CAP = 8
@@ -495,8 +495,7 @@ def render_hero(fund):
     shown = esc(fund["scoreShown"])
     return (
         f'<div class="heroW">'
-        f'<button class="rankb" data-ev="rank"><i>#{esc(rank["place"])}</i>{esc(rank["tier"])} fund '
-        f'<small>of {esc(rank["of"])}</small>{example}</button>'
+        f'<button class="rankb" data-ev="rank"><i>#{esc(rank["place"])}</i> of {esc(rank["of"])} funds{example}</button>'
         f'{"".join(floats)}'
         f'<div class="hero"><div>'
         f'<button class="ringBtn" id="ringBtn" aria-label="Score {shown}. See why on the Score tab">'
@@ -546,7 +545,7 @@ def render_fund_page(fund, prefix):
     body = f'''<div class="blobs np" style="height:900px"><div class="blob" style="width:520px;height:520px;background:#CDBBFF;left:-180px;top:-120px"></div><div class="blob" style="width:460px;height:460px;background:#FFC7B8;right:-140px;top:-40px"></div><div class="blob" style="width:380px;height:380px;background:#FFEBA0;left:42%;top:420px;opacity:.35"></div></div>
 <nav class="pillnav np"><a class="logo" href="{home}"><i></i><span class="wm">regrett<em>amine</em></span></a>
  <div class="links"><a class="on" href="{home}">VCs</a><a href="{home}scoring/">Scoring</a><a href="{home}plans/">Pricing</a><a href="{home}account/#share">Report a VC</a></div>
- <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#alerts">Get alerts</a></div></nav>
+ <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#watchlist">Get alerts</a></div></nav>
 <div class="ftop"><div class="wrap">
  <div class="crumb np"><a href="{home}">← All VCs</a></div>
  <div class="fh np"><div><h1>{esc(fund["name"])} <span>{esc(fund["short"])}</span><button type="button" class="save" id="save" data-tip="Save" aria-label="Save to watchlist" aria-pressed="false">{SAVE_SVG}</button></h1>
@@ -779,7 +778,7 @@ def render_fund_shell(fund, prefix):
     body = f'''<div class="blobs np" style="height:420px"><div class="blob" style="width:520px;height:520px;background:#CDBBFF;left:-180px;top:-120px"></div><div class="blob" style="width:460px;height:460px;background:#FFC7B8;right:-140px;top:-40px"></div></div>
 <nav class="pillnav np"><a class="logo" href="{home}"><i></i><span class="wm">regrett<em>amine</em></span></a>
  <div class="links"><a class="on" href="{home}">VCs</a><a href="{home}scoring/">Scoring</a><a href="{home}plans/">Pricing</a><a href="{home}account/#share">Report a VC</a></div>
- <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#alerts">Get alerts</a></div></nav>
+ <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#watchlist">Get alerts</a></div></nav>
 <div class="ftop"><div class="wrap" id="report">
  <div class="crumb np"><a href="{home}">← All VCs</a></div>
  <div class="fh np"><div><h1>{name} <span>{short}</span><button type="button" class="save" id="save" data-tip="Save" aria-label="Save to watchlist" aria-pressed="false">{SAVE_SVG}</button></h1>
@@ -825,11 +824,26 @@ def publish_report_pages(funds):
         print(f"stored report {slug}")
 
 
+def assign_list_ranks(funds):
+    """Same order as the landing list: higher shown score first, then name."""
+    ranked = sorted(
+        funds.values(),
+        key=lambda fund: (-int(fund.get("scoreShown") or 0), fund.get("name") or ""),
+    )
+    total = len(ranked)
+    for place, fund in enumerate(ranked, start=1):
+        rank = dict(fund.get("rank") or {})
+        rank["place"] = place
+        rank["of"] = total
+        fund["rank"] = rank
+
+
 def main():
     if SITE.exists():
         shutil.rmtree(SITE)
     SITE.mkdir(parents=True)
     home, funds = load_site()
+    assign_list_ranks(funds)
     linked = [f.get("report") for f in home["funds"] if f.get("report")]
     missing = [slug for slug in linked if slug not in funds]
     if missing:
@@ -839,6 +853,17 @@ def main():
     account = (SRC / "account.html").read_text(encoding="utf-8").replace("__HOME_JSON__", embed(public))
     (SITE / "account").mkdir(parents=True, exist_ok=True)
     (SITE / "account" / "index.html").write_text(account, encoding="utf-8")
+    alerts = SITE / "account" / "alerts" / "index.html"
+    alerts.parent.mkdir(parents=True, exist_ok=True)
+    alerts.write_text(
+        '<!doctype html><html lang="en"><head><meta charset="utf-8">'
+        '<meta http-equiv="refresh" content="0;url=../#watchlist">'
+        '<link rel="canonical" href="../#watchlist">'
+        '<title>Watchlist · Regrettamine</title>'
+        '<script>location.replace("../#watchlist")</script></head>'
+        '<body><p><a href="../#watchlist">Watchlist</a></p></body></html>\n',
+        encoding="utf-8",
+    )
     build_shell("login.html", SITE / "login" / "index.html")
     build_shell("reset.html", SITE / "login" / "reset" / "index.html")
     build_legal("privacy.html", SITE / "privacy" / "index.html")
@@ -846,6 +871,7 @@ def main():
     build_shell("how.html", SITE / "how" / "index.html")
     build_shell("plans.html", SITE / "plans" / "index.html")
     build_shell("settings.html", SITE / "settings" / "index.html")
+    build_shell("admin.html", SITE / "admin" / "index.html")
     build_scoring(funds)
     for slug, fund in funds.items():
         dest = SITE / "vc" / slug / "index.html"

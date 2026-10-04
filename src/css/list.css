@@ -31,8 +31,19 @@ a.tr2:hover .nm b{color:var(--vio);text-decoration:underline;text-underline-offs
 .empty{text-align:center;padding:48px 20px;color:var(--mute)}
 .empty b{display:block;font-family:'Bricolage Grotesque';font-size:20px;color:var(--ink);margin-bottom:6px}
 
-/* Watchlist only: same row, plus a filled bookmark. */
-.tbl.bm .tr2{grid-template-columns:2.3fr 1.7fr 1.1fr 1fr 1fr 36px}
+/* Watchlist: the landing columns, then bookmark and the two alert toggles. */
+.tbl.marks .tr2{grid-template-columns:minmax(190px,2.3fr) minmax(210px,1.7fr) minmax(112px,1.1fr) minmax(92px,1fr) minmax(104px,1fr) 40px}
+.tbl.alerts .tr2{grid-template-columns:minmax(190px,2.3fr) minmax(210px,1.7fr) minmax(112px,1.1fr) minmax(92px,1fr) minmax(104px,1fr) 40px 148px 120px}
+.wlboard .tbl{width:100%}
+.wlboard .nm b,.wlboard .m,.wlboard .lgc,.wlboard .tag,.wlboard .tr2 > div,.wlboard .tr2.th{white-space:nowrap}
+.wtog{width:42px;height:24px;border:0;background:transparent;padding:0;cursor:pointer}
+.wtog .sw2{display:block;width:42px;height:24px;border-radius:999px;background:#E4E0F0;position:relative}
+.wtog .sw2:after{content:'';position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .15s}
+.wtog.on .sw2{background:var(--vio)}
+.wtog.on .sw2:after{left:21px}
+.wtog.off,.wtog:disabled{cursor:not-allowed;opacity:.55}
+.wtip{position:relative;display:inline-flex;justify-content:flex-start}
+.wtip[data-tip]:hover:after{content:attr(data-tip);position:absolute;right:0;bottom:calc(100% + 6px);background:var(--ink);color:#fff;font:600 12px "DM Sans";padding:4px 9px;border-radius:7px;white-space:nowrap;z-index:4;pointer-events:none}
 .bm{position:relative;width:36px;height:36px;border-radius:50%;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--vio);padding:0}
 .bm:hover{background:var(--viobg)}
 .bm:after{content:attr(data-tip);position:absolute;right:calc(100% + 6px);top:50%;transform:translateY(-50%);background:var(--ink);color:#fff;font:600 12px "DM Sans";padding:4px 9px;border-radius:7px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .12s}

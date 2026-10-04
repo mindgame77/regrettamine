@@ -86,9 +86,9 @@
     const paid = data.tier === 'paid' || data.plan === 'Paid' || data.plan === 'Monthly' || data.plan === 'Annual';
     $('planName').textContent = data.plan || (paid ? 'Paid' : 'Free');
     $('planDetail').textContent = data.price_label || (paid ? 'Your paid plan is active.' : 'No charge.');
-    if (data.payment_failed && data.next_charge_label) {
-      $('nxLabel').textContent = 'Charge failed';
-      $('nxVal').textContent = data.next_charge_label;
+    if (data.payment_failed && data.payment_failed_on) {
+      $('nxLabel').textContent = 'Charge failed on';
+      $('nxVal').textContent = data.payment_failed_on;
       $('nxVal').classList.add('bad');
     } else {
       $('nxLabel').textContent = 'Next charge';
@@ -128,8 +128,10 @@
       const receipt = item.receipt_url ? '<a class="lnk2" href="' + Regret.esc(item.receipt_url) + '" data-stripe="receipt">Receipt</a>' : '';
       return '<div class="pr"><div>' + Regret.esc(item.date || '') + '</div><div>' + Regret.esc(item.description || '') + '</div><div>' + Regret.esc(item.amount || money(item.amount_cents)) + '</div><div><span class="st ' + status + '">' + label + '</span></div><div>' + receipt + '</div></div>';
     }).join('');
-    const banner = $('payFail');
-    if (banner) banner.hidden = !data.payment_failed;
+    const notice = !data.payment_failed ? '' : (data.lapsed
+      ? "Your payment didn't go through, so you're on the free plan now. Update your card to restore access."
+      : "We couldn't charge your card. Update it within 24 hours or your account moves to the free plan.");
+    if (window.Regret && Regret.paintPayFail) Regret.paintPayFail(notice);
   }
 
   document.querySelectorAll('[data-open]').forEach(btn => {

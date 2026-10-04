@@ -106,6 +106,14 @@ def test_stripe_webhook_grace_and_secrets():
             cur.execute("select is_paid(%s), payment_failed_at is not null from subscriptions where profile_id = %s", (ada, ada))
             still_paid, failed = cur.fetchone()
             assert still_paid is True and failed is True
+            cur.execute("select set_config('request.jwt.claim.sub', %s, true)", (str(ada),))
+            cur.execute("set role authenticated")
+            cur.execute("select my_billing()")
+            grace = cur.fetchone()[0]
+            assert grace["plan"] == "Monthly" and grace["lapsed"] is False
+            assert grace["payment_failed"] is True and grace["payment_failed_on"]
+            assert grace["next_charge_label"] is None
+            cur.execute("reset role")
 
             cur.execute(
                 "update subscriptions set payment_failed_at = now() - interval '25 hours' where profile_id = %s",
@@ -113,6 +121,13 @@ def test_stripe_webhook_grace_and_secrets():
             )
             cur.execute("select is_paid(%s)", (ada,))
             assert cur.fetchone()[0] is False
+            cur.execute("select set_config('request.jwt.claim.sub', %s, true)", (str(ada),))
+            cur.execute("set role authenticated")
+            cur.execute("select my_billing()")
+            lapsed = cur.fetchone()[0]
+            assert lapsed["plan"] == "Free" and lapsed["lapsed"] is True
+            assert lapsed["payment_failed_on"]
+            cur.execute("reset role")
             cur.execute("select downgrade_lapsed_payments()")
             assert cur.fetchone()[0] == 1
             cur.execute("select status from subscriptions where profile_id = %s", (ada,))
