@@ -24,7 +24,9 @@ def test_seed_matches_json_and_hides_stress():
 
     seed_main()
     home = json.loads((ROOT / "data" / "home.json").read_text(encoding="utf-8"))
-    fund = json.loads((ROOT / "data" / "funds" / "a16z.json").read_text(encoding="utf-8"))
+    funds = {}
+    for path in sorted((ROOT / "data" / "funds").glob("*.json")):
+        funds[path.stem] = json.loads(path.read_text(encoding="utf-8"))
 
     with psycopg.connect(DATABASE_URL) as conn:
         with conn.cursor() as cur:
@@ -32,9 +34,11 @@ def test_seed_matches_json_and_hides_stress():
             bundle = cur.fetchone()[0]
         assembled_home, assembled_funds = assemble_site(bundle)
         assert assembled_home == home
-        assert assembled_funds["a16z"] == fund
+        assert set(assembled_funds) == set(funds)
+        for slug, fund in funds.items():
+            assert assembled_funds[slug] == fund, slug
+            assert render_fund_page(assembled_funds[slug], "../../") == render_fund_page(fund, "../../")
         assert build_home(assembled_home) == build_home(home)
-        assert render_fund_page(assembled_funds["a16z"], "../../") == render_fund_page(fund, "../../")
 
         with conn.cursor() as cur:
             cur.execute(

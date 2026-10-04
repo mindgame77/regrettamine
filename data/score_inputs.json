@@ -1,0 +1,1312 @@
+{
+  "lux": [
+    {
+      "section_code": "s1",
+      "name": "portfolio_companies",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "own_founder_lawsuits",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "founder_ceo_removals",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "downround_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "blocking_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "losses_or_fraud",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s2",
+      "name": "money_fund_size",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_reserves",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_hit_target",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "media_points",
+      "value_numeric": 0,
+      "max_numeric": 6
+    },
+    {
+      "section_code": "s2",
+      "name": "help_platform",
+      "value_numeric": 0,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "help_intros",
+      "value_numeric": 0,
+      "max_numeric": 1.5
+    },
+    {
+      "section_code": "s2",
+      "name": "help_stability",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "partner_departure_years",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "portfolio_companies",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "fund_age_years",
+      "value_numeric": 26
+    },
+    {
+      "section_code": "s3",
+      "name": "negative_first_hand",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "first_hand_accounts",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "conflict_count",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "scaled_deduction",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "bonus",
+      "name": "years_investing",
+      "value_numeric": 26
+    },
+    {
+      "section_code": "bonus",
+      "name": "significant_harm",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "pen",
+      "name": "sec_record",
+      "value_numeric": 0,
+      "value_text": "sec"
+    },
+    {
+      "section_code": "pen",
+      "name": "sanctions",
+      "value_numeric": 0,
+      "value_text": "sanctions_clear"
+    }
+  ],
+  "accel": [
+    {
+      "section_code": "s1",
+      "name": "portfolio_companies",
+      "value_numeric": 152
+    },
+    {
+      "section_code": "s1",
+      "name": "own_founder_lawsuits",
+      "value_numeric": 1
+    },
+    {
+      "section_code": "s1",
+      "name": "founder_ceo_removals",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "downround_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "blocking_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "losses_or_fraud",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s2",
+      "name": "money_fund_size",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_reserves",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_hit_target",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "media_points",
+      "value_numeric": 0,
+      "max_numeric": 6
+    },
+    {
+      "section_code": "s2",
+      "name": "help_platform",
+      "value_numeric": 0,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "help_intros",
+      "value_numeric": 0,
+      "max_numeric": 1.5
+    },
+    {
+      "section_code": "s2",
+      "name": "help_stability",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "partner_departure_years",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "portfolio_companies",
+      "value_numeric": 152
+    },
+    {
+      "section_code": "s3",
+      "name": "fund_age_years",
+      "value_numeric": 43
+    },
+    {
+      "section_code": "s3",
+      "name": "negative_first_hand",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "first_hand_accounts",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "conflict_count",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "scaled_deduction",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "bonus",
+      "name": "years_investing",
+      "value_numeric": 43
+    },
+    {
+      "section_code": "bonus",
+      "name": "significant_harm",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "pen",
+      "name": "sec_record",
+      "value_numeric": 0,
+      "value_text": "sec"
+    },
+    {
+      "section_code": "pen",
+      "name": "sanctions",
+      "value_numeric": 0,
+      "value_text": "sanctions_clear"
+    }
+  ],
+  "bessemer": [
+    {
+      "section_code": "s1",
+      "name": "portfolio_companies",
+      "value_numeric": 450
+    },
+    {
+      "section_code": "s1",
+      "name": "own_founder_lawsuits",
+      "value_numeric": 1
+    },
+    {
+      "section_code": "s1",
+      "name": "founder_ceo_removals",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "downround_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "blocking_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "losses_or_fraud",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s2",
+      "name": "money_fund_size",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_reserves",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_hit_target",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "media_points",
+      "value_numeric": 0,
+      "max_numeric": 6
+    },
+    {
+      "section_code": "s2",
+      "name": "help_platform",
+      "value_numeric": 1,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "help_intros",
+      "value_numeric": 0.75,
+      "max_numeric": 1.5
+    },
+    {
+      "section_code": "s2",
+      "name": "help_stability",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "partner_departure_years",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "portfolio_companies",
+      "value_numeric": 450
+    },
+    {
+      "section_code": "s3",
+      "name": "fund_age_years",
+      "value_numeric": 51
+    },
+    {
+      "section_code": "s3",
+      "name": "negative_first_hand",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "first_hand_accounts",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "conflict_count",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "scaled_deduction",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "bonus",
+      "name": "years_investing",
+      "value_numeric": 51
+    },
+    {
+      "section_code": "bonus",
+      "name": "significant_harm",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "pen",
+      "name": "sec_record",
+      "value_numeric": 0,
+      "value_text": "sec"
+    },
+    {
+      "section_code": "pen",
+      "name": "sanctions",
+      "value_numeric": 0,
+      "value_text": "sanctions_clear"
+    }
+  ],
+  "battery": [
+    {
+      "section_code": "s1",
+      "name": "portfolio_companies",
+      "value_numeric": 530
+    },
+    {
+      "section_code": "s1",
+      "name": "own_founder_lawsuits",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "founder_ceo_removals",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "downround_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "blocking_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "losses_or_fraud",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s2",
+      "name": "money_fund_size",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_reserves",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_hit_target",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "media_points",
+      "value_numeric": 0,
+      "max_numeric": 6
+    },
+    {
+      "section_code": "s2",
+      "name": "help_platform",
+      "value_numeric": 0,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "help_intros",
+      "value_numeric": 0,
+      "max_numeric": 1.5
+    },
+    {
+      "section_code": "s2",
+      "name": "help_stability",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "partner_departure_years",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "portfolio_companies",
+      "value_numeric": 530
+    },
+    {
+      "section_code": "s3",
+      "name": "fund_age_years",
+      "value_numeric": 43
+    },
+    {
+      "section_code": "s3",
+      "name": "negative_first_hand",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "first_hand_accounts",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "conflict_count",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "scaled_deduction",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "bonus",
+      "name": "years_investing",
+      "value_numeric": 43
+    },
+    {
+      "section_code": "bonus",
+      "name": "significant_harm",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "pen",
+      "name": "sec_record",
+      "value_numeric": 0,
+      "value_text": "sec"
+    },
+    {
+      "section_code": "pen",
+      "name": "sanctions",
+      "value_numeric": 0,
+      "value_text": "sanctions_clear"
+    }
+  ],
+  "insightpartners": [
+    {
+      "section_code": "s1",
+      "name": "portfolio_companies",
+      "value_numeric": 875
+    },
+    {
+      "section_code": "s1",
+      "name": "own_founder_lawsuits",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "founder_ceo_removals",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "downround_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "blocking_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "losses_or_fraud",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s2",
+      "name": "money_fund_size",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_reserves",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_hit_target",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "media_points",
+      "value_numeric": 0,
+      "max_numeric": 6
+    },
+    {
+      "section_code": "s2",
+      "name": "help_platform",
+      "value_numeric": 0,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "help_intros",
+      "value_numeric": 0,
+      "max_numeric": 1.5
+    },
+    {
+      "section_code": "s2",
+      "name": "help_stability",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "partner_departure_years",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "portfolio_companies",
+      "value_numeric": 875
+    },
+    {
+      "section_code": "s3",
+      "name": "fund_age_years",
+      "value_numeric": 31
+    },
+    {
+      "section_code": "s3",
+      "name": "negative_first_hand",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "first_hand_accounts",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "conflict_count",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "scaled_deduction",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "bonus",
+      "name": "years_investing",
+      "value_numeric": 31
+    },
+    {
+      "section_code": "bonus",
+      "name": "significant_harm",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "pen",
+      "name": "sec_fee_order",
+      "value_numeric": -10,
+      "value_text": "fine"
+    },
+    {
+      "section_code": "pen",
+      "name": "sanctions",
+      "value_numeric": 0,
+      "value_text": "sanctions_clear"
+    }
+  ],
+  "baincapitalventures": [
+    {
+      "section_code": "s1",
+      "name": "portfolio_companies",
+      "value_numeric": 400
+    },
+    {
+      "section_code": "s1",
+      "name": "own_founder_lawsuits",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "founder_ceo_removals",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "downround_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "blocking_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "losses_or_fraud",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s2",
+      "name": "money_fund_size",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_reserves",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_hit_target",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "media_points",
+      "value_numeric": 0,
+      "max_numeric": 6
+    },
+    {
+      "section_code": "s2",
+      "name": "help_platform",
+      "value_numeric": 0,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "help_intros",
+      "value_numeric": 0,
+      "max_numeric": 1.5
+    },
+    {
+      "section_code": "s2",
+      "name": "help_stability",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "partner_departure_years",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "portfolio_companies",
+      "value_numeric": 400
+    },
+    {
+      "section_code": "s3",
+      "name": "fund_age_years",
+      "value_numeric": 25
+    },
+    {
+      "section_code": "s3",
+      "name": "negative_first_hand",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "first_hand_accounts",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "conflict_count",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "scaled_deduction",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "bonus",
+      "name": "years_investing",
+      "value_numeric": 25
+    },
+    {
+      "section_code": "bonus",
+      "name": "significant_harm",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "pen",
+      "name": "sec_record",
+      "value_numeric": 0,
+      "value_text": "sec"
+    },
+    {
+      "section_code": "pen",
+      "name": "sanctions",
+      "value_numeric": 0,
+      "value_text": "sanctions_clear"
+    }
+  ],
+  "generalcatalyst": [
+    {
+      "section_code": "s1",
+      "name": "portfolio_companies",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "own_founder_lawsuits",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "founder_ceo_removals",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "downround_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "blocking_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "losses_or_fraud",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s2",
+      "name": "money_fund_size",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_reserves",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_hit_target",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "media_points",
+      "value_numeric": 0,
+      "max_numeric": 6
+    },
+    {
+      "section_code": "s2",
+      "name": "help_platform",
+      "value_numeric": 0,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "help_intros",
+      "value_numeric": 0,
+      "max_numeric": 1.5
+    },
+    {
+      "section_code": "s2",
+      "name": "help_stability",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "partner_departure_years",
+      "value_numeric": 1
+    },
+    {
+      "section_code": "s3",
+      "name": "portfolio_companies",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "fund_age_years",
+      "value_numeric": 25
+    },
+    {
+      "section_code": "s3",
+      "name": "negative_first_hand",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "first_hand_accounts",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "conflict_count",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "scaled_deduction",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "bonus",
+      "name": "years_investing",
+      "value_numeric": 25
+    },
+    {
+      "section_code": "bonus",
+      "name": "significant_harm",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "pen",
+      "name": "sec_record",
+      "value_numeric": 0,
+      "value_text": "sec"
+    },
+    {
+      "section_code": "pen",
+      "name": "sanctions",
+      "value_numeric": 0,
+      "value_text": "sanctions_clear"
+    }
+  ],
+  "sequoia": [
+    {
+      "section_code": "s1",
+      "name": "portfolio_companies",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "own_founder_lawsuits",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "founder_ceo_removals",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "downround_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "blocking_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "losses_or_fraud",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s2",
+      "name": "money_fund_size",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_reserves",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_hit_target",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "media_points",
+      "value_numeric": 0,
+      "max_numeric": 6
+    },
+    {
+      "section_code": "s2",
+      "name": "help_platform",
+      "value_numeric": 0,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "help_intros",
+      "value_numeric": 0,
+      "max_numeric": 1.5
+    },
+    {
+      "section_code": "s2",
+      "name": "help_stability",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "partner_departure_years",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "portfolio_companies",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "fund_age_years",
+      "value_numeric": 54
+    },
+    {
+      "section_code": "s3",
+      "name": "negative_first_hand",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "first_hand_accounts",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "conflict_count",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "scaled_deduction",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "bonus",
+      "name": "years_investing",
+      "value_numeric": 54
+    },
+    {
+      "section_code": "bonus",
+      "name": "significant_harm",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "pen",
+      "name": "sec_record",
+      "value_numeric": 0,
+      "value_text": "sec"
+    },
+    {
+      "section_code": "pen",
+      "name": "sanctions",
+      "value_numeric": 0,
+      "value_text": "sanctions_clear"
+    }
+  ],
+  "khosla": [
+    {
+      "section_code": "s1",
+      "name": "portfolio_companies",
+      "value_numeric": 115
+    },
+    {
+      "section_code": "s1",
+      "name": "own_founder_lawsuits",
+      "value_numeric": 1
+    },
+    {
+      "section_code": "s1",
+      "name": "founder_ceo_removals",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "downround_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "blocking_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "losses_or_fraud",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s2",
+      "name": "money_fund_size",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_reserves",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_hit_target",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "media_points",
+      "value_numeric": 0,
+      "max_numeric": 6
+    },
+    {
+      "section_code": "s2",
+      "name": "help_platform",
+      "value_numeric": 0,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "help_intros",
+      "value_numeric": 0,
+      "max_numeric": 1.5
+    },
+    {
+      "section_code": "s2",
+      "name": "help_stability",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "partner_departure_years",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "portfolio_companies",
+      "value_numeric": 115
+    },
+    {
+      "section_code": "s3",
+      "name": "fund_age_years",
+      "value_numeric": 22
+    },
+    {
+      "section_code": "s3",
+      "name": "negative_first_hand",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "first_hand_accounts",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "conflict_count",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "scaled_deduction",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "bonus",
+      "name": "years_investing",
+      "value_numeric": 22
+    },
+    {
+      "section_code": "bonus",
+      "name": "significant_harm",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "pen",
+      "name": "sec_record",
+      "value_numeric": 0,
+      "value_text": "sec"
+    },
+    {
+      "section_code": "pen",
+      "name": "sanctions",
+      "value_numeric": 0,
+      "value_text": "sanctions_clear"
+    }
+  ],
+  "lightspeed": [
+    {
+      "section_code": "s1",
+      "name": "portfolio_companies",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "own_founder_lawsuits",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "founder_ceo_removals",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "downround_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "blocking_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "losses_or_fraud",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s2",
+      "name": "money_fund_size",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_reserves",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_hit_target",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "media_points",
+      "value_numeric": 0,
+      "max_numeric": 6
+    },
+    {
+      "section_code": "s2",
+      "name": "help_platform",
+      "value_numeric": 0,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "help_intros",
+      "value_numeric": 0,
+      "max_numeric": 1.5
+    },
+    {
+      "section_code": "s2",
+      "name": "help_stability",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "partner_departure_years",
+      "value_numeric": 2
+    },
+    {
+      "section_code": "s3",
+      "name": "portfolio_companies",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "fund_age_years",
+      "value_numeric": 26
+    },
+    {
+      "section_code": "s3",
+      "name": "negative_first_hand",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "first_hand_accounts",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "conflict_count",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "scaled_deduction",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "bonus",
+      "name": "years_investing",
+      "value_numeric": 26
+    },
+    {
+      "section_code": "bonus",
+      "name": "significant_harm",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "pen",
+      "name": "sec_record",
+      "value_numeric": 0,
+      "value_text": "sec"
+    },
+    {
+      "section_code": "pen",
+      "name": "sanctions",
+      "value_numeric": 0,
+      "value_text": "sanctions_clear"
+    }
+  ]
+}

@@ -175,11 +175,11 @@ From `gating-plan.md`: 2 reports anonymous, register, 5 more (7 total), then a p
 
 ## What the seed is allowed to insert
 
-`scripts/seed.py` loads `data/home.json` and `data/funds/a16z.json` only.
+`scripts/seed.py` loads `data/home.json` and every `data/funds/<slug>.json` report. Score inputs for the ten funds besides a16z live in `data/score_inputs.json`. a16z keeps the published worksheet in `regrettamine/score_v2.py`.
 
 - Eleven firms, homepage stats, and the eight updates.
-- The full a16z report: score, matters, press, takeaways, questions, evidence, sources, and the people and board seats named in that file.
-- No invented vehicle list, no invented 1,456 companies, no invented reviews, no invented filings. Those tables stay empty for the real firms until a sourced row is added.
-- The other ten firms get a `legacy-list` score equal to the list score already in `home.json`, and no report page.
+- Every full report: score, matters, press, takeaways, questions, evidence, sources, and the people named in that file.
+- No invented vehicle list, no invented company roster, no invented reviews, no invented filings. Those tables stay empty until a sourced row is added.
+- A firm with no report file gets a `legacy-list` score equal to the list score in `home.json`, and no report page.
 
 `scripts/stress_fixture.py` is separate. It inserts one firm, `slug = stress-fixture`, `is_test = true`, `published = false`: 3 vehicles, 20 people, 1,000 portfolio companies, 100 reviews, 150 sources. The check constraint stops it from being published. The site build never selects it.

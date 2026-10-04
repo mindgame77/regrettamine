@@ -1,0 +1,896 @@
+{
+  "slug": "insightpartners",
+  "name": "Insight Partners",
+  "short": "Insight",
+  "title": "Insight Partners · Regrettamine",
+  "hq": "New York, NY",
+  "since": "1995",
+  "meta": [
+    "SEC adviser · CRD 142994",
+    "INSIGHT VENTURE PARTNERS"
+  ],
+  "notToken": "",
+  "updated": "Oct 4, 2026",
+  "method": "Toxy Score v2",
+  "scoreShown": 81,
+  "scoreExact": 81.6,
+  "band": "Low risk",
+  "range": [
+    71,
+    85
+  ],
+  "rank": {
+    "place": 11,
+    "tier": "v2",
+    "of": 11,
+    "example": false
+  },
+  "question": "Should I take this money?",
+  "verdict": "The SEC fined the adviser in 2023 for excess management fees. That is the score.",
+  "verdictSub": "The fees were repaid and there was no fraud finding, so the fine is −10, the bottom of the fine band. A former VP's suit is listed and is not a founder case.",
+  "floats": [
+    {
+      "class": "f1",
+      "ev": "pen",
+      "iconBg": "var(--peach)",
+      "icon": "!",
+      "text": "Sanctions: no ADV hit",
+      "small": "people not screened"
+    },
+    {
+      "class": "f2",
+      "ev": "cov",
+      "iconBg": "var(--sky)",
+      "icon": "%",
+      "text": "Coverage 9%",
+      "small": "what we could check"
+    }
+  ],
+  "badges": [
+    {
+      "ev": "cov",
+      "icon": "am",
+      "text": "Coverage 9%"
+    },
+    {
+      "ev": "rel",
+      "icon": "ok",
+      "text": "Sources linked"
+    },
+    {
+      "ev": "pen",
+      "icon": "am",
+      "text": "Sanctions: no ADV hit"
+    }
+  ],
+  "scoreBarNote": "Where the 81 comes from · tap a block for the Score tab",
+  "parts": [
+    {
+      "id": "s1",
+      "cardClass": "k1",
+      "barClass": "sb1",
+      "legendClass": "k1",
+      "name": "Fund vs. founders",
+      "legend": "Fund vs. founders",
+      "got": "60",
+      "maxLabel": "of 60",
+      "legendOf": "/60",
+      "heroFlex": "60",
+      "heroFill": "100.0%",
+      "scoreBar": "100.0%",
+      "aria": "Fund vs. founders: 60 of 60",
+      "rule": "Bad events are measured as a share of companies backed. Under 1% costs nothing. A missing portfolio count is not scored as a 70% rate. −3 per case the fund lost or where fraud was found.",
+      "inputs": [
+        {
+          "name": "Lawsuits with its own startups or founders",
+          "points": "30 / 30",
+          "why": "No fund-versus-founder lawsuit was verified. No rate is scored."
+        },
+        {
+          "name": "Pushing out founder CEOs",
+          "points": "12 / 12",
+          "why": "No removal was verified as its own event. Where a lawsuit alleged one, it stays inside that lawsuit."
+        },
+        {
+          "name": "Down-round or pay-to-play behavior",
+          "points": "10 / 10",
+          "why": "No evidence found. Terms were not checked, so coverage is 0% and there is no deduction."
+        },
+        {
+          "name": "Blocking acquisitions or rounds",
+          "points": "8 / 8",
+          "why": "No documented veto was verified on its own. Coverage is 0%."
+        },
+        {
+          "name": "Lost case or fraud finding (−3 each)",
+          "points": "0",
+          "why": "None verified against the fund."
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "cardClass": "k2",
+      "barClass": "sb2",
+      "legendClass": "k2",
+      "name": "Ability to support you",
+      "legend": "Support",
+      "got": "7",
+      "maxLabel": "of 17.5",
+      "legendOf": "/17.5",
+      "heroFlex": "17.5",
+      "heroFill": "40.0%",
+      "scoreBar": "40.0%",
+      "aria": "Ability to support you: 7 of 17.5",
+      "rule": "Money 6 + media 6 (capped) + help after the check 5.5. Claims the fund makes about itself count at half until founders confirm them. Partner departures cost −0.5 for each calendar year with a departure, up to −2.",
+      "inputs": [
+        {
+          "name": "Money",
+          "points": "5 / 6",
+          "why": "Fund size 2/2: Form ADV Item 5.F discretionary regulatory AUM is $92,178,934,483. Money left 1.5/2: reserves are not in the filing. Hit target 1.5/2: no published target for the current fund."
+        },
+        {
+          "name": "Media reach (capped)",
+          "points": "0 / 6",
+          "why": "No measured audience. Owned channels were not scored."
+        },
+        {
+          "name": "Help after the check",
+          "points": "2 / 5.5",
+          "why": "Platform 0/2: no founder-confirmed platform team. Intros 0/1.5: no independent intro record. Partner stability 2/2: no departure year was verified for this adviser."
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "cardClass": "k3",
+      "barClass": "sb3",
+      "legendClass": "k3",
+      "name": "Founder experience",
+      "legend": "Founder exp.",
+      "got": "16.6",
+      "maxLabel": "of 17.5",
+      "legendOf": "/17.5",
+      "heroFlex": "17.5",
+      "heroFill": "94.9%",
+      "scoreBar": "94.9%",
+      "aria": "Founder experience: 16.6 of 17.5",
+      "rule": "Only first-hand accounts count. If negative accounts are under 1% of the portfolio, or there are none, the fund gets its age default.",
+      "inputs": [
+        {
+          "name": "First-hand accounts",
+          "points": "0",
+          "why": "None collected. Anonymous and second-hand posts were not used."
+        },
+        {
+          "name": "Negative share",
+          "points": "0",
+          "why": "No negative first-hand account, so the share is under 1%."
+        },
+        {
+          "name": "Age default",
+          "points": "16.6",
+          "why": "Wikipedia says Insight Partners was founded in 1995. 31 ÷ 5 is capped at +3. The SEC fine is a penalty, not the bonus's “significant harm” test, which is about a pattern against founders."
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "cardClass": "k4",
+      "barClass": "sb4",
+      "legendClass": "k4",
+      "name": "Conflicts of interest",
+      "legend": "Conflicts",
+      "got": "5",
+      "maxLabel": "of 5",
+      "legendOf": "/5",
+      "heroFlex": "5",
+      "heroFill": "100.0%",
+      "scoreBar": "100.0%",
+      "aria": "Conflicts of interest: 5 of 5",
+      "rule": "−1 per documented conflict, scaled by partner count. No documented conflict was scored here.",
+      "inputs": [
+        {
+          "name": "Documented conflicts",
+          "points": "0",
+          "why": "None verified. Board seats were not censused."
+        },
+        {
+          "name": "Scaled deduction",
+          "points": "0",
+          "why": "No conflict to scale."
+        }
+      ]
+    },
+    {
+      "id": "bonus",
+      "cardClass": "kb",
+      "barClass": "bonus",
+      "legendClass": "kb",
+      "name": "Track record bonus",
+      "legend": "Bonus",
+      "got": "+3",
+      "maxLabel": "max +3",
+      "legendOf": null,
+      "heroFlex": "3",
+      "heroFill": "100.0%",
+      "scoreBar": "100.0%",
+      "aria": "Track record bonus +3",
+      "rule": "+1 for every 5 years of investing with no significant pattern of harm, up to +3.",
+      "inputs": [
+        {
+          "name": "Years investing",
+          "points": "31",
+          "why": "Wikipedia says Insight Partners was founded in 1995. 31 ÷ 5 is capped at +3. The SEC fine is a penalty, not the bonus's “significant harm” test, which is about a pattern against founders."
+        }
+      ]
+    },
+    {
+      "id": "pen",
+      "cardClass": "kp",
+      "barClass": "pen",
+      "legendClass": "kp",
+      "name": "Regulatory penalty",
+      "legend": "Regulatory",
+      "got": "−10",
+      "maxLabel": "range 0 to −50",
+      "legendOf": null,
+      "heroFlex": "10",
+      "heroFill": "100%",
+      "scoreBar": "20.0%",
+      "aria": "Regulatory penalty minus 10",
+      "rule": "Penalty only. A fine is −10 to −20. A clean Form ADV disclosure page is 0. Sanctions need an exact identity match.",
+      "inputs": [
+        {
+          "name": "SEC fee order, 2023",
+          "points": "−10",
+          "why": "Fine band is −10 to −20. Fees were repaid and there was no fraud finding, so −10. Not also scored as a conflict."
+        },
+        {
+          "name": "Sanctions",
+          "points": "0",
+          "why": "No sanctions designation in the Form ADV. People were not screened one by one."
+        }
+      ]
+    }
+  ],
+  "summary": "Insight's September 9, 2026 Form ADV reports $92.18 billion of discretionary regulatory AUM and a filed regulatory disclosure for the SEC's June 20, 2023 order.",
+  "takeaways": [
+    {
+      "ev": "tk0",
+      "title": "Read the 2023 SEC order before treating the founder record as the whole record.",
+      "text": "The points come off the regulatory penalty, not off fund-versus-founders."
+    },
+    {
+      "ev": "tk1",
+      "title": "The employee suit is not a founder suit.",
+      "text": "It is on the Legal tab and costs 0 under the founder section."
+    },
+    {
+      "ev": "tk2",
+      "title": "The company floor is the firm's reported total.",
+      "text": "Over 875 companies is what puts founder experience on the large-portfolio default."
+    }
+  ],
+  "topLegal": [
+    "L1"
+  ],
+  "matters": [
+    {
+      "id": "L1",
+      "year": "2025",
+      "text": "Former vice president Kate Lowry sued Insight for disability discrimination, gender discrimination, and wrongful termination. TechCrunch saw a suit filed December 30 in San Mateo County. This is an employee suit, not a suit by a portfolio founder.",
+      "sub": "Lowry v. Insight Partners",
+      "badge": "0 pts",
+      "tone": "open"
+    }
+  ],
+  "regulatory": {
+    "title": "Regulatory records & sanctions",
+    "note": "Form ADV read · Oct 4, 2026",
+    "recordsTitle": "Regulatory records",
+    "sanctionsTitle": "Sanctions",
+    "records": [
+      {
+        "icon": "am",
+        "title": "SEC fee order, 2023",
+        "detail": "June 20, 2023 order. Excess fees repaid. $1.5 million penalty. No fraud finding.",
+        "points": "−10 pts",
+        "tone": "amber",
+        "ev": "sec"
+      }
+    ],
+    "sanctions": {
+      "ok": true,
+      "title": "No adviser designation in the filing",
+      "text": "The September 9, 2026 Form ADV for INSIGHT VENTURE PARTNERS has no sanctions disclosure. People at the firm were not screened one by one.",
+      "ev": "sanc",
+      "link": "Details →",
+      "note": "A shared word in another entity's name is not a match."
+    }
+  },
+  "legalGroups": [
+    {
+      "title": "Other matters",
+      "note": "Not scored as fund versus founders",
+      "ids": [
+        "L1"
+      ]
+    }
+  ],
+  "notCountedTitle": "Not counted",
+  "notCounted": [
+    "IPI Partners is a different firm. Its sanctions news is not scored here.",
+    "Wikipedia describes a 2024 ransomware incident. It is not a founder suit and not an SEC order, so it is not scored.",
+    "A full person-by-person sanctions screen was not run."
+  ],
+  "fundTab": {
+    "factsTitle": "Fund facts",
+    "factsNote": "Form ADV, September 9, 2026",
+    "facts": [
+      {
+        "k": "Regulatory AUM",
+        "v": "$92.18B",
+        "s": "Discretionary regulatory AUM $92,178,934,483. 181 accounts. Non-discretionary $0."
+      },
+      {
+        "k": "Accounts",
+        "v": "181",
+        "s": "Discretionary accounts on the September 9, 2026 ADV."
+      },
+      {
+        "k": "Staff",
+        "v": "438",
+        "s": "Item 5.A. 147 perform investment advisory functions (Item 5.B.1)."
+      },
+      {
+        "k": "Latest ADV",
+        "v": "September 9, 2026",
+        "s": "SEC-registered adviser."
+      },
+      {
+        "k": "SEC file",
+        "v": "801-67560",
+        "s": "CRD 142994"
+      },
+      {
+        "k": "Performance",
+        "v": "Not public",
+        "s": "IRR / TVPI / DPI were not in the filing"
+      }
+    ],
+    "boards": {
+      "title": "Partner board seats",
+      "items": [],
+      "note": "No partner-board list was verified. Empty is missing data, not a clean conflict record."
+    },
+    "moves": {
+      "title": "Partner moves",
+      "note": "Verified departures only",
+      "items": [],
+      "foot": "One calendar year costs −0.5, however many people left that year."
+    },
+    "media": {
+      "title": "Media reach",
+      "note": "Not measured",
+      "items": [],
+      "foot": "No subscriber or audience figure was verified, so media points are 0."
+    }
+  },
+  "public": {
+    "title": "Public record",
+    "intro": "Articles cited on this page. The fact itself lives on the tab named in the note.",
+    "sentimentTitle": "What these sources are",
+    "sentimentNote": "A link is not a second copy of the fact.",
+    "empty": "No press was needed beyond the filings.",
+    "items": [
+      {
+        "publisher": "TechCrunch",
+        "domain": "techcrunch.com",
+        "date": "Jan 5, 2026",
+        "headline": "Insight Partners sued by former vice president Kate Lowry",
+        "url": "https://techcrunch.com/2026/01/05/insight-partners-sued-by-former-vice-president-kate-lowry/",
+        "group": "Legal",
+        "sentiment": "neg",
+        "why": "Cited on the Legal tab. Employee suit, 0 points."
+      },
+      {
+        "publisher": "U.S. Securities and Exchange Commission",
+        "domain": "sec.gov",
+        "date": "Jun 20, 2023",
+        "headline": "SEC charges Insight Venture Management for overcharging fees",
+        "url": "https://www.sec.gov/newsroom/press-releases/2023-112",
+        "group": "Regulator",
+        "sentiment": "neg",
+        "why": "Cited on the regulatory record. The dollar figures live there."
+      }
+    ]
+  },
+  "portfolio": {
+    "title": "What we did not classify",
+    "note": "No event histogram",
+    "events": [],
+    "foot": "Portfolio-company trouble is not charged to the firm unless the firm's own role is documented. No event list was classified.",
+    "size": {
+      "title": "Portfolio size",
+      "value": "875+",
+      "text": "Wikipedia, citing Insight's about page, says the firm had invested in over 875 companies as of June 30, 2025. Used as a floor."
+    },
+    "healthTitle": "Health",
+    "healthNote": "Not classified",
+    "health": [],
+    "litigation": {
+      "title": "Portfolio litigation rate",
+      "value": "Not measured",
+      "text": "No fund-versus-founder lawsuit was verified against this floor."
+    }
+  },
+  "ask": {
+    "title": "Not public: ask the fund",
+    "note": "These can't be checked from public records. Bring them to your partner meeting.",
+    "printHead": "Insight Partners · Questions to ask · Regrettamine · Oct 4, 2026",
+    "questions": [
+      {
+        "n": "01",
+        "title": "Down rounds, bridges, pay-to-play",
+        "q": "In your last 3 down or flat rounds, did you lead, follow or walk?"
+      },
+      {
+        "n": "02",
+        "title": "Follow-on and pro rata",
+        "q": "What share of your seed/A companies did you reinvest in at the next round, including the strugglers?"
+      },
+      {
+        "n": "03",
+        "title": "Replacing founder-CEOs",
+        "q": "When did you last back replacing a founder-CEO, and how did it happen?"
+      },
+      {
+        "n": "04",
+        "title": "Board seat & consent rights",
+        "q": "Will you take a seat at my stage? Which consent rights do you require?"
+      },
+      {
+        "n": "05",
+        "title": "Competitor overlap",
+        "q": "Does any partner sit on the board of a company that competes with me?"
+      },
+      {
+        "n": "06",
+        "title": "Reserves for this check",
+        "q": "Which fund is this check from, and how much is reserved for follow-ons?"
+      },
+      {
+        "n": "07",
+        "title": "Foreign or sovereign LPs",
+        "q": "Are there sovereign or foreign-state LPs in this fund?"
+      },
+      {
+        "n": "08",
+        "title": "References from failures",
+        "q": "Give me 2 founders whose companies failed with you on the board."
+      }
+    ],
+    "clipboard": "Questions to ask Insight Partners, from Regrettamine\n\n1. Down rounds, bridges, pay-to-play: In your last 3 down or flat rounds, did you lead, follow or walk?\n2. Follow-on and pro rata: What share of your seed/A companies did you reinvest in at the next round, including the strugglers?\n3. Replacing founder-CEOs: When did you last back replacing a founder-CEO, and how did it happen?\n4. Board seat & consent rights: Will you take a seat at my stage? Which consent rights do you require?\n5. Competitor overlap: Does any partner sit on the board of a company that competes with me?\n6. Reserves for this check: Which fund is this check from, and how much is reserved for follow-ons?\n7. Foreign or sovereign LPs: Are there sovereign or foreign-state LPs in this fund?\n8. References from failures: Give me 2 founders whose companies failed with you on the board."
+  },
+  "footnote": "Every scored fact links to a dated source. Empty blocks were left empty. Founder sentiment stays empty until it rests on a first-hand account.",
+  "scoreFooter": "Rules: Toxy Score v2 (Oct 2, 2026). Inputs: this report, Oct 4, 2026.",
+  "evidence": {
+    "tk0": {
+      "kicker": "Takeaway",
+      "title": "Read the 2023 SEC order before treating the founder record as the whole record.",
+      "body": "The points come off the regulatory penalty, not off fund-versus-founders.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/142994/PDF/142994.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "tk1": {
+      "kicker": "Takeaway",
+      "title": "The employee suit is not a founder suit.",
+      "body": "It is on the Legal tab and costs 0 under the founder section.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/142994/PDF/142994.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "tk2": {
+      "kicker": "Takeaway",
+      "title": "The company floor is the firm's reported total.",
+      "body": "Over 875 companies is what puts founder experience on the large-portfolio default.",
+      "rows": [],
+      "sources": [
+        [
+          "Wikipedia, Insight Partners",
+          "https://en.wikipedia.org/wiki/Insight_Partners"
+        ]
+      ],
+      "tone": ""
+    },
+    "s1": {
+      "kicker": "Score · 60 of 60",
+      "title": "Fund vs. founders",
+      "body": "Insight's September 9, 2026 Form ADV reports $92.18 billion of discretionary regulatory AUM and a filed regulatory disclosure for the SEC's June 20, 2023 order.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/142994/PDF/142994.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "s2": {
+      "kicker": "Score · 7 of 17.5",
+      "title": "Ability to support you",
+      "body": "Money is the filing. Media reach was not measured. Help is empty unless the firm itself claimed a platform, and then only at half.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/142994/PDF/142994.pdf"
+        ],
+        [
+          "Wikipedia, Insight Partners",
+          "https://en.wikipedia.org/wiki/Insight_Partners"
+        ]
+      ],
+      "tone": ""
+    },
+    "s3": {
+      "kicker": "Score · 16.6 of 17.5",
+      "title": "Founder experience",
+      "body": "No first-hand account was collected, so the age default applies.",
+      "rows": [
+        [
+          "First-hand accounts",
+          "0"
+        ],
+        [
+          "Age default",
+          "16.6"
+        ]
+      ],
+      "sources": [
+        [
+          "Wikipedia, Insight Partners",
+          "https://en.wikipedia.org/wiki/Insight_Partners"
+        ]
+      ],
+      "tone": ""
+    },
+    "s4": {
+      "kicker": "Score · 5 of 5",
+      "title": "Conflicts of interest",
+      "body": "No competitor-board or incubation conflict was verified. A partner-by-partner board list was not built.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/142994/PDF/142994.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "bonus": {
+      "kicker": "Bonus · +3",
+      "title": "Track record bonus",
+      "body": "Wikipedia says Insight Partners was founded in 1995. 31 ÷ 5 is capped at +3. The SEC fine is a penalty, not the bonus's “significant harm” test, which is about a pattern against founders.",
+      "rows": [],
+      "sources": [
+        [
+          "Wikipedia, Insight Partners",
+          "https://en.wikipedia.org/wiki/Insight_Partners"
+        ]
+      ],
+      "tone": ""
+    },
+    "pen": {
+      "kicker": "Penalty · -10",
+      "title": "Regulatory penalty",
+      "body": "SEC order of June 20, 2023: excess management fees of $773,754.41, a $1.5 million civil penalty, and disgorgement plus interest of $864,958.17 that the SEC said had already been paid back. No fraud finding. Scored at −10, the bottom of the fine band. The same fee conflict is not also deducted under conflicts.",
+      "rows": [],
+      "sources": [
+        [
+          "SEC press release, Jun 20, 2023",
+          "https://www.sec.gov/newsroom/press-releases/2023-112"
+        ],
+        [
+          "SEC order IA-6332",
+          "https://www.sec.gov/files/litigation/admin/2023/ia-6332.pdf"
+        ],
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/142994/PDF/142994.pdf"
+        ]
+      ],
+      "tone": "penalty"
+    },
+    "sec": {
+      "kicker": "Regulatory record",
+      "title": "SEC fee order, 2023",
+      "body": "SEC order of June 20, 2023: excess management fees of $773,754.41, a $1.5 million civil penalty, and disgorgement plus interest of $864,958.17 that the SEC said had already been paid back. No fraud finding. Scored at −10, the bottom of the fine band. The same fee conflict is not also deducted under conflicts.",
+      "rows": [],
+      "sources": [
+        [
+          "SEC press release, Jun 20, 2023",
+          "https://www.sec.gov/newsroom/press-releases/2023-112"
+        ],
+        [
+          "SEC order IA-6332",
+          "https://www.sec.gov/files/litigation/admin/2023/ia-6332.pdf"
+        ],
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/142994/PDF/142994.pdf"
+        ]
+      ],
+      "tone": "open"
+    },
+    "range": {
+      "kicker": "How sure are we",
+      "title": "Likely range 71–85",
+      "body": "For each unchecked part we took a small plausible downside (10% of lawsuits and removals, half of down-rounds and blocking, and the unpublished reserve and founder-experience gaps) and combined them as independent swings. Upside is unpublished reserves, unmeasured media, and unconfirmed help.",
+      "rows": [
+        [
+          "1a Lawsuits with own founders",
+          "-2.5 / +0.0"
+        ],
+        [
+          "1b Pushing out founder-CEOs",
+          "-1.2 / +0.0"
+        ],
+        [
+          "1c Down-round / pay-to-play",
+          "-5.0 / +0.0"
+        ],
+        [
+          "1d Blocking deals / rounds",
+          "-4.0 / +0.0"
+        ],
+        [
+          "2a Money",
+          "-0.5 / +1.0"
+        ],
+        [
+          "2b Media reach",
+          "-0.0 / +3.0"
+        ],
+        [
+          "2c Help after the check",
+          "-1.0 / +2.0"
+        ],
+        [
+          "3 Founder experience",
+          "-6.0 / +0.0"
+        ],
+        [
+          "4 Conflicts",
+          "-1.0 / +0.0"
+        ],
+        [
+          "6 Regulatory",
+          "-5.0 / +0.0"
+        ]
+      ],
+      "sources": [],
+      "tone": ""
+    },
+    "cov": {
+      "kicker": "Coverage · 9%",
+      "title": "How much we could check",
+      "body": "Weighted by section points. Down rounds, blocking, media reach, and founder accounts are 0% because they were not measured. A thin record is not a clean record. The percent does not change the 0–100 score.",
+      "rows": [
+        [
+          "1a Lawsuits",
+          "15%"
+        ],
+        [
+          "1b Founder removals",
+          "0%"
+        ],
+        [
+          "1c Down rounds",
+          "0%"
+        ],
+        [
+          "1d Blocking",
+          "0%"
+        ],
+        [
+          "2a Money",
+          "33%"
+        ],
+        [
+          "2b Media",
+          "0%"
+        ],
+        [
+          "2c Help",
+          "36%"
+        ],
+        [
+          "3 Founder experience",
+          "0%"
+        ],
+        [
+          "4 Conflicts",
+          "15%"
+        ]
+      ],
+      "sources": [],
+      "tone": ""
+    },
+    "rel": {
+      "kicker": "Sources",
+      "title": "Sourced rows only",
+      "body": "Each scored figure links to a filing or an article that was read. Older research files were used as leads, not as facts. Empty blocks were left empty.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/142994/PDF/142994.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "rank": {
+      "kicker": "Ranking",
+      "title": "#11 of 11 on Toxy Score v2",
+      "body": "All 11 funds are on v2. Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
+      "rows": [
+        [
+          "Andreessen Horowitz",
+          "95.4 (v2)"
+        ],
+        [
+          "Bessemer Venture Partners",
+          "91.7 (v2)"
+        ],
+        [
+          "Battery Ventures",
+          "91.6 (v2)"
+        ],
+        [
+          "Accel",
+          "89.9 (v2)"
+        ],
+        [
+          "Bain Capital Ventures",
+          "89.9 (v2)"
+        ],
+        [
+          "Khosla Ventures",
+          "89.9 (v2)"
+        ],
+        [
+          "Lux Capital",
+          "89.9 (v2)"
+        ],
+        [
+          "Sequoia Capital",
+          "89.9 (v2)"
+        ],
+        [
+          "General Catalyst",
+          "89.4 (v2)"
+        ],
+        [
+          "Lightspeed Venture Partners",
+          "88.9 (v2)"
+        ],
+        [
+          "Insight Partners",
+          "81.6 (v2)"
+        ]
+      ],
+      "sources": [],
+      "tone": ""
+    },
+    "rules": {
+      "kicker": "Methodology",
+      "title": "How Toxy Score v2 works",
+      "body": "Every fund starts with full points and loses them only for verified evidence about its own behavior. Bad events are a share of the portfolio: under 1% costs nothing. A missing portfolio count is not treated as a 70% rate. Regulatory is penalty-only.",
+      "rows": [
+        [
+          "Fund vs. founders",
+          "60"
+        ],
+        [
+          "Ability to support you",
+          "17.5"
+        ],
+        [
+          "Founder experience",
+          "17.5"
+        ],
+        [
+          "Conflicts",
+          "5"
+        ],
+        [
+          "Track record bonus",
+          "up to +3"
+        ],
+        [
+          "Regulatory penalty",
+          "0 to −50"
+        ]
+      ],
+      "sources": [],
+      "tone": ""
+    },
+    "sanc": {
+      "kicker": "Sanctions · no ADV designation",
+      "title": "No adviser designation in the filing",
+      "body": "The Form ADV disclosure pages were read. No sanctions designation for this adviser was in them. People were not screened one by one. A designation would need an exact identity match, not a shared word in a name.",
+      "rows": [
+        [
+          "Form ADV DRP",
+          "No sanctions designation filed"
+        ],
+        [
+          "People screened",
+          "Not run"
+        ],
+        [
+          "Adviser",
+          "INSIGHT VENTURE PARTNERS"
+        ]
+      ],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/142994/PDF/142994.pdf"
+        ],
+        [
+          "SEC IAPD summary",
+          "https://adviserinfo.sec.gov/firm/summary/142994"
+        ]
+      ],
+      "tone": ""
+    },
+    "L1": {
+      "kicker": "Legal · 2025",
+      "title": "Kate Lowry v. Insight Partners",
+      "body": "Employment case. It does not enter the fund-versus-founders rate. No later dismissal was found in the sources read, so the list counts it as active.",
+      "rows": [
+        [
+          "Firm role",
+          "Defendant"
+        ],
+        [
+          "Other party",
+          "Kate Lowry"
+        ],
+        [
+          "Status",
+          "Filed Dec 30, 2025 · no dismissal found"
+        ],
+        [
+          "Founder relevance",
+          "Low · employee, not a founder"
+        ],
+        [
+          "Score effect",
+          "0"
+        ]
+      ],
+      "sources": [
+        [
+          "TechCrunch, Jan 5, 2026",
+          "https://techcrunch.com/2026/01/05/insight-partners-sued-by-former-vice-president-kate-lowry/"
+        ]
+      ],
+      "tone": "open"
+    }
+  }
+}

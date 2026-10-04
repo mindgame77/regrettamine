@@ -23,7 +23,7 @@
     "place": 1,
     "tier": "Top 1",
     "of": 11,
-    "example": true
+    "example": false
   },
   "question": "Should I take this money?",
   "verdict": "Safe to take a meeting. Ask which other boards your partner sits on.",
@@ -1879,53 +1879,53 @@
       "tone": ""
     },
     "rank": {
-      "kicker": "Ranking · example",
-      "title": "Top 1 fund among 11 Toxy tracks",
-      "body": "Example only. a16z's v2 score (95) is compared with the other 10 funds' old Toxy scores (highest: Lux Capital 83). They haven't been rescored on v2, so this rank isn't like-for-like. On Toxy's old scores a16z ranks 11 of 11.",
+      "kicker": "Ranking",
+      "title": "#1 of 11 on Toxy Score v2",
+      "body": "All 11 funds are scored on v2. Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
       "rows": [
         [
           "Andreessen Horowitz",
-          "95 (v2)"
-        ],
-        [
-          "Lux Capital",
-          "83 (old Toxy)"
-        ],
-        [
-          "Accel",
-          "78 (old Toxy)"
+          "95.4 (v2)"
         ],
         [
           "Bessemer Venture Partners",
-          "71 (old Toxy)"
+          "91.7 (v2)"
         ],
         [
           "Battery Ventures",
-          "67 (old Toxy)"
+          "91.6 (v2)"
         ],
         [
-          "Insight Partners",
-          "67 (old Toxy)"
+          "Accel",
+          "89.9 (v2)"
         ],
         [
           "Bain Capital Ventures",
-          "66 (old Toxy)"
-        ],
-        [
-          "General Catalyst",
-          "66 (old Toxy)"
+          "89.9 (v2)"
         ],
         [
           "Khosla Ventures",
-          "63 (old Toxy)"
+          "89.9 (v2)"
         ],
         [
-          "Lightspeed Venture Partners",
-          "58 (old Toxy)"
+          "Lux Capital",
+          "89.9 (v2)"
         ],
         [
           "Sequoia Capital",
-          "52 (old Toxy)"
+          "89.9 (v2)"
+        ],
+        [
+          "General Catalyst",
+          "89.4 (v2)"
+        ],
+        [
+          "Lightspeed Venture Partners",
+          "88.9 (v2)"
+        ],
+        [
+          "Insight Partners",
+          "81.6 (v2)"
         ]
       ],
       "sources": [],

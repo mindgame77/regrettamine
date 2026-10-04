@@ -1,0 +1,897 @@
+{
+  "slug": "generalcatalyst",
+  "name": "General Catalyst",
+  "short": "GC",
+  "title": "General Catalyst · Regrettamine",
+  "hq": "Cambridge, MA",
+  "since": "2000",
+  "meta": [
+    "SEC adviser · CRD 162548",
+    "GENERAL CATALYST"
+  ],
+  "notToken": "",
+  "updated": "Oct 4, 2026",
+  "method": "Toxy Score v2",
+  "scoreShown": 89,
+  "scoreExact": 89.4,
+  "band": "Low risk",
+  "range": [
+    80,
+    93
+  ],
+  "rank": {
+    "place": 9,
+    "tier": "v2",
+    "of": 11,
+    "example": false
+  },
+  "question": "Should I take this money?",
+  "verdict": "Three managing directors left in 2025. That is the deduction.",
+  "verdictSub": "Palantir's case is a subpoena report, not a suit against the firm. No founder lawsuit was verified, and the portfolio count is unpublished.",
+  "floats": [
+    {
+      "class": "f1",
+      "ev": "pen",
+      "iconBg": "var(--mint)",
+      "icon": "✓",
+      "text": "Sanctions: no ADV hit",
+      "small": "people not screened"
+    },
+    {
+      "class": "f2",
+      "ev": "cov",
+      "iconBg": "var(--sky)",
+      "icon": "%",
+      "text": "Coverage 8%",
+      "small": "what we could check"
+    }
+  ],
+  "badges": [
+    {
+      "ev": "cov",
+      "icon": "am",
+      "text": "Coverage 8%"
+    },
+    {
+      "ev": "rel",
+      "icon": "ok",
+      "text": "Sources linked"
+    },
+    {
+      "ev": "pen",
+      "icon": "ok",
+      "text": "Sanctions: no ADV hit"
+    }
+  ],
+  "scoreBarNote": "Where the 89 comes from · tap a block for the Score tab",
+  "parts": [
+    {
+      "id": "s1",
+      "cardClass": "k1",
+      "barClass": "sb1",
+      "legendClass": "k1",
+      "name": "Fund vs. founders",
+      "legend": "Fund vs. founders",
+      "got": "60",
+      "maxLabel": "of 60",
+      "legendOf": "/60",
+      "heroFlex": "60",
+      "heroFill": "100.0%",
+      "scoreBar": "100.0%",
+      "aria": "Fund vs. founders: 60 of 60",
+      "rule": "Bad events are measured as a share of companies backed. Under 1% costs nothing. A missing portfolio count is not scored as a 70% rate. −3 per case the fund lost or where fraud was found.",
+      "inputs": [
+        {
+          "name": "Lawsuits with its own startups or founders",
+          "points": "30 / 30",
+          "why": "No fund-versus-founder lawsuit was verified. No rate is scored."
+        },
+        {
+          "name": "Pushing out founder CEOs",
+          "points": "12 / 12",
+          "why": "No removal was verified as its own event. Where a lawsuit alleged one, it stays inside that lawsuit."
+        },
+        {
+          "name": "Down-round or pay-to-play behavior",
+          "points": "10 / 10",
+          "why": "No evidence found. Terms were not checked, so coverage is 0% and there is no deduction."
+        },
+        {
+          "name": "Blocking acquisitions or rounds",
+          "points": "8 / 8",
+          "why": "No documented veto was verified on its own. Coverage is 0%."
+        },
+        {
+          "name": "Lost case or fraud finding (−3 each)",
+          "points": "0",
+          "why": "None verified against the fund."
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "cardClass": "k2",
+      "barClass": "sb2",
+      "legendClass": "k2",
+      "name": "Ability to support you",
+      "legend": "Support",
+      "got": "6.5",
+      "maxLabel": "of 17.5",
+      "legendOf": "/17.5",
+      "heroFlex": "17.5",
+      "heroFill": "37.1%",
+      "scoreBar": "37.1%",
+      "aria": "Ability to support you: 6.5 of 17.5",
+      "rule": "Money 6 + media 6 (capped) + help after the check 5.5. Claims the fund makes about itself count at half until founders confirm them. Partner departures cost −0.5 for each calendar year with a departure, up to −2.",
+      "inputs": [
+        {
+          "name": "Money",
+          "points": "5 / 6",
+          "why": "Fund size 2/2: Form ADV Item 5.F discretionary regulatory AUM is $45,502,659,880. Money left 1.5/2: reserves are not in the filing. Hit target 1.5/2: no published target for the current fund."
+        },
+        {
+          "name": "Media reach (capped)",
+          "points": "0 / 6",
+          "why": "No measured audience. Owned channels were not scored."
+        },
+        {
+          "name": "Help after the check",
+          "points": "1.5 / 5.5",
+          "why": "Platform 0/2: no founder-confirmed platform team. Intros 0/1.5: no independent intro record. Partner stability 1.5/2: −0.5 for 1 calendar year with a departure."
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "cardClass": "k3",
+      "barClass": "sb3",
+      "legendClass": "k3",
+      "name": "Founder experience",
+      "legend": "Founder exp.",
+      "got": "14.9",
+      "maxLabel": "of 17.5",
+      "legendOf": "/17.5",
+      "heroFlex": "17.5",
+      "heroFill": "85.1%",
+      "scoreBar": "85.1%",
+      "aria": "Founder experience: 14.9 of 17.5",
+      "rule": "Only first-hand accounts count. If negative accounts are under 1% of the portfolio, or there are none, the fund gets its age default.",
+      "inputs": [
+        {
+          "name": "First-hand accounts",
+          "points": "0",
+          "why": "None collected. Anonymous and second-hand posts were not used."
+        },
+        {
+          "name": "Negative share",
+          "points": "0",
+          "why": "No negative first-hand account, so the share is under 1%."
+        },
+        {
+          "name": "Age default",
+          "points": "14.9",
+          "why": "General Catalyst's capital page says 25 years in its Creation strategy. That is the sourced floor. 25 ÷ 5 is capped at +3. The list year 2000 was already on this site and is one year apart, which does not change the points."
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "cardClass": "k4",
+      "barClass": "sb4",
+      "legendClass": "k4",
+      "name": "Conflicts of interest",
+      "legend": "Conflicts",
+      "got": "5",
+      "maxLabel": "of 5",
+      "legendOf": "/5",
+      "heroFlex": "5",
+      "heroFill": "100.0%",
+      "scoreBar": "100.0%",
+      "aria": "Conflicts of interest: 5 of 5",
+      "rule": "−1 per documented conflict, scaled by partner count. No documented conflict was scored here.",
+      "inputs": [
+        {
+          "name": "Documented conflicts",
+          "points": "0",
+          "why": "None verified. Board seats were not censused."
+        },
+        {
+          "name": "Scaled deduction",
+          "points": "0",
+          "why": "No conflict to scale."
+        }
+      ]
+    },
+    {
+      "id": "bonus",
+      "cardClass": "kb",
+      "barClass": "bonus",
+      "legendClass": "kb",
+      "name": "Track record bonus",
+      "legend": "Bonus",
+      "got": "+3",
+      "maxLabel": "max +3",
+      "legendOf": null,
+      "heroFlex": "3",
+      "heroFill": "100.0%",
+      "scoreBar": "100.0%",
+      "aria": "Track record bonus +3",
+      "rule": "+1 for every 5 years of investing with no significant pattern of harm, up to +3.",
+      "inputs": [
+        {
+          "name": "Years investing",
+          "points": "25",
+          "why": "General Catalyst's capital page says 25 years in its Creation strategy. That is the sourced floor. 25 ÷ 5 is capped at +3. The list year 2000 was already on this site and is one year apart, which does not change the points."
+        }
+      ]
+    },
+    {
+      "id": "pen",
+      "cardClass": "kp",
+      "barClass": "pen",
+      "legendClass": "kp",
+      "name": "Regulatory penalty",
+      "legend": "Regulatory",
+      "got": "0",
+      "maxLabel": "range 0 to −50",
+      "legendOf": null,
+      "heroFlex": "0",
+      "heroFill": "0%",
+      "scoreBar": "0.0%",
+      "aria": "Regulatory penalty 0",
+      "rule": "Penalty only. A fine is −10 to −20. A clean Form ADV disclosure page is 0. Sanctions need an exact identity match.",
+      "inputs": [
+        {
+          "name": "SEC record",
+          "points": "0",
+          "why": "No information filed on the disclosure pages of the July 21, 2026 Form ADV."
+        },
+        {
+          "name": "Sanctions",
+          "points": "0",
+          "why": "No sanctions designation in the Form ADV. People were not screened one by one."
+        }
+      ]
+    }
+  ],
+  "summary": "General Catalyst's July 21, 2026 Form ADV reports $45.50 billion of discretionary regulatory AUM and no filed disclosure page. TechCrunch reported three managing-director departures in 2025.",
+  "takeaways": [
+    {
+      "ev": "tk0",
+      "title": "2025 is one departure year, not three deductions.",
+      "text": "Nishar, Doherty, and Valkin left in the same calendar year. The cap is −0.5 per year."
+    },
+    {
+      "ev": "tk1",
+      "title": "The Palantir matter is a subpoena.",
+      "text": "It is on the Legal tab and costs 0."
+    },
+    {
+      "ev": "tk2",
+      "title": "Portfolio size is unpublished.",
+      "text": "No lawsuit rate is computed, and founder experience stays on the age default."
+    }
+  ],
+  "topLegal": [
+    "L1"
+  ],
+  "matters": [
+    {
+      "id": "L1",
+      "year": "2026",
+      "text": "Bloomberg reported that a judge partly blocked former Palantir employees at Percepta from poaching. General Catalyst was subpoenaed, not sued.",
+      "sub": "Palantir matter · Percepta",
+      "badge": "0 pts",
+      "tone": "gray"
+    }
+  ],
+  "regulatory": {
+    "title": "Regulatory records & sanctions",
+    "note": "Form ADV read · Oct 4, 2026",
+    "recordsTitle": "Regulatory records",
+    "sanctionsTitle": "Sanctions",
+    "records": [
+      {
+        "icon": "ok",
+        "title": "SEC disciplinary record",
+        "detail": "No information filed on the disclosure pages of the July 21, 2026 Form ADV.",
+        "points": "0 pts",
+        "tone": "gray",
+        "ev": "sec"
+      }
+    ],
+    "sanctions": {
+      "ok": true,
+      "title": "No adviser designation in the filing",
+      "text": "The July 21, 2026 Form ADV for GENERAL CATALYST has no sanctions disclosure. People at the firm were not screened one by one.",
+      "ev": "sanc",
+      "link": "Details →",
+      "note": "A shared word in another entity's name is not a match."
+    }
+  },
+  "legalGroups": [
+    {
+      "title": "Other matters",
+      "note": "Not scored as fund versus founders",
+      "ids": [
+        "L1"
+      ]
+    }
+  ],
+  "notCountedTitle": "Not counted",
+  "notCounted": [
+    "TechCrunch's IPO comments are attributed to people close to the firm. They are not scored as a plan.",
+    "A full person-by-person sanctions screen was not run."
+  ],
+  "fundTab": {
+    "factsTitle": "Fund facts",
+    "factsNote": "Form ADV, July 21, 2026",
+    "facts": [
+      {
+        "k": "Regulatory AUM",
+        "v": "$45.50B",
+        "s": "Discretionary regulatory AUM $45,502,659,880. 49 accounts. Non-discretionary $0."
+      },
+      {
+        "k": "Accounts",
+        "v": "49",
+        "s": "Discretionary accounts on the July 21, 2026 ADV."
+      },
+      {
+        "k": "Staff",
+        "v": "211",
+        "s": "Item 5.A. 68 perform investment advisory functions (Item 5.B.1)."
+      },
+      {
+        "k": "Latest ADV",
+        "v": "July 21, 2026",
+        "s": "SEC-registered adviser. Registration effective April 26, 2019."
+      },
+      {
+        "k": "SEC file",
+        "v": "801-115155",
+        "s": "CRD 162548"
+      },
+      {
+        "k": "Performance",
+        "v": "Not public",
+        "s": "IRR / TVPI / DPI were not in the filing"
+      }
+    ],
+    "boards": {
+      "title": "Partner board seats",
+      "items": [],
+      "note": "No partner-board list was verified. Empty is missing data, not a clean conflict record."
+    },
+    "moves": {
+      "title": "Partner moves",
+      "note": "Verified departures only",
+      "items": [
+        {
+          "name": "Deep Nishar",
+          "role": "Managing director",
+          "badge": "Left 2025"
+        },
+        {
+          "name": "Kyle Doherty",
+          "role": "Managing director",
+          "badge": "Left 2025"
+        },
+        {
+          "name": "Adam Valkin",
+          "role": "Managing director",
+          "badge": "Left 2025"
+        }
+      ],
+      "foot": "One calendar year costs −0.5, however many people left that year."
+    },
+    "media": {
+      "title": "Media reach",
+      "note": "Not measured",
+      "items": [],
+      "foot": "No subscriber or audience figure was verified, so media points are 0."
+    }
+  },
+  "public": {
+    "title": "Public record",
+    "intro": "Articles cited on this page. The fact itself lives on the tab named in the note.",
+    "sentimentTitle": "What these sources are",
+    "sentimentNote": "A link is not a second copy of the fact.",
+    "empty": "No press was needed beyond the filings.",
+    "items": [
+      {
+        "publisher": "TechCrunch",
+        "domain": "techcrunch.com",
+        "date": "Mar 3, 2025",
+        "headline": "General Catalyst loses three top investors as the firm expands beyond venture",
+        "url": "https://techcrunch.com/2025/03/03/general-catalyst-loses-three-top-investors-as-the-firm-expands-beyond-venture-contemplates-ipo/",
+        "group": "People",
+        "sentiment": "neg",
+        "why": "Cited on the Fund tab for the 2025 departures."
+      }
+    ]
+  },
+  "portfolio": {
+    "title": "What we did not classify",
+    "note": "No event histogram",
+    "events": [],
+    "foot": "Portfolio-company trouble is not charged to the firm unless the firm's own role is documented. No event list was classified.",
+    "size": {
+      "title": "Portfolio size",
+      "value": "Not published",
+      "text": "No complete company count was found. A missing count is coverage, not a penalty."
+    },
+    "healthTitle": "Health",
+    "healthNote": "Not classified",
+    "health": [],
+    "litigation": {
+      "title": "Portfolio litigation rate",
+      "value": "Not measured",
+      "text": "No fund-versus-founder lawsuit was verified."
+    }
+  },
+  "ask": {
+    "title": "Not public: ask the fund",
+    "note": "These can't be checked from public records. Bring them to your partner meeting.",
+    "printHead": "General Catalyst · Questions to ask · Regrettamine · Oct 4, 2026",
+    "questions": [
+      {
+        "n": "01",
+        "title": "Down rounds, bridges, pay-to-play",
+        "q": "In your last 3 down or flat rounds, did you lead, follow or walk?"
+      },
+      {
+        "n": "02",
+        "title": "Follow-on and pro rata",
+        "q": "What share of your seed/A companies did you reinvest in at the next round, including the strugglers?"
+      },
+      {
+        "n": "03",
+        "title": "Replacing founder-CEOs",
+        "q": "When did you last back replacing a founder-CEO, and how did it happen?"
+      },
+      {
+        "n": "04",
+        "title": "Board seat & consent rights",
+        "q": "Will you take a seat at my stage? Which consent rights do you require?"
+      },
+      {
+        "n": "05",
+        "title": "Competitor overlap",
+        "q": "Does any partner sit on the board of a company that competes with me?"
+      },
+      {
+        "n": "06",
+        "title": "Reserves for this check",
+        "q": "Which fund is this check from, and how much is reserved for follow-ons?"
+      },
+      {
+        "n": "07",
+        "title": "Foreign or sovereign LPs",
+        "q": "Are there sovereign or foreign-state LPs in this fund?"
+      },
+      {
+        "n": "08",
+        "title": "References from failures",
+        "q": "Give me 2 founders whose companies failed with you on the board."
+      }
+    ],
+    "clipboard": "Questions to ask General Catalyst, from Regrettamine\n\n1. Down rounds, bridges, pay-to-play: In your last 3 down or flat rounds, did you lead, follow or walk?\n2. Follow-on and pro rata: What share of your seed/A companies did you reinvest in at the next round, including the strugglers?\n3. Replacing founder-CEOs: When did you last back replacing a founder-CEO, and how did it happen?\n4. Board seat & consent rights: Will you take a seat at my stage? Which consent rights do you require?\n5. Competitor overlap: Does any partner sit on the board of a company that competes with me?\n6. Reserves for this check: Which fund is this check from, and how much is reserved for follow-ons?\n7. Foreign or sovereign LPs: Are there sovereign or foreign-state LPs in this fund?\n8. References from failures: Give me 2 founders whose companies failed with you on the board."
+  },
+  "footnote": "Every scored fact links to a dated source. Empty blocks were left empty. Founder sentiment stays empty until it rests on a first-hand account.",
+  "scoreFooter": "Rules: Toxy Score v2 (Oct 2, 2026). Inputs: this report, Oct 4, 2026.",
+  "evidence": {
+    "tk0": {
+      "kicker": "Takeaway",
+      "title": "2025 is one departure year, not three deductions.",
+      "body": "Nishar, Doherty, and Valkin left in the same calendar year. The cap is −0.5 per year.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/162548/PDF/162548.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "tk1": {
+      "kicker": "Takeaway",
+      "title": "The Palantir matter is a subpoena.",
+      "body": "It is on the Legal tab and costs 0.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/162548/PDF/162548.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "tk2": {
+      "kicker": "Takeaway",
+      "title": "Portfolio size is unpublished.",
+      "body": "No lawsuit rate is computed, and founder experience stays on the age default.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/162548/PDF/162548.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "s1": {
+      "kicker": "Score · 60 of 60",
+      "title": "Fund vs. founders",
+      "body": "General Catalyst's July 21, 2026 Form ADV reports $45.50 billion of discretionary regulatory AUM and no filed disclosure page. TechCrunch reported three managing-director departures in 2025.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/162548/PDF/162548.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "s2": {
+      "kicker": "Score · 6.5 of 17.5",
+      "title": "Ability to support you",
+      "body": "Money is the filing. Media reach was not measured. Help is empty unless the firm itself claimed a platform, and then only at half.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/162548/PDF/162548.pdf"
+        ],
+        [
+          "General Catalyst, Capital",
+          "https://www.generalcatalyst.com/capital"
+        ],
+        [
+          "TechCrunch",
+          "https://techcrunch.com/2025/03/03/general-catalyst-loses-three-top-investors-as-the-firm-expands-beyond-venture-contemplates-ipo/"
+        ]
+      ],
+      "tone": ""
+    },
+    "s3": {
+      "kicker": "Score · 14.9 of 17.5",
+      "title": "Founder experience",
+      "body": "No first-hand account was collected, so the age default applies.",
+      "rows": [
+        [
+          "First-hand accounts",
+          "0"
+        ],
+        [
+          "Age default",
+          "14.9"
+        ]
+      ],
+      "sources": [
+        [
+          "General Catalyst, Capital",
+          "https://www.generalcatalyst.com/capital"
+        ]
+      ],
+      "tone": ""
+    },
+    "s4": {
+      "kicker": "Score · 5 of 5",
+      "title": "Conflicts of interest",
+      "body": "No competitor-board or incubation conflict was verified. A partner-by-partner board list was not built.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/162548/PDF/162548.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "bonus": {
+      "kicker": "Bonus · +3",
+      "title": "Track record bonus",
+      "body": "General Catalyst's capital page says 25 years in its Creation strategy. That is the sourced floor. 25 ÷ 5 is capped at +3. The list year 2000 was already on this site and is one year apart, which does not change the points.",
+      "rows": [],
+      "sources": [
+        [
+          "General Catalyst, Capital",
+          "https://www.generalcatalyst.com/capital"
+        ]
+      ],
+      "tone": ""
+    },
+    "pen": {
+      "kicker": "Penalty · 0",
+      "title": "Regulatory penalty",
+      "body": "The Form ADV regulatory disclosure page has no information filed.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/162548/PDF/162548.pdf"
+        ],
+        [
+          "SEC IAPD summary",
+          "https://adviserinfo.sec.gov/firm/summary/162548"
+        ]
+      ],
+      "tone": ""
+    },
+    "sec": {
+      "kicker": "Regulatory record",
+      "title": "SEC disclosure page",
+      "body": "The Form ADV regulatory disclosure page has no information filed.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/162548/PDF/162548.pdf"
+        ],
+        [
+          "SEC IAPD summary",
+          "https://adviserinfo.sec.gov/firm/summary/162548"
+        ]
+      ],
+      "tone": ""
+    },
+    "range": {
+      "kicker": "How sure are we",
+      "title": "Likely range 80–93",
+      "body": "For each unchecked part we took a small plausible downside (10% of lawsuits and removals, half of down-rounds and blocking, and the unpublished reserve and founder-experience gaps) and combined them as independent swings. Upside is unpublished reserves, unmeasured media, and unconfirmed help.",
+      "rows": [
+        [
+          "1a Lawsuits with own founders",
+          "-2.7 / +0.0"
+        ],
+        [
+          "1b Pushing out founder-CEOs",
+          "-1.2 / +0.0"
+        ],
+        [
+          "1c Down-round / pay-to-play",
+          "-5.0 / +0.0"
+        ],
+        [
+          "1d Blocking deals / rounds",
+          "-4.0 / +0.0"
+        ],
+        [
+          "2a Money",
+          "-0.5 / +1.0"
+        ],
+        [
+          "2b Media reach",
+          "-0.0 / +3.0"
+        ],
+        [
+          "2c Help after the check",
+          "-1.0 / +2.0"
+        ],
+        [
+          "3 Founder experience",
+          "-6.0 / +0.0"
+        ],
+        [
+          "4 Conflicts",
+          "-1.0 / +0.0"
+        ],
+        [
+          "6 Regulatory",
+          "-1.0 / +0.0"
+        ]
+      ],
+      "sources": [],
+      "tone": ""
+    },
+    "cov": {
+      "kicker": "Coverage · 8%",
+      "title": "How much we could check",
+      "body": "Weighted by section points. Down rounds, blocking, media reach, and founder accounts are 0% because they were not measured. A thin record is not a clean record. The percent does not change the 0–100 score.",
+      "rows": [
+        [
+          "1a Lawsuits",
+          "10%"
+        ],
+        [
+          "1b Founder removals",
+          "0%"
+        ],
+        [
+          "1c Down rounds",
+          "0%"
+        ],
+        [
+          "1d Blocking",
+          "0%"
+        ],
+        [
+          "2a Money",
+          "33%"
+        ],
+        [
+          "2b Media",
+          "0%"
+        ],
+        [
+          "2c Help",
+          "36%"
+        ],
+        [
+          "3 Founder experience",
+          "0%"
+        ],
+        [
+          "4 Conflicts",
+          "15%"
+        ]
+      ],
+      "sources": [],
+      "tone": ""
+    },
+    "rel": {
+      "kicker": "Sources",
+      "title": "Sourced rows only",
+      "body": "Each scored figure links to a filing or an article that was read. Older research files were used as leads, not as facts. Empty blocks were left empty.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/162548/PDF/162548.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "rank": {
+      "kicker": "Ranking",
+      "title": "#9 of 11 on Toxy Score v2",
+      "body": "All 11 funds are on v2. Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
+      "rows": [
+        [
+          "Andreessen Horowitz",
+          "95.4 (v2)"
+        ],
+        [
+          "Bessemer Venture Partners",
+          "91.7 (v2)"
+        ],
+        [
+          "Battery Ventures",
+          "91.6 (v2)"
+        ],
+        [
+          "Accel",
+          "89.9 (v2)"
+        ],
+        [
+          "Bain Capital Ventures",
+          "89.9 (v2)"
+        ],
+        [
+          "Khosla Ventures",
+          "89.9 (v2)"
+        ],
+        [
+          "Lux Capital",
+          "89.9 (v2)"
+        ],
+        [
+          "Sequoia Capital",
+          "89.9 (v2)"
+        ],
+        [
+          "General Catalyst",
+          "89.4 (v2)"
+        ],
+        [
+          "Lightspeed Venture Partners",
+          "88.9 (v2)"
+        ],
+        [
+          "Insight Partners",
+          "81.6 (v2)"
+        ]
+      ],
+      "sources": [],
+      "tone": ""
+    },
+    "rules": {
+      "kicker": "Methodology",
+      "title": "How Toxy Score v2 works",
+      "body": "Every fund starts with full points and loses them only for verified evidence about its own behavior. Bad events are a share of the portfolio: under 1% costs nothing. A missing portfolio count is not treated as a 70% rate. Regulatory is penalty-only.",
+      "rows": [
+        [
+          "Fund vs. founders",
+          "60"
+        ],
+        [
+          "Ability to support you",
+          "17.5"
+        ],
+        [
+          "Founder experience",
+          "17.5"
+        ],
+        [
+          "Conflicts",
+          "5"
+        ],
+        [
+          "Track record bonus",
+          "up to +3"
+        ],
+        [
+          "Regulatory penalty",
+          "0 to −50"
+        ]
+      ],
+      "sources": [],
+      "tone": ""
+    },
+    "sanc": {
+      "kicker": "Sanctions · no ADV designation",
+      "title": "No adviser designation in the filing",
+      "body": "The Form ADV disclosure pages were read. No sanctions designation for this adviser was in them. People were not screened one by one. A designation would need an exact identity match, not a shared word in a name.",
+      "rows": [
+        [
+          "Form ADV DRP",
+          "No sanctions designation filed"
+        ],
+        [
+          "People screened",
+          "Not run"
+        ],
+        [
+          "Adviser",
+          "GENERAL CATALYST"
+        ]
+      ],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/162548/PDF/162548.pdf"
+        ],
+        [
+          "SEC IAPD summary",
+          "https://adviserinfo.sec.gov/firm/summary/162548"
+        ]
+      ],
+      "tone": ""
+    },
+    "L1": {
+      "kicker": "Legal · 2026",
+      "title": "Palantir / Percepta subpoena",
+      "body": "Same treatment as a non-party subpoena: listed, not scored. The departure deduction is separate and lives on the Fund tab.",
+      "rows": [
+        [
+          "Firm role",
+          "Non-party · subpoena"
+        ],
+        [
+          "Other party",
+          "Palantir"
+        ],
+        [
+          "Status",
+          "Firm subpoenaed, not sued"
+        ],
+        [
+          "Founder relevance",
+          "Low"
+        ],
+        [
+          "Score effect",
+          "0"
+        ]
+      ],
+      "sources": [
+        [
+          "Bloomberg, Mar 6, 2026",
+          "https://www.bloomberg.com/news/articles/2026-03-06/ex-palantir-ai-workers-blocked-from-poaching-using-secrets"
+        ]
+      ],
+      "tone": "gray"
+    }
+  }
+}

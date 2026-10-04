@@ -1,0 +1,882 @@
+{
+  "slug": "bessemer",
+  "name": "Bessemer Venture Partners",
+  "short": "BVP",
+  "title": "Bessemer Venture Partners · Regrettamine",
+  "hq": "Larchmont, NY",
+  "since": "1975",
+  "meta": [
+    "SEC adviser · CRD 159279",
+    "BESSEMER VENTURE PARTNERS"
+  ],
+  "notToken": "",
+  "updated": "Oct 4, 2026",
+  "method": "Toxy Score v2",
+  "scoreShown": 91,
+  "scoreExact": 91.7,
+  "band": "Very low risk",
+  "range": [
+    82,
+    95
+  ],
+  "rank": {
+    "place": 2,
+    "tier": "v2",
+    "of": 11,
+    "example": false
+  },
+  "question": "Should I take this money?",
+  "verdict": "One founder-company suit is under 1% of the active companies Bessemer publishes.",
+  "verdictSub": "Platform and intro points are the firm's own claims, at half. A later judgment in Transeo was not found.",
+  "floats": [
+    {
+      "class": "f1",
+      "ev": "pen",
+      "iconBg": "var(--mint)",
+      "icon": "✓",
+      "text": "Sanctions: no ADV hit",
+      "small": "people not screened"
+    },
+    {
+      "class": "f2",
+      "ev": "cov",
+      "iconBg": "var(--sky)",
+      "icon": "%",
+      "text": "Coverage 12%",
+      "small": "what we could check"
+    }
+  ],
+  "badges": [
+    {
+      "ev": "cov",
+      "icon": "am",
+      "text": "Coverage 12%"
+    },
+    {
+      "ev": "rel",
+      "icon": "ok",
+      "text": "Sources linked"
+    },
+    {
+      "ev": "pen",
+      "icon": "ok",
+      "text": "Sanctions: no ADV hit"
+    }
+  ],
+  "scoreBarNote": "Where the 91 comes from · tap a block for the Score tab",
+  "parts": [
+    {
+      "id": "s1",
+      "cardClass": "k1",
+      "barClass": "sb1",
+      "legendClass": "k1",
+      "name": "Fund vs. founders",
+      "legend": "Fund vs. founders",
+      "got": "60",
+      "maxLabel": "of 60",
+      "legendOf": "/60",
+      "heroFlex": "60",
+      "heroFill": "100.0%",
+      "scoreBar": "100.0%",
+      "aria": "Fund vs. founders: 60 of 60",
+      "rule": "Bad events are measured as a share of companies backed. Under 1% costs nothing. A missing portfolio count is not scored as a 70% rate. −3 per case the fund lost or where fraud was found.",
+      "inputs": [
+        {
+          "name": "Lawsuits with its own startups or founders",
+          "points": "30 / 30",
+          "why": "1 case ÷ 450 = 0.22%. The denominator is a published floor, so this rate is an upper bound. Under 1%, no penalty."
+        },
+        {
+          "name": "Pushing out founder CEOs",
+          "points": "12 / 12",
+          "why": "No removal was verified as its own event. Where a lawsuit alleged one, it stays inside that lawsuit."
+        },
+        {
+          "name": "Down-round or pay-to-play behavior",
+          "points": "10 / 10",
+          "why": "No evidence found. Terms were not checked, so coverage is 0% and there is no deduction."
+        },
+        {
+          "name": "Blocking acquisitions or rounds",
+          "points": "8 / 8",
+          "why": "No documented veto was verified on its own. Coverage is 0%."
+        },
+        {
+          "name": "Lost case or fraud finding (−3 each)",
+          "points": "0",
+          "why": "None verified against the fund."
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "cardClass": "k2",
+      "barClass": "sb2",
+      "legendClass": "k2",
+      "name": "Ability to support you",
+      "legend": "Support",
+      "got": "8.75",
+      "maxLabel": "of 17.5",
+      "legendOf": "/17.5",
+      "heroFlex": "17.5",
+      "heroFill": "50.0%",
+      "scoreBar": "50.0%",
+      "aria": "Ability to support you: 8.75 of 17.5",
+      "rule": "Money 6 + media 6 (capped) + help after the check 5.5. Claims the fund makes about itself count at half until founders confirm them. Partner departures cost −0.5 for each calendar year with a departure, up to −2.",
+      "inputs": [
+        {
+          "name": "Money",
+          "points": "5 / 6",
+          "why": "Fund size 2/2: Form ADV Item 5.F discretionary regulatory AUM is $20,239,213,324. Money left 1.5/2: reserves are not in the filing. Hit target 1.5/2: no published target for the current fund."
+        },
+        {
+          "name": "Media reach (capped)",
+          "points": "0 / 6",
+          "why": "No measured audience. Owned channels were not scored."
+        },
+        {
+          "name": "Help after the check",
+          "points": "3.75 / 5.5",
+          "why": "Platform 1/2: the firm's own claim, scored at half. Intros 0.75/1.5: the firm's own claim, scored at half. Partner stability 2/2: no departure year was verified for this adviser."
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "cardClass": "k3",
+      "barClass": "sb3",
+      "legendClass": "k3",
+      "name": "Founder experience",
+      "legend": "Founder exp.",
+      "got": "14.9",
+      "maxLabel": "of 17.5",
+      "legendOf": "/17.5",
+      "heroFlex": "17.5",
+      "heroFill": "85.1%",
+      "scoreBar": "85.1%",
+      "aria": "Founder experience: 14.9 of 17.5",
+      "rule": "Only first-hand accounts count. If negative accounts are under 1% of the portfolio, or there are none, the fund gets its age default.",
+      "inputs": [
+        {
+          "name": "First-hand accounts",
+          "points": "0",
+          "why": "None collected. Anonymous and second-hand posts were not used."
+        },
+        {
+          "name": "Negative share",
+          "points": "0",
+          "why": "No negative first-hand account, so the share is under 1%."
+        },
+        {
+          "name": "Age default",
+          "points": "14.9",
+          "why": "Bessemer's own history says the venture firm dates to 1975. The 1911 date is the Phipps family office, not this adviser. 51 ÷ 5 is capped at +3."
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "cardClass": "k4",
+      "barClass": "sb4",
+      "legendClass": "k4",
+      "name": "Conflicts of interest",
+      "legend": "Conflicts",
+      "got": "5",
+      "maxLabel": "of 5",
+      "legendOf": "/5",
+      "heroFlex": "5",
+      "heroFill": "100.0%",
+      "scoreBar": "100.0%",
+      "aria": "Conflicts of interest: 5 of 5",
+      "rule": "−1 per documented conflict, scaled by partner count. No documented conflict was scored here.",
+      "inputs": [
+        {
+          "name": "Documented conflicts",
+          "points": "0",
+          "why": "None verified. Board seats were not censused."
+        },
+        {
+          "name": "Scaled deduction",
+          "points": "0",
+          "why": "No conflict to scale."
+        }
+      ]
+    },
+    {
+      "id": "bonus",
+      "cardClass": "kb",
+      "barClass": "bonus",
+      "legendClass": "kb",
+      "name": "Track record bonus",
+      "legend": "Bonus",
+      "got": "+3",
+      "maxLabel": "max +3",
+      "legendOf": null,
+      "heroFlex": "3",
+      "heroFill": "100.0%",
+      "scoreBar": "100.0%",
+      "aria": "Track record bonus +3",
+      "rule": "+1 for every 5 years of investing with no significant pattern of harm, up to +3.",
+      "inputs": [
+        {
+          "name": "Years investing",
+          "points": "51",
+          "why": "Bessemer's own history says the venture firm dates to 1975. The 1911 date is the Phipps family office, not this adviser. 51 ÷ 5 is capped at +3."
+        }
+      ]
+    },
+    {
+      "id": "pen",
+      "cardClass": "kp",
+      "barClass": "pen",
+      "legendClass": "kp",
+      "name": "Regulatory penalty",
+      "legend": "Regulatory",
+      "got": "0",
+      "maxLabel": "range 0 to −50",
+      "legendOf": null,
+      "heroFlex": "0",
+      "heroFill": "0%",
+      "scoreBar": "0.0%",
+      "aria": "Regulatory penalty 0",
+      "rule": "Penalty only. A fine is −10 to −20. A clean Form ADV disclosure page is 0. Sanctions need an exact identity match.",
+      "inputs": [
+        {
+          "name": "SEC record",
+          "points": "0",
+          "why": "No information filed on the disclosure pages of the May 13, 2026 Form ADV."
+        },
+        {
+          "name": "Sanctions",
+          "points": "0",
+          "why": "No sanctions designation in the Form ADV. People were not screened one by one."
+        }
+      ]
+    }
+  ],
+  "summary": "Bessemer publishes 450+ active portfolio companies and, on its homepage, claims a talent team and a large intro practice. Those claims are scored at half. One 2011 founder-company suit is on the legal record.",
+  "takeaways": [
+    {
+      "ev": "tk0",
+      "title": "The homepage support claims are scored at half.",
+      "text": "Talent advisors, operating advisors, and “1,000+ introductions a year” are Bessemer’s own words."
+    },
+    {
+      "ev": "tk1",
+      "title": "The company count is active companies, not full history.",
+      "text": "450+ is the floor used for the lawsuit rate."
+    },
+    {
+      "ev": "tk2",
+      "title": "Founder accounts were not collected.",
+      "text": "The founder-experience points are the age default."
+    }
+  ],
+  "topLegal": [
+    "L1"
+  ],
+  "matters": [
+    {
+      "id": "L1",
+      "year": "2013",
+      "text": "Transeo, owned by founder Laurent Marteau, sued Bessemer entities after Bessemer took control of Neutral Holdings. The March 29, 2013 opinion dismissed the CEO-removal fiduciary claim and let a refusal-to-consider-an-offer claim proceed. A final judgment was not found.",
+      "sub": "Transeo S.A.R.L. v. Bessemer Venture Partners VI L.P.",
+      "badge": "0 pts",
+      "tone": "gray"
+    }
+  ],
+  "regulatory": {
+    "title": "Regulatory records & sanctions",
+    "note": "Form ADV read · Oct 4, 2026",
+    "recordsTitle": "Regulatory records",
+    "sanctionsTitle": "Sanctions",
+    "records": [
+      {
+        "icon": "ok",
+        "title": "SEC disciplinary record",
+        "detail": "No information filed on the disclosure pages of the May 13, 2026 Form ADV.",
+        "points": "0 pts",
+        "tone": "gray",
+        "ev": "sec"
+      }
+    ],
+    "sanctions": {
+      "ok": true,
+      "title": "No adviser designation in the filing",
+      "text": "The May 13, 2026 Form ADV for BESSEMER VENTURE PARTNERS has no sanctions disclosure. People at the firm were not screened one by one.",
+      "ev": "sanc",
+      "link": "Details →",
+      "note": "A shared word in another entity's name is not a match."
+    }
+  },
+  "legalGroups": [
+    {
+      "title": "Founder-relevant",
+      "note": "1 matter",
+      "ids": [
+        "L1"
+      ]
+    }
+  ],
+  "notCountedTitle": "Not counted",
+  "notCounted": [
+    "1911 is the Phipps family office (Bessemer Securities), not the year this venture firm started.",
+    "A full person-by-person sanctions screen was not run."
+  ],
+  "fundTab": {
+    "factsTitle": "Fund facts",
+    "factsNote": "Form ADV, May 13, 2026",
+    "facts": [
+      {
+        "k": "Regulatory AUM",
+        "v": "$20.24B",
+        "s": "Discretionary regulatory AUM $20,239,213,324. 36 accounts. Non-discretionary $0."
+      },
+      {
+        "k": "Accounts",
+        "v": "36",
+        "s": "Discretionary accounts on the May 13, 2026 ADV."
+      },
+      {
+        "k": "Staff",
+        "v": "191",
+        "s": "Item 5.A. 83 perform investment advisory functions (Item 5.B.1)."
+      },
+      {
+        "k": "Latest ADV",
+        "v": "May 13, 2026",
+        "s": "SEC-registered adviser. Registration effective June 14, 2022."
+      },
+      {
+        "k": "SEC file",
+        "v": "801-125875",
+        "s": "CRD 159279"
+      },
+      {
+        "k": "Performance",
+        "v": "Not public",
+        "s": "IRR / TVPI / DPI were not in the filing"
+      }
+    ],
+    "boards": {
+      "title": "Partner board seats",
+      "items": [],
+      "note": "No partner-board list was verified. Empty is missing data, not a clean conflict record."
+    },
+    "moves": {
+      "title": "Partner moves",
+      "note": "Verified departures only",
+      "items": [],
+      "foot": "One calendar year costs −0.5, however many people left that year."
+    },
+    "media": {
+      "title": "Media reach",
+      "note": "Not measured",
+      "items": [],
+      "foot": "No subscriber or audience figure was verified, so media points are 0."
+    }
+  },
+  "public": {
+    "title": "Public record",
+    "intro": "Articles cited on this page. The fact itself lives on the tab named in the note.",
+    "sentimentTitle": "What these sources are",
+    "sentimentNote": "A link is not a second copy of the fact.",
+    "empty": "No press was needed beyond the filings.",
+    "items": []
+  },
+  "portfolio": {
+    "title": "What we did not classify",
+    "note": "No event histogram",
+    "events": [],
+    "foot": "Portfolio-company trouble is not charged to the firm unless the firm's own role is documented. No event list was classified.",
+    "size": {
+      "title": "Portfolio size",
+      "value": "450+",
+      "text": "Active portfolio companies stated on bvp.com. Used as a floor. Total history is not published, so a rate against 450 is an upper bound."
+    },
+    "healthTitle": "Health",
+    "healthNote": "Not classified",
+    "health": [],
+    "litigation": {
+      "title": "Portfolio litigation rate",
+      "value": "≤0.3%",
+      "text": "1 case ÷ 450 active companies. Exited companies would make the historical rate lower."
+    }
+  },
+  "ask": {
+    "title": "Not public: ask the fund",
+    "note": "These can't be checked from public records. Bring them to your partner meeting.",
+    "printHead": "Bessemer Venture Partners · Questions to ask · Regrettamine · Oct 4, 2026",
+    "questions": [
+      {
+        "n": "01",
+        "title": "Down rounds, bridges, pay-to-play",
+        "q": "In your last 3 down or flat rounds, did you lead, follow or walk?"
+      },
+      {
+        "n": "02",
+        "title": "Follow-on and pro rata",
+        "q": "What share of your seed/A companies did you reinvest in at the next round, including the strugglers?"
+      },
+      {
+        "n": "03",
+        "title": "Replacing founder-CEOs",
+        "q": "When did you last back replacing a founder-CEO, and how did it happen?"
+      },
+      {
+        "n": "04",
+        "title": "Board seat & consent rights",
+        "q": "Will you take a seat at my stage? Which consent rights do you require?"
+      },
+      {
+        "n": "05",
+        "title": "Competitor overlap",
+        "q": "Does any partner sit on the board of a company that competes with me?"
+      },
+      {
+        "n": "06",
+        "title": "Reserves for this check",
+        "q": "Which fund is this check from, and how much is reserved for follow-ons?"
+      },
+      {
+        "n": "07",
+        "title": "Foreign or sovereign LPs",
+        "q": "Are there sovereign or foreign-state LPs in this fund?"
+      },
+      {
+        "n": "08",
+        "title": "References from failures",
+        "q": "Give me 2 founders whose companies failed with you on the board."
+      }
+    ],
+    "clipboard": "Questions to ask Bessemer Venture Partners, from Regrettamine\n\n1. Down rounds, bridges, pay-to-play: In your last 3 down or flat rounds, did you lead, follow or walk?\n2. Follow-on and pro rata: What share of your seed/A companies did you reinvest in at the next round, including the strugglers?\n3. Replacing founder-CEOs: When did you last back replacing a founder-CEO, and how did it happen?\n4. Board seat & consent rights: Will you take a seat at my stage? Which consent rights do you require?\n5. Competitor overlap: Does any partner sit on the board of a company that competes with me?\n6. Reserves for this check: Which fund is this check from, and how much is reserved for follow-ons?\n7. Foreign or sovereign LPs: Are there sovereign or foreign-state LPs in this fund?\n8. References from failures: Give me 2 founders whose companies failed with you on the board."
+  },
+  "footnote": "Every scored fact links to a dated source. Empty blocks were left empty. Founder sentiment stays empty until it rests on a first-hand account.",
+  "scoreFooter": "Rules: Toxy Score v2 (Oct 2, 2026). Inputs: this report, Oct 4, 2026.",
+  "evidence": {
+    "tk0": {
+      "kicker": "Takeaway",
+      "title": "The homepage support claims are scored at half.",
+      "body": "Talent advisors, operating advisors, and “1,000+ introductions a year” are Bessemer’s own words.",
+      "rows": [],
+      "sources": [
+        [
+          "Bessemer homepage",
+          "https://www.bvp.com/"
+        ],
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/159279/PDF/159279.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "tk1": {
+      "kicker": "Takeaway",
+      "title": "The company count is active companies, not full history.",
+      "body": "450+ is the floor used for the lawsuit rate.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/159279/PDF/159279.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "tk2": {
+      "kicker": "Takeaway",
+      "title": "Founder accounts were not collected.",
+      "body": "The founder-experience points are the age default.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/159279/PDF/159279.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "s1": {
+      "kicker": "Score · 60 of 60",
+      "title": "Fund vs. founders",
+      "body": "Bessemer publishes 450+ active portfolio companies and, on its homepage, claims a talent team and a large intro practice. Those claims are scored at half. One 2011 founder-company suit is on the legal record.",
+      "rows": [],
+      "sources": [
+        [
+          "Justia opinion",
+          "https://law.justia.com/cases/federal/district-courts/new-york/nysdce/7:2011cv05331/382774/31/"
+        ],
+        [
+          "Opinion PDF",
+          "https://cases.justia.com/federal/district-courts/new-york/nysdce/7:2011cv05331/382774/31/0.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "s2": {
+      "kicker": "Score · 8.75 of 17.5",
+      "title": "Ability to support you",
+      "body": "Money is the filing. Media reach was not measured. Help is empty unless the firm itself claimed a platform, and then only at half.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/159279/PDF/159279.pdf"
+        ],
+        [
+          "Bessemer, operating model",
+          "https://www.bvp.com/atlas/inside-bessemers-operating-model"
+        ],
+        [
+          "Bessemer homepage",
+          "https://www.bvp.com/"
+        ]
+      ],
+      "tone": ""
+    },
+    "s3": {
+      "kicker": "Score · 14.9 of 17.5",
+      "title": "Founder experience",
+      "body": "No first-hand account was collected, so the age default applies.",
+      "rows": [
+        [
+          "First-hand accounts",
+          "0"
+        ],
+        [
+          "Age default",
+          "14.9"
+        ]
+      ],
+      "sources": [
+        [
+          "Bessemer, operating model",
+          "https://www.bvp.com/atlas/inside-bessemers-operating-model"
+        ]
+      ],
+      "tone": ""
+    },
+    "s4": {
+      "kicker": "Score · 5 of 5",
+      "title": "Conflicts of interest",
+      "body": "No competitor-board or incubation conflict was verified. A partner-by-partner board list was not built.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/159279/PDF/159279.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "bonus": {
+      "kicker": "Bonus · +3",
+      "title": "Track record bonus",
+      "body": "Bessemer's own history says the venture firm dates to 1975. The 1911 date is the Phipps family office, not this adviser. 51 ÷ 5 is capped at +3.",
+      "rows": [],
+      "sources": [
+        [
+          "Bessemer, operating model",
+          "https://www.bvp.com/atlas/inside-bessemers-operating-model"
+        ]
+      ],
+      "tone": ""
+    },
+    "pen": {
+      "kicker": "Penalty · 0",
+      "title": "Regulatory penalty",
+      "body": "The Form ADV regulatory disclosure page has no information filed.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/159279/PDF/159279.pdf"
+        ],
+        [
+          "SEC IAPD summary",
+          "https://adviserinfo.sec.gov/firm/summary/159279"
+        ]
+      ],
+      "tone": ""
+    },
+    "sec": {
+      "kicker": "Regulatory record",
+      "title": "SEC disclosure page",
+      "body": "The Form ADV regulatory disclosure page has no information filed.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/159279/PDF/159279.pdf"
+        ],
+        [
+          "SEC IAPD summary",
+          "https://adviserinfo.sec.gov/firm/summary/159279"
+        ]
+      ],
+      "tone": ""
+    },
+    "range": {
+      "kicker": "How sure are we",
+      "title": "Likely range 82–95",
+      "body": "For each unchecked part we took a small plausible downside (10% of lawsuits and removals, half of down-rounds and blocking, and the unpublished reserve and founder-experience gaps) and combined them as independent swings. Upside is unpublished reserves, unmeasured media, and unconfirmed help.",
+      "rows": [
+        [
+          "1a Lawsuits with own founders",
+          "-2.2 / +0.0"
+        ],
+        [
+          "1b Pushing out founder-CEOs",
+          "-1.2 / +0.0"
+        ],
+        [
+          "1c Down-round / pay-to-play",
+          "-5.0 / +0.0"
+        ],
+        [
+          "1d Blocking deals / rounds",
+          "-4.0 / +0.0"
+        ],
+        [
+          "2a Money",
+          "-0.5 / +1.0"
+        ],
+        [
+          "2b Media reach",
+          "-0.0 / +3.0"
+        ],
+        [
+          "2c Help after the check",
+          "-1.0 / +2.0"
+        ],
+        [
+          "3 Founder experience",
+          "-6.0 / +0.0"
+        ],
+        [
+          "4 Conflicts",
+          "-1.0 / +0.0"
+        ],
+        [
+          "6 Regulatory",
+          "-1.0 / +0.0"
+        ]
+      ],
+      "sources": [],
+      "tone": ""
+    },
+    "cov": {
+      "kicker": "Coverage · 12%",
+      "title": "How much we could check",
+      "body": "Weighted by section points. Down rounds, blocking, media reach, and founder accounts are 0% because they were not measured. A thin record is not a clean record. The percent does not change the 0–100 score.",
+      "rows": [
+        [
+          "1a Lawsuits",
+          "25%"
+        ],
+        [
+          "1b Founder removals",
+          "0%"
+        ],
+        [
+          "1c Down rounds",
+          "0%"
+        ],
+        [
+          "1d Blocking",
+          "0%"
+        ],
+        [
+          "2a Money",
+          "33%"
+        ],
+        [
+          "2b Media",
+          "0%"
+        ],
+        [
+          "2c Help",
+          "36%"
+        ],
+        [
+          "3 Founder experience",
+          "0%"
+        ],
+        [
+          "4 Conflicts",
+          "15%"
+        ]
+      ],
+      "sources": [],
+      "tone": ""
+    },
+    "rel": {
+      "kicker": "Sources",
+      "title": "Sourced rows only",
+      "body": "Each scored figure links to a filing or an article that was read. Older research files were used as leads, not as facts. Empty blocks were left empty.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/159279/PDF/159279.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "rank": {
+      "kicker": "Ranking",
+      "title": "#2 of 11 on Toxy Score v2",
+      "body": "All 11 funds are on v2. Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
+      "rows": [
+        [
+          "Andreessen Horowitz",
+          "95.4 (v2)"
+        ],
+        [
+          "Bessemer Venture Partners",
+          "91.7 (v2)"
+        ],
+        [
+          "Battery Ventures",
+          "91.6 (v2)"
+        ],
+        [
+          "Accel",
+          "89.9 (v2)"
+        ],
+        [
+          "Bain Capital Ventures",
+          "89.9 (v2)"
+        ],
+        [
+          "Khosla Ventures",
+          "89.9 (v2)"
+        ],
+        [
+          "Lux Capital",
+          "89.9 (v2)"
+        ],
+        [
+          "Sequoia Capital",
+          "89.9 (v2)"
+        ],
+        [
+          "General Catalyst",
+          "89.4 (v2)"
+        ],
+        [
+          "Lightspeed Venture Partners",
+          "88.9 (v2)"
+        ],
+        [
+          "Insight Partners",
+          "81.6 (v2)"
+        ]
+      ],
+      "sources": [],
+      "tone": ""
+    },
+    "rules": {
+      "kicker": "Methodology",
+      "title": "How Toxy Score v2 works",
+      "body": "Every fund starts with full points and loses them only for verified evidence about its own behavior. Bad events are a share of the portfolio: under 1% costs nothing. A missing portfolio count is not treated as a 70% rate. Regulatory is penalty-only.",
+      "rows": [
+        [
+          "Fund vs. founders",
+          "60"
+        ],
+        [
+          "Ability to support you",
+          "17.5"
+        ],
+        [
+          "Founder experience",
+          "17.5"
+        ],
+        [
+          "Conflicts",
+          "5"
+        ],
+        [
+          "Track record bonus",
+          "up to +3"
+        ],
+        [
+          "Regulatory penalty",
+          "0 to −50"
+        ]
+      ],
+      "sources": [],
+      "tone": ""
+    },
+    "sanc": {
+      "kicker": "Sanctions · no ADV designation",
+      "title": "No adviser designation in the filing",
+      "body": "The Form ADV disclosure pages were read. No sanctions designation for this adviser was in them. People were not screened one by one. A designation would need an exact identity match, not a shared word in a name.",
+      "rows": [
+        [
+          "Form ADV DRP",
+          "No sanctions designation filed"
+        ],
+        [
+          "People screened",
+          "Not run"
+        ],
+        [
+          "Adviser",
+          "BESSEMER VENTURE PARTNERS"
+        ]
+      ],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/159279/PDF/159279.pdf"
+        ],
+        [
+          "SEC IAPD summary",
+          "https://adviserinfo.sec.gov/firm/summary/159279"
+        ]
+      ],
+      "tone": ""
+    },
+    "L1": {
+      "kicker": "Legal · 2013",
+      "title": "Transeo v. Bessemer Venture Partners VI",
+      "body": "S.D.N.Y. 11-cv-05331, opinion at 936 F. Supp. 2d 376. One episode. The removal allegation and the alleged refusal to consider an AVG offer stay inside this lawsuit. They are not second and third score events.",
+      "rows": [
+        [
+          "Firm role",
+          "Defendant"
+        ],
+        [
+          "Other party",
+          "Transeo S.A.R.L. / Laurent Marteau"
+        ],
+        [
+          "Status",
+          "Motion decided Mar 29, 2013 · later judgment not found"
+        ],
+        [
+          "Founder relevance",
+          "High"
+        ],
+        [
+          "Score effect",
+          "0 (under 1% of the active list). Not also scored as a removal or a block."
+        ]
+      ],
+      "sources": [
+        [
+          "Justia opinion",
+          "https://law.justia.com/cases/federal/district-courts/new-york/nysdce/7:2011cv05331/382774/31/"
+        ],
+        [
+          "Opinion PDF",
+          "https://cases.justia.com/federal/district-courts/new-york/nysdce/7:2011cv05331/382774/31/0.pdf"
+        ]
+      ],
+      "tone": "gray"
+    }
+  }
+}
