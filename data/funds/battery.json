@@ -1,0 +1,819 @@
+{
+  "slug": "battery",
+  "name": "Battery Ventures",
+  "short": "Battery",
+  "title": "Battery Ventures · Regrettamine",
+  "hq": "Boston, MA",
+  "since": "1983",
+  "meta": [
+    "SEC adviser · CRD 160921",
+    "BATTERY MANAGEMENT CORP."
+  ],
+  "notToken": "",
+  "updated": "Oct 4, 2026",
+  "method": "Toxy Score v2",
+  "scoreShown": 91,
+  "scoreExact": 91.6,
+  "band": "Very low risk",
+  "range": [
+    82,
+    95
+  ],
+  "rank": {
+    "place": 3,
+    "tier": "v2",
+    "of": 11,
+    "example": false
+  },
+  "question": "Should I take this money?",
+  "verdict": "No founder lawsuit was verified. The age default uses a 530-company floor.",
+  "verdictSub": "That company count is Wikipedia's “more than 530,” so founder experience is the large-portfolio default. Down rounds were not checked.",
+  "floats": [
+    {
+      "class": "f1",
+      "ev": "pen",
+      "iconBg": "var(--mint)",
+      "icon": "✓",
+      "text": "Sanctions: no ADV hit",
+      "small": "people not screened"
+    },
+    {
+      "class": "f2",
+      "ev": "cov",
+      "iconBg": "var(--sky)",
+      "icon": "%",
+      "text": "Coverage 9%",
+      "small": "what we could check"
+    }
+  ],
+  "badges": [
+    {
+      "ev": "cov",
+      "icon": "am",
+      "text": "Coverage 9%"
+    },
+    {
+      "ev": "rel",
+      "icon": "ok",
+      "text": "Sources linked"
+    },
+    {
+      "ev": "pen",
+      "icon": "ok",
+      "text": "Sanctions: no ADV hit"
+    }
+  ],
+  "scoreBarNote": "Where the 91 comes from · tap a block for the Score tab",
+  "parts": [
+    {
+      "id": "s1",
+      "cardClass": "k1",
+      "barClass": "sb1",
+      "legendClass": "k1",
+      "name": "Fund vs. founders",
+      "legend": "Fund vs. founders",
+      "got": "60",
+      "maxLabel": "of 60",
+      "legendOf": "/60",
+      "heroFlex": "60",
+      "heroFill": "100.0%",
+      "scoreBar": "100.0%",
+      "aria": "Fund vs. founders: 60 of 60",
+      "rule": "Bad events are measured as a share of companies backed. Under 1% costs nothing. A missing portfolio count is not scored as a 70% rate. −3 per case the fund lost or where fraud was found.",
+      "inputs": [
+        {
+          "name": "Lawsuits with its own startups or founders",
+          "points": "30 / 30",
+          "why": "No fund-versus-founder lawsuit was verified. No rate is scored."
+        },
+        {
+          "name": "Pushing out founder CEOs",
+          "points": "12 / 12",
+          "why": "No removal was verified as its own event. Where a lawsuit alleged one, it stays inside that lawsuit."
+        },
+        {
+          "name": "Down-round or pay-to-play behavior",
+          "points": "10 / 10",
+          "why": "No evidence found. Terms were not checked, so coverage is 0% and there is no deduction."
+        },
+        {
+          "name": "Blocking acquisitions or rounds",
+          "points": "8 / 8",
+          "why": "No documented veto was verified on its own. Coverage is 0%."
+        },
+        {
+          "name": "Lost case or fraud finding (−3 each)",
+          "points": "0",
+          "why": "None verified against the fund."
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "cardClass": "k2",
+      "barClass": "sb2",
+      "legendClass": "k2",
+      "name": "Ability to support you",
+      "legend": "Support",
+      "got": "7",
+      "maxLabel": "of 17.5",
+      "legendOf": "/17.5",
+      "heroFlex": "17.5",
+      "heroFill": "40.0%",
+      "scoreBar": "40.0%",
+      "aria": "Ability to support you: 7 of 17.5",
+      "rule": "Money 6 + media 6 (capped) + help after the check 5.5. Claims the fund makes about itself count at half until founders confirm them. Partner departures cost −0.5 for each calendar year with a departure, up to −2.",
+      "inputs": [
+        {
+          "name": "Money",
+          "points": "5 / 6",
+          "why": "Fund size 2/2: Form ADV Item 5.F discretionary regulatory AUM is $15,609,095,762. Money left 1.5/2: reserves are not in the filing. Hit target 1.5/2: no published target for the current fund."
+        },
+        {
+          "name": "Media reach (capped)",
+          "points": "0 / 6",
+          "why": "No measured audience. Owned channels were not scored."
+        },
+        {
+          "name": "Help after the check",
+          "points": "2 / 5.5",
+          "why": "Platform 0/2: no founder-confirmed platform team. Intros 0/1.5: no independent intro record. Partner stability 2/2: no departure year was verified for this adviser."
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "cardClass": "k3",
+      "barClass": "sb3",
+      "legendClass": "k3",
+      "name": "Founder experience",
+      "legend": "Founder exp.",
+      "got": "16.6",
+      "maxLabel": "of 17.5",
+      "legendOf": "/17.5",
+      "heroFlex": "17.5",
+      "heroFill": "94.9%",
+      "scoreBar": "94.9%",
+      "aria": "Founder experience: 16.6 of 17.5",
+      "rule": "Only first-hand accounts count. If negative accounts are under 1% of the portfolio, or there are none, the fund gets its age default.",
+      "inputs": [
+        {
+          "name": "First-hand accounts",
+          "points": "0",
+          "why": "None collected. Anonymous and second-hand posts were not used."
+        },
+        {
+          "name": "Negative share",
+          "points": "0",
+          "why": "No negative first-hand account, so the share is under 1%."
+        },
+        {
+          "name": "Age default",
+          "points": "16.6",
+          "why": "Wikipedia, citing the firm's history, says Battery was founded in 1983. 43 ÷ 5 is capped at +3."
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "cardClass": "k4",
+      "barClass": "sb4",
+      "legendClass": "k4",
+      "name": "Conflicts of interest",
+      "legend": "Conflicts",
+      "got": "5",
+      "maxLabel": "of 5",
+      "legendOf": "/5",
+      "heroFlex": "5",
+      "heroFill": "100.0%",
+      "scoreBar": "100.0%",
+      "aria": "Conflicts of interest: 5 of 5",
+      "rule": "−1 per documented conflict, scaled by partner count. No documented conflict was scored here.",
+      "inputs": [
+        {
+          "name": "Documented conflicts",
+          "points": "0",
+          "why": "None verified. Board seats were not censused."
+        },
+        {
+          "name": "Scaled deduction",
+          "points": "0",
+          "why": "No conflict to scale."
+        }
+      ]
+    },
+    {
+      "id": "bonus",
+      "cardClass": "kb",
+      "barClass": "bonus",
+      "legendClass": "kb",
+      "name": "Track record bonus",
+      "legend": "Bonus",
+      "got": "+3",
+      "maxLabel": "max +3",
+      "legendOf": null,
+      "heroFlex": "3",
+      "heroFill": "100.0%",
+      "scoreBar": "100.0%",
+      "aria": "Track record bonus +3",
+      "rule": "+1 for every 5 years of investing with no significant pattern of harm, up to +3.",
+      "inputs": [
+        {
+          "name": "Years investing",
+          "points": "43",
+          "why": "Wikipedia, citing the firm's history, says Battery was founded in 1983. 43 ÷ 5 is capped at +3."
+        }
+      ]
+    },
+    {
+      "id": "pen",
+      "cardClass": "kp",
+      "barClass": "pen",
+      "legendClass": "kp",
+      "name": "Regulatory penalty",
+      "legend": "Regulatory",
+      "got": "0",
+      "maxLabel": "range 0 to −50",
+      "legendOf": null,
+      "heroFlex": "0",
+      "heroFill": "0%",
+      "scoreBar": "0.0%",
+      "aria": "Regulatory penalty 0",
+      "rule": "Penalty only. A fine is −10 to −20. A clean Form ADV disclosure page is 0. Sanctions need an exact identity match.",
+      "inputs": [
+        {
+          "name": "SEC record",
+          "points": "0",
+          "why": "No information filed on the disclosure pages of the March 30, 2026 Form ADV."
+        },
+        {
+          "name": "Sanctions",
+          "points": "0",
+          "why": "No sanctions designation in the Form ADV. People were not screened one by one."
+        }
+      ]
+    }
+  ],
+  "summary": "Battery's March 30, 2026 Form ADV reports $15.61 billion of discretionary regulatory AUM and no filed disclosure page. Wikipedia says the firm has invested in more than 530 companies.",
+  "takeaways": [
+    {
+      "ev": "tk0",
+      "title": "The company floor is what lifts founder experience.",
+      "text": "More than 530 companies puts the fund in the 500+ age default. It is not a company-by-company list."
+    },
+    {
+      "ev": "tk1",
+      "title": "Support is the thin part of the score.",
+      "text": "Reserves, a published target, and measured media reach were not found."
+    },
+    {
+      "ev": "tk2",
+      "title": "No first-hand founder account was collected.",
+      "text": "Negative accounts were not found either, so the default stands."
+    }
+  ],
+  "topLegal": [],
+  "matters": [],
+  "regulatory": {
+    "title": "Regulatory records & sanctions",
+    "note": "Form ADV read · Oct 4, 2026",
+    "recordsTitle": "Regulatory records",
+    "sanctionsTitle": "Sanctions",
+    "records": [
+      {
+        "icon": "ok",
+        "title": "SEC disciplinary record",
+        "detail": "No information filed on the disclosure pages of the March 30, 2026 Form ADV.",
+        "points": "0 pts",
+        "tone": "gray",
+        "ev": "sec"
+      }
+    ],
+    "sanctions": {
+      "ok": true,
+      "title": "No adviser designation in the filing",
+      "text": "The March 30, 2026 Form ADV for BATTERY MANAGEMENT CORP. has no sanctions disclosure. People at the firm were not screened one by one.",
+      "ev": "sanc",
+      "link": "Details →",
+      "note": "A shared word in another entity's name is not a match."
+    }
+  },
+  "legalGroups": [
+    {
+      "title": "Founder-relevant",
+      "note": "0 matters",
+      "ids": []
+    }
+  ],
+  "notCountedTitle": "Not counted",
+  "notCounted": [
+    "Wikipedia's asset and employee figures are not used. The Form ADV figures are.",
+    "A full person-by-person sanctions screen was not run."
+  ],
+  "fundTab": {
+    "factsTitle": "Fund facts",
+    "factsNote": "Form ADV, March 30, 2026",
+    "facts": [
+      {
+        "k": "Regulatory AUM",
+        "v": "$15.61B",
+        "s": "Discretionary regulatory AUM $15,609,095,762. 60 accounts. Non-discretionary $0."
+      },
+      {
+        "k": "Accounts",
+        "v": "60",
+        "s": "Discretionary accounts on the March 30, 2026 ADV."
+      },
+      {
+        "k": "Staff",
+        "v": "113",
+        "s": "Item 5.A. 70 perform investment advisory functions (Item 5.B.1)."
+      },
+      {
+        "k": "Latest ADV",
+        "v": "March 30, 2026",
+        "s": "SEC-registered adviser. Registration effective April 18, 2014."
+      },
+      {
+        "k": "SEC file",
+        "v": "801-79475",
+        "s": "CRD 160921"
+      },
+      {
+        "k": "Performance",
+        "v": "Not public",
+        "s": "IRR / TVPI / DPI were not in the filing"
+      }
+    ],
+    "boards": {
+      "title": "Partner board seats",
+      "items": [],
+      "note": "No partner-board list was verified. Empty is missing data, not a clean conflict record."
+    },
+    "moves": {
+      "title": "Partner moves",
+      "note": "Verified departures only",
+      "items": [],
+      "foot": "One calendar year costs −0.5, however many people left that year."
+    },
+    "media": {
+      "title": "Media reach",
+      "note": "Not measured",
+      "items": [],
+      "foot": "No subscriber or audience figure was verified, so media points are 0."
+    }
+  },
+  "public": {
+    "title": "Public record",
+    "intro": "Articles cited on this page. The fact itself lives on the tab named in the note.",
+    "sentimentTitle": "What these sources are",
+    "sentimentNote": "A link is not a second copy of the fact.",
+    "empty": "No press was needed beyond the filings.",
+    "items": []
+  },
+  "portfolio": {
+    "title": "What we did not classify",
+    "note": "No event histogram",
+    "events": [],
+    "foot": "Portfolio-company trouble is not charged to the firm unless the firm's own role is documented. No event list was classified.",
+    "size": {
+      "title": "Portfolio size",
+      "value": "530+",
+      "text": "Wikipedia says Battery has invested in more than 530 companies. Used as a floor, not a full list."
+    },
+    "healthTitle": "Health",
+    "healthNote": "Not classified",
+    "health": [],
+    "litigation": {
+      "title": "Portfolio litigation rate",
+      "value": "Not measured",
+      "text": "No founder-company lawsuit was verified against this floor."
+    }
+  },
+  "ask": {
+    "title": "Not public: ask the fund",
+    "note": "These can't be checked from public records. Bring them to your partner meeting.",
+    "printHead": "Battery Ventures · Questions to ask · Regrettamine · Oct 4, 2026",
+    "questions": [
+      {
+        "n": "01",
+        "title": "Down rounds, bridges, pay-to-play",
+        "q": "In your last 3 down or flat rounds, did you lead, follow or walk?"
+      },
+      {
+        "n": "02",
+        "title": "Follow-on and pro rata",
+        "q": "What share of your seed/A companies did you reinvest in at the next round, including the strugglers?"
+      },
+      {
+        "n": "03",
+        "title": "Replacing founder-CEOs",
+        "q": "When did you last back replacing a founder-CEO, and how did it happen?"
+      },
+      {
+        "n": "04",
+        "title": "Board seat & consent rights",
+        "q": "Will you take a seat at my stage? Which consent rights do you require?"
+      },
+      {
+        "n": "05",
+        "title": "Competitor overlap",
+        "q": "Does any partner sit on the board of a company that competes with me?"
+      },
+      {
+        "n": "06",
+        "title": "Reserves for this check",
+        "q": "Which fund is this check from, and how much is reserved for follow-ons?"
+      },
+      {
+        "n": "07",
+        "title": "Foreign or sovereign LPs",
+        "q": "Are there sovereign or foreign-state LPs in this fund?"
+      },
+      {
+        "n": "08",
+        "title": "References from failures",
+        "q": "Give me 2 founders whose companies failed with you on the board."
+      }
+    ],
+    "clipboard": "Questions to ask Battery Ventures, from Regrettamine\n\n1. Down rounds, bridges, pay-to-play: In your last 3 down or flat rounds, did you lead, follow or walk?\n2. Follow-on and pro rata: What share of your seed/A companies did you reinvest in at the next round, including the strugglers?\n3. Replacing founder-CEOs: When did you last back replacing a founder-CEO, and how did it happen?\n4. Board seat & consent rights: Will you take a seat at my stage? Which consent rights do you require?\n5. Competitor overlap: Does any partner sit on the board of a company that competes with me?\n6. Reserves for this check: Which fund is this check from, and how much is reserved for follow-ons?\n7. Foreign or sovereign LPs: Are there sovereign or foreign-state LPs in this fund?\n8. References from failures: Give me 2 founders whose companies failed with you on the board."
+  },
+  "footnote": "Every scored fact links to a dated source. Empty blocks were left empty. Founder sentiment stays empty until it rests on a first-hand account.",
+  "scoreFooter": "Rules: Toxy Score v2 (Oct 2, 2026). Inputs: this report, Oct 4, 2026.",
+  "evidence": {
+    "tk0": {
+      "kicker": "Takeaway",
+      "title": "The company floor is what lifts founder experience.",
+      "body": "More than 530 companies puts the fund in the 500+ age default. It is not a company-by-company list.",
+      "rows": [],
+      "sources": [
+        [
+          "Wikipedia, Battery Ventures",
+          "https://en.wikipedia.org/wiki/Battery_Ventures"
+        ]
+      ],
+      "tone": ""
+    },
+    "tk1": {
+      "kicker": "Takeaway",
+      "title": "Support is the thin part of the score.",
+      "body": "Reserves, a published target, and measured media reach were not found.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/160921/PDF/160921.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "tk2": {
+      "kicker": "Takeaway",
+      "title": "No first-hand founder account was collected.",
+      "body": "Negative accounts were not found either, so the default stands.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/160921/PDF/160921.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "s1": {
+      "kicker": "Score · 60 of 60",
+      "title": "Fund vs. founders",
+      "body": "Battery's March 30, 2026 Form ADV reports $15.61 billion of discretionary regulatory AUM and no filed disclosure page. Wikipedia says the firm has invested in more than 530 companies.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/160921/PDF/160921.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "s2": {
+      "kicker": "Score · 7 of 17.5",
+      "title": "Ability to support you",
+      "body": "Money is the filing. Media reach was not measured. Help is empty unless the firm itself claimed a platform, and then only at half.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/160921/PDF/160921.pdf"
+        ],
+        [
+          "Wikipedia, Battery Ventures",
+          "https://en.wikipedia.org/wiki/Battery_Ventures"
+        ]
+      ],
+      "tone": ""
+    },
+    "s3": {
+      "kicker": "Score · 16.6 of 17.5",
+      "title": "Founder experience",
+      "body": "No first-hand account was collected, so the age default applies.",
+      "rows": [
+        [
+          "First-hand accounts",
+          "0"
+        ],
+        [
+          "Age default",
+          "16.6"
+        ]
+      ],
+      "sources": [
+        [
+          "Wikipedia, Battery Ventures",
+          "https://en.wikipedia.org/wiki/Battery_Ventures"
+        ]
+      ],
+      "tone": ""
+    },
+    "s4": {
+      "kicker": "Score · 5 of 5",
+      "title": "Conflicts of interest",
+      "body": "No competitor-board or incubation conflict was verified. A partner-by-partner board list was not built.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/160921/PDF/160921.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "bonus": {
+      "kicker": "Bonus · +3",
+      "title": "Track record bonus",
+      "body": "Wikipedia, citing the firm's history, says Battery was founded in 1983. 43 ÷ 5 is capped at +3.",
+      "rows": [],
+      "sources": [
+        [
+          "Wikipedia, Battery Ventures",
+          "https://en.wikipedia.org/wiki/Battery_Ventures"
+        ]
+      ],
+      "tone": ""
+    },
+    "pen": {
+      "kicker": "Penalty · 0",
+      "title": "Regulatory penalty",
+      "body": "The Form ADV regulatory disclosure page has no information filed.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/160921/PDF/160921.pdf"
+        ],
+        [
+          "SEC IAPD summary",
+          "https://adviserinfo.sec.gov/firm/summary/160921"
+        ]
+      ],
+      "tone": ""
+    },
+    "sec": {
+      "kicker": "Regulatory record",
+      "title": "SEC disclosure page",
+      "body": "The Form ADV regulatory disclosure page has no information filed.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/160921/PDF/160921.pdf"
+        ],
+        [
+          "SEC IAPD summary",
+          "https://adviserinfo.sec.gov/firm/summary/160921"
+        ]
+      ],
+      "tone": ""
+    },
+    "range": {
+      "kicker": "How sure are we",
+      "title": "Likely range 82–95",
+      "body": "For each unchecked part we took a small plausible downside (10% of lawsuits and removals, half of down-rounds and blocking, and the unpublished reserve and founder-experience gaps) and combined them as independent swings. Upside is unpublished reserves, unmeasured media, and unconfirmed help.",
+      "rows": [
+        [
+          "1a Lawsuits with own founders",
+          "-2.5 / +0.0"
+        ],
+        [
+          "1b Pushing out founder-CEOs",
+          "-1.2 / +0.0"
+        ],
+        [
+          "1c Down-round / pay-to-play",
+          "-5.0 / +0.0"
+        ],
+        [
+          "1d Blocking deals / rounds",
+          "-4.0 / +0.0"
+        ],
+        [
+          "2a Money",
+          "-0.5 / +1.0"
+        ],
+        [
+          "2b Media reach",
+          "-0.0 / +3.0"
+        ],
+        [
+          "2c Help after the check",
+          "-1.0 / +2.0"
+        ],
+        [
+          "3 Founder experience",
+          "-6.0 / +0.0"
+        ],
+        [
+          "4 Conflicts",
+          "-1.0 / +0.0"
+        ],
+        [
+          "6 Regulatory",
+          "-1.0 / +0.0"
+        ]
+      ],
+      "sources": [],
+      "tone": ""
+    },
+    "cov": {
+      "kicker": "Coverage · 9%",
+      "title": "How much we could check",
+      "body": "Weighted by section points. Down rounds, blocking, media reach, and founder accounts are 0% because they were not measured. A thin record is not a clean record. The percent does not change the 0–100 score.",
+      "rows": [
+        [
+          "1a Lawsuits",
+          "15%"
+        ],
+        [
+          "1b Founder removals",
+          "0%"
+        ],
+        [
+          "1c Down rounds",
+          "0%"
+        ],
+        [
+          "1d Blocking",
+          "0%"
+        ],
+        [
+          "2a Money",
+          "33%"
+        ],
+        [
+          "2b Media",
+          "0%"
+        ],
+        [
+          "2c Help",
+          "36%"
+        ],
+        [
+          "3 Founder experience",
+          "0%"
+        ],
+        [
+          "4 Conflicts",
+          "15%"
+        ]
+      ],
+      "sources": [],
+      "tone": ""
+    },
+    "rel": {
+      "kicker": "Sources",
+      "title": "Sourced rows only",
+      "body": "Each scored figure links to a filing or an article that was read. Older research files were used as leads, not as facts. Empty blocks were left empty.",
+      "rows": [],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/160921/PDF/160921.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "rank": {
+      "kicker": "Ranking",
+      "title": "#3 of 11 on Toxy Score v2",
+      "body": "All 11 funds are on v2. Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
+      "rows": [
+        [
+          "Andreessen Horowitz",
+          "95.4 (v2)"
+        ],
+        [
+          "Bessemer Venture Partners",
+          "91.7 (v2)"
+        ],
+        [
+          "Battery Ventures",
+          "91.6 (v2)"
+        ],
+        [
+          "Accel",
+          "89.9 (v2)"
+        ],
+        [
+          "Bain Capital Ventures",
+          "89.9 (v2)"
+        ],
+        [
+          "Khosla Ventures",
+          "89.9 (v2)"
+        ],
+        [
+          "Lux Capital",
+          "89.9 (v2)"
+        ],
+        [
+          "Sequoia Capital",
+          "89.9 (v2)"
+        ],
+        [
+          "General Catalyst",
+          "89.4 (v2)"
+        ],
+        [
+          "Lightspeed Venture Partners",
+          "88.9 (v2)"
+        ],
+        [
+          "Insight Partners",
+          "81.6 (v2)"
+        ]
+      ],
+      "sources": [],
+      "tone": ""
+    },
+    "rules": {
+      "kicker": "Methodology",
+      "title": "How Toxy Score v2 works",
+      "body": "Every fund starts with full points and loses them only for verified evidence about its own behavior. Bad events are a share of the portfolio: under 1% costs nothing. A missing portfolio count is not treated as a 70% rate. Regulatory is penalty-only.",
+      "rows": [
+        [
+          "Fund vs. founders",
+          "60"
+        ],
+        [
+          "Ability to support you",
+          "17.5"
+        ],
+        [
+          "Founder experience",
+          "17.5"
+        ],
+        [
+          "Conflicts",
+          "5"
+        ],
+        [
+          "Track record bonus",
+          "up to +3"
+        ],
+        [
+          "Regulatory penalty",
+          "0 to −50"
+        ]
+      ],
+      "sources": [],
+      "tone": ""
+    },
+    "sanc": {
+      "kicker": "Sanctions · no ADV designation",
+      "title": "No adviser designation in the filing",
+      "body": "The Form ADV disclosure pages were read. No sanctions designation for this adviser was in them. People were not screened one by one. A designation would need an exact identity match, not a shared word in a name.",
+      "rows": [
+        [
+          "Form ADV DRP",
+          "No sanctions designation filed"
+        ],
+        [
+          "People screened",
+          "Not run"
+        ],
+        [
+          "Adviser",
+          "BATTERY MANAGEMENT CORP."
+        ]
+      ],
+      "sources": [
+        [
+          "Form ADV PDF",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/160921/PDF/160921.pdf"
+        ],
+        [
+          "SEC IAPD summary",
+          "https://adviserinfo.sec.gov/firm/summary/160921"
+        ]
+      ],
+      "tone": ""
+    }
+  }
+}

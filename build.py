@@ -3,7 +3,7 @@
 
 Source of truth:
   data/home.json          fund list, stats, updates
-  data/funds/<slug>.json  a full report (only a16z today)
+  data/funds/<slug>.json  a full report
 
 No third-party dependencies. Internal links are relative, so the same
 output works at a GitHub project URL (/regrettamine/) and at regrettamine.com.

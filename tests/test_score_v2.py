@@ -1,7 +1,11 @@
 """Toxy Score v2. The a16z worksheet is the published worked example."""
+import json
 from decimal import Decimal
+from pathlib import Path
 
 from regrettamine.score_v2 import A16Z_SCORE_INPUTS, score_v2
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_a16z_published_worksheet():
@@ -77,3 +81,30 @@ def test_partner_departures_count_per_year_capped():
     assert with_years(1) == Decimal("95.4")
     assert with_years(0) - with_years(1) == Decimal("0.5")
     assert with_years(4) == with_years(9)
+
+
+def test_published_fund_scores_match_inputs():
+    inputs = json.loads((ROOT / "data" / "score_inputs.json").read_text(encoding="utf-8"))
+    assert set(inputs) == {
+        "lux", "accel", "bessemer", "battery", "insightpartners",
+        "baincapitalventures", "generalcatalyst", "sequoia", "khosla", "lightspeed",
+    }
+    for slug, rows in inputs.items():
+        fund = json.loads((ROOT / "data" / "funds" / f"{slug}.json").read_text(encoding="utf-8"))
+        result = score_v2(rows)
+        assert result["total"] == Decimal(str(fund["scoreExact"])), slug
+        assert result["band"] == fund["band"], slug
+        by_id = {part["id"]: part["got"] for part in fund["parts"]}
+        assert by_id["s1"] == _got(result["sections"]["s1"])
+        assert by_id["s3"] == _got(result["sections"]["s3"])
+        assert by_id["s4"] == _got(result["sections"]["s4"])
+        assert by_id["bonus"] == "+" + _got(result["sections"]["bonus"])
+        pen = result["sections"]["pen"]
+        assert by_id["pen"] == ("0" if pen == 0 else "−" + _got(abs(pen)))
+
+
+def _got(value):
+    text = format(value, "f")
+    if "." in text:
+        text = text.rstrip("0").rstrip(".")
+    return text or "0"

@@ -57,7 +57,7 @@ One-time setup:
    DATABASE_URL="…" python3 scripts/seed.py
    ```
 
-   `seed.py` loads the 11 list rows and the full a16z report from `data/`. It replaces those content tables. It does not invent vehicles, portfolio companies, reviews, or users. It does not load `templates/csv/`. The account migration adds the signup trigger, the watchlist cap, alert preferences, and the rule that a founder review stays hidden until it is approved. `20261004180000_share_review.sql` adds the share-form columns (connection type, five ratings, LinkedIn URL). The LinkedIn URL is not selectable by anon or signed-in users and is omitted from the public bundle. `first_hand` and `verification_status` stay at the server defaults for those roles.
+   `seed.py` loads the 11 list rows and every report in `data/funds/`. Score inputs for the reports other than a16z are in `data/score_inputs.json`. It replaces those content tables. It does not invent vehicles, portfolio companies, reviews, or users. It does not load `templates/csv/`. The account migration adds the signup trigger, the watchlist cap, alert preferences, and the rule that a founder review stays hidden until it is approved. `20261004180000_share_review.sql` adds the share-form columns (connection type, five ratings, LinkedIn URL). The LinkedIn URL is not selectable by anon or signed-in users and is omitted from the public bundle. `first_hand` and `verification_status` stay at the server defaults for those roles.
 
 3. **Project Settings → API**: copy the project URL and the `anon` public key.
 4. GitHub → this repo → **Settings → Secrets and variables → Actions**. Add:

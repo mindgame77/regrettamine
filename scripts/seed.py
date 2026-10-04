@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Load data/home.json and data/funds/a16z.json into Postgres.
+"""Load data/home.json and every data/funds/<slug>.json report into Postgres.
 
 Nothing is invented. Vehicles, portfolio companies, reviews, filings, and
 docket entries stay empty for the real firms: the source files do not list
@@ -171,7 +171,7 @@ def seed_home(loader, home, firm_ids, version_ids):
             published=True,
             is_test=False,
         )
-        if row["id"] != "a16z":
+        if not row.get("report"):
             loader.add(
                 "score_results",
                 id=uid(),
@@ -225,7 +225,7 @@ def copy_block(loader, firm_id, key, body, sort_order):
     )
 
 
-def seed_a16z(loader, fund, firm_id, version_ids):
+def seed_report(loader, fund, firm_id, version_ids, score_inputs, old_score, computed_at, checked_on):
     blocks = {
         "page_title": fund["title"],
         "not_token": fund["notToken"],
@@ -320,25 +320,43 @@ def seed_a16z(loader, fund, firm_id, version_ids):
         )
 
     # Entities named in the report. No vehicle list is in the source, so funds stays empty.
-    loader.add(
-        "fund_entities",
-        id=uid(),
-        firm_id=firm_id,
-        name="AH Capital Management, L.L.C.",
-        entity_kind="adviser",
-        crd="160489",
-        notes="SEC adviser · CRD 160489",
-        sort_order=0,
-    )
-    loader.add(
-        "fund_entities",
-        id=uid(),
-        firm_id=firm_id,
-        name="a16z Capital Management",
-        entity_kind="management",
-        notes="Named in the Oct 2, 2026 sanctions screen",
-        sort_order=1,
-    )
+    if fund["slug"] == "a16z":
+        loader.add(
+            "fund_entities",
+            id=uid(),
+            firm_id=firm_id,
+            name="AH Capital Management, L.L.C.",
+            entity_kind="adviser",
+            crd="160489",
+            notes="SEC adviser · CRD 160489",
+            sort_order=0,
+        )
+        loader.add(
+            "fund_entities",
+            id=uid(),
+            firm_id=firm_id,
+            name="a16z Capital Management",
+            entity_kind="management",
+            notes="Named in the Oct 2, 2026 sanctions screen",
+            sort_order=1,
+        )
+    else:
+        crd = ""
+        for label in fund.get("meta") or []:
+            match = re.search(r"CRD\s+(\d+)", label)
+            if match:
+                crd = match.group(1)
+        legal_name = fund["meta"][1] if len(fund.get("meta") or []) > 1 else fund["name"]
+        loader.add(
+            "fund_entities",
+            id=uid(),
+            firm_id=firm_id,
+            name=legal_name,
+            entity_kind="adviser",
+            crd=crd or None,
+            notes=fund["meta"][0] if fund.get("meta") else None,
+            sort_order=0,
+        )
 
     people = {}
 
@@ -399,17 +417,18 @@ def seed_a16z(loader, fund, firm_id, version_ids):
             badge=item.get("badge"),
             tone=item.get("tone"),
         )
-    # Named in the sanctions note as a GP. No start date is given.
-    person("Anne Neuberger")
-    loader.add(
-        "fund_people",
-        id=uid(),
-        person_id=people["Anne Neuberger"],
-        firm_id=firm_id,
-        role="GP",
-        notes="Named on Russia and Iran counter-sanctions lists for a former White House role. Not a Western sanction.",
-        sort_order=200,
-    )
+    # Named in the a16z sanctions note as a GP. No start date is given.
+    if fund["slug"] == "a16z":
+        person("Anne Neuberger")
+        loader.add(
+            "fund_people",
+            id=uid(),
+            person_id=people["Anne Neuberger"],
+            firm_id=firm_id,
+            role="GP",
+            notes="Named on Russia and Iran counter-sanctions lists for a former White House role. Not a Western sanction.",
+            sort_order=200,
+        )
 
     for index, tile in enumerate(fund["fundTab"]["facts"]):
         loader.add(
@@ -505,6 +524,7 @@ def seed_a16z(loader, fund, firm_id, version_ids):
             title=matter["sub"],
         )
         role = role_by_matter.get(matter["id"], {})
+        party_role = next((value for label, value in role.items() if label.endswith(" role")), None)
         points = points_from_badge(matter["badge"])
         link_id = uid()
         loader.add(
@@ -512,7 +532,7 @@ def seed_a16z(loader, fund, firm_id, version_ids):
             id=link_id,
             matter_id=matter_id,
             firm_id=firm_id,
-            party_role=role.get("a16z role"),
+            party_role=party_role,
             status=role.get("Status"),
             counted=points not in (None, 0),
             relevance=role.get("Founder relevance"),
@@ -526,13 +546,13 @@ def seed_a16z(loader, fund, firm_id, version_ids):
             featured_rank=featured.get(matter["id"]),
             evidence_key=matter["id"],
         )
-        if role.get("a16z role"):
+        if party_role:
             loader.add(
                 "legal_matter_parties",
                 id=uid(),
                 matter_id=matter_id,
-                name="Andreessen Horowitz",
-                party_role=role["a16z role"],
+                name=fund["name"],
+                party_role=party_role,
                 firm_id=firm_id,
                 sort_order=0,
             )
@@ -614,7 +634,7 @@ def seed_a16z(loader, fund, firm_id, version_ids):
         "sanctions_checks",
         id=sanctions_id,
         firm_id=firm_id,
-        checked_on=date(2026, 10, 2),
+        checked_on=checked_on,
         result="no_match" if sanctions.get("ok") else "match",
         exact_identity_match=False,
         points=0,
@@ -683,16 +703,23 @@ def seed_a16z(loader, fund, firm_id, version_ids):
         )
 
     # History: the old list score, then the current v2 result.
-    loader.add(
-        "score_results",
-        id=uid(),
-        firm_id=firm_id,
-        version_id=version_ids["legacy-list"],
-        total=49,
-        total_shown=49,
-        is_current=False,
-    )
+    if old_score is not None:
+        loader.add(
+            "score_results",
+            id=uid(),
+            firm_id=firm_id,
+            version_id=version_ids["legacy-list"],
+            total=old_score,
+            total_shown=old_score,
+            is_current=False,
+        )
     result_id = uid()
+    coverage = None
+    for chip in fund.get("floats") or []:
+        if chip.get("ev") == "cov":
+            match = re.search(r"(\d+)", chip.get("text") or "")
+            if match:
+                coverage = int(match.group(1))
     loader.add(
         "score_results",
         id=result_id,
@@ -703,10 +730,10 @@ def seed_a16z(loader, fund, firm_id, version_ids):
         band=fund["band"],
         range_low=fund["range"][0],
         range_high=fund["range"][1],
-        coverage_pct=39,
+        coverage_pct=coverage,
         confidence=f"likely {fund['range'][0]}–{fund['range'][1]}",
         is_current=True,
-        computed_at="2026-10-02T00:00:00-07:00",
+        computed_at=computed_at,
     )
     part_ids = {}
     for index, part in enumerate(fund["parts"]):
@@ -746,7 +773,7 @@ def seed_a16z(loader, fund, firm_id, version_ids):
         card = fund["evidence"].get(part["id"]) or {}
         for source_index, pair in enumerate(card.get("sources") or []):
             loader.cite(loader.source(pair[1]), firm_id, "score_result", part_id, pair[0], source_index)
-    for index, row in enumerate(A16Z_SCORE_INPUTS):
+    for index, row in enumerate(score_inputs):
         loader.add(
             "score_inputs",
             id=uid(),
@@ -767,7 +794,7 @@ def main():
     import psycopg
 
     home = load(ROOT / "data" / "home.json")
-    fund = load(ROOT / "data" / "funds" / "a16z.json")
+    score_inputs = load(ROOT / "data" / "score_inputs.json")
     with psycopg.connect(url) as conn:
         with conn.cursor() as cur:
             reset(cur)
@@ -776,9 +803,25 @@ def main():
             loader = Loader(cur)
             firm_ids = {}
             seed_home(loader, home, firm_ids, version_ids)
-            seed_a16z(loader, fund, firm_ids["a16z"], version_ids)
+            for row in home["funds"]:
+                if not row.get("report"):
+                    continue
+                fund = load(ROOT / "data" / "funds" / f"{row['report']}.json")
+                inputs = A16Z_SCORE_INPUTS if row["report"] == "a16z" else score_inputs[row["report"]]
+                computed_at = "2026-10-02T00:00:00-07:00" if row["report"] == "a16z" else row["updatedTs"]
+                checked_on = date(2026, 10, 2) if row["report"] == "a16z" else date(2026, 10, 4)
+                seed_report(
+                    loader,
+                    fund,
+                    firm_ids[row["id"]],
+                    version_ids,
+                    inputs,
+                    row.get("old"),
+                    computed_at,
+                    checked_on,
+                )
         conn.commit()
-    print(f"seeded {len(home['funds'])} firms, a16z report, {len(home['updates'])} updates")
+    print(f"seeded {len(home['funds'])} firms, {sum(1 for row in home['funds'] if row.get('report'))} reports, {len(home['updates'])} updates")
 
 
 if __name__ == "__main__":
