@@ -1,4 +1,4 @@
-/* Settings. Account fields are the signed-in profile. Billing reads my_billing until Stripe is connected. */
+/* Settings. Account fields are the signed-in profile. Billing reads my_billing. */
 (function () {
   const $ = id => document.getElementById(id);
   let email = '';
@@ -11,7 +11,29 @@
     document.querySelectorAll('.anav a').forEach(a => a.classList.toggle('on', a.dataset.v === name));
   }
   addEventListener('hashchange', () => { go(); scrollTo(0, 0); });
-  go();
+
+  function planIsPaid(data) {
+    const plan = data && data.plan;
+    return plan === 'Monthly' || plan === 'Annual' || plan === 'Paid' || (data && data.tier === 'paid');
+  }
+
+  function consumeReturn() {
+    const params = new URLSearchParams(location.search);
+    let tab = (params.get('tab') || '').toLowerCase();
+    const justPaid = params.get('paid') === '1';
+    if (justPaid && tab !== 'account') tab = 'billing';
+    if (tab === 'billing' || tab === 'account') {
+      if (location.hash !== '#' + tab) location.hash = tab;
+    }
+    if (params.has('tab') || params.has('paid')) {
+      history.replaceState(null, '', location.pathname + location.hash);
+    }
+    go();
+    const note = $('payNote');
+    if (note && justPaid) note.hidden = false;
+    return justPaid;
+  }
+  const justPaid = consumeReturn();
 
   function showErr(id, text) {
     const node = $(id);
@@ -66,8 +88,8 @@
 
   function paintBilling(row) {
     const data = row || {};
-    const paid = data.plan === 'Paid' || data.tier === 'paid';
-    $('planName').textContent = paid ? 'Paid' : 'Free';
+    const paid = data.tier === 'paid' || data.plan === 'Paid' || data.plan === 'Monthly' || data.plan === 'Annual';
+    $('planName').textContent = data.plan || (paid ? 'Paid' : 'Free');
     $('planDetail').textContent = data.price_label || (paid ? 'Your paid plan is active.' : 'No charge.');
     if (data.payment_failed && data.next_charge_label) {
       $('nxLabel').textContent = 'Charge failed';
@@ -83,7 +105,13 @@
     $('cardBrand').textContent = card ? (card.brand || '') : '';
     $('cardLabel').textContent = card ? (card.label || 'Card on file') : 'No card on file';
     $('cardMeta').textContent = card && card.expires ? 'Expires ' + card.expires : '';
-    $('cardChange').hidden = !card;
+    const manage = !!(data.manage_card || card);
+    if (!card && manage) {
+      $('cardLabel').textContent = 'Card on file';
+      $('cardMeta').textContent = '';
+    }
+    $('cardChange').hidden = !manage;
+    $('cardChange').textContent = 'Manage card';
     $('cardDelete').hidden = !card;
     const payments = Array.isArray(data.payments) ? data.payments : [];
     $('payEmpty').hidden = payments.length > 0;
@@ -212,7 +240,33 @@
     const { data } = await Regret.sb().from('profiles').select('display_name, website').eq('id', Regret.user.id).maybeSingle();
     if (document.activeElement !== $('nameIn')) $('nameIn').value = (data && data.display_name) || '';
     if (document.activeElement !== $('siteIn')) $('siteIn').value = (data && data.website) || '';
-    const billing = await Regret.sb().rpc('my_billing');
-    paintBilling(billing.data || { plan: Regret.tier === 'paid' ? 'Paid' : 'Free' });
+    await watchPayment(justPaid);
   });
+
+  async function loadBilling() {
+    const billing = await Regret.sb().rpc('my_billing');
+    const row = billing.data || { plan: Regret.tier === 'paid' ? 'Paid' : 'Free' };
+    paintBilling(row);
+    return row;
+  }
+
+  async function watchPayment(waiting) {
+    let row = await loadBilling();
+    if (!waiting) return;
+    const note = $('payNote');
+    if (planIsPaid(row)) {
+      if (note) note.hidden = true;
+      return;
+    }
+    if (note) note.hidden = false;
+    const deadline = Date.now() + 20000;
+    while (Date.now() < deadline) {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      row = await loadBilling();
+      if (planIsPaid(row)) {
+        if (note) note.hidden = true;
+        return;
+      }
+    }
+  }
 })();

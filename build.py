@@ -576,6 +576,7 @@ def render_fund_page(fund, prefix):
         f'<script id="ask-copy" type="application/json">{embed(fund["ask"]["clipboard"])}</script>\n'
         f'{extra}'
         f'<script src="{prefix}js/supabase-config.js"></script>'
+        f'<script src="{prefix}js/stripe-config.js"></script>'
         f'<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>'
         f'<script src="{prefix}js/auth.js"></script>'
         f'<script src="{prefix}js/gate.js"></script>'
@@ -663,9 +664,14 @@ def apply_legal(raw):
     legal = {}
     if path.exists():
         legal = load_json(path).get("legal") or {}
+    company = legal_html(legal.get("company"), "company")
     email = legal_html(legal.get("contact_email"), "contact email", email=True)
     place = legal_html(legal.get("jurisdiction"), "jurisdiction")
-    return raw.replace("__CONTACT_EMAIL__", email).replace("__JURISDICTION__", place)
+    return (
+        raw.replace("__COMPANY__", company)
+        .replace("__CONTACT_EMAIL__", email)
+        .replace("__JURISDICTION__", place)
+    )
 
 
 def build_scoring(funds):
@@ -784,6 +790,7 @@ def render_fund_shell(fund, prefix):
 <div class="scrim"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="Details"><div class="dh"><div><div class="dk" id="dk"></div><div class="dtt" id="dt"></div></div><button class="dx" id="dx" aria-label="Close">×</button></div><div class="db" id="db"></div></aside><div class="toast"></div>'''
     scripts = (
         f'<script src="{prefix}js/supabase-config.js"></script>'
+        f'<script src="{prefix}js/stripe-config.js"></script>'
         f'<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>'
         f'<script src="{prefix}js/auth.js"></script>'
         f'<script src="{prefix}js/gate.js"></script>'

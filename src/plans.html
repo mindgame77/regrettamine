@@ -20,7 +20,6 @@
   <h2>Monthly</h2>
   <div class="price"><b>$49</b><span>/month</span></div>
   <p class="bill">Billed monthly</p>
-  <!-- PLACEHOLDER: Stripe checkout is not built. data-checkout is the hook for later wiring. This button does not start a payment. -->
   <button class="b w pbtn" type="button" data-checkout="monthly">Start monthly</button>
   <ul class="feat"><li><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i>Every fund report, no limit</li><li><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i>Full reports: Score, Legal, Fund &amp; people, Public, Portfolio, Ask the fund</li><li><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i>Watchlist up to 100 funds</li><li><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i>Alerts on the funds you watch</li></ul>
  </div>
@@ -29,15 +28,17 @@
   <h2>Annual <span class="save">Save 40%</span></h2>
   <div class="price"><b>$29.40</b><span>/month</span></div>
   <p class="bill">Billed $352.80 a year <s>$588</s></p>
-  <!-- PLACEHOLDER: Stripe checkout is not built. data-checkout is the hook for later wiring. This button does not start a payment. -->
   <button class="b c pbtn" type="button" data-checkout="annual">Start annual</button>
   <ul class="feat"><li><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i>Every fund report, no limit</li><li><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i>Full reports: Score, Legal, Fund &amp; people, Public, Portfolio, Ask the fund</li><li><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i>Watchlist up to 100 funds</li><li><i><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i>Alerts on the funds you watch</li></ul>
  </div>
 </section>
 <p class="free">Not ready? Read 2 reports free, and 5 more with a free account.</p>
+<p class="testbuy"><button class="b w" type="button" data-checkout="test" hidden>$1 test purchase</button></p>
 </main>
 <footer><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regrett<em>amine</em></span></span><span>regrettamine.com · Know your VC before you raise.</span><span style="margin-left:auto"><a href="../scoring/">Scoring</a> · <a href="../privacy/">Privacy</a> · <a href="../terms/">Terms</a></span></div></footer>
 <script src="../js/supabase-config.js"></script>
+<script src="../js/stripe-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../js/auth.js"></script>
+<script src="../js/plans.js"></script>
 </body></html>
