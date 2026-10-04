@@ -5,7 +5,6 @@
   const listeners = [];
   let client = null;
   let user = null;
-  let firms = null;
   let carriedFor = null;
   const limits = { anon: 2, extra: 5, dwell: 2000 };
   const watch = { slugs: new Set() };
@@ -32,8 +31,11 @@
   function confirmed(person) {
     return !!(person && (person.email_confirmed_at || person.confirmed_at));
   }
+  let tier = 'visitor';
+  const alerts = { slugs: new Set(), opened: new Set(), rows: [] };
   function capFor(person) {
-    if (!person || !confirmed(person)) return limits.anon;
+    if (tier === 'paid') return Infinity;
+    if (!person) return limits.anon;
     return limits.anon + limits.extra;
   }
   function anonState() {
@@ -104,25 +106,61 @@
     if (user && full) btn.setAttribute('aria-disabled', 'true');
     else btn.removeAttribute('aria-disabled');
   }
+  function paintOneAlert(tog, on, locked) {
+    tog.classList.toggle('on', !!on && !locked);
+    tog.classList.toggle('off', !!locked);
+    tog.setAttribute('aria-checked', on && !locked ? 'true' : 'false');
+    if (locked) tog.setAttribute('aria-disabled', 'true');
+    else tog.removeAttribute('aria-disabled');
+  }
+  async function paintAlert() {
+    const tog = document.getElementById('alertTog');
+    const note = document.getElementById('alertNote');
+    if (!tog) return;
+    const slug = document.body.dataset.firm;
+    let locked = false;
+    if (user && tier !== 'paid' && slug) {
+      const opened = alerts.opened.has(slug) || (await seen()).has(slug);
+      locked = !opened;
+    }
+    const on = !!(slug && alerts.slugs.has(slug));
+    paintOneAlert(tog, on, locked);
+    if (note) note.hidden = !locked;
+  }
   async function firmMap() {
-    if (firms) return firms;
-    firms = {};
-    const clientNow = sb();
-    if (!clientNow) return firms;
-    const { data } = await clientNow.from('firms').select('id,slug');
-    (data || []).forEach(row => { firms[row.slug] = row.id; });
-    return firms;
+    return {};
   }
   async function landingFunds() {
     const clientNow = sb();
-    if (!user || !clientNow) return null;
+    if (!clientNow) return null;
     const { data, error } = await clientNow.rpc('landing_funds');
-    if (error || !Array.isArray(data)) return null;
+    if (error || !data || !Array.isArray(data.funds)) return null;
+    if (data.tier) tier = data.tier;
     return data;
   }
   async function firmId(slug) {
-    const map = await firmMap();
-    return map[slug] || null;
+    const clientNow = sb();
+    if (!clientNow || !slug) return null;
+    const { data, error } = await clientNow.rpc('firm_id_for_slug', { p_slug: slug });
+    if (error) return null;
+    return data || null;
+  }
+  async function loadReport(slug) {
+    const clientNow = sb();
+    if (!clientNow) return null;
+    const anon = anonState();
+    const { data, error } = await clientNow.rpc('open_report', {
+      p_slug: slug,
+      p_anon_key: user ? null : anon.anonKey
+    });
+    if (error || !data) return { ok: false, reason: 'error' };
+    if (data.tier) tier = data.tier;
+    if (data.ok && user && slug) alerts.opened.add(slug);
+    if (data.ok && !user && !anon.funds.includes(slug)) {
+      anon.funds.push(slug);
+      saveAnon(anon);
+    }
+    return data;
   }
   async function loadLimits() {
     const clientNow = sb();
@@ -133,106 +171,90 @@
     limits.extra = data.registered_extra_reports;
     limits.dwell = data.dwell_ms;
   }
+  async function refreshTier() {
+    const clientNow = sb();
+    if (!clientNow || !user) {
+      if (!user) tier = 'visitor';
+      return tier;
+    }
+    const { data, error } = await clientNow.rpc('access_tier');
+    if (!error && data) tier = data;
+    return tier;
+  }
+  async function refreshAlerts() {
+    alerts.slugs = new Set();
+    alerts.opened = new Set();
+    alerts.rows = [];
+    const clientNow = sb();
+    if (!user || !clientNow) return alerts;
+    const { data } = await clientNow.rpc('my_alert_funds');
+    (data || []).forEach(row => {
+      if (!row || !row.slug) return;
+      alerts.rows.push(row);
+      if (row.alerts) alerts.slugs.add(row.slug);
+      if (row.opened) alerts.opened.add(row.slug);
+    });
+    return alerts;
+  }
   async function refreshWatch() {
     watch.slugs = new Set();
     const clientNow = sb();
     if (!user || !clientNow) return watch;
-    const { data } = await clientNow.from('watchlist').select('firm_id, firms(slug)');
-    (data || []).forEach(row => {
-      const slug = row.firms && row.firms.slug;
-      if (slug) watch.slugs.add(slug);
-    });
+    const { data } = await clientNow.rpc('my_watch_slugs');
+    (data || []).forEach(slug => { if (slug) watch.slugs.add(slug); });
     return watch;
   }
   async function seen() {
     if (!user) return new Set(anonState().funds);
     const clientNow = sb();
     if (!clientNow) return new Set();
-    const { data } = await clientNow.from('report_views').select('counted, firms(slug)').eq('profile_id', user.id);
-    const out = new Set();
-    (data || []).forEach(row => {
-      if (row.counted && row.firms && row.firms.slug) out.add(row.firms.slug);
-    });
-    return out;
+    const { data } = await clientNow.rpc('my_report_slugs');
+    return new Set(data || []);
   }
   async function carry() {
     if (!user || carriedFor === user.id) return;
     carriedFor = user.id;
     const clientNow = sb();
     if (!clientNow) return;
+    await clientNow.rpc('carry_anon_views', { p_anon_key: anonState().anonKey });
+  }
+  async function record(slug) {
+    if (user) return;
     const state = anonState();
-    const already = await seen();
-    const room = capFor(user) - already.size;
-    let left = room;
-    for (const slug of state.funds) {
-      if (already.has(slug) || left <= 0) continue;
-      const id = await firmId(slug);
-      if (!id) continue;
-      const { error } = await clientNow.from('report_views').insert({
-        profile_id: user.id,
-        firm_id: id,
-        source: 'carry',
-        dwell_ms: limits.dwell,
-        counted: true
-      });
-      if (!error) {
-        already.add(slug);
-        left -= 1;
-      }
-    }
+    if (!state.funds.includes(slug)) state.funds.push(slug);
+    saveAnon(state);
   }
-  async function record(slug, source) {
-    if (!user) {
-      const state = anonState();
-      if (!state.funds.includes(slug)) state.funds.push(slug);
-      saveAnon(state);
-      return;
-    }
-    const clientNow = sb();
-    const id = await firmId(slug);
-    if (!clientNow || !id) return;
-    const { data } = await clientNow.from('report_views').select('id').eq('profile_id', user.id).eq('firm_id', id).maybeSingle();
-    const now = new Date().toISOString();
-    if (data) {
-      await clientNow.from('report_views').update({ last_opened_at: now, counted: true, dwell_ms: limits.dwell }).eq('id', data.id);
-    } else {
-      await clientNow.from('report_views').insert({
-        profile_id: user.id,
-        firm_id: id,
-        source: source || 'report',
-        dwell_ms: limits.dwell,
-        counted: true
-      });
-    }
-  }
-  async function touch(slug) {
-    if (!user) return;
-    const clientNow = sb();
-    const id = await firmId(slug);
-    if (!clientNow || !id) return;
-    await clientNow.from('report_views').update({ last_opened_at: new Date().toISOString() }).eq('profile_id', user.id).eq('firm_id', id);
-  }
+  async function touch() {}
   async function addWatch(slug) {
     if (!user) return { needAuth: true };
     if (watch.slugs.has(slug)) return { saved: true };
     if (watch.slugs.size >= 100) return { full: true };
     const clientNow = sb();
-    const id = await firmId(slug);
-    if (!clientNow || !id) return { error: 'Sign-in is not configured on this build.' };
-    const { error } = await clientNow.from('watchlist').insert({ profile_id: user.id, firm_id: id });
-    if (error) {
-      if (/full/i.test(error.message || '')) return { full: true };
-      return { error: error.message };
-    }
-    watch.slugs.add(slug);
-    return { saved: true };
+    if (!clientNow) return { error: 'Sign-in is not configured on this build.' };
+    const { data, error } = await clientNow.rpc('watch_fund', { p_slug: slug });
+    if (error) return { error: error.message };
+    if (data && data.saved) watch.slugs.add(slug);
+    return data || { error: 'Could not save' };
   }
   async function removeWatch(slug) {
     const clientNow = sb();
-    const id = await firmId(slug);
-    if (!clientNow || !id || !user) return;
-    await clientNow.from('watchlist').delete().eq('profile_id', user.id).eq('firm_id', id);
+    if (!clientNow || !user) return;
+    await clientNow.rpc('unwatch_fund', { p_slug: slug });
     watch.slugs.delete(slug);
+    alerts.slugs.delete(slug);
+    alerts.rows = alerts.rows.filter(row => row.slug !== slug);
+  }
+  async function setFundAlert(slug, on) {
+    if (!user) return { needAuth: true };
+    const clientNow = sb();
+    if (!clientNow) return { error: 'Sign-in is not configured on this build.' };
+    const { data, error } = await clientNow.rpc('set_fund_alert', { p_slug: slug, p_on: !!on });
+    if (error) return { error: error.message };
+    if (data && data.ok) {
+      if (data.on) watch.slugs.add(slug);
+      await refreshAlerts();
+    }
+    return data || { error: 'Could not update alerts' };
   }
 
   function cardHtml() {
@@ -470,6 +492,24 @@
       paintSave();
       return;
     }
+    const alertTog = ev.target.closest('#alertTog, [data-alert]');
+    if (alertTog) {
+      ev.preventDefault();
+      const slug = alertTog.dataset.alert || document.body.dataset.firm;
+      if (!user) { setMode('login', false); return; }
+      if (alertTog.classList.contains('off') || alertTog.getAttribute('aria-disabled') === 'true') return;
+      const next = !alertTog.classList.contains('on');
+      const result = await setFundAlert(slug, next);
+      if (result && result.reason === 'unopened') {
+        alertTog.classList.add('off');
+        alertTog.setAttribute('aria-disabled', 'true');
+        const note = alertTog.parentElement && alertTog.parentElement.querySelector('.fnote');
+        if (note) note.hidden = false;
+      }
+      await paintAlert();
+      listeners.forEach(fn => fn(user));
+      return;
+    }
     if (!ev.target.closest('.av')) {
       const open = document.querySelector('.av.open');
       if (open) open.classList.remove('open');
@@ -490,7 +530,9 @@
       await loadLimits();
       if (user) {
         await carry();
+        await refreshTier();
         await refreshWatch();
+        await refreshAlerts();
       }
       clientNow.auth.onAuthStateChange(async (event, session) => {
         const next = session && session.user;
@@ -499,19 +541,27 @@
         if (event === 'PASSWORD_RECOVERY') setMode('reset', false);
         if (event === 'SIGNED_OUT') {
           watch.slugs = new Set();
+          alerts.slugs = new Set();
+          alerts.opened = new Set();
+          alerts.rows = [];
+          tier = 'visitor';
           carriedFor = null;
         }
         if (user && changed) {
           await carry();
+          await refreshTier();
           await refreshWatch();
+          await refreshAlerts();
         }
         paintNav(user);
         paintSave();
+        await paintAlert();
         listeners.forEach(fn => fn(user));
       });
     }
     paintNav(user);
     paintSave();
+    await paintAlert();
     if (user && pendingAfter()) {
       const target = new URL(pendingAfter(), siteRoot());
       const same = target.pathname === location.pathname && target.hash === location.hash;
@@ -538,10 +588,11 @@
   })();
 
   global.Regret = {
-    sb, root, siteRoot, limits, watch, ready, esc,
+    sb, root, siteRoot, limits, watch, alerts, ready, esc, paintSave, paintAlert,
     get user() { return user; },
+    get tier() { return tier; },
     confirmed, capFor, anonState, seen, record, touch, firmId, firmMap,
-    addWatch, removeWatch, refreshWatch, landingFunds,
+    addWatch, removeWatch, refreshWatch, refreshAlerts, setFundAlert, landingFunds, loadReport,
     onChange(fn) { listeners.push(fn); }
   };
   global.RegretAuth = { open: setMode, close, setMode };

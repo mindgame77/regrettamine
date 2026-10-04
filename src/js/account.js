@@ -47,14 +47,14 @@
 
   function renderAlerts() {
     const read = readKeys();
-    const items = HOME.updates.filter(u => u.fid && Regret.watch.slugs.has(u.fid) && KINDS[u.k]);
+    const items = HOME.updates.filter(u => u.fid && Regret.alerts.slugs.has(u.fid) && KINDS[u.k]);
     const unread = items.filter(u => !read.has(alertKey(u)));
     const badge = $('alertCount');
     badge.hidden = unread.length === 0;
     badge.textContent = String(unread.length);
     badge.classList.toggle('hot', unread.length > 0);
     if (!items.length) {
-      $('alertFeed').innerHTML = '<div class="empty"><b>No alerts yet.</b>Legal, regulatory, and score changes for saved funds show up here.</div>';
+      $('alertFeed').innerHTML = '<div class="empty"><b>No alerts yet.</b>Legal, regulatory, and score changes for funds with alerts on show up here.</div>';
       return;
     }
     $('alertFeed').innerHTML = items.map(u => {
@@ -90,24 +90,39 @@
     if (at < 0) return Regret.esc(name);
     return Regret.esc(name.slice(0, at)) + '<mark>' + Regret.esc(name.slice(at, at + q.length)) + '</mark>' + Regret.esc(name.slice(at + q.length));
   }
-  function showFunds() {
+  let shareToken = 0;
+  async function showFunds() {
     const input = $('fundIn');
     const dd = $('fundDD');
     const q = input.value.trim();
     if (!q) { dd.classList.remove('on'); dd.innerHTML = ''; return; }
     ensureGrad();
-    const rows = HOME.funds.filter(f => (f.name + ' ' + (f.short || '') + ' ' + f.id).toLowerCase().includes(q.toLowerCase()))
-      .sort((a, b) => a.name.localeCompare(b.name));
+    const token = ++shareToken;
+    let rows;
+    const client = Regret.sb && Regret.sb();
+    if (client) {
+      const { data } = await client.rpc('search_funds', { q: q });
+      if (token !== shareToken) return;
+      rows = data || [];
+    } else {
+      rows = HOME.funds.filter(f => (f.name + ' ' + (f.short || '') + ' ' + f.id).toLowerCase().includes(q.toLowerCase()))
+        .sort((a, b) => a.name.localeCompare(b.name));
+    }
     if (!rows.length) {
       dd.innerHTML = '<div class="none">No fund found</div>';
       dd.classList.add('on');
       return;
     }
     dd.innerHTML = rows.map((f, i) => {
+      const id = f.id || f.slug;
+      if (f.score == null) {
+        return '<button type="button" class="opt' + (i ? '' : ' hi') + '" data-firm="' + Regret.esc(id) + '" data-name="' + Regret.esc(f.name) + '">'
+          + '<div class="on2"><b>' + highlight(f.name, q) + '</b><small>' + Regret.esc(f.slug || id) + '</small></div></button>';
+      }
       const color = f.v2 ? 'url(#g2)' : '#C9C5D9';
-      return '<button type="button" class="opt' + (i ? '' : ' hi') + '" data-firm="' + Regret.esc(f.id) + '" data-name="' + Regret.esc(f.name) + '">'
+      return '<button type="button" class="opt' + (i ? '' : ' hi') + '" data-firm="' + Regret.esc(id) + '" data-name="' + Regret.esc(f.name) + '">'
         + '<div class="mring">' + FundList.ring(f.score, 32, 3.5, color) + '<b style="' + (f.v2 ? '' : 'color:#A9A5BD') + '">' + Regret.esc(f.score) + '</b></div>'
-        + '<div class="on2"><b>' + highlight(f.name, q) + '</b><small>' + Regret.esc(f.hq) + '</small></div>'
+        + '<div class="on2"><b>' + highlight(f.name, q) + '</b><small>' + Regret.esc(f.hq || '') + '</small></div>'
         + '<span class="bands"><i style="background:' + FundList.bandColor(f.band) + '"></i>' + Regret.esc(f.band) + '</span></button>';
     }).join('');
     dd.classList.add('on');
@@ -120,7 +135,23 @@
     document.querySelectorAll('[data-pref]').forEach(el => {
       el.classList.toggle('on', !!prefs[el.dataset.pref]);
     });
-    $('prefNote').textContent = 'To ' + (Regret.user.email || 'you') + ', only for watched funds.';
+    $('prefNote').textContent = 'To ' + (Regret.user.email || 'you') + ', only for funds with alerts on.';
+  }
+
+  function renderFundAlerts() {
+    const host = $('fundAlerts');
+    if (!host) return;
+    const rows = (Regret.alerts && Regret.alerts.rows) || [];
+    if (!rows.length) {
+      host.innerHTML = '<p class="fnote">Open a report to get alerts for that fund.</p>';
+      return;
+    }
+    host.innerHTML = rows.map(row => {
+      const locked = Regret.tier !== 'paid' && !row.opened;
+      const on = !!row.alerts && !locked;
+      return '<div class="fund-alert"><div class="tog' + (on ? ' on' : '') + (locked ? ' off' : '') + '" data-alert="' + Regret.esc(row.slug) + '" role="switch" aria-checked="' + (on ? 'true' : 'false') + '"' + (locked ? ' aria-disabled="true"' : '') + '><span>' + Regret.esc(row.name) + '</span><span class="sw2"></span></div>'
+        + (locked ? '<p class="fnote">Open this report to get alerts</p>' : '') + '</div>';
+    }).join('');
   }
 
   $('wlOut').addEventListener('click', async e => {
@@ -129,17 +160,29 @@
     e.preventDefault();
     e.stopPropagation();
     await Regret.removeWatch(btn.dataset.remove);
+    await Regret.refreshAlerts();
     renderWatch();
     renderAlerts();
+    renderFundAlerts();
   });
 
-  $('addFund').addEventListener('input', () => {
-    const q = $('addFund').value.trim().toLowerCase();
+  let addToken = 0;
+  $('addFund').addEventListener('input', async () => {
+    const q = $('addFund').value.trim();
     const list = $('addList');
     if (!q) { list.hidden = true; list.innerHTML = ''; return; }
-    const matches = funds.filter(f => !Regret.watch.slugs.has(f.id) && f.name.toLowerCase().includes(q)).slice(0, 8);
+    const token = ++addToken;
+    let matches;
+    const client = Regret.sb && Regret.sb();
+    if (client) {
+      const { data } = await client.rpc('search_funds', { q: q });
+      if (token !== addToken) return;
+      matches = (data || []).filter(f => !Regret.watch.slugs.has(f.id || f.slug)).slice(0, 8);
+    } else {
+      matches = funds.filter(f => !Regret.watch.slugs.has(f.id) && f.name.toLowerCase().includes(q.toLowerCase())).slice(0, 8);
+    }
     list.hidden = matches.length === 0;
-    list.innerHTML = matches.map(f => '<button type="button" data-add="' + Regret.esc(f.id) + '">' + Regret.esc(f.name) + '<small>' + Regret.esc(f.hq) + '</small></button>').join('');
+    list.innerHTML = matches.map(f => '<button type="button" data-add="' + Regret.esc(f.id || f.slug) + '">' + Regret.esc(f.name) + '<small>' + Regret.esc(f.hq || f.slug || '') + '</small></button>').join('');
   });
   $('addList').addEventListener('click', async e => {
     const btn = e.target.closest('[data-add]');
@@ -148,13 +191,15 @@
     $('addFund').value = '';
     $('addList').hidden = true;
     if (result && result.full) $('addFund').placeholder = 'Watchlist full (100/100)';
+    await Regret.refreshAlerts();
     renderWatch();
     renderAlerts();
+    renderFundAlerts();
   });
 
   $('markRead').onclick = () => {
     const keys = readKeys();
-    HOME.updates.forEach(u => { if (u.fid && Regret.watch.slugs.has(u.fid) && KINDS[u.k]) keys.add(alertKey(u)); });
+    HOME.updates.forEach(u => { if (u.fid && Regret.alerts.slugs.has(u.fid) && KINDS[u.k]) keys.add(alertKey(u)); });
     storeKeys(keys);
     renderAlerts();
   };
@@ -254,14 +299,22 @@
       location.href = new URL('login/', Regret.siteRoot()).href + '?next=account/&view=' + encodeURIComponent(view);
       return;
     }
-    const rows = await Regret.landingFunds();
-    if (rows && rows.length) {
-      funds = rows;
+    const catalog = await Regret.landingFunds();
+    if (catalog && Array.isArray(catalog.funds) && catalog.funds.length) {
+      funds = catalog.funds;
       BY_ID = Object.fromEntries(funds.map(f => [f.id, f]));
     }
     anonHint();
     renderWatch();
     renderAlerts();
+    renderFundAlerts();
     await loadPrefs();
+  });
+
+  Regret.onChange(() => {
+    if (!Regret.user || !document.getElementById('fundAlerts')) return;
+    renderWatch();
+    renderAlerts();
+    renderFundAlerts();
   });
 })();

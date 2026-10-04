@@ -24,6 +24,7 @@ SITE = ROOT / "site"
 EXT_SVG = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3H3.5A.5.5 0 0 0 3 3.5v9a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V10M9 3h4v4M13 3 7.5 8.5"/></svg>'
 OPEN_SVG = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h4v4M13 3 7.5 8.5"/></svg>'
 SAVE_SVG = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14l-6-4.2L6 20z"/></svg>'
+ALERT_LINE = '<div class="alert-line"><div class="tog" id="alertTog" role="switch" aria-checked="false"><span>Alerts</span><span class="sw2"></span></div><p class="fnote" id="alertNote" hidden>Open this report to get alerts</p></div>'
 SENT_LABEL = {"pos": "Positive", "neu": "Neutral", "neg": "Negative"}
 PAGE_SIZE = 24
 LIST_CAP = 8
@@ -549,6 +550,7 @@ def render_fund_page(fund, prefix):
 <div class="ftop"><div class="wrap">
  <div class="crumb np"><a href="{home}">← All VCs</a></div>
  <div class="fh np"><div><h1>{esc(fund["name"])} <span>{esc(fund["short"])}</span><button type="button" class="save" id="save" data-tip="Save" aria-label="Save to watchlist" aria-pressed="false">{SAVE_SVG}</button></h1>
+  {ALERT_LINE}
   <div class="meta">{"".join(meta)}</div></div>
   <div class="upd">Updated {esc(fund["updated"])}<br>{esc(fund["method"])}</div></div>
  <div class="np">{render_hero(fund)}</div>
@@ -703,7 +705,16 @@ def copy_static():
     data_dest = SITE / "data"
     if data_dest.exists():
         shutil.rmtree(data_dest)
-    shutil.copytree(DATA, data_dest)
+    data_dest.mkdir(parents=True)
+    # Fund report JSON is not part of the public site. Reports load through open_report.
+    for item in DATA.iterdir():
+        if item.name == "funds":
+            continue
+        dest = data_dest / item.name
+        if item.is_dir():
+            shutil.copytree(item, dest)
+        else:
+            shutil.copy2(item, dest)
     (SITE / ".nojekyll").write_text("")
     cname = ROOT / "CNAME"
     if cname.exists():
@@ -723,14 +734,88 @@ def load_local():
 
 
 def load_site():
+    """Full catalog for the build. The service role key never goes into the site."""
     url = os.environ.get("SUPABASE_URL", "").strip()
-    key = os.environ.get("SUPABASE_ANON_KEY", "").strip()
+    key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "").strip()
     if url and key:
         from regrettamine.supabase_load import load_site as load_remote
-        print("source: supabase")
+        print("source: supabase (service role, server-side)")
         return load_remote(url, key)
-    print("source: json")
+    if os.environ.get("SUPABASE_ANON_KEY", "").strip():
+        print("source: json (SUPABASE_SERVICE_ROLE_KEY is not set; the anon key cannot read the full bundle)")
+    else:
+        print("source: json")
     return load_local()
+
+
+def render_report_payload(fund, prefix):
+    """Report body stored in report_pages. Not written into the public HTML."""
+    page = render_fund_page(fund, prefix)
+    start = page.split('<div class="ftop"><div class="wrap">', 1)[1]
+    inner = start.split("<footer", 1)[0]
+    inner = inner.rsplit("</div></div>", 1)[0]
+    scripts = []
+    for marker in ("evidence", "ask-copy", "portfolio-data", "review-data", "press-data"):
+        token = f'<script id="{marker}"'
+        if token not in page:
+            continue
+        chunk = page.split(token, 1)[1].split("</script>", 1)[0]
+        scripts.append(token + chunk + "</script>")
+    return inner + "\n" + "\n".join(scripts)
+
+
+def render_fund_shell(fund, prefix):
+    """Public fund URL. The score, legal record, and evidence stay on the server."""
+    home = prefix
+    name = esc(fund["name"])
+    short = esc(fund.get("short") or "")
+    title = f'{fund["name"]} · Regrettamine'
+    body = f'''<div class="blobs np" style="height:420px"><div class="blob" style="width:520px;height:520px;background:#CDBBFF;left:-180px;top:-120px"></div><div class="blob" style="width:460px;height:460px;background:#FFC7B8;right:-140px;top:-40px"></div></div>
+<nav class="pillnav np"><a class="logo" href="{home}"><i></i><span class="wm">regrett<em>amine</em></span></a>
+ <div class="links"><a class="on" href="{home}">VCs</a><a href="{home}scoring/">Scoring</a><a href="{home}account/#share">Report a VC</a></div>
+ <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#alerts">Get alerts</a></div></nav>
+<div class="ftop"><div class="wrap" id="report">
+ <div class="crumb np"><a href="{home}">← All VCs</a></div>
+ <div class="fh np"><div><h1>{name} <span>{short}</span><button type="button" class="save" id="save" data-tip="Save" aria-label="Save to watchlist" aria-pressed="false">{SAVE_SVG}</button></h1>
+  {ALERT_LINE}</div></div>
+ <p class="report-wait">Loading the report…</p>
+</div></div>
+<footer class="np"><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regrett<em>amine</em></span></span><span>regrettamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">Scoring</a> · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>
+<div class="scrim"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="Details"><div class="dh"><div><div class="dk" id="dk"></div><div class="dtt" id="dt"></div></div><button class="dx" id="dx" aria-label="Close">×</button></div><div class="db" id="db"></div></aside><div class="toast"></div>'''
+    scripts = (
+        f'<script src="{prefix}js/supabase-config.js"></script>'
+        f'<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>'
+        f'<script src="{prefix}js/auth.js"></script>'
+        f'<script src="{prefix}js/gate.js"></script>'
+        f'<script src="{prefix}js/fund.js"></script>'
+    )
+    return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{esc(title)}</title>
+<link rel="icon" href="{prefix}assets/favicon.svg">
+<link rel="stylesheet" href="{prefix}css/common.css">
+<link rel="stylesheet" href="{prefix}css/fund.css">
+<link rel="stylesheet" href="{prefix}css/auth.css">
+<meta name="regret-root" content="{prefix}">
+</head><body data-firm="{esc(fund["slug"])}" data-report="1">
+{body}{scripts}</body></html>
+'''
+
+
+def publish_report_pages(funds):
+    url = os.environ.get("SUPABASE_URL", "").strip()
+    key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "").strip()
+    if not (url and key):
+        print("report pages: not uploaded (no service role key)")
+        return
+    from regrettamine.supabase_load import store_report
+    for slug, fund in funds.items():
+        html = render_report_payload(fund, "../../")
+        try:
+            store_report(url, key, slug, html)
+        except Exception as exc:
+            print(f"report upload failed for {slug}: {exc}")
+            continue
+        print(f"stored report {slug}")
 
 
 def main():
@@ -752,13 +837,15 @@ def main():
     build_legal("privacy.html", SITE / "privacy" / "index.html")
     build_legal("terms.html", SITE / "terms" / "index.html")
     build_shell("how.html", SITE / "how" / "index.html")
+    build_shell("plans.html", SITE / "plans" / "index.html")
     build_scoring(funds)
     for slug, fund in funds.items():
         dest = SITE / "vc" / slug / "index.html"
         dest.parent.mkdir(parents=True, exist_ok=True)
-        # Two levels under the site root: /vc/<slug>/
-        dest.write_text(render_fund_page(fund, "../../"), encoding="utf-8")
+        # Two levels under the site root: /vc/<slug>/. Body comes from open_report.
+        dest.write_text(render_fund_shell(fund, "../../"), encoding="utf-8")
         print(f"built /vc/{slug}/")
+    publish_report_pages(funds)
     copy_static()
     (SITE / "data" / "home.json").write_text(
         json.dumps(public, ensure_ascii=False, indent=2) + "\n",

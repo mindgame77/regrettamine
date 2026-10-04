@@ -1,4 +1,4 @@
-/* Count a report after it has stayed open, then show the register or paywall card. */
+/* Load a fund report through open_report. The server counts the view and refuses past the cap. */
 (function () {
   const slug = document.body && document.body.dataset.firm;
   if (!slug || !window.Regret) return;
@@ -6,7 +6,7 @@
   function nudge(seen) {
     const person = Regret.user;
     const total = Regret.capFor(person);
-    if (seen.size !== total - 1 || total < 2) return;
+    if (!isFinite(total) || seen.size !== total - 1 || total < 2) return;
     let note = document.getElementById('nudge');
     if (!note) {
       const crumb = document.querySelector('.crumb');
@@ -18,24 +18,50 @@
     note.textContent = '1 free report left. Make it count.';
   }
 
+  function showWait(text) {
+    const mount = document.getElementById('report');
+    if (!mount) return;
+    let note = mount.querySelector('.report-wait');
+    if (!note) {
+      mount.insertAdjacentHTML('beforeend', '<p class="report-wait"></p>');
+      note = mount.querySelector('.report-wait');
+    }
+    note.textContent = text;
+  }
+
   Regret.ready.then(async () => {
-    const seen = await Regret.seen();
-    if (seen.has(slug)) {
-      Regret.touch(slug);
-      nudge(seen);
+    const result = await Regret.loadReport(slug);
+    if (!result) {
+      showWait('This report is not available on this build.');
       return;
     }
-    if (seen.size >= Regret.capFor(Regret.user)) {
+    if (!result.ok) {
+      if (result.plans) {
+        location.href = new URL('plans/', Regret.siteRoot()).href;
+        return;
+      }
+      if (result.reason === 'unpublished') {
+        showWait('This report is not available on this build.');
+        await Regret.paintAlert();
+        return;
+      }
       document.body.classList.add('gated');
+      await Regret.paintAlert();
       if (!Regret.user) RegretAuth.open('signup', true);
-      else if (!Regret.confirmed(Regret.user)) RegretAuth.open('confirm', false);
       else RegretAuth.open('paywall', false);
       return;
     }
-    const timer = setTimeout(async () => {
-      await Regret.record(slug, 'report');
-      nudge(await Regret.seen());
-    }, Regret.limits.dwell || 2000);
-    window.addEventListener('pagehide', () => clearTimeout(timer));
+    const mount = document.getElementById('report');
+    if (result.html && mount) {
+      mount.innerHTML = result.html;
+      if (window.RegretFund) RegretFund.start();
+      Regret.paintSave();
+      await Regret.paintAlert();
+    } else {
+      showWait('This report is not available on this build.');
+      await Regret.paintAlert();
+    }
+    if (result.tier === 'paid') return;
+    nudge(await Regret.seen());
   });
 })();

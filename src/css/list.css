@@ -38,7 +38,8 @@ a.tr2:hover .nm b{color:var(--vio);text-decoration:underline;text-underline-offs
 .bm:after{content:attr(data-tip);position:absolute;right:calc(100% + 6px);top:50%;transform:translateY(-50%);background:var(--ink);color:#fff;font:600 12px "DM Sans";padding:4px 9px;border-radius:7px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .12s}
 .bm:hover:after{opacity:1}
 
-/* Landing only: rows after the first 3 are blurred placeholders for logged-out visitors. */
+/* Rows past the caller's tier are blurred placeholders. They contain no fund data. */
+a.lockpill{color:#fff;text-decoration:none}
 .lock{position:relative;cursor:pointer}
 .lock .skel{filter:blur(6px);user-select:none;pointer-events:none;cursor:default}
 .lock:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0) 0,rgba(255,255,255,.55) 40%,rgba(255,255,255,.9) 100%);pointer-events:none}
