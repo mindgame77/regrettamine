@@ -36,3 +36,41 @@ def test_shared_list_and_auth_pages(monkeypatch):
     config = (ROOT / "site" / "js" / "supabase-config.js").read_text(encoding="utf-8")
     assert "REGRET_CONFIG" in config
     assert "sb_secret" not in config
+
+    login = (ROOT / "site" / "login" / "index.html").read_text(encoding="utf-8")
+    reset = (ROOT / "site" / "login" / "reset" / "index.html").read_text(encoding="utf-8")
+    privacy = (ROOT / "site" / "privacy" / "index.html").read_text(encoding="utf-8")
+    terms = (ROOT / "site" / "terms" / "index.html").read_text(encoding="utf-8")
+    assert 'href="privacy/"' in index and 'href="terms/"' in index
+    assert 'href="../../privacy/"' in fund and 'href="../../terms/"' in fund
+    assert 'href="../privacy/"' in account and 'href="../terms/"' in account
+    assert 'href="../privacy/"' in login and 'href="../terms/"' in login
+    assert 'href="../../privacy/"' in reset and 'href="../../terms/"' in reset
+    assert "By creating an account you agree to the" in auth_js
+    assert "terms/" in auth_js and "privacy/" in auth_js
+    assert 'class="agree up-only"' in auth_js
+    assert "Privacy Policy" in privacy and "Terms of Service" in terms
+    assert privacy.count('class="ph"') == 3
+    assert ">contact email<" in privacy and "mailto:" not in privacy
+    assert terms.count('class="ph"') == 3
+    assert ">jurisdiction<" in terms and ">contact email<" in terms
+    assert "within 30 days of account deletion, and from backups within 90 days" in privacy
+    assert "at most 30 days after you submit them" in privacy
+    assert 'class="ph">30 days' not in privacy and 'class="ph">90 days' not in privacy
+    assert "limited to the greater of USD 100 or the amount you paid us in the 12 months before the claim" in terms
+    assert "by emailing us" in terms
+    assert "account settings" not in terms
+    assert 'href="../terms/#corrections"' in privacy
+
+
+def test_legal_config_values():
+    from build import legal_html
+
+    assert legal_html("", "contact email", email=True) == '<span class="ph">contact email</span>'
+    assert legal_html("  ", "jurisdiction") == '<span class="ph">jurisdiction</span>'
+    assert legal_html("hello@regrettamine.com", "contact email", email=True) == (
+        '<a href="mailto:hello@regrettamine.com">hello@regrettamine.com</a>'
+    )
+    assert legal_html("not-an-email", "contact email", email=True) == "not-an-email"
+    assert legal_html("Delaware", "jurisdiction") == "Delaware"
+    assert legal_html("<script>", "jurisdiction") == "&lt;script&gt;"

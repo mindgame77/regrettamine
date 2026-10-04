@@ -40,6 +40,8 @@ Scores, stats, and the update feed on the homepage also live in `data/home.json`
 
 The JSON files remain the fallback. If `SUPABASE_URL` and `SUPABASE_ANON_KEY` are both set, `build.py` reads published firms from Supabase instead. Empty or missing values keep the JSON build.
 
+Privacy and terms are `/privacy/` and `/terms/`. `data/site.json` → `legal.contact_email` and `legal.jurisdiction` fill both pages at build time. Leave either value empty and the page shows the placeholder chip. An email address becomes a mailto link.
+
 ## Supabase
 
 The model is `docs/data-model.md`. A **firm** is the management company (the `/vc/<slug>/` page). A firm has many **funds** (vehicles). People, portfolio companies, reviews, legal matters, and sources are rows, so a firm can have thousands of companies without a fixed set of columns. Scores are versioned (`score_results` + `score_inputs`). Test rows (`is_test`) cannot be published.
