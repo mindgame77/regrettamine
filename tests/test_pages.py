@@ -173,6 +173,7 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert 'monthlyLink: ""' not in stripe_cfg and 'annualLink: ""' not in stripe_cfg
     assert "client_reference_id" in plans_js and "prefilled_email" in plans_js
     assert "Current plan" in plans_js and "Switch plan" in plans_js and "portalUrl" in plans_js
+    assert "openBillingPortal" in plans_js
     assert "login/" in plans_js and "next=plans/" in plans_js
     assert "create table public.subscriptions" in (ROOT / "supabase" / "migrations" / "20261004210000_access_tiers.sql").read_text(encoding="utf-8")
     assert "apply_subscription" in (ROOT / "supabase" / "migrations" / "20261004210000_access_tiers.sql").read_text(encoding="utf-8")
@@ -210,7 +211,15 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "stripe_forgotten_customers" in qa_sql and "flagged" in qa_sql
     delete_fn = (ROOT / "supabase" / "functions" / "delete-account" / "index.ts").read_text(encoding="utf-8")
     assert "stripe_secret_key" in delete_fn and "DELETE" in delete_fn
+    assert "Access-Control-Allow-Origin" in delete_fn and "OPTIONS" in delete_fn
     assert "We couldn't cancel your plan, contact malytskyyo@gmail.com" in delete_fn
+    portal_fn = (ROOT / "supabase" / "functions" / "billing-portal" / "index.ts").read_text(encoding="utf-8")
+    assert "billing_portal/sessions" in portal_fn
+    assert "Access-Control-Allow-Origin" in portal_fn and "OPTIONS" in portal_fn
+    assert "bpc_1UMuvYHcbGkfjKgmIKZWNWhe" in portal_fn
+    assert "settings/?tab=billing" in portal_fn
+    assert "stripe_secret_key" in portal_fn
+    assert "openBillingPortal" in auth_js and "billing-portal" in auth_js and "portalUrl" in auth_js
     assert "Alex" not in settings and "4242" not in settings
     assert "paintPayFail" in auth_js
     assert "regret.after" in auth_js

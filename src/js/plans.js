@@ -76,6 +76,10 @@
   }
 
   function openPortal() {
+    if (window.Regret && typeof Regret.openBillingPortal === 'function') {
+      Regret.openBillingPortal();
+      return;
+    }
     const portal = cfg().portalUrl || '';
     if (portal) location.href = portal;
   }
