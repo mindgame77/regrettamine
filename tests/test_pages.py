@@ -218,10 +218,11 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "create table public.fact_events" in (ROOT / "supabase" / "migrations" / "20261004200000_fact_events.sql").read_text(encoding="utf-8")
 
     assert "account/#watchlist" in auth_js and "account/#alerts" not in auth_js
-    assert 'plans/">Pricing' in auth_js
+    assert "ACCOUNT_NAV" in auth_js and auth_js.count("Share experience") == 1
+    assert "Share / Report a VC" not in auth_js
+    assert "path: 'plans/'" in auth_js and "path: 'settings/'" in auth_js
     assert 'plans/">See plans' in home_js
-    assert "Share / Report a VC" in auth_js
-    assert 'settings/#account">Settings' in auth_js
+    assert 'id="accountNav"' in account and 'id="accountNav"' in (ROOT / "src" / "settings.html").read_text(encoding="utf-8")
     settings = (ROOT / "site" / "settings" / "index.html").read_text(encoding="utf-8")
     settings_js = (ROOT / "src" / "js" / "settings.js").read_text(encoding="utf-8")
     assert "<h1>Account</h1>" in settings and "<h1>Billing</h1>" in settings
