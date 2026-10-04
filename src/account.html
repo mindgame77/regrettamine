@@ -1,0 +1,83 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your account · Regrettamine</title>
+<link rel="icon" href="../assets/favicon.svg">
+<link rel="stylesheet" href="../css/common.css">
+<link rel="stylesheet" href="../css/list.css">
+<link rel="stylesheet" href="../css/auth.css">
+<link rel="stylesheet" href="../css/account.css">
+<meta name="regret-root" content="../">
+</head><body>
+<div class="blobs" style="height:420px"><div class="blob" style="width:420px;height:420px;background:#CDBBFF;left:-160px;top:-180px"></div><div class="blob" style="width:380px;height:380px;background:#FFC7B8;right:-140px;top:-160px"></div></div>
+<nav class="pillnav"><a class="logo" href="../"><i></i><span class="wm">regrett<em>amine</em></span></a>
+ <div class="links"><a href="../">VCs</a><a href="#">How it works</a><a href="#">Scoring</a></div>
+ <div class="r" id="navSlot"><a class="b w" href="../login/">Log in</a><a class="b v" href="#alerts">Get alerts</a></div></nav>
+<main class="wrap"><div class="acc">
+<aside class="anav">
+ <a href="#watchlist" data-v="watchlist"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14l-6-4.2L6 20z"/></svg>Watchlist</a>
+ <a href="#alerts" data-v="alerts"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0112 0v5l1.5 2h-15zM10 20.5a2 2 0 004 0"/></svg>Alerts<em id="alertCount" hidden>0</em></a>
+ <a href="#history" data-v="history"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 108-8 8 8 0 00-6.3 3M4 4v4h4M12 8v4l3 2"/></svg>History</a>
+ <a href="#share" data-v="share"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19.5l1-4L16 5.5a2.1 2.1 0 013 3L9 18.5zM14 7.5l3 3"/></svg>Share experience</a>
+</aside>
+<div>
+<section id="watchlist" class="view">
+ <div class="vh"><h1>Watchlist</h1>
+  <div class="addwrap"><label class="sinput add"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8C88A3" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><input id="addFund" placeholder="Add a fund" autocomplete="off"></label><div class="adds" id="addList" hidden></div></div>
+ </div>
+ <div id="wlOut"></div>
+</section>
+<section id="alerts" class="view">
+ <div class="vh"><h1>Alerts</h1><button type="button" class="mark-read" id="markRead">Mark all read</button></div>
+ <div class="two">
+  <div class="card alert-feed" id="alertFeed"></div>
+  <aside class="card prefs"><h3>Email me</h3>
+   <div class="tog" data-pref="new_legal_matter"><span>New legal matter</span><span class="sw2"></span></div>
+   <div class="tog" data-pref="regulatory_record"><span>Regulatory record</span><span class="sw2"></span></div>
+   <div class="tog" data-pref="partner_exit"><span>Partner exit</span><span class="sw2"></span></div>
+   <div class="tog" data-pref="score_change"><span>Score change</span><span class="sw2"></span></div>
+   <p class="fnote" id="prefNote">Only for watched funds. Email sending comes later.</p>
+  </aside>
+ </div>
+</section>
+<section id="history" class="view">
+ <div class="vh"><h1>Report history</h1></div>
+ <div class="card meter" id="meter"></div>
+ <div id="hsOut"></div>
+</section>
+<section id="share" class="view">
+ <div class="vh"><h1>Share your experience</h1></div>
+ <form class="card form" id="shareForm">
+  <div class="row2">
+   <label class="fl"><span>Fund</span><span class="fld"><select id="revFund" required></select></span></label>
+   <div class="fl"><span>When they invested</span><div class="duo">
+    <span class="fld"><select id="revRole"><option>Founder / CEO</option><option>Founder</option><option>Employee</option><option>Operator</option></select></span>
+    <span class="fld"><select id="revRound"><option>Pre-seed</option><option selected>Seed</option><option>Series A</option><option>Series B</option><option>Series C+</option><option>Growth</option></select></span>
+   </div></div>
+  </div>
+  <div class="fl"><span>Rate them</span><div class="rates">
+   <div class="rt"><span>Transparency</span><div class="pips" data-dim="transparency"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button></div></div>
+   <div class="rt"><span>Support after the check</span><div class="pips" data-dim="support"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button></div></div>
+   <div class="rt"><span>In hard times</span><div class="pips" data-dim="hard_times"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button></div></div>
+  </div></div>
+  <div class="fl again"><span>Would you take their money again?</span><div class="seg" id="again"><button type="button" class="on" data-yes="yes">Yes</button><button type="button" data-yes="no">No</button></div></div>
+  <label class="fl"><span>What should the next founder know?</span><textarea class="fld ta" id="revBody" placeholder="Optional"></textarea></label>
+  <div class="foot">
+   <div class="tog on" id="anonTog"><span><b>Post anonymously</b><small id="anonHint">Shown as "Founder / CEO, Seed"</small></span><span class="sw2"></span></div>
+   <div class="ver"><b>Verify you took their money</b><div class="chips" id="verify">
+    <button type="button" class="chip" data-method="work_email">Work email</button>
+    <button type="button" class="chip" data-method="linkedin">LinkedIn</button>
+    <button type="button" class="chip" data-method="cap_table">Cap table</button>
+   </div><small>Used only to confirm. Never shown.</small></div>
+  </div>
+  <p class="err" id="shareErr" hidden></p>
+  <div class="sub"><button class="b c" type="submit">Submit review</button></div>
+ </form>
+</section>
+</div></div></main>
+<footer><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regrett<em>amine</em></span></span><span>regrettamine.com</span></div></footer>
+<script id="home-data" type="application/json">__HOME_JSON__</script>
+<script src="../js/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/fund-list.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/account.js"></script>
+</body></html>

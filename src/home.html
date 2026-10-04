@@ -3,12 +3,15 @@
 <link rel="icon" href="assets/favicon.svg">
 <link rel="stylesheet" href="css/common.css">
 <link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/list.css">
+<link rel="stylesheet" href="css/auth.css">
+<meta name="regret-root" content="">
 </head><body>
 
 <div class="blobs" style="height:520px"><div class="blob" style="width:420px;height:420px;background:#CDBBFF;left:-160px;top:-160px"></div><div class="blob" style="width:400px;height:400px;background:#FFC7B8;right:-140px;top:-120px"></div><div class="blob" style="width:260px;height:260px;background:#BDF0D8;left:46%;top:120px;opacity:.3"></div></div>
 <nav class="pillnav"><a class="logo" href="./"><i></i><span class="wm">regrett<em>amine</em></span></a>
  <div class="links"><a class="on" href="./">VCs</a><a href="#">How it works</a><a href="#">Scoring</a><a href="#">Report a VC</a></div>
- <div class="r"><a class="b w" href="#">Log in</a><a class="b v" href="#">Get alerts</a></div></nav>
+ <div class="r" id="navSlot"><a class="b w" href="login/">Log in</a><a class="b v" href="account/#alerts">Get alerts</a></div></nav>
 
 <header class="hero"><div class="wrap">
  <span class="kick"><b>New</b>Lawsuits, regulators and conflicts, every source linked</span>
@@ -45,4 +48,8 @@
 </div></main>
 <footer><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regrett<em>amine</em></span></span><span>regrettamine.com · Know your VC before you raise.</span><span style="margin-left:auto">Scoring · Sources · Corrections · Privacy</span></div></footer>
 <script id="home-data" type="application/json">__HOME_JSON__</script>
+<script src="js/supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/fund-list.js"></script>
+<script src="js/auth.js"></script>
 <script src="js/home.js"></script></body></html>

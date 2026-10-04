@@ -1,0 +1,125 @@
+"""Watchlist cap, signup profile, and review visibility."""
+import os
+
+import pytest
+
+pytest.importorskip("psycopg")
+
+DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
+pytestmark = pytest.mark.skipif(not DATABASE_URL, reason="DATABASE_URL is not set")
+
+
+def _user(cur, email):
+    cur.execute(
+        "insert into auth.users (id, email) values (gen_random_uuid(), %s) returning id",
+        (email,),
+    )
+    return cur.fetchone()[0]
+
+
+def test_watchlist_cap_profile_and_review_rls():
+    import psycopg
+
+    from scripts.seed import main as seed_main
+
+    seed_main()
+    with psycopg.connect(DATABASE_URL) as conn:
+        with conn.cursor() as cur:
+            ada = _user(cur, "ada@example.com")
+            bea = _user(cur, "bea@example.com")
+            cur.execute("select display_name from profiles where id = %s", (ada,))
+            assert cur.fetchone()[0] == "ada"
+            cur.execute(
+                "select new_legal_matter, regulatory_record, partner_exit, score_change from alert_preferences where profile_id = %s",
+                (ada,),
+            )
+            assert cur.fetchone() == (True, True, False, True)
+
+            cur.execute(
+                """
+                insert into firms (slug, name, published)
+                select 'cap-' || g, 'Cap ' || g, true
+                from generate_series(1, 101) g
+                """
+            )
+            cur.execute("select id from firms where slug like 'cap-%'")
+            firm_ids = [row[0] for row in cur.fetchall()]
+            assert len(firm_ids) == 101
+            for firm_id in firm_ids[:100]:
+                cur.execute(
+                    "insert into watchlist (profile_id, firm_id) values (%s, %s)",
+                    (ada, firm_id),
+                )
+            cur.execute("savepoint over_cap")
+            with pytest.raises(psycopg.errors.CheckViolation):
+                cur.execute(
+                    "insert into watchlist (profile_id, firm_id) values (%s, %s)",
+                    (ada, firm_ids[100]),
+                )
+            cur.execute("rollback to savepoint over_cap")
+            cur.execute("select count(*) from watchlist where profile_id = %s", (ada,))
+            assert cur.fetchone()[0] == 100
+            cur.execute("delete from firms where slug like 'cap-%'")
+
+            cur.execute("select id from firms where slug = 'a16z'")
+            a16z = cur.fetchone()[0]
+            cur.execute("select set_config('request.jwt.claim.sub', %s, true)", (str(ada),))
+            cur.execute("set role authenticated")
+            cur.execute(
+                "insert into watchlist (profile_id, firm_id) values (%s, %s)",
+                (ada, a16z),
+            )
+            cur.execute("savepoint steal")
+            with pytest.raises(psycopg.Error):
+                cur.execute(
+                    "insert into watchlist (profile_id, firm_id) values (%s, %s)",
+                    (bea, a16z),
+                )
+            cur.execute("rollback to savepoint steal")
+            cur.execute(
+                """
+                insert into reviews (
+                  firm_id, profile_id, body, moderation_status, anonymous,
+                  role_label, round_label, would_again, verification_method
+                ) values (%s, %s, 'kept private', 'pending', true, 'Founder / CEO', 'Seed', true, 'linkedin')
+                returning id
+                """,
+                (a16z, ada),
+            )
+            review_id = cur.fetchone()[0]
+            cur.execute(
+                "insert into review_ratings (review_id, dimension, score) values (%s, 'transparency', 4)",
+                (review_id,),
+            )
+            cur.execute("savepoint approve")
+            with pytest.raises(psycopg.Error):
+                cur.execute(
+                    "insert into reviews (firm_id, profile_id, moderation_status) values (%s, %s, 'approved')",
+                    (a16z, ada),
+                )
+            cur.execute("rollback to savepoint approve")
+            cur.execute("reset role")
+
+            cur.execute("set role anon")
+            cur.execute("select count(*) from reviews where id = %s", (review_id,))
+            assert cur.fetchone()[0] == 0
+            cur.execute("savepoint anon_wl")
+            with pytest.raises(psycopg.errors.InsufficientPrivilege):
+                cur.execute("select count(*) from watchlist")
+            cur.execute("rollback to savepoint anon_wl")
+            cur.execute("reset role")
+
+            cur.execute("select set_config('request.jwt.claim.sub', %s, true)", (str(bea),))
+            cur.execute("set role authenticated")
+            cur.execute("select count(*) from reviews where id = %s", (review_id,))
+            assert cur.fetchone()[0] == 0
+            cur.execute("select count(*) from watchlist")
+            assert cur.fetchone()[0] == 0
+            cur.execute("reset role")
+
+            cur.execute("select set_config('request.jwt.claim.sub', %s, true)", (str(ada),))
+            cur.execute("set role authenticated")
+            cur.execute("select body from reviews where id = %s", (review_id,))
+            assert cur.fetchone()[0] == "kept private"
+            cur.execute("reset role")
+        conn.rollback()

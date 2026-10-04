@@ -282,3 +282,12 @@ body:not([data-tab=overview]) .ovx{display:none!important}
 .empty-state{margin:8px 0 18px;color:var(--mute);font-size:14.5px}
 #companies .it,#reviews .it,#vehicles .it{display:flex;gap:12px;align-items:baseline;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line)}
 #moreCos,#moreReviews,#morePress{margin:12px 0 4px}
+.save{position:relative;width:46px;height:46px;margin-left:14px;vertical-align:10px;border-radius:50%;border:1.5px solid var(--line);background:#fff;color:var(--ink2);display:inline-grid;place-items:center;cursor:pointer;transition:background .12s,color .12s,border-color .12s;padding:0}
+.save:hover{border-color:var(--vio2);color:var(--vio)}
+.save.on{color:var(--vio);border-color:var(--viobg);background:var(--viobg)}
+.save.on svg{fill:currentColor}
+.save.full{color:#C9C5D9;cursor:not-allowed}
+.save.full:hover{border-color:var(--line);color:#C9C5D9}
+.save:after{content:attr(data-tip);position:absolute;left:50%;top:calc(100% + 8px);transform:translateX(-50%);background:var(--ink);color:#fff;font:600 12.5px 'DM Sans';letter-spacing:0;padding:5px 10px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .12s;z-index:5}
+.save:hover:after{opacity:1}
+body.gated .tabsW,body.gated [data-panel],body.gated .fnote,body.gated footer{filter:blur(8px);pointer-events:none;user-select:none}

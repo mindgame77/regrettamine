@@ -153,17 +153,21 @@ Row level security is on for every public table.
 
 `published_site_bundle()` returns one JSON document of the published, non-test rows. The site build calls it with the anon key. The function also filters `published and not is_test` itself, so a test firm cannot ride along.
 
-## Gating tables (no paywall UI)
-
-From `gating-plan.md`: 2 reports anonymous, register, 5 more (7 total), then the paywall. A view is a unique firm, counted once it has stayed open at least 2 seconds. Re-opening a firm is free.
+## Accounts, watchlist, alerts
 
 | Table | Role |
 |---|---|
-| `profiles` | One row per `auth.users` id. `is_admin` is the write switch. |
-| `gating_policies` | The numbers (2, 5, 2000 ms). One policy row, `code = default`, so the limits are data. |
-| `report_views` | One row per (account, firm) or (device `anon_key`, firm). `counted` flips after the dwell. `source` records list / search / shared link / SEO. |
+| `profiles` | One row per `auth.users` id, created by the `on_auth_user_created` trigger. `is_admin` is the content-write switch. |
+| `watchlist` | One row per (profile, firm). A before-insert trigger rejects the 101st firm for that person. |
+| `alert_preferences` | Four booleans per person: new legal matter, regulatory record, partner exit, score change. Created with the profile. Stored only — nothing sends email yet. |
+| `gating_policies` | The numbers (2, 5, 2000 ms). One policy row, `code = default`. |
+| `report_views` | One row per (account, firm) or (device `anon_key`, firm). `counted` flips after the dwell. Re-opening a firm is free. |
 
-Anonymous counting still belongs on the device until registration exists. The table is the account ledger the gate will use. This repo does not render a paywall, login, or register flow.
+Anonymous views live in the browser until sign-up, then the same firms are copied onto `report_views` and count toward the 7. A review submitted from the account form is `moderation_status = pending` and is not readable by anyone except its author and an admin, so it cannot appear on a public fund page.
+
+## Gating
+
+From `gating-plan.md`: 2 reports anonymous, register, 5 more (7 total), then a plans placeholder with no prices. A view is a unique firm, counted once it has stayed open at least 2 seconds. The extra 5 wait until the email is confirmed. Google accounts are confirmed by the provider.
 
 ## What the seed is allowed to insert
 

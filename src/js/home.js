@@ -4,20 +4,11 @@ const VCS = HOME.funds;
 const STATS = HOME.stats;
 const UPD = HOME.updates;
 
-const BANDS = [['Very low risk', 'Very low', '#19C37D'], ['Low risk', 'Low', '#7BD3A8'], ['Moderate', 'Moderate', '#F2B705'], ['Elevated', 'Elevated', '#FF6B4A'], ['High', 'High', '#D7263D']];
+const BANDS = FundList.BANDS;
 const SIZES = [['s', 'Under $20B', a => a < 20], ['m', '$20–50B', a => a >= 20 && a < 50], ['l', '$50B+', a => a >= 50]];
 const S = {q: '', band: new Set(), size: new Set(), legal: false, min: 0, max: 100, sort: 'score'};
 const $ = id => document.getElementById(id);
-const bandColor = b => (BANDS.find(x => x[0] == b) || [0, 0, '#ccc'])[2];
-const fmtAum = a => '$' + (a >= 10 ? a.toFixed(a % 1 ? 1 : 0) : a.toFixed(1)) + 'B';
 
-function ring(s, size, stroke, color) {
-  const r = (size - stroke) / 2, c = 2 * Math.PI * r;
-  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${size / 2}" cy="${size / 2}" r="${r}" stroke="#F1EFF7" stroke-width="${stroke}" fill="none"/><circle cx="${size / 2}" cy="${size / 2}" r="${r}" stroke="${color}" stroke-width="${stroke}" fill="none" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c * (1 - s / 100)}"/></svg>`;
-}
-function grad() {
-  return `<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6C3BFF"/><stop offset="1" stop-color="#19C37D"/></linearGradient></defs></svg>`;
-}
 function match(f, skip) {
   if (skip != 'q' && S.q && !(f.name + ' ' + (f.short || '')).toLowerCase().includes(S.q.toLowerCase())) return false;
   if (skip != 'band' && S.band.size && !S.band.has(f.band)) return false;
@@ -37,18 +28,6 @@ function chipGroup(el, items, set, key, test, extra) {
     render();
   });
 }
-function fundHref(f) {
-  return f.report ? `vc/${f.report}/` : '#';
-}
-function row(f) {
-  const href = fundHref(f);
-  return `<a class="tr2${f.v2 ? ' feat' : ''}" href="${href}" data-fund="${f.id}" title="${f.report ? 'Open full report' : 'Full report coming soon'}"><div class="nm"><b>${f.name}</b><div class="m">${f.hq} · since ${f.since}</div></div>
- <div class="sc"><div class="mring">${ring(f.score, 38, 4.5, f.v2 ? 'url(#g2)' : '#C9C5D9')}<b style="${f.v2 ? '' : 'color:#A9A5BD'}">${f.score}</b></div><div><span class="bands"><i style="background:${bandColor(f.band)}"></i>${f.band}</span><span class="tag ${f.v2 ? 'v2' : 'old'}">${f.v2 ? 'v2 · likely ' + f.lo + '–' + f.hi : 'old method'}</span></div></div>
- <div title="${f.legalNote}"><span class="lgc ${f.legal ? 'r' : 'g'}">${f.legal ? f.legal + ' active' : 'None found'}</span><div class="m">${f.v2 ? 'verified' : 'Toxy, unverified'}</div></div>
- <div><b>${fmtAum(f.aum)}</b><div class="m">${f.aumAsOf}${f.aumStale ? ' · stale' : ''}</div></div>
- <div>${f.updatedS}</div>
- <div class="ar">→</div></a>`;
-}
 function render() {
   chipGroup('fBand', BANDS, S.band, 'band', (f, it) => f.band == it[0], it => `<span class="sw" style="background:${it[2]}"></span>`);
   chipGroup('fSize', SIZES, S.size, 'size', (f, it) => it[2](f.aum));
@@ -66,7 +45,7 @@ function render() {
   }[S.sort];
   L.sort(cmp);
   $('tot').textContent = VCS.length;
-  $('cnt').innerHTML = `${L.length} ${L.length == 1 ? 'fund' : 'funds'}<small>of ${VCS.length}</small>`;
+  $('cnt').innerHTML = FundList.countHtml(L.length, VCS.length);
   const A = [];
   if (S.q) A.push(['q', '“' + S.q + '”']);
   S.band.forEach(b => A.push(['band:' + b, b]));
@@ -85,8 +64,7 @@ function render() {
     render();
   });
   if ($('clr')) $('clr').onclick = reset;
-  const empty = `<div class="empty"><b>No funds match these filters.</b>Try widening the score range or clearing a filter.</div>`;
-  $('out').innerHTML = grad() + `<div class="tbl"><div class="tr2 th"><div>Fund</div><div>Score</div><div>Active legal</div><div>AUM</div><div>Last update</div><div></div></div>${L.map(row).join('') || empty}</div>`;
+  $('out').innerHTML = FundList.table(L, {});
 }
 function reset() {
   S.q = ''; $('q').value = ''; $('hq').value = '';
