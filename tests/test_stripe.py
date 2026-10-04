@@ -190,4 +190,115 @@ def test_stripe_webhook_grace_and_secrets():
             cur.execute("set role authenticated")
             cur.execute("select count(*) from payments")
             assert cur.fetchone()[0] == 1
+            cur.execute("reset role")
+
+            cam = _user(cur, "cam-stripe@example.com")
+            later = int(time.time()) + 40 * 24 * 3600
+            cur.execute(
+                "select apply_stripe_event(%s::jsonb)",
+                (_event("evt_cam_inv", "invoice.paid", {
+                    "id": "in_cam",
+                    "customer": "cus_cam",
+                    "subscription": "sub_cam",
+                    "amount_paid": 4900,
+                    "currency": "usd",
+                    "status": "paid",
+                    "created": int(time.time()),
+                    "period_end": later,
+                    "lines": {"data": [{"price": {"id": MONTHLY}, "period": {"end": later}}]},
+                }),),
+            )
+            cur.execute(
+                """
+                select profile_id is null, plan, status
+                from subscriptions where stripe_subscription_id = 'sub_cam'
+                """
+            )
+            assert cur.fetchone() == (True, "monthly", "active")
+            cur.execute("select profile_id is null from payments where stripe_invoice_id = 'in_cam'")
+            assert cur.fetchone()[0] is True
+
+            cur.execute(
+                "select apply_stripe_event(%s::jsonb)",
+                (_event("evt_cam_cs", "checkout.session.completed", {
+                    "id": "cs_cam",
+                    "mode": "subscription",
+                    "client_reference_id": str(cam),
+                    "customer": "cus_cam",
+                    "subscription": "sub_cam",
+                    "payment_status": "paid",
+                    "amount_total": 4900,
+                    "currency": "usd",
+                }),),
+            )
+            cur.execute("select profile_id from subscriptions where stripe_subscription_id = 'sub_cam'")
+            assert cur.fetchone()[0] == cam
+            cur.execute("select profile_id from payments where stripe_invoice_id = 'in_cam'")
+            assert cur.fetchone()[0] == cam
+            cur.execute("select is_paid(%s)", (cam,))
+            assert cur.fetchone()[0] is True
+
+            dup = _event("evt_cam_cs2", "checkout.session.completed", {
+                "id": "cs_cam2",
+                "mode": "subscription",
+                "client_reference_id": str(cam),
+                "customer": "cus_cam2",
+                "subscription": "sub_cam2",
+                "payment_status": "paid",
+                "amount_total": 35280,
+                "currency": "usd",
+            })
+            cur.execute("select apply_stripe_event(%s::jsonb)", (dup,))
+            flagged = cur.fetchone()[0]
+            assert flagged["cancel_at_period_end"] == ["sub_cam"]
+            cur.execute(
+                """
+                select count(*), bool_or(flagged) filter (where stripe_subscription_id = 'sub_cam2')
+                from subscriptions where profile_id = %s
+                """,
+                (cam,),
+            )
+            assert cur.fetchone() == (2, True)
+            cur.execute(
+                "select description from payments where stripe_checkout_session_id = 'cs_cam2'"
+            )
+            assert cur.fetchone()[0] == "Duplicate subscription"
+            cur.execute("select set_config('request.jwt.claim.sub', %s, true)", (str(cam),))
+            cur.execute("set role authenticated")
+            cur.execute("select my_billing()")
+            cam_bill = cur.fetchone()[0]
+            assert cam_bill["plan"] == "Monthly" and cam_bill["tier"] == "paid"
+            cur.execute("savepoint still_paid")
+            with pytest.raises(psycopg.errors.RaiseException) as blocked:
+                cur.execute("select delete_my_account()")
+            cur.execute("rollback to savepoint still_paid")
+            assert "cancel your plan" in str(blocked.value)
+            cur.execute("reset role")
+            cur.execute(
+                "update subscriptions set status = 'canceled' where profile_id = %s",
+                (cam,),
+            )
+            cur.execute("set role authenticated")
+            cur.execute("select delete_my_account()")
+            cur.execute("reset role")
+            cur.execute(
+                """
+                select count(*) from stripe_forgotten_customers
+                where stripe_customer_id in ('cus_cam', 'cus_cam2')
+                """
+            )
+            assert cur.fetchone()[0] == 2
+            cur.execute(
+                "select apply_stripe_event(%s::jsonb)",
+                (_event("evt_cam_late", "invoice.paid", {
+                    "id": "in_cam_late",
+                    "customer": "cus_cam",
+                    "subscription": "sub_cam",
+                    "amount_paid": 4900,
+                    "currency": "usd",
+                    "status": "paid",
+                }),),
+            )
+            cur.execute("select count(*) from subscriptions where stripe_customer_id = 'cus_cam'")
+            assert cur.fetchone()[0] == 0
         conn.rollback()

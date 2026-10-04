@@ -12,11 +12,6 @@
   }
   addEventListener('hashchange', () => { go(); scrollTo(0, 0); });
 
-  function planIsPaid(data) {
-    const plan = data && data.plan;
-    return plan === 'Monthly' || plan === 'Annual' || plan === 'Paid' || (data && data.tier === 'paid');
-  }
-
   function consumeReturn() {
     const params = new URLSearchParams(location.search);
     let tab = (params.get('tab') || '').toLowerCase();
@@ -113,6 +108,18 @@
     $('cardChange').hidden = !manage;
     $('cardChange').textContent = 'Manage card';
     $('cardDelete').hidden = !card;
+    const change = $('changePlan');
+    if (change) {
+      if (paid) {
+        change.textContent = 'Switch plan →';
+        change.dataset.stripe = 'portal';
+        change.href = '#';
+      } else {
+        change.textContent = 'Change plan →';
+        change.dataset.stripe = 'checkout';
+        change.href = '../plans/';
+      }
+    }
     const payments = Array.isArray(data.payments) ? data.payments : [];
     $('payEmpty').hidden = payments.length > 0;
     $('payRows').innerHTML = payments.map(item => {
@@ -190,7 +197,11 @@
       if (bad) { showErr('emailErr', 'That password does not match.'); return; }
     }
     const { error } = await Regret.sb().auth.updateUser({ email: next });
-    if (error) { showErr('emailErr', error.message || 'Could not change that email.'); return; }
+    if (error) {
+      const text = Regret.authError ? Regret.authError(error.message) : error.message;
+      showErr('emailErr', text || 'Could not change that email.');
+      return;
+    }
     showErr('emailErr', '');
     $('emailForm').querySelector('.help').textContent = 'Confirmation link sent. The change applies once you click it.';
   });
@@ -216,12 +227,26 @@
     $('pwCurrentIn').value = '';
   });
 
+  async function deleteError(error) {
+    const fallback = "Could not delete this account.";
+    const planned = "We couldn't cancel your plan, contact malytskyyo@gmail.com";
+    try {
+      const ctx = error && error.context;
+      if (ctx && typeof ctx.json === 'function') {
+        const body = await ctx.json();
+        if (body && body.message) return body.message;
+      }
+    } catch (e) { /* the body was not json */ }
+    if (error && /cancel your plan/i.test(error.message || '')) return planned;
+    return fallback;
+  }
+
   $('cfmBtn').addEventListener('click', async () => {
     showErr('delErr', '');
     $('cfmBtn').disabled = true;
-    const { error } = await Regret.sb().rpc('delete_my_account');
+    const { error } = await Regret.sb().functions.invoke('delete-account');
     if (error) {
-      showErr('delErr', 'Could not delete this account.');
+      showErr('delErr', await deleteError(error));
       $('cfmBtn').disabled = false;
       return;
     }
@@ -250,20 +275,25 @@
     return row;
   }
 
+  function chargeReady(row) {
+    const payments = Array.isArray(row && row.payments) ? row.payments : [];
+    return !!(row && row.next_charge_label) && payments.length > 0;
+  }
+
   async function watchPayment(waiting) {
     let row = await loadBilling();
     if (!waiting) return;
     const note = $('payNote');
-    if (planIsPaid(row)) {
+    if (note) note.hidden = false;
+    if (chargeReady(row)) {
       if (note) note.hidden = true;
       return;
     }
-    if (note) note.hidden = false;
-    const deadline = Date.now() + 20000;
+    const deadline = Date.now() + 30000;
     while (Date.now() < deadline) {
       await new Promise(resolve => setTimeout(resolve, 2000));
       row = await loadBilling();
-      if (planIsPaid(row)) {
+      if (chargeReady(row)) {
         if (note) note.hidden = true;
         return;
       }
