@@ -166,9 +166,11 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert 'src="../js/plans.js"' in plans and 'src="../js/stripe-config.js"' in plans
     stripe_cfg = (ROOT / "src" / "js" / "stripe-config.js").read_text(encoding="utf-8")
     plans_js = (ROOT / "src" / "js" / "plans.js").read_text(encoding="utf-8")
-    assert 'monthlyLink: ""' in stripe_cfg and 'annualLink: ""' in stripe_cfg
+    assert "buy.stripe.com/test_bJedR97cM6zM82XcM48Vi02" in stripe_cfg
+    assert "buy.stripe.com/test_8x2fZh7cM2jwab5bI08Vi03" in stripe_cfg
     assert "buy.stripe.com/test_28E5kDdBaf6iab58vO8Vi00" in stripe_cfg
-    assert "portalUrl:" in stripe_cfg
+    assert "billing.stripe.com/p/login/test_6oU7sL0OoaQ23MHdQ88Vi01" in stripe_cfg
+    assert 'monthlyLink: ""' not in stripe_cfg and 'annualLink: ""' not in stripe_cfg
     assert "client_reference_id" in plans_js and "prefilled_email" in plans_js
     assert "login/" in plans_js and "next=plans/" in plans_js
     assert "create table public.subscriptions" in (ROOT / "supabase" / "migrations" / "20261004210000_access_tiers.sql").read_text(encoding="utf-8")
@@ -195,6 +197,9 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "Manage card" in settings
     assert 'data-stripe="checkout"' in settings and 'data-stripe="portal"' in settings
     assert 'id="payFail"' in settings and "payment_failed" in settings_js
+    assert 'id="payNote"' in settings
+    assert "Payment received, your plan will update in a few seconds" in settings
+    assert "tab" in settings_js and "paid" in settings_js and "20000" in settings_js
     assert "signInWithPassword" in settings_js and "updateUser" in settings_js
     assert "delete_my_account" in settings_js
     assert "Alex" not in settings and "4242" not in settings
