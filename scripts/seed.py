@@ -127,7 +127,8 @@ def reset(cur):
           public.legal_matters,
           public.press_items,
           public.site_stats,
-          public.site_updates
+          public.site_updates,
+          public.fact_events
         restart identity cascade
         """
     )
@@ -194,11 +195,22 @@ def seed_home(loader, home, firm_ids, version_ids):
             verified=stat["v"],
             unverified_label=stat.get("u"),
         )
-    for index, upd in enumerate(home["updates"]):
+    seen_updates = set()
+    sort_order = 0
+    for upd in home["updates"]:
+        # The owner deleted the three duplicate "Ten funds rescored" rows.
+        # Skip that entry even if a future data file puts it back, and skip
+        # any other exact duplicate so seeding stays idempotent.
+        if "rescored on Toxy Score v2. Empty blocks stay empty." in (upd.get("t") or ""):
+            continue
+        key = (upd.get("no"), upd.get("t"), upd.get("u"))
+        if key in seen_updates:
+            continue
+        seen_updates.add(key)
         loader.add(
             "site_updates",
             id=uid(),
-            sort_order=index,
+            sort_order=sort_order,
             update_no=upd["no"],
             happened_on=upd["d"],
             happened_label=upd["ds"],
@@ -210,6 +222,7 @@ def seed_home(loader, home, firm_ids, version_ids):
             url=upd["u"],
             verification=upd["v"],
         )
+        sort_order += 1
 
 
 def copy_block(loader, firm_id, key, body, sort_order):

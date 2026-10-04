@@ -1,4 +1,5 @@
 """The account lists reuse the landing fund list, and the auth pages build."""
+import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -110,6 +111,27 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "__SCORE_EXAMPLE__" not in scoring
     assert "How it works" not in index and "how/" not in index
 
+    home_payload = json.loads(index.split('id="home-data" type="application/json">', 1)[1].split("</script>", 1)[0])
+    assert [fund["id"] for fund in home_payload["funds"]] == ["a16z", "battery", "bessemer"]
+    assert home_payload["fundTotal"] == 11
+    assert {fund["id"] for fund in home_payload["funds"]}.isdisjoint({"accel", "sequoia", "insightpartners"})
+    assert len(home_payload["updates"]) == 8
+    assert all(item["no"] != 9 for item in home_payload["updates"])
+    assert "Ten funds" not in index
+    published_home = json.loads((ROOT / "site" / "data" / "home.json").read_text(encoding="utf-8"))
+    assert published_home["funds"] == home_payload["funds"]
+    assert (ROOT / "site" / "vc" / "accel" / "index.html").is_file()
+    assert 'placeholder="Andreessen Horowitz"' in index
+    assert "Search a VC fund" not in index and 'class="hints"' not in index
+    assert "Higher score = safer" not in index and "No filters applied" not in index
+    assert "All 11 funds are on Toxy Score v2" not in index
+    assert "Toxy, unverified" not in list_js and 'class="ar"' not in list_js
+    assert "grid-template-columns:2.3fr 1.7fr 1.1fr 1fr 1fr;" in (ROOT / "src" / "css" / "list.css").read_text(encoding="utf-8")
+    assert "font-size:64px" in (ROOT / "src" / "css" / "home.css").read_text(encoding="utf-8")
+    assert "Log in to see all" in home_js and "fact_record_count" in home_js and "FEED_SHOWN = 7" in home_js
+    assert "landing_funds" in auth_js and "list-only" in auth_js
+    assert "create table public.fact_events" in (ROOT / "supabase" / "migrations" / "20261004200000_fact_events.sql").read_text(encoding="utf-8")
+
     assert "account/#watchlist" in auth_js and "account/#alerts" in auth_js
     assert "Share / Report a VC" in auth_js
     assert "regret.after" in auth_js
@@ -137,7 +159,10 @@ def test_shared_list_and_auth_pages(monkeypatch):
     for name, html in pages.items():
         scoring_href, share_href = linked[name]
         assert html.count(f'href="{scoring_href}">Scoring') == (1 if name in ("login", "reset") else 2), name
-        assert f'href="{share_href}">Corrections' in html, name
+        footer = html.split("<footer", 1)[1].split("</footer>", 1)[0]
+        assert "Sources" not in footer and "Corrections" not in footer, name
+        assert f'href="{scoring_href}">Scoring' in footer, name
+        assert "Privacy" in footer and "Terms" in footer, name
         assert f'href="{share_href}">Report a VC' in html, name
         assert "How it works" not in html or name == "scoring", name
         assert 'href="#">Scoring' not in html, name

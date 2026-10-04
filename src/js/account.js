@@ -1,7 +1,8 @@
 /* Account tabs. The watchlist renders through FundList, the landing list. */
 (function () {
   const HOME = JSON.parse(document.getElementById('home-data').textContent);
-  const BY_ID = Object.fromEntries(HOME.funds.map(f => [f.id, f]));
+  let funds = HOME.funds.slice();
+  let BY_ID = Object.fromEntries(funds.map(f => [f.id, f]));
   const READ_KEY = 'regret.alerts.read';
   const KINDS = { Court: 'Legal', Regulator: 'Regulator', Rescore: 'Score' };
   const $ = id => document.getElementById(id);
@@ -136,7 +137,7 @@
     const q = $('addFund').value.trim().toLowerCase();
     const list = $('addList');
     if (!q) { list.hidden = true; list.innerHTML = ''; return; }
-    const matches = HOME.funds.filter(f => !Regret.watch.slugs.has(f.id) && f.name.toLowerCase().includes(q)).slice(0, 8);
+    const matches = funds.filter(f => !Regret.watch.slugs.has(f.id) && f.name.toLowerCase().includes(q)).slice(0, 8);
     list.hidden = matches.length === 0;
     list.innerHTML = matches.map(f => '<button type="button" data-add="' + Regret.esc(f.id) + '">' + Regret.esc(f.name) + '<small>' + Regret.esc(f.hq) + '</small></button>').join('');
   });
@@ -252,6 +253,11 @@
       const view = (location.hash || '#watchlist').replace('#', '') || 'watchlist';
       location.href = new URL('login/', Regret.siteRoot()).href + '?next=account/&view=' + encodeURIComponent(view);
       return;
+    }
+    const rows = await Regret.landingFunds();
+    if (rows && rows.length) {
+      funds = rows;
+      BY_ID = Object.fromEntries(funds.map(f => [f.id, f]));
     }
     anonHint();
     renderWatch();

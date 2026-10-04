@@ -75,3 +75,9 @@ body.is-auth-page .auth{box-shadow:0 30px 70px -34px rgba(60,40,140,.4)}
 .auth-page .center{position:relative;z-index:2;display:grid;place-items:center;min-height:calc(100vh - 140px);padding:32px 16px 64px}
 .logo .wm{font-family:'Bricolage Grotesque';font-weight:800;letter-spacing:-.035em}
 .logo .wm em{font-style:normal;color:var(--vio)}
+
+/* Landing list gate: same card, list headline instead of the page one. */
+.auth .list-only{display:none}
+.auth.is-list[data-mode=login] .list-only,.auth.is-list[data-mode=signup] .list-only{display:block}
+.auth.is-list .page-only{display:none!important}
+.auth.is-list h2.list-only{margin-bottom:8px}

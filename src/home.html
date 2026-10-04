@@ -17,8 +17,7 @@
  <span class="kick"><b>New</b>Lawsuits, regulators and conflicts, every source linked</span>
  <h1>Take the money<br>you <span class="mark">won't regret</span>.</h1>
  <p class="sub">A bad investor costs you years. Check a fund's record before you sign the term sheet.</p>
- <div class="hs"><svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="#8C88A3" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg><input id="hq" placeholder="Search a VC fund, e.g. Andreessen Horowitz" autocomplete="off"><button class="b c" id="hgo">Check fund</button></div>
- <div class="hints">Try <a data-q="Andreessen">Andreessen Horowitz</a><a data-q="Sequoia">Sequoia</a><a data-q="Khosla">Khosla</a></div>
+ <div class="hs"><svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="#8C88A3" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg><input id="hq" placeholder="Andreessen Horowitz" autocomplete="off"><button class="b c" id="hgo">Check fund</button></div>
 </div></header>
 
 <div class="wrap"><section class="stats" id="stats"></section></div>
@@ -37,16 +36,13 @@
    <div class="fg"><h5>Sort</h5><label class="sel" style="border-radius:12px;height:42px"><select id="sort" style="flex:1"><option value="score">Score: high to low</option><option value="name">Name: A–Z</option><option value="aum">AUM: largest first</option><option value="upd">Last updated</option></select></label></div>
   </aside>
   <section>
-   <div class="lhead"><div><h2>All VCs <span id="tot"></span></h2><p>Higher score = safer. Click any fund for its report.</p></div>
-    <div class="banner"><i>!</i><span><b>All 11 funds are on Toxy Score v2.</b> Empty blocks mean we did not find a source, not that the record is clean.</span></div></div>
    <div class="rbar"><span class="cnt" id="cnt"></span><div class="active" id="active" style="margin:0 0 0 8px"></div></div>
    <div id="out"></div>
-   <p class="srcs"><b>Data:</b> Scores are Toxy Score v2. AUM is SEC Form ADV regulatory AUM, except Lux and Khosla, whose figures are private-fund gross asset value from Schedule D. Bain Capital Ventures is the March 31, 2026 filing. Active legal = open matters with the firm as a named party on the v2 reports.</p>
   </section>
  </div>
  <div class="upd"><div class="uh"><h2>Latest updates</h2><p id="updTot"></p></div><div class="feed" id="feed"></div></div>
 </div></main>
-<footer><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regrett<em>amine</em></span></span><span>regrettamine.com · Know your VC before you raise.</span><span style="margin-left:auto"><a href="scoring/">Scoring</a> · Sources · <a href="account/#share">Corrections</a> · <a href="privacy/">Privacy</a> · <a href="terms/">Terms</a></span></div></footer>
+<footer><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regrett<em>amine</em></span></span><span>regrettamine.com · Know your VC before you raise.</span><span style="margin-left:auto"><a href="scoring/">Scoring</a> · <a href="privacy/">Privacy</a> · <a href="terms/">Terms</a></span></div></footer>
 <script id="home-data" type="application/json">__HOME_JSON__</script>
 <script src="js/supabase-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

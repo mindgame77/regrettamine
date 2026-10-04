@@ -44,8 +44,8 @@ function render() {
     upd: (a, b) => b.updatedTs.localeCompare(a.updatedTs) || a.name.localeCompare(b.name)
   }[S.sort];
   L.sort(cmp);
-  $('tot').textContent = VCS.length;
-  $('cnt').innerHTML = FundList.countHtml(L.length, VCS.length);
+  const total = fullList ? VCS.length : (HOME.fundTotal || VCS.length);
+  $('cnt').innerHTML = FundList.countHtml(L.length, total);
   const A = [];
   if (S.q) A.push(['q', '“' + S.q + '”']);
   S.band.forEach(b => A.push(['band:' + b, b]));
@@ -54,7 +54,7 @@ function render() {
   if (S.legal) A.push(['legal', 'Has active legal matters']);
   $('active').innerHTML = A.length
     ? A.map(a => `<span class="ac">${a[1]}<i data-x="${a[0]}">×</i></span>`).join('') + '<span class="clr" id="clr">Clear all</span>'
-    : '<span class="none">No filters applied · showing every fund we track</span>';
+    : '';
   $('active').querySelectorAll('[data-x]').forEach(x => x.onclick = () => {
     const [k, v] = x.dataset.x.split(':');
     if (k == 'q') { S.q = ''; $('q').value = ''; $('hq').value = ''; }
@@ -65,6 +65,46 @@ function render() {
   });
   if ($('clr')) $('clr').onclick = reset;
   $('out').innerHTML = FundList.table(L, {});
+  lockRows();
+}
+const FREE_ROWS = 3;
+let fullList = false;
+function skeletonRow() {
+  return '<div class="tr2 skel" aria-hidden="true"><div class="nm"><b></b><div class="m"></div></div><div class="sc"><span class="ring"></span><span class="tag"></span></div><div><span class="lgc"></span></div><div><b></b><div class="m"></div></div><div></div></div>';
+}
+function lockRows() {
+  if (fullList || (window.Regret && Regret.user)) return;
+  const total = HOME.fundTotal || VCS.length;
+  const hidden = total - FREE_ROWS;
+  if (hidden <= 0) return;
+  const table = $('out').querySelector('.tbl');
+  if (!table) return;
+  const lock = document.createElement('div');
+  lock.className = 'lock';
+  lock.setAttribute('role', 'button');
+  lock.tabIndex = 0;
+  lock.setAttribute('aria-label', 'Log in to see all ' + total + ' funds');
+  let bars = '';
+  for (let i = 0; i < hidden; i++) bars += skeletonRow();
+  lock.innerHTML = bars + '<span class="lockpill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Log in to see all ' + total + ' funds</span>';
+  lock.onclick = openListLogin;
+  lock.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openListLogin(); } };
+  table.appendChild(lock);
+}
+function openListLogin() {
+  RegretAuth.open('login', false);
+  const count = document.getElementById('listN');
+  if (count) count.textContent = HOME.fundTotal || VCS.length;
+  const card = document.querySelector('.auth');
+  if (card) card.classList.add('is-list');
+}
+async function revealFunds() {
+  if (!window.Regret || !Regret.user || !Regret.landingFunds) return;
+  const rows = await Regret.landingFunds();
+  if (!rows || !rows.length) return;
+  VCS.splice(0, VCS.length, ...rows);
+  fullList = true;
+  render();
 }
 function reset() {
   S.q = ''; $('q').value = ''; $('hq').value = '';
@@ -78,23 +118,42 @@ $('q').oninput = e => setQ(e.target.value);
 $('hq').oninput = e => setQ(e.target.value);
 $('hgo').onclick = () => $('list').scrollIntoView({behavior: 'smooth'});
 $('hq').onkeydown = e => { if (e.key == 'Enter') $('list').scrollIntoView({behavior: 'smooth'}); };
-document.querySelectorAll('.hints a').forEach(a => a.onclick = () => { setQ(a.dataset.q); $('list').scrollIntoView({behavior: 'smooth'}); });
 $('smin').oninput = e => { S.min = Math.min(+e.target.value, S.max); e.target.value = S.min; render(); };
 $('smax').oninput = e => { S.max = Math.max(+e.target.value, S.min); e.target.value = S.max; render(); };
 $('fLegal').onclick = () => { S.legal = !S.legal; render(); };
 $('sort').onchange = e => { S.sort = e.target.value; render(); };
-$('stats').innerHTML = STATS.map(s => `<div class="stat"><div class="n">${s.n.toLocaleString('en-US')}</div><div class="l">${s.l}</div><div class="s">${s.s}</div>${s.v ? '' : '<span class="uv">' + (s.u || 'Toxy · unverified') + '</span>'}</div>`).join('');
-const byId = Object.fromEntries(VCS.map(f => [f.id, f]));
-$('feed').innerHTML = UPD.map(u => {
-  const linked = u.fid && byId[u.fid] && byId[u.fid].report;
-  const name = linked ? `<a href="vc/${byId[u.fid].report}/">${u.f}</a>` : u.f;
-  const ext = String(u.u).startsWith('http');
-  return `<div class="fi"><span class="dt">Update #${u.no}<small>${u.ds}</small></span><span class="fd">${name}</span><span class="ev"><span class="k ${u.k}" style="margin-right:8px">${u.k}</span>${u.t}</span><span class="sr"><a href="${u.u}" ${ext ? 'target="_blank" rel="noopener"' : ''}>${u.src} ↗</a><span>${u.v == 'ver' ? 'verified by us' : u.v == 'ours' ? 'our analysis' : 'via Toxy, unverified'}</span></span></div>`;
-}).join('');
-$('updTot').textContent = UPD.length + ' updates so far · newest first, every one sourced';
+$('stats').innerHTML = STATS.map(s => `<div class="stat"><div class="n">${s.n.toLocaleString('en-US')}</div><div class="l">${s.l}</div></div>`).join('');
+const FEED = UPD.filter((u, i, all) => all.findIndex(x => x.no == u.no && x.d == u.d && x.t == u.t && x.u == u.u) == i);
+const FEED_SHOWN = 7;
+function paintFeed() {
+  const byId = Object.fromEntries(VCS.map(f => [f.id, f]));
+  $('feed').innerHTML = FEED.slice(0, FEED_SHOWN).map(u => {
+    const linked = u.fid && byId[u.fid] && byId[u.fid].report;
+    const name = linked ? `<a href="vc/${byId[u.fid].report}/">${u.f}</a>` : u.f;
+    const ext = String(u.u).startsWith('http');
+    return `<div class="fi"><span class="dt">Update #${u.no}<small>${u.ds}</small></span><span class="fd">${name}</span><span class="ev"><span class="k ${u.k}" style="margin-right:8px">${u.k}</span>${u.t}</span><span class="sr"><a href="${u.u}" ${ext ? 'target="_blank" rel="noopener"' : ''}>${u.src} ↗</a><span>${u.v == 'ver' ? 'verified by us' : u.v == 'ours' ? 'our analysis' : 'via Toxy, unverified'}</span></span></div>`;
+  }).join('');
+}
+function paintRecordCount(count) {
+  const shown = Math.min(FEED_SHOWN, FEED.length);
+  $('updTot').textContent = (count == null ? '…' : count) + ' records · showing the newest ' + shown;
+}
+async function loadRecordCount() {
+  paintRecordCount(null);
+  const client = window.Regret && Regret.sb && Regret.sb();
+  if (!client) return;
+  const { data, error } = await client.rpc('fact_record_count');
+  if (error || data == null) return;
+  paintRecordCount(data);
+}
 document.addEventListener('click', e => {
   const r = e.target.closest('a.tr2[href="#"]');
   if (r) e.preventDefault();
 });
 $('reset').onclick = reset;
+paintFeed();
+if (window.Regret) {
+  Regret.ready.then(() => { revealFunds(); loadRecordCount(); });
+  Regret.onChange(() => { if (Regret.user) revealFunds(); });
+}
 render();
