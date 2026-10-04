@@ -2,7 +2,7 @@
 
 Founder tool for background-checking a VC fund before taking their money. This repo is the static site for [regrettamine.com](https://regrettamine.com): the fund list at `/` and the Andreessen Horowitz report at `/vc/a16z/`.
 
-The pages are plain HTML, CSS, and JavaScript. `build.py` turns either the JSON in `data/` or a Supabase Postgres database into the site. Login is Google or email and password (`/login/`). A free account is at `/account/` (watchlist, alerts, report history, share experience). Anonymous visitors get 2 reports, an account gets 5 more, then a plans placeholder with no prices and no checkout. Watchlist and history use the same fund list as the homepage.
+The pages are plain HTML, CSS, and JavaScript. `build.py` turns either the JSON in `data/` or a Supabase Postgres database into the site. Login is Google or email and password (`/login/`). A free account is at `/account/` (watchlist, alerts, share experience). Anonymous visitors get 2 reports, an account gets 5 more, then a plans placeholder with no prices and no checkout. The watchlist uses the same fund list as the homepage.
 
 ## Run it locally
 
@@ -40,7 +40,7 @@ Scores, stats, and the update feed on the homepage also live in `data/home.json`
 
 The JSON files remain the fallback. If `SUPABASE_URL` and `SUPABASE_ANON_KEY` are both set, `build.py` reads published firms from Supabase instead. Empty or missing values keep the JSON build.
 
-How it works is `/how/` and the score rules are `/scoring/`. Privacy and terms are `/privacy/` and `/terms/`. `data/site.json` → `legal.contact_email` and `legal.jurisdiction` fill both pages at build time. Leave either value empty and the page shows the placeholder chip. An email address becomes a mailto link.
+How it works and the score rules are both on `/scoring/`. `/how/` redirects there. Privacy and terms are `/privacy/` and `/terms/`. `data/site.json` → `legal.contact_email` and `legal.jurisdiction` fill both pages at build time. Leave either value empty and the page shows the placeholder chip. An email address becomes a mailto link.
 
 ## Supabase
 

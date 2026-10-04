@@ -1,4 +1,4 @@
-/* Account tabs. Watchlist and history render through FundList, the landing list. */
+/* Account tabs. The watchlist renders through FundList, the landing list. */
 (function () {
   const HOME = JSON.parse(document.getElementById('home-data').textContent);
   const BY_ID = Object.fromEntries(HOME.funds.map(f => [f.id, f]));
@@ -8,11 +8,13 @@
 
   function go() {
     const v = (location.hash || '#watchlist').replace('#', '') || 'watchlist';
-    const name = ['watchlist', 'alerts', 'history', 'share'].includes(v) ? v : 'watchlist';
-    document.querySelectorAll('.view').forEach(el => el.classList.toggle('on', el.id === name));
+    const name = ['watchlist', 'alerts', 'share'].includes(v) ? v : 'watchlist';
+    document.querySelectorAll('.view').forEach(el => el.classList.toggle('on', el.dataset.view === name));
     document.querySelectorAll('.anav a').forEach(a => a.classList.toggle('on', a.dataset.v === name));
+    if (name === 'share') window.scrollTo(0, 0);
   }
   addEventListener('hashchange', go);
+  addEventListener('load', () => { if (location.hash === '#share') window.scrollTo(0, 0); });
   go();
 
   function readKeys() {
@@ -60,45 +62,6 @@
       const ext = String(u.u).startsWith('http') ? ' target="_blank" rel="noopener"' : '';
       return '<div class="fi' + (fresh ? ' new' : '') + '"><i class="ud"></i><div class="dt">' + Regret.esc(u.ds) + '</div><div class="bd"><div class="fd"><span class="k ' + u.k + '">' + KINDS[u.k] + '</span>' + Regret.esc(u.f) + '</div><div class="ev">' + Regret.esc(u.t) + '</div><div class="sr">' + Regret.esc(u.src) + '<a href="' + Regret.esc(href) + '"' + ext + '>Open →</a></div></div></div>';
     }).join('');
-  }
-
-  function renderMeter(used) {
-    const total = Regret.limits.anon + Regret.limits.extra;
-    const freeUsed = Math.min(used, Regret.limits.anon);
-    const extraUsed = Math.min(Math.max(used - Regret.limits.anon, 0), Regret.limits.extra);
-    const left = Math.max(total - used, 0);
-    function slots(n, on, cls) {
-      let html = '';
-      for (let i = 0; i < n; i++) html += '<i class="' + (i < on ? cls : '') + '"></i>';
-      return html;
-    }
-    $('meter').innerHTML = '<div class="mt"><div><b class="d">' + used + ' of ' + total + '</b><span>free reports used</span></div><div class="segs">'
-      + '<div class="grp"><div class="bar">' + slots(Regret.limits.anon, freeUsed, 'u') + '</div><small>Free</small></div>'
-      + '<div class="grp g5"><div class="bar">' + slots(Regret.limits.extra, extraUsed, 'u ac') + '</div><small>With account</small></div>'
-      + '<div class="grp pd"><div class="bar"><i class="inf"></i></div><small>Plan</small></div></div></div>'
-      + '<div class="mb"><span>' + left + ' left. After that, unlimited reports come with a plan. Re-opening a fund is always free.</span>'
-      + '<button type="button" class="b c sm" id="plansBtn">See plans</button></div>';
-    $('plansBtn').onclick = () => RegretAuth.open('plans', false);
-  }
-
-  async function historySlugs() {
-    const client = Regret.sb();
-    if (!client || !Regret.user) return [];
-    const { data } = await client.from('report_views').select('counted, first_opened_at, firms(slug)').eq('profile_id', Regret.user.id).order('first_opened_at', { ascending: true });
-    return (data || []).filter(row => row.counted && row.firms && row.firms.slug).map(row => row.firms.slug);
-  }
-
-  async function renderHistory() {
-    const slugs = await historySlugs();
-    const rows = slugs.map(id => BY_ID[id]).filter(Boolean);
-    renderMeter(slugs.length);
-    const total = Regret.limits.anon + Regret.limits.extra;
-    FundList.mount($('hsOut'), rows, {
-      total: total,
-      prefix: '../',
-      note: '<span class="none">Re-opening a fund is always free.</span>',
-      empty: '<div class="empty"><b>No reports yet.</b>Open a fund and it will show up here.</div>'
-    });
   }
 
   const CONNECTIONS = [
@@ -294,6 +257,5 @@
     renderWatch();
     renderAlerts();
     await loadPrefs();
-    await renderHistory();
   });
 })();

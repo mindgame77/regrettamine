@@ -76,9 +76,13 @@
     }
     slot.innerHTML = '<div class="av" id="av"><i>' + esc(initials(person)) + '</i>' + esc(label(person))
       + '<svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke="#8C88A3" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>'
-      + '<div class="menu"><small>' + esc(person.email || '') + '</small><button type="button" id="logout">Log out</button></div></div>';
+      + '<div class="menu"><small>' + esc(person.email || '') + '</small>'
+      + '<a href="' + base + 'account/#watchlist">Watchlist</a>'
+      + '<a href="' + base + 'account/#alerts">Alerts</a>'
+      + '<a href="' + base + 'account/#share">Share / Report a VC</a>'
+      + '<button type="button" id="logout">Log out</button></div></div>';
     document.getElementById('av').onclick = function (e) {
-      if (e.target.closest('#logout')) return;
+      if (e.target.closest('#logout') || e.target.closest('a')) return;
       e.currentTarget.classList.toggle('open');
     };
     document.getElementById('logout').onclick = async function () {
@@ -305,8 +309,24 @@
     const veil = document.getElementById('authVeil');
     if (veil) veil.hidden = true;
     msg('');
+    sessionStorage.removeItem('regret.after');
+  }
+  function pendingAfter() {
+    const pending = sessionStorage.getItem('regret.after') || '';
+    if (!/^[a-z0-9./_#?-]+$/i.test(pending) || pending.indexOf('//') !== -1) return '';
+    return pending;
+  }
+  function consumeAfter() {
+    const pending = pendingAfter();
+    if (pending) sessionStorage.removeItem('regret.after');
+    return pending;
   }
   function goNext() {
+    const pending = consumeAfter();
+    if (pending) {
+      location.href = new URL(pending, siteRoot()).href;
+      return;
+    }
     if (!document.body.classList.contains('is-auth-page')) {
       location.reload();
       return;
@@ -398,7 +418,33 @@
     if (veil) veil.addEventListener('click', ev => { if (ev.target === veil) close(); });
   }
 
+  function openReport(ev) {
+    const link = ev.target.closest('a[href*="account/#share"]');
+    if (!link) return false;
+    ev.preventDefault();
+    const menu = document.querySelector('.av.open');
+    if (menu) menu.classList.remove('open');
+    if (!user) {
+      sessionStorage.setItem('regret.after', 'account/#share');
+      if (document.body.dataset.page === 'login') return true;
+      if (document.body.classList.contains('is-auth-page')) {
+        location.href = new URL('login/', siteRoot()).href;
+        return true;
+      }
+      setMode('login', false);
+      return true;
+    }
+    if (document.getElementById('shareForm')) {
+      if (location.hash !== '#share') location.hash = 'share';
+      else window.scrollTo(0, 0);
+      return true;
+    }
+    location.href = new URL('account/#share', siteRoot()).href;
+    return true;
+  }
+
   document.addEventListener('click', async ev => {
+    if (openReport(ev)) return;
     const save = ev.target.closest('#save');
     if (save) {
       ev.preventDefault();
@@ -419,7 +465,10 @@
     }
   });
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') close();
+    if (e.key !== 'Escape') return;
+    const av = document.querySelector('.av.open');
+    if (av) av.classList.remove('open');
+    close();
   });
 
   const ready = (async () => {
@@ -452,6 +501,15 @@
     }
     paintNav(user);
     paintSave();
+    if (user && pendingAfter()) {
+      const target = new URL(pendingAfter(), siteRoot());
+      const same = target.pathname === location.pathname && target.hash === location.hash;
+      sessionStorage.removeItem('regret.after');
+      if (!same) {
+        location.replace(target.href);
+        return;
+      }
+    }
     const page = document.body.dataset.page;
     if (page === 'login' || page === 'reset') {
       const slot = document.getElementById('authPage');
