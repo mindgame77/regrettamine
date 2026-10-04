@@ -7,10 +7,12 @@
   function go() {
     const v = (location.hash || '#account').replace('#', '') || 'account';
     const name = v === 'billing' ? 'billing' : 'account';
-    document.querySelectorAll('.view').forEach(el => el.classList.toggle('on', el.id === name));
+    document.querySelectorAll('.setcol .view').forEach(el => el.classList.toggle('on', el.id === name));
     document.querySelectorAll('[data-set]').forEach(a => a.classList.toggle('on', a.dataset.set === name));
+    const section = document.getElementById(name);
+    if (section) section.scrollIntoView();
   }
-  addEventListener('hashchange', () => { go(); scrollTo(0, 0); });
+  addEventListener('hashchange', go);
 
   function consumeReturn() {
     const params = new URLSearchParams(location.search);
@@ -227,6 +229,8 @@
     $('pwIn').value = '';
     $('pw2In').value = '';
     $('pwCurrentIn').value = '';
+    $('pwOk').hidden = false;
+    $('pwOk').textContent = 'Password updated';
   });
 
   async function deleteError(error) {
@@ -253,7 +257,7 @@
       return;
     }
     try { await Regret.sb().auth.signOut(); } catch (e) { /* the user row is already gone */ }
-    location.href = Regret.siteRoot().href;
+    location.href = new URL('deleted/', Regret.siteRoot()).href;
   });
 
   Regret.ready.then(async () => {
@@ -270,9 +274,18 @@
     await watchPayment(justPaid);
   });
 
+  async function refreshCard(row) {
+    if (!row || row.card || !row.manage_card) return row;
+    const { error } = await Regret.sb().functions.invoke('billing-portal', { body: { cardOnly: true } });
+    if (error) return row;
+    const billing = await Regret.sb().rpc('my_billing');
+    return billing.data || row;
+  }
+
   async function loadBilling() {
     const billing = await Regret.sb().rpc('my_billing');
-    const row = billing.data || { plan: Regret.tier === 'paid' ? 'Paid' : 'Free' };
+    let row = billing.data || { plan: Regret.tier === 'paid' ? 'Paid' : 'Free' };
+    row = await refreshCard(row);
     paintBilling(row);
     return row;
   }

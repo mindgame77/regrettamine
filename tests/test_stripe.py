@@ -91,6 +91,30 @@ def test_stripe_webhook_grace_and_secrets():
 
             cur.execute(
                 "select apply_stripe_event(%s::jsonb)",
+                (_event("evt_card", "invoice.paid", {
+                    "id": "in_card",
+                    "customer": "cus_ada",
+                    "subscription": "sub_ada",
+                    "amount_paid": 4900,
+                    "currency": "usd",
+                    "status": "paid",
+                    "created": int(time.time()),
+                    "lines": {"data": [{"price": {"id": MONTHLY}}]},
+                    "payment_method_details": {"card": {"brand": "mastercard", "last4": "1687"}},
+                }),),
+            )
+            cur.execute("select card_brand, card_last4 from subscriptions where profile_id = %s", (ada,))
+            assert cur.fetchone() == ("mastercard", "1687")
+            cur.execute("select set_config('request.jwt.claim.sub', %s, true)", (str(ada),))
+            cur.execute("set role authenticated")
+            cur.execute("select my_billing()")
+            card = cur.fetchone()[0]["card"]
+            assert card["brand"] == "Mastercard" and card["last4"] == "1687"
+            assert card["label"] == "Mastercard •••• 1687"
+            cur.execute("reset role")
+
+            cur.execute(
+                "select apply_stripe_event(%s::jsonb)",
                 (_event("evt_fail", "invoice.payment_failed", {
                     "id": "in_fail",
                     "customer": "cus_ada",
@@ -153,7 +177,7 @@ def test_stripe_webhook_grace_and_secrets():
             cur.execute("select is_paid(%s)", (ada,))
             assert cur.fetchone()[0] is True
             cur.execute("select count(*), max(status), max(amount) from payments where profile_id = %s", (ada,))
-            assert cur.fetchone() == (2, "paid", 4900)
+            assert cur.fetchone() == (3, "paid", 4900)
 
             cur.execute(
                 "select apply_stripe_event(%s::jsonb)",
@@ -167,7 +191,7 @@ def test_stripe_webhook_grace_and_secrets():
                 }),),
             )
             cur.execute("select count(*) from payments where profile_id = %s", (ada,))
-            assert cur.fetchone()[0] == 2
+            assert cur.fetchone()[0] == 3
 
             cur.execute(
                 "select apply_stripe_event(%s::jsonb)",

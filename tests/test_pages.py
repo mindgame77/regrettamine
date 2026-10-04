@@ -54,6 +54,9 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert '<i>#6</i> of 11 funds' in render_fund_page(ranked_funds["generalcatalyst"], "../../")
     assert "out of 100" not in fund and 'id="evidence"' not in fund
     assert "Loading the report…" in fund
+    accel = (ROOT / "site" / "vc" / "accel" / "index.html").read_text(encoding="utf-8")
+    assert "Accel <span>I</span>" in accel
+    assert "Accel <span>Accel</span>" not in accel
     assert not (ROOT / "site" / "data" / "funds").exists()
     assert (ROOT / "site" / "login" / "index.html").is_file()
     assert (ROOT / "site" / "login" / "reset" / "index.html").is_file()
@@ -180,6 +183,7 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "search_funds" in home_js and "plans/" in home_js
     gate_js = (ROOT / "src" / "js" / "gate.js").read_text(encoding="utf-8")
     assert "plans/" in gate_js and "loadReport" in gate_js
+    assert "Create account to see the full report" in gate_js and "showClosed" in gate_js
     plans = (ROOT / "site" / "plans" / "index.html").read_text(encoding="utf-8")
     assert "Check first." in plans and "Sign second" in plans
     assert "One plan with everything. Pay monthly or yearly." in plans
@@ -210,10 +214,10 @@ def test_shared_list_and_auth_pages(monkeypatch):
     alerts_sql = (ROOT / "supabase" / "migrations" / "20261004220000_alert_funds.sql").read_text(encoding="utf-8")
     assert "create table public.fund_alert_settings" in alerts_sql
     assert "can_alert_fund" in alerts_sql
-    assert "Open this report to get alerts" in (ROOT / "src" / "js" / "fund-list.js").read_text(encoding="utf-8")
-    assert "New legal matter" in (ROOT / "src" / "js" / "fund-list.js").read_text(encoding="utf-8")
-    assert "Score change" in (ROOT / "src" / "js" / "fund-list.js").read_text(encoding="utf-8")
-    assert "set_fund_alert" in auth_js and "set_fund_alert_kind" in auth_js
+    assert "New legal matter" in account_js and "Score change" in account_js
+    assert "setWatchAlertKind" in account_js and "my_watch_alerts" in auth_js
+    assert "set_fund_alert" in auth_js and "set_fund_alert_kind" in auth_js and "set_watch_alert_kind" in auth_js
+    assert "grid-template-columns:2.3fr 1.7fr 1.1fr 1fr 1fr 40px" in (ROOT / "src" / "css" / "list.css").read_text(encoding="utf-8")
     assert 'id="fundAlerts"' not in account
     assert 'data-v="alerts"' not in account
     assert "v === 'alerts'" in account_js and "#watchlist" in account_js
@@ -239,6 +243,23 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "tab" in settings_js and "paid" in settings_js and "30000" in settings_js
     assert "next_charge_label" in settings_js
     assert "signInWithPassword" in settings_js and "updateUser" in settings_js
+    assert "Password updated" in settings_js
+    assert "deleted/" in settings_js
+    deleted = (ROOT / "site" / "deleted" / "index.html").read_text(encoding="utf-8")
+    assert "Your account was deleted" in deleted
+    missing = (ROOT / "site" / "404.html").read_text(encoding="utf-8")
+    assert "Page not found" in missing
+    assert 'href="/regrettamine/"' in missing and 'href="/regrettamine/scoring/"' in missing
+    assert 'href="/regrettamine/css/common.css"' in missing
+    assert 'href="css/' not in missing
+    assert "search_funds" in (ROOT / "src" / "js" / "notfound.js").read_text(encoding="utf-8")
+    assert "Your name is hidden" in account and "Your name will be shown" in account_js
+    assert "scroll-margin-top:120px" in (ROOT / "src" / "css" / "settings.css").read_text(encoding="utf-8")
+    assert "scrollIntoView" in settings_js
+    full = render_fund_page(load_local()[1]["a16z"], "../../")
+    visible = full.split('<script id="evidence"', 1)[0]
+    assert visible.count("DOJ is investigating a16z partners") == 1
+    assert "Interlocking board seats at Databricks and Fivetran. Open, no charges." not in visible
     assert "delete-account" in settings_js
     assert "We couldn't cancel your plan, contact malytskyyo@gmail.com" in settings_js
     assert "Too many sign-ups right now, try again in a few minutes" in auth_js
@@ -254,6 +275,8 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "bpc_1UMuvYHcbGkfjKgmIKZWNWhe" in portal_fn
     assert "settings/?tab=billing" in portal_fn
     assert "stripe_secret_key" in portal_fn
+    assert "payment_methods" in portal_fn and "cardOnly" in portal_fn
+    assert "card_last4" in (ROOT / "supabase" / "migrations" / "20261004300000_gate_card.sql").read_text(encoding="utf-8")
     assert "openBillingPortal" in auth_js and "billing-portal" in auth_js and "portalUrl" in auth_js
     assert "Alex" not in settings and "4242" not in settings
     assert "paintPayFail" in auth_js

@@ -88,6 +88,8 @@ def test_visitor_free_and_paid_tiers():
             assert third["reason"] == "limit"
             assert third["plans"] is False
             assert "html" not in third
+            assert third["summary"]["name"]
+            assert third["summary"]["score"] is not None
             again = _open(cur, ranked[0], ANON)
             assert again["ok"] is True and again["repeat"] is True
             cur.execute("select count(*) from firms")
@@ -345,6 +347,32 @@ def test_alerts_require_an_opened_report_or_paid():
             assert paid["ok"] is True and paid["on"] is True
             cur.execute("select count(*) from report_views where profile_id = %s and firm_id = %s", (ada, battery))
             assert cur.fetchone()[0] == 0
+            cur.execute(
+                "select new_legal_matter, score_change from fund_alert_settings where profile_id = %s and firm_id = %s",
+                (ada, a16z),
+            )
+            assert cur.fetchone() == (True, True)
+            cur.execute(
+                "select new_legal_matter, score_change from fund_alert_settings where profile_id = %s and firm_id = %s",
+                (ada, battery),
+            )
+            assert cur.fetchone() == (True, True)
+            cur.execute("select set_watch_alert_kind('score_change', false)")
+            shared = cur.fetchone()[0]
+            assert shared["ok"] is True and shared["score_change"] is False and shared["new_legal_matter"] is True
+            cur.execute(
+                "select new_legal_matter, score_change from alert_preferences where profile_id = %s",
+                (ada,),
+            )
+            assert cur.fetchone() == (True, False)
+            cur.execute(
+                """
+                select bool_and(new_legal_matter), bool_and(score_change) = false
+                from fund_alert_settings where profile_id = %s
+                """,
+                (ada,),
+            )
+            assert cur.fetchone() == (True, True)
             cur.execute("reset role")
 
             cur.execute(
@@ -361,6 +389,58 @@ def test_alerts_require_an_opened_report_or_paid():
             cur.execute("select count(*) from fund_alert_settings where profile_id = %s and firm_id = %s", (ada, battery))
             assert cur.fetchone()[0] == 0
             cur.execute("reset role")
+
+            bob = _user(cur, "alert-bob@example.com")
+            cur.execute("alter table public.fund_alert_settings disable trigger user")
+            cur.execute(
+                """
+                insert into fund_alert_settings (profile_id, firm_id, enabled, new_legal_matter, score_change)
+                values (%s, %s, true, true, false), (%s, %s, true, false, false)
+                """,
+                (bob, a16z, bob, battery),
+            )
+            cur.execute("alter table public.fund_alert_settings enable trigger user")
+            cur.execute(
+                """
+                update public.alert_preferences p
+                set new_legal_matter = exists (
+                      select 1 from public.fund_alert_settings s
+                      where s.profile_id = p.profile_id and s.new_legal_matter
+                    ),
+                    score_change = exists (
+                      select 1 from public.fund_alert_settings s
+                      where s.profile_id = p.profile_id and s.score_change
+                    )
+                where p.profile_id = %s
+                  and exists (
+                    select 1 from public.fund_alert_settings s
+                    where s.profile_id = p.profile_id
+                  )
+                """,
+                (bob,),
+            )
+            cur.execute(
+                "select new_legal_matter, score_change from alert_preferences where profile_id = %s",
+                (bob,),
+            )
+            assert cur.fetchone() == (True, False)
+            cara = _user(cur, "alert-cara@example.com")
+            cur.execute(
+                """
+                update public.alert_preferences p
+                set new_legal_matter = false, score_change = false
+                where p.profile_id = %s
+                  and exists (
+                    select 1 from public.fund_alert_settings s where s.profile_id = p.profile_id
+                  )
+                """,
+                (cara,),
+            )
+            cur.execute(
+                "select new_legal_matter, score_change from alert_preferences where profile_id = %s",
+                (cara,),
+            )
+            assert cur.fetchone() == (True, True)
         conn.rollback()
 
 

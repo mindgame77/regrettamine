@@ -24,43 +24,33 @@
   function countHtml(n, total) {
     return `${n} ${n == 1 ? 'fund' : 'funds'}<small>of ${total}</small>`;
   }
-  function alertSwitch(f, kind, label, opts) {
-    const info = opts.alertOf ? (opts.alertOf(f.id) || {}) : {};
-    const locked = opts.alertLocked ? !!opts.alertLocked(f.id) : false;
-    const on = !!info[kind];
-    const tip = locked ? 'Open this report to get alerts' : '';
-    return `<span class="wtip"${tip ? ` data-tip="${tip}"` : ''}><button type="button" class="wtog${on ? ' on' : ''}${locked ? ' off' : ''}" data-kind="${kind}" data-slug="${f.id}" role="switch" aria-checked="${on ? 'true' : 'false'}" aria-label="${label}"${locked ? ' disabled aria-disabled="true"' : ''}><span class="sw2"></span></button></span>`;
-  }
   function row(f, opts) {
     opts = opts || {};
     const href = fundHref(f, opts.prefix || '');
     const mark = opts.bookmark
       ? `<button type="button" class="bm" data-remove="${f.id}" data-tip="Remove" aria-label="Remove from watchlist">${BOOKMARK}</button>`
       : '';
-    const kinds = opts.toggles
-      ? alertSwitch(f, 'new_legal_matter', 'New legal matter', opts) + alertSwitch(f, 'score_change', 'Score change', opts)
-      : '';
     return `<a class="tr2${f.v2 ? ' feat' : ''}" href="${href}" data-fund="${f.id}" title="${f.report ? 'Open full report' : 'Full report coming soon'}"><div class="nm"><b>${f.name}</b><div class="m">${f.hq} · since ${f.since}</div></div>
  <div class="sc"><div class="mring">${ring(f.score, 38, 4.5, f.v2 ? 'url(#g2)' : '#C9C5D9')}<b style="${f.v2 ? '' : 'color:#A9A5BD'}">${f.score}</b></div><div><span class="bands"><i style="background:${bandColor(f.band)}"></i>${f.band}</span><span class="tag ${f.v2 ? 'v2' : 'old'}">${f.v2 ? 'v2 · likely ' + f.lo + '–' + f.hi : 'old method'}</span></div></div>
  <div title="${f.legalNote}"><span class="lgc ${f.legal ? 'r' : 'g'}">${f.legal ? f.legal + ' active' : 'None found'}</span></div>
  <div><b>${fmtAum(f.aum)}</b><div class="m">${f.aumAsOf}${f.aumStale ? ' · stale' : ''}</div></div>
  <div>${f.updatedS}</div>
- ${mark}${kinds}</a>`;
+ ${mark}</a>`;
   }
   function table(funds, opts) {
     opts = opts || {};
-    const extra = (opts.bookmark ? '<div></div>' : '')
-      + (opts.toggles ? '<div>New legal matter</div><div>Score change</div>' : '');
+    const extra = opts.bookmark ? '<div></div>' : '';
     const head = `<div class="tr2 th"><div>Fund</div><div>Score</div><div>Active legal</div><div>AUM</div><div>Last update</div>${extra}</div>`;
     const body = funds.map(f => row(f, opts)).join('') || (opts.empty || EMPTY);
-    const cls = (opts.bookmark ? ' marks' : '') + (opts.toggles ? ' alerts' : '');
+    const cls = opts.bookmark ? ' marks' : '';
     return grad() + `<div class="tbl${cls}">${head}${body}</div>`;
   }
   function mount(el, funds, opts) {
     opts = opts || {};
     const total = opts.total != null ? opts.total : funds.length;
     const note = opts.note != null ? opts.note : '<span class="none">No filters applied · showing every fund we track</span>';
-    el.innerHTML = `<div class="rbar"><span class="cnt">${countHtml(funds.length, total)}</span><div class="active" style="margin:0 0 0 8px">${note}</div></div>` + table(funds, opts);
+    const aside = opts.aside ? `<div class="r">${opts.aside}</div>` : '';
+    el.innerHTML = `<div class="rbar"><span class="cnt">${countHtml(funds.length, total)}</span><div class="active" style="margin:0 0 0 8px">${note}</div>${aside}</div>` + table(funds, opts);
   }
 
   global.FundList = { BANDS, bandColor, fmtAum, ring, grad, fundHref, countHtml, row, table, mount };

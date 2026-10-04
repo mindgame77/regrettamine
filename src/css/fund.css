@@ -3,6 +3,13 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .crumb{font-size:14px;color:var(--mute)}.crumb a{color:var(--vio);font-weight:600}
 .fh{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin:10px 0 26px}
 .fh h1{font-size:64px;font-weight:800;line-height:1}
+.report-wait{color:var(--mute);padding:12px 0 40px}
+.gatecard{background:#fff;border:1.5px solid var(--line);border-radius:28px;box-shadow:0 40px 80px -40px rgba(60,40,140,.35);padding:28px 32px 32px;display:flex;flex-direction:column;align-items:center;text-align:center;max-width:480px;margin:8px auto 48px}
+.gatecard .ringBox{width:180px;height:180px;margin:0 auto}
+.gatecard .ringBox svg{width:180px;height:180px}
+.gatecard .ringBox .num b{font-size:64px}
+.gatecard p{color:var(--ink2);font-size:16px;margin:16px 0}
+.gatecard .b{margin-top:4px}
 .fh h1 span{color:var(--vio)}
 .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .mi{font-size:13px;font-weight:600;border-radius:999px;padding:5px 12px;background:#F4F2FA;color:var(--ink2)}

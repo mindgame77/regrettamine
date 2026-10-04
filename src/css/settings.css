@@ -1,6 +1,7 @@
 /* Settings. Account cards, fields, and the login card come from the site. */
 .set{overflow:hidden}
 .settabs{margin:8px 0 22px;width:max-content}
+.setcol #account,.setcol #billing,.setcol .vh h1{scroll-margin-top:120px}
 .settabs a{height:36px;padding:0 22px;border-radius:999px;font:700 14.5px 'DM Sans';color:var(--ink2);display:inline-flex;align-items:center}
 .settabs a.on{background:var(--ink);color:#fff}
 .srow{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:20px 24px}

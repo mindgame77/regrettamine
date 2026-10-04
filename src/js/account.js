@@ -24,14 +24,13 @@
     return [...Regret.watch.slugs].map(id => BY_ID[id]).filter(Boolean);
   }
 
-  function alertRow(id) {
-    const rows = (Regret.alerts && Regret.alerts.rows) || [];
-    return rows.find(row => row.slug === id) || {};
-  }
-
-  function alertLocked(id) {
-    if (Regret.tier === 'paid') return false;
-    return !alertRow(id).opened;
+  function kindSwitch(kind, label) {
+    const prefs = (Regret.alerts && Regret.alerts.prefs) || {};
+    const on = !!prefs[kind];
+    return '<label class="wlkind">' + label
+      + '<button type="button" class="wtog' + (on ? ' on' : '') + '" data-kind="' + kind
+      + '" role="switch" aria-checked="' + (on ? 'true' : 'false') + '" aria-label="' + label
+      + '"><span class="sw2"></span></button></label>';
   }
 
   function renderWatch() {
@@ -42,10 +41,11 @@
     FundList.mount($('wlOut'), rows, {
       total: 100,
       bookmark: true,
-      toggles: true,
       prefix: '../',
-      alertOf: alertRow,
-      alertLocked: alertLocked,
+      aside: '<div class="wlkinds">'
+        + kindSwitch('new_legal_matter', 'New legal matter')
+        + kindSwitch('score_change', 'Score change')
+        + '</div>',
       note: '<span class="none">Saved funds. The bookmark removes one.</span>',
       empty: '<div class="empty"><b>Nothing saved yet.</b>Open a fund and tap the bookmark.</div>'
     });
@@ -66,7 +66,9 @@
     return CONNECTIONS.find(row => row[0] === (on && on.dataset.connection)) || CONNECTIONS[0];
   }
   function anonHint() {
-    $('anonHint').textContent = 'Shown as "' + selectedConnection()[2] + ', ' + $('revRound').value + '"';
+    $('anonHint').textContent = $('anonTog').classList.contains('on')
+      ? 'Your name is hidden'
+      : 'Your name will be shown';
   }
   function ensureGrad() {
     if (!document.getElementById('g2')) document.body.insertAdjacentHTML('afterbegin', FundList.grad());
@@ -119,10 +121,8 @@
     if (tog) {
       e.preventDefault();
       e.stopPropagation();
-      if (tog.disabled || tog.classList.contains('off')) return;
       const next = !tog.classList.contains('on');
-      const result = await Regret.setFundAlertKind(tog.dataset.slug, tog.dataset.kind, next);
-      if (result && result.reason === 'unopened') tog.classList.add('off');
+      await Regret.setWatchAlertKind(tog.dataset.kind, next);
       await Regret.refreshAlerts();
       renderWatch();
       return;
@@ -176,7 +176,7 @@
   document.querySelectorAll('#again button').forEach(b => {
     b.onclick = () => { document.querySelectorAll('#again button').forEach(x => x.classList.toggle('on', x === b)); };
   });
-  $('anonTog').onclick = () => $('anonTog').classList.toggle('on');
+  $('anonTog').onclick = () => { $('anonTog').classList.toggle('on'); anonHint(); };
   $('revRound').onchange = anonHint;
   document.querySelectorAll('#connect .chip').forEach(chip => {
     chip.onclick = e => {
