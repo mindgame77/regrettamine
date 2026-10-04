@@ -3,12 +3,14 @@
 
 create extension if not exists pgcrypto;
 
-create schema if not exists auth;
-
-create table if not exists auth.users (
-  id uuid primary key default gen_random_uuid(),
-  email text
-);
+-- On Supabase, auth.users already exists and the postgres role cannot touch the auth schema.
+do $$
+begin
+  if to_regclass('auth.users') is null then
+    execute 'create schema if not exists auth';
+    execute 'create table auth.users (id uuid primary key default gen_random_uuid(), email text)';
+  end if;
+end $$;
 
 do $$
 begin
@@ -30,6 +32,7 @@ end $$;
 create or replace function public.touch_updated_at()
 returns trigger
 language plpgsql
+set search_path = public
 as $$
 begin
   new.updated_at = now();
