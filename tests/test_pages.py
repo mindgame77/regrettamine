@@ -173,6 +173,19 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert 'plans/">Pricing' in auth_js
     assert 'plans/">See plans' in home_js
     assert "Share / Report a VC" in auth_js
+    assert 'settings/#account">Settings' in auth_js
+    settings = (ROOT / "site" / "settings" / "index.html").read_text(encoding="utf-8")
+    settings_js = (ROOT / "src" / "js" / "settings.js").read_text(encoding="utf-8")
+    assert "<h1>Account</h1>" in settings and "<h1>Billing</h1>" in settings
+    assert 'id="nameIn"' in settings and 'id="siteIn"' in settings
+    assert "Change email" in settings and "Delete account" in settings
+    assert "No card on file" in settings and "No payments yet." in settings
+    assert 'data-stripe="checkout"' in settings and 'data-stripe="portal"' in settings
+    assert 'id="payFail"' in settings and "payment_failed" in settings_js
+    assert "signInWithPassword" in settings_js and "updateUser" in settings_js
+    assert "delete_my_account" in settings_js
+    assert "Alex" not in settings and "4242" not in settings
+    assert "paintPayFail" in auth_js
     assert "regret.after" in auth_js
     assert "setMode('login', false)" in auth_js
     assert "querySelector('.av.open')" in auth_js
@@ -191,10 +204,11 @@ def test_shared_list_and_auth_pages(monkeypatch):
         "terms": ("../scoring/", "../account/#share"),
         "scoring": ("../scoring/", "../account/#share"),
         "plans": ("../scoring/", "../account/#share"),
+        "settings": ("../scoring/", "../account/#share"),
     }
     pages = {
         "index": index, "account": account, "fund": fund, "login": login, "reset": reset,
-        "privacy": privacy, "terms": terms, "scoring": scoring, "plans": plans,
+        "privacy": privacy, "terms": terms, "scoring": scoring, "plans": plans, "settings": settings,
     }
     for name, html in pages.items():
         scoring_href, share_href = linked[name]

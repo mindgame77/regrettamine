@@ -1,0 +1,62 @@
+/* Settings. Account cards, fields, and the login card come from the site. */
+.set{overflow:hidden}
+.srow{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:20px 24px}
+.srow+.srow,.sform+.srow{border-top:1.5px solid var(--line)}
+.srow b{display:flex;align-items:center;gap:10px;font-size:15.5px;font-weight:700}
+.srow span{display:block;font-size:14.5px;color:var(--ink2);margin-top:2px}
+.sform{padding:0 24px 24px;display:flex;flex-direction:column;gap:16px;max-width:520px}
+.sform[hidden]{display:none}
+.sform .fld,.pgrid .fld{outline:0}
+.sform .fld:focus,.pgrid .fld:focus{border-color:var(--vio2);box-shadow:0 0 0 4px var(--viobg);background:#fff}
+.fld::placeholder{color:var(--mute)}
+.acts{display:flex;gap:8px;align-items:center}
+.sh2{font-size:20px;font-weight:800;margin:32px 0 12px}
+.sh2.danger{color:#C43D1F}
+.b.d{background:#C43D1F;color:#fff;box-shadow:0 8px 20px -10px rgba(196,61,31,.7)}
+.b.d:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+.b.s{background:var(--viobg);color:var(--vio)}
+.b.ghost{background:transparent;color:#C43D1F}
+.b.ghost:hover{background:var(--coralbg)}
+.tagp{font-style:normal;font-size:11.5px;font-weight:700;color:#0B8A57;background:var(--mintbg);border-radius:999px;padding:2px 9px}
+.plan b{font-family:'Bricolage Grotesque';font-size:22px;font-weight:800}
+.nx{text-align:right}.nx small{display:block;font-size:12.5px;color:var(--mute);font-weight:600}.nx b{display:block;font-family:'DM Sans';font-size:15.5px;margin-top:2px}
+.nx b.bad{color:#C43D1F}
+.lnk2{font-size:14.5px;font-weight:700;color:var(--vio);white-space:nowrap}
+.cc{display:flex;align-items:center;gap:16px}
+.brand{width:56px;height:38px;border-radius:8px;background:var(--skybg);color:#1B4FB8;display:grid!important;place-items:center;font:italic 800 14px 'DM Sans'!important;letter-spacing:.02em;margin:0!important}
+.ptab{overflow:hidden}
+.pr{display:grid;grid-template-columns:1.2fr 1.6fr 1fr 1fr 90px;gap:16px;align-items:center;padding:14px 24px;font-size:14.5px;border-top:1.5px solid var(--line)}
+.pr.th{border-top:0;font-size:11.5px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.07em;padding:12px 24px}
+.pr>div:last-child{text-align:right}
+.st{font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px}
+.st.ok{background:var(--mintbg);color:#0B8A57}.st.bad{background:var(--coralbg);color:#C43D1F}
+.setcol .fail{margin:0 0 24px;max-width:none}
+.auth.mod h2{font-size:28px;margin-bottom:8px}
+.auth.mod .sub{margin-bottom:16px}
+.dic{width:44px;height:44px;border-radius:14px;background:var(--coralbg);color:#C43D1F;display:grid;place-items:center;margin:0 auto 16px;font-weight:800;font-size:20px}
+.gone{list-style:none;text-align:left;background:#FBFAFE;border:1.5px solid var(--line);border-radius:16px;padding:12px 16px;display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;font-size:14px;color:var(--ink)}
+.gone li{display:flex;align-items:center;gap:8px}.gone li:before{content:'';width:6px;height:6px;border-radius:50%;background:#C43D1F;flex:none}
+.note{font-size:13.5px;color:var(--ink2);margin:12px 0 16px}
+.auth .cfm{margin-bottom:12px}
+.auth .b.d{background:#C43D1F;color:#fff}
+.auth .b.d:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+.srow [hidden]{display:none!important}
+.set+.set{margin-top:16px}
+.prof{padding:20px 24px 24px}
+.prof .pt{display:block;font-size:15.5px;font-weight:700;margin-bottom:16px}
+.pgrid{display:grid;grid-template-columns:1fr 1fr auto;gap:16px;align-items:end}
+.pgrid .b{height:48px;padding:0 24px}
+.b.quiet{background:transparent;color:var(--mute);border:1.5px solid var(--line);box-shadow:none;font-weight:600}
+.b.quiet:hover{color:#C43D1F;border-color:#F3C9BE;background:transparent}
+.set .err{color:#C43D1F;font-size:14px;font-weight:600;margin:0}
+.set .ok{color:#0B8A57;font-size:14px;font-weight:600;margin:0}
+.payempty{padding:22px 24px;color:var(--mute);font-size:14.5px}
+.payempty[hidden]{display:none}
+@media(max-width:900px){
+  .pgrid{grid-template-columns:1fr}
+  .srow,.nx{flex-wrap:wrap;text-align:left}
+  .nx{text-align:left}
+  .pr{grid-template-columns:1fr 1fr;gap:8px 16px}
+  .pr.th{display:none}
+  .gone{grid-template-columns:1fr}
+}

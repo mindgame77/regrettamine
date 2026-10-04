@@ -838,6 +838,7 @@ def main():
     build_legal("terms.html", SITE / "terms" / "index.html")
     build_shell("how.html", SITE / "how" / "index.html")
     build_shell("plans.html", SITE / "plans" / "index.html")
+    build_shell("settings.html", SITE / "settings" / "index.html")
     build_scoring(funds)
     for slug, fund in funds.items():
         dest = SITE / "vc" / slug / "index.html"
