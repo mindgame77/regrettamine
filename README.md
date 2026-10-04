@@ -2,7 +2,7 @@
 
 Founder tool for background-checking a VC fund before taking their money. This repo is the static site for [regrettamine.com](https://regrettamine.com): the fund list at `/` and the Andreessen Horowitz report at `/vc/a16z/`.
 
-The pages are plain HTML, CSS, and JavaScript. A small Python script (`build.py`, standard library only) turns the JSON in `data/` into the site. Login, alerts, registration, and the paywall are not built. Those buttons are visual only.
+The pages are plain HTML, CSS, and JavaScript. `build.py` turns either the JSON in `data/` or a Supabase Postgres database into the site. Login, alerts, registration, and the paywall are not built. Those buttons are visual only. The database has the tables the gate will use later (`profiles`, `report_views`, `gating_policies`: 2 free reports, then 5 more after register).
 
 ## Run it locally
 
@@ -17,7 +17,9 @@ Open [http://localhost:8000/](http://localhost:8000/) and [http://localhost:8000
 
 Links and assets are relative, so the same build works at the project URL (`https://<user>.github.io/regrettamine/`) and at the domain root (`https://regrettamine.com/`). No base-path setting.
 
-## Add a fund
+## Add a fund in JSON
+
+This is the fallback, used when the Supabase secrets are not set. Once Supabase is connected, add firms in the Table Editor (see below) instead of editing these files.
 
 List row (shows on the homepage, no report yet):
 
@@ -34,7 +36,59 @@ Full report:
 
 Scores, stats, and the update feed on the homepage also live in `data/home.json` (`stats`, `updates`). An update whose `fid` matches a fund with a `report` links the fund name to that report. Use a full `https://` URL in `u` for an external source.
 
-`docs/toxy-score-v2-rules.md` is the Toxy Score v2 rules the a16z score is based on.
+`docs/toxy-score-v2-rules.md` is the Toxy Score v2 rules. `regrettamine/score_v2.py` is the function. The published a16z inputs score **95.4** (60 / 14.25 / 16.6 / 4 / +3 / −2.5).
+
+The JSON files remain the fallback. If `SUPABASE_URL` and `SUPABASE_ANON_KEY` are both set, `build.py` reads published firms from Supabase instead. Empty or missing values keep the JSON build.
+
+## Supabase
+
+The model is `docs/data-model.md`. A **firm** is the management company (the `/vc/<slug>/` page). A firm has many **funds** (vehicles). People, portfolio companies, reviews, legal matters, and sources are rows, so a firm can have thousands of companies without a fixed set of columns. Scores are versioned (`score_results` + `score_inputs`). Test rows (`is_test`) cannot be published.
+
+One-time setup:
+
+1. Create a free project at [supabase.com](https://supabase.com).
+2. In the SQL editor, run the files in `supabase/migrations/` in name order (`20261004120000_schema.sql`, then `20261004120100_rls.sql`). Or, with the database URL from **Project Settings → Database**:
+
+   ```bash
+   pip install -r requirements-dev.txt
+   DATABASE_URL="postgresql://postgres.[ref]:[password]@aws-0-[region].pooler.supabase.com:5432/postgres" python3 scripts/migrate.py
+   DATABASE_URL="…" python3 scripts/seed.py
+   ```
+
+   `seed.py` loads the 11 list rows and the full a16z report from `data/`. It replaces those content tables. It does not invent vehicles, portfolio companies, or reviews. It does not load `templates/csv/`.
+3. **Project Settings → API**: copy the project URL and the `anon` public key.
+4. GitHub → this repo → **Settings → Secrets and variables → Actions**. Add:
+   - `SUPABASE_URL` — the project URL
+   - `SUPABASE_ANON_KEY` — the publishable key (`sb_publishable_...`) is recommended. The legacy anon JWT also works. Both were tested against the live project and the build matched the JSON output. `SUPABASE_URL` and `SUPABASE_ANON_KEY` are set on this repo.
+5. Re-run **Deploy to GitHub Pages** (or push to `main`). The workflow passes the secrets into `build.py`. If either secret is missing, the workflow keeps building from `data/`.
+
+Anon can read published firms only. Writes in the Table Editor use the logged-in dashboard role, which bypasses row-level security. The anon key cannot insert or update.
+
+### Add or edit a firm
+
+**Table Editor** (no code):
+
+1. `firms` — one row. `slug` is the id (`sequoia`). Set `published` when it should show on the list. Leave `report_slug` empty until the report is ready; the row stays “coming soon”. Set `report_slug` to the same slug to publish `/vc/<slug>/`.
+2. `funds` — one row per vehicle (name, vintage, size, status). `firm_id` is the firm.
+3. `people`, then `fund_people` — one row per role, with start and end dates. The same person can have rows at more than one firm.
+4. `portfolio_companies`, then `investments` — round, date, lead, board seat, outcome. Add founders in `company_founders`.
+5. `legal_matters`, then `legal_matter_firms` — the firm’s role (plaintiff or defendant), status, counted or not, relevance. Parties, filings, and docket entries are further rows.
+6. `press_items` (`sentiment` is `pos`, `neu`, or `neg`) and `press_item_firms`.
+7. `sources` — one row per URL (`verified`, `junk`). `fact_sources` links a source to any fact (`fact_type`, `fact_id`).
+8. A full report also needs `copy_blocks`, `takeaways`, `ask_questions`, `evidence_cards`, and a current `score_results` row (version `v2`) with `score_inputs`. The score function reads those inputs.
+
+**CSV:** `templates/csv/` has worksheets for funds (vehicles), legal matters, people, and press. Each file has one row with `example` = `yes`. That row is skipped. Fill a copy of the file, then:
+
+```bash
+DATABASE_URL="…" python3 scripts/import_csv.py funds templates/csv/funds.csv
+DATABASE_URL="…" python3 scripts/import_csv.py legal templates/csv/legal_matters.csv
+DATABASE_URL="…" python3 scripts/import_csv.py people templates/csv/people.csv
+DATABASE_URL="…" python3 scripts/import_csv.py press templates/csv/press_items.csv
+```
+
+`firm_slug` must already be a row in `firms`. The example rows are not part of the seed. You can also type the same fields straight into the Table Editor; the CSV headers are the field list.
+
+Do not set `published` on a row with `is_test` true. The database rejects it. `scripts/stress_fixture.py` loads one fake firm (`stress-fixture`, 3 vehicles, 20 people, 1,000 companies, 100 reviews, 150 sources) for a pagination check. It stays unpublished and the site build never selects it.
 
 ## Deploy
 

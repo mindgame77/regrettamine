@@ -1,0 +1,2 @@
+firm_slug,publisher,url,published_on,headline,sentiment,why,group_label,example
+a16z,Example News,https://example.test/delete-this-row,2024-01-15,Example headline — delete this row,neu,Example only. Delete before import.,Fund & founders,yes

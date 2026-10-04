@@ -11,6 +11,7 @@ output works at a GitHub project URL (/regrettamine/) and at regrettamine.com.
 import html
 import json
 import math
+import os
 import shutil
 import sys
 from pathlib import Path
@@ -23,6 +24,8 @@ SITE = ROOT / "site"
 EXT_SVG = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3H3.5A.5.5 0 0 0 3 3.5v9a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V10M9 3h4v4M13 3 7.5 8.5"/></svg>'
 OPEN_SVG = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h4v4M13 3 7.5 8.5"/></svg>'
 SENT_LABEL = {"pos": "Positive", "neu": "Neutral", "neg": "Negative"}
+PAGE_SIZE = 24
+LIST_CAP = 8
 
 
 def esc(value):
@@ -90,6 +93,19 @@ def source_line(fund, ev_id):
     return " · ".join(pair[0] for pair in sources[:2])
 
 
+def join_capped(items, render_item, limit=LIST_CAP):
+    """Show the first rows, then a disclosure. Short lists stay one block."""
+    if len(items) <= limit:
+        return "".join(render_item(item) for item in items)
+    head = "".join(render_item(item) for item in items[:limit])
+    tail = "".join(render_item(item) for item in items[limit:])
+    return (
+        head
+        + f'<details class="more"><summary>Show more <span>{len(items) - limit} more</span></summary>'
+        + f'<div class="lst">{tail}</div></details>'
+    )
+
+
 def render_takeaways(fund):
     cards = []
     for i, tk in enumerate(fund["takeaways"]):
@@ -105,14 +121,33 @@ def render_takeaways(fund):
 def render_overview(fund, matters):
     top = "".join(leg_row(matters[i]) for i in fund["topLegal"])
     n = len(matters)
-    return (
-        f'<div class="blk sumb"><div class="lab">Summary</div><div><p class="big clamp5">{esc(fund["summary"])}</p></div></div>'
-        f'<div class="sech"><h2 class="h2">Takeaways</h2><small>Click any card to see the evidence</small></div>'
-        f'<div class="tkg tk6">{render_takeaways(fund)}</div>'
-        f'<div class="sech"><h2 class="h2">Top legal matters</h2>'
-        f'<button class="lnk" data-go="legal">See all {n} →</button></div>'
-        f'<div class="pc lstc"><div class="lst">{top}</div></div>'
-    )
+    if fund["takeaways"]:
+        take_block = (
+            f'<div class="sech"><h2 class="h2">Takeaways</h2><small>Click any card to see the evidence</small></div>'
+            f'<div class="tkg tk6">{render_takeaways(fund)}</div>'
+        )
+    else:
+        take_block = (
+            '<div class="sech"><h2 class="h2">Takeaways</h2></div>'
+            '<p class="empty-state">No takeaways yet.</p>'
+        )
+    if n:
+        legal_block = (
+            f'<div class="sech"><h2 class="h2">Top legal matters</h2>'
+            f'<button class="lnk" data-go="legal">See all {n} →</button></div>'
+            f'<div class="pc lstc"><div class="lst">{top}</div></div>'
+        )
+    else:
+        legal_block = (
+            '<div class="sech"><h2 class="h2">Top legal matters</h2></div>'
+            '<p class="empty-state">No legal matters on file.</p>'
+        )
+    summary = fund.get("summary") or ""
+    if summary:
+        summary_block = f'<div class="blk sumb"><div class="lab">Summary</div><div><p class="big clamp5">{esc(summary)}</p></div></div>'
+    else:
+        summary_block = '<p class="empty-state">No summary yet.</p>'
+    return summary_block + take_block + legal_block
 
 
 def render_score(fund):
@@ -211,22 +246,76 @@ def render_pair_item(item):
     return f'<div class="it"><b>{esc(item["name"])}</b><span>{esc(item["value"])}</span></div>'
 
 
-def render_fund_tab(tab):
-    facts = "".join(render_fact_tile(t) for t in tab["facts"])
+def render_vehicles(vehicles):
+    if not vehicles:
+        return ""
+    def one(item):
+        bits = [bit for bit in (str(item.get("vintage") or ""), item.get("kind") or "", item.get("status") or "") if bit]
+        size = item.get("size")
+        if size not in (None, ""):
+            bits.append(str(size))
+        return f'<div class="it"><b>{esc(item["name"])}</b><span>{esc(" · ".join(bits))}</span></div>'
+    body = join_capped(vehicles, one)
+    return (
+        f'<div class="pc list" id="vehicles"><div class="ph3"><h3>Funds</h3>'
+        f'<small>{len(vehicles)} vehicle{"" if len(vehicles) == 1 else "s"}</small></div>{body}</div>'
+    )
+
+
+def render_reviews(reviews):
+    if not reviews:
+        return ""
+    def one(item):
+        who = " · ".join(bit for bit in (item.get("founder"), item.get("company"), item.get("partner")) if bit)
+        flags = []
+        if item.get("firstHand"):
+            flags.append("first-hand")
+        if item.get("verification"):
+            flags.append(item["verification"])
+        dims = " ".join(f'{esc(r["dimension"])} {esc(r["score"])}' for r in item.get("ratings") or [])
+        return (
+            f'<div class="it review"><div><b>{esc(who or "Founder")}</b>'
+            f'<div class="sm">{esc(item.get("body") or "")}</div></div>'
+            f'<span class="rt gray">{esc(" · ".join(flags))}</span>'
+            f'<span class="sm">{dims}</span></div>'
+        )
+    visible = reviews[:PAGE_SIZE]
+    more = ""
+    if len(reviews) > PAGE_SIZE:
+        more = (
+            f'<button type="button" class="lnk" id="moreReviews" data-page-size="{PAGE_SIZE}">Show more</button>'
+            f'<p class="note" id="reviewCount">Showing {PAGE_SIZE} of {len(reviews)}</p>'
+        )
+    noun = "review" if len(reviews) == 1 else "reviews"
+    return (
+        f'<div class="pc list" id="reviews"><div class="ph3"><h3>Founder reviews</h3>'
+        f'<small>{len(reviews)} {noun}</small></div>'
+        f'<div class="lst" id="reviewList">{"".join(one(item) for item in visible)}</div>{more}</div>'
+    )
+
+
+def render_fund_tab(tab, extras=None):
+    extras = extras or {}
+    facts = "".join(render_fact_tile(t) for t in tab["facts"]) if tab["facts"] else '<p class="empty-state">No fund facts yet.</p>'
     boards = tab["boards"]
     moves = tab["moves"]
     media = tab["media"]
+    board_body = join_capped(boards["items"], render_board_item) if boards["items"] else '<p class="empty-state">No board seats on file.</p>'
+    move_body = join_capped(moves["items"], render_move_item) if moves["items"] else '<p class="empty-state">No partner moves on file.</p>'
+    media_body = join_capped(media["items"], render_pair_item) if media["items"] else '<p class="empty-state">No media reach on file.</p>'
     return (
         f'<div class="pc"><div class="ph3"><h3>{esc(tab["factsTitle"])}</h3><small>{esc(tab["factsNote"])}</small></div>'
         f'<div class="kv">{facts}</div></div>'
         f'<div class="gg three">'
         f'<div class="pc list"><div class="ph3"><h3>{esc(boards["title"])}</h3></div>'
-        f'{"".join(render_board_item(i) for i in boards["items"])}<p class="note">{esc(boards["note"])}</p></div>'
+        f'{board_body}<p class="note">{esc(boards["note"])}</p></div>'
         f'<div class="pc list"><div class="ph3"><h3>{esc(moves["title"])}</h3><small>{esc(moves["note"])}</small></div>'
-        f'{"".join(render_move_item(i) for i in moves["items"])}<p class="note">{esc(moves["foot"])}</p></div>'
+        f'{move_body}<p class="note">{esc(moves["foot"])}</p></div>'
         f'<div class="pc list"><div class="ph3"><h3>{esc(media["title"])}</h3><small>{esc(media["note"])}</small></div>'
-        f'{"".join(render_pair_item(i) for i in media["items"])}<p class="note">{esc(media["foot"])}</p></div>'
+        f'{media_body}<p class="note">{esc(media["foot"])}</p></div>'
         f'</div>'
+        f'{render_vehicles(extras.get("vehicles") or [])}'
+        f'{render_reviews(extras.get("reviews") or [])}'
     )
 
 
@@ -241,11 +330,43 @@ def favicon(publisher, domain, prefix):
     return f'<span class="fav nofav"><em>{initial}</em></span>'
 
 
+def render_companies(companies):
+    if not companies:
+        return ""
+    def one(item):
+        bits = [bit for bit in (item.get("round"), item.get("outcome")) if bit]
+        if item.get("lead"):
+            bits.append("lead")
+        if item.get("board"):
+            bits.append("board seat")
+        return f'<div class="it"><b>{esc(item["name"])}</b><span>{esc(" · ".join(bits))}</span></div>'
+    visible = companies[:PAGE_SIZE]
+    more = ""
+    if len(companies) > PAGE_SIZE:
+        more = (
+            f'<button type="button" class="lnk" id="moreCos" data-page-size="{PAGE_SIZE}">Show more</button>'
+            f'<p class="note" id="coCount">Showing {min(PAGE_SIZE, len(companies))} of {len(companies)}</p>'
+        )
+    noun = "company" if len(companies) == 1 else "companies"
+    return (
+        f'<div class="pc" id="companies"><div class="ph3"><h3>Portfolio companies</h3>'
+        f'<small>{len(companies)} {noun}</small></div>'
+        f'<div class="lst" id="coList">{"".join(one(item) for item in visible)}</div>{more}</div>'
+    )
+
+
 def render_public(fund, prefix):
     pub = fund["public"]
     items = pub["items"]
+    if not items:
+        return (
+            f'<div class="pubh"><div><h2 class="h2">{esc(pub["title"])}</h2>'
+            f'<p class="note" style="margin-top:4px">{esc(pub["intro"])}</p></div></div>'
+            f'<p class="empty-state">{esc(pub.get("empty") or "No public record yet.")}</p>'
+        )
+    visible = items if len(items) <= PAGE_SIZE else items[:PAGE_SIZE]
     cards = []
-    for item in items:
+    for item in visible:
         se = item["sentiment"]
         cards.append(
             f'<a class="pubc" data-sent="{esc(se)}" href="{esc(item["url"])}" target="_blank" rel="noopener" '
@@ -267,6 +388,12 @@ def render_public(fund, prefix):
         for k in ("pos", "neu", "neg")
     )
     publishers = len({item["domain"] for item in items})
+    pager = ""
+    if len(items) > PAGE_SIZE:
+        pager = (
+            f'<button type="button" class="lnk" id="morePress" data-page-size="{PAGE_SIZE}" data-prefix="{esc(prefix)}">Show more</button>'
+            f'<p class="note" id="pressCount">Showing {PAGE_SIZE} of {len(items)}</p>'
+        )
     return (
         f'<div class="pubh"><div><h2 class="h2">{esc(pub["title"])}</h2>'
         f'<p class="note" style="margin-top:4px">{esc(pub["intro"])}</p></div>'
@@ -274,7 +401,7 @@ def render_public(fund, prefix):
         f'<div class="pc sentc"><div class="sentt"><b>{esc(pub["sentimentTitle"])}</b>'
         f'<span class="note">{esc(pub["sentimentNote"])}</span></div>'
         f'<div class="sbar">{bar}</div><div class="sfl" role="group" aria-label="Filter by sentiment">{filters}</div></div>'
-        f'<div class="pubg">{"".join(cards)}</div><p class="note sempty" hidden>{esc(pub["empty"])}</p>'
+        f'<div class="pubg"{"" if len(items) <= PAGE_SIZE else " id=\"pressList\""}>{"".join(cards)}</div>{pager}<p class="note sempty" hidden>{esc(pub["empty"])}</p>'
     )
 
 
@@ -394,9 +521,9 @@ def render_fund_page(fund, prefix):
         "overview": render_overview(fund, matters),
         "score": render_score(fund),
         "legal": render_legal(fund, matters),
-        "fund": render_fund_tab(fund["fundTab"]),
+        "fund": render_fund_tab(fund["fundTab"], {"vehicles": fund.get("vehicles"), "reviews": fund.get("reviews")}),
         "public": render_public(fund, prefix),
-        "portfolio": render_portfolio(fund["portfolio"]),
+        "portfolio": render_portfolio(fund["portfolio"]) + render_companies(fund.get("companies") or []),
         "ask": render_ask(fund["ask"]),
     }
     sections = "".join(f'<section data-panel="{k}">{panels[k]}</section>' for k, _ in tabs)
@@ -418,9 +545,20 @@ def render_fund_page(fund, prefix):
 <footer class="np"><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regrett<em>amine</em></span></span><span>regrettamine.com</span><span style="margin-left:auto">Scoring · Sources · Corrections · Privacy</span></div></footer>
 <div class="scrim"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="Details"><div class="dh"><div><div class="dk" id="dk"></div><div class="dtt" id="dt"></div></div><button class="dx" id="dx" aria-label="Close">×</button></div><div class="db" id="db"></div></aside><div class="toast"></div>'''
     title = fund.get("title") or f'{fund["name"]} · Regrettamine'
+    extra = ""
+    companies = fund.get("companies") or []
+    reviews = fund.get("reviews") or []
+    press = fund.get("public", {}).get("items") or []
+    if len(companies) > PAGE_SIZE:
+        extra += f'<script id="portfolio-data" type="application/json">{embed(companies)}</script>\n'
+    if len(reviews) > PAGE_SIZE:
+        extra += f'<script id="review-data" type="application/json">{embed(reviews)}</script>\n'
+    if len(press) > PAGE_SIZE:
+        extra += f'<script id="press-data" type="application/json">{embed(press)}</script>\n'
     scripts = (
         f'<script id="evidence" type="application/json">{embed(fund["evidence"])}</script>\n'
         f'<script id="ask-copy" type="application/json">{embed(fund["ask"]["clipboard"])}</script>\n'
+        f'{extra}'
         f'<script src="{prefix}js/fund.js"></script>'
     )
     page = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -468,10 +606,7 @@ def copy_static():
         shutil.copy(cname, SITE / "CNAME")
 
 
-def main():
-    if SITE.exists():
-        shutil.rmtree(SITE)
-    SITE.mkdir(parents=True)
+def load_local():
     home = load_json(DATA / "home.json")
     funds = {}
     for path in sorted((DATA / "funds").glob("*.json")):
@@ -480,6 +615,25 @@ def main():
         if slug != path.stem:
             raise SystemExit(f"{path.name}: slug {slug!r} must match the filename")
         funds[slug] = fund
+    return home, funds
+
+
+def load_site():
+    url = os.environ.get("SUPABASE_URL", "").strip()
+    key = os.environ.get("SUPABASE_ANON_KEY", "").strip()
+    if url and key:
+        from regrettamine.supabase_load import load_site as load_remote
+        print("source: supabase")
+        return load_remote(url, key)
+    print("source: json")
+    return load_local()
+
+
+def main():
+    if SITE.exists():
+        shutil.rmtree(SITE)
+    SITE.mkdir(parents=True)
+    home, funds = load_site()
     linked = [f.get("report") for f in home["funds"] if f.get("report")]
     missing = [slug for slug in linked if slug not in funds]
     if missing:
