@@ -1,0 +1,1998 @@
+{
+  "slug": "a16z",
+  "name": "Andreessen Horowitz",
+  "short": "a16z",
+  "title": "Andreessen Horowitz · Regrettamine",
+  "hq": "Menlo Park, CA",
+  "since": "2009",
+  "meta": [
+    "SEC adviser · CRD 160489",
+    "AH Capital Management, L.L.C."
+  ],
+  "notToken": "Not the $AI16Z token",
+  "updated": "Oct 2, 2026",
+  "method": "Toxy Score v2",
+  "scoreShown": 95,
+  "scoreExact": 95.4,
+  "band": "Very low risk",
+  "range": [
+    86,
+    97
+  ],
+  "rank": {
+    "place": 1,
+    "tier": "Top 1",
+    "of": 11,
+    "example": true
+  },
+  "question": "Should I take this money?",
+  "verdict": "Safe to take a meeting. Ask which other boards your partner sits on.",
+  "verdictSub": "Clean record with its own founders (0.07% of portfolio). One open DOJ probe into competing board seats, no charges.",
+  "floats": [
+    {
+      "class": "f1",
+      "ev": "pen",
+      "iconBg": "var(--mint)",
+      "icon": "✓",
+      "text": "Sanctions: no match",
+      "small": "44 people"
+    },
+    {
+      "class": "f2",
+      "ev": "cov",
+      "iconBg": "var(--sky)",
+      "icon": "%",
+      "text": "Coverage 39%",
+      "small": "what we could check"
+    }
+  ],
+  "badges": [
+    {
+      "ev": "cov",
+      "icon": "am",
+      "text": "Coverage 39%"
+    },
+    {
+      "ev": "rel",
+      "icon": "ok",
+      "text": "Sources verified"
+    },
+    {
+      "ev": "pen",
+      "icon": "ok",
+      "text": "Sanctions: no match"
+    }
+  ],
+  "scoreBarNote": "Where the 95 comes from · tap a block for the Score tab",
+  "parts": [
+    {
+      "id": "s1",
+      "cardClass": "k1",
+      "barClass": "sb1",
+      "legendClass": "k1",
+      "name": "Fund vs. founders",
+      "legend": "Fund vs. founders",
+      "got": "60",
+      "maxLabel": "of 60",
+      "legendOf": "/60",
+      "heroFlex": "60",
+      "heroFill": "100.0%",
+      "scoreBar": "100.0%",
+      "aria": "Fund vs. founders: 60 of 60",
+      "rule": "Bad events are measured as a share of the ~1,456 companies a16z has backed. Under 1% costs nothing. −3 per case the fund lost or where fraud was found.",
+      "inputs": [
+        {
+          "name": "Lawsuits with its own startups or founders",
+          "points": "30 / 30",
+          "why": "1 case (Run The World, 2023) ÷ 1,456 = 0.07%. Under 1%, no penalty."
+        },
+        {
+          "name": "Pushing out founder CEOs",
+          "points": "12 / 12",
+          "why": "1 case (Zenefits, 2016) ÷ 1,456 = 0.07%. Under 1%, no penalty."
+        },
+        {
+          "name": "Down-round or pay-to-play behavior",
+          "points": "10 / 10",
+          "why": "No evidence found. Terms aren't public (0% checked), so no deduction."
+        },
+        {
+          "name": "Blocking acquisitions or rounds",
+          "points": "8 / 8",
+          "why": "No documented veto found (0% checked)."
+        },
+        {
+          "name": "Lost case or fraud finding (−3 each)",
+          "points": "0",
+          "why": "None. Run The World federal claims were dismissed."
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "cardClass": "k2",
+      "barClass": "sb2",
+      "legendClass": "k2",
+      "name": "Ability to support you",
+      "legend": "Support",
+      "got": "14.25",
+      "maxLabel": "of 17.5",
+      "legendOf": "/17.5",
+      "heroFlex": "17.5",
+      "heroFill": "81.4%",
+      "scoreBar": "81.4%",
+      "aria": "Ability to support you: 14.25 of 17.5",
+      "rule": "Money 6 + media 6 (capped) + help after the check 5.5. Claims the fund makes about itself count at half until founders confirm them. Partner departures cost points.",
+      "inputs": [
+        {
+          "name": "Money",
+          "points": "5 / 6",
+          "why": "Fund size 2/2: $15B+ raised Jan 2026. Money left 1.5/2: reserves not disclosed. Hit target 1.5/2: no published target."
+        },
+        {
+          "name": "Media reach (capped)",
+          "points": "6 / 6",
+          "why": "~290K YouTube subscribers, podcast since 2014, in-house New Media team, ~1.08M X followers."
+        },
+        {
+          "name": "Help after the check",
+          "points": "3.25 / 5.5",
+          "why": "Platform team 1/2 and intros 0.75/1.5: a16z's own claims, at half. Partner stability 1.5/2: −0.5 for 2025 departures (Pande, Wennmachers, O'Farrell)."
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "cardClass": "k3",
+      "barClass": "sb3",
+      "legendClass": "k3",
+      "name": "Founder experience",
+      "legend": "Founder exp.",
+      "got": "16.6",
+      "maxLabel": "of 17.5",
+      "legendOf": "/17.5",
+      "heroFlex": "17.5",
+      "heroFill": "94.9%",
+      "scoreBar": "94.9%",
+      "aria": "Founder experience: 16.6 of 17.5",
+      "rule": "Only first-hand accounts count. If negative accounts are under 1% of the portfolio, the fund gets its age default.",
+      "inputs": [
+        {
+          "name": "First-hand accounts",
+          "points": "3",
+          "why": "2 negative (Run The World, Zenefits), 1 positive (RapidAPI)."
+        },
+        {
+          "name": "Negative share",
+          "points": "0.14%",
+          "why": "2 ÷ 1,456. Under 1%, so the age default applies."
+        },
+        {
+          "name": "Age default",
+          "points": "16.6",
+          "why": "10+ years and over 500 companies = 95% of 17.5."
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "cardClass": "k4",
+      "barClass": "sb4",
+      "legendClass": "k4",
+      "name": "Conflicts of interest",
+      "legend": "Conflicts",
+      "got": "4",
+      "maxLabel": "of 5",
+      "legendOf": "/5",
+      "heroFlex": "5",
+      "heroFill": "80.0%",
+      "scoreBar": "80.0%",
+      "aria": "Conflicts: 4 of 5",
+      "rule": "−1 per documented conflict, scaled by partner count. The section can't go below 0.",
+      "inputs": [
+        {
+          "name": "Competing board seats",
+          "points": "conflict",
+          "why": "Horowitz at Databricks, Casado at Fivetran (DOJ probe)."
+        },
+        {
+          "name": "Incubation clause",
+          "points": "conflict",
+          "why": "SEC filing: incubated companies “will be in direct competition” with portfolio companies."
+        },
+        {
+          "name": "Uniswap vote, 2023",
+          "points": "conflict",
+          "why": "Voted against Uniswap's bridge choice while backing LayerZero."
+        },
+        {
+          "name": "Scaled across 88 investing partners",
+          "points": "−1",
+          "why": "3 conflicts, spread across 88 partners, cost 1 point."
+        }
+      ]
+    },
+    {
+      "id": "bonus",
+      "cardClass": "kb",
+      "barClass": "bonus",
+      "legendClass": "kb",
+      "name": "Track record bonus",
+      "legend": "Bonus",
+      "got": "+3",
+      "maxLabel": "max +3",
+      "legendOf": null,
+      "heroFlex": "3",
+      "heroFill": "100%",
+      "scoreBar": "100.0%",
+      "aria": "Track record bonus +3",
+      "rule": "+1 for every 5 years of investing with no significant pattern of harm, up to +3.",
+      "inputs": [
+        {
+          "name": "Years investing",
+          "points": "16",
+          "why": "16 ÷ 5 = 3.2, capped at +3."
+        }
+      ]
+    },
+    {
+      "id": "pen",
+      "cardClass": "kp",
+      "barClass": "pen",
+      "legendClass": "kp",
+      "name": "Regulatory penalty",
+      "legend": "Regulatory",
+      "got": "−2.5",
+      "maxLabel": "range 0 to −50",
+      "legendOf": null,
+      "heroFlex": "2.5",
+      "heroFill": "100%",
+      "scoreBar": "5.0%",
+      "aria": "Regulatory penalty minus 2.5",
+      "rule": "Penalty only; a clean record earns 0. Open investigation −2. Shareholder suit against a partner as a public-company director −0.5 to −1.",
+      "inputs": [
+        {
+          "name": "DOJ board-seat probe",
+          "points": "−2",
+          "why": "Open investigation, no charges."
+        },
+        {
+          "name": "Coinbase director suit",
+          "points": "−0.5",
+          "why": "Shareholder suit against Andreessen as a Coinbase director. Active."
+        },
+        {
+          "name": "SEC record",
+          "points": "0",
+          "why": "Clean. No disciplinary disclosures."
+        },
+        {
+          "name": "Sanctions",
+          "points": "0",
+          "why": "No exact match. Counter-sanctions on Anne Neuberger cost 0 by rule."
+        }
+      ]
+    }
+  ],
+  "summary": "On the evidence we could verify, a16z treats its own founders well: one founder-side lawsuit across about 1,456 portfolio companies, no lost cases or fraud findings, and a clean SEC record.",
+  "takeaways": [
+    {
+      "ev": "tk0",
+      "title": "Its partners sit on competing boards.",
+      "text": "Its SEC brochure says companies it incubates will compete with yours."
+    },
+    {
+      "ev": "tk1",
+      "title": "Close to clean with its own founders.",
+      "text": "No suit by a16z against a founder was found."
+    },
+    {
+      "ev": "tk2",
+      "title": "Expect the company to come before the founder.",
+      "text": "Horowitz: “we're not founder-friendly.” See Zenefits, 2016."
+    },
+    {
+      "ev": "tk3",
+      "title": "Crypto founders carry more of its legal risk.",
+      "text": "Token-buyer suits (Lido, Compound) argue VCs are partners of the DAOs they fund."
+    },
+    {
+      "ev": "tk4",
+      "title": "Money isn't the constraint.",
+      "text": "$15B+ raised in Jan 2026; $106.5B AUM across 119 funds."
+    },
+    {
+      "ev": "tk5",
+      "title": "Confirm your partner's tenure.",
+      "text": "Three senior exits in 2025: Pande, Wennmachers, O'Farrell."
+    }
+  ],
+  "topLegal": [
+    "L1",
+    "L5",
+    "L3"
+  ],
+  "matters": [
+    {
+      "id": "L1",
+      "year": "2026",
+      "text": "The DOJ is investigating a16z partners' seats on the boards of competing companies (Databricks, Fivetran). Open, no charges filed.",
+      "sub": "DOJ antitrust probe: interlocking board seats at Databricks and Fivetran",
+      "badge": "Open probe · −2",
+      "tone": "amber"
+    },
+    {
+      "id": "L5",
+      "year": "2023",
+      "text": "a16z was sued by a former Run The World co-founder, who alleged pregnancy discrimination. Federal claims dismissed; state outcome unverified.",
+      "sub": "Run The World Inc. v. Jiang",
+      "badge": "0 pts",
+      "tone": "gray"
+    },
+    {
+      "id": "L3",
+      "year": "2022",
+      "text": "a16z is being sued by Compound token buyers in a class action. Active; a16z lost its bid to force arbitration in Oct 2025.",
+      "sub": "Houghton v. AH Capital Mgmt (Compound)",
+      "badge": "0 pts",
+      "tone": "gray"
+    },
+    {
+      "id": "L2",
+      "year": "2023",
+      "text": "a16z is being sued by Lido token buyers in a class action. Active; the motion to dismiss was denied in Nov 2024.",
+      "sub": "Samuels v. Lido DAO",
+      "badge": "0 pts",
+      "tone": "gray"
+    },
+    {
+      "id": "L4",
+      "year": "2022",
+      "text": "a16z was sued by Uniswap token buyers in a class action. Federal claims dismissed, affirmed in 2025.",
+      "sub": "Risley v. Universal Navigation (Uniswap)",
+      "badge": "0 pts",
+      "tone": "gray"
+    },
+    {
+      "id": "L7",
+      "year": "2021",
+      "text": "a16z was sued by ICP token buyers in a class action against Dfinity. Ended in summary judgment for Dfinity.",
+      "sub": "Ocampo v. Dfinity USA Research",
+      "badge": "0 pts",
+      "tone": "gray"
+    },
+    {
+      "id": "L8",
+      "year": "2025",
+      "text": "a16z is named in an individual's suit against portfolio company Deel. a16z's role is unverified; terminated Jan 2026.",
+      "sub": "Teman v. Deel",
+      "badge": "0 pts",
+      "tone": "gray"
+    },
+    {
+      "id": "L6",
+      "year": "2023",
+      "text": "Marc Andreessen is being sued by a Coinbase shareholder in his role as a Coinbase director. Active.",
+      "sub": "Grabski ex rel. Coinbase v. Andreessen",
+      "badge": "−0.5",
+      "tone": "red"
+    },
+    {
+      "id": "L9",
+      "year": "2013",
+      "text": "a16z was sued by Think Computer alongside Dwolla. Dismissed.",
+      "sub": "Think Computer Corp. v. Dwolla",
+      "badge": "0 pts",
+      "tone": "gray"
+    },
+    {
+      "id": "L10",
+      "year": "2014",
+      "text": "Marc Andreessen was sued by an eBay shareholder as an eBay director over the Skype sale. Dismissed with prejudice.",
+      "sub": "Smukler v. Donahoe (eBay/Skype)",
+      "badge": "0 pts",
+      "tone": "gray"
+    },
+    {
+      "id": "L11",
+      "year": "2024",
+      "text": "a16z joined a suit against the SEC over its crypto rules (a16z is a plaintiff). Outcome not verified.",
+      "sub": "CFAT v. SEC",
+      "badge": "0 pts",
+      "tone": "gray"
+    },
+    {
+      "id": "L12",
+      "year": "2022",
+      "text": "a16z backed Coin Center's suit against the U.S. Treasury. Outcome not verified.",
+      "sub": "Coin Center v. Yellen",
+      "badge": "0 pts",
+      "tone": "gray"
+    },
+    {
+      "id": "L13",
+      "year": "2024",
+      "text": "a16z was subpoenaed as a non-party in Doe v. GitHub.",
+      "sub": "Doe v. GitHub",
+      "badge": "0 pts",
+      "tone": "gray"
+    },
+    {
+      "id": "L14",
+      "year": "2025",
+      "text": "A court was asked to make AH Capital comply with a subpoena (2025). Other party not known.",
+      "sub": "Motion to compel AH Capital subpoena compliance",
+      "badge": "0 pts",
+      "tone": "gray"
+    }
+  ],
+  "regulatory": {
+    "title": "Regulatory records & sanctions",
+    "note": "always checked · 3 records",
+    "recordsTitle": "Regulatory records",
+    "sanctionsTitle": "Sanctions",
+    "records": [
+      {
+        "icon": "am",
+        "title": "DOJ antitrust probe",
+        "detail": "Interlocking board seats at Databricks and Fivetran. Open, no charges.",
+        "points": "−2 pts",
+        "tone": "amber",
+        "ev": "L1"
+      },
+      {
+        "icon": "ok",
+        "title": "SEC disciplinary record",
+        "detail": "Clean. IAPD disclosure flag N; ADV Item 9 “not applicable” (Mar 2026).",
+        "points": "0 pts",
+        "tone": "gray",
+        "ev": "pen"
+      },
+      {
+        "icon": "ok",
+        "title": "Fines or settlements with regulators",
+        "detail": "None found.",
+        "points": "0 pts",
+        "tone": "gray",
+        "ev": "pen"
+      }
+    ],
+    "sanctions": {
+      "ok": true,
+      "title": "No sanctions found",
+      "text": "Checked OFAC, EU, UK and UN lists via OpenSanctions on Oct 2, 2026: 44 a16z people and 2 entities (AH Capital Management, a16z Capital Management).",
+      "ev": "sanc",
+      "link": "Details →",
+      "note": "Counter-sanctions: GP Anne Neuberger is on Russia's and Iran's lists for her former White House role. Not a Western sanction; 0 points by rule."
+    }
+  },
+  "legalGroups": [
+    {
+      "title": "Founder-relevant",
+      "note": "2 matters · most relevant first",
+      "ids": [
+        "L1",
+        "L5"
+      ]
+    },
+    {
+      "title": "Other a16z cases",
+      "note": "5 matters · token-buyer suits cost 0 under v2",
+      "ids": [
+        "L3",
+        "L2",
+        "L4",
+        "L7",
+        "L8"
+      ],
+      "more": {
+        "summary": "7 more, low relevance",
+        "hint": "director suits, plaintiff roles, subpoenas",
+        "ids": [
+          "L6",
+          "L9",
+          "L10",
+          "L11",
+          "L12",
+          "L13",
+          "L14"
+        ]
+      }
+    }
+  ],
+  "notCountedTitle": "Not counted",
+  "notCounted": [
+    "Amicus briefs, not a party: CFTC v. Ooki DAO, SEC v. Coinbase, Beba LLC v. SEC.",
+    "8 raw court hits are awaiting role review and are not counted (e.g., SEC v. Terraform Labs, WPEngine v. Automattic).",
+    "Excluded: “Graham Platner” suit (content farm, never at a16z), Shnayderman v. Ozone (a16z not a party), Pikabea v. Walters ($AI16Z brand misuse)."
+  ],
+  "fundTab": {
+    "factsTitle": "Fund facts",
+    "factsNote": "Form ADV, Mar 2026 · a16z.com",
+    "facts": [
+      {
+        "k": "Regulatory AUM",
+        "v": "$106.5B",
+        "s": "119 funds · Form ADV, Mar 2026"
+      },
+      {
+        "k": "Latest raise",
+        "v": "$15B+",
+        "s": "Jan 2026 · Growth $6.75B, Apps $1.7B, Infra $1.7B, Am. Dynamism $1.18B, Bio+Health $0.7B"
+      },
+      {
+        "k": "Staff",
+        "v": "738",
+        "s": "88 in investment roles"
+      },
+      {
+        "k": "Newest funds",
+        "v": "$1.62B each",
+        "s": "Fund X AI Apps & AI Infra, gross asset value"
+      },
+      {
+        "k": "Known LPs",
+        "v": "4 public",
+        "s": "CalPERS $400M, North Dakota $75M, U. Michigan, Yale"
+      },
+      {
+        "k": "Performance",
+        "v": "Not public",
+        "s": "IRR / TVPI / DPI only as secondary estimates"
+      }
+    ],
+    "boards": {
+      "title": "Partner board seats",
+      "items": [
+        {
+          "name": "Ben Horowitz",
+          "value": "Databricks",
+          "badge": "DOJ probe",
+          "tone": "amber"
+        },
+        {
+          "name": "Martin Casado",
+          "value": "Fivetran",
+          "badge": "DOJ probe",
+          "tone": "amber"
+        },
+        {
+          "name": "Marc Andreessen",
+          "value": "Meta, Coinbase"
+        },
+        {
+          "name": "Alex Rampell",
+          "value": "Rocket Companies"
+        },
+        {
+          "name": "William Shrank",
+          "value": "WW, Walgreens"
+        },
+        {
+          "name": "Robert Swan",
+          "value": "Micron, Nike"
+        },
+        {
+          "name": "Jeff Jordan",
+          "value": "Airbnb"
+        },
+        {
+          "name": "David Ulevitch",
+          "value": "Flock Safety"
+        }
+      ],
+      "note": "a16z's SEC brochure: some incubated companies “will be in direct competition with other Incubated Companies or other portfolio companies in which a Fund invests.”"
+    },
+    "moves": {
+      "title": "Partner moves",
+      "note": "last 24 months",
+      "items": [
+        {
+          "name": "Vijay Pande",
+          "role": "Founding GP, Bio+Health",
+          "badge": "Left, Jun 2025",
+          "tone": "gray"
+        },
+        {
+          "name": "Margit Wennmachers",
+          "role": "Marketing partner",
+          "badge": "Emeritus, Jul 2025",
+          "tone": "gray"
+        },
+        {
+          "name": "John O'Farrell",
+          "role": "First GP hire; later criticized the firm",
+          "badge": "Resigned, May 2025",
+          "tone": "gray"
+        },
+        {
+          "name": "Erik Torenberg",
+          "role": "GP; a16z bought his Turpentine network",
+          "badge": "Joined, Apr 2025",
+          "tone": "gray"
+        }
+      ],
+      "foot": "88 investment staff · key-person risk low."
+    },
+    "media": {
+      "title": "Media reach",
+      "note": "6 / 6, capped",
+      "items": [
+        {
+          "name": "YouTube",
+          "value": "~290K subs"
+        },
+        {
+          "name": "Podcast",
+          "value": "Since 2014"
+        },
+        {
+          "name": "X followers",
+          "value": "~1.08M"
+        },
+        {
+          "name": "In-house media",
+          "value": "Yes"
+        }
+      ],
+      "foot": "Capped so marketing can't outweigh how a fund treats founders."
+    }
+  },
+  "public": {
+    "title": "Public record",
+    "intro": "Press and public posts about a16z that we checked. Each card opens the original source in a new tab.",
+    "sentimentTitle": "Sentiment",
+    "sentimentNote": "Tone toward founders and the fund, read from each article. When unclear, we mark Neutral.",
+    "empty": "No items with this sentiment.",
+    "items": [
+      {
+        "publisher": "TechCrunch",
+        "domain": "techcrunch.com",
+        "date": "Aug 18, 2026",
+        "headline": "DOJ probes a16z partners' board seats at Databricks and Fivetran",
+        "url": "https://techcrunch.com/2026/08/18/dojs-probe-into-andreessen-horowitz-over-board-seats-baffles-vcs/",
+        "group": "Regulators & legal",
+        "sentiment": "neg",
+        "why": "Open federal antitrust probe into a16z partners."
+      },
+      {
+        "publisher": "The Next Web",
+        "domain": "thenextweb.com",
+        "date": "2026",
+        "headline": "DOJ probe into a16z over Databricks and Fivetran board seats",
+        "url": "https://thenextweb.com/news/andreessen-horowitz-doj-probe-databricks-fivetran-board-seats",
+        "group": "Regulators & legal",
+        "sentiment": "neg",
+        "why": "Same DOJ probe, second outlet."
+      },
+      {
+        "publisher": "Axios",
+        "domain": "axios.com",
+        "date": "Sep 11, 2023",
+        "headline": "Run The World co-founder alleges pregnancy discrimination, names a16z",
+        "url": "https://www.axios.com/2023/09/11/andreessen-horowitz-run-the-word-discrimination-venture-capital",
+        "group": "Regulators & legal",
+        "sentiment": "neg",
+        "why": "A founder's allegation against the fund."
+      },
+      {
+        "publisher": "ProPublica",
+        "domain": "propublica.org",
+        "date": "2025",
+        "headline": "CFPB probes into a16z-backed fintechs disrupted under political pressure",
+        "url": "https://www.propublica.org/article/trump-cfpb-marc-andreessen-silicon-valley",
+        "group": "Regulators & legal",
+        "sentiment": "neg",
+        "why": "Critical investigation of a16z's political influence."
+      },
+      {
+        "publisher": "CNBC",
+        "domain": "cnbc.com",
+        "date": "Jun 11, 2026",
+        "headline": "Ex-partner John O'Farrell accuses a16z of “political infiltration”",
+        "url": "https://www.cnbc.com/2026/06/11/ex-a16z-partner-slams-old-firm-othes-political-infiltration-in-ai.html",
+        "group": "People & partners",
+        "sentiment": "neg",
+        "why": "Public criticism from a former partner."
+      },
+      {
+        "publisher": "Axios",
+        "domain": "axios.com",
+        "date": "Jun 4, 2026",
+        "headline": "Anne Neuberger joins a16z as GP and head of global affairs",
+        "url": "https://www.axios.com/2026/06/04/anne-neuberger-andreessen-horowitz",
+        "group": "People & partners",
+        "sentiment": "neu",
+        "why": "Hiring news, no judgment either way."
+      },
+      {
+        "publisher": "Endpoints News",
+        "domain": "endpoints.news",
+        "date": "2025",
+        "headline": "Bio+Health founding GP Vijay Pande exits a16z",
+        "url": "https://endpoints.news/former-a16z-biotech-investment-leader-vijay-pande-exits-the-vc-firm/",
+        "group": "People & partners",
+        "sentiment": "neu",
+        "why": "Departure reported as fact."
+      },
+      {
+        "publisher": "PitchBook",
+        "domain": "pitchbook.com",
+        "date": "2025",
+        "headline": "Marketing partner Margit Wennmachers steps back",
+        "url": "https://pitchbook.com/news/articles/andreessen-horowitz-marketing-maestro-margit-wennmachers-leaving-a16z",
+        "group": "People & partners",
+        "sentiment": "neu",
+        "why": "Departure reported as fact."
+      },
+      {
+        "publisher": "a16z",
+        "domain": "a16z.com",
+        "date": "Jan 2026",
+        "headline": "Why did we raise $15B (a16z's own post)",
+        "url": "https://a16z.com/why-did-we-raise-15b/",
+        "group": "Fund & founders",
+        "sentiment": "pos",
+        "why": "Favorable, but it's a16z's own post."
+      },
+      {
+        "publisher": "TechCrunch",
+        "domain": "techcrunch.com",
+        "date": "Nov 3, 2025",
+        "headline": "a16z pauses its TxO fund for underserved founders, lays off staff",
+        "url": "https://techcrunch.com/2025/11/03/a16z-pauses-its-famed-txo-fund-for-underserved-founders-lays-off-staff/",
+        "group": "Fund & founders",
+        "sentiment": "neg",
+        "why": "Founder program paused, staff laid off."
+      },
+      {
+        "publisher": "Business Insider",
+        "domain": "businessinsider.com",
+        "date": "c. 2020",
+        "headline": "Ben Horowitz: “we're not founder-friendly… our obligation is to the employees”",
+        "url": "https://www.businessinsider.com/entrepreneurship-advice-ben-horowitz-company-culture-startups-venture-capital",
+        "group": "Fund & founders",
+        "sentiment": "neg",
+        "why": "Cofounder says the fund isn't founder-friendly."
+      },
+      {
+        "publisher": "BuzzFeed News",
+        "domain": "buzzfeednews.com",
+        "date": "2016",
+        "headline": "How Zenefits fell to earth, with an a16z designee on the board",
+        "url": "https://www.buzzfeednews.com/article/williamalden/how-high-flying-zenefits-fell-to-earth",
+        "group": "Fund & founders",
+        "sentiment": "neg",
+        "why": "Founder-CEO pushed out with a16z on the board."
+      },
+      {
+        "publisher": "Forbes",
+        "domain": "forbes.com",
+        "date": "Jun 12, 2023",
+        "headline": "a16z backed Health IQ's ex-CEO's new company despite vendor lawsuits",
+        "url": "https://www.forbes.com/sites/katiejennings/2023/06/12/lawsuits-allege-this-startup-ripped-off-millions-from-vendors-andreessen-horowitz-backed-the-former-ceos-new-company-anyway/",
+        "group": "Fund & founders",
+        "sentiment": "neg",
+        "why": "Critical of a16z's diligence."
+      },
+      {
+        "publisher": "CoinDesk",
+        "domain": "coindesk.com",
+        "date": "Feb 10, 2023",
+        "headline": "Uniswap vote ends with a16z on the losing side",
+        "url": "https://www.coindesk.com/tech/2023/02/10/uniswap-vote-on-bnb-deployment-ends-with-silicon-valleys-a16z-on-losing-side",
+        "group": "Crypto",
+        "sentiment": "neu",
+        "why": "Factual vote report. The conflict is scored, not here."
+      },
+      {
+        "publisher": "TechCrunch",
+        "domain": "techcrunch.com",
+        "date": "Jun 18, 2025",
+        "headline": "No, a16z didn't post that crypto scam tweet (account hijack)",
+        "url": "https://techcrunch.com/2025/06/18/no-andreessen-horowitz-didnt-post-that-crypto-scam-tweet/",
+        "group": "Crypto",
+        "sentiment": "neu",
+        "why": "a16z was the target of a hack, not at fault."
+      },
+      {
+        "publisher": "DL News",
+        "domain": "dlnews.com",
+        "date": "2024",
+        "headline": "Impersonator uses an old a16z-linked X handle to take ~$245K",
+        "url": "https://www.dlnews.com/articles/people-culture/a16z-impersonator-uses-x-handle-to-swipe-crypto-from-victim/",
+        "group": "Crypto",
+        "sentiment": "neu",
+        "why": "Impersonation by a third party, not a16z."
+      },
+      {
+        "publisher": "TechCrunch",
+        "domain": "techcrunch.com",
+        "date": "Aug 25, 2025",
+        "headline": "a16z spends $1.49M lobbying Washington in H1 2025",
+        "url": "https://techcrunch.com/2025/08/25/a16z-spends-1-49m-in-washington-lobbying-while-rivals-mostly-sit-out/",
+        "group": "Policy",
+        "sentiment": "neu",
+        "why": "Lobbying spend reported as fact."
+      },
+      {
+        "publisher": "Bloomberg",
+        "domain": "bloomberg.com",
+        "date": "Apr 15, 2026",
+        "headline": "a16z-backed AI super PAC passes $50M",
+        "url": "https://www.bloomberg.com/news/articles/2026-04-15/andreessen-horowitz-boost-ai-super-pac-cash-to-over-50-million",
+        "group": "Policy",
+        "sentiment": "neu",
+        "why": "Political spending reported as fact."
+      }
+    ]
+  },
+  "portfolio": {
+    "title": "Adverse events at portfolio companies",
+    "note": "108 events · 94 companies · context only",
+    "events": [
+      {
+        "label": "Regulator actions",
+        "examples": "Synapse, Roblox, Coinbase",
+        "width": "89%",
+        "count": "17"
+      },
+      {
+        "label": "Shutdowns",
+        "examples": "Health IQ, Forward, Farcaster",
+        "width": "68%",
+        "count": "13"
+      },
+      {
+        "label": "Founder fraud",
+        "examples": "IRL, Jumio, Cluely",
+        "width": "53%",
+        "count": "10"
+      },
+      {
+        "label": "Founder removal / board control",
+        "examples": "Zenefits, RapidAPI",
+        "width": "37%",
+        "count": "7"
+      },
+      {
+        "label": "Harassment / discrimination",
+        "examples": "Run The World, Pinterest, Carta",
+        "width": "37%",
+        "count": "7"
+      },
+      {
+        "label": "Crypto token / holder harm",
+        "examples": "Optimism, Compound, Aptos",
+        "width": "47%",
+        "count": "9"
+      },
+      {
+        "label": "Security incidents",
+        "examples": "Ronin, Okta",
+        "width": "37%",
+        "count": "7"
+      },
+      {
+        "label": "Customer harm",
+        "examples": "Robinhood, Phantom",
+        "width": "26%",
+        "count": "5"
+      },
+      {
+        "label": "Suits against the company",
+        "examples": "Solana, Smartcar, Pindrop",
+        "width": "26%",
+        "count": "5"
+      },
+      {
+        "label": "Other",
+        "examples": "OpenSea, Domo, Flowcarbon",
+        "width": "47%",
+        "count": "9"
+      },
+      {
+        "label": "Layoffs",
+        "examples": "Stripe, Airbnb, Hopin · low founder relevance",
+        "width": "100%",
+        "count": "19"
+      }
+    ],
+    "foot": "108 adverse events at 94 portfolio companies, shown for context. Under v2, a portfolio company's own trouble is not charged to a16z unless a16z's role is documented.",
+    "size": {
+      "title": "Portfolio size",
+      "value": "1,456",
+      "text": "companies on a16z's investment list"
+    },
+    "healthTitle": "Health",
+    "healthNote": "52 classified companies",
+    "health": [
+      {
+        "label": "Operating",
+        "pct": "71%",
+        "color": "var(--mint)"
+      },
+      {
+        "label": "Exited",
+        "pct": "23%",
+        "color": "var(--vio)"
+      },
+      {
+        "label": "Shut down",
+        "pct": "6%",
+        "color": "#C9C5D9"
+      }
+    ],
+    "litigation": {
+      "title": "Portfolio litigation rate",
+      "value": "≥0.7%",
+      "text": "At least 0.7% of portfolio companies are in federal suits (floor, 10 of 1,456). Full rate not measured yet."
+    }
+  },
+  "ask": {
+    "title": "Not public: ask the fund",
+    "note": "These can't be checked from public records. Bring them to your partner meeting.",
+    "printHead": "Andreessen Horowitz (a16z) · Questions to ask · Regrettamine · Oct 2, 2026",
+    "questions": [
+      {
+        "n": "01",
+        "title": "Down rounds, bridges, pay-to-play",
+        "q": "In your last 3 down or flat rounds, did you lead, follow or walk?"
+      },
+      {
+        "n": "02",
+        "title": "Follow-on and pro rata",
+        "q": "What share of your seed/A companies did you reinvest in at the next round, including the strugglers?"
+      },
+      {
+        "n": "03",
+        "title": "Replacing founder-CEOs",
+        "q": "When did you last back replacing a founder-CEO, and how did it happen?"
+      },
+      {
+        "n": "04",
+        "title": "Board seat & consent rights",
+        "q": "Will you take a seat at my stage? Which consent rights do you require?"
+      },
+      {
+        "n": "05",
+        "title": "Competitor overlap",
+        "q": "Does any partner sit on the board of a company that competes with me?"
+      },
+      {
+        "n": "06",
+        "title": "Reserves for this check",
+        "q": "Which fund is this check from, and how much is reserved for follow-ons?"
+      },
+      {
+        "n": "07",
+        "title": "Foreign or sovereign LPs",
+        "q": "Are there sovereign or foreign-state LPs in this fund?"
+      },
+      {
+        "n": "08",
+        "title": "References from failures",
+        "q": "Give me 2 founders whose companies failed with you on the board."
+      }
+    ],
+    "clipboard": "Questions to ask Andreessen Horowitz (a16z), from Regrettamine\n\n1. Down rounds, bridges, pay-to-play: In your last 3 down or flat rounds, did you lead, follow or walk?\n2. Follow-on and pro rata: What share of your seed/A companies did you reinvest in at the next round, including the strugglers?\n3. Replacing founder-CEOs: When did you last back replacing a founder-CEO, and how did it happen?\n4. Board seat & consent rights: Will you take a seat at my stage? Which consent rights do you require?\n5. Competitor overlap: Does any partner sit on the board of a company that competes with me?\n6. Reserves for this check: Which fund is this check from, and how much is reserved for follow-ons?\n7. Foreign or sovereign LPs: Are there sovereign or foreign-state LPs in this fund?\n8. References from failures: Give me 2 founders whose companies failed with you on the board."
+  },
+  "footnote": "Every scored fact links to a dated source. Founder sentiment stays hidden until it rests on first-hand accounts.",
+  "scoreFooter": "Rules: Toxy Score v2 (Oct 2, 2026). Inputs: a16z score file.",
+  "evidence": {
+    "tk0": {
+      "kicker": "Takeaway 1",
+      "title": "If an a16z partner joins your board, ask which other boards they sit on.",
+      "body": "The DOJ is probing Horowitz (Databricks) and Casado (Fivetran) over interlocking seats. a16z's own SEC brochure says incubated companies “will be in direct competition” with portfolio companies.",
+      "rows": [],
+      "sources": [
+        [
+          "TechCrunch, Aug 18 2026",
+          "https://techcrunch.com/2026/08/18/dojs-probe-into-andreessen-horowitz-over-board-seats-baffles-vcs/"
+        ],
+        [
+          "The Next Web",
+          "https://thenextweb.com/news/andreessen-horowitz-doj-probe-databricks-fivetran-board-seats"
+        ],
+        [
+          "a16z Form ADV Part 2A, Mar 2026",
+          "https://files.adviserinfo.sec.gov/IAPD/Content/Common/crd_iapd_Brochure.aspx?BRCHR_VRSN_ID=1033427"
+        ]
+      ],
+      "tone": ""
+    },
+    "tk1": {
+      "kicker": "Takeaway 2",
+      "title": "Its record with its own founders is close to clean.",
+      "body": "One founder-side suit (Run The World, federal claims dismissed) across ~1,456 companies. No suit by a16z against a founder was found.",
+      "rows": [],
+      "sources": [
+        [
+          "Run The World complaint (N.D. Cal., 2023)",
+          "https://www.govinfo.gov/content/pkg/USCOURTS-cand-3_23-cv-03130/pdf/USCOURTS-cand-3_23-cv-03130-1.pdf"
+        ],
+        [
+          "CourtListener docket",
+          "https://www.courtlistener.com/docket/67526436/run-the-world-inc-v-jiang/"
+        ],
+        [
+          "Axios, Sep 2023",
+          "https://www.axios.com/2023/09/11/andreessen-horowitz-run-the-word-discrimination-venture-capital"
+        ]
+      ],
+      "tone": ""
+    },
+    "tk2": {
+      "kicker": "Takeaway 3",
+      "title": "Expect the company to come before the founder.",
+      "body": "Ben Horowitz: “we're not founder-friendly… our obligation is to the employees.” An a16z board designee was the only outside director when Zenefits' founder-CEO was pushed out (2016).",
+      "rows": [],
+      "sources": [
+        [
+          "Business Insider",
+          "https://www.businessinsider.com/entrepreneurship-advice-ben-horowitz-company-culture-startups-venture-capital"
+        ],
+        [
+          "BuzzFeed News",
+          "https://www.buzzfeednews.com/article/williamalden/how-high-flying-zenefits-fell-to-earth"
+        ],
+        [
+          "Reuters",
+          "https://www.reuters.com/article/technology/zenefits-ceo-parker-conrad-resigns-amid-startup-turmoil-idUSKCN0VI02B/"
+        ]
+      ],
+      "tone": ""
+    },
+    "tk3": {
+      "kicker": "Takeaway 4",
+      "title": "Crypto founders carry more of a16z's legal risk.",
+      "body": "Two active token-buyer class actions (Lido, Compound) argue VCs are general partners of the DAOs they fund. a16z lost its bid to force arbitration in Compound (Oct 2025).",
+      "rows": [],
+      "sources": [
+        [
+          "Houghton v. AH Capital Mgmt docket",
+          "https://www.courtlistener.com/docket/69431607/houghton-et-al-v-ah-capital-management-llc-et-al/"
+        ],
+        [
+          "Samuels v. Lido DAO order",
+          "https://storage.courtlistener.com/recap/gov.uscourts.cand.422388/gov.uscourts.cand.422388.115.0.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "tk4": {
+      "kicker": "Takeaway 5",
+      "title": "Money isn't the constraint. Ask which fund your check comes from.",
+      "body": "$15B+ raised in Jan 2026; $106.5B regulatory AUM across 119 funds. Follow-on reserves are not disclosed.",
+      "rows": [],
+      "sources": [
+        [
+          "a16z: Why did we raise $15B",
+          "https://a16z.com/why-did-we-raise-15b/"
+        ],
+        [
+          "a16z Form ADV, Mar 2026",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/160489/PDF/160489.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "tk5": {
+      "kicker": "Takeaway 6",
+      "title": "Confirm your partner's tenure.",
+      "body": "In 2025 Vijay Pande left, Margit Wennmachers went emeritus, and John O'Farrell resigned and later criticized the firm publicly.",
+      "rows": [],
+      "sources": [
+        [
+          "Endpoints News",
+          "https://endpoints.news/former-a16z-biotech-investment-leader-vijay-pande-exits-the-vc-firm/"
+        ],
+        [
+          "PitchBook",
+          "https://pitchbook.com/news/articles/andreessen-horowitz-marketing-maestro-margit-wennmachers-leaving-a16z"
+        ],
+        [
+          "CNBC, Jun 2026",
+          "https://www.cnbc.com/2026/06/11/ex-a16z-partner-slams-old-firm-othes-political-infiltration-in-ai.html"
+        ]
+      ],
+      "tone": ""
+    },
+    "L1": {
+      "kicker": "Legal · 2026",
+      "title": "DOJ antitrust probe: interlocking board seats at Databricks and Fivetran",
+      "body": "The DOJ is investigating a16z partners' seats on the boards of competing companies (Databricks, Fivetran). Open, no charges filed.",
+      "rows": [
+        [
+          "a16z role",
+          "Subject"
+        ],
+        [
+          "Other party",
+          "U.S. DOJ Antitrust Division"
+        ],
+        [
+          "Status",
+          "Open · no charges"
+        ],
+        [
+          "Founder relevance",
+          "High"
+        ],
+        [
+          "Score effect",
+          "−2"
+        ]
+      ],
+      "sources": [
+        [
+          "TechCrunch, Aug 18 2026",
+          "https://techcrunch.com/2026/08/18/dojs-probe-into-andreessen-horowitz-over-board-seats-baffles-vcs/"
+        ],
+        [
+          "The Next Web",
+          "https://thenextweb.com/news/andreessen-horowitz-doj-probe-databricks-fivetran-board-seats"
+        ]
+      ],
+      "tone": "open"
+    },
+    "L5": {
+      "kicker": "Legal · 2023",
+      "title": "Run The World Inc. v. Jiang",
+      "body": "a16z was sued by a former Run The World co-founder, who alleged pregnancy discrimination. Federal claims dismissed; state outcome unverified.",
+      "rows": [
+        [
+          "a16z role",
+          "Counter-defendant"
+        ],
+        [
+          "Other party",
+          "Former co-founder Xuan Jiang"
+        ],
+        [
+          "Status",
+          "Federal claims dismissed · state outcome unverified"
+        ],
+        [
+          "Founder relevance",
+          "High"
+        ],
+        [
+          "Score effect",
+          "0 (0.07%)"
+        ]
+      ],
+      "sources": [
+        [
+          "Run The World complaint (N.D. Cal., 2023)",
+          "https://www.govinfo.gov/content/pkg/USCOURTS-cand-3_23-cv-03130/pdf/USCOURTS-cand-3_23-cv-03130-1.pdf"
+        ],
+        [
+          "CourtListener docket",
+          "https://www.courtlistener.com/docket/67526436/run-the-world-inc-v-jiang/"
+        ],
+        [
+          "Axios, Sep 2023",
+          "https://www.axios.com/2023/09/11/andreessen-horowitz-run-the-word-discrimination-venture-capital"
+        ]
+      ],
+      "tone": ""
+    },
+    "L2": {
+      "kicker": "Legal · 2023",
+      "title": "Samuels v. Lido DAO",
+      "body": "a16z is being sued by Lido token buyers in a class action. Active; the motion to dismiss was denied in Nov 2024.",
+      "rows": [
+        [
+          "a16z role",
+          "Defendant"
+        ],
+        [
+          "Other party",
+          "Token buyers (class)"
+        ],
+        [
+          "Status",
+          "Active · dismissal denied Nov 2024"
+        ],
+        [
+          "Founder relevance",
+          "Medium"
+        ],
+        [
+          "Score effect",
+          "0 (not founder)"
+        ]
+      ],
+      "sources": [
+        [
+          "Samuels v. Lido DAO order",
+          "https://storage.courtlistener.com/recap/gov.uscourts.cand.422388/gov.uscourts.cand.422388.115.0.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "L3": {
+      "kicker": "Legal · 2022",
+      "title": "Houghton v. AH Capital Mgmt (Compound)",
+      "body": "a16z is being sued by Compound token buyers in a class action. Active; a16z lost its bid to force arbitration in Oct 2025.",
+      "rows": [
+        [
+          "a16z role",
+          "Defendant"
+        ],
+        [
+          "Other party",
+          "Token buyers (class)"
+        ],
+        [
+          "Status",
+          "Active · lost arbitration appeal Oct 2025"
+        ],
+        [
+          "Founder relevance",
+          "Medium"
+        ],
+        [
+          "Score effect",
+          "0 (not founder)"
+        ]
+      ],
+      "sources": [
+        [
+          "Houghton v. AH Capital Mgmt docket",
+          "https://www.courtlistener.com/docket/69431607/houghton-et-al-v-ah-capital-management-llc-et-al/"
+        ]
+      ],
+      "tone": ""
+    },
+    "L4": {
+      "kicker": "Legal · 2022",
+      "title": "Risley v. Universal Navigation (Uniswap)",
+      "body": "a16z was sued by Uniswap token buyers in a class action. Federal claims dismissed, affirmed in 2025.",
+      "rows": [
+        [
+          "a16z role",
+          "Defendant"
+        ],
+        [
+          "Other party",
+          "Retail token buyers (class)"
+        ],
+        [
+          "Status",
+          "Federal claims dismissed, affirmed 2025"
+        ],
+        [
+          "Founder relevance",
+          "Medium"
+        ],
+        [
+          "Score effect",
+          "0"
+        ]
+      ],
+      "sources": [
+        [
+          "Risley v. Universal Navigation (Uniswap)",
+          "https://www.courtlistener.com/docket/68002980/risley-v-universal-navigation-inc/"
+        ]
+      ],
+      "tone": ""
+    },
+    "L7": {
+      "kicker": "Legal · 2021",
+      "title": "Ocampo v. Dfinity USA Research",
+      "body": "a16z was sued by ICP token buyers in a class action against Dfinity. Ended in summary judgment for Dfinity.",
+      "rows": [
+        [
+          "a16z role",
+          "Defendant"
+        ],
+        [
+          "Other party",
+          "ICP token buyers (class)"
+        ],
+        [
+          "Status",
+          "Summary judgment for Dfinity"
+        ],
+        [
+          "Founder relevance",
+          "Medium"
+        ],
+        [
+          "Score effect",
+          "0"
+        ]
+      ],
+      "sources": [
+        [
+          "Ocampo v. Dfinity USA Research",
+          "https://www.cravath.com/news-insights/dfinity-wins-summary-judgment-in-purported-securities-class-action.html"
+        ]
+      ],
+      "tone": ""
+    },
+    "L8": {
+      "kicker": "Legal · 2025",
+      "title": "Teman v. Deel",
+      "body": "a16z is named in an individual's suit against portfolio company Deel. a16z's role is unverified; terminated Jan 2026.",
+      "rows": [
+        [
+          "a16z role",
+          "Named party · role unverified"
+        ],
+        [
+          "Other party",
+          "Individual plaintiff"
+        ],
+        [
+          "Status",
+          "Terminated Jan 2026"
+        ],
+        [
+          "Founder relevance",
+          "Medium"
+        ],
+        [
+          "Score effect",
+          "0 (pending)"
+        ]
+      ],
+      "sources": [
+        [
+          "Teman v. Deel",
+          "https://www.courtlistener.com/docket/70818963/teman-v-deel-inc/"
+        ]
+      ],
+      "tone": ""
+    },
+    "L6": {
+      "kicker": "Legal · 2023",
+      "title": "Grabski ex rel. Coinbase v. Andreessen",
+      "body": "Marc Andreessen is being sued by a Coinbase shareholder in his role as a Coinbase director. Active.",
+      "rows": [
+        [
+          "a16z role",
+          "Defendant (Andreessen as Coinbase director)"
+        ],
+        [
+          "Other party",
+          "Coinbase shareholder"
+        ],
+        [
+          "Status",
+          "Active"
+        ],
+        [
+          "Founder relevance",
+          "Low"
+        ],
+        [
+          "Score effect",
+          "−0.5"
+        ]
+      ],
+      "sources": [
+        [
+          "Delaware Chancery opinion",
+          "https://courts.delaware.gov/Opinions/Download.aspx?id=391020"
+        ]
+      ],
+      "tone": "penalty"
+    },
+    "L9": {
+      "kicker": "Legal · 2013",
+      "title": "Think Computer Corp. v. Dwolla",
+      "body": "a16z was sued by Think Computer alongside Dwolla. Dismissed.",
+      "rows": [
+        [
+          "a16z role",
+          "Defendant"
+        ],
+        [
+          "Other party",
+          "Think Computer"
+        ],
+        [
+          "Status",
+          "Dismissed"
+        ],
+        [
+          "Founder relevance",
+          "Low"
+        ],
+        [
+          "Score effect",
+          "0"
+        ]
+      ],
+      "sources": [
+        [
+          "Think Computer Corp. v. Dwolla",
+          "https://www.pacermonitor.com/public/filings/DG2GYZSQ/Think_Computer_Corporation_v_Dwolla_Inc_et_al__candce-13-02054__0001.0.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "L10": {
+      "kicker": "Legal · 2014",
+      "title": "Smukler v. Donahoe (eBay/Skype)",
+      "body": "Marc Andreessen was sued by an eBay shareholder as an eBay director over the Skype sale. Dismissed with prejudice.",
+      "rows": [
+        [
+          "a16z role",
+          "Defendant (Andreessen as eBay director)"
+        ],
+        [
+          "Other party",
+          "eBay shareholder"
+        ],
+        [
+          "Status",
+          "Dismissed with prejudice"
+        ],
+        [
+          "Founder relevance",
+          "Low"
+        ],
+        [
+          "Score effect",
+          "0"
+        ]
+      ],
+      "sources": [
+        [
+          "Smukler v. Donahoe (eBay/Skype)",
+          "https://v2.courthousenews.com/shareholder-rips-ebay-for-flip-of-skype/"
+        ]
+      ],
+      "tone": ""
+    },
+    "L11": {
+      "kicker": "Legal · 2024",
+      "title": "CFAT v. SEC",
+      "body": "a16z joined a suit against the SEC over its crypto rules (a16z is a plaintiff). Outcome not verified.",
+      "rows": [
+        [
+          "a16z role",
+          "Plaintiff"
+        ],
+        [
+          "Other party",
+          "SEC"
+        ],
+        [
+          "Status",
+          "Not verified"
+        ],
+        [
+          "Founder relevance",
+          "Low"
+        ],
+        [
+          "Score effect",
+          "0"
+        ]
+      ],
+      "sources": [
+        [
+          "CFAT v. SEC",
+          "https://decrypt.co/218567/coinbase-a16z-take-sec-court-unlawful-crypto-overreach"
+        ]
+      ],
+      "tone": ""
+    },
+    "L12": {
+      "kicker": "Legal · 2022",
+      "title": "Coin Center v. Yellen",
+      "body": "a16z backed Coin Center's suit against the U.S. Treasury. Outcome not verified.",
+      "rows": [
+        [
+          "a16z role",
+          "Plaintiff side (funder)"
+        ],
+        [
+          "Other party",
+          "U.S. Treasury"
+        ],
+        [
+          "Status",
+          "Not verified"
+        ],
+        [
+          "Founder relevance",
+          "Low"
+        ],
+        [
+          "Score effect",
+          "0"
+        ]
+      ],
+      "sources": [
+        [
+          "Coin Center v. Yellen",
+          "https://www.courtlistener.com/docket/65418276/case/"
+        ]
+      ],
+      "tone": ""
+    },
+    "L13": {
+      "kicker": "Legal · 2024",
+      "title": "Doe v. GitHub",
+      "body": "a16z was subpoenaed as a non-party in Doe v. GitHub.",
+      "rows": [
+        [
+          "a16z role",
+          "Non-party (subpoena)"
+        ],
+        [
+          "Other party",
+          "Open-source developers"
+        ],
+        [
+          "Status",
+          "Not verified"
+        ],
+        [
+          "Founder relevance",
+          "Low"
+        ],
+        [
+          "Score effect",
+          "0"
+        ]
+      ],
+      "sources": [
+        [
+          "Doe v. GitHub",
+          "https://storage.courtlistener.com/recap/gov.uscourts.cand.403220/gov.uscourts.cand.403220.209.0.pdf"
+        ]
+      ],
+      "tone": ""
+    },
+    "L14": {
+      "kicker": "Legal · 2025",
+      "title": "Motion to compel AH Capital subpoena compliance",
+      "body": "A court was asked to make AH Capital comply with a subpoena (2025). Other party not known.",
+      "rows": [
+        [
+          "a16z role",
+          "Non-party (subpoena)"
+        ],
+        [
+          "Other party",
+          "Not known"
+        ],
+        [
+          "Status",
+          "Not known"
+        ],
+        [
+          "Founder relevance",
+          "Low"
+        ],
+        [
+          "Score effect",
+          "0"
+        ]
+      ],
+      "sources": [
+        [
+          "Motion to compel AH Capital subpoena compliance",
+          "https://www.courtlistener.com/docket/70802517/in-re-motion-to-compel-ah-capital-management-llcs-compliance-with-a/"
+        ]
+      ],
+      "tone": ""
+    },
+    "s1": {
+      "kicker": "Score · 60 of 60",
+      "title": "Fund vs. founders",
+      "body": "One founder-side suit (Run The World) and one founder removal with a16z on the board (Zenefits, 2016) across about 1,456 companies. Each is 0.07%, under the 1% threshold, so no penalty. No lost case or fraud finding.",
+      "rows": [
+        [
+          "Lawsuits with own founders",
+          "30 / 30 · 0.07%"
+        ],
+        [
+          "Pushing out founder-CEOs",
+          "12 / 12 · 0.07%"
+        ],
+        [
+          "Down-round behavior",
+          "10 / 10 · no evidence (0% checked)"
+        ],
+        [
+          "Blocking deals",
+          "8 / 8 · no evidence (0% checked)"
+        ]
+      ],
+      "sources": [
+        [
+          "Run The World complaint (N.D. Cal., 2023)",
+          "https://www.govinfo.gov/content/pkg/USCOURTS-cand-3_23-cv-03130/pdf/USCOURTS-cand-3_23-cv-03130-1.pdf"
+        ],
+        [
+          "BuzzFeed News",
+          "https://www.buzzfeednews.com/article/williamalden/how-high-flying-zenefits-fell-to-earth"
+        ],
+        [
+          "a16z investment list",
+          "https://a16z.com/investment-list/"
+        ]
+      ],
+      "tone": ""
+    },
+    "s2": {
+      "kicker": "Score · 14.25 of 17.5",
+      "title": "Ability to support you",
+      "body": "Money 5 of 6: $15B+ raised Jan 2026, but follow-on reserves aren't public. Media 6 of 6, capped. Help after the check 3.25 of 5.5: the platform team and intros are a16z's own claims, so they count at half; −0.5 for 2025 partner departures.",
+      "rows": [
+        [
+          "Money",
+          "5 / 6"
+        ],
+        [
+          "Media reach (capped)",
+          "6 / 6 · ~290K YouTube, ~1.08M X"
+        ],
+        [
+          "Help after the check",
+          "3.25 / 5.5"
+        ]
+      ],
+      "sources": [
+        [
+          "a16z: Why did we raise $15B",
+          "https://a16z.com/why-did-we-raise-15b/"
+        ],
+        [
+          "a16z Form ADV, Mar 2026",
+          "https://reports.adviserinfo.sec.gov/reports/ADV/160489/PDF/160489.pdf"
+        ],
+        [
+          "YouTube @a16z",
+          "https://www.youtube.com/@a16z"
+        ],
+        [
+          "socialcounts.org",
+          "https://socialcounts.org/youtube-channel-analytics/UC9cn0TuPq4dnbTY-CBsm8XA"
+        ],
+        [
+          "a16z New Media",
+          "https://a16z.com/what-is-new-media-in-2026/"
+        ],
+        [
+          "VC Sheet profile",
+          "https://www.vcsheet.com/fund/andreessen-horowitz"
+        ],
+        [
+          "Axios, Jun 2026",
+          "https://www.axios.com/2026/06/04/anne-neuberger-andreessen-horowitz"
+        ]
+      ],
+      "tone": ""
+    },
+    "s3": {
+      "kicker": "Score · 16.6 of 17.5",
+      "title": "Founder experience",
+      "body": "Two negative first-hand accounts (Run The World, Zenefits) are 0.14% of the portfolio, under 1%. a16z gets the default for a fund investing 10+ years with 500+ companies: 95%.",
+      "rows": [
+        [
+          "First-hand accounts",
+          "3 (2 negative, 1 positive)"
+        ],
+        [
+          "Share of portfolio",
+          "0.14%"
+        ],
+        [
+          "Coverage",
+          "10%"
+        ]
+      ],
+      "sources": [
+        [
+          "Axios, Sep 2023",
+          "https://www.axios.com/2023/09/11/andreessen-horowitz-run-the-word-discrimination-venture-capital"
+        ],
+        [
+          "BuzzFeed News",
+          "https://www.buzzfeednews.com/article/williamalden/how-high-flying-zenefits-fell-to-earth"
+        ],
+        [
+          "Calcalist (RapidAPI)",
+          "https://www.calcalistech.com/ctechnews/article/qnsptbros"
+        ]
+      ],
+      "tone": ""
+    },
+    "s4": {
+      "kicker": "Score · 4 of 5",
+      "title": "Conflicts of interest",
+      "body": "Partners on boards of competing companies (Databricks, Fivetran), the ADV clause that incubated companies “will be in direct competition” with portfolio companies, and the 2023 Uniswap vote. Scaled across 88 investing partners.",
+      "rows": [],
+      "sources": [
+        [
+          "TechCrunch, Aug 18 2026",
+          "https://techcrunch.com/2026/08/18/dojs-probe-into-andreessen-horowitz-over-board-seats-baffles-vcs/"
+        ],
+        [
+          "a16z Form ADV Part 2A, Mar 2026",
+          "https://files.adviserinfo.sec.gov/IAPD/Content/Common/crd_iapd_Brochure.aspx?BRCHR_VRSN_ID=1033427"
+        ],
+        [
+          "CoinDesk, Feb 2023",
+          "https://www.coindesk.com/tech/2023/02/10/uniswap-vote-on-bnb-deployment-ends-with-silicon-valleys-a16z-on-losing-side"
+        ]
+      ],
+      "tone": ""
+    },
+    "bonus": {
+      "kicker": "Bonus · +3",
+      "title": "Track record bonus",
+      "body": "16 years of investing with no significant pattern of harm. +1 per 5 years, up to +3.",
+      "rows": [],
+      "sources": [
+        [
+          "SEC IAPD firm summary",
+          "https://adviserinfo.sec.gov/firm/summary/160489"
+        ]
+      ],
+      "tone": ""
+    },
+    "pen": {
+      "kicker": "Penalty · −2.5",
+      "title": "Regulatory penalty",
+      "body": "DOJ board-seat probe: open, no charges (−2). Coinbase shareholder suit against Andreessen as a director (−0.5). SEC record clean. No OFAC, EU, UK or UN sanctions match for 44 people and the firm's entities. Anne Neuberger's Russian and Iranian counter-sanctions cost 0 by rule.",
+      "rows": [
+        [
+          "DOJ probe",
+          "−2"
+        ],
+        [
+          "Coinbase director suit",
+          "−0.5"
+        ],
+        [
+          "SEC record",
+          "Clean · 0"
+        ],
+        [
+          "Sanctions",
+          "No match · 0"
+        ]
+      ],
+      "sources": [
+        [
+          "TechCrunch, Aug 18 2026",
+          "https://techcrunch.com/2026/08/18/dojs-probe-into-andreessen-horowitz-over-board-seats-baffles-vcs/"
+        ],
+        [
+          "Delaware Chancery opinion",
+          "https://courts.delaware.gov/Opinions/Download.aspx?id=391020"
+        ],
+        [
+          "SEC IAPD firm summary",
+          "https://adviserinfo.sec.gov/firm/summary/160489"
+        ],
+        [
+          "OpenSanctions (Neuberger entry)",
+          "https://www.opensanctions.org/entities/Q70709513/"
+        ]
+      ],
+      "tone": "penalty"
+    },
+    "range": {
+      "kicker": "How sure are we",
+      "title": "Likely range 86–97",
+      "body": "Likely 86–97. For each part we couldn't fully check, we took a plausible bad and good outcome under the v2 rules, weighted it by the share left unchecked, and combined the parts as independent (root-sum-square). Biggest swings: founder experience (−6.3), down-round behavior (−5), blocking deals (−4), the DOJ probe turning into charges (−2.4). If every downside hit at once: 63.",
+      "rows": [
+        [
+          "1a Lawsuits with own founders",
+          "-1.5 / +0.0"
+        ],
+        [
+          "1b Pushing out founder-CEOs",
+          "-0.9 / +0.0"
+        ],
+        [
+          "1c Down-round / pay-to-play",
+          "-5.0 / +0.0"
+        ],
+        [
+          "1d Blocking deals / rounds",
+          "-4.0 / +0.0"
+        ],
+        [
+          "2a Money",
+          "-0.2 / +0.2"
+        ],
+        [
+          "2c Help after the check",
+          "-0.6 / +1.1"
+        ],
+        [
+          "3 Founder experience",
+          "-6.3 / +0.0"
+        ],
+        [
+          "4 Conflicts",
+          "-1.2 / +0.6"
+        ],
+        [
+          "6 Regulatory (DOJ probe)",
+          "-2.4 / +0.6"
+        ]
+      ],
+      "sources": [],
+      "tone": ""
+    },
+    "cov": {
+      "kicker": "Coverage · 39%",
+      "title": "How much we could check",
+      "body": "Weighted by score points, we could check 39% of what this score needs. Down-round behavior and blocking deals (18 points) have 0% coverage; founder experience 10%. A thin record is not a clean record.",
+      "rows": [
+        [
+          "1a Lawsuits",
+          "50%"
+        ],
+        [
+          "1b Founder removals",
+          "25%"
+        ],
+        [
+          "1c Down rounds",
+          "0%"
+        ],
+        [
+          "1d Blocking",
+          "0%"
+        ],
+        [
+          "2 Support",
+          "40–90%"
+        ],
+        [
+          "3 Founder experience",
+          "10%"
+        ],
+        [
+          "4 Conflicts",
+          "40%"
+        ],
+        [
+          "Regulatory",
+          "70%"
+        ]
+      ],
+      "sources": [],
+      "tone": ""
+    },
+    "rel": {
+      "kicker": "Sources",
+      "title": "Verified sources only",
+      "body": "Every scored item has a working link, names a16z, and tags its role. 17 Toxy sources were excluded (dead links, content farms, copycat names).",
+      "rows": [],
+      "sources": [],
+      "tone": ""
+    },
+    "rank": {
+      "kicker": "Ranking · example",
+      "title": "Top 1 fund among 11 Toxy tracks",
+      "body": "Example only. a16z's v2 score (95) is compared with the other 10 funds' old Toxy scores (highest: Lux Capital 83). They haven't been rescored on v2, so this rank isn't like-for-like. On Toxy's old scores a16z ranks 11 of 11.",
+      "rows": [
+        [
+          "Andreessen Horowitz",
+          "95 (v2)"
+        ],
+        [
+          "Lux Capital",
+          "83 (old Toxy)"
+        ],
+        [
+          "Accel",
+          "78 (old Toxy)"
+        ],
+        [
+          "Bessemer Venture Partners",
+          "71 (old Toxy)"
+        ],
+        [
+          "Battery Ventures",
+          "67 (old Toxy)"
+        ],
+        [
+          "Insight Partners",
+          "67 (old Toxy)"
+        ],
+        [
+          "Bain Capital Ventures",
+          "66 (old Toxy)"
+        ],
+        [
+          "General Catalyst",
+          "66 (old Toxy)"
+        ],
+        [
+          "Khosla Ventures",
+          "63 (old Toxy)"
+        ],
+        [
+          "Lightspeed Venture Partners",
+          "58 (old Toxy)"
+        ],
+        [
+          "Sequoia Capital",
+          "52 (old Toxy)"
+        ]
+      ],
+      "sources": [],
+      "tone": ""
+    },
+    "rules": {
+      "kicker": "Methodology",
+      "title": "How Toxy Score v2 works",
+      "body": "Every fund starts with full points and loses them only for verified evidence about its own behavior. Bad events are measured as a share of the portfolio: under 1% costs nothing, 1–3% small, 3–10% medium, over 10% large. Regulatory is penalty-only: open probe −2, charges −10, fine −10 to −20, fraud −30, sanctions −50 plus a red banner. Score is capped 0–100.",
+      "rows": [
+        [
+          "Fund vs. founders",
+          "60"
+        ],
+        [
+          "Ability to support you",
+          "17.5"
+        ],
+        [
+          "Founder experience",
+          "17.5"
+        ],
+        [
+          "Conflicts",
+          "5"
+        ],
+        [
+          "Track record bonus",
+          "up to +3"
+        ],
+        [
+          "Regulatory penalty",
+          "0 to −50"
+        ]
+      ],
+      "sources": [],
+      "tone": ""
+    },
+    "sanc": {
+      "kicker": "Sanctions · no match",
+      "title": "No sanctions found",
+      "body": "We screened 44 a16z people and the firm's 2 legal entities against OFAC, EU, UK and UN lists on OpenSanctions (Oct 2, 2026). Every hit was a namesake or a politically exposed person (e.g. Scott Kupor, a US official), not a sanctions designation. A sanctions finding needs an exact identity match (date of birth, nationality, ID), never a name match.",
+      "rows": [
+        [
+          "OFAC / EU / UK / UN",
+          "No match"
+        ],
+        [
+          "People screened",
+          "44"
+        ],
+        [
+          "Entities screened",
+          "AH Capital Management, a16z Capital Management"
+        ],
+        [
+          "Counter-sanctions (Neuberger)",
+          "0 points by rule"
+        ]
+      ],
+      "sources": [
+        [
+          "OpenSanctions (Neuberger entry)",
+          "https://www.opensanctions.org/entities/Q70709513/"
+        ]
+      ],
+      "tone": ""
+    }
+  }
+}
