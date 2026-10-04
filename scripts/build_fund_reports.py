@@ -1578,18 +1578,6 @@ def main():
         {"n": active, "l": "active legal matters", "s": "Open matters on the v2 reports. Insight 1, a16z 4", "v": True},
         {"n": 0, "l": "funds sanctioned", "s": "No adviser-name designation in the Form ADVs read. Person screen only for a16z", "v": False},
     ]
-    home["updates"].insert(0, {
-        "d": "2026-10-04",
-        "ds": "Oct 4, 2026",
-        "f": "Ten funds",
-        "fid": "",
-        "k": "Rescore",
-        "t": "Lux, Accel, Bessemer, Battery, Insight, Bain Capital Ventures, General Catalyst, Sequoia, Khosla, and Lightspeed rescored on Toxy Score v2. Empty blocks stay empty.",
-        "src": "Toxy Score v2 reports",
-        "u": "vc/accel/",
-        "v": "ours",
-        "no": 9,
-    })
     dump(ROOT / "data" / "home.json", home)
     print("sources", len(urls), "active", active)
 

@@ -556,7 +556,7 @@ def render_fund_page(fund, prefix):
  {sections}
  <p class="fnote np">{esc(fund["footnote"])}</p>
 </div></div>
-<footer class="np"><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regrett<em>amine</em></span></span><span>regrettamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">Scoring</a> · Sources · <a href="{home}account/#share">Corrections</a> · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>
+<footer class="np"><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regrett<em>amine</em></span></span><span>regrettamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">Scoring</a> · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>
 <div class="scrim"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="Details"><div class="dh"><div><div class="dk" id="dk"></div><div class="dtt" id="dt"></div></div><button class="dx" id="dx" aria-label="Close">×</button></div><div class="db" id="db"></div></aside><div class="toast"></div>'''
     title = fund.get("title") or f'{fund["name"]} · Regrettamine'
     extra = ""
@@ -604,6 +604,36 @@ def build_home(home):
     if "__HOME_JSON__" not in raw:
         raise SystemExit("src/home.html is missing the __HOME_JSON__ placeholder")
     return raw.replace("__HOME_JSON__", embed(home))
+
+
+PUBLIC_LIST = 3
+DROPPED_UPDATE = "rescored on Toxy Score v2. Empty blocks stay empty."
+
+
+def public_home(home):
+    """What a signed-out visitor is allowed to download.
+
+    The fund table shows the top three by score. The rest are fetched after
+    login. The deleted "Ten funds rescored" update stays out, and exact
+    duplicate feed rows are dropped.
+    """
+    ranked = sorted(home["funds"], key=lambda fund: (-fund["score"], fund["name"]))
+    seen = set()
+    updates = []
+    for upd in home["updates"]:
+        if DROPPED_UPDATE in (upd.get("t") or ""):
+            continue
+        key = (upd.get("no"), upd.get("t"), upd.get("u"))
+        if key in seen:
+            continue
+        seen.add(key)
+        updates.append(upd)
+    return {
+        "funds": ranked[:PUBLIC_LIST],
+        "fundTotal": len(home["funds"]),
+        "stats": home["stats"],
+        "updates": updates,
+    }
 
 
 def write_config():
@@ -712,8 +742,9 @@ def main():
     missing = [slug for slug in linked if slug not in funds]
     if missing:
         raise SystemExit("home.json links reports that have no data file: " + ", ".join(missing))
-    (SITE / "index.html").write_text(build_home(home), encoding="utf-8")
-    account = (SRC / "account.html").read_text(encoding="utf-8").replace("__HOME_JSON__", embed(home))
+    public = public_home(home)
+    (SITE / "index.html").write_text(build_home(public), encoding="utf-8")
+    account = (SRC / "account.html").read_text(encoding="utf-8").replace("__HOME_JSON__", embed(public))
     (SITE / "account").mkdir(parents=True, exist_ok=True)
     (SITE / "account" / "index.html").write_text(account, encoding="utf-8")
     build_shell("login.html", SITE / "login" / "index.html")
@@ -729,6 +760,10 @@ def main():
         dest.write_text(render_fund_page(fund, "../../"), encoding="utf-8")
         print(f"built /vc/{slug}/")
     copy_static()
+    (SITE / "data" / "home.json").write_text(
+        json.dumps(public, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     write_config()
     print(f"built {SITE} ({len(list(SITE.rglob('*')))} files)")
 

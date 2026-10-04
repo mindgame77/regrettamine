@@ -39,6 +39,32 @@ def test_seed_matches_json_and_hides_stress():
             assert assembled_funds[slug] == fund, slug
             assert render_fund_page(assembled_funds[slug], "../../") == render_fund_page(fund, "../../")
         assert build_home(assembled_home) == build_home(home)
+        assert len(home["updates"]) == 8
+        assert all("Ten funds" not in item["f"] for item in home["updates"])
+
+        with conn.cursor() as cur:
+            cur.execute("select count(*) from site_updates")
+            assert cur.fetchone()[0] == 8
+            cur.execute("select count(*) from site_updates where firm_name = 'Ten funds'")
+            assert cur.fetchone()[0] == 0
+            cur.execute("select fact_record_count()")
+            recorded = cur.fetchone()[0]
+            cur.execute("select count(*) from fact_events")
+            assert cur.fetchone()[0] == recorded
+            assert recorded > 0
+            cur.execute("select landing_funds()")
+            assert cur.fetchone()[0] == []
+            cur.execute("select set_config('request.jwt.claim.sub', '11111111-1111-1111-1111-111111111111', true)")
+            cur.execute("select jsonb_array_length(landing_funds())")
+            assert cur.fetchone()[0] == 11
+            cur.execute("select set_config('request.jwt.claim.sub', '', true)")
+            cur.execute("savepoint anon_list")
+            cur.execute("set role anon")
+            cur.execute("select fact_record_count()")
+            assert cur.fetchone()[0] == recorded
+            with pytest.raises(psycopg.Error):
+                cur.execute("select landing_funds()")
+            cur.execute("rollback to savepoint anon_list")
 
         with conn.cursor() as cur:
             cur.execute(

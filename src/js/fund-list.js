@@ -32,14 +32,14 @@
       : '';
     return `<a class="tr2${f.v2 ? ' feat' : ''}" href="${href}" data-fund="${f.id}" title="${f.report ? 'Open full report' : 'Full report coming soon'}"><div class="nm"><b>${f.name}</b><div class="m">${f.hq} · since ${f.since}</div></div>
  <div class="sc"><div class="mring">${ring(f.score, 38, 4.5, f.v2 ? 'url(#g2)' : '#C9C5D9')}<b style="${f.v2 ? '' : 'color:#A9A5BD'}">${f.score}</b></div><div><span class="bands"><i style="background:${bandColor(f.band)}"></i>${f.band}</span><span class="tag ${f.v2 ? 'v2' : 'old'}">${f.v2 ? 'v2 · likely ' + f.lo + '–' + f.hi : 'old method'}</span></div></div>
- <div title="${f.legalNote}"><span class="lgc ${f.legal ? 'r' : 'g'}">${f.legal ? f.legal + ' active' : 'None found'}</span><div class="m">${f.v2 ? 'verified' : 'Toxy, unverified'}</div></div>
+ <div title="${f.legalNote}"><span class="lgc ${f.legal ? 'r' : 'g'}">${f.legal ? f.legal + ' active' : 'None found'}</span></div>
  <div><b>${fmtAum(f.aum)}</b><div class="m">${f.aumAsOf}${f.aumStale ? ' · stale' : ''}</div></div>
  <div>${f.updatedS}</div>
- <div class="ar">→</div>${mark}</a>`;
+ ${mark}</a>`;
   }
   function table(funds, opts) {
     opts = opts || {};
-    const head = `<div class="tr2 th"><div>Fund</div><div>Score</div><div>Active legal</div><div>AUM</div><div>Last update</div><div></div>${opts.bookmark ? '<div></div>' : ''}</div>`;
+    const head = `<div class="tr2 th"><div>Fund</div><div>Score</div><div>Active legal</div><div>AUM</div><div>Last update</div>${opts.bookmark ? '<div></div>' : ''}</div>`;
     const body = funds.map(f => row(f, opts)).join('') || (opts.empty || EMPTY);
     return grad() + `<div class="tbl${opts.bookmark ? ' bm' : ''}">${head}${body}</div>`;
   }

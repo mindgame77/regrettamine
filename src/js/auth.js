@@ -113,6 +113,13 @@
     (data || []).forEach(row => { firms[row.slug] = row.id; });
     return firms;
   }
+  async function landingFunds() {
+    const clientNow = sb();
+    if (!user || !clientNow) return null;
+    const { data, error } = await clientNow.rpc('landing_funds');
+    if (error || !Array.isArray(data)) return null;
+    return data;
+  }
   async function firmId(slug) {
     const map = await firmMap();
     return map[slug] || null;
@@ -234,6 +241,8 @@
       + '<div class="dots gate-only gate-flex" id="authDots" aria-hidden="true"></div>'
       + '<h2 id="ah" class="gate-only">Two funds in.<br>Don\'t <span class="mark">regret the third</span>.</h2>'
       + '<h2 class="page-only">Check first.<br><span class="mark">Sign second</span>.</h2>'
+      + '<h2 class="list-only">Log in to see<br><span class="mark">all <span id="listN"></span> funds</span>.</h2>'
+      + '<p class="sub list-only">Free account. No card.</p>'
       + '<h2 class="pay-only">You\'ve checked 7 funds.<br>The 8th could be the one you <span class="mark">regret</span>.</h2>'
       + '<h2 class="plans-only">Plans</h2>'
       + '<h2 class="confirm-only">Confirm your email.</h2>'
@@ -308,6 +317,8 @@
   function close() {
     const veil = document.getElementById('authVeil');
     if (veil) veil.hidden = true;
+    const card = document.querySelector('.auth');
+    if (card) card.classList.remove('is-list');
     msg('');
     sessionStorage.removeItem('regret.after');
   }
@@ -530,7 +541,7 @@
     sb, root, siteRoot, limits, watch, ready, esc,
     get user() { return user; },
     confirmed, capFor, anonState, seen, record, touch, firmId, firmMap,
-    addWatch, removeWatch, refreshWatch,
+    addWatch, removeWatch, refreshWatch, landingFunds,
     onChange(fn) { listeners.push(fn); }
   };
   global.RegretAuth = { open: setMode, close, setMode };
