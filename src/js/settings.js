@@ -8,7 +8,7 @@
     const v = (location.hash || '#account').replace('#', '') || 'account';
     const name = v === 'billing' ? 'billing' : 'account';
     document.querySelectorAll('.view').forEach(el => el.classList.toggle('on', el.id === name));
-    document.querySelectorAll('.anav a').forEach(a => a.classList.toggle('on', a.dataset.v === name));
+    document.querySelectorAll('[data-set]').forEach(a => a.classList.toggle('on', a.dataset.set === name));
   }
   addEventListener('hashchange', () => { go(); scrollTo(0, 0); });
 

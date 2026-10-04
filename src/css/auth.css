@@ -67,7 +67,7 @@ body.is-auth-page .auth{box-shadow:0 30px 70px -34px rgba(60,40,140,.4)}
 .av.open .menu{display:block}
 .av .menu small{display:block;padding:6px 10px 8px;color:var(--mute);border-bottom:1.5px solid var(--line);margin-bottom:6px;font-size:12.5px;word-break:break-all}
 .av .menu button,.av .menu a{display:block;width:100%;text-align:left;padding:8px 10px;border-radius:10px;font-size:14.5px;font-weight:600;background:none;border:0;cursor:pointer;font-family:inherit;color:var(--ink)}
-.av .menu button:hover,.av .menu a:hover{background:var(--viobg);color:var(--vio)}
+.av .menu button:hover,.av .menu a:hover,.av .menu a.on{background:var(--viobg);color:var(--vio)}
 
 .auth-page{min-height:100vh;position:relative;overflow:hidden}
 .auth-page .top{position:relative;z-index:2;max-width:1080px;margin:28px auto 0;padding:0 28px;display:flex;align-items:center}

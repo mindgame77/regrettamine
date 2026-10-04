@@ -117,22 +117,50 @@
       ? 'Your payment didn\'t go through, so you\'re on the free plan now. Update your card to restore access.'
       : 'We couldn\'t charge your card. Update it within 24 hours or your account moves to the free plan.');
   }
+  const NAV_ICON = ' width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+  const ACCOUNT_NAV = [
+    { id: 'watchlist', label: 'Watchlist', path: 'account/#watchlist', icon: '<svg' + NAV_ICON + '><path d="M6 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14l-6-4.2L6 20z"/></svg>' },
+    { id: 'share', label: 'Share experience', path: 'account/#share', icon: '<svg' + NAV_ICON + '><path d="M5 19.5l1-4L16 5.5a2.1 2.1 0 013 3L9 18.5zM14 7.5l3 3"/></svg>' },
+    { id: 'pricing', label: 'Pricing', path: 'plans/', icon: '<svg' + NAV_ICON + '><path d="M12 2v20M17 7c0-1.7-2.2-3-5-3S7 5.3 7 7s2 2.5 5 2.5 5 .8 5 2.5-2.2 3-5 3-5-1.3-5-3"/></svg>' },
+    { id: 'settings', label: 'Settings', path: 'settings/', icon: '<svg' + NAV_ICON + '><circle cx="12" cy="12" r="3"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8 5.6 18.4"/></svg>' },
+    { id: 'review', label: 'Review', path: 'admin/', admin: true, icon: '<svg' + NAV_ICON + '><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>' }
+  ];
+  function accountNavItems() {
+    return ACCOUNT_NAV.filter(item => !item.admin || isAdmin);
+  }
+  function accountNavCurrent() {
+    const path = location.pathname;
+    if (path.indexOf('/admin') !== -1) return 'review';
+    if (path.indexOf('/settings') !== -1) return 'settings';
+    if (path.indexOf('/plans') !== -1) return 'pricing';
+    if (path.indexOf('/account') !== -1) {
+      const hash = (location.hash || '#watchlist').replace('#', '');
+      return hash === 'share' ? 'share' : 'watchlist';
+    }
+    return '';
+  }
+  function paintAccountNav() {
+    const aside = document.getElementById('accountNav');
+    if (!aside) return;
+    const current = accountNavCurrent();
+    const base = root();
+    aside.innerHTML = accountNavItems().map(item => '<a href="' + base + item.path + '" data-v="' + item.id + '"' + (item.id === current ? ' class="on"' : '') + '>' + item.icon + esc(item.label) + '</a>').join('');
+  }
   function paintNav(person) {
     const slot = document.getElementById('navSlot');
     if (!slot) return;
     const base = root();
+    paintAccountNav();
     if (!person) {
       slot.innerHTML = '<a class="b w" href="' + base + 'login/">Log in</a><a class="b v" href="' + base + 'account/#watchlist">Get alerts</a>';
       return;
     }
+    const current = accountNavCurrent();
+    const links = accountNavItems().map(item => '<a href="' + base + item.path + '"' + (item.id === current ? ' class="on"' : '') + '>' + esc(item.label) + '</a>').join('');
     slot.innerHTML = '<div class="av" id="av"><i>' + esc(initials(person)) + '</i>' + esc(label(person))
       + '<svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke="#8C88A3" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>'
       + '<div class="menu"><small>' + esc(person.email || '') + '</small>'
-      + '<a href="' + base + 'account/#watchlist">Watchlist</a>'
-      + '<a href="' + base + 'plans/">Pricing</a>'
-      + '<a href="' + base + 'account/#share">Share / Report a VC</a>'
-      + (isAdmin ? '<a href="' + base + 'admin/">Review</a>' : '')
-      + '<a href="' + base + 'settings/#account">Settings</a>'
+      + links
       + '<button type="button" id="logout">Log out</button></div></div>';
     document.getElementById('av').onclick = function (e) {
       if (e.target.closest('#logout') || e.target.closest('a')) return;
@@ -704,7 +732,7 @@
     get user() { return user; },
     get tier() { return tier; },
     confirmed, capFor, anonState, seen, record, touch, firmId, firmMap,
-    addWatch, removeWatch, refreshWatch, refreshAlerts, setFundAlert, setFundAlertKind, landingFunds, loadReport,
+    addWatch, removeWatch, refreshWatch, refreshAlerts, setFundAlert, setFundAlertKind, landingFunds, loadReport, paintAccountNav,
     refreshProfile, paintNav: function () { paintNav(user); }, paintPayFail, authError, openBillingPortal,
     onChange(fn) { listeners.push(fn); }
   };
