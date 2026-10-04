@@ -570,13 +570,32 @@
       if (open) open.classList.remove('open');
     }
   });
+  let openingPortal = false;
+  async function openBillingPortal() {
+    if (openingPortal) return;
+    openingPortal = true;
+    const fallback = (global.REGRET_STRIPE || {}).portalUrl || '';
+    try {
+      const client = sb();
+      if (client && user) {
+        const { data, error } = await client.functions.invoke('billing-portal');
+        const url = data && data.url;
+        if (!error && typeof url === 'string' && url.indexOf('https://billing.stripe.com/') === 0) {
+          location.href = url;
+          return;
+        }
+      }
+    } catch (err) { /* login-page portal */ }
+    if (fallback) location.href = fallback;
+    else openingPortal = false;
+  }
   document.addEventListener('click', e => {
     const portal = e.target.closest && e.target.closest('[data-stripe="portal"]');
     if (!portal) return;
     const stripe = global.REGRET_STRIPE || {};
-    if (!stripe.portalUrl) return;
+    if (!stripe.portalUrl && !(sb() && user)) return;
     e.preventDefault();
-    location.href = stripe.portalUrl;
+    openBillingPortal();
   });
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
@@ -662,7 +681,7 @@
     get tier() { return tier; },
     confirmed, capFor, anonState, seen, record, touch, firmId, firmMap,
     addWatch, removeWatch, refreshWatch, refreshAlerts, setFundAlert, landingFunds, loadReport,
-    refreshProfile, paintNav: function () { paintNav(user); }, paintPayFail, authError,
+    refreshProfile, paintNav: function () { paintNav(user); }, paintPayFail, authError, openBillingPortal,
     onChange(fn) { listeners.push(fn); }
   };
   global.RegretAuth = { open: setMode, close, setMode };
