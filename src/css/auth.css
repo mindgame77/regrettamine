@@ -30,6 +30,7 @@
 .auth .fld .fp{font-size:13px;font-weight:600;color:var(--vio);white-space:nowrap;margin-left:10px;background:none;border:0;cursor:pointer;font-family:inherit;padding:0}
 .auth .pf .b{margin-top:4px}
 .auth .fine{margin-top:18px;font-size:13.5px;color:var(--mute)}
+.auth .agree{display:block;margin-bottom:8px}
 .auth .fine a,.auth .fine button.link{color:var(--vio);font-weight:700;cursor:pointer;background:none;border:0;font:inherit;padding:0}
 .auth .err{margin-top:12px;font-size:13.5px;color:#C43D1F;font-weight:600}
 .auth .ok{margin-top:12px;font-size:13.5px;color:#0B8A57;font-weight:600}

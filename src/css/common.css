@@ -24,4 +24,5 @@ h1,h2,h3,h4,.d{font-family:'Bricolage Grotesque',sans-serif;letter-spacing:-.025
 .blobs{position:absolute;left:0;right:0;top:0;height:1400px;overflow:hidden;z-index:0;pointer-events:none}.blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;z-index:0;pointer-events:none}
 footer{padding:48px 0;margin-top:96px;border-top:1px solid var(--line);color:var(--mute);font-size:14px}
 footer .wrap{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+footer a:hover{color:var(--vio)}
 @media(max-width:760px){.wrap{padding:0 18px}.pillnav{margin:10px 10px 0;padding:6px 6px 6px 14px}.pillnav .links,.hide-m{display:none!important}}

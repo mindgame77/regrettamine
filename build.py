@@ -543,7 +543,7 @@ def render_fund_page(fund, prefix):
  {sections}
  <p class="fnote np">{esc(fund["footnote"])}</p>
 </div></div>
-<footer class="np"><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regrett<em>amine</em></span></span><span>regrettamine.com</span><span style="margin-left:auto">Scoring · Sources · Corrections · Privacy</span></div></footer>
+<footer class="np"><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regrett<em>amine</em></span></span><span>regrettamine.com</span><span style="margin-left:auto">Scoring · Sources · Corrections · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>
 <div class="scrim"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="Details"><div class="dh"><div><div class="dk" id="dk"></div><div class="dtt" id="dt"></div></div><button class="dx" id="dx" aria-label="Close">×</button></div><div class="db" id="db"></div></aside><div class="toast"></div>'''
     title = fund.get("title") or f'{fund["name"]} · Regrettamine'
     extra = ""
@@ -603,10 +603,36 @@ def write_config():
     )
 
 
+def legal_html(value, label, email=False):
+    """Empty config stays a yellow placeholder. A real email becomes a mailto link."""
+    text = str(value or "").strip()
+    if not text:
+        return f'<span class="ph">{esc(label)}</span>'
+    if email and "@" in text:
+        return f'<a href="mailto:{esc(text)}">{esc(text)}</a>'
+    return esc(text)
+
+
+def apply_legal(raw):
+    path = DATA / "site.json"
+    legal = {}
+    if path.exists():
+        legal = load_json(path).get("legal") or {}
+    email = legal_html(legal.get("contact_email"), "contact email", email=True)
+    place = legal_html(legal.get("jurisdiction"), "jurisdiction")
+    return raw.replace("__CONTACT_EMAIL__", email).replace("__JURISDICTION__", place)
+
+
 def build_shell(name, dest):
     raw = (SRC / name).read_text(encoding="utf-8")
     if "__HOME_JSON__" in raw:
         raise SystemExit(f"{name} should not carry fund data")
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(raw, encoding="utf-8")
+
+
+def build_legal(name, dest):
+    raw = apply_legal((SRC / name).read_text(encoding="utf-8"))
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(raw, encoding="utf-8")
 
@@ -669,6 +695,8 @@ def main():
     (SITE / "account" / "index.html").write_text(account, encoding="utf-8")
     build_shell("login.html", SITE / "login" / "index.html")
     build_shell("reset.html", SITE / "login" / "reset" / "index.html")
+    build_legal("privacy.html", SITE / "privacy" / "index.html")
+    build_legal("terms.html", SITE / "terms" / "index.html")
     for slug, fund in funds.items():
         dest = SITE / "vc" / slug / "index.html"
         dest.parent.mkdir(parents=True, exist_ok=True)
