@@ -148,10 +148,17 @@ def test_shared_list_and_auth_pages(monkeypatch):
     gate_js = (ROOT / "src" / "js" / "gate.js").read_text(encoding="utf-8")
     assert "plans/" in gate_js and "loadReport" in gate_js
     plans = (ROOT / "site" / "plans" / "index.html").read_text(encoding="utf-8")
-    assert "<h1>Plans</h1>" in plans
-    assert "Paid plans are coming soon." in plans
-    assert 'href="../">Back to funds' in plans
-    assert "Stripe" not in plans and "$" not in plans.split("<h1>Plans</h1>", 1)[1].split("</main>", 1)[0]
+    assert "Check first." in plans and "Sign second" in plans
+    assert "One plan with everything. Pay monthly or yearly." in plans
+    assert "$49" in plans and "$29.40" in plans and "$352.80" in plans and "$588" in plans
+    assert "Save 40%" in plans and "Recommended" in plans
+    assert plans.count("Every fund report, no limit") == 2
+    assert plans.count("Alerts on the funds you watch") == 2
+    assert plans.count("Watchlist up to 100 funds") == 2
+    assert "Not ready? Read 2 reports free, and 5 more with a free account." in plans
+    assert 'data-checkout="monthly"' in plans and 'data-checkout="annual"' in plans
+    assert "stripe.com" not in plans and "checkout.stripe" not in plans
+    assert "Paid plans are coming soon." not in plans
     assert "create table public.subscriptions" in (ROOT / "supabase" / "migrations" / "20261004210000_access_tiers.sql").read_text(encoding="utf-8")
     assert "apply_subscription" in (ROOT / "supabase" / "migrations" / "20261004210000_access_tiers.sql").read_text(encoding="utf-8")
     alerts_sql = (ROOT / "supabase" / "migrations" / "20261004220000_alert_funds.sql").read_text(encoding="utf-8")
@@ -163,6 +170,8 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "create table public.fact_events" in (ROOT / "supabase" / "migrations" / "20261004200000_fact_events.sql").read_text(encoding="utf-8")
 
     assert "account/#watchlist" in auth_js and "account/#alerts" in auth_js
+    assert 'plans/">Pricing' in auth_js
+    assert 'plans/">See plans' in home_js
     assert "Share / Report a VC" in auth_js
     assert "regret.after" in auth_js
     assert "setMode('login', false)" in auth_js
@@ -189,7 +198,9 @@ def test_shared_list_and_auth_pages(monkeypatch):
     }
     for name, html in pages.items():
         scoring_href, share_href = linked[name]
-        assert html.count(f'href="{scoring_href}">Scoring') == (1 if name in ("login", "reset") else 2), name
+        assert html.count(f'href="{scoring_href}">Scoring') == 2, name
+        pricing_href = scoring_href.replace("scoring/", "plans/")
+        assert f'href="{pricing_href}">Pricing' in html, name
         footer = html.split("<footer", 1)[1].split("</footer>", 1)[0]
         assert "Sources" not in footer and "Corrections" not in footer, name
         assert f'href="{scoring_href}">Scoring' in footer, name
