@@ -38,7 +38,7 @@ Scores, stats, and the update feed on the homepage also live in `data/home.json`
 
 `docs/toxy-score-v2-rules.md` is the Toxy Score v2 rules. `regrettamine/score_v2.py` is the function. The published a16z inputs score **95.4** (60 / 14.25 / 16.6 / 4 / +3 / −2.5).
 
-The JSON files remain the fallback. If `SUPABASE_URL` and `SUPABASE_ANON_KEY` are both set, `build.py` reads published firms from Supabase instead. Empty or missing values keep the JSON build, which is what GitHub Pages does until those secrets exist.
+The JSON files remain the fallback. If `SUPABASE_URL` and `SUPABASE_ANON_KEY` are both set, `build.py` reads published firms from Supabase instead. Empty or missing values keep the JSON build.
 
 ## Supabase
 
@@ -59,8 +59,8 @@ One-time setup:
 3. **Project Settings → API**: copy the project URL and the `anon` public key.
 4. GitHub → this repo → **Settings → Secrets and variables → Actions**. Add:
    - `SUPABASE_URL` — the project URL
-   - `SUPABASE_ANON_KEY` — the anon key
-5. Re-run **Deploy to GitHub Pages** (or push to `main`). The workflow passes the secrets into `build.py`. Until both secrets exist, the workflow keeps building from `data/`.
+   - `SUPABASE_ANON_KEY` — the publishable key (`sb_publishable_...`) is recommended. The legacy anon JWT also works. Both were tested against the live project and the build matched the JSON output. `SUPABASE_URL` and `SUPABASE_ANON_KEY` are set on this repo.
+5. Re-run **Deploy to GitHub Pages** (or push to `main`). The workflow passes the secrets into `build.py`. If either secret is missing, the workflow keeps building from `data/`.
 
 Anon can read published firms only. Writes in the Table Editor use the logged-in dashboard role, which bypasses row-level security. The anon key cannot insert or update.
 
