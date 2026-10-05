@@ -11,7 +11,7 @@
   ],
   "notToken": "Not the $AI16Z token",
   "updated": "Oct 2, 2026",
-  "method": "Toxy Score v2",
+  "method": "Regrettamine score",
   "scoreShown": 95,
   "scoreExact": 95.4,
   "band": "Very low risk",
@@ -978,7 +978,7 @@
     "clipboard": "Questions to ask Andreessen Horowitz (a16z), from Regrettamine\n\n1. Down rounds, bridges, pay-to-play: In your last 3 down or flat rounds, did you lead, follow or walk?\n2. Follow-on and pro rata: What share of your seed/A companies did you reinvest in at the next round, including the strugglers?\n3. Replacing founder-CEOs: When did you last back replacing a founder-CEO, and how did it happen?\n4. Board seat & consent rights: Will you take a seat at my stage? Which consent rights do you require?\n5. Competitor overlap: Does any partner sit on the board of a company that competes with me?\n6. Reserves for this check: Which fund is this check from, and how much is reserved for follow-ons?\n7. Foreign or sovereign LPs: Are there sovereign or foreign-state LPs in this fund?\n8. References from failures: Give me 2 founders whose companies failed with you on the board."
   },
   "footnote": "Every scored fact links to a dated source. Founder sentiment stays hidden until it rests on first-hand accounts.",
-  "scoreFooter": "Rules: Toxy Score v2 (Oct 2, 2026). Inputs: a16z score file.",
+  "scoreFooter": "Rules: Regrettamine score (Oct 2, 2026). Inputs: a16z score file.",
   "evidence": {
     "tk0": {
       "kicker": "Takeaway 1",
@@ -1873,14 +1873,14 @@
     "rel": {
       "kicker": "Sources",
       "title": "Verified sources only",
-      "body": "Every scored item has a working link, names a16z, and tags its role. 17 Toxy sources were excluded (dead links, content farms, copycat names).",
+      "body": "Every scored item has a working link, names a16z, and tags its role. 17 sources were excluded (dead links, content farms, copycat names).",
       "rows": [],
       "sources": [],
       "tone": ""
     },
     "rank": {
       "kicker": "Ranking",
-      "title": "#1 of 11 on Toxy Score v2",
+      "title": "#1 of 11 on Regrettamine score",
       "body": "All 11 funds are scored on v2. Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
       "rows": [
         [
@@ -1933,7 +1933,7 @@
     },
     "rules": {
       "kicker": "Methodology",
-      "title": "How Toxy Score v2 works",
+      "title": "How Regrettamine score works",
       "body": "Every fund starts with full points and loses them only for verified evidence about its own behavior. Bad events are measured as a share of the portfolio: under 1% costs nothing, 1–3% small, 3–10% medium, over 10% large. Regulatory is penalty-only: open probe −2, charges −10, fine −10 to −20, fraud −30, sanctions −50 plus a red banner. Score is capped 0–100.",
       "rows": [
         [

@@ -1197,14 +1197,14 @@ def build_evidence(spec, cov, lo, hi, downs, ups, sections, rank_rows, place):
     )
     evidence["rank"] = card(
         "Ranking",
-        f"#{place} of 11 on Toxy Score v2",
-        "All 11 funds are on v2. Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
+        f"#{place} of 11",
+        "Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
         [],
         rows=rank_rows,
     )
     evidence["rules"] = card(
         "Methodology",
-        "How Toxy Score v2 works",
+        "How the Regrettamine score works",
         "Every fund starts with full points and loses them only for verified evidence about its own behavior. Bad events are a share of the portfolio: under 1% costs nothing. A missing portfolio count is not treated as a 70% rate. Regulatory is penalty-only.",
         [],
         rows=[
@@ -1268,7 +1268,7 @@ def build_fund(spec, result, cov, lo, hi, downs, ups, rank_rows, place):
         part("s3", sections["s3"], D("17.5"), S3_RULE, [
             {"name": "First-hand accounts", "points": "0", "why": "None collected. Anonymous and second-hand posts were not used."},
             {"name": "Negative share", "points": "0", "why": "No negative first-hand account, so the share is under 1%."},
-            {"name": "Age default", "points": fmt_num(sections["s3"]), "why": spec["age_why"] if sections["s3"] == D("14.9") or sections["s3"] == D("16.6") else spec["age_why"]},
+            {"name": "Age default", "points": fmt_num(sections["s3"]), "why": ""},
         ]),
         part("s4", sections["s4"], 5, S4_RULE, [
             {"name": "Documented conflicts", "points": "0", "why": "None verified. Board seats were not censused."},
@@ -1325,7 +1325,7 @@ def build_fund(spec, result, cov, lo, hi, downs, ups, rank_rows, place):
         ],
         "notToken": "",
         "updated": UPDATED,
-        "method": "Toxy Score v2",
+        "method": "Regrettamine score",
         "scoreShown": shown,
         "scoreExact": float(total),
         "band": band,
@@ -1419,7 +1419,7 @@ def build_fund(spec, result, cov, lo, hi, downs, ups, rank_rows, place):
         },
         "ask": ask_block(spec["name"]),
         "footnote": "Every scored fact links to a dated source. Empty blocks were left empty. Founder sentiment stays empty until it rests on a first-hand account.",
-        "scoreFooter": "Rules: Toxy Score v2 (Oct 2, 2026). Inputs: this report, Oct 4, 2026.",
+        "scoreFooter": "Rules: Regrettamine score (Oct 2, 2026). Inputs: this report, Oct 4, 2026.",
     }
     page["evidence"] = build_evidence(spec, cov, lo, hi, downs, ups, sections, rank_rows, place)
     # s1 lawsuit points label is always 30/30 for these inputs because every scored rate is under 1% or the count is 0.
@@ -1480,7 +1480,7 @@ def main():
     rank_rows = []
     for index, row in enumerate(ranking, start=1):
         place_of[row["slug"]] = index
-        rank_rows.append([row["name"], f"{fmt_num(row['total'])} (v2)"])
+        rank_rows.append([row["name"], f"{fmt_num(row['total'])}"])
 
     out_dir = ROOT / "data" / "funds"
     inputs_out = {}
@@ -1499,8 +1499,8 @@ def main():
     a16z["rank"] = {"place": place_of["a16z"], "tier": "Top 1", "of": 11, "example": False}
     a16z["evidence"]["rank"] = {
         "kicker": "Ranking",
-        "title": f"#{place_of['a16z']} of 11 on Toxy Score v2",
-        "body": "All 11 funds are scored on v2. Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
+        "title": f"#{place_of['a16z']} of 11",
+        "body": "Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
         "rows": rank_rows,
         "sources": [],
         "tone": "",

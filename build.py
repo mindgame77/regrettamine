@@ -12,6 +12,7 @@ import html
 import json
 import math
 import os
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -141,6 +142,33 @@ def strip_toxy(value):
     if isinstance(value, dict):
         return {key: strip_toxy(item) for key, item in value.items()}
     return value
+
+
+_CAP_CLAUSE = re.compile(r"\s*\d+ ÷ 5 is capped at \+3\.")
+_RANK_V2 = re.compile(r"^All 11 funds are (?:scored )?on v2\.\s*")
+
+
+def dedupe_founded_sentence(fund):
+    """The age row and the bonus row stored the same founded sentence. Keep it once, on the bonus."""
+    parts = {part.get("id"): part for part in fund.get("parts") or []}
+    bonus_why = ""
+    for item in (parts.get("bonus") or {}).get("inputs") or []:
+        if item.get("name") == "Years investing":
+            bonus_why = item.get("why") or ""
+    if "capped at +3" not in bonus_why:
+        return fund
+    for item in (parts.get("s3") or {}).get("inputs") or []:
+        if item.get("name") != "Age default":
+            continue
+        why = item.get("why") or ""
+        if "capped at +3" not in why:
+            continue
+        trimmed = _CAP_CLAUSE.sub("", why).strip()
+        if why == bonus_why or (trimmed and trimmed in bonus_why):
+            item["why"] = ""
+        else:
+            item["why"] = trimmed
+    return fund
 
 
 def fund_heading(fund):
@@ -565,7 +593,7 @@ def render_hero(fund):
 
 
 def render_fund_page(fund, prefix):
-    fund = strip_toxy(fund)
+    fund = dedupe_founded_sentence(strip_toxy(fund))
     matters = {m["id"]: m for m in fund["matters"]}
     meta = [f'<span class="mi">{esc(fund["hq"])}</span>', f'<span class="mi">Since {esc(fund["since"])}</span>']
     meta += [f'<span class="mi">{esc(item)}</span>' for item in fund["meta"]]
@@ -864,20 +892,26 @@ def render_fund_shell(fund, prefix):
 
 
 def publish_report_pages(funds):
+    """Rewrite every stored report. Pull requests skip this so they cannot replace production."""
+    if os.environ.get("REPORT_PUBLISH", "").strip() != "1":
+        print("report pages: not uploaded (REPORT_PUBLISH is not 1)")
+        return
     url = os.environ.get("SUPABASE_URL", "").strip()
     key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "").strip()
     if not (url and key):
-        print("report pages: not uploaded (no service role key)")
-        return
+        raise SystemExit("REPORT_PUBLISH=1 but the service role key is missing")
     from regrettamine.supabase_load import store_report
+    errors = []
     for slug, fund in funds.items():
         html = render_report_payload(fund, "../../")
         try:
             store_report(url, key, slug, html)
         except Exception as exc:
-            print(f"report upload failed for {slug}: {exc}")
+            errors.append(f"{slug}: {exc}")
             continue
         print(f"stored report {slug}")
+    if errors:
+        raise SystemExit("report upload failed: " + "; ".join(errors))
 
 
 def assign_list_ranks(funds):
@@ -887,11 +921,22 @@ def assign_list_ranks(funds):
         key=lambda fund: (-int(fund.get("scoreShown") or 0), fund.get("name") or ""),
     )
     total = len(ranked)
+    rows = []
+    for fund in ranked:
+        exact = fund.get("scoreExact")
+        label = f"{float(exact):.1f}" if isinstance(exact, (int, float)) else str(exact or "")
+        rows.append([fund.get("name") or "", label])
     for place, fund in enumerate(ranked, start=1):
         rank = dict(fund.get("rank") or {})
         rank["place"] = place
         rank["of"] = total
         fund["rank"] = rank
+        card = (fund.get("evidence") or {}).get("rank")
+        if not isinstance(card, dict):
+            continue
+        card["title"] = f"#{place} of {total}"
+        card["body"] = _RANK_V2.sub("", card.get("body") or "")
+        card["rows"] = [list(row) for row in rows]
 
 
 def main():
