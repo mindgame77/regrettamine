@@ -37,7 +37,8 @@ def test_template_zero_one_and_many():
     assert "No summary yet." in empty_html
     assert "No takeaways yet." in empty_html
     assert "No legal matters on file." in empty_html
-    assert empty["public"]["empty"] in empty_html
+    assert "No data yet. We found no press for this fund." in empty_html
+    assert "No data yet. We found no court cases, regulator actions or sanctions for this fund." in empty_html
     assert "moreCos" not in empty_html
 
     one = _a16z()

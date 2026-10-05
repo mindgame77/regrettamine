@@ -128,12 +128,39 @@ def grouped_matter_ids(fund):
     return ids
 
 
+def strip_toxy(value):
+    """User-facing pages do not name the old score brand."""
+    if isinstance(value, str):
+        text = value.replace("Toxy Score v2", "Regrettamine score")
+        text = text.replace("Toxy sources", "sources")
+        text = text.replace("Toxy's ", "")
+        text = text.replace("Toxy ", "")
+        return text.replace("Toxy", "")
+    if isinstance(value, list):
+        return [strip_toxy(item) for item in value]
+    if isinstance(value, dict):
+        return {key: strip_toxy(item) for key, item in value.items()}
+    return value
+
+
 def fund_heading(fund):
-    name = esc(fund["name"])
+    name = (fund.get("name") or "").strip()
     short = (fund.get("short") or "").strip()
-    if short and short.lower() != (fund.get("name") or "").strip().lower():
-        return f"{name} <span>{esc(short)}</span>"
-    return name
+    initials = "".join(part[0] for part in name.split() if part)
+    redundant = (
+        not short
+        or short.lower() == name.lower()
+        or (len(short) > 1 and short.lower() in name.lower())
+        or short.lower() == initials.lower()
+    )
+    if redundant:
+        return esc(name)
+    return f"{esc(name)} <span>{esc(short)}</span>"
+
+
+def empty_card(sentence, checked):
+    when = f'<p class="checked">Last checked {esc(checked)}</p>' if checked else ""
+    return f'<div class="pc emptycard"><p>{esc(sentence)}</p>{when}</div>'
 
 
 def render_overview(fund, matters):
@@ -224,6 +251,11 @@ def render_regulatory(reg, matters=None):
 
 
 def render_legal(fund, matters):
+    if not matters:
+        return empty_card(
+            "No data yet. We found no court cases, regulator actions or sanctions for this fund.",
+            fund.get("updated") or "",
+        )
     parts = [render_regulatory(fund["regulatory"], matters)]
     for group in fund["legalGroups"]:
         rows = "".join(leg_row(matters[i]) for i in group["ids"])
@@ -284,9 +316,9 @@ def render_vehicles(vehicles):
     )
 
 
-def render_reviews(reviews):
+def render_reviews(reviews, checked=""):
     if not reviews:
-        return ""
+        return empty_card("No data yet. We found no founder accounts for this fund.", checked)
     def one(item):
         who = " · ".join(bit for bit in (item.get("founder"), item.get("company"), item.get("partner")) if bit)
         flags = []
@@ -337,7 +369,7 @@ def render_fund_tab(tab, extras=None):
         f'{media_body}<p class="note">{esc(media["foot"])}</p></div>'
         f'</div>'
         f'{render_vehicles(extras.get("vehicles") or [])}'
-        f'{render_reviews(extras.get("reviews") or [])}'
+        f'{render_reviews(extras.get("reviews") or [], (extras or {}).get("checked") or "")}'
     )
 
 
@@ -381,10 +413,9 @@ def render_public(fund, prefix):
     pub = fund["public"]
     items = pub["items"]
     if not items:
-        return (
-            f'<div class="pubh"><div><h2 class="h2">{esc(pub["title"])}</h2>'
-            f'<p class="note" style="margin-top:4px">{esc(pub["intro"])}</p></div></div>'
-            f'<p class="empty-state">{esc(pub.get("empty") or "No public record yet.")}</p>'
+        return empty_card(
+            "No data yet. We found no press for this fund.",
+            fund.get("updated") or "",
         )
     visible = items if len(items) <= PAGE_SIZE else items[:PAGE_SIZE]
     cards = []
@@ -534,6 +565,7 @@ def render_hero(fund):
 
 
 def render_fund_page(fund, prefix):
+    fund = strip_toxy(fund)
     matters = {m["id"]: m for m in fund["matters"]}
     meta = [f'<span class="mi">{esc(fund["hq"])}</span>', f'<span class="mi">Since {esc(fund["since"])}</span>']
     meta += [f'<span class="mi">{esc(item)}</span>' for item in fund["meta"]]
@@ -541,26 +573,31 @@ def render_fund_page(fund, prefix):
         meta.append(f'<span class="mi y">{esc(fund["notToken"])}</span>')
     n_legal = len(matters)
     n_public = len(fund["public"]["items"])
-    tabs = [
-        ("overview", "Overview"),
-        ("score", "Score"),
-        ("legal", f"Legal <i>{n_legal}</i>"),
-        ("fund", "Fund &amp; people"),
-        ("public", f"Public <i>{n_public}</i>"),
-        ("portfolio", "Portfolio"),
-        ("ask", "Ask the fund"),
-    ]
-    tab_html = "".join(f'<button data-tab="{k}" role="tab">{label}</button>' for k, label in tabs)
+
+    def tab_button(key, label, count=None):
+        zero = ' class="zero"' if count == 0 else ""
+        badge = f" <i>{count}</i>" if count is not None else ""
+        return f'<button data-tab="{key}"{zero} role="tab">{label}{badge}</button>'
+
+    tab_html = "".join([
+        tab_button("overview", "Overview"),
+        tab_button("score", "Score"),
+        tab_button("legal", "Legal", n_legal),
+        tab_button("fund", "Fund &amp; people"),
+        tab_button("public", "Public", n_public),
+        tab_button("portfolio", "Portfolio"),
+        tab_button("ask", "Ask the fund"),
+    ])
     panels = {
         "overview": render_overview(fund, matters),
         "score": render_score(fund),
         "legal": render_legal(fund, matters),
-        "fund": render_fund_tab(fund["fundTab"], {"vehicles": fund.get("vehicles"), "reviews": fund.get("reviews")}),
+        "fund": render_fund_tab(fund["fundTab"], {"vehicles": fund.get("vehicles"), "reviews": fund.get("reviews"), "checked": fund.get("updated") or ""}),
         "public": render_public(fund, prefix),
         "portfolio": render_portfolio(fund["portfolio"]) + render_companies(fund.get("companies") or []),
         "ask": render_ask(fund["ask"]),
     }
-    sections = "".join(f'<section data-panel="{k}">{panels[k]}</section>' for k, _ in tabs)
+    sections = "".join(f'<section data-panel="{k}">{panels[k]}</section>' for k in panels)
     home = prefix
     body = f'''<div class="blobs np" style="height:900px"><div class="blob" style="width:520px;height:520px;background:#CDBBFF;left:-180px;top:-120px"></div><div class="blob" style="width:460px;height:460px;background:#FFC7B8;right:-140px;top:-40px"></div><div class="blob" style="width:380px;height:380px;background:#FFEBA0;left:42%;top:420px;opacity:.35"></div></div>
 <nav class="pillnav np"><a class="logo" href="{home}"><i></i><span class="wm">regrett<em>amine</em></span></a>
@@ -790,7 +827,8 @@ def render_report_payload(fund, prefix):
 
 
 def render_fund_shell(fund, prefix):
-    """Public fund URL. The score, legal record, and evidence stay on the server."""
+    """Public fund URL. The score line is static. The record stays on the server."""
+    fund = strip_toxy(fund)
     home = prefix
     title = f'{fund["name"]} · Regrettamine'
     body = f'''<div class="blobs np" style="height:420px"><div class="blob" style="width:520px;height:520px;background:#CDBBFF;left:-180px;top:-120px"></div><div class="blob" style="width:460px;height:460px;background:#FFC7B8;right:-140px;top:-40px"></div></div>
@@ -861,6 +899,7 @@ def main():
         shutil.rmtree(SITE)
     SITE.mkdir(parents=True)
     home, funds = load_site()
+    home = strip_toxy(home)
     assign_list_ranks(funds)
     linked = [f.get("report") for f in home["funds"] if f.get("report")]
     missing = [slug for slug in linked if slug not in funds]

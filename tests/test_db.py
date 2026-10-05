@@ -39,12 +39,12 @@ def test_seed_matches_json_and_hides_stress():
             assert assembled_funds[slug] == fund, slug
             assert render_fund_page(assembled_funds[slug], "../../") == render_fund_page(fund, "../../")
         assert build_home(assembled_home) == build_home(home)
-        assert len(home["updates"]) == 8
+        assert len(home["updates"]) == 7
         assert all("Ten funds" not in item["f"] for item in home["updates"])
 
         with conn.cursor() as cur:
             cur.execute("select count(*) from site_updates")
-            assert cur.fetchone()[0] == 8
+            assert cur.fetchone()[0] == 7
             cur.execute("select count(*) from site_updates where firm_name = 'Ten funds'")
             assert cur.fetchone()[0] == 0
             cur.execute("select fact_record_count()")

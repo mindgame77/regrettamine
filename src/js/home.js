@@ -196,7 +196,7 @@ function paintFeed() {
     const linked = u.fid && byId[u.fid] && byId[u.fid].report;
     const name = linked ? `<a href="vc/${byId[u.fid].report}/">${u.f}</a>` : u.f;
     const ext = String(u.u).startsWith('http');
-    return `<div class="fi"><span class="dt">Update #${u.no}<small>${u.ds}</small></span><span class="fd">${name}</span><span class="ev"><span class="k ${u.k}" style="margin-right:8px">${u.k}</span>${u.t}</span><span class="sr"><a href="${u.u}" ${ext ? 'target="_blank" rel="noopener"' : ''}>${u.src} ↗</a><span>${u.v == 'ver' ? 'verified by us' : u.v == 'ours' ? 'our analysis' : 'via Toxy, unverified'}</span></span></div>`;
+    return `<div class="fi"><span class="dt">Update #${u.no}<small>${u.ds}</small></span><span class="fd">${name}</span><span class="ev"><span class="k ${u.k}" style="margin-right:8px">${u.k}</span>${u.t}</span><span class="sr"><a href="${u.u}" ${ext ? 'target="_blank" rel="noopener"' : ''}>${u.src} ↗</a><span>${u.v == 'ver' ? 'verified by us' : u.v == 'ours' ? 'our analysis' : 'unverified'}</span></span></div>`;
   }).join('');
 }
 function paintRecordCount(count) {

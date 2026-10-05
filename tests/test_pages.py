@@ -56,6 +56,10 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "Loading the report…" in fund
     accel = (ROOT / "site" / "vc" / "accel" / "index.html").read_text(encoding="utf-8")
     assert "Accel <span>I</span>" in accel
+    bessemer = (ROOT / "site" / "vc" / "bessemer" / "index.html").read_text(encoding="utf-8")
+    assert "Bessemer Venture Partners BVP" not in bessemer
+    assert ">Bessemer Venture Partners<" in bessemer or "Bessemer Venture Partners<button" in bessemer
+    assert 'class="zero"' in (ROOT / "site" / "vc" / "sequoia" / "index.html").read_text(encoding="utf-8") or "Legal <i>0</i>" in render_fund_page(load_local()[1]["sequoia"], "../../")
     assert "Accel <span>Accel</span>" not in accel
     assert not (ROOT / "site" / "data" / "funds").exists()
     assert (ROOT / "site" / "login" / "index.html").is_file()
@@ -116,6 +120,8 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "first_hand" not in account_js and "verification_status" not in account_js
 
     auth_css = (ROOT / "src" / "css" / "auth.css").read_text(encoding="utf-8")
+    assert ".auth .pf{display:flex;flex-direction:column;align-items:stretch;gap:10px;width:100%}" in auth_css
+    assert ".auth .fld{display:flex;align-items:center;width:100%;align-self:stretch;" in auth_css
     assert ".auth .pw2-row{display:none}" in auth_css
     assert ".auth[data-mode=signup] .pw2-row,.auth[data-mode=reset] .pw2-row{display:flex}" in auth_css
     assert ".auth[data-mode=reset] .email-row{display:none}" in auth_css
@@ -164,7 +170,10 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert [fund["id"] for fund in home_payload["funds"]] == ["a16z", "battery", "bessemer"]
     assert home_payload["fundTotal"] == 11
     assert {fund["id"] for fund in home_payload["funds"]}.isdisjoint({"accel", "sequoia", "insightpartners"})
-    assert len(home_payload["updates"]) == 8
+    assert len(home_payload["updates"]) == 7
+    assert all(item["no"] != 7 for item in home_payload["updates"])
+    assert "Andreessen Horowitz scores 95, Very low risk." in index
+    assert "Toxy" not in index and "toxybase" not in index
     assert all(item["no"] != 9 for item in home_payload["updates"])
     assert "Ten funds" not in index
     published_home = json.loads((ROOT / "site" / "data" / "home.json").read_text(encoding="utf-8"))

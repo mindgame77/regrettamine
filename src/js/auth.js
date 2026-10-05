@@ -147,6 +147,7 @@
     aside.innerHTML = accountNavItems().map(item => '<a href="' + base + item.path + '" data-v="' + item.id + '"' + (item.id === current ? ' class="on"' : '') + '>' + item.icon + esc(item.label) + '</a>').join('');
   }
   function paintNav(person) {
+    document.body.classList.toggle('is-in', !!person);
     const slot = document.getElementById('navSlot');
     if (!slot) return;
     const base = root();
@@ -681,19 +682,29 @@
     close();
   });
 
+  let resolveSession = function () {};
+  const sessionReady = new Promise(resolve => { resolveSession = resolve; });
   const ready = (async () => {
     const clientNow = sb();
     if (clientNow) {
-      const { data } = await clientNow.auth.getSession();
-      user = data.session && data.session.user;
-      await loadLimits();
+      try {
+        const { data } = await clientNow.auth.getSession();
+        user = data.session && data.session.user;
+      } finally {
+        resolveSession();
+      }
       if (user) {
-        await carry();
-        await refreshTier();
-        await refreshWatch();
-        await refreshAlerts();
-        await refreshProfile();
-        await refreshPayNotice();
+        await Promise.all([
+          loadLimits(),
+          carry(),
+          refreshTier(),
+          refreshWatch(),
+          refreshAlerts(),
+          refreshProfile(),
+          refreshPayNotice()
+        ]);
+      } else {
+        await loadLimits();
       }
       clientNow.auth.onAuthStateChange(async (event, session) => {
         const next = session && session.user;
@@ -724,6 +735,8 @@
         await paintAlert();
         listeners.forEach(fn => fn(user));
       });
+    } else {
+      resolveSession();
     }
     paintNav(user);
     paintSave();
@@ -754,7 +767,7 @@
   })();
 
   global.Regret = {
-    sb, root, siteRoot, limits, watch, alerts, ready, esc, paintSave, paintAlert,
+    sb, root, siteRoot, limits, watch, alerts, ready, sessionReady, esc, paintSave, paintAlert,
     get user() { return user; },
     get tier() { return tier; },
     confirmed, capFor, anonState, seen, record, touch, firmId, firmMap,

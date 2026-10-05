@@ -342,23 +342,11 @@
       "f": "Andreessen Horowitz",
       "fid": "a16z",
       "k": "Rescore",
-      "t": "Rescored with Toxy Score v2: 95, Very low risk. Toxy's old method gave 49.",
-      "src": "Toxy Score v2 report",
+      "t": "Andreessen Horowitz scores 95, Very low risk.",
+      "src": "a16z report",
       "u": "vc/a16z/",
       "v": "ours",
       "no": 8
-    },
-    {
-      "d": "2026-09-18",
-      "ds": "Sep 17–18, 2026",
-      "f": "All 11 funds",
-      "fid": "",
-      "k": "Data",
-      "t": "Toxy re-ran every fund with stricter scoring. Score histories and summary text weren't updated to match.",
-      "src": "toxybase.netlify.app",
-      "u": "https://toxybase.netlify.app/vcs/a16z-openrouter",
-      "v": "ours",
-      "no": 7
     },
     {
       "d": "2026-08-18",
