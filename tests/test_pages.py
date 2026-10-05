@@ -239,8 +239,9 @@ def test_shared_list_and_auth_pages(monkeypatch):
 
     assert "account/#watchlist" in auth_js and "account/#alerts" not in auth_js
     assert "ACCOUNT_NAV" in auth_js and auth_js.count("Share experience") == 1
+    assert "path: 'account/#share'" in auth_js
     assert "Share / Report a VC" not in auth_js
-    assert "label: 'Report a VC'" in auth_js
+    assert "Report a VC" not in auth_js
     assert 'M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' in auth_js
     assert "path: 'plans/'" in auth_js and "path: 'settings/'" in auth_js
     assert 'plans/">See plans' in home_js
@@ -350,6 +351,8 @@ def test_shared_list_and_auth_pages(monkeypatch):
             continue
         foot = page.split("<footer", 1)[1].split("</footer>", 1)[0]
         assert "Report a VC" not in foot, str(path.relative_to(ROOT))
+    assert "Report a VC" not in shipped
+    assert "Share experience" in shipped
     assert "Regrettamine" not in shipped
     assert "regrettamine.com" not in shipped
     assert "regrett<em>" not in shipped
