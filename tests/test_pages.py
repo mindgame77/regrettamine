@@ -188,6 +188,10 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "grid-template-columns:2.3fr 1.7fr 1.1fr 1fr 1fr;" in (ROOT / "src" / "css" / "list.css").read_text(encoding="utf-8")
     assert "font-size:64px" in (ROOT / "src" / "css" / "home.css").read_text(encoding="utf-8")
     assert "Log in to see all" in home_js and "fact_record_count" in home_js and "FEED_SHOWN = 7" in home_js
+    assert "Firm AUM" in index and "Fund size (AUM)" not in index
+    assert "Updated in the last 30 days" in index and 'id="fRecent"' in index
+    assert "Under $20B" not in home_js and "$50B+" not in home_js
+    assert "Under $100M" in home_js and "$1B–$10B" in home_js and "$10B+" in home_js
     assert "landing_funds" in auth_js and "list-only" in auth_js
     assert "loadReport" in auth_js and "open_report" in auth_js
     assert "search_funds" in home_js and "plans/" in home_js
@@ -420,6 +424,60 @@ def test_report_copy_matches_the_landing_list():
     overview = a16z.split('data-panel="overview"', 1)[1].split('data-panel="score"', 1)[0]
     assert (hero + overview).count("DOJ") == 1
     assert "REPORT_PUBLISH" in (ROOT / "build.py").read_text(encoding="utf-8")
+
+
+def test_firm_aum_buckets_and_recent_updates():
+    import subprocess
+
+    home = json.loads((ROOT / "data" / "home.json").read_text(encoding="utf-8"))
+    script = r"""
+const fs = require('fs');
+const src = fs.readFileSync('src/js/home.js', 'utf8');
+const sizes = src.slice(src.indexOf('const SIZES'), src.indexOf('const S ='));
+const fn = src.slice(src.indexOf('function updatedWithin30'), src.indexOf('const $'));
+const funds = JSON.parse(fs.readFileSync('data/home.json', 'utf8')).funds;
+const run = new Function('funds', sizes + '\n' + fn + `
+const buckets = {};
+for (const f of funds) {
+  const hit = SIZES.filter(z => z[2](f.aum)).map(z => z[1]);
+  const key = hit.join('|') || 'none';
+  (buckets[key] || (buckets[key] = [])).push(f.id);
+}
+const today = new Date(2026, 9, 5);
+return {
+  buckets,
+  recent: {
+    today: updatedWithin30({updated: '2026-10-05'}, today),
+    yesterday: updatedWithin30({updated: '2026-10-04'}, today),
+    edge: updatedWithin30({updated: '2026-09-05'}, today),
+    old: updatedWithin30({updated: '2026-09-04'}, today),
+    future: updatedWithin30({updated: '2026-10-06'}, today),
+    fromTs: updatedWithin30({updatedTs: '2026-10-04T00:00:00-07:00'}, today),
+    blank: updatedWithin30({}, today)
+  },
+  listed: funds.filter(f => updatedWithin30(f, today)).length,
+  total: funds.length
+};
+`);
+console.log(JSON.stringify(run(funds)));
+"""
+    out = subprocess.check_output(["node", "-e", script], cwd=ROOT, text=True)
+    data = json.loads(out)
+    assert data["buckets"].get("Under $100M", []) == []
+    assert data["buckets"].get("$100M–$1B", []) == []
+    assert data["buckets"]["$1B–$10B"] == ["baincapitalventures"]
+    assert "baincapitalventures" not in data["buckets"]["$10B+"]
+    assert len(data["buckets"]["$10B+"]) == len(home["funds"]) - 1
+    assert data["recent"] == {
+        "today": True,
+        "yesterday": True,
+        "edge": True,
+        "old": False,
+        "future": False,
+        "fromTs": True,
+        "blank": False,
+    }
+    assert data["listed"] == data["total"] == 11
 
 
 def test_legal_config_values():
