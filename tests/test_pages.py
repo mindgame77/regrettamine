@@ -281,7 +281,14 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "Alex" not in settings and "4242" not in settings
     assert "paintPayFail" in auth_js
     assert "regret.after" in auth_js
-    assert "setMode('login', false)" in auth_js
+    assert "Check first." in auth_js and "Sign second" in auth_js
+    assert "Sign in to <span class=\"mark\">save this fund</span>" in auth_js
+    assert "Sign in to <span class=\"mark\">get alerts</span> on this fund" in auth_js
+    assert "Create an account to <span class=\"mark\">keep reading</span>" in auth_js
+    assert "Sign in to <span class=\"mark\">share your experience</span>" in auth_js
+    assert "setMode('login', false, 'save')" in auth_js
+    assert "setMode('login', false, 'alerts')" in auth_js
+    assert "RegretAuth.open('signup', true, 'gate')" in gate_js
     assert "querySelector('.av.open')" in auth_js
     assert "scrollTo(0, 0)" in account_js
     assert "'history'" not in account_js

@@ -65,7 +65,7 @@
       + '<p>The score is here. The full report opens with an account.</p>'
       + '<button class="b c" type="button" id="gateJoin">Create account to see the full report</button>';
     const join = document.getElementById('gateJoin');
-    if (join) join.onclick = () => RegretAuth.open(Regret.user ? 'paywall' : 'signup', !Regret.user);
+    if (join) join.onclick = () => RegretAuth.open(Regret.user ? 'paywall' : 'signup', !Regret.user, Regret.user ? '' : 'gate');
   }
 
   Regret.ready.then(async () => {
@@ -87,7 +87,7 @@
       showClosed(result);
       document.body.classList.add('gated');
       await Regret.paintAlert();
-      if (!Regret.user) RegretAuth.open('signup', true);
+      if (!Regret.user) RegretAuth.open('signup', true, 'gate');
       else RegretAuth.open('paywall', false);
       return;
     }

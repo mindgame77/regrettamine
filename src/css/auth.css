@@ -86,6 +86,11 @@ body.is-auth-page .auth{box-shadow:0 30px 70px -34px rgba(60,40,140,.4)}
 .b.sm{height:40px;padding:0 18px;font-size:14.5px}
 
 /* Landing list gate: same card, list headline instead of the page one. */
+.auth .intent-only,.auth .intent-sub{display:none}
+.auth[data-intent="save"] .intent-only,.auth[data-intent="alerts"] .intent-only,.auth[data-intent="share"] .intent-only,.auth[data-intent="gate"] .intent-only{display:block}
+.auth[data-intent] .intent-sub:not([hidden]){display:block}
+.auth[data-intent="save"] .page-only,.auth[data-intent="alerts"] .page-only,.auth[data-intent="share"] .page-only{display:none!important}
+.auth[data-intent="gate"] .gate-copy{display:none!important}
 .auth .list-only{display:none}
 .auth.is-list[data-mode=login] .list-only,.auth.is-list[data-mode=signup] .list-only{display:block}
 .auth.is-list .page-only{display:none!important}

@@ -385,8 +385,9 @@
     return '<div class="auth" role="dialog" aria-labelledby="ah" data-mode="login">'
       + '<button type="button" class="x" id="authClose" aria-label="Close"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>'
       + '<div class="dots gate-only gate-flex" id="authDots" aria-hidden="true"></div>'
-      + '<h2 id="ah" class="gate-only">Two funds in.<br>Don\'t <span class="mark">regret the third</span>.</h2>'
+      + '<h2 id="ah" class="gate-only gate-copy">Two funds in.<br>Don\'t <span class="mark">regret the third</span>.</h2>'
       + '<h2 class="page-only">Check first.<br><span class="mark">Sign second</span>.</h2>'
+      + '<h2 class="intent-only" id="intentH"></h2>'
       + '<h2 class="list-only">Log in to see<br><span class="mark">all <span id="listN"></span> funds</span>.</h2>'
       + '<p class="sub list-only">Free account. No card.</p>'
       + '<h2 class="pay-only">You\'ve checked 7 funds.<br>The 8th could be the one you <span class="mark">regret</span>.</h2>'
@@ -394,7 +395,8 @@
       + '<h2 class="confirm-only">Confirm your email.</h2>'
       + '<h2 class="forgot-only">Reset your password.</h2>'
       + '<h2 class="reset-only">Choose a new password.</h2>'
-      + '<p class="sub gate-only">A free account unlocks 5 more reports. No card.</p>'
+      + '<p class="sub gate-only gate-copy">A free account unlocks 5 more reports. No card.</p>'
+      + '<p class="sub intent-sub" id="intentSub" hidden></p>'
       + '<p class="sub pay-only">Unlimited reports and alerts when a fund you\'re talking to gets sued.</p>'
       + '<p class="sub plans-only">Unlimited reports, when pricing is ready. Nothing to pay today.</p>'
       + '<p class="sub confirm-only">The extra 5 reports open after you confirm. We sent the link to your inbox.</p>'
@@ -447,10 +449,26 @@
     if (err) { err.hidden = !shown || !!ok; err.textContent = ok ? '' : (shown || ''); }
     if (good) { good.hidden = !shown || !ok; good.textContent = ok ? shown : ''; }
   }
-  function setMode(mode, gate) {
+  const INTENT = {
+    save: { title: 'Sign in to <span class="mark">save this fund</span>', sub: 'Free account. The fund stays on your watchlist.' },
+    alerts: { title: 'Sign in to <span class="mark">get alerts</span> on this fund', sub: 'Free account. Alerts follow the funds you save.' },
+    gate: { title: 'Create an account to <span class="mark">keep reading</span>', sub: 'A free account unlocks 5 more reports. No card.' },
+    share: { title: 'Sign in to <span class="mark">share your experience</span>', sub: 'Free account. You can hide your name.' }
+  };
+  function setMode(mode, gate, intent) {
     const card = ensureCard();
+    const reason = intent || '';
     card.dataset.mode = mode;
+    card.dataset.intent = reason;
     card.classList.toggle('is-gate', !!gate);
+    const copy = INTENT[reason];
+    const title = document.getElementById('intentH');
+    const sub = document.getElementById('intentSub');
+    if (title) title.innerHTML = copy ? copy.title : '';
+    if (sub) {
+      sub.textContent = copy && copy.sub ? copy.sub : '';
+      sub.hidden = !(copy && copy.sub);
+    }
     const email = document.getElementById('authEmail');
     const pw = document.getElementById('authPassword');
     if (email) email.required = mode !== 'reset';
@@ -556,7 +574,7 @@
   function bindCard(card) {
     card.querySelector('#authClose').onclick = close;
     card.querySelectorAll('[data-to]').forEach(btn => {
-      btn.onclick = () => setMode(btn.dataset.to, card.classList.contains('is-gate'));
+      btn.onclick = () => setMode(btn.dataset.to, card.classList.contains('is-gate'), card.dataset.intent || '');
     });
     card.querySelector('#forgotBtn').onclick = () => setMode('forgot', false);
     card.querySelector('#authForm').onsubmit = onSubmit;
@@ -596,7 +614,7 @@
         location.href = new URL('login/', siteRoot()).href;
         return true;
       }
-      setMode('login', false);
+      setMode('login', false, 'share');
       return true;
     }
     if (document.getElementById('shareForm')) {
@@ -608,13 +626,30 @@
     return true;
   }
 
+  function openAlerts(ev) {
+    const link = ev.target.closest('a.b.v');
+    if (!link) return false;
+    const href = link.getAttribute('href') || '';
+    if (href.indexOf('watchlist') === -1) return false;
+    if (user) return false;
+    ev.preventDefault();
+    sessionStorage.setItem('regret.after', 'account/#watchlist');
+    if (document.body.classList.contains('is-auth-page')) {
+      location.href = new URL('login/', siteRoot()).href;
+      return true;
+    }
+    setMode('login', false, 'alerts');
+    return true;
+  }
+
   document.addEventListener('click', async ev => {
     if (openReport(ev)) return;
+    if (openAlerts(ev)) return;
     const save = ev.target.closest('#save');
     if (save) {
       ev.preventDefault();
       const slug = document.body.dataset.firm;
-      if (!user) { setMode('login', false); return; }
+      if (!user) { setMode('login', false, 'save'); return; }
       if (save.classList.contains('full') && !watch.slugs.has(slug)) return;
       const result = watch.slugs.has(slug) ? (await removeWatch(slug), { saved: false }) : await addWatch(slug);
       if (result && result.full) paintSave();
@@ -628,7 +663,7 @@
     if (alertTog) {
       ev.preventDefault();
       const slug = alertTog.dataset.alert || document.body.dataset.firm;
-      if (!user) { setMode('login', false); return; }
+      if (!user) { setMode('login', false, 'alerts'); return; }
       if (alertTog.classList.contains('off') || alertTog.getAttribute('aria-disabled') === 'true') return;
       if (watch.slugs.has(slug)) {
         await removeWatch(slug);
