@@ -899,7 +899,8 @@ def publish_report_pages(funds):
     url = os.environ.get("SUPABASE_URL", "").strip()
     key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "").strip()
     if not (url and key):
-        raise SystemExit("REPORT_PUBLISH=1 but the service role key is missing")
+        print("report pages: not uploaded (service role key is not set)")
+        return
     from regrettamine.supabase_load import store_report
     errors = []
     for slug, fund in funds.items():
