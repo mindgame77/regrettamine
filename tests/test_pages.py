@@ -120,6 +120,8 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "first_hand" not in account_js and "verification_status" not in account_js
 
     auth_css = (ROOT / "src" / "css" / "auth.css").read_text(encoding="utf-8")
+    assert ".auth .pf{display:flex;flex-direction:column;align-items:stretch;gap:10px;width:100%}" in auth_css
+    assert ".auth .fld{display:flex;align-items:center;width:100%;align-self:stretch;" in auth_css
     assert ".auth .pw2-row{display:none}" in auth_css
     assert ".auth[data-mode=signup] .pw2-row,.auth[data-mode=reset] .pw2-row{display:flex}" in auth_css
     assert ".auth[data-mode=reset] .email-row{display:none}" in auth_css
