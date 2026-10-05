@@ -333,6 +333,7 @@ def test_shared_list_and_auth_pages(monkeypatch):
         assert "Sources" not in footer and "Corrections" not in footer, name
         assert f'href="{scoring_href}">Scoring' in footer, name
         assert "Privacy" in footer and "Terms" in footer, name
+        assert "Report a VC" not in footer, name
         assert "Report a VC" not in html, name
         assert "<!-- Our Story -->" in html, name
         assert "How it works" not in html or name == "scoring", name
@@ -343,6 +344,12 @@ def test_shared_list_and_auth_pages(monkeypatch):
         if path.suffix in {".html", ".js", ".css"} and path.is_file():
             visible.append(path.read_text(encoding="utf-8", errors="ignore"))
     shipped = "\n".join(visible)
+    for path in (ROOT / "site").rglob("*.html"):
+        page = path.read_text(encoding="utf-8", errors="ignore")
+        if "<footer" not in page:
+            continue
+        foot = page.split("<footer", 1)[1].split("</footer>", 1)[0]
+        assert "Report a VC" not in foot, str(path.relative_to(ROOT))
     assert "Regrettamine" not in shipped
     assert "regrettamine.com" not in shipped
     assert "regrett<em>" not in shipped
