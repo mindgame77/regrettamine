@@ -270,6 +270,10 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "Your name is hidden" in account and "Your name will be shown" in account_js
     assert "scroll-margin-top:120px" in (ROOT / "src" / "css" / "settings.css").read_text(encoding="utf-8")
     assert "scrollIntoView" in settings_js
+    assert "scrollTo(0, 0)" in settings_js
+    assert 'id="planCancel" hidden' in settings
+    assert "Your plan is cancelled with it. No more charges." in settings
+    assert "planCancel" in settings_js and "cancel.hidden = !paid" in settings_js
     full = render_fund_page(load_local()[1]["a16z"], "../../")
     visible = full.split('<script id="evidence"', 1)[0]
     assert visible.count("DOJ is investigating a16z partners") == 1
@@ -331,6 +335,51 @@ def test_shared_list_and_auth_pages(monkeypatch):
         assert "How it works" not in html or name == "scoring", name
         assert 'href="#">Scoring' not in html, name
         assert "how/" not in html, name
+
+
+def test_report_copy_matches_the_landing_list():
+    from build import assign_list_ranks, fund_heading, load_local, render_fund_page
+
+    _, funds = load_local()
+    assign_list_ranks(funds)
+    ranked = sorted(funds.values(), key=lambda fund: (-int(fund["scoreShown"]), fund["name"]))
+    names = [fund["name"] for fund in ranked]
+    assert names[:3] == ["Andreessen Horowitz", "Battery Ventures", "Bessemer Venture Partners"]
+    for place, fund in enumerate(ranked, start=1):
+        page = render_fund_page(fund, "../../")
+        assert f"<i>#{place}</i> of {len(ranked)} funds" in page, fund["slug"]
+        assert "Toxy" not in page, fund["slug"]
+        assert "v2 fund of" not in page and "Top 1 fund" not in page
+        heading = fund_heading(fund)
+        h1 = page.split("<h1>", 1)[1].split("<button", 1)[0]
+        assert heading in page
+        if "<span>" not in heading:
+            assert "<span>" not in h1, fund["slug"]
+        rows = [row[0] for row in fund["evidence"]["rank"]["rows"]]
+        assert rows == names
+        assert "(v2)" not in str(fund["evidence"]["rank"]["rows"])
+        score = page.split('data-panel="score"', 1)[1].split('data-panel="legal"', 1)[0]
+        assert score.count("capped at +3") <= 1, fund["slug"]
+        for key, nxt in (("legal", "fund"), ("public", "portfolio")):
+            button = page.split(f'data-tab="{key}"', 1)[1].split("</button>", 1)[0]
+            if "<i>0</i>" not in button:
+                continue
+            panel = page.split(f'data-panel="{key}"', 1)[1].split(f'data-panel="{nxt}"', 1)[0]
+            assert "No data yet" in panel, fund["slug"] + " " + key
+            assert "0 matters" not in panel, fund["slug"] + " " + key
+    battery = render_fund_page(funds["battery"], "../../")
+    legal = battery.split('data-panel="legal"', 1)[1].split('data-panel="fund"', 1)[0]
+    assert "No data yet" in legal and "Founder-relevant" not in legal
+    score = battery.split('data-panel="score"', 1)[1].split('data-panel="legal"', 1)[0]
+    assert score.count("founded in 1983") == 1
+    sequoia = render_fund_page(funds["sequoia"], "../../")
+    public = sequoia.split('data-panel="public"', 1)[1].split('data-panel="portfolio"', 1)[0]
+    assert "No data yet" in public
+    a16z = render_fund_page(funds["a16z"], "../../")
+    hero = a16z.split('data-panel="overview"', 1)[0]
+    overview = a16z.split('data-panel="overview"', 1)[1].split('data-panel="score"', 1)[0]
+    assert (hero + overview).count("DOJ") == 1
+    assert "REPORT_PUBLISH" in (ROOT / "build.py").read_text(encoding="utf-8")
 
 
 def test_legal_config_values():

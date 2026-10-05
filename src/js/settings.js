@@ -4,13 +4,20 @@
   let email = '';
   let hasPassword = false;
 
+  let scrollBilling = false;
+
   function go() {
     const v = (location.hash || '#account').replace('#', '') || 'account';
     const name = v === 'billing' ? 'billing' : 'account';
     document.querySelectorAll('.setcol .view').forEach(el => el.classList.toggle('on', el.id === name));
     document.querySelectorAll('[data-set]').forEach(a => a.classList.toggle('on', a.dataset.set === name));
-    const section = document.getElementById(name);
-    if (section) section.scrollIntoView();
+    if (scrollBilling && name === 'billing') {
+      scrollBilling = false;
+      const heading = document.querySelector('#billing .vh h1');
+      if (heading) heading.scrollIntoView();
+      return;
+    }
+    window.scrollTo(0, 0);
   }
   addEventListener('hashchange', go);
 
@@ -19,13 +26,18 @@
     let tab = (params.get('tab') || '').toLowerCase();
     const justPaid = params.get('paid') === '1';
     if (justPaid && tab !== 'account') tab = 'billing';
+    if (tab === 'billing' && (params.has('tab') || justPaid)) scrollBilling = true;
+    let changed = false;
     if (tab === 'billing' || tab === 'account') {
-      if (location.hash !== '#' + tab) location.hash = tab;
+      if (location.hash !== '#' + tab) {
+        location.hash = tab;
+        changed = true;
+      }
     }
     if (params.has('tab') || params.has('paid')) {
       history.replaceState(null, '', location.pathname + location.hash);
     }
-    go();
+    if (!changed) go();
     const note = $('payNote');
     if (note && justPaid) note.hidden = false;
     return justPaid;
@@ -86,6 +98,8 @@
   function paintBilling(row) {
     const data = row || {};
     const paid = data.tier === 'paid' || data.plan === 'Paid' || data.plan === 'Monthly' || data.plan === 'Annual';
+    const cancel = $('planCancel');
+    if (cancel) cancel.hidden = !paid;
     $('planName').textContent = data.plan || (paid ? 'Paid' : 'Free');
     $('planDetail').textContent = data.price_label || (paid ? 'Your paid plan is active.' : 'No charge.');
     if (data.payment_failed && data.payment_failed_on) {
