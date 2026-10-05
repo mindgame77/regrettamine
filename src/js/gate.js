@@ -68,10 +68,50 @@
     if (join) join.onclick = () => RegretAuth.open(Regret.user ? 'paywall' : 'signup', !Regret.user);
   }
 
-  Regret.ready.then(async () => {
-    const result = await Regret.loadReport(slug);
+  const CACHE = 'regret.reporthtml.v1';
+  function hasSession() {
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i) || '';
+        if (key.indexOf('sb-') === 0 && key.indexOf('auth-token') !== -1) {
+          const raw = localStorage.getItem(key) || '';
+          if (raw.indexOf('access_token') !== -1) return true;
+        }
+      }
+    } catch (e) { /* private mode */ }
+    return false;
+  }
+  function readCache(id) {
+    try {
+      const all = JSON.parse(sessionStorage.getItem(CACHE) || '{}');
+      const hit = all[id];
+      if (!hit || !hit.html || Date.now() - hit.at > 600000) return '';
+      const opened = (Regret.anonState().funds || []).indexOf(id) !== -1;
+      if (!opened && !hasSession()) return '';
+      return hit.html;
+    } catch (e) { return ''; }
+  }
+  function writeCache(id, html) {
+    try {
+      const all = JSON.parse(sessionStorage.getItem(CACHE) || '{}');
+      all[id] = { html: html, at: Date.now() };
+      sessionStorage.setItem(CACHE, JSON.stringify(all));
+    } catch (e) { /* quota */ }
+  }
+  function showReport(html, bind) {
+    const mount = document.getElementById('report');
+    if (!html || !mount) return;
+    mount.innerHTML = html;
+    if (bind && window.RegretFund) RegretFund.start();
+    Regret.paintSave();
+    Regret.paintAlert();
+  }
+  const early = readCache(slug);
+  if (early) showReport(early, false);
+  const sessionKnown = hasSession() && Regret.sessionReady ? Regret.sessionReady : Promise.resolve();
+  sessionKnown.then(() => Regret.loadReport(slug)).then(async (result) => {
     if (!result) {
-      showWait('This report is not available on this build.');
+      if (!early) showWait('This report is not available on this build.');
       return;
     }
     if (!result.ok) {
@@ -80,7 +120,7 @@
         return;
       }
       if (result.reason === 'unpublished') {
-        showWait('This report is not available on this build.');
+        if (!early) showWait('This report is not available on this build.');
         await Regret.paintAlert();
         return;
       }
@@ -91,13 +131,10 @@
       else RegretAuth.open('paywall', false);
       return;
     }
-    const mount = document.getElementById('report');
-    if (result.html && mount) {
-      mount.innerHTML = result.html;
-      if (window.RegretFund) RegretFund.start();
-      Regret.paintSave();
-      await Regret.paintAlert();
-    } else {
+    if (result.html) {
+      writeCache(slug, result.html);
+      showReport(result.html, true);
+    } else if (!early) {
       showWait('This report is not available on this build.');
       await Regret.paintAlert();
     }
