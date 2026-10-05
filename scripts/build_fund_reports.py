@@ -1321,8 +1321,8 @@ def build_fund(spec, result, cov, lo, hi, downs, ups, rank_rows, place):
         "since": spec["since"],
         "meta": [
             f"SEC adviser · CRD {spec['crd']}",
-            spec["legal_name"],
         ],
+        "legalName": spec["legal_name"],
         "notToken": "",
         "updated": UPDATED,
         "method": "Regretamine score",
@@ -1334,15 +1334,8 @@ def build_fund(spec, result, cov, lo, hi, downs, ups, rank_rows, place):
         "question": "Should I take this money?",
         "verdict": spec["verdict"],
         "verdictSub": spec["verdict_sub"],
-        "floats": [
-            {"class": "f1", "ev": "pen", "iconBg": "var(--mint)" if not spec.get("penalty") else "var(--peach)", "icon": "✓" if not spec.get("penalty") else "!", "text": "Sanctions: no ADV hit", "small": "people not screened"},
-            {"class": "f2", "ev": "cov", "iconBg": "var(--sky)", "icon": "%", "text": f"Coverage {cov}%", "small": "what we could check"},
-        ],
-        "badges": [
-            {"ev": "cov", "icon": "am", "text": f"Coverage {cov}%"},
-            {"ev": "rel", "icon": "ok", "text": "Sources linked"},
-            {"ev": "pen", "icon": "ok" if not spec.get("penalty") else "am", "text": "Sanctions: no ADV hit"},
-        ],
+        "floats": [],
+        "badges": [],
         "scoreBarNote": f"Where the {shown} comes from · tap a block for the Score tab",
         "parts": parts,
         "summary": spec["summary"],

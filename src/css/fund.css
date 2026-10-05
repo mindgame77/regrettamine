@@ -284,8 +284,7 @@ body.dopen .drawer{transform:translate(-50%,-50%);opacity:1;pointer-events:auto}
 .swy{font-size:12.5px;color:var(--mute);line-height:1.3}
 .pubc[hidden]{display:none}
 
-/* t54: option-2 Overview restored. Hero extras (floats + score bar) only on the Overview tab, so other tabs are unchanged. */
-body:not([data-tab=overview]) .ovx{display:none!important}
+/* The score block (rank, circle, verdict, bar) stays above the tabs on every tab. */
 .f1.ovx{top:auto;bottom:-22px}
 .hero .ovx .bart{margin-top:6px}
 .tk6 .tkc p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1}

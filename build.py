@@ -25,7 +25,7 @@ SITE = ROOT / "site"
 EXT_SVG = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3H3.5A.5.5 0 0 0 3 3.5v9a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V10M9 3h4v4M13 3 7.5 8.5"/></svg>'
 OPEN_SVG = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h4v4M13 3 7.5 8.5"/></svg>'
 SAVE_SVG = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14l-6-4.2L6 20z"/></svg>'
-ALERT_LINE = '<div class="alert-line"><div class="tog" id="alertTog" role="switch" aria-checked="false"><span>Alerts</span><span class="sw2"></span></div><p class="fnote" id="alertNote" hidden>Open this report to get alerts</p><a class="lnk" id="correctLink" hidden>Request a correction</a></div>'
+CORRECT_LINE = '<a class="lnk" id="correctLink" hidden>Request a correction</a>'
 SENT_LABEL = {"pos": "Positive", "neu": "Neutral", "neg": "Negative"}
 PAGE_SIZE = 24
 LIST_CAP = 8
@@ -556,26 +556,44 @@ def render_worked_example(fund):
     )
 
 
+def header_meta(fund):
+    """Location, founded year, and the SEC adviser line. Legal names and token chips stay off this row."""
+    chips = [fund["hq"], f'Since {fund["since"]}']
+    for item in fund.get("meta") or []:
+        text = str(item)
+        if text.startswith("SEC adviser") or "CRD" in text:
+            chips.append(text)
+    return chips
+
+
+def overview_badges(fund):
+    """Top pills that stay. Coverage, sanctions, and source badges are not part of the score block."""
+    hidden = {"cov", "pen", "rel"}
+    kept = []
+    for badge in fund.get("badges") or []:
+        if badge.get("ev") in hidden:
+            continue
+        text = badge.get("text") or ""
+        if text.startswith(("Coverage ", "Sanctions:", "Sources ")):
+            continue
+        kept.append(badge)
+    return kept
+
+
 def render_hero(fund):
     lo, hi = fund["range"]
     rank = fund["rank"]
     example = '<span class="ph">example</span>' if rank.get("example") else ""
-    floats = []
-    for fl in fund["floats"]:
-        floats.append(
-            f'<button class="float {esc(fl["class"])} ovx" data-ev="{esc(fl["ev"])}">'
-            f'<i style="background:{fl["iconBg"]}">{fl["icon"]}</i>{esc(fl["text"])} <small>{esc(fl["small"])}</small></button>'
-        )
     badges = []
-    for b in fund["badges"]:
+    for badge in overview_badges(fund):
         badges.append(
-            f'<button class="bdg" data-ev="{esc(b["ev"])}"><i class="dt {esc(b["icon"])}"></i>{esc(b["text"])}</button>'
+            f'<button class="bdg" data-ev="{esc(badge["ev"])}"><i class="dt {esc(badge["icon"])}"></i>{esc(badge["text"])}</button>'
         )
+    badge_row = f'<div class="bdgs">{"".join(badges)}</div>' if badges else ""
     shown = esc(fund["scoreShown"])
     return (
         f'<div class="heroW">'
         f'<button class="rankb" data-ev="rank"><i>#{esc(rank["place"])}</i> of {esc(rank["of"])} funds{example}</button>'
-        f'{"".join(floats)}'
         f'<div class="hero"><div>'
         f'<button class="ringBtn" id="ringBtn" aria-label="Score {shown}. See why on the Score tab">'
         f'<div class="ringBox">{ring_svg(fund["scoreExact"])}'
@@ -584,7 +602,7 @@ def render_hero(fund):
         f'<button class="rng" data-ev="range">likely {esc(lo)}–{esc(hi)} ⓘ</button></div>'
         f'<div><div class="q">{esc(fund["question"])}</div><div class="dv">{esc(fund["verdict"])}</div>'
         f'<div class="vsub">{esc(fund["verdictSub"])}</div>'
-        f'<div class="bdgs">{"".join(badges)}</div>'
+        f'{badge_row}'
         f'<div class="ovx"><div class="bart"><span>{esc(fund["scoreBarNote"])}</span>'
         f'<button class="lnk" data-ev="rules">How scoring works</button></div>'
         f'{render_score_bars(fund)}</div>'
@@ -595,10 +613,7 @@ def render_hero(fund):
 def render_fund_page(fund, prefix):
     fund = dedupe_founded_sentence(strip_toxy(fund))
     matters = {m["id"]: m for m in fund["matters"]}
-    meta = [f'<span class="mi">{esc(fund["hq"])}</span>', f'<span class="mi">Since {esc(fund["since"])}</span>']
-    meta += [f'<span class="mi">{esc(item)}</span>' for item in fund["meta"]]
-    if fund.get("notToken"):
-        meta.append(f'<span class="mi y">{esc(fund["notToken"])}</span>')
+    meta = [f'<span class="mi">{esc(item)}</span>' for item in header_meta(fund)]
     n_legal = len(matters)
     n_public = len(fund["public"]["items"])
 
@@ -634,7 +649,7 @@ def render_fund_page(fund, prefix):
 <div class="ftop"><div class="wrap">
  <div class="crumb np"><a href="{home}">← All VCs</a></div>
  <div class="fh np"><div><h1>{fund_heading(fund)}<button type="button" class="save" id="save" data-tip="Save" aria-label="Save to watchlist" aria-pressed="false">{SAVE_SVG}</button></h1>
-  {ALERT_LINE}
+  {CORRECT_LINE}
   <div class="meta">{"".join(meta)}</div></div>
   <div class="upd">Updated {esc(fund["updated"])}<br>{esc(fund["method"])}</div></div>
  <div class="np">{render_hero(fund)}</div>
@@ -866,7 +881,7 @@ def render_fund_shell(fund, prefix):
 <div class="ftop"><div class="wrap" id="report">
  <div class="crumb np"><a href="{home}">← All VCs</a></div>
  <div class="fh np"><div><h1>{fund_heading(fund)}<button type="button" class="save" id="save" data-tip="Save" aria-label="Save to watchlist" aria-pressed="false">{SAVE_SVG}</button></h1>
-  {ALERT_LINE}</div></div>
+  {CORRECT_LINE}</div></div>
  <p class="report-wait">Loading the report…</p>
 </div></div>
 <footer class="np"><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regret<em>amine</em></span></span><span>regretamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">Scoring</a> · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>

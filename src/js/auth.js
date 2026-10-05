@@ -196,16 +196,17 @@
   async function paintAlert() {
     const tog = document.getElementById('alertTog');
     const note = document.getElementById('alertNote');
-    if (!tog) return;
     const slug = document.body.dataset.firm;
-    let locked = false;
-    if (user && tier !== 'paid' && slug) {
-      const opened = alerts.opened.has(slug) || (await seen()).has(slug);
-      locked = !opened;
+    if (tog) {
+      let locked = false;
+      if (user && tier !== 'paid' && slug) {
+        const opened = alerts.opened.has(slug) || (await seen()).has(slug);
+        locked = !opened;
+      }
+      const on = !!(slug && watch.slugs.has(slug));
+      paintOneAlert(tog, on, locked);
+      if (note) note.hidden = !locked;
     }
-    const on = !!(slug && watch.slugs.has(slug));
-    paintOneAlert(tog, on, locked);
-    if (note) note.hidden = !locked;
     const link = document.getElementById('correctLink');
     if (link) {
       const show = !!(user && tier === 'paid' && slug);
