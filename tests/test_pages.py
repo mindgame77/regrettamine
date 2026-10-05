@@ -192,7 +192,12 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "search_funds" in home_js and "plans/" in home_js
     gate_js = (ROOT / "src" / "js" / "gate.js").read_text(encoding="utf-8")
     assert "plans/" in gate_js and "loadReport" in gate_js
-    assert "Create account to see the full report" in gate_js and "showClosed" in gate_js
+    assert "Create account" in gate_js and "See plans" in gate_js and "showVeil" in gate_js
+    assert "report-veil" in gate_js and "A free account opens this report." in gate_js
+    assert "A plan opens this report." in gate_js
+    assert "summary.score" not in gate_js and "The score is here" not in gate_js
+    fund_css = (ROOT / "src" / "css" / "fund.css").read_text(encoding="utf-8")
+    assert "body.gated .report-veil{filter:blur(28px);pointer-events:none;user-select:none" in fund_css
     plans = (ROOT / "site" / "plans" / "index.html").read_text(encoding="utf-8")
     assert "Check first." in plans and "Sign second" in plans
     assert "One plan with everything. Pay monthly or yearly." in plans
