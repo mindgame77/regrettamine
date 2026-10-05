@@ -88,8 +88,8 @@ def test_visitor_free_and_paid_tiers():
             assert third["reason"] == "limit"
             assert third["plans"] is False
             assert "html" not in third
-            assert third["summary"]["name"]
-            assert third["summary"]["score"] is not None
+            assert "summary" not in third
+            assert "score" not in third
             again = _open(cur, ranked[0], ANON)
             assert again["ok"] is True and again["repeat"] is True
             cur.execute("select count(*) from firms")
@@ -135,6 +135,8 @@ def test_visitor_free_and_paid_tiers():
             assert blocked["reason"] == "limit"
             assert blocked["plans"] is True
             assert "html" not in blocked
+            assert "summary" not in blocked
+            assert "score" not in blocked
             cur.execute("savepoint no_apply")
             with pytest.raises(psycopg.Error):
                 cur.execute(

@@ -9,7 +9,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-a
 .gatecard .ringBox svg{width:180px;height:180px}
 .gatecard .ringBox .num b{font-size:64px}
 .gatecard p{color:var(--ink2);font-size:16px;margin:16px 0}
-.gatecard .b{margin-top:4px}
+.gatecard .b{margin-top:4px;width:100%;justify-content:center}
 .fh h1 span{color:var(--vio)}
 .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .mi{font-size:13px;font-weight:600;border-radius:999px;padding:5px 12px;background:#F4F2FA;color:var(--ink2)}
@@ -314,5 +314,7 @@ body.is-in .alert-line{display:block}
 .alert-line .fnote{font-size:12.5px;color:var(--mute);margin:8px 0 0;text-align:left;border:0;padding:0}
 .alert-line #correctLink{display:inline-block;margin-top:8px}
 .alert-line #correctLink[hidden]{display:none}
-body.gated .tabsW,body.gated [data-panel],body.gated .fnote,body.gated footer{filter:blur(8px);pointer-events:none;user-select:none}
-body.gated .alert-line,body.gated .alert-line .fnote{filter:none;pointer-events:auto;user-select:auto}
+body.gated .report-veil{filter:blur(28px);pointer-events:none;user-select:none;-webkit-user-select:none}
+body.gated .report-veil [data-panel]{display:block}
+body.gated .gatecard{position:fixed;z-index:35;top:50%;left:50%;transform:translate(-50%,-50%);margin:0;width:min(420px,calc(100% - 48px));filter:none;pointer-events:auto;user-select:auto}
+body.gated .alert-line{display:none!important}
