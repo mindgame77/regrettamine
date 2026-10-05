@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Build the Regrettamine static site into ./site.
+"""Build the Regretamine static site into ./site.
 
 Source of truth:
   data/home.json          fund list, stats, updates
   data/funds/<slug>.json  a full report
 
 No third-party dependencies. Internal links are relative, so the same
-output works at a GitHub project URL (/regrettamine/) and at regrettamine.com.
+output works at a GitHub project URL (/regrettamine/) and at regretamine.com.
 """
 import html
 import json
@@ -132,7 +132,7 @@ def grouped_matter_ids(fund):
 def strip_toxy(value):
     """User-facing pages do not name the old score brand."""
     if isinstance(value, str):
-        text = value.replace("Toxy Score v2", "Regrettamine score")
+        text = value.replace("Toxy Score v2", "Regretamine score")
         text = text.replace("Toxy sources", "sources")
         text = text.replace("Toxy's ", "")
         text = text.replace("Toxy ", "")
@@ -628,8 +628,8 @@ def render_fund_page(fund, prefix):
     sections = "".join(f'<section data-panel="{k}">{panels[k]}</section>' for k in panels)
     home = prefix
     body = f'''<div class="blobs np" style="height:900px"><div class="blob" style="width:520px;height:520px;background:#CDBBFF;left:-180px;top:-120px"></div><div class="blob" style="width:460px;height:460px;background:#FFC7B8;right:-140px;top:-40px"></div><div class="blob" style="width:380px;height:380px;background:#FFEBA0;left:42%;top:420px;opacity:.35"></div></div>
-<nav class="pillnav np"><a class="logo" href="{home}"><i></i><span class="wm">regrett<em>amine</em></span></a>
- <div class="links"><a class="on" href="{home}">VCs</a><a href="{home}scoring/">Scoring</a><a href="{home}plans/">Pricing</a><a href="{home}account/#share">Report a VC</a></div>
+<nav class="pillnav np"><a class="logo" href="{home}"><i></i><span class="wm">regret<em>amine</em></span></a>
+ <div class="links"><a class="on" href="{home}">VCs</a><a href="{home}scoring/">Scoring</a><a href="{home}plans/">Pricing</a><!-- Our Story --></div>
  <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#watchlist">Get alerts</a></div></nav>
 <div class="ftop"><div class="wrap">
  <div class="crumb np"><a href="{home}">← All VCs</a></div>
@@ -642,9 +642,9 @@ def render_fund_page(fund, prefix):
  {sections}
  <p class="fnote np">{esc(fund["footnote"])}</p>
 </div></div>
-<footer class="np"><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regrett<em>amine</em></span></span><span>regrettamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">Scoring</a> · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>
+<footer class="np"><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regret<em>amine</em></span></span><span>regretamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">Scoring</a> · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>
 <div class="scrim"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="Details"><div class="dh"><div><div class="dk" id="dk"></div><div class="dtt" id="dt"></div></div><button class="dx" id="dx" aria-label="Close">×</button></div><div class="db" id="db"></div></aside><div class="toast"></div>'''
-    title = fund.get("title") or f'{fund["name"]} · Regrettamine'
+    title = fund.get("title") or f'{fund["name"]} · Regretamine'
     extra = ""
     companies = fund.get("companies") or []
     reviews = fund.get("reviews") or []
@@ -858,10 +858,10 @@ def render_fund_shell(fund, prefix):
     """Public fund URL. The score line is static. The record stays on the server."""
     fund = strip_toxy(fund)
     home = prefix
-    title = f'{fund["name"]} · Regrettamine'
+    title = f'{fund["name"]} · Regretamine'
     body = f'''<div class="blobs np" style="height:420px"><div class="blob" style="width:520px;height:520px;background:#CDBBFF;left:-180px;top:-120px"></div><div class="blob" style="width:460px;height:460px;background:#FFC7B8;right:-140px;top:-40px"></div></div>
-<nav class="pillnav np"><a class="logo" href="{home}"><i></i><span class="wm">regrett<em>amine</em></span></a>
- <div class="links"><a class="on" href="{home}">VCs</a><a href="{home}scoring/">Scoring</a><a href="{home}plans/">Pricing</a><a href="{home}account/#share">Report a VC</a></div>
+<nav class="pillnav np"><a class="logo" href="{home}"><i></i><span class="wm">regret<em>amine</em></span></a>
+ <div class="links"><a class="on" href="{home}">VCs</a><a href="{home}scoring/">Scoring</a><a href="{home}plans/">Pricing</a><!-- Our Story --></div>
  <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#watchlist">Get alerts</a></div></nav>
 <div class="ftop"><div class="wrap" id="report">
  <div class="crumb np"><a href="{home}">← All VCs</a></div>
@@ -869,7 +869,7 @@ def render_fund_shell(fund, prefix):
   {ALERT_LINE}</div></div>
  <p class="report-wait">Loading the report…</p>
 </div></div>
-<footer class="np"><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regrett<em>amine</em></span></span><span>regrettamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">Scoring</a> · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>
+<footer class="np"><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regret<em>amine</em></span></span><span>regretamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">Scoring</a> · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>
 <div class="scrim"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="Details"><div class="dh"><div><div class="dk" id="dk"></div><div class="dtt" id="dt"></div></div><button class="dx" id="dx" aria-label="Close">×</button></div><div class="db" id="db"></div></aside><div class="toast"></div>'''
     scripts = (
         f'<script src="{prefix}js/supabase-config.js"></script>'
@@ -961,7 +961,7 @@ def main():
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         '<meta http-equiv="refresh" content="0;url=../#watchlist">'
         '<link rel="canonical" href="../#watchlist">'
-        '<title>Watchlist · Regrettamine</title>'
+        '<title>Watchlist · Regretamine</title>'
         '<script>location.replace("../#watchlist")</script></head>'
         '<body><p><a href="../#watchlist">Watchlist</a></p></body></html>\n',
         encoding="utf-8",

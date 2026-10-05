@@ -133,13 +133,13 @@ def card(kicker, title, body, sources, rows=None, tone=""):
 
 
 def ask_block(name):
-    lines = [f"Questions to ask {name}, from Regrettamine", ""]
+    lines = [f"Questions to ask {name}, from Regretamine", ""]
     for index, (_, title, question) in enumerate(QUESTIONS, start=1):
         lines.append(f"{index}. {title}: {question}")
     return {
         "title": "Not public: ask the fund",
         "note": "These can't be checked from public records. Bring them to your partner meeting.",
-        "printHead": f"{name} · Questions to ask · Regrettamine · {UPDATED}",
+        "printHead": f"{name} · Questions to ask · Regretamine · {UPDATED}",
         "questions": [{"n": n, "title": title, "q": q} for n, title, q in QUESTIONS],
         "clipboard": "\n".join(lines),
     }
@@ -1204,7 +1204,7 @@ def build_evidence(spec, cov, lo, hi, downs, ups, sections, rank_rows, place):
     )
     evidence["rules"] = card(
         "Methodology",
-        "How the Regrettamine score works",
+        "How the Regretamine score works",
         "Every fund starts with full points and loses them only for verified evidence about its own behavior. Bad events are a share of the portfolio: under 1% costs nothing. A missing portfolio count is not treated as a 70% rate. Regulatory is penalty-only.",
         [],
         rows=[
@@ -1316,7 +1316,7 @@ def build_fund(spec, result, cov, lo, hi, downs, ups, rank_rows, place):
         "slug": spec["slug"],
         "name": spec["name"],
         "short": SHORTS[spec["slug"]],
-        "title": f"{spec['name']} · Regrettamine",
+        "title": f"{spec['name']} · Regretamine",
         "hq": spec["hq"],
         "since": spec["since"],
         "meta": [
@@ -1325,7 +1325,7 @@ def build_fund(spec, result, cov, lo, hi, downs, ups, rank_rows, place):
         ],
         "notToken": "",
         "updated": UPDATED,
-        "method": "Regrettamine score",
+        "method": "Regretamine score",
         "scoreShown": shown,
         "scoreExact": float(total),
         "band": band,
@@ -1419,7 +1419,7 @@ def build_fund(spec, result, cov, lo, hi, downs, ups, rank_rows, place):
         },
         "ask": ask_block(spec["name"]),
         "footnote": "Every scored fact links to a dated source. Empty blocks were left empty. Founder sentiment stays empty until it rests on a first-hand account.",
-        "scoreFooter": "Rules: Regrettamine score (Oct 2, 2026). Inputs: this report, Oct 4, 2026.",
+        "scoreFooter": "Rules: Regretamine score (Oct 2, 2026). Inputs: this report, Oct 4, 2026.",
     }
     page["evidence"] = build_evidence(spec, cov, lo, hi, downs, ups, sections, rank_rows, place)
     # s1 lawsuit points label is always 30/30 for these inputs because every scored rate is under 1% or the count is 0.

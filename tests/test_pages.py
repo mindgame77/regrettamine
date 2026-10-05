@@ -240,6 +240,8 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "account/#watchlist" in auth_js and "account/#alerts" not in auth_js
     assert "ACCOUNT_NAV" in auth_js and auth_js.count("Share experience") == 1
     assert "Share / Report a VC" not in auth_js
+    assert "label: 'Report a VC'" in auth_js
+    assert 'M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' in auth_js
     assert "path: 'plans/'" in auth_js and "path: 'settings/'" in auth_js
     assert 'plans/">See plans' in home_js
     assert 'id="accountNav"' in account and 'id="accountNav"' in (ROOT / "src" / "settings.html").read_text(encoding="utf-8")
@@ -331,10 +333,20 @@ def test_shared_list_and_auth_pages(monkeypatch):
         assert "Sources" not in footer and "Corrections" not in footer, name
         assert f'href="{scoring_href}">Scoring' in footer, name
         assert "Privacy" in footer and "Terms" in footer, name
-        assert f'href="{share_href}">Report a VC' in html, name
+        assert "Report a VC" not in html, name
+        assert "<!-- Our Story -->" in html, name
         assert "How it works" not in html or name == "scoring", name
         assert 'href="#">Scoring' not in html, name
         assert "how/" not in html, name
+    visible = []
+    for path in (ROOT / "site").rglob("*"):
+        if path.suffix in {".html", ".js", ".css"} and path.is_file():
+            visible.append(path.read_text(encoding="utf-8", errors="ignore"))
+    shipped = "\n".join(visible)
+    assert "Regrettamine" not in shipped
+    assert "regrettamine.com" not in shipped
+    assert "regrett<em>" not in shipped
+    assert 'href="/regrettamine/"' in shipped
 
 
 def test_report_copy_matches_the_landing_list():
@@ -387,8 +399,8 @@ def test_legal_config_values():
 
     assert legal_html("", "contact email", email=True) == '<span class="ph">contact email</span>'
     assert legal_html("  ", "jurisdiction") == '<span class="ph">jurisdiction</span>'
-    assert legal_html("hello@regrettamine.com", "contact email", email=True) == (
-        '<a href="mailto:hello@regrettamine.com">hello@regrettamine.com</a>'
+    assert legal_html("hello@regretamine.com", "contact email", email=True) == (
+        '<a href="mailto:hello@regretamine.com">hello@regretamine.com</a>'
     )
     assert legal_html("not-an-email", "contact email", email=True) == "not-an-email"
     assert legal_html("Delaware", "jurisdiction") == "Delaware"

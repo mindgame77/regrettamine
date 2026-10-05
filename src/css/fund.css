@@ -175,7 +175,7 @@ body.dopen .scrim{opacity:1;pointer-events:auto}body.dopen .drawer{transform:non
  body.print-ask [data-panel=ask]{display:block!important}body.print-ask .print-head{display:block;font-weight:700;font-size:16px;margin-bottom:14px}
  body.print-ask .askc{break-inside:avoid}body{background:#fff!important}}
 
-/* Regrettamine brand */
+/* Regretamine brand */
 .logo .wm{font-family:'Bricolage Grotesque';font-weight:800;letter-spacing:-.035em}.logo .wm em{font-style:normal;color:var(--vio)}
 .f1{bottom:auto;top:458px}
 /* score button */

@@ -9,14 +9,14 @@ Authentication → Emails → SMTP Settings
   Username: resend
   Password: the Resend API key
   Sender email: noreply@<the domain verified in Resend>
-  Sender name: Regrettamine
+  Sender name: Regretamine
 
 Authentication → Emails → Templates
   Confirm signup:     supabase/templates/confirmation.html
-    Subject: Confirm your Regrettamine account
+    Subject: Confirm your Regretamine account
   Reset password:     supabase/templates/recovery.html
-    Subject: Reset your Regrettamine password
+    Subject: Reset your Regretamine password
   Change email:       supabase/templates/email_change.html
-    Subject: Confirm your new email for Regrettamine
+    Subject: Confirm your new email for Regretamine
 
 The Resend domain has to be verified before messages will send.
