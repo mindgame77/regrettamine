@@ -124,10 +124,16 @@ try {
     await new Promise(resolve => setTimeout(resolve, 15000));
   }
   for (const slug of SLUGS.filter(slug => slug !== 'a16z')) {
-    const context = await browser.newContext();
-    const page = await context.newPage();
-    const row = await readFund(page, slug);
-    await context.close();
+    let row;
+    for (let attempt = 1; attempt <= 4; attempt++) {
+      const context = await browser.newContext();
+      const page = await context.newPage();
+      row = await readFund(page, slug);
+      await context.close();
+      const stalled = row.problems.some(item => /did not finish/.test(item));
+      if (!stalled || attempt === 4) break;
+      await new Promise(resolve => setTimeout(resolve, 5000));
+    }
     problems.push(...row.problems);
     if (!row.problems.length) loaded.push(row);
   }
@@ -137,14 +143,16 @@ try {
   await homePage.waitForSelector('.tbl .nm b', { timeout: 20000 });
   const homeNames = await homePage.locator('.tbl .nm b').allTextContents();
   await home.close();
-  const expected = loaded.slice().sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
-  expected.forEach((fund, index) => {
-    const want = '#' + (index + 1) + ' of ' + expected.length + ' funds';
-    if (fund.rank !== want) problems.push(fund.slug + ': rank ' + fund.rank + ' != ' + want);
-  });
-  const top = expected.slice(0, 3).map(fund => fund.name);
-  if (homeNames.slice(0, 3).join('|') !== top.join('|')) {
-    problems.push('landing order ' + homeNames.slice(0, 3).join(', ') + ' != ' + top.join(', '));
+  if (loaded.length === SLUGS.length) {
+    const expected = loaded.slice().sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
+    expected.forEach((fund, index) => {
+      const want = '#' + (index + 1) + ' of ' + SLUGS.length + ' funds';
+      if (fund.rank !== want) problems.push(fund.slug + ': rank ' + fund.rank + ' != ' + want);
+    });
+    const top = expected.slice(0, 3).map(fund => fund.name);
+    if (homeNames.slice(0, 3).join('|') !== top.join('|')) {
+      problems.push('landing order ' + homeNames.slice(0, 3).join(', ') + ' != ' + top.join(', '));
+    }
   }
 } finally {
   await browser.close();
