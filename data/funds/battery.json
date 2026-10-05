@@ -2,7 +2,7 @@
   "slug": "battery",
   "name": "Battery Ventures",
   "short": "Battery",
-  "title": "Battery Ventures · Regrettamine",
+  "title": "Battery Ventures · Regretamine",
   "hq": "Boston, MA",
   "since": "1983",
   "meta": [
@@ -11,7 +11,7 @@
   ],
   "notToken": "",
   "updated": "Oct 4, 2026",
-  "method": "Regrettamine score",
+  "method": "Regretamine score",
   "scoreShown": 91,
   "scoreExact": 91.6,
   "band": "Very low risk",
@@ -393,7 +393,7 @@
   "ask": {
     "title": "Not public: ask the fund",
     "note": "These can't be checked from public records. Bring them to your partner meeting.",
-    "printHead": "Battery Ventures · Questions to ask · Regrettamine · Oct 4, 2026",
+    "printHead": "Battery Ventures · Questions to ask · Regretamine · Oct 4, 2026",
     "questions": [
       {
         "n": "01",
@@ -436,10 +436,10 @@
         "q": "Give me 2 founders whose companies failed with you on the board."
       }
     ],
-    "clipboard": "Questions to ask Battery Ventures, from Regrettamine\n\n1. Down rounds, bridges, pay-to-play: In your last 3 down or flat rounds, did you lead, follow or walk?\n2. Follow-on and pro rata: What share of your seed/A companies did you reinvest in at the next round, including the strugglers?\n3. Replacing founder-CEOs: When did you last back replacing a founder-CEO, and how did it happen?\n4. Board seat & consent rights: Will you take a seat at my stage? Which consent rights do you require?\n5. Competitor overlap: Does any partner sit on the board of a company that competes with me?\n6. Reserves for this check: Which fund is this check from, and how much is reserved for follow-ons?\n7. Foreign or sovereign LPs: Are there sovereign or foreign-state LPs in this fund?\n8. References from failures: Give me 2 founders whose companies failed with you on the board."
+    "clipboard": "Questions to ask Battery Ventures, from Regretamine\n\n1. Down rounds, bridges, pay-to-play: In your last 3 down or flat rounds, did you lead, follow or walk?\n2. Follow-on and pro rata: What share of your seed/A companies did you reinvest in at the next round, including the strugglers?\n3. Replacing founder-CEOs: When did you last back replacing a founder-CEO, and how did it happen?\n4. Board seat & consent rights: Will you take a seat at my stage? Which consent rights do you require?\n5. Competitor overlap: Does any partner sit on the board of a company that competes with me?\n6. Reserves for this check: Which fund is this check from, and how much is reserved for follow-ons?\n7. Foreign or sovereign LPs: Are there sovereign or foreign-state LPs in this fund?\n8. References from failures: Give me 2 founders whose companies failed with you on the board."
   },
   "footnote": "Every scored fact links to a dated source. Empty blocks were left empty. Founder sentiment stays empty until it rests on a first-hand account.",
-  "scoreFooter": "Rules: Regrettamine score (Oct 2, 2026). Inputs: this report, Oct 4, 2026.",
+  "scoreFooter": "Rules: Regretamine score (Oct 2, 2026). Inputs: this report, Oct 4, 2026.",
   "evidence": {
     "tk0": {
       "kicker": "Takeaway",
@@ -701,7 +701,7 @@
     },
     "rank": {
       "kicker": "Ranking",
-      "title": "#3 of 11 on Regrettamine score",
+      "title": "#3 of 11 on Regretamine score",
       "body": "All 11 funds are on v2. Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
       "rows": [
         [
@@ -754,7 +754,7 @@
     },
     "rules": {
       "kicker": "Methodology",
-      "title": "How Regrettamine score works",
+      "title": "How Regretamine score works",
       "body": "Every fund starts with full points and loses them only for verified evidence about its own behavior. Bad events are a share of the portfolio: under 1% costs nothing. A missing portfolio count is not treated as a 70% rate. Regulatory is penalty-only.",
       "rows": [
         [

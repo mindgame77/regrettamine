@@ -1,6 +1,6 @@
-# Regrettamine
+# Regretamine
 
-Founder tool for background-checking a VC fund before taking their money. This repo is the static site for [regrettamine.com](https://regrettamine.com): the fund list at `/` and the Andreessen Horowitz report at `/vc/a16z/`.
+Founder tool for background-checking a VC fund before taking their money. This repo is the static site for [regretamine.com](https://regretamine.com): the fund list at `/` and the Andreessen Horowitz report at `/vc/a16z/`.
 
 The pages are plain HTML, CSS, and JavaScript. `build.py` turns either the JSON in `data/` or a Supabase Postgres database into the site. Login is Google or email and password (`/login/`). A free account is at `/account/` (watchlist, alerts, share experience). Anonymous visitors get 2 reports, an account gets 5 more, then a plans placeholder with no prices and no checkout. The watchlist uses the same fund list as the homepage.
 
@@ -15,7 +15,7 @@ Open [http://localhost:8000/](http://localhost:8000/) and [http://localhost:8000
 
 `site/` is generated. Do not edit it by hand. Python 3.9 or newer is enough. There is no install step.
 
-Links and assets are relative, so the same build works at the project URL (`https://<user>.github.io/regrettamine/`) and at the domain root (`https://regrettamine.com/`). No base-path setting.
+Links and assets are relative, so the same build works at the project URL (`https://<user>.github.io/regrettamine/`) and at the domain root (`https://regretamine.com/`). No base-path setting.
 
 ## Add a fund in JSON
 
@@ -120,15 +120,15 @@ The repository owner has to turn Pages on once:
 
 If the deploy fails with a Pages site error before that setting is saved, set the source and re-run the workflow. The URL is also printed on the workflow run and on the Pages settings screen.
 
-### Custom domain (regrettamine.com)
+### Custom domain (regretamine.com)
 
 A `CNAME` file is not in the repo yet, so the `github.io` URL keeps working before DNS exists. When you are ready:
 
-1. Add a file named `CNAME` at the repo root whose only line is `regrettamine.com`. `build.py` copies it into the published site. Commit it to `main`.
+1. Add a file named `CNAME` at the repo root whose only line is `regretamine.com`. `build.py` copies it into the published site. Commit it to `main`.
 2. At the DNS host, point the apex at GitHub Pages:
    - `A` records for `@`: `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
    - or an `ALIAS` / `ANAME` / apex `CNAME` to `mindgame77.github.io`, if the host supports it
    - `www` as a `CNAME` to `mindgame77.github.io`
-3. Settings → Pages → **Custom domain**: `regrettamine.com`. After DNS checks out, turn on **Enforce HTTPS**.
+3. Settings → Pages → **Custom domain**: `regretamine.com`. After DNS checks out, turn on **Enforce HTTPS**.
 
 Relative links mean you do not change paths when the custom domain goes live.

@@ -1,4 +1,4 @@
-# Regrettamine data model
+# Regretamine data model
 
 Scores, people, portfolio companies, legal matters, press, and sources live in Postgres (Supabase). The static site is a build of the **published** rows. A firm with no full report still appears on the list. Test rows are never published and never deployed.
 
