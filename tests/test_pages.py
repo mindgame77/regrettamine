@@ -41,7 +41,8 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert 'id="share"' not in account
     assert "js/fund-list.js" in account and "css/list.css" in account
     assert 'class="save"' in fund and 'data-firm="a16z"' in fund
-    assert 'id="alertTog"' in fund and "Open this report to get alerts" in fund
+    assert 'id="alertTog"' not in fund and "Open this report to get alerts" not in fund
+    assert 'id="correctLink"' in fund
     full_report = render_fund_page(load_local()[1]["a16z"], "../../")
     assert "out of 100" in full_report and 'id="evidence"' in full_report
     from build import assign_list_ranks
@@ -194,10 +195,12 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "plans/" in gate_js and "loadReport" in gate_js
     assert "Create account" in gate_js and "See plans" in gate_js and "showVeil" in gate_js
     assert "report-veil" in gate_js and "A free account opens this report." in gate_js
+    assert 'class="float' not in gate_js and "Andreessen" not in gate_js.split("function veilHtml", 1)[1].split("function showVeil", 1)[0]
     assert "A plan opens this report." in gate_js
     assert "summary.score" not in gate_js and "The score is here" not in gate_js
     fund_css = (ROOT / "src" / "css" / "fund.css").read_text(encoding="utf-8")
     assert "body.gated .report-veil{filter:blur(28px);pointer-events:none;user-select:none" in fund_css
+    assert "body:not([data-tab=overview]) .ovx{display:none" not in fund_css
     plans = (ROOT / "site" / "plans" / "index.html").read_text(encoding="utf-8")
     assert "Check first." in plans and "Sign second" in plans
     assert "One plan with everything. Pay monthly or yearly." in plans
@@ -360,7 +363,7 @@ def test_shared_list_and_auth_pages(monkeypatch):
 
 
 def test_report_copy_matches_the_landing_list():
-    from build import assign_list_ranks, fund_heading, load_local, render_fund_page
+    from build import assign_list_ranks, esc, fund_heading, load_local, render_fund_page
 
     _, funds = load_local()
     assign_list_ranks(funds)
@@ -382,6 +385,21 @@ def test_report_copy_matches_the_landing_list():
         assert "(v2)" not in str(fund["evidence"]["rank"]["rows"])
         score = page.split('data-panel="score"', 1)[1].split('data-panel="legal"', 1)[0]
         assert score.count("capped at +3") <= 1, fund["slug"]
+        top = page.split('<div class="tabsW', 1)[0]
+        meta = top.split('<div class="meta">', 1)[1].split("</div>", 1)[0]
+        assert 'id="alertTog"' not in page and 'class="float' not in top, fund["slug"]
+        assert "Coverage " not in top and "Sanctions:" not in top, fund["slug"]
+        assert "Sources verified" not in top and "Sources linked" not in top, fund["slug"]
+        assert "Not the $" not in top, fund["slug"]
+        assert fund["hq"] in meta and f'Since {fund["since"]}' in meta and "SEC adviser" in meta, fund["slug"]
+        assert "CRD" in meta, fund["slug"]
+        for extra in fund.get("meta") or []:
+            if str(extra).startswith("SEC adviser") or "CRD" in str(extra):
+                continue
+            assert extra not in meta, fund["slug"]
+        assert 'class="stk"' in top and fund["question"] in top and esc(fund["verdict"]) in top, fund["slug"]
+        assert 'class="rankb"' in top and "out of 100" in top, fund["slug"]
+        assert top.index('class="heroW"') < top.index('class="stk"') < page.index('data-panel="overview"')
         for key, nxt in (("legal", "fund"), ("public", "portfolio")):
             button = page.split(f'data-tab="{key}"', 1)[1].split("</button>", 1)[0]
             if "<i>0</i>" not in button:

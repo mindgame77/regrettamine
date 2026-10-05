@@ -359,7 +359,7 @@ def seed_report(loader, fund, firm_id, version_ids, score_inputs, old_score, com
             match = re.search(r"CRD\s+(\d+)", label)
             if match:
                 crd = match.group(1)
-        legal_name = fund["meta"][1] if len(fund.get("meta") or []) > 1 else fund["name"]
+        legal_name = fund.get("legalName") or (fund["meta"][1] if len(fund.get("meta") or []) > 1 else fund["name"])
         loader.add(
             "fund_entities",
             id=uid(),
