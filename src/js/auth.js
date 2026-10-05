@@ -121,7 +121,6 @@
   const ACCOUNT_NAV = [
     { id: 'watchlist', label: 'Watchlist', path: 'account/#watchlist', icon: '<svg' + NAV_ICON + '><path d="M6 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14l-6-4.2L6 20z"/></svg>' },
     { id: 'share', label: 'Share experience', path: 'account/#share', icon: '<svg' + NAV_ICON + '><path d="M5 19.5l1-4L16 5.5a2.1 2.1 0 013 3L9 18.5zM14 7.5l3 3"/></svg>' },
-    { id: 'report', label: 'Report a VC', path: 'account/#share', icon: '<svg' + NAV_ICON + '><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg>' },
     { id: 'pricing', label: 'Pricing', path: 'plans/', icon: '<svg' + NAV_ICON + '><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' },
     { id: 'settings', label: 'Settings', path: 'settings/', icon: '<svg' + NAV_ICON + '><circle cx="12" cy="12" r="3"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8 5.6 18.4"/></svg>' },
     { id: 'review', label: 'Review', path: 'admin/', admin: true, icon: '<svg' + NAV_ICON + '><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>' }
