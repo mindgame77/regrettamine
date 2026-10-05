@@ -190,6 +190,9 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "Log in to see all" in home_js and "fact_record_count" in home_js and "FEED_SHOWN = 7" in home_js
     assert "Firm AUM" in index and "Fund size (AUM)" not in index
     assert "Updated in the last 30 days" in index and 'id="fRecent"' in index
+    assert "Has active legal matters" in index and 'id="fLegal"' in index
+    assert "Open cases or probes with the firm as a party" not in index
+    assert "Uses the Last update date on each fund." not in index
     assert "Under $20B" not in home_js and "$50B+" not in home_js
     assert "Under $100M" in home_js and "$1B–$10B" in home_js and "$10B+" in home_js
     assert "landing_funds" in auth_js and "list-only" in auth_js
