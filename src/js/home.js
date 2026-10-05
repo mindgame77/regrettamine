@@ -5,8 +5,23 @@ const STATS = HOME.stats;
 const UPD = HOME.updates;
 
 const BANDS = FundList.BANDS;
-const SIZES = [['s', 'Under $20B', a => a < 20], ['m', '$20–50B', a => a >= 20 && a < 50], ['l', '$50B+', a => a >= 50]];
-const S = {q: '', band: new Set(), size: new Set(), legal: false, min: 0, max: 100, sort: 'score'};
+const SIZES = [
+  ['u', 'Under $100M', a => typeof a == 'number' && a < 0.1],
+  ['s', '$100M–$1B', a => typeof a == 'number' && a >= 0.1 && a < 1],
+  ['m', '$1B–$10B', a => typeof a == 'number' && a >= 1 && a < 10],
+  ['l', '$10B+', a => typeof a == 'number' && a >= 10]
+];
+const S = {q: '', band: new Set(), size: new Set(), legal: false, recent: false, min: 0, max: 100, sort: 'score'};
+function updatedWithin30(f, today) {
+  const raw = String((f && (f.updated || f.updatedTs)) || '').slice(0, 10);
+  const parts = /^(\d{4})-(\d{2})-(\d{2})$/.exec(raw);
+  if (!parts) return false;
+  const updated = Date.UTC(+parts[1], +parts[2] - 1, +parts[3]);
+  const now = today || new Date();
+  const day = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  const days = Math.round((day - updated) / 86400000);
+  return days >= 0 && days <= 30;
+}
 const $ = id => document.getElementById(id);
 function esc(s) {
   return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -18,7 +33,11 @@ function match(f, skip) {
   if (skip != 'range' && (f.score < S.min || f.score > S.max)) return false;
   if (skip != 'size' && S.size.size && !SIZES.some(z => S.size.has(z[0]) && z[2](f.aum))) return false;
   if (skip != 'legal' && S.legal && !f.legal) return false;
+  if (skip != 'recent' && S.recent && !updatedWithin30(f)) return false;
   return true;
+}
+function listFiltered() {
+  return S.band.size || S.size.size || S.legal || S.recent || S.min > 0 || S.max < 100;
 }
 function chipGroup(el, items, set, key, test, extra) {
   $(el).innerHTML = items.map(it => {
@@ -35,6 +54,7 @@ function render() {
   chipGroup('fBand', BANDS, S.band, 'band', (f, it) => f.band == it[0], it => `<span class="sw" style="background:${it[2]}"></span>`);
   chipGroup('fSize', SIZES, S.size, 'size', (f, it) => it[2](f.aum));
   $('fLegal').classList.toggle('on', S.legal);
+  $('fRecent').classList.toggle('on', S.recent);
   const lo = Math.min(S.min, S.max), hi = Math.max(S.min, S.max);
   $('rfill').style.left = lo + '%';
   $('rfill').style.width = (hi - lo) + '%';
@@ -42,7 +62,7 @@ function render() {
   let nameOnly = [];
   let L;
   if (S.q && searchHits) {
-    const filtering = S.band.size || S.size.size || S.legal || S.min > 0 || S.max < 100;
+    const filtering = listFiltered();
     const detailed = searchHits.filter(f => f.score != null);
     nameOnly = filtering ? [] : searchHits.filter(f => f.score == null);
     L = detailed.filter(f => match(f, 'q'));
@@ -62,8 +82,9 @@ function render() {
   if (S.q) A.push(['q', '“' + S.q + '”']);
   S.band.forEach(b => A.push(['band:' + b, b]));
   if (S.min > 0 || S.max < 100) A.push(['range', 'Score ' + lo + '–' + hi]);
-  S.size.forEach(s => A.push(['size:' + s, 'AUM ' + SIZES.find(z => z[0] == s)[1]]));
+  S.size.forEach(s => A.push(['size:' + s, 'Firm AUM ' + SIZES.find(z => z[0] == s)[1]]));
   if (S.legal) A.push(['legal', 'Has active legal matters']);
+  if (S.recent) A.push(['recent', 'Updated in the last 30 days']);
   $('active').innerHTML = A.length
     ? A.map(a => `<span class="ac">${a[1]}<i data-x="${a[0]}">×</i></span>`).join('') + '<span class="clr" id="clr">Clear all</span>'
     : '';
@@ -72,6 +93,7 @@ function render() {
     if (k == 'q') { S.q = ''; $('q').value = ''; $('hq').value = ''; }
     else if (k == 'range') { S.min = 0; S.max = 100; $('smin').value = 0; $('smax').value = 100; }
     else if (k == 'legal') S.legal = false;
+    else if (k == 'recent') S.recent = false;
     else S[k].delete(v);
     render();
   });
@@ -95,7 +117,7 @@ function skeletonRow() {
   return '<div class="tr2 skel" aria-hidden="true"><div class="nm"><b></b><div class="m"></div></div><div class="sc"><span class="ring"></span><span class="tag"></span></div><div><span class="lgc"></span></div><div><b></b><div class="m"></div></div><div></div></div>';
 }
 function filtersOn() {
-  return S.q || S.band.size || S.size.size || S.legal || S.min > 0 || S.max < 100;
+  return S.q || listFiltered();
 }
 function lockRows() {
   if (filtersOn()) return;
@@ -157,7 +179,7 @@ async function loadSearch(q) {
 function reset() {
   S.q = ''; $('q').value = ''; $('hq').value = '';
   ['band', 'size'].forEach(k => S[k].clear());
-  S.legal = false; S.min = 0; S.max = 100;
+  S.legal = false; S.recent = false; S.min = 0; S.max = 100;
   $('smin').value = 0; $('smax').value = 100;
   render();
 }
@@ -186,6 +208,7 @@ $('hq').onkeydown = e => { if (e.key == 'Enter') $('list').scrollIntoView({behav
 $('smin').oninput = e => { S.min = Math.min(+e.target.value, S.max); e.target.value = S.min; render(); };
 $('smax').oninput = e => { S.max = Math.max(+e.target.value, S.min); e.target.value = S.max; render(); };
 $('fLegal').onclick = () => { S.legal = !S.legal; render(); };
+$('fRecent').onclick = () => { S.recent = !S.recent; render(); };
 $('sort').onchange = e => { S.sort = e.target.value; render(); };
 $('stats').innerHTML = STATS.map(s => `<div class="stat"><div class="n">${s.n.toLocaleString('en-US')}</div><div class="l">${s.l}</div></div>`).join('');
 const FEED = UPD.filter((u, i, all) => all.findIndex(x => x.no == u.no && x.d == u.d && x.t == u.t && x.u == u.u) == i);
