@@ -22,8 +22,8 @@
 .auth .b.c{background:var(--vio);color:#fff;box-shadow:0 8px 20px -8px rgba(108,59,255,.7)}
 .auth .or{display:flex;align-items:center;gap:12px;margin:18px 0;font-size:12.5px;font-weight:600;color:var(--mute);text-transform:uppercase;letter-spacing:.07em}
 .auth .or:before,.auth .or:after{content:'';flex:1;height:1.5px;background:var(--line)}
-.auth .pf{display:flex;flex-direction:column;gap:10px}
-.auth .fld{display:flex;align-items:center;height:50px;border:1.5px solid var(--line);border-radius:14px;padding:0 16px;background:#FBFAFE}
+.auth .pf{display:flex;flex-direction:column;align-items:stretch;gap:10px;width:100%}
+.auth .fld{display:flex;align-items:center;width:100%;align-self:stretch;height:50px;border:1.5px solid var(--line);border-radius:14px;padding:0 16px;background:#FBFAFE}
 .auth .fld:focus-within{border-color:var(--vio2);box-shadow:0 0 0 4px var(--viobg);background:#fff}
 .auth .fld input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:15.5px 'DM Sans';color:var(--ink);width:100%}
 .auth .fld input::placeholder{color:var(--mute)}
@@ -86,6 +86,11 @@ body.is-auth-page .auth{box-shadow:0 30px 70px -34px rgba(60,40,140,.4)}
 .b.sm{height:40px;padding:0 18px;font-size:14.5px}
 
 /* Landing list gate: same card, list headline instead of the page one. */
+.auth .intent-only,.auth .intent-sub{display:none}
+.auth[data-intent="save"] .intent-only,.auth[data-intent="alerts"] .intent-only,.auth[data-intent="share"] .intent-only,.auth[data-intent="gate"] .intent-only{display:block}
+.auth[data-intent] .intent-sub:not([hidden]){display:block}
+.auth[data-intent="save"] .page-only,.auth[data-intent="alerts"] .page-only,.auth[data-intent="share"] .page-only{display:none!important}
+.auth[data-intent="gate"] .gate-copy{display:none!important}
 .auth .list-only{display:none}
 .auth.is-list[data-mode=login] .list-only,.auth.is-list[data-mode=signup] .list-only{display:block}
 .auth.is-list .page-only{display:none!important}
