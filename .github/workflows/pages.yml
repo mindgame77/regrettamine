@@ -31,7 +31,8 @@ jobs:
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
           # Server-side only. build.py never writes this into supabase-config.js.
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          # The Pages environment cannot see this key. Publish here, and only on main.
+          # Publish stored reports on main when the service role key is present.
+          # A missing key skips the upload and still deploys the site.
           REPORT_PUBLISH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && '1' || '0' }}
         run: python3 build.py
       - name: Upload Pages artifact
