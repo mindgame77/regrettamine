@@ -114,13 +114,13 @@
       return;
     }
     paintPayFail(data.lapsed
-      ? 'Your payment didn\'t go through, so you\'re on the free plan now. Update your card to restore access.'
-      : 'We couldn\'t charge your card. Update it within 24 hours or your account moves to the free plan.');
+      ? 'Your payment didn\'t go through, so you\'{{sjs:js.auth.re_on_the_free_plan}}'
+      : 'We couldn\'{{sjs:js.auth.t_charge_your_card_update}}');
   }
   const NAV_ICON = ' width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
   const ACCOUNT_NAV = [
     { id: 'watchlist', label: 'Watchlist', path: 'account/#watchlist', icon: '<svg' + NAV_ICON + '><path d="M6 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14l-6-4.2L6 20z"/></svg>' },
-    { id: 'share', label: 'Share experience', path: 'account/#share', icon: '<svg' + NAV_ICON + '><path d="M5 19.5l1-4L16 5.5a2.1 2.1 0 013 3L9 18.5zM14 7.5l3 3"/></svg>' },
+    { id: 'share', label: '{{sjs:js.auth.share_experience}}', path: 'account/#share', icon: '<svg' + NAV_ICON + '><path d="M5 19.5l1-4L16 5.5a2.1 2.1 0 013 3L9 18.5zM14 7.5l3 3"/></svg>' },
     { id: 'pricing', label: 'Pricing', path: 'plans/', icon: '<svg' + NAV_ICON + '><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' },
     { id: 'settings', label: 'Settings', path: 'settings/', icon: '<svg' + NAV_ICON + '><circle cx="12" cy="12" r="3"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8 5.6 18.4"/></svg>' },
     { id: 'review', label: 'Review', path: 'admin/', admin: true, icon: '<svg' + NAV_ICON + '><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>' }
@@ -325,11 +325,11 @@
     if (watch.slugs.has(slug)) return { saved: true };
     if (watch.slugs.size >= 100) return { full: true };
     const clientNow = sb();
-    if (!clientNow) return { error: 'Sign-in is not configured on this build.' };
+    if (!clientNow) return { error: '{{sjs:js.auth.sign_in_is_not_configured}}' };
     const { data, error } = await clientNow.rpc('watch_fund', { p_slug: slug });
     if (error) return { error: error.message };
     if (data && data.saved) watch.slugs.add(slug);
-    return data || { error: 'Could not save' };
+    return data || { error: '{{sjs:js.auth.could_not_save}}' };
   }
   async function removeWatch(slug) {
     const clientNow = sb();
@@ -342,19 +342,19 @@
   async function setFundAlert(slug, on) {
     if (!user) return { needAuth: true };
     const clientNow = sb();
-    if (!clientNow) return { error: 'Sign-in is not configured on this build.' };
+    if (!clientNow) return { error: '{{sjs:js.auth.sign_in_is_not_configured}}' };
     const { data, error } = await clientNow.rpc('set_fund_alert', { p_slug: slug, p_on: !!on });
     if (error) return { error: error.message };
     if (data && data.ok) {
       if (data.on) watch.slugs.add(slug);
       await refreshAlerts();
     }
-    return data || { error: 'Could not update alerts' };
+    return data || { error: '{{sjs:js.auth.could_not_update_alerts}}' };
   }
   async function setFundAlertKind(slug, kind, on) {
     if (!user) return { needAuth: true };
     const clientNow = sb();
-    if (!clientNow) return { error: 'Sign-in is not configured on this build.' };
+    if (!clientNow) return { error: '{{sjs:js.auth.sign_in_is_not_configured}}' };
     const { data, error } = await clientNow.rpc('set_fund_alert_kind', {
       p_slug: slug,
       p_kind: kind,
@@ -362,12 +362,12 @@
     });
     if (error) return { error: error.message };
     if (data && data.ok) await refreshAlerts();
-    return data || { error: 'Could not update alerts' };
+    return data || { error: '{{sjs:js.auth.could_not_update_alerts}}' };
   }
   async function setWatchAlertKind(kind, on) {
     if (!user) return { needAuth: true };
     const clientNow = sb();
-    if (!clientNow) return { error: 'Sign-in is not configured on this build.' };
+    if (!clientNow) return { error: '{{sjs:js.auth.sign_in_is_not_configured}}' };
     const { data, error } = await clientNow.rpc('set_watch_alert_kind', {
       p_kind: kind,
       p_on: !!on
@@ -380,7 +380,7 @@
       };
       await refreshAlerts();
     }
-    return data || { error: 'Could not update alerts' };
+    return data || { error: '{{sjs:js.auth.could_not_update_alerts}}' };
   }
 
   function cardHtml() {
@@ -438,7 +438,7 @@
   function authError(text) {
     const raw = String(text || '');
     if (/email rate limit exceeded|over_email_send_rate_limit/i.test(raw)) {
-      return 'Too many sign-ups right now, try again in a few minutes';
+      return '{{sjs:js.auth.too_many_sign_ups_right}}';
     }
     return raw;
   }
@@ -511,7 +511,7 @@
   }
   function needConfig() {
     if (sb()) return false;
-    msg('Sign-in is not configured on this build.');
+    msg('{{sjs:js.auth.sign_in_is_not_configured}}');
     return true;
   }
   async function onSubmit(e) {
@@ -527,18 +527,18 @@
     if (mode === 'forgot') {
       const { error } = await clientNow.auth.resetPasswordForEmail(email, { redirectTo: new URL('login/reset/', siteRoot()).href });
       if (error) msg(error.message);
-      else msg('Reset link sent. Check your email.', true);
+      else msg('{{sjs:js.auth.reset_link_sent_check_your}}', true);
       return;
     }
     if (mode === 'reset') {
-      if (password.length < 6) { msg('Use at least 6 characters.'); return; }
+      if (password.length < 6) { msg('{{sjs:js.auth.use_at_least_6_characters}}'); return; }
       if (password !== password2) { msg('Those passwords don\'t match.'); return; }
       const { error } = await clientNow.auth.updateUser({ password: password });
       if (error) msg(error.message);
-      else { msg('Password updated.', true); setTimeout(() => { location.href = siteRoot().href; }, 600); }
+      else { msg('{{sjs:js.auth.password_updated}}', true); setTimeout(() => { location.href = siteRoot().href; }, 600); }
       return;
     }
-    if (password.length < 6) { msg('Use at least 6 characters.'); return; }
+    if (password.length < 6) { msg('{{sjs:js.auth.use_at_least_6_characters}}'); return; }
     if (mode === 'signup') {
       if (password !== password2) { msg('Those passwords don\'t match.'); return; }
       const { data, error } = await clientNow.auth.signUp({
@@ -576,10 +576,10 @@
     const resend = card.querySelector('#resendBtn');
     if (resend) resend.onclick = async () => {
       const email = document.getElementById('authEmail').value.trim();
-      if (!email || needConfig()) { msg('Enter the email you signed up with.'); return; }
+      if (!email || needConfig()) { msg('{{sjs:js.auth.enter_the_email_you_signed}}'); return; }
       const { error } = await sb().auth.resend({ type: 'signup', email: email, options: { emailRedirectTo: siteRoot().href } });
       if (error) msg(error.message);
-      else msg('Sent again.', true);
+      else msg('{{sjs:js.auth.sent_again}}', true);
     };
     const veil = document.getElementById('authVeil');
     if (veil) veil.addEventListener('click', ev => { if (ev.target === veil) close(); });
@@ -621,7 +621,7 @@
       const result = watch.slugs.has(slug) ? (await removeWatch(slug), { saved: false }) : await addWatch(slug);
       if (result && result.full) paintSave();
       if (result && result.error) {
-        save.dataset.tip = 'Could not save';
+        save.dataset.tip = '{{sjs:js.auth.could_not_save}}';
       }
       paintSave();
       return;

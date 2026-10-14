@@ -25,7 +25,7 @@
     "of": 11,
     "example": false
   },
-  "question": "Should I take this money?",
+  "question": "{{s:report.should_i_take_this_money}}",
   "verdict": "Khosla sued a former portfolio CEO. That one case is under 1% of the names on its portfolio page.",
   "verdictSub": "The page is a partial list, so the rate is an upper bound. A later dismissal was not confirmed in a source we could read. No fraud finding against the fund was verified.",
   "floats": [
@@ -43,7 +43,7 @@
       "iconBg": "var(--sky)",
       "icon": "%",
       "text": "Coverage 12%",
-      "small": "what we could check"
+      "small": "{{s:report.what_we_could_check}}"
     }
   ],
   "badges": [
@@ -70,39 +70,39 @@
       "cardClass": "k1",
       "barClass": "sb1",
       "legendClass": "k1",
-      "name": "Fund vs. founders",
-      "legend": "Fund vs. founders",
+      "name": "{{s:page.scoring.fund_vs_founders}}",
+      "legend": "{{s:page.scoring.fund_vs_founders}}",
       "got": "60",
       "maxLabel": "of 60",
       "legendOf": "/60",
       "heroFlex": "60",
       "heroFill": "100.0%",
       "scoreBar": "100.0%",
-      "aria": "Fund vs. founders: 60 of 60",
+      "aria": "{{s:report.fund_vs_founders_60_of}}",
       "rule": "Bad events are measured as a share of companies backed. Under 1% costs nothing. A missing portfolio count is not scored as a 70% rate. −3 per case the fund lost or where fraud was found.",
       "inputs": [
         {
-          "name": "Lawsuits with its own startups or founders",
+          "name": "{{s:page.scoring.lawsuits_with_its_own_startups}}",
           "points": "30 / 30",
           "why": "1 case ÷ 115 = 0.87%. The denominator is a published floor, so this rate is an upper bound. Under 1%, no penalty."
         },
         {
-          "name": "Pushing out founder CEOs",
+          "name": "{{s:page.scoring.pushing_out_founder_ceos}}",
           "points": "12 / 12",
           "why": "No removal was verified as its own event. Where a lawsuit alleged one, it stays inside that lawsuit."
         },
         {
-          "name": "Down-round or pay-to-play behavior",
+          "name": "{{s:page.scoring.down_round_or_pay_to}}",
           "points": "10 / 10",
           "why": "No evidence found. Terms were not checked, so coverage is 0% and there is no deduction."
         },
         {
-          "name": "Blocking acquisitions or rounds",
+          "name": "{{s:page.scoring.blocking_acquisitions_or_rounds}}",
           "points": "8 / 8",
           "why": "No documented veto was verified on its own. Coverage is 0%."
         },
         {
-          "name": "Lost case or fraud finding (−3 each)",
+          "name": "{{s:report.lost_case_or_fraud_finding}}",
           "points": "0",
           "why": "None verified against the fund."
         }
@@ -113,7 +113,7 @@
       "cardClass": "k2",
       "barClass": "sb2",
       "legendClass": "k2",
-      "name": "Ability to support you",
+      "name": "{{s:page.scoring.ability_to_support_you}}",
       "legend": "Support",
       "got": "7",
       "maxLabel": "of 17.5",
@@ -130,12 +130,12 @@
           "why": "Fund size 2/2: Schedule D gross asset value sums to $21,727,199,655 across 31 private funds. Money left 1.5/2: reserves are not in the filing. Hit target 1.5/2: no published target for the current fund."
         },
         {
-          "name": "Media reach (capped)",
+          "name": "{{s:page.scoring.media_reach_capped}}",
           "points": "0 / 6",
           "why": "No measured audience. Owned channels were not scored."
         },
         {
-          "name": "Help after the check",
+          "name": "{{s:report.help_after_the_check}}",
           "points": "2 / 5.5",
           "why": "Platform 0/2: no founder-confirmed platform team. Intros 0/1.5: no independent intro record. Partner stability 2/2: no departure year was verified for this adviser."
         }
@@ -146,8 +146,8 @@
       "cardClass": "k3",
       "barClass": "sb3",
       "legendClass": "k3",
-      "name": "Founder experience",
-      "legend": "Founder exp.",
+      "name": "{{s:page.scoring.founder_experience}}",
+      "legend": "{{s:report.founder_exp}}",
       "got": "14.9",
       "maxLabel": "of 17.5",
       "legendOf": "/17.5",
@@ -158,17 +158,17 @@
       "rule": "Only first-hand accounts count. If negative accounts are under 1% of the portfolio, or there are none, the fund gets its age default.",
       "inputs": [
         {
-          "name": "First-hand accounts",
+          "name": "{{s:report.first_hand_accounts}}",
           "points": "0",
           "why": "None collected. Anonymous and second-hand posts were not used."
         },
         {
-          "name": "Negative share",
+          "name": "{{s:report.negative_share}}",
           "points": "0",
           "why": "No negative first-hand account, so the share is under 1%."
         },
         {
-          "name": "Age default",
+          "name": "{{s:report.age_default}}",
           "points": "14.9",
           "why": ""
         }
@@ -179,7 +179,7 @@
       "cardClass": "k4",
       "barClass": "sb4",
       "legendClass": "k4",
-      "name": "Conflicts of interest",
+      "name": "{{s:page.scoring.conflicts_of_interest}}",
       "legend": "Conflicts",
       "got": "5",
       "maxLabel": "of 5",
@@ -207,19 +207,19 @@
       "cardClass": "kb",
       "barClass": "bonus",
       "legendClass": "kb",
-      "name": "Track record bonus",
+      "name": "{{s:page.scoring.track_record_bonus}}",
       "legend": "Bonus",
       "got": "+3",
-      "maxLabel": "max +3",
+      "maxLabel": "{{s:report.max_3}}",
       "legendOf": null,
       "heroFlex": "3",
       "heroFill": "100.0%",
       "scoreBar": "100.0%",
-      "aria": "Track record bonus +3",
-      "rule": "+1 for every 5 years of investing with no significant pattern of harm, up to +3.",
+      "aria": "{{s:report.track_record_bonus_3}}",
+      "rule": "{{s:report.1_for_every_5_years}}",
       "inputs": [
         {
-          "name": "Years investing",
+          "name": "{{s:report.years_investing}}",
           "points": "22",
           "why": "Vinod Khosla's Wikipedia entry says he founded Khosla Ventures in 2004. 22 ÷ 5 is capped at +3."
         }
@@ -230,10 +230,10 @@
       "cardClass": "kp",
       "barClass": "pen",
       "legendClass": "kp",
-      "name": "Regulatory penalty",
+      "name": "{{s:page.scoring.regulatory_penalty}}",
       "legend": "Regulatory",
       "got": "0",
-      "maxLabel": "range 0 to −50",
+      "maxLabel": "{{s:report.range_0_to_50}}",
       "legendOf": null,
       "heroFlex": "0",
       "heroFill": "0%",
@@ -286,9 +286,9 @@
     }
   ],
   "regulatory": {
-    "title": "Regulatory records & sanctions",
+    "title": "{{s:report.regulatory_records_sanctions}}",
     "note": "Form ADV read · Oct 4, 2026",
-    "recordsTitle": "Regulatory records",
+    "recordsTitle": "{{s:report.regulatory_records}}",
     "sanctionsTitle": "Sanctions",
     "records": [
       {
@@ -305,7 +305,7 @@
       "title": "No adviser designation in the filing",
       "text": "The May 20, 2026 Form ADV for KHOSLA VENTURES, LLC has no sanctions disclosure. People at the firm were not screened one by one.",
       "ev": "sanc",
-      "link": "Details →",
+      "link": "{{s:report.details}}",
       "note": "A shared word in another entity's name is not a match."
     }
   },
@@ -318,14 +318,14 @@
       ]
     }
   ],
-  "notCountedTitle": "Not counted",
+  "notCountedTitle": "{{s:report.not_counted}}",
   "notCounted": [
     "Martins Beach litigation is about Vinod Khosla's property, not Khosla Ventures, LLC. It is not scored as a fund case.",
     "A Nextdoor shareholder case that once named Khosla-related defendants was not re-read and is not scored.",
     "A full person-by-person sanctions screen was not run."
   ],
   "fundTab": {
-    "factsTitle": "Fund facts",
+    "factsTitle": "{{s:report.fund_facts}}",
     "factsNote": "Form ADV, May 20, 2026",
     "facts": [
       {
@@ -355,30 +355,30 @@
       },
       {
         "k": "Performance",
-        "v": "Not public",
+        "v": "{{s:report.not_public}}",
         "s": "IRR / TVPI / DPI were not in the filing"
       }
     ],
     "boards": {
-      "title": "Partner board seats",
+      "title": "{{s:report.partner_board_seats}}",
       "items": [],
       "note": "No partner-board list was verified. Empty is missing data, not a clean conflict record."
     },
     "moves": {
-      "title": "Partner moves",
+      "title": "{{s:report.partner_moves}}",
       "note": "Verified departures only",
       "items": [],
       "foot": "One calendar year costs −0.5, however many people left that year."
     },
     "media": {
-      "title": "Media reach",
+      "title": "{{s:report.media_reach}}",
       "note": "Not measured",
       "items": [],
       "foot": "No subscriber or audience figure was verified, so media points are 0."
     }
   },
   "public": {
-    "title": "Public record",
+    "title": "{{s:report.public_record}}",
     "intro": "Articles cited on this page. The fact itself lives on the tab named in the note.",
     "sentimentTitle": "What these sources are",
     "sentimentNote": "A link is not a second copy of the fact.",
@@ -402,7 +402,7 @@
     "events": [],
     "foot": "Portfolio-company trouble is not charged to the firm unless the firm's own role is documented. No event list was classified.",
     "size": {
-      "title": "Portfolio size",
+      "title": "{{s:report.portfolio_size}}",
       "value": "115",
       "text": "Company names on khoslaventures.com/portfolio on Oct 4, 2026. A partial public list, used only as a floor."
     },
@@ -410,55 +410,55 @@
     "healthNote": "Not classified",
     "health": [],
     "litigation": {
-      "title": "Portfolio litigation rate",
+      "title": "{{s:report.portfolio_litigation_rate}}",
       "value": "≤0.9%",
       "text": "1 suit brought by the firm ÷ 115 named companies. If the full history is larger, the rate is lower."
     }
   },
   "ask": {
-    "title": "Not public: ask the fund",
-    "note": "These can't be checked from public records. Bring them to your partner meeting.",
+    "title": "{{s:report.not_public_ask_the_fund}}",
+    "note": "{{s:report.these_can_t_be_checked}}",
     "printHead": "Khosla Ventures · Questions to ask · {{s:brand.name}} · Oct 4, 2026",
     "questions": [
       {
         "n": "01",
-        "title": "Down rounds, bridges, pay-to-play",
-        "q": "In your last 3 down or flat rounds, did you lead, follow or walk?"
+        "title": "{{s:report.down_rounds_bridges_pay_to}}",
+        "q": "{{s:report.in_your_last_3_down}}"
       },
       {
         "n": "02",
-        "title": "Follow-on and pro rata",
-        "q": "What share of your seed/A companies did you reinvest in at the next round, including the strugglers?"
+        "title": "{{s:report.follow_on_and_pro_rata}}",
+        "q": "{{s:report.what_share_of_your_seed}}"
       },
       {
         "n": "03",
-        "title": "Replacing founder-CEOs",
-        "q": "When did you last back replacing a founder-CEO, and how did it happen?"
+        "title": "{{s:report.replacing_founder_ceos}}",
+        "q": "{{s:report.when_did_you_last_back}}"
       },
       {
         "n": "04",
-        "title": "Board seat & consent rights",
-        "q": "Will you take a seat at my stage? Which consent rights do you require?"
+        "title": "{{s:report.board_seat_consent_rights}}",
+        "q": "{{s:report.will_you_take_a_seat}}"
       },
       {
         "n": "05",
-        "title": "Competitor overlap",
-        "q": "Does any partner sit on the board of a company that competes with me?"
+        "title": "{{s:report.competitor_overlap}}",
+        "q": "{{s:report.does_any_partner_sit_on}}"
       },
       {
         "n": "06",
-        "title": "Reserves for this check",
-        "q": "Which fund is this check from, and how much is reserved for follow-ons?"
+        "title": "{{s:report.reserves_for_this_check}}",
+        "q": "{{s:report.which_fund_is_this_check}}"
       },
       {
         "n": "07",
-        "title": "Foreign or sovereign LPs",
-        "q": "Are there sovereign or foreign-state LPs in this fund?"
+        "title": "{{s:report.foreign_or_sovereign_lps}}",
+        "q": "{{s:report.are_there_sovereign_or_foreign}}"
       },
       {
         "n": "08",
-        "title": "References from failures",
-        "q": "Give me 2 founders whose companies failed with you on the board."
+        "title": "{{s:report.references_from_failures}}",
+        "q": "{{s:report.give_me_2_founders_whose}}"
       }
     ],
     "clipboard": "Questions to ask Khosla Ventures, from {{s:brand.name}}\n\n1. Down rounds, bridges, pay-to-play: In your last 3 down or flat rounds, did you lead, follow or walk?\n2. Follow-on and pro rata: What share of your seed/A companies did you reinvest in at the next round, including the strugglers?\n3. Replacing founder-CEOs: When did you last back replacing a founder-CEO, and how did it happen?\n4. Board seat & consent rights: Will you take a seat at my stage? Which consent rights do you require?\n5. Competitor overlap: Does any partner sit on the board of a company that competes with me?\n6. Reserves for this check: Which fund is this check from, and how much is reserved for follow-ons?\n7. Foreign or sovereign LPs: Are there sovereign or foreign-state LPs in this fund?\n8. References from failures: Give me 2 founders whose companies failed with you on the board."
@@ -506,8 +506,8 @@
       "tone": ""
     },
     "s1": {
-      "kicker": "Score · 60 of 60",
-      "title": "Fund vs. founders",
+      "kicker": "{{s:report.score_60_of_60}}",
+      "title": "{{s:page.scoring.fund_vs_founders}}",
       "body": "Khosla Ventures' May 20, 2026 Form ADV is an exempt-reporting-adviser filing. Private-fund gross asset value sums to $21.73 billion. The verified lawsuit is the firm's own case against Avogy's former CEO.",
       "rows": [],
       "sources": [
@@ -520,7 +520,7 @@
     },
     "s2": {
       "kicker": "Score · 7 of 17.5",
-      "title": "Ability to support you",
+      "title": "{{s:page.scoring.ability_to_support_you}}",
       "body": "Money is the filing. Media reach was not measured. Help is empty unless the firm itself claimed a platform, and then only at half.",
       "rows": [],
       "sources": [
@@ -537,11 +537,11 @@
     },
     "s3": {
       "kicker": "Score · 14.9 of 17.5",
-      "title": "Founder experience",
+      "title": "{{s:page.scoring.founder_experience}}",
       "body": "No first-hand account was collected, so the age default applies.",
       "rows": [
         [
-          "First-hand accounts",
+          "{{s:report.first_hand_accounts}}",
           "0"
         ],
         [
@@ -559,7 +559,7 @@
     },
     "s4": {
       "kicker": "Score · 5 of 5",
-      "title": "Conflicts of interest",
+      "title": "{{s:page.scoring.conflicts_of_interest}}",
       "body": "No competitor-board or incubation conflict was verified. A partner-by-partner board list was not built.",
       "rows": [],
       "sources": [
@@ -571,8 +571,8 @@
       "tone": ""
     },
     "bonus": {
-      "kicker": "Bonus · +3",
-      "title": "Track record bonus",
+      "kicker": "{{s:report.bonus_3}}",
+      "title": "{{s:page.scoring.track_record_bonus}}",
       "body": "Vinod Khosla's Wikipedia entry says he founded Khosla Ventures in 2004. 22 ÷ 5 is capped at +3.",
       "rows": [],
       "sources": [
@@ -585,7 +585,7 @@
     },
     "pen": {
       "kicker": "Penalty · 0",
-      "title": "Regulatory penalty",
+      "title": "{{s:page.scoring.regulatory_penalty}}",
       "body": "The Form ADV regulatory disclosure page has no information filed.",
       "rows": [],
       "sources": [
@@ -618,28 +618,28 @@
       "tone": ""
     },
     "range": {
-      "kicker": "How sure are we",
+      "kicker": "{{s:report.how_sure_are_we}}",
       "title": "Likely range 81–94",
       "body": "For each unchecked part we took a small plausible downside (10% of lawsuits and removals, half of down-rounds and blocking, and the unpublished reserve and founder-experience gaps) and combined them as independent swings. Upside is unpublished reserves, unmeasured media, and unconfirmed help.",
       "rows": [
         [
-          "1a Lawsuits with own founders",
+          "{{s:report.1a_lawsuits_with_own_founders}}",
           "-2.2 / +0.0"
         ],
         [
-          "1b Pushing out founder-CEOs",
+          "{{s:report.1b_pushing_out_founder_ceos}}",
           "-1.2 / +0.0"
         ],
         [
-          "1c Down-round / pay-to-play",
+          "{{s:report.1c_down_round_pay_to}}",
           "-5.0 / +0.0"
         ],
         [
-          "1d Blocking deals / rounds",
+          "{{s:report.1d_blocking_deals_rounds}}",
           "-4.0 / +0.0"
         ],
         [
-          "2a Money",
+          "{{s:report.2a_money}}",
           "-0.5 / +1.0"
         ],
         [
@@ -668,23 +668,23 @@
     },
     "cov": {
       "kicker": "Coverage · 12%",
-      "title": "How much we could check",
+      "title": "{{s:report.how_much_we_could_check}}",
       "body": "Weighted by section points. Down rounds, blocking, media reach, and founder accounts are 0% because they were not measured. A thin record is not a clean record. The percent does not change the 0–100 score.",
       "rows": [
         [
-          "1a Lawsuits",
+          "{{s:report.1a_lawsuits}}",
           "25%"
         ],
         [
-          "1b Founder removals",
+          "{{s:report.1b_founder_removals}}",
           "0%"
         ],
         [
-          "1c Down rounds",
+          "{{s:report.1c_down_rounds}}",
           "0%"
         ],
         [
-          "1d Blocking",
+          "{{s:report.1d_blocking}}",
           "0%"
         ],
         [
@@ -730,15 +730,15 @@
       "body": "All 11 funds are on v2. Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
       "rows": [
         [
-          "Andreessen Horowitz",
+          "{{s:common.andreessen_horowitz}}",
           "95.4 (v2)"
         ],
         [
-          "Bessemer Venture Partners",
+          "{{s:report.bessemer_venture_partners}}",
           "91.7 (v2)"
         ],
         [
-          "Battery Ventures",
+          "{{s:report.battery_ventures}}",
           "91.6 (v2)"
         ],
         [
@@ -746,31 +746,31 @@
           "89.9 (v2)"
         ],
         [
-          "Bain Capital Ventures",
+          "{{s:report.bain_capital_ventures}}",
           "89.9 (v2)"
         ],
         [
-          "Khosla Ventures",
+          "{{s:report.khosla_ventures}}",
           "89.9 (v2)"
         ],
         [
-          "Lux Capital",
+          "{{s:report.lux_capital}}",
           "89.9 (v2)"
         ],
         [
-          "Sequoia Capital",
+          "{{s:report.sequoia_capital}}",
           "89.9 (v2)"
         ],
         [
-          "General Catalyst",
+          "{{s:report.general_catalyst}}",
           "89.4 (v2)"
         ],
         [
-          "Lightspeed Venture Partners",
+          "{{s:report.lightspeed_venture_partners}}",
           "88.9 (v2)"
         ],
         [
-          "Insight Partners",
+          "{{s:report.insight_partners}}",
           "81.6 (v2)"
         ]
       ],
@@ -779,19 +779,19 @@
     },
     "rules": {
       "kicker": "Methodology",
-      "title": "How {{s:brand.name}} score works",
+      "title": "{{s:report.how_score_works}}",
       "body": "Every fund starts with full points and loses them only for verified evidence about its own behavior. Bad events are a share of the portfolio: under 1% costs nothing. A missing portfolio count is not treated as a 70% rate. Regulatory is penalty-only.",
       "rows": [
         [
-          "Fund vs. founders",
+          "{{s:page.scoring.fund_vs_founders}}",
           "60"
         ],
         [
-          "Ability to support you",
+          "{{s:page.scoring.ability_to_support_you}}",
           "17.5"
         ],
         [
-          "Founder experience",
+          "{{s:page.scoring.founder_experience}}",
           "17.5"
         ],
         [
@@ -799,11 +799,11 @@
           "5"
         ],
         [
-          "Track record bonus",
+          "{{s:page.scoring.track_record_bonus}}",
           "up to +3"
         ],
         [
-          "Regulatory penalty",
+          "{{s:page.scoring.regulatory_penalty}}",
           "0 to −50"
         ]
       ],
@@ -820,7 +820,7 @@
           "No sanctions designation filed"
         ],
         [
-          "People screened",
+          "{{s:report.people_screened}}",
           "Not run"
         ],
         [

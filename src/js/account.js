@@ -43,8 +43,8 @@
       bookmark: true,
       prefix: '../',
       aside: '<div class="wlkinds">'
-        + kindSwitch('new_legal_matter', 'New legal matter')
-        + kindSwitch('score_change', 'Score change')
+        + kindSwitch('new_legal_matter', '{{sjs:js.account.new_legal_matter}}')
+        + kindSwitch('score_change', '{{sjs:js.account.score_change}}')
         + '</div>',
       note: '<span class="none">Saved funds. The bookmark removes one.</span>',
       empty: '<div class="empty"><b>Nothing saved yet.</b>Open a fund and tap the bookmark.</div>'
@@ -56,7 +56,7 @@
     ['co_founder', 'Co-founder', 'Co-founder'],
     ['executive', 'Executive', 'Executive'],
     ['employee', 'Employee', 'Employee'],
-    ['pitched', 'Pitched but no deal', 'Pitched'],
+    ['pitched', '{{sjs:page.account.pitched_but_no_deal}}', 'Pitched'],
     ['co_investor', 'Co-investor', 'Co-investor']
   ];
   const LI_URL = /^(https?:\/\/)?((www|[a-z]{2})\.)?linkedin\.com\/in\/[a-z0-9\-_%]+\/?$/i;
@@ -67,8 +67,8 @@
   }
   function anonHint() {
     $('anonHint').textContent = $('anonTog').classList.contains('on')
-      ? 'Your name is hidden'
-      : 'Your name will be shown';
+      ? '{{sjs:page.account.your_name_is_hidden}}'
+      : '{{sjs:js.account.your_name_will_be_shown}}';
   }
   function ensureGrad() {
     if (!document.getElementById('g2')) document.body.insertAdjacentHTML('afterbegin', FundList.grad());
@@ -203,14 +203,14 @@
     err.hidden = true;
     const fail = text => { err.hidden = false; err.textContent = text; };
     const slug = $('fundIn').dataset.firm;
-    if (!slug) { fail('Pick a fund from the list.'); return; }
+    if (!slug) { fail('{{sjs:js.account.pick_a_fund_from_the}}'); return; }
     const linkedin = $('revLinkedin').value.trim();
     if (!LI_URL.test(linkedin)) { fail('Use a LinkedIn profile URL like linkedin.com/in/your-name.'); return; }
     const again = document.querySelector('#again button.on');
-    if (!again) { fail('Say whether you would take their money again.'); return; }
-    if (!Regret.user || !Regret.sb()) { fail('Log in before you send a review.'); return; }
+    if (!again) { fail('{{sjs:js.account.say_whether_you_would_take}}'); return; }
+    if (!Regret.user || !Regret.sb()) { fail('{{sjs:js.account.log_in_before_you_send}}'); return; }
     const firm = await Regret.firmId(slug);
-    if (!firm) { fail('That fund is not in the database yet.'); return; }
+    if (!firm) { fail('{{sjs:js.account.that_fund_is_not_in}}'); return; }
     const ratings = {};
     document.querySelectorAll('.pips').forEach(p => {
       const on = p.querySelectorAll('button.on').length;

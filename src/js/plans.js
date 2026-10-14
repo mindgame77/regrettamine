@@ -49,11 +49,11 @@
       const current = (which === 'monthly' && plan === 'Monthly') || (which === 'annual' && plan === 'Annual');
       if (current) {
         btn.disabled = true;
-        btn.textContent = 'Current plan';
+        btn.textContent = '{{sjs:js.plans.current_plan}}';
         btn.dataset.action = 'current';
       } else {
         btn.disabled = false;
-        btn.textContent = 'Switch plan';
+        btn.textContent = '{{sjs:js.plans.switch_plan}}';
         btn.dataset.action = 'switch';
       }
     });

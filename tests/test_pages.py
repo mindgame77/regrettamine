@@ -12,10 +12,10 @@ def test_shared_list_and_auth_pages(monkeypatch):
     from build import main, render_fund_page, load_local
 
     main()
-    home_js = (ROOT / "src" / "js" / "home.js").read_text(encoding="utf-8")
-    list_js = (ROOT / "src" / "js" / "fund-list.js").read_text(encoding="utf-8")
-    account_js = (ROOT / "src" / "js" / "account.js").read_text(encoding="utf-8")
-    auth_js = (ROOT / "src" / "js" / "auth.js").read_text(encoding="utf-8")
+    home_js = (ROOT / "site" / "js" / "home.js").read_text(encoding="utf-8")
+    list_js = (ROOT / "site" / "js" / "fund-list.js").read_text(encoding="utf-8")
+    account_js = (ROOT / "site" / "js" / "account.js").read_text(encoding="utf-8")
+    auth_js = (ROOT / "site" / "js" / "auth.js").read_text(encoding="utf-8")
     assert "FundList.table" in home_js
     assert "old method" not in home_js
     assert "Active legal" in list_js

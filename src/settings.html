@@ -12,96 +12,96 @@
 </head><body>
 <div class="blobs" style="height:420px"><div class="blob" style="width:420px;height:420px;background:#CDBBFF;left:-160px;top:-180px"></div><div class="blob" style="width:380px;height:380px;background:#FFC7B8;right:-140px;top:-160px"></div></div>
 <nav class="pillnav"><a class="logo" href="../"><img class="lockup" src="../assets/logo/lockup-light.svg" alt="{{s:brand.name}}" width="143" height="36"></a>
- <div class="links"><a href="../">VCs</a><a href="../scoring/">Scoring</a><a href="../plans/">Pricing</a><!-- Our Story --></div>
- <div class="r" id="navSlot"><a class="b w" href="../login/">Log in</a><a class="b v" href="../account/#watchlist">Get alerts</a></div></nav>
+ <div class="links"><a href="../">{{s:common.vcs}}</a><a href="../scoring/">{{s:common.scoring}}</a><a href="../plans/">{{s:common.pricing}}</a><!-- Our Story --></div>
+ <div class="r" id="navSlot"><a class="b w" href="../login/">{{s:common.log_in}}</a><a class="b v" href="../account/#watchlist">{{s:common.get_alerts}}</a></div></nav>
 
 <main class="wrap"><div class="acc">
 <aside class="anav" id="accountNav"></aside>
 <div class="setcol">
-<div class="seg settabs" id="setTabs"><a href="#account" data-set="account">Account</a><a href="#billing" data-set="billing">Billing</a></div>
+<div class="seg settabs" id="setTabs"><a href="#account" data-set="account">{{s:common.account}}</a><a href="#billing" data-set="billing">{{s:page.settings.billing}}</a></div>
 
-<div class="fail" id="payFail" data-pay-fail hidden><i>!</i><span>We couldn't charge your card. Update it within 24 hours or your account moves to the free plan.</span><button class="b d sm" type="button" data-stripe="portal">Update card</button></div>
+<div class="fail" id="payFail" data-pay-fail hidden><i>!</i><span>{{s:page.settings.we_couldn_t_charge_your}}</span><button class="b d sm" type="button" data-stripe="portal">{{s:page.settings.update_card}}</button></div>
 
 <section id="account" class="view">
- <div class="vh"><h1>Account</h1></div>
+ <div class="vh"><h1>{{s:common.account}}</h1></div>
  <form class="card set prof" id="profileForm">
-  <b class="pt">Profile</b>
+  <b class="pt">{{s:page.settings.profile}}</b>
   <div class="pgrid">
-   <label class="fl"><span>Name</span><input class="fld" id="nameIn" autocomplete="name" maxlength="120"></label>
-   <label class="fl"><span>Website</span><input class="fld" id="siteIn" type="text" inputmode="url" autocomplete="url" placeholder="example.com"></label>
-   <button class="b c sm" type="submit" id="saveProfile">Save</button>
+   <label class="fl"><span>{{s:common.name}}</span><input class="fld" id="nameIn" autocomplete="name" maxlength="120"></label>
+   <label class="fl"><span>{{s:page.settings.website}}</span><input class="fld" id="siteIn" type="text" inputmode="url" autocomplete="url" placeholder="{{s:page.settings.example_com}}"></label>
+   <button class="b c sm" type="submit" id="saveProfile">{{s:page.settings.save}}</button>
   </div>
   <p class="err" id="profileErr" hidden></p>
  </form>
  <div class="card set">
-  <div class="srow"><div><b>Email</b><span id="emailNow"></span></div><button class="b w sm" type="button" id="emailOpen" data-open="emailForm">Change email</button></div>
+  <div class="srow"><div><b>{{s:page.settings.email}}</b><span id="emailNow"></span></div><button class="b w sm" type="button" id="emailOpen" data-open="emailForm">{{s:page.settings.change_email}}</button></div>
   <form class="sform" id="emailForm" hidden>
-   <label class="fl"><span>New email</span><input class="fld" id="emailIn" type="email" placeholder="you@company.com" autocomplete="email"></label>
-   <label class="fl" id="emailPw"><span>Current password</span><input class="fld" id="emailPwIn" type="password" placeholder="Password" autocomplete="current-password"></label>
-   <p class="help">We'll send a confirmation link to the new email. The change applies once you click it.</p>
+   <label class="fl"><span>{{s:page.settings.new_email}}</span><input class="fld" id="emailIn" type="email" placeholder="{{s:page.settings.you_company_com}}" autocomplete="email"></label>
+   <label class="fl" id="emailPw"><span>{{s:page.settings.current_password}}</span><input class="fld" id="emailPwIn" type="password" placeholder="{{s:page.settings.password}}" autocomplete="current-password"></label>
+   <p class="help">{{s:page.settings.we_ll_send_a_confirmation}}</p>
    <p class="err" id="emailErr" hidden></p>
-   <div class="acts"><button class="b c sm" type="submit">Send confirmation link</button><button class="b s sm" type="button" data-close="emailForm">Cancel</button></div>
+   <div class="acts"><button class="b c sm" type="submit">{{s:page.settings.send_confirmation_link}}</button><button class="b s sm" type="button" data-close="emailForm">{{s:page.settings.cancel}}</button></div>
   </form>
-  <div class="srow"><div><b>Password</b><span id="pwHint">••••••••••</span><p class="ok" id="pwOk" hidden></p></div><button class="b w sm" type="button" id="pwOpen" data-open="pwForm">Change password</button></div>
+  <div class="srow"><div><b>{{s:page.settings.password}}</b><span id="pwHint">••••••••••</span><p class="ok" id="pwOk" hidden></p></div><button class="b w sm" type="button" id="pwOpen" data-open="pwForm">{{s:page.settings.change_password}}</button></div>
   <form class="sform" id="pwForm" hidden>
-   <label class="fl" id="pwCurrent"><span>Current password</span><input class="fld" id="pwCurrentIn" type="password" placeholder="Password" autocomplete="current-password"></label>
-   <label class="fl"><span>New password</span><input class="fld" id="pwIn" type="password" placeholder="At least 6 characters" autocomplete="new-password"></label>
-   <label class="fl"><span>Confirm new password</span><input class="fld" id="pw2In" type="password" placeholder="Repeat it" autocomplete="new-password"></label>
+   <label class="fl" id="pwCurrent"><span>{{s:page.settings.current_password}}</span><input class="fld" id="pwCurrentIn" type="password" placeholder="{{s:page.settings.password}}" autocomplete="current-password"></label>
+   <label class="fl"><span>{{s:page.settings.new_password}}</span><input class="fld" id="pwIn" type="password" placeholder="{{s:page.settings.at_least_6_characters}}" autocomplete="new-password"></label>
+   <label class="fl"><span>{{s:page.settings.confirm_new_password}}</span><input class="fld" id="pw2In" type="password" placeholder="{{s:page.settings.repeat_it}}" autocomplete="new-password"></label>
    <p class="err" id="pwErr" hidden></p>
-   <div class="acts"><button class="b c sm" type="submit" id="pwSubmit">Update password</button><button class="b s sm" type="button" data-close="pwForm">Cancel</button></div>
+   <div class="acts"><button class="b c sm" type="submit" id="pwSubmit">{{s:page.settings.update_password}}</button><button class="b s sm" type="button" data-close="pwForm">{{s:page.settings.cancel}}</button></div>
   </form>
  </div>
- <h2 class="sh2 danger">Danger zone</h2>
+ <h2 class="sh2 danger">{{s:page.settings.danger_zone}}</h2>
  <div class="card set">
-  <div class="srow"><div><b>Delete account</b><span>Permanently deletes your account and everything in it.</span></div><button class="b quiet sm" type="button" data-modal="delAcc">Delete account</button></div>
+  <div class="srow"><div><b>{{s:page.settings.delete_account}}</b><span>{{s:page.settings.permanently_deletes_your_account_and}}</span></div><button class="b quiet sm" type="button" data-modal="delAcc">{{s:page.settings.delete_account}}</button></div>
  </div>
 </section>
 
 <section id="billing" class="view" data-billing-root>
- <div class="vh"><h1>Billing</h1></div>
- <p class="paidnote" id="payNote" hidden>Payment received, your plan will update in a few seconds</p>
+ <div class="vh"><h1>{{s:page.settings.billing}}</h1></div>
+ <p class="paidnote" id="payNote" hidden>{{s:page.settings.payment_received_your_plan_will}}</p>
  <div class="card set" data-billing="plan">
-  <div class="srow plan"><div><b id="planName">Free</b><span id="planDetail"></span></div>
-   <div class="nx"><small id="nxLabel">Next charge</small><b id="nxVal">—</b></div></div>
-  <div class="srow"><div><span>Switch between monthly and annual billing.</span></div><a class="lnk2" id="changePlan" href="../plans/" data-stripe="checkout">Change plan →</a></div>
+  <div class="srow plan"><div><b id="planName">{{s:page.settings.free}}</b><span id="planDetail"></span></div>
+   <div class="nx"><small id="nxLabel">{{s:page.settings.next_charge}}</small><b id="nxVal">—</b></div></div>
+  <div class="srow"><div><span>{{s:page.settings.switch_between_monthly_and_annual}}</span></div><a class="lnk2" id="changePlan" href="../plans/" data-stripe="checkout">{{s:page.settings.change_plan}}</a></div>
  </div>
- <h2 class="sh2">Payment method</h2>
+ <h2 class="sh2">{{s:page.settings.payment_method}}</h2>
  <div class="card set" data-billing="card">
-  <div class="srow"><div class="cc"><span class="brand" id="cardBrand" hidden></span><div><b id="cardLabel">No card on file</b><span id="cardMeta"></span></div></div>
-   <div class="acts"><button class="b w sm" type="button" data-stripe="portal" id="cardChange" hidden>Manage card</button><button class="b ghost sm" type="button" data-stripe="delete-card" data-modal="delCard" id="cardDelete" hidden>Delete card</button></div></div>
+  <div class="srow"><div class="cc"><span class="brand" id="cardBrand" hidden></span><div><b id="cardLabel">{{s:page.settings.no_card_on_file}}</b><span id="cardMeta"></span></div></div>
+   <div class="acts"><button class="b w sm" type="button" data-stripe="portal" id="cardChange" hidden>{{s:page.settings.manage_card}}</button><button class="b ghost sm" type="button" data-stripe="delete-card" data-modal="delCard" id="cardDelete" hidden>{{s:page.settings.delete_card}}</button></div></div>
  </div>
- <h2 class="sh2">Payments</h2>
+ <h2 class="sh2">{{s:page.settings.payments}}</h2>
  <div class="card ptab" data-billing="payments">
-  <div class="pr th"><div>Date</div><div>Description</div><div>Amount</div><div>Status</div><div></div></div>
+  <div class="pr th"><div>{{s:page.settings.date}}</div><div>{{s:page.settings.description}}</div><div>{{s:page.settings.amount}}</div><div>{{s:page.settings.status}}</div><div></div></div>
   <div id="payRows"></div>
-  <p class="payempty" id="payEmpty">No payments yet.</p>
+  <p class="payempty" id="payEmpty">{{s:page.settings.no_payments_yet}}</p>
  </div>
 </section>
 </div></div></main>
 
 <div class="auth-veil" id="delAcc" hidden><div class="auth mod">
- <button type="button" class="x" data-x aria-label="Close"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+ <button type="button" class="x" data-x aria-label="{{s:page.settings.close}}"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
  <span class="dic">!</span>
- <h2>Delete your account?</h2>
- <p class="sub">Everything about you is deleted permanently. This can't be undone.</p>
- <ul class="gone"><li>Profile and login</li><li>Watchlist</li><li>Alerts and alert settings</li><li>Report history</li><li>Shared experiences</li><li>Billing info and saved card</li></ul>
- <p class="note" id="planCancel" hidden>Your plan is cancelled with it. No more charges.</p>
- <label class="fld cfm"><input id="cfmIn" placeholder="Type DELETE or your email" aria-label="Confirm" autocomplete="off"></label>
+ <h2>{{s:page.settings.delete_your_account}}</h2>
+ <p class="sub">{{s:page.settings.everything_about_you_is_deleted}}</p>
+ <ul class="gone"><li>{{s:page.settings.profile_and_login}}</li><li>{{s:common.watchlist}}</li><li>{{s:page.settings.alerts_and_alert_settings}}</li><li>{{s:page.settings.report_history}}</li><li>{{s:page.settings.shared_experiences}}</li><li>{{s:page.settings.billing_info_and_saved_card}}</li></ul>
+ <p class="note" id="planCancel" hidden>{{s:page.settings.your_plan_is_cancelled_with}}</p>
+ <label class="fld cfm"><input id="cfmIn" placeholder="{{s:page.settings.type_delete_or_your_email}}" aria-label="{{s:page.settings.confirm}}" autocomplete="off"></label>
  <p class="err" id="delErr" hidden></p>
- <button class="b d" type="button" id="cfmBtn" disabled>Delete my account</button>
- <button class="b s" type="button" data-x>Cancel</button>
+ <button class="b d" type="button" id="cfmBtn" disabled>{{s:page.settings.delete_my_account}}</button>
+ <button class="b s" type="button" data-x>{{s:page.settings.cancel}}</button>
 </div></div>
 
 <div class="auth-veil" id="delCard" hidden><div class="auth mod" data-stripe="delete-card-modal">
- <button type="button" class="x" data-x aria-label="Close"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+ <button type="button" class="x" data-x aria-label="{{s:page.settings.close}}"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
  <span class="dic">!</span>
- <h2>Delete this card?</h2>
- <p class="sub">Without a card we can't charge you. If your next charge fails, we'll email you. After 24 hours without a card, your account moves to the free plan.</p>
- <button class="b d" type="button" data-stripe="delete-card-confirm">Delete card</button>
- <button class="b s" type="button" data-x>Keep card</button>
+ <h2>{{s:page.settings.delete_this_card}}</h2>
+ <p class="sub">{{s:page.settings.without_a_card_we_can}}</p>
+ <button class="b d" type="button" data-stripe="delete-card-confirm">{{s:page.settings.delete_card}}</button>
+ <button class="b s" type="button" data-x>{{s:page.settings.keep_card}}</button>
 </div></div>
 
-<footer><div class="wrap"><span class="logo"><img class="lockup sm" src="../assets/logo/lockup-light.svg" alt="{{s:brand.name}}" width="111" height="28"></span><span>regretamine.com</span><span style="margin-left:auto"><a href="../scoring/">Scoring</a> · <a href="../privacy/">Privacy</a> · <a href="../terms/">Terms</a></span></div></footer>
+<footer><div class="wrap"><span class="logo"><img class="lockup sm" src="../assets/logo/lockup-light.svg" alt="{{s:brand.name}}" width="111" height="28"></span><span>{{s:brand.domain}}</span><span style="margin-left:auto"><a href="../scoring/">{{s:common.scoring}}</a> · <a href="../privacy/">{{s:common.privacy}}</a> · <a href="../terms/">{{s:common.terms}}</a></span></div></footer>
 <script src="../js/supabase-config.js"></script>
 <script src="../js/stripe-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

@@ -82,9 +82,9 @@ function render() {
   if (S.q) A.push(['q', '“' + S.q + '”']);
   S.band.forEach(b => A.push(['band:' + b, b]));
   if (S.min > 0 || S.max < 100) A.push(['range', 'Score ' + lo + '–' + hi]);
-  S.size.forEach(s => A.push(['size:' + s, 'Firm AUM ' + SIZES.find(z => z[0] == s)[1]]));
-  if (S.legal) A.push(['legal', 'Has active legal matters']);
-  if (S.recent) A.push(['recent', 'Updated in the last 30 days']);
+  S.size.forEach(s => A.push(['size:' + s, '{{sjs:js.home.firm_aum}}' + SIZES.find(z => z[0] == s)[1]]));
+  if (S.legal) A.push(['legal', '{{sjs:page.home.has_active_legal_matters}}']);
+  if (S.recent) A.push(['recent', '{{sjs:page.home.updated_in_the_last_30}}']);
   $('active').innerHTML = A.length
     ? A.map(a => `<span class="ac">${a[1]}<i data-x="${a[0]}">×</i></span>`).join('') + '<span class="clr" id="clr">Clear all</span>'
     : '';
@@ -135,7 +135,7 @@ function lockRows() {
   let bars = '';
   for (let i = 0; i < hidden; i++) bars += skeletonRow();
   if (!loggedIn) {
-    const label = 'Log in to see all ' + total + ' funds';
+    const label = '{{sjs:js.home.log_in_to_see_all}}' + total + ' funds';
     lock.setAttribute('role', 'button');
     lock.tabIndex = 0;
     lock.setAttribute('aria-label', label);
@@ -144,7 +144,7 @@ function lockRows() {
     lock.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openListLogin(); } };
   } else {
     const base = window.Regret && Regret.root ? Regret.root() : '';
-    lock.setAttribute('aria-label', 'More funds are on a paid plan');
+    lock.setAttribute('aria-label', '{{sjs:js.home.more_funds_are_on_a}}');
     lock.innerHTML = bars + '<a class="lockpill" href="' + base + 'plans/">See plans</a>';
   }
   table.appendChild(lock);

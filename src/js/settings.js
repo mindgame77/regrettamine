@@ -62,16 +62,16 @@
     let raw = String(value || '').trim();
     if (!raw) return { value: null };
     if (/^[a-z][a-z0-9+.-]*:/i.test(raw)) {
-      if (!/^https?:\/\//i.test(raw)) return { error: 'Enter a valid website.' };
+      if (!/^https?:\/\//i.test(raw)) return { error: '{{sjs:js.settings.enter_a_valid_website}}' };
     } else {
       raw = 'https://' + raw;
     }
     let url;
     try { url = new URL(raw); }
-    catch (e) { return { error: 'Enter a valid website.' }; }
-    if (url.protocol !== 'http:' && url.protocol !== 'https:') return { error: 'Enter a valid website.' };
+    catch (e) { return { error: '{{sjs:js.settings.enter_a_valid_website}}' }; }
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') return { error: '{{sjs:js.settings.enter_a_valid_website}}' };
     if (!url.hostname || url.hostname.indexOf('.') === -1 || url.username || url.password) {
-      return { error: 'Enter a valid website.' };
+      return { error: '{{sjs:js.settings.enter_a_valid_website}}' };
     }
     return { value: raw };
   }
@@ -80,12 +80,12 @@
     email = (person && person.email) || '';
     hasPassword = hasEmailPassword(person);
     $('emailNow').textContent = email;
-    $('cfmIn').placeholder = email ? 'Type DELETE or ' + email : 'Type DELETE';
+    $('cfmIn').placeholder = email ? '{{sjs:js.settings.type_delete_or}}' + email : '{{sjs:js.settings.type_delete}}';
     $('emailPw').hidden = !hasPassword;
     $('pwCurrent').hidden = !hasPassword;
-    $('pwHint').textContent = hasPassword ? '••••••••••' : 'Not set';
-    $('pwOpen').textContent = hasPassword ? 'Change password' : 'Set password';
-    $('pwSubmit').textContent = hasPassword ? 'Update password' : 'Set password';
+    $('pwHint').textContent = hasPassword ? '••••••••••' : '{{sjs:js.settings.not_set}}';
+    $('pwOpen').textContent = hasPassword ? '{{sjs:page.settings.change_password}}' : '{{sjs:js.settings.set_password}}';
+    $('pwSubmit').textContent = hasPassword ? '{{sjs:page.settings.update_password}}' : '{{sjs:js.settings.set_password}}';
   }
 
   function money(cents) {
@@ -101,37 +101,37 @@
     const cancel = $('planCancel');
     if (cancel) cancel.hidden = !paid;
     $('planName').textContent = data.plan || (paid ? 'Paid' : 'Free');
-    $('planDetail').textContent = data.price_label || (paid ? 'Your paid plan is active.' : 'No charge.');
+    $('planDetail').textContent = data.price_label || (paid ? '{{sjs:js.settings.your_paid_plan_is_active}}' : 'No charge.');
     if (data.payment_failed && data.payment_failed_on) {
-      $('nxLabel').textContent = 'Charge failed on';
+      $('nxLabel').textContent = '{{sjs:js.settings.charge_failed_on}}';
       $('nxVal').textContent = data.payment_failed_on;
       $('nxVal').classList.add('bad');
     } else {
-      $('nxLabel').textContent = 'Next charge';
+      $('nxLabel').textContent = '{{sjs:page.settings.next_charge}}';
       $('nxVal').textContent = data.next_charge_label || '—';
       $('nxVal').classList.remove('bad');
     }
     const card = data.card || null;
     $('cardBrand').hidden = !card;
     $('cardBrand').textContent = card ? (card.brand || '') : '';
-    $('cardLabel').textContent = card ? (card.label || 'Card on file') : 'No card on file';
+    $('cardLabel').textContent = card ? (card.label || '{{sjs:js.settings.card_on_file}}') : '{{sjs:page.settings.no_card_on_file}}';
     $('cardMeta').textContent = card && card.expires ? 'Expires ' + card.expires : '';
     const manage = !!(data.manage_card || card);
     if (!card && manage) {
-      $('cardLabel').textContent = 'Card on file';
+      $('cardLabel').textContent = '{{sjs:js.settings.card_on_file}}';
       $('cardMeta').textContent = '';
     }
     $('cardChange').hidden = !manage;
-    $('cardChange').textContent = 'Manage card';
+    $('cardChange').textContent = '{{sjs:page.settings.manage_card}}';
     $('cardDelete').hidden = !card;
     const change = $('changePlan');
     if (change) {
       if (paid) {
-        change.textContent = 'Switch plan →';
+        change.textContent = '{{sjs:js.settings.switch_plan}}';
         change.dataset.stripe = 'portal';
         change.href = '#';
       } else {
-        change.textContent = 'Change plan →';
+        change.textContent = '{{sjs:page.settings.change_plan}}';
         change.dataset.stripe = 'checkout';
         change.href = '../plans/';
       }
@@ -185,14 +185,14 @@
     const person = Regret.user;
     if (!person) return;
     const name = $('nameIn').value.trim();
-    if (!name) { showErr('profileErr', 'Enter your name.'); return; }
+    if (!name) { showErr('profileErr', '{{sjs:js.settings.enter_your_name}}'); return; }
     const site = normalizeWebsite($('siteIn').value);
     if (site.error) { showErr('profileErr', site.error); return; }
     const { error } = await Regret.sb().from('profiles').update({
       display_name: name,
       website: site.value
     }).eq('id', person.id);
-    if (error) { showErr('profileErr', 'Could not save that profile.'); return; }
+    if (error) { showErr('profileErr', '{{sjs:js.settings.could_not_save_that_profile}}'); return; }
     $('siteIn').value = site.value || '';
     await Regret.refreshProfile();
     Regret.paintNav();
@@ -209,33 +209,33 @@
     e.preventDefault();
     showErr('emailErr', '');
     const next = $('emailIn').value.trim();
-    if (!next || next.indexOf('@') < 1) { showErr('emailErr', 'Enter a valid email.'); return; }
+    if (!next || next.indexOf('@') < 1) { showErr('emailErr', '{{sjs:js.settings.enter_a_valid_email}}'); return; }
     if (hasPassword) {
       const bad = await recheck($('emailPwIn').value);
-      if (bad) { showErr('emailErr', 'That password does not match.'); return; }
+      if (bad) { showErr('emailErr', '{{sjs:js.settings.that_password_does_not_match}}'); return; }
     }
     const { error } = await Regret.sb().auth.updateUser({ email: next });
     if (error) {
       const text = Regret.authError ? Regret.authError(error.message) : error.message;
-      showErr('emailErr', text || 'Could not change that email.');
+      showErr('emailErr', text || '{{sjs:js.settings.could_not_change_that_email}}');
       return;
     }
     showErr('emailErr', '');
-    $('emailForm').querySelector('.help').textContent = 'Confirmation link sent. The change applies once you click it.';
+    $('emailForm').querySelector('.help').textContent = '{{sjs:js.settings.confirmation_link_sent_the_change}}';
   });
 
   $('pwForm').addEventListener('submit', async e => {
     e.preventDefault();
     showErr('pwErr', '');
     const next = $('pwIn').value;
-    if (next.length < 6) { showErr('pwErr', 'Use at least 6 characters.'); return; }
+    if (next.length < 6) { showErr('pwErr', '{{sjs:js.auth.use_at_least_6_characters}}'); return; }
     if (next !== $('pw2In').value) { showErr('pwErr', "Those passwords don't match."); return; }
     if (hasPassword) {
       const bad = await recheck($('pwCurrentIn').value);
-      if (bad) { showErr('pwErr', 'That password does not match.'); return; }
+      if (bad) { showErr('pwErr', '{{sjs:js.settings.that_password_does_not_match}}'); return; }
     }
     const { error } = await Regret.sb().auth.updateUser({ password: next });
-    if (error) { showErr('pwErr', error.message || 'Could not update that password.'); return; }
+    if (error) { showErr('pwErr', error.message || '{{sjs:js.settings.could_not_update_that_password}}'); return; }
     hasPassword = true;
     paintAuth(Regret.user);
     $('pwForm').hidden = true;
@@ -244,7 +244,7 @@
     $('pw2In').value = '';
     $('pwCurrentIn').value = '';
     $('pwOk').hidden = false;
-    $('pwOk').textContent = 'Password updated';
+    $('pwOk').textContent = '{{sjs:js.settings.password_updated}}';
   });
 
   async function deleteError(error) {

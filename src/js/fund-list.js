@@ -30,9 +30,9 @@
     const mark = opts.bookmark
       ? `<button type="button" class="bm" data-remove="${f.id}" data-tip="Remove" aria-label="Remove from watchlist">${BOOKMARK}</button>`
       : '';
-    return `<a class="tr2${f.v2 ? ' feat' : ''}" href="${href}" data-fund="${f.id}" title="${f.report ? 'Open full report' : 'Full report coming soon'}"><div class="nm"><b>${f.name}</b><div class="m">${f.hq} · since ${f.since}</div></div>
+    return `<a class="tr2${f.v2 ? ' feat' : ''}" href="${href}" data-fund="${f.id}" title="${f.report ? '{{sjs:js.fund_list.open_full_report}}' : '{{sjs:js.fund_list.full_report_coming_soon}}'}"><div class="nm"><b>${f.name}</b><div class="m">${f.hq} · since ${f.since}</div></div>
  <div class="sc"><div class="mring">${ring(f.score, 38, 4.5, f.v2 ? 'url(#g2)' : '#C9C5D9')}<b style="${f.v2 ? '' : 'color:#A9A5BD'}">${f.score}</b></div><div><span class="bands"><i style="background:${bandColor(f.band)}"></i>${f.band}</span><span class="tag ${f.v2 ? 'v2' : 'old'}">${f.v2 ? 'v2 · likely ' + f.lo + '–' + f.hi : 'old method'}</span></div></div>
- <div title="${f.legalNote}"><span class="lgc ${f.legal ? 'r' : 'g'}">${f.legal ? f.legal + ' active' : 'None found'}</span></div>
+ <div title="${f.legalNote}"><span class="lgc ${f.legal ? 'r' : 'g'}">${f.legal ? f.legal + ' active' : '{{sjs:js.fund_list.none_found}}'}</span></div>
  <div><b>${fmtAum(f.aum)}</b><div class="m">${f.aumAsOf}${f.aumStale ? ' · stale' : ''}</div></div>
  <div>${f.updatedS}</div>
  ${mark}</a>`;

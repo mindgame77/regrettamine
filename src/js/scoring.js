@@ -89,15 +89,15 @@
   $('correctForm').addEventListener('submit', async e => {
     e.preventDefault();
     fail('');
-    if (!paid()) { fail('A paid plan is required.'); return; }
+    if (!paid()) { fail('{{sjs:js.scoring.a_paid_plan_is_required}}'); return; }
     if (!chosen) { fail('Choose a fund.'); return; }
     const message = $('correctMsg').value.trim();
     const source = $('correctSource').value.trim();
-    if (!message) { fail('Say what is wrong.'); return; }
-    if (!/^https?:\/\//i.test(source)) { fail('The source has to be an http or https link.'); return; }
+    if (!message) { fail('{{sjs:js.scoring.say_what_is_wrong}}'); return; }
+    if (!/^https?:\/\//i.test(source)) { fail('{{sjs:js.scoring.the_source_has_to_be}}'); return; }
     const client = Regret.sb();
     const { data: firmId, error: lookup } = await client.rpc('public_firm_id', { p_slug: chosen.slug });
-    if (lookup || !firmId) { fail('That fund is not on the list.'); return; }
+    if (lookup || !firmId) { fail('{{sjs:js.scoring.that_fund_is_not_on}}'); return; }
     const { error } = await client.from('corrections').insert({
       user_id: Regret.user.id,
       fund_id: firmId,
@@ -106,7 +106,7 @@
       source_url: source,
       status: 'pending'
     });
-    if (error) { fail('Could not send that. A paid plan is required.'); return; }
+    if (error) { fail('{{sjs:js.scoring.could_not_send_that_a}}'); return; }
     $('correctForm').outerHTML = '<div class="card done" id="correctDone"><b>Submitted.</b><p>We review every request.</p></div>';
   });
 

@@ -55,7 +55,22 @@ def apply_strings(text):
         if kind == "sjs":
             value = value.replace("\\", "\\\\").replace("'", "\\'")
         return value
-    return _TOKEN.sub(sub, text)
+    for _ in range(3):  # a string may itself contain {{s:brand.name}}
+        if "{{s" not in text:
+            break
+        text = _TOKEN.sub(sub, text)
+    return text
+
+
+def apply_strings_to_data(obj):
+    """Resolve {{s:key}} inside loaded JSON/Supabase records (shared site text lives in strings.js)."""
+    if isinstance(obj, dict):
+        return {k: apply_strings_to_data(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [apply_strings_to_data(v) for v in obj]
+    if isinstance(obj, str) and "{{s" in obj:
+        return apply_strings(obj)
+    return obj
 
 
 def apply_strings_to_site():
@@ -889,12 +904,14 @@ def load_site():
     if url and key:
         from regrettamine.supabase_load import load_site as load_remote
         print("source: supabase (service role, server-side)")
-        return load_remote(url, key)
+        home, funds = load_remote(url, key)
+        return apply_strings_to_data(home), apply_strings_to_data(funds)
     if os.environ.get("SUPABASE_ANON_KEY", "").strip():
         print("source: json (SUPABASE_SERVICE_ROLE_KEY is not set; the anon key cannot read the full bundle)")
     else:
         print("source: json")
-    return load_local()
+    home, funds = load_local()
+    return apply_strings_to_data(home), apply_strings_to_data(funds)
 
 
 def render_report_payload(fund, prefix):
