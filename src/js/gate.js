@@ -15,7 +15,7 @@
       note = document.getElementById('nudge');
     }
     note.hidden = false;
-    note.textContent = '1 free report left. Make it count.';
+    note.textContent = '{{sjs:js.gate.1_free_report_left_make}}';
   }
 
   function showWait(text) {
@@ -43,7 +43,7 @@
   }
 
   function lorem(n) {
-    const line = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.';
+    const line = '{{sjs:js.gate.lorem_ipsum_dolor_sit_amet}}';
     let out = '';
     for (let i = 0; i < n; i++) out += (i ? ' ' : '') + line;
     return out;
@@ -95,8 +95,8 @@
     const crumb = mount.querySelector('.crumb');
     const crumbHtml = crumb ? crumb.outerHTML : '';
     const plans = !!(result && result.plans);
-    const pitch = plans ? 'A plan opens this report.' : 'A free account opens this report.';
-    const label = plans ? 'See plans' : 'Create account';
+    const pitch = plans ? '{{sjs:js.gate.a_plan_opens_this_report}}' : '{{sjs:js.gate.a_free_account_opens_this}}';
+    const label = plans ? '{{sjs:js.gate.see_plans}}' : '{{sjs:page.scoring.create_account}}';
     mount.innerHTML = crumbHtml
       + '<div class="fh np"><div><h1>' + heading + '</h1></div></div>'
       + veilHtml()
@@ -164,7 +164,7 @@
   const sessionKnown = hasSession() && Regret.sessionReady ? Regret.sessionReady : Promise.resolve();
   sessionKnown.then(() => Regret.loadReport(slug)).then(async (result) => {
     if (!result) {
-      if (!early) showWait('This report is not available on this build.');
+      if (!early) showWait('{{sjs:js.gate.this_report_is_not_available}}');
       return;
     }
     if (!result.ok) {
@@ -175,18 +175,18 @@
         return;
       }
       if (result.reason === 'unpublished') {
-        if (!early) showWait('This report is not available on this build.');
+        if (!early) showWait('{{sjs:js.gate.this_report_is_not_available}}');
         await Regret.paintAlert();
         return;
       }
-      if (!early) showWait('This report is not available on this build.');
+      if (!early) showWait('{{sjs:js.gate.this_report_is_not_available}}');
       return;
     }
     if (result.html) {
       writeCache(slug, result.html);
       showReport(result.html, true);
     } else if (!early) {
-      showWait('This report is not available on this build.');
+      showWait('{{sjs:js.gate.this_report_is_not_available}}');
       await Regret.paintAlert();
     }
     if (result.tier === 'paid') return;

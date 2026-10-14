@@ -1,6 +1,9 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Scoring · Regretamine</title>
-<link rel="icon" href="../assets/favicon.svg">
+<title>Scoring · {{s:brand.name}}</title>
+<link rel="icon" href="../assets/favicon.ico" sizes="any">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/logo/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/logo/apple-touch-icon.png">
 <link rel="stylesheet" href="../css/common.css">
 <link rel="stylesheet" href="../css/auth.css">
 <link rel="stylesheet" href="../css/legal.css">
@@ -12,73 +15,73 @@
 <meta name="regret-root" content="../">
 </head><body>
 <div class="blobs" style="height:420px"><div class="blob" style="width:420px;height:420px;background:#CDBBFF;left:-160px;top:-180px"></div><div class="blob" style="width:380px;height:380px;background:#FFC7B8;right:-140px;top:-160px"></div></div>
-<nav class="pillnav"><a class="logo" href="../"><i></i><span class="wm">regret<em>amine</em></span></a>
- <div class="links"><a href="../">VCs</a><a class="on" href="../scoring/">Scoring</a><a href="../plans/">Pricing</a><!-- Our Story --></div>
- <div class="r" id="navSlot"><a class="b w" href="../login/">Log in</a><a class="b v" href="../account/#watchlist">Get alerts</a></div></nav>
-<header class="lhero"><div class="wrap"><span class="kick">How it works</span><h1>From public record to score.</h1><p>We check how a VC fund treats founders, using sources you can open yourself.</p></div></header>
-<main class="wrap" style="position:relative;z-index:1"><div class="tkg k4" style="margin-top:28px"><div class="tkc t0"><span class="ix">01</span><h4>We pull the public record.</h4></div><div class="tkc t1"><span class="ix">02</span><h4>We verify every source.</h4><p>It counts only if it links, names the fund and shows its role.</p></div><div class="tkc t2"><span class="ix">03</span><h4>We score the fund.</h4><p>0 to 100, higher is safer, from published rules.</p><a class="lnk" href="#rules">How scoring works →</a></div><div class="tkc t3"><span class="ix">04</span><h4>You check before you sign.</h4><p>Read the report, save the fund, get alerts when it changes.</p></div></div>
-<div class="sech"><h2 class="h2">What we check</h2></div>
-<table class="dt"><tr><th>Area</th><th>Sources</th></tr>
-<tr><td>Legal records</td><td>Federal dockets (PACER, CourtListener) and state courts: suits by or against the fund, its partners as directors, and its own companies.</td></tr>
-<tr><td>Regulators and sanctions</td><td>SEC Form ADV and Form D, SEC and DOJ actions, OFAC, EU, UK and UN sanctions lists (exact identity matches only).</td></tr>
-<tr><td>Press</td><td>Named, dated reporting from outlets such as TechCrunch, Bloomberg and Reuters. Anonymous-only claims don't count.</td></tr>
-<tr><td>Founder experiences</td><td>First-hand reviews from founders and executives, verified via LinkedIn and anonymous by default.</td></tr></table>
+<nav class="pillnav"><a class="logo" href="../"><img class="lockup" src="../assets/logo/lockup-light.svg" alt="{{s:brand.name}}" width="143" height="36"></a>
+ <div class="links"><a href="../">{{s:common.vcs}}</a><a class="on" href="../scoring/">{{s:common.scoring}}</a><a href="../plans/">{{s:common.pricing}}</a><!-- Our Story --></div>
+ <div class="r" id="navSlot"><a class="b w" href="../login/">{{s:common.log_in}}</a><a class="b v" href="../account/#watchlist">{{s:common.get_alerts}}</a></div></nav>
+<header class="lhero"><div class="wrap"><span class="kick">{{s:page.scoring.how_it_works}}</span><h1>{{s:page.scoring.from_public_record_to_score}}</h1><p>{{s:page.scoring.we_check_how_a_vc}}</p></div></header>
+<main class="wrap" style="position:relative;z-index:1"><div class="tkg k4" style="margin-top:28px"><div class="tkc t0"><span class="ix">01</span><h4>{{s:page.scoring.we_pull_the_public_record}}</h4></div><div class="tkc t1"><span class="ix">02</span><h4>{{s:page.scoring.we_verify_every_source}}</h4><p>{{s:page.scoring.it_counts_only_if_it}}</p></div><div class="tkc t2"><span class="ix">03</span><h4>{{s:page.scoring.we_score_the_fund}}</h4><p>{{s:scoring.step3.body}}</p><a class="lnk" href="#rules">{{s:page.scoring.how_scoring_works}}</a></div><div class="tkc t3"><span class="ix">04</span><h4>{{s:page.scoring.you_check_before_you_sign}}</h4><p>{{s:page.scoring.read_the_report_save_the}}</p></div></div>
+<div class="sech"><h2 class="h2">{{s:page.scoring.what_we_check}}</h2></div>
+<table class="dt"><tr><th>{{s:page.scoring.area}}</th><th>{{s:page.scoring.sources}}</th></tr>
+<tr><td>{{s:page.scoring.legal_records}}</td><td>{{s:page.scoring.federal_dockets_pacer_courtlistener_and}}</td></tr>
+<tr><td>{{s:page.scoring.regulators_and_sanctions}}</td><td>{{s:page.scoring.sec_form_adv_and_form}}</td></tr>
+<tr><td>{{s:page.scoring.press}}</td><td>{{s:page.scoring.named_dated_reporting_from_outlets}}</td></tr>
+<tr><td>{{s:page.scoring.founder_experiences}}</td><td>{{s:page.scoring.first_hand_reviews_from_founders}}</td></tr></table>
 <div class="cols one" id="accessRow" style="margin-top:52px">
- <div><h2 class="h2" style="margin-bottom:18px">Reports</h2><div class="card meter"><div class="segs">
-  <div class="grp"><div class="bar"><i class="u"></i><i class="u"></i></div><small>Free · 2</small></div>
-  <div class="grp g5"><div class="bar"><i class="u ac"></i><i class="u ac"></i><i class="u ac"></i><i class="u ac"></i><i class="u ac"></i></div><small>Free account · 5 more</small></div>
-  <div class="grp pd"><div class="bar"><i class="inf"></i></div><small>Plans</small></div></div>
-  <div class="mb"><span>Reopening a fund you've seen is free.</span><a class="b c" style="height:40px" href="../login/?mode=signup">Create account</a></div></div></div>
- <div id="correctionsCard" hidden><h2 class="h2" style="margin-bottom:18px">Corrections</h2><div class="card meter"><p style="font-size:15px;color:var(--ink2)">Spotted a wrong fact? Send the page, what's wrong and a source. We review every request.</p>
-  <div class="mb"><button class="b w" type="button" id="correctOpen" style="height:40px;margin-left:auto">Request a correction</button></div></div>
+ <div><h2 class="h2" style="margin-bottom:18px">{{s:page.scoring.reports}}</h2><div class="card meter"><div class="segs">
+  <div class="grp"><div class="bar"><i class="u"></i><i class="u"></i></div><small>{{s:page.scoring.free_2}}</small></div>
+  <div class="grp g5"><div class="bar"><i class="u ac"></i><i class="u ac"></i><i class="u ac"></i><i class="u ac"></i><i class="u ac"></i></div><small>{{s:page.scoring.free_account_5_more}}</small></div>
+  <div class="grp pd"><div class="bar"><i class="inf"></i></div><small>{{s:page.scoring.plans}}</small></div></div>
+  <div class="mb"><span>{{s:page.scoring.reopening_a_fund_you_ve}}</span><a class="b c" style="height:40px" href="../login/?mode=signup">{{s:page.scoring.create_account}}</a></div></div></div>
+ <div id="correctionsCard" hidden><h2 class="h2" style="margin-bottom:18px">{{s:common.corrections}}</h2><div class="card meter"><p style="font-size:15px;color:var(--ink2)">{{s:page.scoring.spotted_a_wrong_fact_send}}</p>
+  <div class="mb"><button class="b w" type="button" id="correctOpen" style="height:40px;margin-left:auto">{{s:page.scoring.request_a_correction}}</button></div></div>
   <form class="card form" id="correctForm" hidden>
-   <div class="fl" id="correctFund"><span>Fund</span>
+   <div class="fl" id="correctFund"><span>{{s:common.fund}}</span>
     <p class="picked" id="correctPicked" hidden></p>
-    <div class="ac-wrap" id="correctPick"><label class="fld srch"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8C88A3" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="correctIn" placeholder="Search fund name" aria-label="Fund" autocomplete="off"></label><div class="dd" id="correctDD"></div></div>
+    <div class="ac-wrap" id="correctPick"><label class="fld srch"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8C88A3" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="correctIn" placeholder="{{s:common.search_fund_name}}" aria-label="{{s:common.fund}}" autocomplete="off"></label><div class="dd" id="correctDD"></div></div>
    </div>
-   <label class="fl"><span>What's wrong</span><textarea class="fld ta" id="correctMsg" required maxlength="4000"></textarea></label>
-   <label class="fl"><span>Source</span><input class="fld" id="correctSource" type="url" required placeholder="https://…" autocomplete="off"></label>
+   <label class="fl"><span>{{s:page.scoring.what_s_wrong}}</span><textarea class="fld ta" id="correctMsg" required maxlength="4000"></textarea></label>
+   <label class="fl"><span>{{s:page.scoring.source}}</span><input class="fld" id="correctSource" type="url" required placeholder="https://…" autocomplete="off"></label>
    <p class="err" id="correctErr" hidden></p>
-   <div class="bar2"><button class="b c" type="submit">Send correction</button></div>
+   <div class="bar2"><button class="b c" type="submit">{{s:page.scoring.send_correction}}</button></div>
   </form>
  </div>
 </div></main>
-<header class="lhero" id="rules"><div class="wrap"><span class="kick">Scoring</span><h1>How the score works.</h1><p>It measures how a fund treats its own founders, not its portfolio's luck.</p><div class="eff">Version 2 · agreed Oct 2, 2026</div></div></header>
-<main class="wrap" style="position:relative;z-index:1"><section class="stats s6"><div class="stat"><div class="n">60</div><div class="l">Fund vs. founders</div><div class="s">Its own startups, founders and executives</div></div><div class="stat"><div class="n">17.5</div><div class="l">Ability to support you</div><div class="s">Money, media reach, help after the check</div></div><div class="stat"><div class="n">17.5</div><div class="l">Founder experience</div><div class="s">First-hand accounts only</div></div><div class="stat"><div class="n">5</div><div class="l">Conflicts of interest</div><div class="s">Competing boards and in-house rivals</div></div><div class="stat"><div class="n">+3</div><div class="l">Track record bonus</div><div class="s">Years investing without a pattern of harm</div></div><div class="stat"><div class="n">0 to −50</div><div class="l">Regulatory penalty</div><div class="s">Probes, charges, fines, sanctions</div></div></section>
-<p class="formula"><b>Score</b> = sections 1–4 + bonus − regulatory penalty, capped at 0–100.</p>
+<header class="lhero" id="rules"><div class="wrap"><span class="kick">{{s:common.scoring}}</span><h1>{{s:page.scoring.how_the_score_works}}</h1><p>{{s:page.scoring.it_measures_how_a_fund}}</p><div class="eff">{{s:page.scoring.version_2_agreed_oct_2}}</div></div></header>
+<main class="wrap" style="position:relative;z-index:1"><section class="stats s6"><div class="stat"><div class="n">60</div><div class="l">{{s:page.scoring.fund_vs_founders}}</div><div class="s">{{s:page.scoring.its_own_startups_founders_and}}</div></div><div class="stat"><div class="n">17.5</div><div class="l">{{s:page.scoring.ability_to_support_you}}</div><div class="s">{{s:page.scoring.money_media_reach_help_after}}</div></div><div class="stat"><div class="n">17.5</div><div class="l">{{s:page.scoring.founder_experience}}</div><div class="s">{{s:page.scoring.first_hand_accounts_only}}</div></div><div class="stat"><div class="n">5</div><div class="l">{{s:page.scoring.conflicts_of_interest}}</div><div class="s">{{s:page.scoring.competing_boards_and_in_house}}</div></div><div class="stat"><div class="n">+3</div><div class="l">{{s:page.scoring.track_record_bonus}}</div><div class="s">{{s:page.scoring.years_investing_without_a_pattern}}</div></div><div class="stat"><div class="n">{{s:page.scoring.0_to_50}}</div><div class="l">{{s:page.scoring.regulatory_penalty}}</div><div class="s">{{s:page.scoring.probes_charges_fines_sanctions}}</div></div></section>
+<p class="formula"><b>{{s:page.scoring.score}}</b> {{s:page.scoring.sections_1_4_bonus_regulatory}}</p>
 <div class="cols" style="margin-top:44px">
- <div class="card2"><h3>Principles</h3><ul>
-  <li>Every fund starts with full points and loses them only for verified evidence about its own behavior.</li>
-  <li>Rates, not counts: bad events are measured as a share of all companies backed.</li>
-  <li>Copycat names are excluded.</li>
-  <li>A suit the fund brought differs from one brought against it.</li>
-  <li>Coverage is shown separately. Missing data lowers coverage, not the score.</li></ul></div>
- <div class="card2"><h3>Rate scale</h3><table class="dt"><tr><th>Share of portfolio affected</th><th>Effect</th></tr><tr><td>Under 1%</td><td>No penalty</td></tr><tr><td>1–3%</td><td>About 10% of the section</td></tr><tr><td>3–10%</td><td>About 35%</td></tr><tr><td>Over 10%</td><td>About 70% or more</td></tr></table>
-  <h3 style="margin-top:22px">Bands</h3><table class="dt"><tr><th>Score</th><th>Band</th></tr><tr><td>90–100</td><td><span class="bands" style="font-size:14.5px"><i style="background:#19C37D"></i>Very low risk</span></td></tr><tr><td>75–89</td><td><span class="bands" style="font-size:14.5px"><i style="background:#7BD3A8"></i>Low risk</span></td></tr><tr><td>50–74</td><td><span class="bands" style="font-size:14.5px"><i style="background:#F2B705"></i>Moderate</span></td></tr><tr><td>25–49</td><td><span class="bands" style="font-size:14.5px"><i style="background:#FF6B4A"></i>Elevated</span></td></tr><tr><td>Under 25</td><td><span class="bands" style="font-size:14.5px"><i style="background:#D7263D"></i>High</span></td></tr></table><p style="margin-top:8px">Any sanctions finding shows a red banner, whatever the score.</p></div>
+ <div class="card2"><h3>{{s:page.scoring.principles}}</h3><ul>
+  <li>{{s:page.scoring.every_fund_starts_with_full}}</li>
+  <li>{{s:page.scoring.rates_not_counts_bad_events}}</li>
+  <li>{{s:page.scoring.copycat_names_are_excluded}}</li>
+  <li>{{s:page.scoring.a_suit_the_fund_brought}}</li>
+  <li>{{s:page.scoring.coverage_is_shown_separately_missing}}</li></ul></div>
+ <div class="card2"><h3>{{s:page.scoring.rate_scale}}</h3><table class="dt"><tr><th>{{s:page.scoring.share_of_portfolio_affected}}</th><th>{{s:page.scoring.effect}}</th></tr><tr><td>{{s:page.scoring.under_1}}</td><td>{{s:page.scoring.no_penalty}}</td></tr><tr><td>1–3%</td><td>{{s:page.scoring.about_10_of_the_section}}</td></tr><tr><td>3–10%</td><td>{{s:page.scoring.about_35}}</td></tr><tr><td>{{s:page.scoring.over_10}}</td><td>{{s:page.scoring.about_70_or_more}}</td></tr></table>
+  <h3 style="margin-top:22px">{{s:page.scoring.bands}}</h3><table class="dt"><tr><th>{{s:page.scoring.score}}</th><th>{{s:page.scoring.band}}</th></tr><tr><td>90–100</td><td><span class="bands" style="font-size:14.5px"><i style="background:#19C37D"></i>{{s:page.scoring.very_low_risk}}</span></td></tr><tr><td>75–89</td><td><span class="bands" style="font-size:14.5px"><i style="background:#7BD3A8"></i>{{s:page.scoring.low_risk}}</span></td></tr><tr><td>50–74</td><td><span class="bands" style="font-size:14.5px"><i style="background:#F2B705"></i>{{s:page.scoring.moderate}}</span></td></tr><tr><td>25–49</td><td><span class="bands" style="font-size:14.5px"><i style="background:#FF6B4A"></i>{{s:page.scoring.elevated}}</span></td></tr><tr><td>{{s:page.scoring.under_25}}</td><td><span class="bands" style="font-size:14.5px"><i style="background:#D7263D"></i>{{s:page.scoring.high}}</span></td></tr></table><p style="margin-top:8px">{{s:page.scoring.any_sanctions_finding_shows_a}}</p></div>
 </div>
-<div class="sech"><h2 class="h2">The rules</h2></div>
+<div class="sech"><h2 class="h2">{{s:page.scoring.the_rules}}</h2></div>
 <div class="mas">
-<div class="card2"><h3>1 · Fund vs. founders <em>60</em></h3>
- <table class="dt"><tr><th>Sub-part</th><th>Points</th></tr><tr><td>Lawsuits with its own startups or founders</td><td class="pt">30</td></tr><tr><td>Pushing out founder CEOs</td><td class="pt">12</td></tr><tr><td>Down-round or pay-to-play behavior</td><td class="pt">10</td></tr><tr><td>Blocking acquisitions or rounds</td><td class="pt">8</td></tr></table>
- <ul><li>−3 per case the fund lost or where fraud was found, even under 1%.</li></ul></div>
-<div class="card2"><h3>2 · Ability to support you <em>17.5</em></h3>
- <table class="dt"><tr><th>Sub-part</th><th>Points</th></tr><tr><td>Money: fund size, money left, hit target</td><td class="pt">6</td></tr><tr><td>Media reach (capped)</td><td class="pt">6</td></tr><tr><td>Help after the check, incl. partner stability</td><td class="pt">5.5</td></tr></table>
- <ul><li>Claims the fund makes about itself count at half until founders confirm them.</li><li>−0.5 for each calendar year with at least one partner departure, up to −2</li></ul></div>
-<div class="card2"><h3>3 · Founder experience <em>17.5</em></h3>
- <p>Only first-hand accounts from a founder or named ex-executive.</p>
- <table class="dt"><tr><th>Negatives under 1%: age default</th><th>Points</th></tr><tr><td>10+ years and over 500 companies</td><td class="pt">16.6</td></tr><tr><td>10+ years</td><td class="pt">14.9</td></tr><tr><td>5–10 years</td><td class="pt">12.25</td></tr><tr><td>2–5 years</td><td class="pt">8.75</td></tr><tr><td>Under 2 years or a first fund</td><td class="pt">7</td></tr></table>
- <table class="dt"><tr><th>Feedback 1% or more: tone</th><th>Points</th></tr><tr><td>Mostly positive</td><td class="pt">15.75</td></tr><tr><td>Mixed</td><td class="pt">9.6</td></tr><tr><td>Mostly negative</td><td class="pt">3.5</td></tr><tr><td>Pattern of serious harm</td><td class="pt">0</td></tr></table>
- <ul><li>Fewer than 5 accounts: average of tone score and age default.</li><li>Accounts older than 5 years count half.</li></ul></div>
-<div class="card2"><h3>4 · Conflicts of interest <em>5</em></h3>
- <p>Partners on competing boards, backing a founder's direct competitor, in-house companies that compete with portfolio companies. −1 per documented conflict, scaled by partner count. Can't go below 0.</p></div>
-<div class="card2"><h3>5 · Track record bonus <em>+3</em></h3><p>+1 per 5 years of investing with no significant pattern of harm.</p></div>
-<div class="card2"><h3>6 · Regulatory penalty <em>0 to −50</em></h3>
- <table class="dt"><tr><th>Event</th><th>Points</th></tr><tr><td>Open investigation, no charges</td><td class="pt">−2</td></tr><tr><td>Charges filed</td><td class="pt">−10</td></tr><tr><td>Fine or settlement</td><td class="pt">−10 to −20</td></tr><tr><td>Fraud finding, or partner barred</td><td class="pt">−30</td></tr><tr><td>Sanctioned partner or sanctioned money</td><td class="pt">−50 + red banner</td></tr><tr><td>Shareholder suit vs. partner as public-company director</td><td class="pt">−0.5 to −1</td></tr></table>
- <ul><li>Sanctions need an exact identity match, never name-only. Counter-sanctions cost 0.</li><li>Crypto token-buyer class actions are context only and cost 0.</li></ul></div></div>
-<div class="sech"><h2 class="h2">Worked example</h2><small>Andreessen Horowitz</small><a class="lnk" href="../vc/a16z/">Open the report →</a></div>
+<div class="card2"><h3>{{s:page.scoring.1_fund_vs_founders}} <em>60</em></h3>
+ <table class="dt"><tr><th>{{s:page.scoring.sub_part}}</th><th>{{s:page.scoring.points}}</th></tr><tr><td>{{s:page.scoring.lawsuits_with_its_own_startups}}</td><td class="pt">30</td></tr><tr><td>{{s:page.scoring.pushing_out_founder_ceos}}</td><td class="pt">12</td></tr><tr><td>{{s:page.scoring.down_round_or_pay_to}}</td><td class="pt">10</td></tr><tr><td>{{s:page.scoring.blocking_acquisitions_or_rounds}}</td><td class="pt">8</td></tr></table>
+ <ul><li>{{s:page.scoring.3_per_case_the_fund}}</li></ul></div>
+<div class="card2"><h3>{{s:page.scoring.2_ability_to_support_you}} <em>17.5</em></h3>
+ <table class="dt"><tr><th>{{s:page.scoring.sub_part}}</th><th>{{s:page.scoring.points}}</th></tr><tr><td>{{s:page.scoring.money_fund_size_money_left}}</td><td class="pt">6</td></tr><tr><td>{{s:page.scoring.media_reach_capped}}</td><td class="pt">6</td></tr><tr><td>{{s:page.scoring.help_after_the_check_incl}}</td><td class="pt">5.5</td></tr></table>
+ <ul><li>{{s:page.scoring.claims_the_fund_makes_about}}</li><li>{{s:page.scoring.0_5_for_each_calendar}}</li></ul></div>
+<div class="card2"><h3>{{s:page.scoring.3_founder_experience}} <em>17.5</em></h3>
+ <p>{{s:page.scoring.only_first_hand_accounts_from}}</p>
+ <table class="dt"><tr><th>{{s:page.scoring.negatives_under_1_age_default}}</th><th>{{s:page.scoring.points}}</th></tr><tr><td>{{s:page.scoring.10_years_and_over_500}}</td><td class="pt">16.6</td></tr><tr><td>{{s:page.scoring.10_years}}</td><td class="pt">14.9</td></tr><tr><td>{{s:page.scoring.5_10_years}}</td><td class="pt">12.25</td></tr><tr><td>{{s:page.scoring.2_5_years}}</td><td class="pt">8.75</td></tr><tr><td>{{s:page.scoring.under_2_years_or_a}}</td><td class="pt">7</td></tr></table>
+ <table class="dt"><tr><th>{{s:page.scoring.feedback_1_or_more_tone}}</th><th>{{s:page.scoring.points}}</th></tr><tr><td>{{s:page.scoring.mostly_positive}}</td><td class="pt">15.75</td></tr><tr><td>{{s:page.scoring.mixed}}</td><td class="pt">9.6</td></tr><tr><td>{{s:page.scoring.mostly_negative}}</td><td class="pt">3.5</td></tr><tr><td>{{s:page.scoring.pattern_of_serious_harm}}</td><td class="pt">0</td></tr></table>
+ <ul><li>{{s:page.scoring.fewer_than_5_accounts_average}}</li><li>{{s:page.scoring.accounts_older_than_5_years}}</li></ul></div>
+<div class="card2"><h3>{{s:page.scoring.4_conflicts_of_interest}} <em>5</em></h3>
+ <p>{{s:page.scoring.partners_on_competing_boards_backing}}</p></div>
+<div class="card2"><h3>{{s:page.scoring.5_track_record_bonus}} <em>+3</em></h3><p>{{s:page.scoring.1_per_5_years_of}}</p></div>
+<div class="card2"><h3>{{s:page.scoring.6_regulatory_penalty}} <em>{{s:page.scoring.0_to_50}}</em></h3>
+ <table class="dt"><tr><th>{{s:page.scoring.event}}</th><th>{{s:page.scoring.points}}</th></tr><tr><td>{{s:page.scoring.open_investigation_no_charges}}</td><td class="pt">−2</td></tr><tr><td>{{s:page.scoring.charges_filed}}</td><td class="pt">−10</td></tr><tr><td>{{s:page.scoring.fine_or_settlement}}</td><td class="pt">{{s:page.scoring.10_to_20}}</td></tr><tr><td>{{s:page.scoring.fraud_finding_or_partner_barred}}</td><td class="pt">−30</td></tr><tr><td>{{s:page.scoring.sanctioned_partner_or_sanctioned_money}}</td><td class="pt">{{s:page.scoring.50_red_banner}}</td></tr><tr><td>{{s:page.scoring.shareholder_suit_vs_partner_as}}</td><td class="pt">{{s:page.scoring.0_5_to_1}}</td></tr></table>
+ <ul><li>{{s:page.scoring.sanctions_need_an_exact_identity}}</li><li>{{s:page.scoring.crypto_token_buyer_class_actions}}</li></ul></div></div>
+<div class="sech"><h2 class="h2">{{s:page.scoring.worked_example}}</h2><small>{{s:common.andreessen_horowitz}}</small><a class="lnk" href="../vc/a16z/">{{s:page.scoring.open_the_report}}</a></div>
 __SCORE_EXAMPLE__
 </main>
-<footer><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regret<em>amine</em></span></span><span>regretamine.com · Know your VC before you raise.</span><span style="margin-left:auto"><a href="../scoring/">Scoring</a> · <a href="../privacy/">Privacy</a> · <a href="../terms/">Terms</a></span></div></footer>
+<footer><div class="wrap"><span class="logo"><img class="lockup sm" src="../assets/logo/lockup-light.svg" alt="{{s:brand.name}}" width="111" height="28"></span><span>{{s:common.regretamine_com_know_your_vc}}</span><span style="margin-left:auto"><a href="../scoring/">{{s:common.scoring}}</a> · <a href="../privacy/">{{s:common.privacy}}</a> · <a href="../terms/">{{s:common.terms}}</a></span></div></footer>
 <script src="../js/supabase-config.js"></script>
 <script src="../js/stripe-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

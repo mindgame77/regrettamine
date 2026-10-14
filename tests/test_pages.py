@@ -12,10 +12,10 @@ def test_shared_list_and_auth_pages(monkeypatch):
     from build import main, render_fund_page, load_local
 
     main()
-    home_js = (ROOT / "src" / "js" / "home.js").read_text(encoding="utf-8")
-    list_js = (ROOT / "src" / "js" / "fund-list.js").read_text(encoding="utf-8")
-    account_js = (ROOT / "src" / "js" / "account.js").read_text(encoding="utf-8")
-    auth_js = (ROOT / "src" / "js" / "auth.js").read_text(encoding="utf-8")
+    home_js = (ROOT / "site" / "js" / "home.js").read_text(encoding="utf-8")
+    list_js = (ROOT / "site" / "js" / "fund-list.js").read_text(encoding="utf-8")
+    account_js = (ROOT / "site" / "js" / "account.js").read_text(encoding="utf-8")
+    auth_js = (ROOT / "site" / "js" / "auth.js").read_text(encoding="utf-8")
     assert "FundList.table" in home_js
     assert "old method" not in home_js
     assert "Active legal" in list_js
@@ -140,7 +140,7 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "From public record to score." in scoring
     assert "We pull the public record." in scoring
     assert scoring.count("It counts only if it links, names the fund and shows its role.") == 1
-    assert scoring.count("0 to 100, higher is safer") == 1
+    assert scoring.count("0 to 100, higher means fewer red flags in the sources we checked") == 1
     assert "Copycat names are excluded." in scoring
     assert "Anonymous-only claims don't count." in scoring
     assert "Read the report, save the fund, get alerts when it changes." in scoring
@@ -198,7 +198,7 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "landing_funds" in auth_js and "list-only" in auth_js
     assert "loadReport" in auth_js and "open_report" in auth_js
     assert "search_funds" in home_js and "plans/" in home_js
-    gate_js = (ROOT / "src" / "js" / "gate.js").read_text(encoding="utf-8")
+    gate_js = (ROOT / "site" / "js" / "gate.js").read_text(encoding="utf-8")
     assert "plans/" in gate_js and "loadReport" in gate_js
     assert "Create account" in gate_js and "See plans" in gate_js and "showVeil" in gate_js
     assert "report-veil" in gate_js and "A free account opens this report." in gate_js
@@ -222,8 +222,8 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "Paid plans are coming soon." not in plans
     assert 'data-checkout="test"' in plans and "$1 test purchase" in plans
     assert 'src="../js/plans.js"' in plans and 'src="../js/stripe-config.js"' in plans
-    stripe_cfg = (ROOT / "src" / "js" / "stripe-config.js").read_text(encoding="utf-8")
-    plans_js = (ROOT / "src" / "js" / "plans.js").read_text(encoding="utf-8")
+    stripe_cfg = (ROOT / "site" / "js" / "stripe-config.js").read_text(encoding="utf-8")
+    plans_js = (ROOT / "site" / "js" / "plans.js").read_text(encoding="utf-8")
     assert "buy.stripe.com/test_bJedR97cM6zM82XcM48Vi02" in stripe_cfg
     assert "buy.stripe.com/test_8x2fZh7cM2jwab5bI08Vi03" in stripe_cfg
     assert "buy.stripe.com/test_28E5kDdBaf6iab58vO8Vi00" in stripe_cfg
@@ -257,7 +257,7 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert 'plans/">See plans' in home_js
     assert 'id="accountNav"' in account and 'id="accountNav"' in (ROOT / "src" / "settings.html").read_text(encoding="utf-8")
     settings = (ROOT / "site" / "settings" / "index.html").read_text(encoding="utf-8")
-    settings_js = (ROOT / "src" / "js" / "settings.js").read_text(encoding="utf-8")
+    settings_js = (ROOT / "site" / "js" / "settings.js").read_text(encoding="utf-8")
     assert "<h1>Account</h1>" in settings and "<h1>Billing</h1>" in settings
     assert 'id="nameIn"' in settings and 'id="siteIn"' in settings
     assert "Change email" in settings and "Delete account" in settings
@@ -279,7 +279,7 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert 'href="/regrettamine/"' in missing and 'href="/regrettamine/scoring/"' in missing
     assert 'href="/regrettamine/css/common.css"' in missing
     assert 'href="css/' not in missing
-    assert "search_funds" in (ROOT / "src" / "js" / "notfound.js").read_text(encoding="utf-8")
+    assert "search_funds" in (ROOT / "site" / "js" / "notfound.js").read_text(encoding="utf-8")
     assert "Your name is hidden" in account and "Your name will be shown" in account_js
     assert "scroll-margin-top:120px" in (ROOT / "src" / "css" / "settings.css").read_text(encoding="utf-8")
     assert "scrollIntoView" in settings_js

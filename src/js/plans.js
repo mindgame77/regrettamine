@@ -1,7 +1,7 @@
 /* Pricing buttons open Stripe Payment Links. A paid member switches in the portal. */
 (function () {
   const TEST_KEY = 'regret.stripeTest';
-  const START = { monthly: 'Start monthly', annual: 'Start annual', test: '$1 test purchase' };
+  const START = { monthly: '{{sjs:plans.start_cta|monthly}}', annual: '{{sjs:plans.start_cta|annual}}', test: '{{sjs:plans.start_cta|test}}' };
 
   function cfg() {
     return window.REGRET_STRIPE || {};
@@ -49,11 +49,11 @@
       const current = (which === 'monthly' && plan === 'Monthly') || (which === 'annual' && plan === 'Annual');
       if (current) {
         btn.disabled = true;
-        btn.textContent = 'Current plan';
+        btn.textContent = '{{sjs:js.plans.current_plan}}';
         btn.dataset.action = 'current';
       } else {
         btn.disabled = false;
-        btn.textContent = 'Switch plan';
+        btn.textContent = '{{sjs:js.plans.switch_plan}}';
         btn.dataset.action = 'switch';
       }
     });

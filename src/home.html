@@ -1,6 +1,9 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Regretamine · Take the money you won't regret</title>
-<link rel="icon" href="assets/favicon.svg">
+<title>{{s:brand.name}} · Take the money you won't regret</title>
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/logo/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/logo/apple-touch-icon.png">
 <link rel="stylesheet" href="css/common.css">
 <link rel="stylesheet" href="css/home.css">
 <link rel="stylesheet" href="css/list.css">
@@ -9,15 +12,15 @@
 </head><body>
 
 <div class="blobs" style="height:520px"><div class="blob" style="width:420px;height:420px;background:#CDBBFF;left:-160px;top:-160px"></div><div class="blob" style="width:400px;height:400px;background:#FFC7B8;right:-140px;top:-120px"></div><div class="blob" style="width:260px;height:260px;background:#BDF0D8;left:46%;top:120px;opacity:.3"></div></div>
-<nav class="pillnav"><a class="logo" href="./"><i></i><span class="wm">regret<em>amine</em></span></a>
- <div class="links"><a class="on" href="./">VCs</a><a href="scoring/">Scoring</a><a href="plans/">Pricing</a><!-- Our Story --></div>
- <div class="r" id="navSlot"><a class="b w" href="login/">Log in</a><a class="b v" href="account/#watchlist">Get alerts</a></div></nav>
+<nav class="pillnav"><a class="logo" href="./"><img class="lockup" src="assets/logo/lockup-light.svg" alt="{{s:brand.name}}" width="143" height="36"></a>
+ <div class="links"><a class="on" href="./">{{s:common.vcs}}</a><a href="scoring/">{{s:common.scoring}}</a><a href="plans/">{{s:common.pricing}}</a><!-- Our Story --></div>
+ <div class="r" id="navSlot"><a class="b w" href="login/">{{s:common.log_in}}</a><a class="b v" href="account/#watchlist">{{s:common.get_alerts}}</a></div></nav>
 
 <header class="hero"><div class="wrap">
- <span class="kick"><b>New</b>Lawsuits, regulators and conflicts, every source linked</span>
- <h1>Take the money<br>you <span class="mark">won't regret</span>.</h1>
- <p class="sub">A bad investor costs you years. Check a fund's record before you sign the term sheet.</p>
- <div class="hs"><svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="#8C88A3" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg><input id="hq" placeholder="Andreessen Horowitz" autocomplete="off"><button class="b c" id="hgo">Check fund</button></div>
+ <span class="kick"><b>{{s:page.home.new}}</b>{{s:page.home.lawsuits_regulators_and_conflicts_every}}</span>
+ <h1>{{s:page.home.take_the_money}}<br>{{s:page.home.you}} <span class="mark">{{s:page.home.won_t_regret}}</span>.</h1>
+ <p class="sub">{{s:page.home.a_bad_investor_costs_you}}</p>
+ <div class="hs"><svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="#8C88A3" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg><input id="hq" placeholder="{{s:common.andreessen_horowitz}}" autocomplete="off"><button class="b c" id="hgo">{{s:page.home.check_fund}}</button></div>
 </div></header>
 
 <div class="wrap"><section class="stats" id="stats"></section></div>
@@ -25,25 +28,25 @@
 <main class="listArea" id="list"><div class="wrap">
  <div class="lay">
   <aside class="side">
-   <div class="sh"><b>Filters</b><a id="reset">Reset all</a></div>
-   <div class="fg"><h5>Name</h5><div class="sinput"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="#8C88A3" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg><input id="q" placeholder="Fund name" autocomplete="off"></div></div>
-   <div class="fg"><h5>Risk band</h5><div class="chips" id="fBand"></div></div>
-   <div class="fg"><h5>Score range <small id="rvTxt"></small></h5>
+   <div class="sh"><b>{{s:page.home.filters}}</b><a id="reset">{{s:page.home.reset_all}}</a></div>
+   <div class="fg"><h5>{{s:common.name}}</h5><div class="sinput"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="#8C88A3" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg><input id="q" placeholder="{{s:page.home.fund_name}}" autocomplete="off"></div></div>
+   <div class="fg"><h5>{{s:page.home.risk_band}}</h5><div class="chips" id="fBand"></div></div>
+   <div class="fg"><h5>{{s:page.home.score_range}} <small id="rvTxt"></small></h5>
     <div class="rng"><div class="tr"></div><div class="fill" id="rfill"></div><input type="range" id="smin" min="0" max="100" value="0"><input type="range" id="smax" min="0" max="100" value="100"></div>
     <div class="rv"><span>0</span><span>50</span><span>100</span></div></div>
-   <div class="fg"><h5>Firm AUM</h5><div class="chips" id="fSize"></div></div>
-   <div class="fg"><div class="tog" id="fLegal"><span>Has active legal matters</span><span class="sw2"></span></div></div>
-   <div class="fg"><div class="tog" id="fRecent"><span>Updated in the last 30 days</span><span class="sw2"></span></div></div>
-   <div class="fg"><h5>Sort</h5><label class="sel" style="border-radius:12px;height:42px"><select id="sort" style="flex:1"><option value="score">Score: high to low</option><option value="name">Name: A–Z</option><option value="aum">AUM: largest first</option><option value="upd">Last updated</option></select></label></div>
+   <div class="fg"><h5>{{s:page.home.firm_aum}}</h5><div class="chips" id="fSize"></div></div>
+   <div class="fg"><div class="tog" id="fLegal"><span>{{s:page.home.has_active_legal_matters}}</span><span class="sw2"></span></div></div>
+   <div class="fg"><div class="tog" id="fRecent"><span>{{s:page.home.updated_in_the_last_30}}</span><span class="sw2"></span></div></div>
+   <div class="fg"><h5>{{s:page.home.sort}}</h5><label class="sel" style="border-radius:12px;height:42px"><select id="sort" style="flex:1"><option value="score">{{s:page.home.score_high_to_low}}</option><option value="name">{{s:page.home.name_a_z}}</option><option value="aum">{{s:page.home.aum_largest_first}}</option><option value="upd">{{s:page.home.last_updated}}</option></select></label></div>
   </aside>
   <section>
    <div class="rbar"><span class="cnt" id="cnt"></span><div class="active" id="active" style="margin:0 0 0 8px"></div></div>
    <div id="out"></div>
   </section>
  </div>
- <div class="upd"><div class="uh"><h2>Latest updates</h2><p id="updTot"></p></div><div class="feed" id="feed"></div></div>
+ <div class="upd"><div class="uh"><h2>{{s:page.home.latest_updates}}</h2><p id="updTot"></p></div><div class="feed" id="feed"></div></div>
 </div></main>
-<footer><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regret<em>amine</em></span></span><span>regretamine.com · Know your VC before you raise.</span><span style="margin-left:auto"><a href="scoring/">Scoring</a> · <a href="privacy/">Privacy</a> · <a href="terms/">Terms</a></span></div></footer>
+<footer><div class="wrap"><span class="logo"><img class="lockup sm" src="assets/logo/lockup-light.svg" alt="{{s:brand.name}}" width="111" height="28"></span><span>{{s:common.regretamine_com_know_your_vc}}</span><span style="margin-left:auto"><a href="scoring/">{{s:common.scoring}}</a> · <a href="privacy/">{{s:common.privacy}}</a> · <a href="terms/">{{s:common.terms}}</a></span></div></footer>
 <script id="home-data" type="application/json">__HOME_JSON__</script>
 <script src="js/supabase-config.js"></script>
 <script src="js/stripe-config.js"></script>

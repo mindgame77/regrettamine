@@ -5,7 +5,7 @@ table.dt{display:table;height:auto;border-radius:0;color:inherit;font-weight:400
 table.dt td.pt{display:table-cell;font-family:'Bricolage Grotesque';font-weight:800;color:var(--ink);white-space:nowrap;width:1%;text-align:right}
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
 .cols.one{grid-template-columns:1fr}
-#correctionsCard .picked{font-size:15px;font-weight:600}
+#correctionsCard .picked{font-size:15px;font-weight:700}
 #correctionsCard .picked small{display:block;font-weight:500;color:var(--mute);font-size:13px}
 #correctForm{margin-top:16px}
 .card2{background:#fff;border:1.5px solid var(--line);border-radius:22px;padding:20px 22px}
@@ -30,7 +30,7 @@ table.dt td.pt{display:table-cell;font-family:'Bricolage Grotesque';font-weight:
 .tkc .lnk{margin-top:auto;padding-top:10px}
 .exh{display:flex;align-items:center;gap:22px;margin-bottom:18px}
 .exh .big{font-family:'Bricolage Grotesque';font-weight:800;font-size:44px;line-height:1;letter-spacing:-.03em}
-.exh .big small{font-size:15px;color:var(--mute);font-weight:600;margin-left:8px;letter-spacing:0}
+.exh .big small{font-size:15px;color:var(--mute);font-weight:700;margin-left:8px;letter-spacing:0}
 .ex .wr,.ex .sm2,.ex .note{display:none}
 .banner{margin-top:16px;max-width:none}
 .card.meter{margin-bottom:0}
