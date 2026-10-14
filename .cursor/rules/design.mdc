@@ -32,7 +32,7 @@ alwaysApply: true
 - Patterns: `.rs-fade-in`, `.rs-tick` (set `--i` per row). Respect `prefers-reduced-motion` (tokens.css disables motion globally).
 
 ## Logo
-- Use `assets/logo/lockup-light.svg` (nav `.logo .lockup` 36px, footer `.lockup.sm` 28px); `-dark` files on dark backgrounds. Never rebuild the wordmark in live text or CSS. Min lockup 24px, icon 16px; clear space = capsule height.
+- Use `assets/logo/lockup-light.svg` (nav `.logo .lockup` 36px, footer `.lockup.sm` 28px); `-dark` files on dark backgrounds. Never rebuild the wordmark in live text or CSS. Min lockup 24px, icon 16px; full icon ≥20px, below that `fav16-*.svg`; clear space = ½ icon height. Swap the logo by replacing files in `assets/logo/` (fixed names).
 
 ## Content rules
 - Each fact once per page; link to it elsewhere.

@@ -6,17 +6,23 @@
 - Catalog: [`docs/design/catalog/index.html`](catalog/index.html). Open it from a local checkout; it reads the live CSS and strings.
 
 ## Logo
-Chosen: **C1** (Oct 14, 2026) from the design workspace, `logo/explore-4.html`. Violet capsule `#6C3BFF` with white tick, ink "Regretamin" wordmark (outlined Bricolage Grotesque 800).
+Chosen: **R2** (Oct 14, 2026), `logo/explore-5.html` in the design workspace. A white double-stroke "R" (currency style) in a violet `#6C3BFF` rounded square, with an ink "Regretamin" wordmark (outlined Bricolage Grotesque 800).
 - Files in `assets/logo/`:
   - `lockup-light.svg` and `lockup-dark.svg`
   - `icon-light.svg` and `icon-dark.svg`
-  - `fav32-*.svg` and `fav16-*.svg`
-  - `favicon-16.png`, `favicon-32.png`, `apple-touch-icon.png` (180), `icon-192.png`, `icon-512.png`
+  - `fav32-*.svg`, plus **`fav16-*.svg`, a simplified 16px variant** (thicker R, stubs above and below instead of full strokes), because the full R2 is muddy at 16px
+  - `favicon-16.png` (from fav16), `favicon-32.png`, `apple-touch-icon.png` (180), `icon-192.png`, `icon-512.png`
   - `lockup-light@2x.png` (emails) and `og.png` (1200×630)
-- Also `assets/favicon.ico` (16/32/48) and `assets/favicon.svg`.
-- Usage: nav uses `.logo .lockup` at 36px; footer uses `.lockup.sm` at 28px. Minimum sizes: lockup 24px, icon 16px. Clear space: at least the capsule height on every side. On dark backgrounds use the `-dark` files.
+- Also `assets/favicon.ico` (16 simplified / 32 / 48) and `assets/favicon.svg`.
+- **Swappable**: every page, the email templates and the catalog point at these fixed file names. To change the logo, replace the files; no code changes.
+- Usage: nav uses `.logo .lockup` at 36px; footer uses `.lockup.sm` at 28px. Minimum sizes: lockup 24px. Use the full icon down to 20px and `fav16` below that. Clear space is at least half the icon height. On dark backgrounds use the `-dark` files.
 - Don't recolour, stretch, re-type the wordmark as live text, add effects, or put the light lockup on violet or busy backgrounds.
-- Logo explorations `logo/ideas.html`, `explore-2.html`, `explore-3.html`, `explore-4.html` (all except C1), `svg/`, `svg2/`, `svg3/`, and other files in `svg4/` are **HISTORY**. The old conic-gradient ring logo is **HISTORY**.
+- **HISTORY**:
+  - C1 capsule + tick (briefly adopted the same day)
+  - every other option in `logo/ideas.html` and `explore-2` through `explore-5`
+  - `svg/` to `svg4/`, and the non-R2 files in `svg5/`
+  - the old conic-gradient ring logo
+  - The currency-R direction is still being explored; R2 is current.
 
 ## Approved mockups
 Mockups are kept outside the repo in the design workspace (`toxybase/design/`). Status: **SHIPPED** = live matches, **APPROVED** = approved, not built yet, **HISTORY** = outdated, do not build from it.
@@ -40,7 +46,7 @@ Mockups are kept outside the repo in the design workspace (`toxybase/design/`). 
 - Full audit: `toxybase/design/system/audit/AUDIT.md` (pages, tokens in use, hardcoded facts/strings, data sources).
 - Brand shown to users: **Regretamin** (`brand.name`). Domain regretamine.com and path /regrettamine/ unchanged.
 - Approved wording: "Reasonable to take a meeting" (a16z verdict); Scoring step 03 "higher means fewer red flags in the sources we checked".
-- Logo C1 replaces the conic ring + live-text wordmark in nav, footer, 404, auth pages, fund pages and email templates. Favicons on every page.
+- Logo R2 replaces the conic ring + live-text wordmark in nav, footer, 404, auth pages, fund pages and email templates. Favicons on every page.
 - Weight 600 was used but never loaded (browsers already rendered 700). Mapped to 700; screenshots show no change. Bricolage 500 was loaded but unused; dropped.
 - `/reset/` now redirects to `/login/reset/` (keeps query and hash).
 

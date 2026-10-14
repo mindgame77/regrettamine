@@ -28,8 +28,8 @@
   --sh-3:0 20px 40px -24px rgba(60,40,140,.45);
   --sh-modal:0 30px 80px -20px rgba(60,40,140,.45);
   --sh-cta:0 8px 20px -8px rgba(108,59,255,.7);
-  /* logo (C1 capsule + tick, assets/logo/). Clear space = capsule height (cap) on all sides. */
-  --logo-h:36px;--logo-h-sm:28px;--logo-min-lockup:24px;--logo-min-icon:16px;--logo-vio:#6C3BFF;--logo-vio-dark:#8B66FF;
+  /* logo R2 (double-stroke R in violet rounded square, assets/logo/). Swap = replace files, paths stay. Clear space = 1/2 icon height. */
+  --logo-h:36px;--logo-h-sm:28px;--logo-min-lockup:24px;--logo-min-icon:16px;--logo-vio:#6C3BFF;
   /* motion */
   --dur-fast:.15s;--dur-base:.25s;--dur-slow:.4s;--dur-count:900ms;--stagger:60ms;
   --ease:cubic-bezier(.2,.8,.2,1);
