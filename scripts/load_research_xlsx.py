@@ -222,6 +222,11 @@ def main(out_dir, files):
                     f"{q(str(aid))}::uuid, {firm}, {q(kind)}, 'overview', {qj(summary[key])}::jsonb, 'research-bot', {q(str(summary.get('Run id')))}, 'draft', 'test');"
                 )
         rep["unmapped_sheets"] = [s for s in wb.sheetnames if s not in ("Summary", "Facts", "Sources", "Fact_Sources", "Score", "Partners")]
+        out.append(
+            "with run as (insert into public.import_runs (source_system, file_or_url, run_by, notes, finished_at) "
+            f"values ('research_workbook', {q(path.split('/')[-1])}, 'load_research_xlsx', {q(name)}, now()) returning id) "
+            "update public.fact_events set import_run_id = (select id from run) where import_run_id is null and created_at = now();"
+        )
         out.append("commit;")
         open(f"{out_dir}/{slug}.sql", "w", encoding="utf-8").write("\n".join(out))
         report[slug] = rep
