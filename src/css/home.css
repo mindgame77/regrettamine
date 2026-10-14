@@ -1,5 +1,3 @@
-.logo .wm{font-family:'Bricolage Grotesque';font-weight:800;letter-spacing:-.035em}
-.logo .wm em{font-style:normal;color:var(--vio)}
 .mark{background:linear-gradient(transparent 58%,var(--sun) 58%,var(--sun) 92%,transparent 92%);padding:0 6px}
 .hs{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:0 6px 0 22px;box-shadow:0 22px 44px -24px rgba(60,40,140,.45)}
 .hs input{flex:1;border:0;outline:0;font:17px 'DM Sans';background:transparent;min-width:0;color:var(--ink)}

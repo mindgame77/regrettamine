@@ -67,7 +67,6 @@ def apply_strings_to_site():
 
 
 BRAND = S("brand.name")
-BRAND_WM = S("brand.wordmark_html")
 SENT_LABEL = {k: S("report.sentiment.label", k) for k in ("pos", "neu", "neg")}
 PAGE_SIZE = 24
 LIST_CAP = 8
@@ -685,7 +684,7 @@ def render_fund_page(fund, prefix):
     sections = "".join(f'<section data-panel="{k}">{panels[k]}</section>' for k in panels)
     home = prefix
     body = f'''<div class="blobs np" style="height:900px"><div class="blob" style="width:520px;height:520px;background:#CDBBFF;left:-180px;top:-120px"></div><div class="blob" style="width:460px;height:460px;background:#FFC7B8;right:-140px;top:-40px"></div><div class="blob" style="width:380px;height:380px;background:#FFEBA0;left:42%;top:420px;opacity:.35"></div></div>
-<nav class="pillnav np"><a class="logo" href="{home}"><i></i><span class="wm">{BRAND_WM}</span></a>
+<nav class="pillnav np"><a class="logo" href="{home}"><img class="lockup" src="{prefix}assets/logo/lockup-light.svg" alt="{BRAND}" width="143" height="36"></a>
  <div class="links"><a class="on" href="{home}">VCs</a><a href="{home}scoring/">Scoring</a><a href="{home}plans/">Pricing</a><!-- Our Story --></div>
  <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#watchlist">Get alerts</a></div></nav>
 <div class="ftop"><div class="wrap">
@@ -699,7 +698,7 @@ def render_fund_page(fund, prefix):
  {sections}
  <p class="fnote np">{esc(fund["footnote"])}</p>
 </div></div>
-<footer class="np"><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">{BRAND_WM}</span></span><span>regretamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">Scoring</a> · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>
+<footer class="np"><div class="wrap"><span class="logo"><img class="lockup sm" src="{prefix}assets/logo/lockup-light.svg" alt="{BRAND}" width="111" height="28"></span><span>regretamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">Scoring</a> · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>
 <div class="scrim"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="Details"><div class="dh"><div><div class="dk" id="dk"></div><div class="dtt" id="dt"></div></div><button class="dx" id="dx" aria-label="Close">×</button></div><div class="db" id="db"></div></aside><div class="toast"></div>'''
     title = fund.get("title") or f'{fund["name"]} · {BRAND}'
     extra = ""
@@ -725,7 +724,10 @@ def render_fund_page(fund, prefix):
     )
     page = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{esc(title)}</title>
-<link rel="icon" href="{prefix}assets/favicon.svg">
+<link rel="icon" href="{prefix}assets/favicon.ico" sizes="any">
+<link rel="icon" href="{prefix}assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="{prefix}assets/logo/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="{prefix}assets/logo/apple-touch-icon.png">
 <link rel="stylesheet" href="{prefix}css/common.css">
 <link rel="stylesheet" href="{prefix}css/fund.css">
 <link rel="stylesheet" href="{prefix}css/auth.css">
@@ -917,7 +919,7 @@ def render_fund_shell(fund, prefix):
     home = prefix
     title = f'{fund["name"]} · {BRAND}'
     body = f'''<div class="blobs np" style="height:420px"><div class="blob" style="width:520px;height:520px;background:#CDBBFF;left:-180px;top:-120px"></div><div class="blob" style="width:460px;height:460px;background:#FFC7B8;right:-140px;top:-40px"></div></div>
-<nav class="pillnav np"><a class="logo" href="{home}"><i></i><span class="wm">{BRAND_WM}</span></a>
+<nav class="pillnav np"><a class="logo" href="{home}"><img class="lockup" src="{prefix}assets/logo/lockup-light.svg" alt="{BRAND}" width="143" height="36"></a>
  <div class="links"><a class="on" href="{home}">VCs</a><a href="{home}scoring/">Scoring</a><a href="{home}plans/">Pricing</a><!-- Our Story --></div>
  <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#watchlist">Get alerts</a></div></nav>
 <div class="ftop"><div class="wrap" id="report">
@@ -926,7 +928,7 @@ def render_fund_shell(fund, prefix):
   {CORRECT_LINE}</div></div>
  <p class="report-wait">Loading the report…</p>
 </div></div>
-<footer class="np"><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">{BRAND_WM}</span></span><span>regretamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">Scoring</a> · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>
+<footer class="np"><div class="wrap"><span class="logo"><img class="lockup sm" src="{prefix}assets/logo/lockup-light.svg" alt="{BRAND}" width="111" height="28"></span><span>regretamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">Scoring</a> · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>
 <div class="scrim"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="Details"><div class="dh"><div><div class="dk" id="dk"></div><div class="dtt" id="dt"></div></div><button class="dx" id="dx" aria-label="Close">×</button></div><div class="db" id="db"></div></aside><div class="toast"></div>'''
     scripts = (
         f'<script src="{prefix}js/supabase-config.js"></script>'
@@ -938,7 +940,10 @@ def render_fund_shell(fund, prefix):
     )
     return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{esc(title)}</title>
-<link rel="icon" href="{prefix}assets/favicon.svg">
+<link rel="icon" href="{prefix}assets/favicon.ico" sizes="any">
+<link rel="icon" href="{prefix}assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="{prefix}assets/logo/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="{prefix}assets/logo/apple-touch-icon.png">
 <link rel="stylesheet" href="{prefix}css/common.css">
 <link rel="stylesheet" href="{prefix}css/fund.css">
 <link rel="stylesheet" href="{prefix}css/auth.css">

@@ -30,8 +30,7 @@ create trigger ui_strings_touch before update on public.ui_strings
 
 -- Seed from src/js/strings.js (generated). Keep in sync until the loader is wired on every page.
 insert into public.ui_strings (key, variant, condition, text, locale, note, status) values
-  ('brand.name', 'default', 'always', 'Regretamin', 'en', 'Product name shown to users. Domain stays regretamine.com.', 'live'),
-  ('brand.wordmark_html', 'default', 'always', 'regret<em>amin</em>', 'en', 'Logo wordmark in nav and footer (HTML).', 'live'),
+  ('brand.name', 'default', 'always', 'Regretamin', 'en', 'Product name shown to users (logo alt text, titles, copy). The logo itself is assets/logo/lockup-*.svg. Domain stays regretamine.com.', 'live'),
   ('brand.domain', 'default', 'always', 'regretamine.com', 'en', 'Public domain. Not a brand name; keep the e.', 'live'),
   ('scoring.step3.body', 'default', 'always', '0 to 100, higher means fewer red flags in the sources we checked, from published rules.', 'en', 'Scoring page, how-it-works step 03.', 'live'),
   ('report.sentiment.label', 'pos', 'item.sentiment = pos', 'Positive', 'en', 'Public tab sentiment tag and filter.', 'live'),

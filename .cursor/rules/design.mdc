@@ -31,6 +31,9 @@ alwaysApply: true
 - Durations `--dur-fast .15s` (hover), `--dur-base .25s` (tabs, toggles, modal), `--dur-slow .4s` (fade-in), `--dur-count 900ms` (stat count-up), `--stagger 60ms` (checklist tick-through). Easing `--ease`.
 - Patterns: `.rs-fade-in`, `.rs-tick` (set `--i` per row). Respect `prefers-reduced-motion` (tokens.css disables motion globally).
 
+## Logo
+- Use `assets/logo/lockup-light.svg` (nav `.logo .lockup` 36px, footer `.lockup.sm` 28px); `-dark` files on dark backgrounds. Never rebuild the wordmark in live text or CSS. Min lockup 24px, icon 16px; clear space = capsule height.
+
 ## Content rules
 - Each fact once per page; link to it elsewhere.
 - Show "No data yet" for a missing source. Never hide the slot.

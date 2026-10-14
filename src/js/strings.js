@@ -6,20 +6,11 @@
    falls back to this bundled copy on any error. Change wording only with Alex's approval. */
 window.RS_STRINGS = /*BEGIN_STRINGS*/{
  "brand.name": {
-  "note": "Product name shown to users. Domain stays regretamine.com.",
+  "note": "Product name shown to users (logo alt text, titles, copy). The logo itself is assets/logo/lockup-*.svg. Domain stays regretamine.com.",
   "variants": {
    "default": {
     "when": "always",
     "text": "Regretamin"
-   }
-  }
- },
- "brand.wordmark_html": {
-  "note": "Logo wordmark in nav and footer (HTML).",
-  "variants": {
-   "default": {
-    "when": "always",
-    "text": "regret<em>amin</em>"
    }
   }
  },

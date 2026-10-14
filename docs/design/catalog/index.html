@@ -1,5 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Design catalog</title>
+<link rel="icon" href="../../../assets/favicon.svg">
 <link rel="stylesheet" href="../../../src/css/common.css">
 <link rel="stylesheet" href="../../../src/css/home.css">
 <link rel="stylesheet" href="../../../src/css/list.css">
@@ -25,6 +26,18 @@ table.v{width:100%;border-collapse:collapse;font-size:13.5px}table.v td,table.v 
 <li>Say “No red flags found in these sources”. Never “safe”.</li><li>Every fact links to a source and a checked date.</li>
 <li>Mock/example data carries the yellow <span class="ph">Mock</span> badge.</li><li>Wording changes need Alex's approval.</li></ol></section>
 
+<section class="sg"><div class="sgh"><h2>Logo</h2><code>assets/logo/ · .logo .lockup · --logo-*</code></div>
+<p class="note">C1: violet capsule #6C3BFF with white tick, ink “Regretamin” wordmark (outlined Bricolage 800). Dark backgrounds use the -dark files (capsule #8B66FF, white wordmark).</p>
+<div class="row" style="gap:24px;align-items:stretch">
+<div class="demo" style="flex:1"><div style="display:inline-block;padding:36px;outline:1.5px dashed var(--vio2);outline-offset:-1px;background:repeating-linear-gradient(45deg,#fff,#fff 6px,var(--viobg) 6px,var(--viobg) 8px)"><img src="../../../assets/logo/lockup-light.svg" style="height:72px;display:block;background:#fff"></div><p class="note">Clear space: at least the capsule height (cap) around the lockup. Nav 36px, footer 28px; minimum lockup height 24px.</p></div>
+<div class="demo" style="flex:1;background:var(--ink)"><img src="../../../assets/logo/lockup-dark.svg" style="height:56px;display:block"><p class="note" style="color:#C9C5D9">Dark: lockup-dark.svg / icon-dark.svg.</p></div></div>
+<div class="row" style="margin-top:16px;gap:28px;align-items:flex-end">
+<div style="text-align:center"><img src="../../../assets/logo/icon-light.svg" width="64"><div class="note">icon 64</div></div>
+<div style="text-align:center"><img src="../../../assets/logo/favicon-32.png" width="32"><div class="note">favicon 32</div></div>
+<div style="text-align:center"><img src="../../../assets/logo/fav16-light.svg" width="16"><div class="note">16 (min icon)</div></div>
+<div style="text-align:center"><img src="../../../assets/logo/apple-touch-icon.png" width="60" style="border-radius:14px;border:1px solid var(--line)"><div class="note">apple-touch 180</div></div>
+<div style="text-align:center"><img src="../../../assets/logo/og.png" width="240" style="border:1px solid var(--line);border-radius:8px"><div class="note">og.png 1200×630</div></div></div>
+<p class="note" style="margin-top:14px"><b>Don't:</b> recolour the capsule or wordmark, rotate the capsule further, stretch or re-type the wordmark in live text, add effects or outlines, place the light lockup on violet or busy photos, go below 24px lockup / 16px icon. The brand name in text is <code>brand.name</code>.</p></section>
 <section class="sg"><div class="sgh"><h2>Colors</h2><code>--*</code></div><div class="cswt" id="colors"></div></section>
 <section class="sg"><div class="sgh"><h2>Status roles</h2><code>--clear/review/flag/nodata/queued</code></div><p class="note">Dot / -bg / -tx. Status only, never decoration.</p><div class="cswt" id="status"></div></section>
 <section class="sg"><div class="sgh"><h2>Type scale</h2><code>--fs-*</code></div><div id="type"></div></section>
@@ -33,7 +46,7 @@ table.v{width:100%;border-collapse:collapse;font-size:13.5px}table.v td,table.v 
 <div class="row"><button class="b c" onclick="replay()">Replay</button><div id="mo" class="row"></div><b id="cnt" class="d" style="font-size:40px">0</b></div></section>
 
 <section class="sg"><div class="sgh"><h2>Nav</h2><code>.pillnav .logo .links .r</code></div>
-<nav class="pillnav" style="position:relative;top:0;margin:0"><a class="logo"><i></i><span class="wm" id="wm"></span></a><div class="links"><a class="on">VCs</a><a>Scoring</a><a>Pricing</a></div><div class="r"><a class="b w">Log in</a><a class="b v">Get alerts</a></div></nav></section>
+<nav class="pillnav" style="position:relative;top:0;margin:0"><a class="logo"><img class="lockup" src="../../../assets/logo/lockup-light.svg" alt="Regretamin"></a><div class="links"><a class="on">VCs</a><a>Scoring</a><a>Pricing</a></div><div class="r"><a class="b w">Log in</a><a class="b v">Get alerts</a></div></nav></section>
 <section class="sg"><div class="sgh"><h2>Buttons · chips · badge</h2><code>.b.c .b.v .b.w · .chip .on .soon · .ph</code></div>
 <div class="row"><a class="b c">Check fund</a><a class="b v">Get alerts</a><a class="b w">Log in</a><span class="chip on">All</span><span class="chip">Very low risk</span><span class="chip soon">Soon</span><span class="ph">Mock · example data</span></div></section>
 <section class="sg"><div class="sgh"><h2>Tabs</h2><code>.tabs button.on</code></div><div class="tabs"><button class="on">Overview</button><button>Score</button><button>Legal <i>14</i></button><button>Public <i>18</i></button></div></section>
@@ -46,7 +59,7 @@ table.v{width:100%;border-collapse:collapse;font-size:13.5px}table.v td,table.v 
 <script src="../../../src/js/strings.js"></script>
 <script>
 var cs=getComputedStyle(document.documentElement),v=n=>cs.getPropertyValue(n).trim();
-document.getElementById('brand').textContent=RS.t('brand.name');document.getElementById('wm').innerHTML=RS.t('brand.wordmark_html');
+document.getElementById('brand').textContent=RS.t('brand.name');
 var sw=(n)=>'<div><i style="background:var('+n+')"></i><code>'+n+'</code><br>'+v(n)+'</div>';
 document.getElementById('colors').innerHTML=['--ink','--ink2','--mute','--line','--line-strong','--surface2','--hover','--vio','--vio2','--viobg','--coral','--coralbg','--sun','--sunbg','--mint','--mintbg','--sky','--skybg'].map(sw).join('');
 document.getElementById('status').innerHTML=['clear','review','flag','nodata','queued'].map(s=>['','-bg','-tx'].filter(x=>v('--'+s+x)).map(x=>sw('--'+s+x)).join('')).join('');
