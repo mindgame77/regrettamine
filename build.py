@@ -6,7 +6,7 @@ Source of truth:
   data/funds/<slug>.json  a full report
 
 No third-party dependencies. Internal links are relative, so the same
-output works at a GitHub project URL (/regrettamine/) and at regretamine.com.
+output works at a GitHub project URL (/regrettamine/) and at regretamin.com.
 """
 import html
 import json
@@ -720,7 +720,7 @@ def _render_fund_page(fund, prefix):
  {sections}
  <p class="fnote np">{esc(fund["footnote"])}</p>
 </div></div>
-<footer class="np"><div class="wrap"><span class="logo"><img class="lockup sm" src="{prefix}assets/logo/lockup-light.svg" alt="{BRAND}" width="111" height="28"></span><span>regretamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">@@s:common.scoring@@</a> · <a href="{home}privacy/">@@s:common.privacy@@</a> · <a href="{home}terms/">@@s:common.terms@@</a></span></div></footer>
+<footer class="np"><div class="wrap"><span class="logo"><img class="lockup sm" src="{prefix}assets/logo/lockup-light.svg" alt="{BRAND}" width="111" height="28"></span><span>regretamin.com</span><span style="margin-left:auto"><a href="{home}scoring/">@@s:common.scoring@@</a> · <a href="{home}privacy/">@@s:common.privacy@@</a> · <a href="{home}terms/">@@s:common.terms@@</a></span></div></footer>
 <div class="scrim"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="@@s:build.details@@"><div class="dh"><div><div class="dk" id="dk"></div><div class="dtt" id="dt"></div></div><button class="dx" id="dx" aria-label="@@s:page.settings.close@@">×</button></div><div class="db" id="db"></div></aside><div class="toast"></div>'''
     title = fund.get("title") or f'{fund["name"]} · {BRAND}'
     extra = ""
@@ -952,7 +952,7 @@ def render_fund_shell(fund, prefix):
   {CORRECT_LINE}</div></div>
  <p class="report-wait">@@s:build.loading_the_report@@</p>
 </div></div>
-<footer class="np"><div class="wrap"><span class="logo"><img class="lockup sm" src="{prefix}assets/logo/lockup-light.svg" alt="{BRAND}" width="111" height="28"></span><span>regretamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">@@s:common.scoring@@</a> · <a href="{home}privacy/">@@s:common.privacy@@</a> · <a href="{home}terms/">@@s:common.terms@@</a></span></div></footer>
+<footer class="np"><div class="wrap"><span class="logo"><img class="lockup sm" src="{prefix}assets/logo/lockup-light.svg" alt="{BRAND}" width="111" height="28"></span><span>regretamin.com</span><span style="margin-left:auto"><a href="{home}scoring/">@@s:common.scoring@@</a> · <a href="{home}privacy/">@@s:common.privacy@@</a> · <a href="{home}terms/">@@s:common.terms@@</a></span></div></footer>
 <div class="scrim"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="@@s:build.details@@"><div class="dh"><div><div class="dk" id="dk"></div><div class="dtt" id="dt"></div></div><button class="dx" id="dx" aria-label="@@s:page.settings.close@@">×</button></div><div class="db" id="db"></div></aside><div class="toast"></div>'''
     scripts = (
         f'<script src="{prefix}js/supabase-config.js"></script>'

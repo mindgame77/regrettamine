@@ -364,7 +364,7 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "Report a VC" not in shipped
     assert "Share experience" in shipped
     assert "Regrettamine" not in shipped
-    assert "regrettamine.com" not in shipped
+    assert "regretamine.com" not in shipped and "regrettamine.com" not in shipped
     assert "regrett<em>" not in shipped
     assert 'href="/regrettamine/"' in shipped
 
@@ -488,8 +488,8 @@ def test_legal_config_values():
 
     assert legal_html("", "contact email", email=True) == '<span class="ph">contact email</span>'
     assert legal_html("  ", "jurisdiction") == '<span class="ph">jurisdiction</span>'
-    assert legal_html("hello@regretamine.com", "contact email", email=True) == (
-        '<a href="mailto:hello@regretamine.com">hello@regretamine.com</a>'
+    assert legal_html("hello@regretamin.com", "contact email", email=True) == (
+        '<a href="mailto:hello@regretamin.com">hello@regretamin.com</a>'
     )
     assert legal_html("not-an-email", "contact email", email=True) == "not-an-email"
     assert legal_html("Delaware", "jurisdiction") == "Delaware"
