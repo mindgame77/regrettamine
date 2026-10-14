@@ -22,7 +22,7 @@ begin
 end $$;
 
 -- 2. Backfill current content (reviewed Oct 14, 2026): everything published is real, except known unverified rows.
-update public.firms set data_status = case when is_test then 'test' else 'real' end;
+update public.firms set data_status = (case when is_test then 'test' else 'real' end)::public.data_status;
 do $$
 declare t text;
 begin
@@ -32,11 +32,11 @@ begin
     'evidence_cards','evidence_lines','takeaways','ask_questions','copy_blocks','page_chips','list_items','firm_meta_items',
     'score_results','fact_events','site_updates'
   ] loop
-    execute format('update public.%I set data_status = %L', t, 'real');
+    execute format('update public.%I set data_status = %L::public.data_status', t, 'real');
   end loop;
 end $$;
-update public.site_stats set data_status = case when verified then 'real' else 'test' end;
-update public.ui_strings set data_status = case when status = 'live' then 'real' else 'test' end;
+update public.site_stats set data_status = (case when verified then 'real' else 'test' end)::public.data_status;
+update public.ui_strings set data_status = (case when status = 'live' then 'real' else 'test' end)::public.data_status;
 -- site_updates with unverified (Toxy) records: tag test.
 update public.site_updates set data_status = 'test' where verification = 'toxy';
 
@@ -88,9 +88,9 @@ begin
     'investments','fund_people','fund_entities','portfolio_metrics','portfolio_companies','people','funds','firms'
   ] loop
     if p_dry_run then
-      execute format('select count(*) from public.%I where data_status = %L', t, 'test') into n;
+      execute format('select count(*) from public.%I where data_status = %L::public.data_status', t, 'test') into n;
     else
-      execute format('delete from public.%I where data_status = %L', t, 'test');
+      execute format('delete from public.%I where data_status = %L::public.data_status', t, 'test');
       get diagnostics n = row_count;
     end if;
     table_name := t; rows_affected := n; return next;

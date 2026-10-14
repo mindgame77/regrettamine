@@ -2,7 +2,7 @@
 -- Depends on drafts 20261014130000_data_status.sql and 20261014140000_merge_ready.sql.
 -- vc_profiles is the existing public.firms table (renamed via view to avoid breaking code now).
 
-create or replace view public.vc_profiles as select * from public.firms;
+create or replace view public.vc_profiles with (security_invoker = true) as select * from public.firms;
 
 alter table public.firms add column if not exists founded_year int,
   add column if not exists disambiguation text,
@@ -63,6 +63,7 @@ begin
   end if;
   return new;
 end $$;
+drop trigger if exists vc_ai_check_approve on public.vc_ai_summaries;
 create trigger vc_ai_check_approve before insert or update on public.vc_ai_summaries
   for each row execute function public.vc_ai_check_approve();
 
@@ -73,6 +74,7 @@ begin
    where exists (select 1 from public.vc_ai_summary_facts l where l.summary_id = s.id and l.fact_id = new.id);
   return new;
 end $$;
+drop trigger if exists vc_fact_mark_stale on public.vc_source_facts;
 create trigger vc_fact_mark_stale after update of value, status, source_url on public.vc_source_facts
   for each row execute function public.vc_fact_mark_stale();
 
@@ -98,7 +100,7 @@ create table if not exists public.vc_score_inputs (
 );
 
 -- Completeness vs the a16z benchmark (required items only; see VC-PROFILE.md).
-create or replace view public.vc_profile_completeness as
+create or replace view public.vc_profile_completeness with (security_invoker = true) as
 select f.id as firm_id, f.slug,
   (f.sec_crd is not null or f.legal_name is not null)::int
   + exists(select 1 from public.vc_aliases a where a.firm_id = f.id)::int
@@ -108,8 +110,8 @@ select f.id as firm_id, f.slug,
   + exists(select 1 from public.vc_scores s where s.firm_id = f.id and s.is_current)::int
   + exists(select 1 from public.vc_ai_summaries s where s.firm_id = f.id and s.kind = 'verdict' and s.review_status = 'approved')::int
   + ((select count(*) from public.vc_ai_summaries s where s.firm_id = f.id and s.kind = 'takeaway') >= 3)::int
-  + not exists(select 1 from public.vc_source_facts x where x.firm_id = f.id and x.status = 'current' and x.data_status <> 'real')::int
-  + not exists(select 1 from public.vc_ai_summaries s where s.firm_id = f.id and s.stale)::int
+  + (not exists(select 1 from public.vc_source_facts x where x.firm_id = f.id and x.status = 'current' and x.data_status <> 'real'))::int
+  + (not exists(select 1 from public.vc_ai_summaries s where s.firm_id = f.id and s.stale))::int
   as required_present, 10 as required_total
 from public.firms f;
 
@@ -119,3 +121,27 @@ alter table public.vc_ai_summary_facts enable row level security;
 alter table public.vc_scores enable row level security;
 alter table public.vc_score_parts enable row level security;
 alter table public.vc_score_inputs enable row level security;
+
+-- Purge now also covers the VC fact / AI layers (links cascade from facts and summaries).
+create or replace function public.purge_test_data(p_dry_run boolean default true)
+returns table (table_name text, rows_affected bigint)
+language plpgsql security definer set search_path = public as $$
+declare t text; n bigint;
+begin
+  foreach t in array array[
+    'vc_ai_summaries','vc_source_facts','vc_scores',
+    'evidence_lines','evidence_cards','takeaways','ask_questions','copy_blocks','page_chips','list_items','firm_meta_items',
+    'docket_entries','filings','legal_matters','regulatory_records','sanctions_checks','fact_sources','sources','press_items',
+    'score_results','fact_events','site_updates','site_stats','ui_strings',
+    'investments','fund_people','fund_entities','portfolio_metrics','portfolio_companies','people','funds','firms'
+  ] loop
+    if p_dry_run then
+      execute format('select count(*) from public.%I where data_status = %L::public.data_status', t, 'test') into n;
+    else
+      execute format('delete from public.%I where data_status = %L::public.data_status', t, 'test');
+      get diagnostics n = row_count;
+    end if;
+    table_name := t; rows_affected := n; return next;
+  end loop;
+end $$;
+revoke all on function public.purge_test_data(boolean) from public, anon, authenticated;
