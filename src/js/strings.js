@@ -741,24 +741,6 @@ window.RS_STRINGS = /*BEGIN_STRINGS*/{
    }
   }
  },
- "page.home.new": {
-  "note": "home page text.",
-  "variants": {
-   "default": {
-    "when": "always",
-    "text": "New"
-   }
-  }
- },
- "page.home.lawsuits_regulators_and_conflicts_every": {
-  "note": "home page text.",
-  "variants": {
-   "default": {
-    "when": "always",
-    "text": "Lawsuits, regulators and conflicts, every source linked"
-   }
-  }
- },
  "page.home.take_the_money": {
   "note": "home page text.",
   "variants": {
