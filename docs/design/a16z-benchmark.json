@@ -1,0 +1,2357 @@
+{
+ "_note": "Benchmark profile built from data/funds/a16z.json (report Oct 2, 2026). Shape = VC-PROFILE.md. Draft; fact_ids for takeaways/score rules are best-effort and need review.",
+ "vc_profile": {
+  "slug": "a16z",
+  "name": "Andreessen Horowitz",
+  "short_name": "a16z",
+  "legal_name": "AH Capital Management, L.L.C.",
+  "sec_crd": "160489",
+  "primary_domain": "a16z.com",
+  "hq": "Menlo Park, CA",
+  "founded_year": 2009,
+  "firm_type": "vc",
+  "publish_status": "published",
+  "data_status": "real",
+  "report_date": "2026-10-02",
+  "source_system": "repo_json",
+  "external_id": "a16z",
+  "deleted_at": null,
+  "disambiguation": "Not the $AI16Z token",
+  "aliases": [
+   {
+    "alias_type": "name",
+    "value": "Andreessen Horowitz"
+   },
+   {
+    "alias_type": "short_name",
+    "value": "a16z"
+   },
+   {
+    "alias_type": "legal_entity",
+    "value": "AH Capital Management, L.L.C."
+   },
+   {
+    "alias_type": "sec_crd",
+    "value": "160489"
+   },
+   {
+    "alias_type": "domain",
+    "value": "a16z.com"
+   }
+  ]
+ },
+ "score": {
+  "method_version": "score-v2 (Oct 2, 2026)",
+  "score_exact": 95.4,
+  "score_shown": 95,
+  "band": "very_low_risk",
+  "range": [
+   86,
+   97
+  ],
+  "coverage_pct": 39,
+  "rank": {
+   "place": 1,
+   "of": 11
+  },
+  "parts": [
+   {
+    "id": "s1",
+    "name": "Fund vs. founders",
+    "got": 60.0,
+    "max_label": "of 60",
+    "inputs": [
+     {
+      "name": "Lawsuits with its own startups or founders",
+      "points": "30 / 30"
+     },
+     {
+      "name": "Pushing out founder CEOs",
+      "points": "12 / 12"
+     },
+     {
+      "name": "Down-round or pay-to-play behavior",
+      "points": "10 / 10"
+     },
+     {
+      "name": "Blocking acquisitions or rounds",
+      "points": "8 / 8"
+     },
+     {
+      "name": "Lost case or fraud finding (−3 each)",
+      "points": "0"
+     }
+    ]
+   },
+   {
+    "id": "s2",
+    "name": "Ability to support you",
+    "got": 14.25,
+    "max_label": "of 17.5",
+    "inputs": [
+     {
+      "name": "Money",
+      "points": "5 / 6"
+     },
+     {
+      "name": "Media reach (capped)",
+      "points": "6 / 6"
+     },
+     {
+      "name": "Help after the check",
+      "points": "3.25 / 5.5"
+     }
+    ]
+   },
+   {
+    "id": "s3",
+    "name": "Founder experience",
+    "got": 16.6,
+    "max_label": "of 17.5",
+    "inputs": [
+     {
+      "name": "First-hand accounts",
+      "points": "3"
+     },
+     {
+      "name": "Negative share",
+      "points": "0.14%"
+     },
+     {
+      "name": "Age default",
+      "points": "16.6"
+     }
+    ]
+   },
+   {
+    "id": "s4",
+    "name": "Conflicts of interest",
+    "got": 4.0,
+    "max_label": "of 5",
+    "inputs": [
+     {
+      "name": "Competing board seats",
+      "points": "conflict"
+     },
+     {
+      "name": "Incubation clause",
+      "points": "conflict"
+     },
+     {
+      "name": "Uniswap vote, 2023",
+      "points": "conflict"
+     },
+     {
+      "name": "Scaled across 88 investing partners",
+      "points": "−1"
+     }
+    ]
+   },
+   {
+    "id": "bonus",
+    "name": "Track record bonus",
+    "got": 3.0,
+    "max_label": "max +3",
+    "inputs": [
+     {
+      "name": "Years investing",
+      "points": "16"
+     }
+    ]
+   },
+   {
+    "id": "pen",
+    "name": "Regulatory penalty",
+    "got": -2.5,
+    "max_label": "range 0 to −50",
+    "inputs": [
+     {
+      "name": "DOJ board-seat probe",
+      "points": "−2"
+     },
+     {
+      "name": "Coinbase director suit",
+      "points": "−0.5"
+     },
+     {
+      "name": "SEC record",
+      "points": "0"
+     },
+     {
+      "name": "Sanctions",
+      "points": "0"
+     }
+    ]
+   }
+  ],
+  "not_counted": [
+   "Amicus briefs, not a party: CFTC v. Ooki DAO, SEC v. Coinbase, Beba LLC v. SEC.",
+   "8 raw court hits are awaiting role review and are not counted (e.g., SEC v. Terraform Labs, WPEngine v. Automattic).",
+   "Excluded: “Graham Platner” suit (content farm, never at a16z), Shnayderman v. Ozone (a16z not a party), Pikabea v. Walters ($AI16Z brand misuse)."
+  ]
+ },
+ "vc_source_facts": [
+  {
+   "id": "f001",
+   "fact_type": "sec_crd",
+   "section": "overview",
+   "value": "160489",
+   "source_url": "https://adviserinfo.sec.gov/firm/summary/160489",
+   "source_label": "SEC IAPD",
+   "source_type": "sec_iapd",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "crd",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:crd"
+  },
+  {
+   "id": "f002",
+   "fact_type": "legal_entity",
+   "section": "overview",
+   "value": "AH Capital Management, L.L.C.",
+   "source_url": "https://adviserinfo.sec.gov/firm/summary/160489",
+   "source_label": "SEC IAPD",
+   "source_type": "sec_iapd",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "legal_name",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:legal_name"
+  },
+  {
+   "id": "f003",
+   "fact_type": "fund_fact",
+   "section": "fund",
+   "value": {
+    "label": "Regulatory AUM",
+    "value": "$106.5B",
+    "note": "119 funds · Form ADV, Mar 2026"
+   },
+   "source_url": "https://adviserinfo.sec.gov/firm/summary/160489",
+   "source_label": "119 funds · Form ADV, Mar 2026",
+   "source_type": "sec_iapd",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "fundfact:Regulatory AUM",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:fundfact:Regulatory AUM"
+  },
+  {
+   "id": "f004",
+   "fact_type": "fund_fact",
+   "section": "fund",
+   "value": {
+    "label": "Latest raise",
+    "value": "$15B+",
+    "note": "Jan 2026 · Growth $6.75B, Apps $1.7B, Infra $1.7B, Am. Dynamism $1.18B, Bio+Health $0.7B"
+   },
+   "source_url": "https://adviserinfo.sec.gov/firm/summary/160489",
+   "source_label": "Jan 2026 · Growth $6.75B, Apps $1.7B, Infra $1.7B, Am. Dynamism $1.18B, Bio+Health $0.7B",
+   "source_type": "sec_iapd",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "fundfact:Latest raise",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:fundfact:Latest raise"
+  },
+  {
+   "id": "f005",
+   "fact_type": "fund_fact",
+   "section": "fund",
+   "value": {
+    "label": "Staff",
+    "value": "738",
+    "note": "88 in investment roles"
+   },
+   "source_url": "https://adviserinfo.sec.gov/firm/summary/160489",
+   "source_label": "88 in investment roles",
+   "source_type": "sec_iapd",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "fundfact:Staff",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:fundfact:Staff"
+  },
+  {
+   "id": "f006",
+   "fact_type": "fund_fact",
+   "section": "fund",
+   "value": {
+    "label": "Newest funds",
+    "value": "$1.62B each",
+    "note": "Fund X AI Apps & AI Infra, gross asset value"
+   },
+   "source_url": "https://adviserinfo.sec.gov/firm/summary/160489",
+   "source_label": "Fund X AI Apps & AI Infra, gross asset value",
+   "source_type": "sec_iapd",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "fundfact:Newest funds",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:fundfact:Newest funds"
+  },
+  {
+   "id": "f007",
+   "fact_type": "fund_fact",
+   "section": "fund",
+   "value": {
+    "label": "Known LPs",
+    "value": "4 public",
+    "note": "CalPERS $400M, North Dakota $75M, U. Michigan, Yale"
+   },
+   "source_url": "https://adviserinfo.sec.gov/firm/summary/160489",
+   "source_label": "CalPERS $400M, North Dakota $75M, U. Michigan, Yale",
+   "source_type": "sec_iapd",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "fundfact:Known LPs",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:fundfact:Known LPs"
+  },
+  {
+   "id": "f008",
+   "fact_type": "fund_fact",
+   "section": "fund",
+   "value": {
+    "label": "Performance",
+    "value": "Not public",
+    "note": "IRR / TVPI / DPI only as secondary estimates"
+   },
+   "source_url": "https://adviserinfo.sec.gov/firm/summary/160489",
+   "source_label": "IRR / TVPI / DPI only as secondary estimates",
+   "source_type": "sec_iapd",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "fundfact:Performance",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:fundfact:Performance"
+  },
+  {
+   "id": "f009",
+   "fact_type": "legal_matter",
+   "section": "legal",
+   "value": {
+    "year": "2026",
+    "title": "The DOJ is investigating a16z partners' seats on the boards of competing companies (Databricks, Fivetran). Open, no charges filed.",
+    "detail": "DOJ antitrust probe: interlocking board seats at Databricks and Fivetran",
+    "status_badge": "Open probe · −2"
+   },
+   "source_url": "https://techcrunch.com/2026/08/18/dojs-probe-into-andreessen-horowitz-over-board-seats-baffles-vcs/",
+   "source_label": "TechCrunch, Aug 18 2026",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "L1",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:L1"
+  },
+  {
+   "id": "f010",
+   "fact_type": "legal_matter",
+   "section": "legal",
+   "value": {
+    "year": "2023",
+    "title": "a16z was sued by a former Run The World co-founder, who alleged pregnancy discrimination. Federal claims dismissed; state outcome unverified.",
+    "detail": "Run The World Inc. v. Jiang",
+    "status_badge": "0 pts"
+   },
+   "source_url": "https://www.govinfo.gov/content/pkg/USCOURTS-cand-3_23-cv-03130/pdf/USCOURTS-cand-3_23-cv-03130-1.pdf",
+   "source_label": "Run The World complaint (N.D. Cal., 2023)",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "L5",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:L5"
+  },
+  {
+   "id": "f011",
+   "fact_type": "legal_matter",
+   "section": "legal",
+   "value": {
+    "year": "2022",
+    "title": "a16z is being sued by Compound token buyers in a class action. Active; a16z lost its bid to force arbitration in Oct 2025.",
+    "detail": "Houghton v. AH Capital Mgmt (Compound)",
+    "status_badge": "0 pts"
+   },
+   "source_url": "https://www.courtlistener.com/docket/69431607/houghton-et-al-v-ah-capital-management-llc-et-al/",
+   "source_label": "Houghton v. AH Capital Mgmt docket",
+   "source_type": "court",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "L3",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:L3"
+  },
+  {
+   "id": "f012",
+   "fact_type": "legal_matter",
+   "section": "legal",
+   "value": {
+    "year": "2023",
+    "title": "a16z is being sued by Lido token buyers in a class action. Active; the motion to dismiss was denied in Nov 2024.",
+    "detail": "Samuels v. Lido DAO",
+    "status_badge": "0 pts"
+   },
+   "source_url": "https://storage.courtlistener.com/recap/gov.uscourts.cand.422388/gov.uscourts.cand.422388.115.0.pdf",
+   "source_label": "Samuels v. Lido DAO order",
+   "source_type": "court",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "L2",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:L2"
+  },
+  {
+   "id": "f013",
+   "fact_type": "legal_matter",
+   "section": "legal",
+   "value": {
+    "year": "2022",
+    "title": "a16z was sued by Uniswap token buyers in a class action. Federal claims dismissed, affirmed in 2025.",
+    "detail": "Risley v. Universal Navigation (Uniswap)",
+    "status_badge": "0 pts"
+   },
+   "source_url": "https://www.courtlistener.com/docket/68002980/risley-v-universal-navigation-inc/",
+   "source_label": "Risley v. Universal Navigation (Uniswap)",
+   "source_type": "court",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "L4",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:L4"
+  },
+  {
+   "id": "f014",
+   "fact_type": "legal_matter",
+   "section": "legal",
+   "value": {
+    "year": "2021",
+    "title": "a16z was sued by ICP token buyers in a class action against Dfinity. Ended in summary judgment for Dfinity.",
+    "detail": "Ocampo v. Dfinity USA Research",
+    "status_badge": "0 pts"
+   },
+   "source_url": "https://www.cravath.com/news-insights/dfinity-wins-summary-judgment-in-purported-securities-class-action.html",
+   "source_label": "Ocampo v. Dfinity USA Research",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "L7",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:L7"
+  },
+  {
+   "id": "f015",
+   "fact_type": "legal_matter",
+   "section": "legal",
+   "value": {
+    "year": "2025",
+    "title": "a16z is named in an individual's suit against portfolio company Deel. a16z's role is unverified; terminated Jan 2026.",
+    "detail": "Teman v. Deel",
+    "status_badge": "0 pts"
+   },
+   "source_url": "https://www.courtlistener.com/docket/70818963/teman-v-deel-inc/",
+   "source_label": "Teman v. Deel",
+   "source_type": "court",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "L8",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:L8"
+  },
+  {
+   "id": "f016",
+   "fact_type": "legal_matter",
+   "section": "legal",
+   "value": {
+    "year": "2023",
+    "title": "Marc Andreessen is being sued by a Coinbase shareholder in his role as a Coinbase director. Active.",
+    "detail": "Grabski ex rel. Coinbase v. Andreessen",
+    "status_badge": "−0.5"
+   },
+   "source_url": "https://courts.delaware.gov/Opinions/Download.aspx?id=391020",
+   "source_label": "Delaware Chancery opinion",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "L6",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:L6"
+  },
+  {
+   "id": "f017",
+   "fact_type": "legal_matter",
+   "section": "legal",
+   "value": {
+    "year": "2013",
+    "title": "a16z was sued by Think Computer alongside Dwolla. Dismissed.",
+    "detail": "Think Computer Corp. v. Dwolla",
+    "status_badge": "0 pts"
+   },
+   "source_url": "https://www.pacermonitor.com/public/filings/DG2GYZSQ/Think_Computer_Corporation_v_Dwolla_Inc_et_al__candce-13-02054__0001.0.pdf",
+   "source_label": "Think Computer Corp. v. Dwolla",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "L9",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:L9"
+  },
+  {
+   "id": "f018",
+   "fact_type": "legal_matter",
+   "section": "legal",
+   "value": {
+    "year": "2014",
+    "title": "Marc Andreessen was sued by an eBay shareholder as an eBay director over the Skype sale. Dismissed with prejudice.",
+    "detail": "Smukler v. Donahoe (eBay/Skype)",
+    "status_badge": "0 pts"
+   },
+   "source_url": "https://v2.courthousenews.com/shareholder-rips-ebay-for-flip-of-skype/",
+   "source_label": "Smukler v. Donahoe (eBay/Skype)",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "L10",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:L10"
+  },
+  {
+   "id": "f019",
+   "fact_type": "legal_matter",
+   "section": "legal",
+   "value": {
+    "year": "2024",
+    "title": "a16z joined a suit against the SEC over its crypto rules (a16z is a plaintiff). Outcome not verified.",
+    "detail": "CFAT v. SEC",
+    "status_badge": "0 pts"
+   },
+   "source_url": "https://decrypt.co/218567/coinbase-a16z-take-sec-court-unlawful-crypto-overreach",
+   "source_label": "CFAT v. SEC",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "L11",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:L11"
+  },
+  {
+   "id": "f020",
+   "fact_type": "legal_matter",
+   "section": "legal",
+   "value": {
+    "year": "2022",
+    "title": "a16z backed Coin Center's suit against the U.S. Treasury. Outcome not verified.",
+    "detail": "Coin Center v. Yellen",
+    "status_badge": "0 pts"
+   },
+   "source_url": "https://www.courtlistener.com/docket/65418276/case/",
+   "source_label": "Coin Center v. Yellen",
+   "source_type": "court",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "L12",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:L12"
+  },
+  {
+   "id": "f021",
+   "fact_type": "legal_matter",
+   "section": "legal",
+   "value": {
+    "year": "2024",
+    "title": "a16z was subpoenaed as a non-party in Doe v. GitHub.",
+    "detail": "Doe v. GitHub",
+    "status_badge": "0 pts"
+   },
+   "source_url": "https://storage.courtlistener.com/recap/gov.uscourts.cand.403220/gov.uscourts.cand.403220.209.0.pdf",
+   "source_label": "Doe v. GitHub",
+   "source_type": "court",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "L13",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:L13"
+  },
+  {
+   "id": "f022",
+   "fact_type": "legal_matter",
+   "section": "legal",
+   "value": {
+    "year": "2025",
+    "title": "A court was asked to make AH Capital comply with a subpoena (2025). Other party not known.",
+    "detail": "Motion to compel AH Capital subpoena compliance",
+    "status_badge": "0 pts"
+   },
+   "source_url": "https://www.courtlistener.com/docket/70802517/in-re-motion-to-compel-ah-capital-management-llcs-compliance-with-a/",
+   "source_label": "Motion to compel AH Capital subpoena compliance",
+   "source_type": "court",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "L14",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:L14"
+  },
+  {
+   "id": "f023",
+   "fact_type": "sanctions_check",
+   "section": "legal",
+   "value": {
+    "result": "no_match",
+    "lists": [
+     "OFAC",
+     "EU",
+     "UK",
+     "UN"
+    ],
+    "people_checked": 44
+   },
+   "source_url": "https://www.opensanctions.org/",
+   "source_label": "OpenSanctions",
+   "source_type": "sanctions",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "sanc",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:sanc"
+  },
+  {
+   "id": "f024",
+   "fact_type": "press_item",
+   "section": "public",
+   "value": {
+    "publisher": "TechCrunch",
+    "date": "Aug 18, 2026",
+    "headline": "DOJ probes a16z partners' board seats at Databricks and Fivetran",
+    "group": "Regulators & legal",
+    "sentiment": "neg"
+   },
+   "source_url": "https://techcrunch.com/2026/08/18/dojs-probe-into-andreessen-horowitz-over-board-seats-baffles-vcs/",
+   "source_label": "TechCrunch",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "press:0",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:press:0"
+  },
+  {
+   "id": "f025",
+   "fact_type": "press_item",
+   "section": "public",
+   "value": {
+    "publisher": "The Next Web",
+    "date": "2026",
+    "headline": "DOJ probe into a16z over Databricks and Fivetran board seats",
+    "group": "Regulators & legal",
+    "sentiment": "neg"
+   },
+   "source_url": "https://thenextweb.com/news/andreessen-horowitz-doj-probe-databricks-fivetran-board-seats",
+   "source_label": "The Next Web",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "press:1",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:press:1"
+  },
+  {
+   "id": "f026",
+   "fact_type": "press_item",
+   "section": "public",
+   "value": {
+    "publisher": "Axios",
+    "date": "Sep 11, 2023",
+    "headline": "Run The World co-founder alleges pregnancy discrimination, names a16z",
+    "group": "Regulators & legal",
+    "sentiment": "neg"
+   },
+   "source_url": "https://www.axios.com/2023/09/11/andreessen-horowitz-run-the-word-discrimination-venture-capital",
+   "source_label": "Axios",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "press:2",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:press:2"
+  },
+  {
+   "id": "f027",
+   "fact_type": "press_item",
+   "section": "public",
+   "value": {
+    "publisher": "ProPublica",
+    "date": "2025",
+    "headline": "CFPB probes into a16z-backed fintechs disrupted under political pressure",
+    "group": "Regulators & legal",
+    "sentiment": "neg"
+   },
+   "source_url": "https://www.propublica.org/article/trump-cfpb-marc-andreessen-silicon-valley",
+   "source_label": "ProPublica",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "press:3",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:press:3"
+  },
+  {
+   "id": "f028",
+   "fact_type": "press_item",
+   "section": "public",
+   "value": {
+    "publisher": "CNBC",
+    "date": "Jun 11, 2026",
+    "headline": "Ex-partner John O'Farrell accuses a16z of “political infiltration”",
+    "group": "People & partners",
+    "sentiment": "neg"
+   },
+   "source_url": "https://www.cnbc.com/2026/06/11/ex-a16z-partner-slams-old-firm-othes-political-infiltration-in-ai.html",
+   "source_label": "CNBC",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "press:4",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:press:4"
+  },
+  {
+   "id": "f029",
+   "fact_type": "press_item",
+   "section": "public",
+   "value": {
+    "publisher": "Axios",
+    "date": "Jun 4, 2026",
+    "headline": "Anne Neuberger joins a16z as GP and head of global affairs",
+    "group": "People & partners",
+    "sentiment": "neu"
+   },
+   "source_url": "https://www.axios.com/2026/06/04/anne-neuberger-andreessen-horowitz",
+   "source_label": "Axios",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "press:5",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:press:5"
+  },
+  {
+   "id": "f030",
+   "fact_type": "press_item",
+   "section": "public",
+   "value": {
+    "publisher": "Endpoints News",
+    "date": "2025",
+    "headline": "Bio+Health founding GP Vijay Pande exits a16z",
+    "group": "People & partners",
+    "sentiment": "neu"
+   },
+   "source_url": "https://endpoints.news/former-a16z-biotech-investment-leader-vijay-pande-exits-the-vc-firm/",
+   "source_label": "Endpoints News",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "press:6",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:press:6"
+  },
+  {
+   "id": "f031",
+   "fact_type": "press_item",
+   "section": "public",
+   "value": {
+    "publisher": "PitchBook",
+    "date": "2025",
+    "headline": "Marketing partner Margit Wennmachers steps back",
+    "group": "People & partners",
+    "sentiment": "neu"
+   },
+   "source_url": "https://pitchbook.com/news/articles/andreessen-horowitz-marketing-maestro-margit-wennmachers-leaving-a16z",
+   "source_label": "PitchBook",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "press:7",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:press:7"
+  },
+  {
+   "id": "f032",
+   "fact_type": "press_item",
+   "section": "public",
+   "value": {
+    "publisher": "a16z",
+    "date": "Jan 2026",
+    "headline": "Why did we raise $15B (a16z's own post)",
+    "group": "Fund & founders",
+    "sentiment": "pos"
+   },
+   "source_url": "https://a16z.com/why-did-we-raise-15b/",
+   "source_label": "a16z",
+   "source_type": "firm_site",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "press:8",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:press:8"
+  },
+  {
+   "id": "f033",
+   "fact_type": "press_item",
+   "section": "public",
+   "value": {
+    "publisher": "TechCrunch",
+    "date": "Nov 3, 2025",
+    "headline": "a16z pauses its TxO fund for underserved founders, lays off staff",
+    "group": "Fund & founders",
+    "sentiment": "neg"
+   },
+   "source_url": "https://techcrunch.com/2025/11/03/a16z-pauses-its-famed-txo-fund-for-underserved-founders-lays-off-staff/",
+   "source_label": "TechCrunch",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "press:9",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:press:9"
+  },
+  {
+   "id": "f034",
+   "fact_type": "press_item",
+   "section": "public",
+   "value": {
+    "publisher": "Business Insider",
+    "date": "c. 2020",
+    "headline": "Ben Horowitz: “we're not founder-friendly… our obligation is to the employees”",
+    "group": "Fund & founders",
+    "sentiment": "neg"
+   },
+   "source_url": "https://www.businessinsider.com/entrepreneurship-advice-ben-horowitz-company-culture-startups-venture-capital",
+   "source_label": "Business Insider",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "press:10",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:press:10"
+  },
+  {
+   "id": "f035",
+   "fact_type": "press_item",
+   "section": "public",
+   "value": {
+    "publisher": "BuzzFeed News",
+    "date": "2016",
+    "headline": "How Zenefits fell to earth, with an a16z designee on the board",
+    "group": "Fund & founders",
+    "sentiment": "neg"
+   },
+   "source_url": "https://www.buzzfeednews.com/article/williamalden/how-high-flying-zenefits-fell-to-earth",
+   "source_label": "BuzzFeed News",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "press:11",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:press:11"
+  },
+  {
+   "id": "f036",
+   "fact_type": "press_item",
+   "section": "public",
+   "value": {
+    "publisher": "Forbes",
+    "date": "Jun 12, 2023",
+    "headline": "a16z backed Health IQ's ex-CEO's new company despite vendor lawsuits",
+    "group": "Fund & founders",
+    "sentiment": "neg"
+   },
+   "source_url": "https://www.forbes.com/sites/katiejennings/2023/06/12/lawsuits-allege-this-startup-ripped-off-millions-from-vendors-andreessen-horowitz-backed-the-former-ceos-new-company-anyway/",
+   "source_label": "Forbes",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "press:12",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:press:12"
+  },
+  {
+   "id": "f037",
+   "fact_type": "press_item",
+   "section": "public",
+   "value": {
+    "publisher": "CoinDesk",
+    "date": "Feb 10, 2023",
+    "headline": "Uniswap vote ends with a16z on the losing side",
+    "group": "Crypto",
+    "sentiment": "neu"
+   },
+   "source_url": "https://www.coindesk.com/tech/2023/02/10/uniswap-vote-on-bnb-deployment-ends-with-silicon-valleys-a16z-on-losing-side",
+   "source_label": "CoinDesk",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "press:13",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:press:13"
+  },
+  {
+   "id": "f038",
+   "fact_type": "press_item",
+   "section": "public",
+   "value": {
+    "publisher": "TechCrunch",
+    "date": "Jun 18, 2025",
+    "headline": "No, a16z didn't post that crypto scam tweet (account hijack)",
+    "group": "Crypto",
+    "sentiment": "neu"
+   },
+   "source_url": "https://techcrunch.com/2025/06/18/no-andreessen-horowitz-didnt-post-that-crypto-scam-tweet/",
+   "source_label": "TechCrunch",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "press:14",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:press:14"
+  },
+  {
+   "id": "f039",
+   "fact_type": "press_item",
+   "section": "public",
+   "value": {
+    "publisher": "DL News",
+    "date": "2024",
+    "headline": "Impersonator uses an old a16z-linked X handle to take ~$245K",
+    "group": "Crypto",
+    "sentiment": "neu"
+   },
+   "source_url": "https://www.dlnews.com/articles/people-culture/a16z-impersonator-uses-x-handle-to-swipe-crypto-from-victim/",
+   "source_label": "DL News",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "press:15",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:press:15"
+  },
+  {
+   "id": "f040",
+   "fact_type": "press_item",
+   "section": "public",
+   "value": {
+    "publisher": "TechCrunch",
+    "date": "Aug 25, 2025",
+    "headline": "a16z spends $1.49M lobbying Washington in H1 2025",
+    "group": "Policy",
+    "sentiment": "neu"
+   },
+   "source_url": "https://techcrunch.com/2025/08/25/a16z-spends-1-49m-in-washington-lobbying-while-rivals-mostly-sit-out/",
+   "source_label": "TechCrunch",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "press:16",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:press:16"
+  },
+  {
+   "id": "f041",
+   "fact_type": "press_item",
+   "section": "public",
+   "value": {
+    "publisher": "Bloomberg",
+    "date": "Apr 15, 2026",
+    "headline": "a16z-backed AI super PAC passes $50M",
+    "group": "Policy",
+    "sentiment": "neu"
+   },
+   "source_url": "https://www.bloomberg.com/news/articles/2026-04-15/andreessen-horowitz-boost-ai-super-pac-cash-to-over-50-million",
+   "source_label": "Bloomberg",
+   "source_type": "press",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "press:17",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:press:17"
+  },
+  {
+   "id": "f042",
+   "fact_type": "board_seat",
+   "section": "fund",
+   "value": {
+    "name": "Ben Horowitz",
+    "value": "Databricks",
+    "badge": "DOJ probe",
+    "tone": "amber"
+   },
+   "source_url": null,
+   "source_label": "a16z SEC brochure / company sites",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "board:0",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:board:0"
+  },
+  {
+   "id": "f043",
+   "fact_type": "board_seat",
+   "section": "fund",
+   "value": {
+    "name": "Martin Casado",
+    "value": "Fivetran",
+    "badge": "DOJ probe",
+    "tone": "amber"
+   },
+   "source_url": null,
+   "source_label": "a16z SEC brochure / company sites",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "board:1",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:board:1"
+  },
+  {
+   "id": "f044",
+   "fact_type": "board_seat",
+   "section": "fund",
+   "value": {
+    "name": "Marc Andreessen",
+    "value": "Meta, Coinbase"
+   },
+   "source_url": null,
+   "source_label": "a16z SEC brochure / company sites",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "board:2",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:board:2"
+  },
+  {
+   "id": "f045",
+   "fact_type": "board_seat",
+   "section": "fund",
+   "value": {
+    "name": "Alex Rampell",
+    "value": "Rocket Companies"
+   },
+   "source_url": null,
+   "source_label": "a16z SEC brochure / company sites",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "board:3",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:board:3"
+  },
+  {
+   "id": "f046",
+   "fact_type": "board_seat",
+   "section": "fund",
+   "value": {
+    "name": "William Shrank",
+    "value": "WW, Walgreens"
+   },
+   "source_url": null,
+   "source_label": "a16z SEC brochure / company sites",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "board:4",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:board:4"
+  },
+  {
+   "id": "f047",
+   "fact_type": "board_seat",
+   "section": "fund",
+   "value": {
+    "name": "Robert Swan",
+    "value": "Micron, Nike"
+   },
+   "source_url": null,
+   "source_label": "a16z SEC brochure / company sites",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "board:5",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:board:5"
+  },
+  {
+   "id": "f048",
+   "fact_type": "board_seat",
+   "section": "fund",
+   "value": {
+    "name": "Jeff Jordan",
+    "value": "Airbnb"
+   },
+   "source_url": null,
+   "source_label": "a16z SEC brochure / company sites",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "board:6",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:board:6"
+  },
+  {
+   "id": "f049",
+   "fact_type": "board_seat",
+   "section": "fund",
+   "value": {
+    "name": "David Ulevitch",
+    "value": "Flock Safety"
+   },
+   "source_url": null,
+   "source_label": "a16z SEC brochure / company sites",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "board:7",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:board:7"
+  },
+  {
+   "id": "f050",
+   "fact_type": "partner_move",
+   "section": "fund",
+   "value": {
+    "name": "Vijay Pande",
+    "role": "Founding GP, Bio+Health",
+    "badge": "Left, Jun 2025",
+    "tone": "gray"
+   },
+   "source_url": null,
+   "source_label": "press",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "move:0",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:move:0"
+  },
+  {
+   "id": "f051",
+   "fact_type": "partner_move",
+   "section": "fund",
+   "value": {
+    "name": "Margit Wennmachers",
+    "role": "Marketing partner",
+    "badge": "Emeritus, Jul 2025",
+    "tone": "gray"
+   },
+   "source_url": null,
+   "source_label": "press",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "move:1",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:move:1"
+  },
+  {
+   "id": "f052",
+   "fact_type": "partner_move",
+   "section": "fund",
+   "value": {
+    "name": "John O'Farrell",
+    "role": "First GP hire; later criticized the firm",
+    "badge": "Resigned, May 2025",
+    "tone": "gray"
+   },
+   "source_url": null,
+   "source_label": "press",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "move:2",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:move:2"
+  },
+  {
+   "id": "f053",
+   "fact_type": "partner_move",
+   "section": "fund",
+   "value": {
+    "name": "Erik Torenberg",
+    "role": "GP; a16z bought his Turpentine network",
+    "badge": "Joined, Apr 2025",
+    "tone": "gray"
+   },
+   "source_url": null,
+   "source_label": "press",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "move:3",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:move:3"
+  },
+  {
+   "id": "f054",
+   "fact_type": "portfolio_size",
+   "section": "portfolio",
+   "value": "1,456",
+   "source_url": "https://a16z.com/portfolio/",
+   "source_label": "a16z investment list",
+   "source_type": "firm_site",
+   "retrieved_at": "2026-10-02T00:00:00Z",
+   "record_id": "portfolio_size",
+   "quote": null,
+   "status": "current",
+   "data_status": "real",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:portfolio_size"
+  },
+  {
+   "id": "f055",
+   "fact_type": "portfolio_event_count",
+   "section": "portfolio",
+   "value": {
+    "label": "Regulator actions",
+    "count": "17",
+    "examples": "Synapse, Roblox, Coinbase"
+   },
+   "source_url": null,
+   "source_label": "research set",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "pev:Regulator actions",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:pev:Regulator actions"
+  },
+  {
+   "id": "f056",
+   "fact_type": "portfolio_event_count",
+   "section": "portfolio",
+   "value": {
+    "label": "Shutdowns",
+    "count": "13",
+    "examples": "Health IQ, Forward, Farcaster"
+   },
+   "source_url": null,
+   "source_label": "research set",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "pev:Shutdowns",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:pev:Shutdowns"
+  },
+  {
+   "id": "f057",
+   "fact_type": "portfolio_event_count",
+   "section": "portfolio",
+   "value": {
+    "label": "Founder fraud",
+    "count": "10",
+    "examples": "IRL, Jumio, Cluely"
+   },
+   "source_url": null,
+   "source_label": "research set",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "pev:Founder fraud",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:pev:Founder fraud"
+  },
+  {
+   "id": "f058",
+   "fact_type": "portfolio_event_count",
+   "section": "portfolio",
+   "value": {
+    "label": "Founder removal / board control",
+    "count": "7",
+    "examples": "Zenefits, RapidAPI"
+   },
+   "source_url": null,
+   "source_label": "research set",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "pev:Founder removal / board control",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:pev:Founder removal / board control"
+  },
+  {
+   "id": "f059",
+   "fact_type": "portfolio_event_count",
+   "section": "portfolio",
+   "value": {
+    "label": "Harassment / discrimination",
+    "count": "7",
+    "examples": "Run The World, Pinterest, Carta"
+   },
+   "source_url": null,
+   "source_label": "research set",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "pev:Harassment / discrimination",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:pev:Harassment / discrimination"
+  },
+  {
+   "id": "f060",
+   "fact_type": "portfolio_event_count",
+   "section": "portfolio",
+   "value": {
+    "label": "Crypto token / holder harm",
+    "count": "9",
+    "examples": "Optimism, Compound, Aptos"
+   },
+   "source_url": null,
+   "source_label": "research set",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "pev:Crypto token / holder harm",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:pev:Crypto token / holder harm"
+  },
+  {
+   "id": "f061",
+   "fact_type": "portfolio_event_count",
+   "section": "portfolio",
+   "value": {
+    "label": "Security incidents",
+    "count": "7",
+    "examples": "Ronin, Okta"
+   },
+   "source_url": null,
+   "source_label": "research set",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "pev:Security incidents",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:pev:Security incidents"
+  },
+  {
+   "id": "f062",
+   "fact_type": "portfolio_event_count",
+   "section": "portfolio",
+   "value": {
+    "label": "Customer harm",
+    "count": "5",
+    "examples": "Robinhood, Phantom"
+   },
+   "source_url": null,
+   "source_label": "research set",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "pev:Customer harm",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:pev:Customer harm"
+  },
+  {
+   "id": "f063",
+   "fact_type": "portfolio_event_count",
+   "section": "portfolio",
+   "value": {
+    "label": "Suits against the company",
+    "count": "5",
+    "examples": "Solana, Smartcar, Pindrop"
+   },
+   "source_url": null,
+   "source_label": "research set",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "pev:Suits against the company",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:pev:Suits against the company"
+  },
+  {
+   "id": "f064",
+   "fact_type": "portfolio_event_count",
+   "section": "portfolio",
+   "value": {
+    "label": "Other",
+    "count": "9",
+    "examples": "OpenSea, Domo, Flowcarbon"
+   },
+   "source_url": null,
+   "source_label": "research set",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "pev:Other",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:pev:Other"
+  },
+  {
+   "id": "f065",
+   "fact_type": "portfolio_event_count",
+   "section": "portfolio",
+   "value": {
+    "label": "Layoffs",
+    "count": "19",
+    "examples": "Stripe, Airbnb, Hopin · low founder relevance"
+   },
+   "source_url": null,
+   "source_label": "research set",
+   "source_type": "unknown",
+   "retrieved_at": null,
+   "record_id": "pev:Layoffs",
+   "quote": null,
+   "status": "current",
+   "data_status": "test",
+   "needs_refetch": true,
+   "source_system": "repo_json",
+   "external_id": "a16z:pev:Layoffs"
+  }
+ ],
+ "vc_ai_summaries": [
+  {
+   "id": "a001",
+   "kind": "verdict",
+   "variant": "review",
+   "section": "overview",
+   "text": "Reasonable to take a meeting. Ask which other boards your partner sits on.",
+   "fact_ids": [
+    "f009",
+    "f010",
+    "f011",
+    "f012",
+    "f013",
+    "f023"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a002",
+   "kind": "verdict_sub",
+   "variant": null,
+   "section": "overview",
+   "text": "Clean record with its own founders (0.07% of portfolio). One open DOJ probe into competing board seats, no charges.",
+   "fact_ids": [
+    "f009",
+    "f010",
+    "f011"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a003",
+   "kind": "summary",
+   "variant": null,
+   "section": "overview",
+   "text": "On the evidence we could verify, a16z treats its own founders well: one founder-side lawsuit across about 1,456 portfolio companies, no lost cases or fraud findings, and a clean SEC record.",
+   "fact_ids": [
+    "f009",
+    "f010",
+    "f011",
+    "f012",
+    "f013",
+    "f014",
+    "f015",
+    "f016",
+    "f017",
+    "f018",
+    "f019",
+    "f020",
+    "f021",
+    "f022",
+    "f023"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a004",
+   "kind": "takeaway",
+   "variant": null,
+   "section": "overview",
+   "text": {
+    "title": "Its partners sit on competing boards.",
+    "text": "Its SEC brochure says companies it incubates will compete with yours."
+   },
+   "fact_ids": [
+    "f009",
+    "f024",
+    "f025"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a005",
+   "kind": "takeaway",
+   "variant": null,
+   "section": "overview",
+   "text": {
+    "title": "Close to clean with its own founders.",
+    "text": "No suit by a16z against a founder was found."
+   },
+   "fact_ids": [
+    "f010",
+    "f026"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a006",
+   "kind": "takeaway",
+   "variant": null,
+   "section": "overview",
+   "text": {
+    "title": "Expect the company to come before the founder.",
+    "text": "Horowitz: “we're not founder-friendly.” See Zenefits, 2016."
+   },
+   "fact_ids": [
+    "f034",
+    "f035"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a007",
+   "kind": "takeaway",
+   "variant": null,
+   "section": "overview",
+   "text": {
+    "title": "Crypto founders carry more of its legal risk.",
+    "text": "Token-buyer suits (Lido, Compound) argue VCs are partners of the DAOs they fund."
+   },
+   "fact_ids": [
+    "f011",
+    "f012"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a008",
+   "kind": "takeaway",
+   "variant": null,
+   "section": "overview",
+   "text": {
+    "title": "Money isn't the constraint.",
+    "text": "$15B+ raised in Jan 2026; $106.5B AUM across 119 funds."
+   },
+   "fact_ids": [
+    "f032"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a009",
+   "kind": "takeaway",
+   "variant": null,
+   "section": "overview",
+   "text": {
+    "title": "Confirm your partner's tenure.",
+    "text": "Three senior exits in 2025: Pande, Wennmachers, O'Farrell."
+   },
+   "fact_ids": [
+    "f028",
+    "f030",
+    "f031"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a010",
+   "kind": "score_part_rule",
+   "variant": null,
+   "section": "score",
+   "text": "Bad events are measured as a share of the ~1,456 companies a16z has backed. Under 1% costs nothing. −3 per case the fund lost or where fraud was found.",
+   "fact_ids": [
+    "f009",
+    "f010"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a011",
+   "kind": "score_part_rule",
+   "variant": null,
+   "section": "score",
+   "text": "Money 6 + media 6 (capped) + help after the check 5.5. Claims the fund makes about itself count at half until founders confirm them. Partner departures cost points.",
+   "fact_ids": [
+    "f009",
+    "f010"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a012",
+   "kind": "score_part_rule",
+   "variant": null,
+   "section": "score",
+   "text": "Only first-hand accounts count. If negative accounts are under 1% of the portfolio, the fund gets its age default.",
+   "fact_ids": [
+    "f009",
+    "f010"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a013",
+   "kind": "score_part_rule",
+   "variant": null,
+   "section": "score",
+   "text": "−1 per documented conflict, scaled by partner count. The section can't go below 0.",
+   "fact_ids": [
+    "f009",
+    "f010"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a014",
+   "kind": "score_part_rule",
+   "variant": null,
+   "section": "score",
+   "text": "+1 for every 5 years of investing with no significant pattern of harm, up to +3.",
+   "fact_ids": [
+    "f009",
+    "f010"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a015",
+   "kind": "score_part_rule",
+   "variant": null,
+   "section": "score",
+   "text": "Penalty only; a clean record earns 0. Open investigation −2. Shareholder suit against a partner as a public-company director −0.5 to −1.",
+   "fact_ids": [
+    "f009",
+    "f010"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a016",
+   "kind": "ask_question",
+   "variant": null,
+   "section": "ask",
+   "text": {
+    "n": "01",
+    "title": "Down rounds, bridges, pay-to-play",
+    "q": "In your last 3 down or flat rounds, did you lead, follow or walk?"
+   },
+   "fact_ids": [
+    "f009",
+    "f010"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a017",
+   "kind": "ask_question",
+   "variant": null,
+   "section": "ask",
+   "text": {
+    "n": "02",
+    "title": "Follow-on and pro rata",
+    "q": "What share of your seed/A companies did you reinvest in at the next round, including the strugglers?"
+   },
+   "fact_ids": [
+    "f009",
+    "f010"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a018",
+   "kind": "ask_question",
+   "variant": null,
+   "section": "ask",
+   "text": {
+    "n": "03",
+    "title": "Replacing founder-CEOs",
+    "q": "When did you last back replacing a founder-CEO, and how did it happen?"
+   },
+   "fact_ids": [
+    "f009",
+    "f010"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a019",
+   "kind": "ask_question",
+   "variant": null,
+   "section": "ask",
+   "text": {
+    "n": "04",
+    "title": "Board seat & consent rights",
+    "q": "Will you take a seat at my stage? Which consent rights do you require?"
+   },
+   "fact_ids": [
+    "f009",
+    "f010"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a020",
+   "kind": "ask_question",
+   "variant": null,
+   "section": "ask",
+   "text": {
+    "n": "05",
+    "title": "Competitor overlap",
+    "q": "Does any partner sit on the board of a company that competes with me?"
+   },
+   "fact_ids": [
+    "f009",
+    "f010"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a021",
+   "kind": "ask_question",
+   "variant": null,
+   "section": "ask",
+   "text": {
+    "n": "06",
+    "title": "Reserves for this check",
+    "q": "Which fund is this check from, and how much is reserved for follow-ons?"
+   },
+   "fact_ids": [
+    "f009",
+    "f010"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a022",
+   "kind": "ask_question",
+   "variant": null,
+   "section": "ask",
+   "text": {
+    "n": "07",
+    "title": "Foreign or sovereign LPs",
+    "q": "Are there sovereign or foreign-state LPs in this fund?"
+   },
+   "fact_ids": [
+    "f009",
+    "f010"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a023",
+   "kind": "ask_question",
+   "variant": null,
+   "section": "ask",
+   "text": {
+    "n": "08",
+    "title": "References from failures",
+    "q": "Give me 2 founders whose companies failed with you on the board."
+   },
+   "fact_ids": [
+    "f009",
+    "f010"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a024",
+   "kind": "press_why",
+   "variant": null,
+   "section": "public",
+   "text": "Open federal antitrust probe into a16z partners.",
+   "fact_ids": [
+    "f024"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a025",
+   "kind": "press_why",
+   "variant": null,
+   "section": "public",
+   "text": "Same DOJ probe, second outlet.",
+   "fact_ids": [
+    "f025"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a026",
+   "kind": "press_why",
+   "variant": null,
+   "section": "public",
+   "text": "A founder's allegation against the fund.",
+   "fact_ids": [
+    "f026"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a027",
+   "kind": "press_why",
+   "variant": null,
+   "section": "public",
+   "text": "Critical investigation of a16z's political influence.",
+   "fact_ids": [
+    "f027"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a028",
+   "kind": "press_why",
+   "variant": null,
+   "section": "public",
+   "text": "Public criticism from a former partner.",
+   "fact_ids": [
+    "f028"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a029",
+   "kind": "press_why",
+   "variant": null,
+   "section": "public",
+   "text": "Hiring news, no judgment either way.",
+   "fact_ids": [
+    "f029"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a030",
+   "kind": "press_why",
+   "variant": null,
+   "section": "public",
+   "text": "Departure reported as fact.",
+   "fact_ids": [
+    "f030"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a031",
+   "kind": "press_why",
+   "variant": null,
+   "section": "public",
+   "text": "Departure reported as fact.",
+   "fact_ids": [
+    "f031"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a032",
+   "kind": "press_why",
+   "variant": null,
+   "section": "public",
+   "text": "Favorable, but it's a16z's own post.",
+   "fact_ids": [
+    "f032"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a033",
+   "kind": "press_why",
+   "variant": null,
+   "section": "public",
+   "text": "Founder program paused, staff laid off.",
+   "fact_ids": [
+    "f033"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a034",
+   "kind": "press_why",
+   "variant": null,
+   "section": "public",
+   "text": "Cofounder says the fund isn't founder-friendly.",
+   "fact_ids": [
+    "f034"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a035",
+   "kind": "press_why",
+   "variant": null,
+   "section": "public",
+   "text": "Founder-CEO pushed out with a16z on the board.",
+   "fact_ids": [
+    "f035"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a036",
+   "kind": "press_why",
+   "variant": null,
+   "section": "public",
+   "text": "Critical of a16z's diligence.",
+   "fact_ids": [
+    "f036"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a037",
+   "kind": "press_why",
+   "variant": null,
+   "section": "public",
+   "text": "Factual vote report. The conflict is scored, not here.",
+   "fact_ids": [
+    "f037"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a038",
+   "kind": "press_why",
+   "variant": null,
+   "section": "public",
+   "text": "a16z was the target of a hack, not at fault.",
+   "fact_ids": [
+    "f038"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a039",
+   "kind": "press_why",
+   "variant": null,
+   "section": "public",
+   "text": "Impersonation by a third party, not a16z.",
+   "fact_ids": [
+    "f039"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a040",
+   "kind": "press_why",
+   "variant": null,
+   "section": "public",
+   "text": "Lobbying spend reported as fact.",
+   "fact_ids": [
+    "f040"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  },
+  {
+   "id": "a041",
+   "kind": "press_why",
+   "variant": null,
+   "section": "public",
+   "text": "Political spending reported as fact.",
+   "fact_ids": [
+    "f041"
+   ],
+   "model": "(record at generation)",
+   "prompt_version": "report-v2",
+   "generated_at": "2026-10-02T00:00:00Z",
+   "review_status": "approved",
+   "stale": false,
+   "data_status": "real"
+  }
+ ],
+ "founder_experiences": {
+  "items": [],
+  "state": "no_data"
+ }
+}
