@@ -27,8 +27,8 @@
 
   function paidPlan(data) {
     if (!data) return '';
-    if (data.plan === 'Monthly' || data.plan === 'Annual' || data.plan === 'Paid') return data.plan;
-    if (data.tier === 'paid') return 'Paid';
+    if (data.plan === '{{sjs:page.plans.monthly}}' || data.plan === '{{sjs:page.plans.annual}}' || data.plan === '{{sjs:js.plans.paid}}') return data.plan;
+    if (data.tier === 'paid') return '{{sjs:js.plans.paid}}';
     return '';
   }
 
@@ -46,7 +46,7 @@
         btn.dataset.action = 'switch';
         return;
       }
-      const current = (which === 'monthly' && plan === 'Monthly') || (which === 'annual' && plan === 'Annual');
+      const current = (which === 'monthly' && plan === '{{sjs:page.plans.monthly}}') || (which === 'annual' && plan === '{{sjs:page.plans.annual}}');
       if (current) {
         btn.disabled = true;
         btn.textContent = '{{sjs:js.plans.current_plan}}';
@@ -102,7 +102,7 @@
       const current = paidPlan(await billing());
       paintPlans(current);
       if (current) {
-        const mine = (plan === 'monthly' && current === 'Monthly') || (plan === 'annual' && current === 'Annual');
+        const mine = (plan === 'monthly' && current === '{{sjs:page.plans.monthly}}') || (plan === 'annual' && current === '{{sjs:page.plans.annual}}');
         if (mine || btn.disabled) return;
         openPortal();
         return;

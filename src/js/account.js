@@ -37,7 +37,7 @@
     const rows = watchedFunds();
     const full = Regret.watch.slugs.size >= 100;
     $('addFund').disabled = full;
-    $('addFund').placeholder = full ? 'Watchlist full (100/100)' : 'Add a fund';
+    $('addFund').placeholder = full ? '{{sjs:js.account.watchlist_full_100_100}}' : '{{sjs:page.account.add_a_fund}}';
     FundList.mount($('wlOut'), rows, {
       total: 100,
       bookmark: true,
@@ -46,17 +46,17 @@
         + kindSwitch('new_legal_matter', '{{sjs:js.account.new_legal_matter}}')
         + kindSwitch('score_change', '{{sjs:js.account.score_change}}')
         + '</div>',
-      note: '<span class="none">Saved funds. The bookmark removes one.</span>',
-      empty: '<div class="empty"><b>Nothing saved yet.</b>Open a fund and tap the bookmark.</div>'
+      note: '<span class="none">{{sjs:js.account.saved_funds_the_bookmark_removes}}</span>',
+      empty: '<div class="empty"><b>{{sjs:js.account.nothing_saved_yet}}</b>{{sjs:js.account.open_a_fund_and_tap}}</div>'
     });
   }
 
   const CONNECTIONS = [
-    ['founder_ceo', 'Founder / CEO', 'Founder'],
+    ['founder_ceo', '{{sjs:page.account.founder_ceo}}', '{{sjs:js.auth.founder}}'],
     ['co_founder', 'Co-founder', 'Co-founder'],
-    ['executive', 'Executive', 'Executive'],
-    ['employee', 'Employee', 'Employee'],
-    ['pitched', '{{sjs:page.account.pitched_but_no_deal}}', 'Pitched'],
+    ['executive', '{{sjs:page.account.executive}}', '{{sjs:page.account.executive}}'],
+    ['employee', '{{sjs:page.account.employee}}', '{{sjs:page.account.employee}}'],
+    ['pitched', '{{sjs:page.account.pitched_but_no_deal}}', '{{sjs:js.account.pitched}}'],
     ['co_investor', 'Co-investor', 'Co-investor']
   ];
   const LI_URL = /^(https?:\/\/)?((www|[a-z]{2})\.)?linkedin\.com\/in\/[a-z0-9\-_%]+\/?$/i;
@@ -97,7 +97,7 @@
         .sort((a, b) => a.name.localeCompare(b.name));
     }
     if (!rows.length) {
-      dd.innerHTML = '<div class="none">No fund found</div>';
+      dd.innerHTML = '<div class="none">{{sjs:js.account.no_fund_found}}</div>';
       dd.classList.add('on');
       return;
     }
@@ -160,7 +160,7 @@
     const result = await Regret.addWatch(btn.dataset.add);
     $('addFund').value = '';
     $('addList').hidden = true;
-    if (result && result.full) $('addFund').placeholder = 'Watchlist full (100/100)';
+    if (result && result.full) $('addFund').placeholder = '{{sjs:js.account.watchlist_full_100_100}}';
     await Regret.refreshAlerts();
     renderWatch();
   });
@@ -205,7 +205,7 @@
     const slug = $('fundIn').dataset.firm;
     if (!slug) { fail('{{sjs:js.account.pick_a_fund_from_the}}'); return; }
     const linkedin = $('revLinkedin').value.trim();
-    if (!LI_URL.test(linkedin)) { fail('Use a LinkedIn profile URL like linkedin.com/in/your-name.'); return; }
+    if (!LI_URL.test(linkedin)) { fail('{{sjs:js.account.use_a_linkedin_profile_url}}'); return; }
     const again = document.querySelector('#again button.on');
     if (!again) { fail('{{sjs:js.account.say_whether_you_would_take}}'); return; }
     if (!Regret.user || !Regret.sb()) { fail('{{sjs:js.account.log_in_before_you_send}}'); return; }
@@ -236,12 +236,12 @@
       hard_times: ratings.hard_times || null
     }).select('id').single();
     if (error) { fail(error.message); return; }
-    $('shareForm').outerHTML = '<div class="card done"><b>Submitted.</b><p>It stays hidden until we review it. Nothing here is shown on the fund page before that.</p></div>';
+    $('shareForm').outerHTML = '<div class="card done"><b>{{sjs:js.account.submitted}}</b><p>{{sjs:js.account.it_stays_hidden_until_we}}</p></div>';
   };
 
   Regret.ready.then(async () => {
     if (!Regret.sb()) {
-      $('wlOut').innerHTML = '<div class="empty"><b>Sign-in is not configured on this build.</b>Add the Supabase URL and publishable key, then rebuild.</div>';
+      $('wlOut').innerHTML = '<div class="empty"><b>{{sjs:js.auth.sign_in_is_not_configured}}</b>{{sjs:js.account.add_the_supabase_url_and}}</div>';
       return;
     }
     if (!Regret.user) {

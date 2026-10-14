@@ -5024,6 +5024,1419 @@ window.RS_STRINGS = /*BEGIN_STRINGS*/{
     "text": "Regulatory records & sanctions"
    }
   }
+ },
+ "js.account.watchlist_full_100_100": {
+  "note": "account.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Watchlist full (100/100)"
+   }
+  }
+ },
+ "js.account.saved_funds_the_bookmark_removes": {
+  "note": "account.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Saved funds. The bookmark removes one."
+   }
+  }
+ },
+ "js.account.nothing_saved_yet": {
+  "note": "account.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Nothing saved yet."
+   }
+  }
+ },
+ "js.account.open_a_fund_and_tap": {
+  "note": "account.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Open a fund and tap the bookmark."
+   }
+  }
+ },
+ "js.account.no_fund_found": {
+  "note": "account.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "No fund found"
+   }
+  }
+ },
+ "js.account.use_a_linkedin_profile_url": {
+  "note": "account.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Use a LinkedIn profile URL like linkedin.com/in/your-name."
+   }
+  }
+ },
+ "js.account.submitted": {
+  "note": "account.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Submitted."
+   }
+  }
+ },
+ "js.account.it_stays_hidden_until_we": {
+  "note": "account.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "It stays hidden until we review it. Nothing here is shown on the fund page before that."
+   }
+  }
+ },
+ "js.account.add_the_supabase_url_and": {
+  "note": "account.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Add the Supabase URL and publishable key, then rebuild."
+   }
+  }
+ },
+ "js.admin.approve": {
+  "note": "admin.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Approve"
+   }
+  }
+ },
+ "js.admin.reject": {
+  "note": "admin.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Reject"
+   }
+  }
+ },
+ "js.admin.nothing_waiting": {
+  "note": "admin.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Nothing waiting."
+   }
+  }
+ },
+ "js.admin.new_founder_reviews_show_up": {
+  "note": "admin.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "New founder reviews show up here."
+   }
+  }
+ },
+ "js.admin.new_corrections_show_up_here": {
+  "note": "admin.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "New corrections show up here."
+   }
+  }
+ },
+ "js.auth.login_log_in": {
+  "note": "auth.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "login/\">Log in"
+   }
+  }
+ },
+ "js.auth.account_watchlist_get_alerts": {
+  "note": "auth.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "account/#watchlist\">Get alerts"
+   }
+  }
+ },
+ "js.auth.log_out": {
+  "note": "auth.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Log out"
+   }
+  }
+ },
+ "js.auth.founder": {
+  "note": "auth.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Founder"
+   }
+  }
+ },
+ "js.auth.unlimited_reports_and_alerts_price": {
+  "note": "auth.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Unlimited reports and alerts. Price not set yet."
+   }
+  }
+ },
+ "js.auth.team_accelerator": {
+  "note": "auth.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Team / accelerator"
+   }
+  }
+ },
+ "js.auth.shared_seats_seats_and_price": {
+  "note": "auth.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Shared seats. Seats and price not set yet."
+   }
+  }
+ },
+ "js.auth.continue_with_google": {
+  "note": "auth.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Continue with Google"
+   }
+  }
+ },
+ "js.auth.forgot_password": {
+  "note": "auth.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Forgot password?"
+   }
+  }
+ },
+ "js.auth.confirm_password": {
+  "note": "auth.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Confirm password"
+   }
+  }
+ },
+ "js.auth.maybe_later": {
+  "note": "auth.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Maybe later"
+   }
+  }
+ },
+ "js.auth.resend_email": {
+  "note": "auth.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Resend email"
+   }
+  }
+ },
+ "js.auth.have_an_account": {
+  "note": "auth.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Have an account?"
+   }
+  }
+ },
+ "js.auth.new_here": {
+  "note": "auth.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "New here?"
+   }
+  }
+ },
+ "js.auth.back_to_log_in": {
+  "note": "auth.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Back to log in"
+   }
+  }
+ },
+ "js.auth.those_passwords_don_t_match": {
+  "note": "auth.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Those passwords don't match."
+   }
+  }
+ },
+ "js.auth.alerttog_data_alert": {
+  "note": "auth.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "#alertTog, [data-alert]"
+   }
+  }
+ },
+ "js.fund_list.no_funds_match_these_filters": {
+  "note": "fund_list.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "No funds match these filters."
+   }
+  }
+ },
+ "js.fund_list.try_widening_the_score_range": {
+  "note": "fund_list.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Try widening the score range or clearing a filter."
+   }
+  }
+ },
+ "js.fund_list.remove": {
+  "note": "fund_list.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Remove"
+   }
+  }
+ },
+ "js.fund_list.remove_from_watchlist": {
+  "note": "fund_list.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Remove from watchlist"
+   }
+  }
+ },
+ "js.fund_list.active_legal": {
+  "note": "fund_list.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Active legal"
+   }
+  }
+ },
+ "js.fund_list.aum": {
+  "note": "fund_list.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "AUM"
+   }
+  }
+ },
+ "js.fund_list.last_update": {
+  "note": "fund_list.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Last update"
+   }
+  }
+ },
+ "js.fund_list.no_filters_applied_showing_every": {
+  "note": "fund_list.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "No filters applied · showing every fund we track"
+   }
+  }
+ },
+ "js.fund.open_real_risk": {
+  "note": "fund.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Open · real risk"
+   }
+  }
+ },
+ "js.fund.costs_points": {
+  "note": "fund.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Costs points"
+   }
+  }
+ },
+ "js.fund.no_public_link_for_this": {
+  "note": "fund.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "No public link for this item. It comes from the scoring method."
+   }
+  }
+ },
+ "js.fund.questions_copied": {
+  "note": "fund.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "questions copied"
+   }
+  }
+ },
+ "js.fund.stk_data_ev_sleg_data": {
+  "note": "fund.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": ".stk [data-ev],.sleg [data-ev]"
+   }
+  }
+ },
+ "js.fund.board_seat": {
+  "note": "fund.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "board seat"
+   }
+  }
+ },
+ "js.gate.lorem_ipsum_dolor": {
+  "note": "gate.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Lorem ipsum dolor"
+   }
+  }
+ },
+ "js.gate.lorem_source": {
+  "note": "gate.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Lorem source"
+   }
+  }
+ },
+ "js.gate.lorem": {
+  "note": "gate.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Lorem"
+   }
+  }
+ },
+ "js.gate.lorem_ipsum_dolor_sit_amet_2": {
+  "note": "gate.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Lorem ipsum dolor sit amet"
+   }
+  }
+ },
+ "js.gate.ipsum": {
+  "note": "gate.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Ipsum"
+   }
+  }
+ },
+ "js.gate.dolor": {
+  "note": "gate.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Dolor"
+   }
+  }
+ },
+ "js.gate.of_00_funds": {
+  "note": "gate.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "of 00 funds"
+   }
+  }
+ },
+ "js.gate.out_of_100": {
+  "note": "gate.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "out of 100"
+   }
+  }
+ },
+ "js.gate.lorem_band": {
+  "note": "gate.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Lorem band"
+   }
+  }
+ },
+ "js.gate.lorem_00_00": {
+  "note": "gate.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "lorem 00–00"
+   }
+  }
+ },
+ "js.gate.overview": {
+  "note": "gate.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Overview"
+   }
+  }
+ },
+ "js.gate.public": {
+  "note": "gate.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Public"
+   }
+  }
+ },
+ "js.gate.portfolio": {
+  "note": "gate.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Portfolio"
+   }
+  }
+ },
+ "js.gate.ask_the_fund": {
+  "note": "gate.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Ask the fund"
+   }
+  }
+ },
+ "js.gate.summary": {
+  "note": "gate.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Summary"
+   }
+  }
+ },
+ "js.gate.takeaways": {
+  "note": "gate.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Takeaways"
+   }
+  }
+ },
+ "js.gate.top_legal_matters": {
+  "note": "gate.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Top legal matters"
+   }
+  }
+ },
+ "js.gate.of_0": {
+  "note": "gate.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "of 0"
+   }
+  }
+ },
+ "js.gate.lorem_ipsum": {
+  "note": "gate.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Lorem ipsum"
+   }
+  }
+ },
+ "js.gate.lorem_ipsum_dolor_sit_amet_3": {
+  "note": "gate.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Lorem ipsum dolor sit amet."
+   }
+  }
+ },
+ "js.home.under_100m": {
+  "note": "home.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Under $100M"
+   }
+  }
+ },
+ "js.home.clear_all": {
+  "note": "home.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Clear all"
+   }
+  }
+ },
+ "js.home.plans_see_plans": {
+  "note": "home.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "plans/\">See plans"
+   }
+  }
+ },
+ "js.home.update": {
+  "note": "home.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Update #"
+   }
+  }
+ },
+ "js.home.records_showing_the_newest": {
+  "note": "home.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "records · showing the newest"
+   }
+  }
+ },
+ "js.notfound.search_is_not_available_on": {
+  "note": "notfound.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Search is not available on this build."
+   }
+  }
+ },
+ "js.scoring.choose_a_fund": {
+  "note": "scoring.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Choose a fund."
+   }
+  }
+ },
+ "js.scoring.we_review_every_request": {
+  "note": "scoring.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "We review every request."
+   }
+  }
+ },
+ "js.settings.no_charge": {
+  "note": "settings.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "No charge."
+   }
+  }
+ },
+ "js.settings.your_payment_didn_t_go": {
+  "note": "settings.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Your payment didn't go through, so you're on the free plan now. Update your card to restore access."
+   }
+  }
+ },
+ "js.settings.could_not_delete_this_account": {
+  "note": "settings.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Could not delete this account."
+   }
+  }
+ },
+ "js.settings.we_couldn_t_cancel_your": {
+  "note": "settings.js text.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "We couldn't cancel your plan, contact malytskyyo@gmail.com"
+   }
+  }
+ },
+ "build.show_more": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Show more"
+   }
+  }
+ },
+ "build.evidence": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Evidence →"
+   }
+  }
+ },
+ "build.last_checked": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Last checked"
+   }
+  }
+ },
+ "build.click_any_card_to_see": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Click any card to see the evidence"
+   }
+  }
+ },
+ "build.no_takeaways_yet": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "No takeaways yet."
+   }
+  }
+ },
+ "build.see_all": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "See all"
+   }
+  }
+ },
+ "build.no_legal_matters_on_file": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "No legal matters on file."
+   }
+  }
+ },
+ "build.no_summary_yet": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "No summary yet."
+   }
+  }
+ },
+ "build.rule": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Rule"
+   }
+  }
+ },
+ "build.input": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Input"
+   }
+  }
+ },
+ "build.why": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Why"
+   }
+  }
+ },
+ "build.funds": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Funds"
+   }
+  }
+ },
+ "build.showing": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Showing"
+   }
+  }
+ },
+ "build.no_fund_facts_yet": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "No fund facts yet."
+   }
+  }
+ },
+ "build.no_board_seats_on_file": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "No board seats on file."
+   }
+  }
+ },
+ "build.no_partner_moves_on_file": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "No partner moves on file."
+   }
+  }
+ },
+ "build.no_media_reach_on_file": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "No media reach on file."
+   }
+  }
+ },
+ "build.portfolio_companies": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Portfolio companies"
+   }
+  }
+ },
+ "build.all": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "All"
+   }
+  }
+ },
+ "build.sources": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "sources ·"
+   }
+  }
+ },
+ "build.filter_by_sentiment": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Filter by sentiment"
+   }
+  }
+ },
+ "build.copy_questions": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Copy questions"
+   }
+  }
+ },
+ "build.download_pdf": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Download PDF"
+   }
+  }
+ },
+ "build.coverage_39": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "· coverage 39%"
+   }
+  }
+ },
+ "build.how_scoring_works": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "How scoring works"
+   }
+  }
+ },
+ "build.save_to_watchlist": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Save to watchlist"
+   }
+  }
+ },
+ "build.updated": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Updated"
+   }
+  }
+ },
+ "build.details": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Details"
+   }
+  }
+ },
+ "build.loading_the_report": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Loading the report…"
+   }
+  }
+ },
+ "build.watchlist": {
+  "note": "build.py generated markup.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Watchlist ·"
+   }
+  }
+ },
+ "report.regulatory.see_matter": {
+  "note": "Regulatory record detail when the matter is on the Legal tab.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "See the matter on this tab."
+   }
+  }
+ },
+ "report.legal.empty": {
+  "note": "Legal tab empty state.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "No data yet. We found no court cases, regulator actions or sanctions for this fund."
+   }
+  }
+ },
+ "report.founders.empty": {
+  "note": "Founder reviews empty state.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "No data yet. We found no founder accounts for this fund."
+   }
+  }
+ },
+ "report.public.empty_all": {
+  "note": "Public tab empty state.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "No data yet. We found no press for this fund."
+   }
+  }
+ },
+ "report.tab.fund": {
+  "note": "Fund page tab label.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Fund &amp; people"
+   }
+  }
+ },
+ "report.public.open_source": {
+  "note": "Public item link title, before the domain.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Open source on"
+   }
+  }
+ },
+ "report.public.new_tab": {
+  "note": "Public item link title suffix.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "(new tab)"
+   }
+  }
+ },
+ "js.auth.agree_prefix": {
+  "note": "Signup fine print, before the Terms link.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "By creating an account you agree to the"
+   }
+  }
+ },
+ "js.fund.of": {
+  "note": "Public list count connector.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "of"
+   }
+  }
+ },
+ "page.404.that_address_is_not_a": {
+  "note": "404 page text (contains brand token).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "That address is not a page on {{s:brand.name}}. Search for a fund, or go back to the list."
+   }
+  }
+ },
+ "legal.privacy.regretamine_com_currently_served_at": {
+  "note": "privacy page text (contains brand token).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "{{s:brand.name}} (regretamine.com, currently served at mindgame77.github.io/regrettamine) helps founders check venture capital funds before taking their money. It is operated by"
+   }
+  }
+ },
+ "legal.privacy.is_not_for_anyone_under": {
+  "note": "privacy page text (contains brand token).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "{{s:brand.name}} is not for anyone under 18. We don't knowingly collect data from children. If you believe a child has an account, contact us and we'll delete it."
+   }
+  }
+ },
+ "legal.terms.the_rules_for_using_in": {
+  "note": "terms page text (contains brand token).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "The rules for using {{s:brand.name}}, in plain English."
+   }
+  }
+ },
+ "legal.terms.who_operates_we_us_by": {
+  "note": "terms page text (contains brand token).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": ", who operates {{s:brand.name}} (\"we\", \"us\"). By using the site or creating an account, you accept them and our"
+   }
+  }
+ },
+ "legal.terms.nothing_on_is_investment_legal": {
+  "note": "terms page text (contains brand token).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Nothing on {{s:brand.name}} is investment, legal or financial advice. Do your own diligence before you take or turn down money."
+   }
+  }
+ },
+ "legal.terms.you_keep_ownership_of_your": {
+  "note": "terms page text (contains brand token).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "You keep ownership of your review. You give us a worldwide, non-exclusive, royalty-free license to host, display, format, translate and use it in aggregated scores for as long as it's on {{s:brand.name}}, and to keep using anonymised, aggregated results after it's removed. You confirm you have the right to grant this."
+   }
+  }
+ },
+ "legal.terms.we_may_suspend_or_close": {
+  "note": "terms page text (contains brand token).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "We may suspend or close accounts that break these terms or put the service or others at risk, and we'll tell you why when we can. You can stop using {{s:brand.name}} at any time. Sections on reviews licensing, disclaimers and liability survive termination."
+   }
+  }
+ },
+ "legal.terms.is_provided_as_is_and": {
+  "note": "terms page text (contains brand token).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "{{s:brand.name}} is provided \"as is\" and \"as available\". To the extent the law allows, we disclaim all warranties, including accuracy, completeness, fitness for a particular purpose and uninterrupted availability."
+   }
+  }
+ },
+ "js.account.pitched": {
+  "note": "account.js label.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Pitched"
+   }
+  }
+ },
+ "js.auth.you": {
+  "note": "auth.js label.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "You"
+   }
+  }
+ },
+ "js.auth.settings": {
+  "note": "auth.js label.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Settings"
+   }
+  }
+ },
+ "js.auth.saved": {
+  "note": "auth.js label.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Saved"
+   }
+  }
+ },
+ "js.fund.positive": {
+  "note": "fund.js label.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Positive"
+   }
+  }
+ },
+ "js.fund.neutral": {
+  "note": "fund.js label.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Neutral"
+   }
+  }
+ },
+ "js.fund.negative": {
+  "note": "fund.js label.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Negative"
+   }
+  }
+ },
+ "js.gate.one": {
+  "note": "gate.js label.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "One"
+   }
+  }
+ },
+ "js.gate.two": {
+  "note": "gate.js label.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Two"
+   }
+  }
+ },
+ "js.gate.three": {
+  "note": "gate.js label.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Three"
+   }
+  }
+ },
+ "js.gate.four": {
+  "note": "gate.js label.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Four"
+   }
+  }
+ },
+ "js.gate.five": {
+  "note": "gate.js label.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Five"
+   }
+  }
+ },
+ "js.gate.six": {
+  "note": "gate.js label.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Six"
+   }
+  }
+ },
+ "js.plans.paid": {
+  "note": "plans.js label.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Paid"
+   }
+  }
+ },
+ "js.settings.failed": {
+  "note": "settings.js label.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Failed"
+   }
+  }
+ },
+ "js.settings.receipt": {
+  "note": "settings.js label.",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Receipt"
+   }
+  }
+ },
+ "report.since": {
+  "note": "Fund header chip prefix: \"Since 2009\".",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Since"
+   }
+  }
+ },
+ "report.ranking": {
+  "note": "Fund report text identical for every fund (evidence.rank.kicker).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Ranking"
+   }
+  }
+ },
+ "report.methodology": {
+  "note": "Fund report text identical for every fund (evidence.rules.kicker).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Methodology"
+   }
+  }
+ },
+ "report.conflicts": {
+  "note": "Fund report text identical for every fund (evidence.rules.rows[3][0]).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Conflicts"
+   }
+  }
+ },
+ "report.up_to_3": {
+  "note": "Fund report text identical for every fund (evidence.rules.rows[4][1]).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "up to +3"
+   }
+  }
+ },
+ "report.staff": {
+  "note": "Fund report text identical for every fund (fundTab.facts[2].k).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Staff"
+   }
+  }
+ },
+ "report.performance": {
+  "note": "Fund report text identical for every fund (fundTab.facts[5].k).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Performance"
+   }
+  }
+ },
+ "report.of_60": {
+  "note": "Fund report text identical for every fund (parts[0].maxLabel).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "of 60"
+   }
+  }
+ },
+ "report.money": {
+  "note": "Fund report text identical for every fund (parts[1].inputs[0].name).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Money"
+   }
+  }
+ },
+ "report.support": {
+  "note": "Fund report text identical for every fund (parts[1].legend).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Support"
+   }
+  }
+ },
+ "report.of_17_5": {
+  "note": "Fund report text identical for every fund (parts[1].maxLabel).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "of 17.5"
+   }
+  }
+ },
+ "report.of_5": {
+  "note": "Fund report text identical for every fund (parts[3].maxLabel).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "of 5"
+   }
+  }
+ },
+ "report.bonus": {
+  "note": "Fund report text identical for every fund (parts[4].legend).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Bonus"
+   }
+  }
+ },
+ "report.regulatory": {
+  "note": "Fund report text identical for every fund (parts[5].legend).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Regulatory"
+   }
+  }
+ },
+ "report.health": {
+  "note": "Fund report text identical for every fund (portfolio.healthTitle).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Health"
+   }
+  }
+ },
+ "report.sanctions": {
+  "note": "Fund report text identical for every fund (regulatory.sanctionsTitle).",
+  "variants": {
+   "default": {
+    "when": "always",
+    "text": "Sanctions"
+   }
+  }
  }
 }/*END_STRINGS*/;
 (function () {

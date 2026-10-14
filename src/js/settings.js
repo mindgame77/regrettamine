@@ -97,11 +97,11 @@
 
   function paintBilling(row) {
     const data = row || {};
-    const paid = data.tier === 'paid' || data.plan === 'Paid' || data.plan === 'Monthly' || data.plan === 'Annual';
+    const paid = data.tier === 'paid' || data.plan === '{{sjs:js.plans.paid}}' || data.plan === '{{sjs:page.plans.monthly}}' || data.plan === '{{sjs:page.plans.annual}}';
     const cancel = $('planCancel');
     if (cancel) cancel.hidden = !paid;
-    $('planName').textContent = data.plan || (paid ? 'Paid' : 'Free');
-    $('planDetail').textContent = data.price_label || (paid ? '{{sjs:js.settings.your_paid_plan_is_active}}' : 'No charge.');
+    $('planName').textContent = data.plan || (paid ? '{{sjs:js.plans.paid}}' : '{{sjs:page.settings.free}}');
+    $('planDetail').textContent = data.price_label || (paid ? '{{sjs:js.settings.your_paid_plan_is_active}}' : '{{sjs:js.settings.no_charge}}');
     if (data.payment_failed && data.payment_failed_on) {
       $('nxLabel').textContent = '{{sjs:js.settings.charge_failed_on}}';
       $('nxVal').textContent = data.payment_failed_on;
@@ -140,13 +140,13 @@
     $('payEmpty').hidden = payments.length > 0;
     $('payRows').innerHTML = payments.map(item => {
       const status = item.status === 'failed' ? 'bad' : 'ok';
-      const label = item.status === 'failed' ? 'Failed' : 'Paid';
-      const receipt = item.receipt_url ? '<a class="lnk2" href="' + Regret.esc(item.receipt_url) + '" data-stripe="receipt">Receipt</a>' : '';
+      const label = item.status === 'failed' ? '{{sjs:js.settings.failed}}' : '{{sjs:js.plans.paid}}';
+      const receipt = item.receipt_url ? '<a class="lnk2" href="' + Regret.esc(item.receipt_url) + '" data-stripe="receipt">{{sjs:js.settings.receipt}}</a>' : '';
       return '<div class="pr"><div>' + Regret.esc(item.date || '') + '</div><div>' + Regret.esc(item.description || '') + '</div><div>' + Regret.esc(item.amount || money(item.amount_cents)) + '</div><div><span class="st ' + status + '">' + label + '</span></div><div>' + receipt + '</div></div>';
     }).join('');
     const notice = !data.payment_failed ? '' : (data.lapsed
-      ? "Your payment didn't go through, so you're on the free plan now. Update your card to restore access."
-      : "We couldn't charge your card. Update it within 24 hours or your account moves to the free plan.");
+      ? "{{s:js.settings.your_payment_didn_t_go}}"
+      : "{{s:page.settings.we_couldn_t_charge_your}}");
     if (window.Regret && Regret.paintPayFail) Regret.paintPayFail(notice);
   }
 
@@ -196,8 +196,8 @@
     $('siteIn').value = site.value || '';
     await Regret.refreshProfile();
     Regret.paintNav();
-    $('saveProfile').textContent = 'Saved';
-    setTimeout(() => { $('saveProfile').textContent = 'Save'; }, 1200);
+    $('saveProfile').textContent = '{{sjs:js.auth.saved}}';
+    setTimeout(() => { $('saveProfile').textContent = '{{sjs:page.settings.save}}'; }, 1200);
   });
 
   async function recheck(password) {
@@ -229,7 +229,7 @@
     showErr('pwErr', '');
     const next = $('pwIn').value;
     if (next.length < 6) { showErr('pwErr', '{{sjs:js.auth.use_at_least_6_characters}}'); return; }
-    if (next !== $('pw2In').value) { showErr('pwErr', "Those passwords don't match."); return; }
+    if (next !== $('pw2In').value) { showErr('pwErr', "{{s:js.auth.those_passwords_don_t_match}}"); return; }
     if (hasPassword) {
       const bad = await recheck($('pwCurrentIn').value);
       if (bad) { showErr('pwErr', '{{sjs:js.settings.that_password_does_not_match}}'); return; }
@@ -248,8 +248,8 @@
   });
 
   async function deleteError(error) {
-    const fallback = "Could not delete this account.";
-    const planned = "We couldn't cancel your plan, contact malytskyyo@gmail.com";
+    const fallback = "{{s:js.settings.could_not_delete_this_account}}";
+    const planned = "{{s:js.settings.we_couldn_t_cancel_your}}";
     try {
       const ctx = error && error.context;
       if (ctx && typeof ctx.json === 'function') {
@@ -298,7 +298,7 @@
 
   async function loadBilling() {
     const billing = await Regret.sb().rpc('my_billing');
-    let row = billing.data || { plan: Regret.tier === 'paid' ? 'Paid' : 'Free' };
+    let row = billing.data || { plan: Regret.tier === 'paid' ? '{{sjs:js.plans.paid}}' : '{{sjs:page.settings.free}}' };
     row = await refreshCard(row);
     paintBilling(row);
     return row;

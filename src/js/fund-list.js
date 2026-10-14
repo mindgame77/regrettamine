@@ -2,7 +2,7 @@
 (function (global) {
   const BANDS = [['{{sjs:score.band|very_low}}', '{{sjs:score.band_short|very_low}}', '#19C37D'], ['{{sjs:score.band|low}}', '{{sjs:score.band_short|low}}', '#7BD3A8'], ['{{sjs:score.band|moderate}}', '{{sjs:score.band_short|moderate}}', '#F2B705'], ['{{sjs:score.band|elevated}}', '{{sjs:score.band_short|elevated}}', '#FF6B4A'], ['{{sjs:score.band|high}}', '{{sjs:score.band_short|high}}', '#D7263D']];
   const BOOKMARK = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14l-6-4.2L6 20z"/></svg>';
-  const EMPTY = '<div class="empty"><b>No funds match these filters.</b>Try widening the score range or clearing a filter.</div>';
+  const EMPTY = '<div class="empty"><b>{{sjs:js.fund_list.no_funds_match_these_filters}}</b>{{sjs:js.fund_list.try_widening_the_score_range}}</div>';
 
   function bandColor(b) {
     return (BANDS.find(x => x[0] == b) || [0, 0, '#ccc'])[2];
@@ -28,11 +28,11 @@
     opts = opts || {};
     const href = fundHref(f, opts.prefix || '');
     const mark = opts.bookmark
-      ? `<button type="button" class="bm" data-remove="${f.id}" data-tip="Remove" aria-label="Remove from watchlist">${BOOKMARK}</button>`
+      ? `<button type="button" class="bm" data-remove="${f.id}" data-tip="{{s:js.fund_list.remove}}" aria-label="{{s:js.fund_list.remove_from_watchlist}}">${BOOKMARK}</button>`
       : '';
-    return `<a class="tr2${f.v2 ? ' feat' : ''}" href="${href}" data-fund="${f.id}" title="${f.report ? '{{sjs:js.fund_list.open_full_report}}' : '{{sjs:js.fund_list.full_report_coming_soon}}'}"><div class="nm"><b>${f.name}</b><div class="m">${f.hq} · since ${f.since}</div></div>
+    return `<a class="tr2${f.v2 ? ' feat' : ''}" href="${href}" data-fund="${f.id}" title="${f.report ? '{{s:js.fund_list.open_full_report}}' : '{{s:js.fund_list.full_report_coming_soon}}'}"><div class="nm"><b>${f.name}</b><div class="m">${f.hq} · since ${f.since}</div></div>
  <div class="sc"><div class="mring">${ring(f.score, 38, 4.5, f.v2 ? 'url(#g2)' : '#C9C5D9')}<b style="${f.v2 ? '' : 'color:#A9A5BD'}">${f.score}</b></div><div><span class="bands"><i style="background:${bandColor(f.band)}"></i>${f.band}</span><span class="tag ${f.v2 ? 'v2' : 'old'}">${f.v2 ? 'v2 · likely ' + f.lo + '–' + f.hi : 'old method'}</span></div></div>
- <div title="${f.legalNote}"><span class="lgc ${f.legal ? 'r' : 'g'}">${f.legal ? f.legal + ' active' : '{{sjs:js.fund_list.none_found}}'}</span></div>
+ <div title="${f.legalNote}"><span class="lgc ${f.legal ? 'r' : 'g'}">${f.legal ? f.legal + ' active' : '{{s:js.fund_list.none_found}}'}</span></div>
  <div><b>${fmtAum(f.aum)}</b><div class="m">${f.aumAsOf}${f.aumStale ? ' · stale' : ''}</div></div>
  <div>${f.updatedS}</div>
  ${mark}</a>`;
@@ -40,7 +40,7 @@
   function table(funds, opts) {
     opts = opts || {};
     const extra = opts.bookmark ? '<div></div>' : '';
-    const head = `<div class="tr2 th"><div>Fund</div><div>Score</div><div>Active legal</div><div>AUM</div><div>Last update</div>${extra}</div>`;
+    const head = `<div class="tr2 th"><div>{{s:common.fund}}</div><div>{{s:page.scoring.score}}</div><div>{{s:js.fund_list.active_legal}}</div><div>{{s:js.fund_list.aum}}</div><div>{{s:js.fund_list.last_update}}</div>${extra}</div>`;
     const body = funds.map(f => row(f, opts)).join('') || (opts.empty || EMPTY);
     const cls = opts.bookmark ? ' marks' : '';
     return grad() + `<div class="tbl${cls}">${head}${body}</div>`;
@@ -48,7 +48,7 @@
   function mount(el, funds, opts) {
     opts = opts || {};
     const total = opts.total != null ? opts.total : funds.length;
-    const note = opts.note != null ? opts.note : '<span class="none">No filters applied · showing every fund we track</span>';
+    const note = opts.note != null ? opts.note : '<span class="none">{{sjs:js.fund_list.no_filters_applied_showing_every}}</span>';
     const aside = opts.aside ? `<div class="r">${opts.aside}</div>` : '';
     el.innerHTML = `<div class="rbar"><span class="cnt">${countHtml(funds.length, total)}</span><div class="active" style="margin:0 0 0 8px">${note}</div>${aside}</div>` + table(funds, opts);
   }

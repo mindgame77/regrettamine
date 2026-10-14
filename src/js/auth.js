@@ -72,7 +72,7 @@
   function label(person) {
     const name = personName(person);
     if (name) return name.split(/\s+/)[0];
-    return (person.email || 'You').split('@')[0];
+    return (person.email || '{{sjs:js.auth.you}}').split('@')[0];
   }
   async function refreshProfile() {
     const gen = ++profileGen;
@@ -95,7 +95,7 @@
     if (!banner) {
       const nav = document.querySelector('nav.pillnav');
       if (!nav) return;
-      nav.insertAdjacentHTML('afterend', '<div class="fail" id="payFail" data-pay-fail><i>!</i><span></span><button class="b d sm" type="button" data-stripe="portal">Update card</button></div>');
+      nav.insertAdjacentHTML('afterend', '<div class="fail" id="payFail" data-pay-fail><i>!</i><span></span><button class="b d sm" type="button" data-stripe="portal">{{sjs:page.settings.update_card}}</button></div>');
       banner = document.getElementById('payFail');
     }
     const text = banner.querySelector('span');
@@ -119,11 +119,11 @@
   }
   const NAV_ICON = ' width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
   const ACCOUNT_NAV = [
-    { id: 'watchlist', label: 'Watchlist', path: 'account/#watchlist', icon: '<svg' + NAV_ICON + '><path d="M6 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14l-6-4.2L6 20z"/></svg>' },
+    { id: 'watchlist', label: '{{sjs:common.watchlist}}', path: 'account/#watchlist', icon: '<svg' + NAV_ICON + '><path d="M6 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14l-6-4.2L6 20z"/></svg>' },
     { id: 'share', label: '{{sjs:js.auth.share_experience}}', path: 'account/#share', icon: '<svg' + NAV_ICON + '><path d="M5 19.5l1-4L16 5.5a2.1 2.1 0 013 3L9 18.5zM14 7.5l3 3"/></svg>' },
-    { id: 'pricing', label: 'Pricing', path: 'plans/', icon: '<svg' + NAV_ICON + '><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' },
-    { id: 'settings', label: 'Settings', path: 'settings/', icon: '<svg' + NAV_ICON + '><circle cx="12" cy="12" r="3"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8 5.6 18.4"/></svg>' },
-    { id: 'review', label: 'Review', path: 'admin/', admin: true, icon: '<svg' + NAV_ICON + '><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>' }
+    { id: 'pricing', label: '{{sjs:common.pricing}}', path: 'plans/', icon: '<svg' + NAV_ICON + '><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' },
+    { id: 'settings', label: '{{sjs:js.auth.settings}}', path: 'settings/', icon: '<svg' + NAV_ICON + '><circle cx="12" cy="12" r="3"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8 5.6 18.4"/></svg>' },
+    { id: 'review', label: '{{sjs:page.admin.review}}', path: 'admin/', admin: true, icon: '<svg' + NAV_ICON + '><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>' }
   ];
   function accountNavItems() {
     return ACCOUNT_NAV.filter(item => !item.admin || isAdmin);
@@ -153,7 +153,7 @@
     const base = root();
     paintAccountNav();
     if (!person) {
-      slot.innerHTML = '<a class="b w" href="' + base + 'login/">Log in</a><a class="b v" href="' + base + 'account/#watchlist">Get alerts</a>';
+      slot.innerHTML = '<a class="b w" href="' + base + '{{sjs:js.auth.login_log_in}}</a><a class="b v" href="' + base + '{{sjs:js.auth.account_watchlist_get_alerts}}</a>';
       return;
     }
     const current = accountNavCurrent();
@@ -162,7 +162,7 @@
       + '<svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke="#8C88A3" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>'
       + '<div class="menu"><small>' + esc(person.email || '') + '</small>'
       + links
-      + '<button type="button" id="logout">Log out</button></div></div>';
+      + '<button type="button" id="logout">{{sjs:js.auth.log_out}}</button></div></div>';
     document.getElementById('av').onclick = function (e) {
       if (e.target.closest('#logout') || e.target.closest('a')) return;
       e.currentTarget.classList.toggle('open');
@@ -181,7 +181,7 @@
     const full = watch.slugs.size >= 100 && !saved;
     btn.classList.toggle('on', saved);
     btn.classList.toggle('full', !!user && full);
-    btn.dataset.tip = user && full ? 'Watchlist full (100/100)' : saved ? 'Saved' : 'Save';
+    btn.dataset.tip = user && full ? '{{sjs:js.account.watchlist_full_100_100}}' : saved ? '{{sjs:js.auth.saved}}' : '{{sjs:page.settings.save}}';
     btn.setAttribute('aria-pressed', saved ? 'true' : 'false');
     if (user && full) btn.setAttribute('aria-disabled', 'true');
     else btn.removeAttribute('aria-disabled');
@@ -385,7 +385,7 @@
 
   function cardHtml() {
     return '<div class="auth" role="dialog" aria-labelledby="ah" data-mode="login">'
-      + '<button type="button" class="x" id="authClose" aria-label="Close"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>'
+      + '<button type="button" class="x" id="authClose" aria-label="{{s:page.settings.close}}"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>'
       + '<div class="dots gate-only gate-flex" id="authDots" aria-hidden="true"></div>'
       + '<h2 id="ah" class="gate-only">{{sjs:auth.heading|gate}}</h2>'
       + '<h2 class="page-only">{{sjs:auth.heading|page}}</h2>'
@@ -402,23 +402,23 @@
       + '<p class="sub confirm-only">{{sjs:auth.sub|confirm}}</p>'
       + '<p class="sub forgot-only">{{sjs:auth.sub|forgot}}</p>'
       + '<p class="sub reset-only">{{sjs:auth.sub|reset}}</p>'
-      + '<div class="plans plans-only"><div><b>Founder</b><span>Unlimited reports and alerts. Price not set yet.</span></div>'
-      + '<div><b>Team / accelerator</b><span>Shared seats. Seats and price not set yet.</span></div></div>'
-      + '<button class="b v google" id="googleBtn" type="button"><span class="g">' + GOOGLE + '</span>Continue with Google</button>'
+      + '<div class="plans plans-only"><div><b>{{sjs:js.auth.founder}}</b><span>{{sjs:js.auth.unlimited_reports_and_alerts_price}}</span></div>'
+      + '<div><b>{{sjs:js.auth.team_accelerator}}</b><span>{{sjs:js.auth.shared_seats_seats_and_price}}</span></div></div>'
+      + '<button class="b v google" id="googleBtn" type="button"><span class="g">' + GOOGLE + '</span>{{sjs:js.auth.continue_with_google}}</button>'
       + '<div class="or">or</div>'
       + '<form class="pf" id="authForm">'
-      + '<label class="fld email-row"><input type="email" id="authEmail" placeholder="Email" aria-label="Email" autocomplete="email" required></label>'
-      + '<label class="fld pw-row"><input type="password" id="authPassword" placeholder="Password" aria-label="Password" autocomplete="current-password" minlength="6"><button type="button" class="fp in-only" id="forgotBtn">Forgot password?</button></label>'
-      + '<label class="fld pw2-row"><input type="password" id="authPassword2" placeholder="Confirm password" aria-label="Confirm password" autocomplete="new-password" minlength="6"></label>'
+      + '<label class="fld email-row"><input type="email" id="authEmail" placeholder="{{s:page.settings.email}}" aria-label="{{s:page.settings.email}}" autocomplete="email" required></label>'
+      + '<label class="fld pw-row"><input type="password" id="authPassword" placeholder="{{s:page.settings.password}}" aria-label="{{s:page.settings.password}}" autocomplete="current-password" minlength="6"><button type="button" class="fp in-only" id="forgotBtn">{{sjs:js.auth.forgot_password}}</button></label>'
+      + '<label class="fld pw2-row"><input type="password" id="authPassword2" placeholder="{{s:js.auth.confirm_password}}" aria-label="{{s:js.auth.confirm_password}}" autocomplete="new-password" minlength="6"></label>'
       + '<button class="b s" id="submitBtn" type="submit"><span class="up-only">{{sjs:auth.submit|signup}}</span><span class="in-only">{{sjs:auth.submit|login}}</span><span class="forgot-only">{{sjs:auth.submit|forgot}}</span><span class="reset-only">{{sjs:auth.submit|reset}}</span></button>'
       + '</form>'
-      + '<div class="pay-only pay-flex" style="flex-direction:column;gap:10px"><button class="b c" type="button" id="seePlans">See plans</button><button class="b s" type="button" id="later">Maybe later</button></div>'
-      + '<button class="b c confirm-only" type="button" id="resendBtn" style="margin-top:8px">Resend email</button>'
-      + '<button class="b s plans-only" type="button" id="closePlans" style="margin-top:16px">Close</button>'
-      + '<p class="fine"><span class="agree up-only">By creating an account you agree to the <a href="' + root() + 'terms/">Terms</a> and <a href="' + root() + 'privacy/">Privacy</a></span>'
-      + '<span class="up-only">Have an account? <button type="button" class="link" data-to="login">Log in</button></span>'
-      + '<span class="in-only">New here? <button type="button" class="link" data-to="signup">Create account</button></span>'
-      + '<span class="forgot-only"><button type="button" class="link" data-to="login">Back to log in</button></span></p>'
+      + '<div class="pay-only pay-flex" style="flex-direction:column;gap:10px"><button class="b c" type="button" id="seePlans">{{sjs:js.gate.see_plans}}</button><button class="b s" type="button" id="later">{{sjs:js.auth.maybe_later}}</button></div>'
+      + '<button class="b c confirm-only" type="button" id="resendBtn" style="margin-top:8px">{{sjs:js.auth.resend_email}}</button>'
+      + '<button class="b s plans-only" type="button" id="closePlans" style="margin-top:16px">{{sjs:page.settings.close}}</button>'
+      + '<p class="fine"><span class="agree up-only">{{sjs:js.auth.agree_prefix}} <a href="' + root() + 'terms/">{{sjs:common.terms}}</a> and <a href="' + root() + 'privacy/">{{sjs:common.privacy}}</a></span>'
+      + '<span class="up-only">{{sjs:js.auth.have_an_account}} <button type="button" class="link" data-to="login">{{sjs:common.log_in}}</button></span>'
+      + '<span class="in-only">{{sjs:js.auth.new_here}} <button type="button" class="link" data-to="signup">{{sjs:page.scoring.create_account}}</button></span>'
+      + '<span class="forgot-only"><button type="button" class="link" data-to="login">{{sjs:js.auth.back_to_log_in}}</button></span></p>'
       + '<p class="err" id="authErr" hidden></p><p class="ok" id="authOk" hidden></p>'
       + '</div>';
   }
@@ -532,7 +532,7 @@
     }
     if (mode === 'reset') {
       if (password.length < 6) { msg('{{sjs:js.auth.use_at_least_6_characters}}'); return; }
-      if (password !== password2) { msg('Those passwords don\'t match.'); return; }
+      if (password !== password2) { msg('{{sjs:js.auth.those_passwords_don_t_match}}'); return; }
       const { error } = await clientNow.auth.updateUser({ password: password });
       if (error) msg(error.message);
       else { msg('{{sjs:js.auth.password_updated}}', true); setTimeout(() => { location.href = siteRoot().href; }, 600); }
@@ -540,7 +540,7 @@
     }
     if (password.length < 6) { msg('{{sjs:js.auth.use_at_least_6_characters}}'); return; }
     if (mode === 'signup') {
-      if (password !== password2) { msg('Those passwords don\'t match.'); return; }
+      if (password !== password2) { msg('{{sjs:js.auth.those_passwords_don_t_match}}'); return; }
       const { data, error } = await clientNow.auth.signUp({
         email: email,
         password: password,
@@ -626,7 +626,7 @@
       paintSave();
       return;
     }
-    const alertTog = ev.target.closest('#alertTog, [data-alert]');
+    const alertTog = ev.target.closest('{{sjs:js.auth.alerttog_data_alert}}');
     if (alertTog) {
       ev.preventDefault();
       const slug = alertTog.dataset.alert || document.body.dataset.firm;

@@ -17,11 +17,11 @@
     $('#dk').textContent = e.kicker;
     $('#dt').textContent = e.title;
     let h = '<div class="body">' + esc(e.body) + '</div>';
-    if (e.tone === 'open') h += '<span class="rt amber dtone">Open · real risk</span>';
-    if (e.tone === 'penalty') h += '<span class="rt red dtone">Costs points</span>';
+    if (e.tone === 'open') h += '<span class="rt amber dtone">{{sjs:js.fund.open_real_risk}}</span>';
+    if (e.tone === 'penalty') h += '<span class="rt red dtone">{{sjs:js.fund.costs_points}}</span>';
     if (e.rows.length) h += '<table>' + e.rows.map(r => '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1]) + '</td></tr>').join('') + '</table>';
-    if (e.sources.length) h += '<h5>Sources</h5><div class="srcl">' + e.sources.map(s => '<a href="' + esc(s[1]) + '" target="_blank" rel="noopener"><div>' + esc(s[0]) + '<span>' + esc(s[1].replace(/^https?:\/\//, '').slice(0, 70)) + '</span></div></a>').join('') + '</div>';
-    else h += '<h5>Sources</h5><p class="note">No public link for this item. It comes from the scoring method.</p>';
+    if (e.sources.length) h += '<h5>{{sjs:page.scoring.sources}}</h5><div class="srcl">' + e.sources.map(s => '<a href="' + esc(s[1]) + '" target="_blank" rel="noopener"><div>' + esc(s[0]) + '<span>' + esc(s[1].replace(/^https?:\/\//, '').slice(0, 70)) + '</span></div></a>').join('') + '</div>';
+    else h += '<h5>{{sjs:page.scoring.sources}}</h5><p class="note">{{sjs:js.fund.no_public_link_for_this}}</p>';
     $('#db').innerHTML = h;
     $('#db').scrollTop = 0;
     $$('[data-ev]').forEach(s => s.classList.toggle('sel', s.dataset.ev === id));
@@ -58,7 +58,7 @@
       document.execCommand('copy');
       a.remove();
     }
-    toast(Q.trim().split('\n').filter(line => /^\d+\./.test(line)).length + ' questions copied');
+    toast(Q.trim().split('\n').filter(line => /^\d+\./.test(line)).length + ' {{sjs:js.fund.questions_copied}}');
   };
   $('#pdf').onclick = () => { document.body.classList.add('print-ask'); setTimeout(() => { window.print(); document.body.classList.remove('print-ask'); }, 50); };
   function goScore(id) {
@@ -76,7 +76,7 @@
   }
   $('#ringBtn').onclick = () => goScore(null);
   document.addEventListener('click', ev => {
-    const t = ev.target.closest('.stk [data-ev],.sleg [data-ev]');
+    const t = ev.target.closest('{{sjs:js.fund.stk_data_ev_sleg_data}}');
     if (!t) return;
     ev.stopImmediatePropagation();
     ev.preventDefault();
@@ -104,7 +104,7 @@
       rows.slice(shown, shown + size).forEach(row => list.insertAdjacentHTML('beforeend', renderRow(row)));
       shown = Math.min(rows.length, shown + size);
       const note = document.getElementById(btn.id === 'moreCos' ? 'coCount' : btn.id === 'moreReviews' ? 'reviewCount' : 'pressCount');
-      if (note) note.textContent = 'Showing ' + shown + ' of ' + rows.length;
+      if (note) note.textContent = '{{sjs:build.showing}} ' + shown + ' {{sjs:js.fund.of}} ' + rows.length;
       if (shown >= rows.length) btn.remove();
       const on = document.querySelector('.sf.on');
       if (on && btn.id === 'morePress') on.click();
@@ -113,11 +113,11 @@
   showMore('moreCos', 'coList', pageJson('portfolio-data'), row => {
     const bits = [row.round, row.outcome].filter(Boolean);
     if (row.lead) bits.push('lead');
-    if (row.board) bits.push('board seat');
+    if (row.board) bits.push('{{sjs:js.fund.board_seat}}');
     return '<div class="it"><b>' + esc(row.name) + '</b><span>' + esc(bits.join(' · ')) + '</span></div>';
   });
   showMore('moreReviews', 'reviewList', pageJson('review-data'), row => {
-    const who = [row.founder, row.company, row.partner].filter(Boolean).join(' · ') || 'Founder';
+    const who = [row.founder, row.company, row.partner].filter(Boolean).join(' · ') || '{{sjs:js.auth.founder}}';
     const flags = [];
     if (row.firstHand) flags.push('first-hand');
     if (row.verification) flags.push(row.verification);
@@ -128,7 +128,7 @@
     const prefix = (document.getElementById('morePress') || {}).dataset.prefix || '';
     const initial = esc((row.publisher || '?').slice(0, 1));
     const fav = '<span class="fav"><img src="' + esc(prefix) + 'assets/fav/' + esc(row.domain) + '.png" alt="" onerror="this.parentNode.classList.add(\'nofav\');this.remove()"><em>' + initial + '</em></span>';
-    const sent = {pos: 'Positive', neu: 'Neutral', neg: 'Negative'}[row.sentiment] || row.sentiment;
+    const sent = {pos: '{{sjs:js.fund.positive}}', neu: '{{sjs:js.fund.neutral}}', neg: '{{sjs:js.fund.negative}}'}[row.sentiment] || row.sentiment;
     return '<a class="pubc" data-sent="' + esc(row.sentiment) + '" href="' + esc(row.url) + '" target="_blank" rel="noopener">'
       + '<span class="pt">' + fav + '<span class="pn"><b>' + esc(row.publisher) + '</b><small>' + esc(row.domain) + ' · ' + esc(row.date) + '</small></span></span>'
       + '<span class="ph4">' + esc(row.headline) + '</span>'

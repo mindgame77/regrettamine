@@ -54,7 +54,7 @@
     if (mine !== token) return;
     const rows = data || [];
     if (!rows.length) {
-      dd.innerHTML = '<div class="none">No fund found</div>';
+      dd.innerHTML = '<div class="none">{{sjs:js.account.no_fund_found}}</div>';
       dd.classList.add('on');
       return;
     }
@@ -90,7 +90,7 @@
     e.preventDefault();
     fail('');
     if (!paid()) { fail('{{sjs:js.scoring.a_paid_plan_is_required}}'); return; }
-    if (!chosen) { fail('Choose a fund.'); return; }
+    if (!chosen) { fail('{{sjs:js.scoring.choose_a_fund}}'); return; }
     const message = $('correctMsg').value.trim();
     const source = $('correctSource').value.trim();
     if (!message) { fail('{{sjs:js.scoring.say_what_is_wrong}}'); return; }
@@ -107,7 +107,7 @@
       status: 'pending'
     });
     if (error) { fail('{{sjs:js.scoring.could_not_send_that_a}}'); return; }
-    $('correctForm').outerHTML = '<div class="card done" id="correctDone"><b>Submitted.</b><p>We review every request.</p></div>';
+    $('correctForm').outerHTML = '<div class="card done" id="correctDone"><b>{{sjs:js.account.submitted}}</b><p>{{sjs:js.scoring.we_review_every_request}}</p></div>';
   });
 
   function boot() {
