@@ -25,7 +25,7 @@ SITE = ROOT / "site"
 EXT_SVG = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3H3.5A.5.5 0 0 0 3 3.5v9a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V10M9 3h4v4M13 3 7.5 8.5"/></svg>'
 OPEN_SVG = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h4v4M13 3 7.5 8.5"/></svg>'
 SAVE_SVG = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14l-6-4.2L6 20z"/></svg>'
-CORRECT_LINE = '<a class="lnk" id="correctLink" hidden>Request a correction</a>'
+CORRECT_LINE = '<a class="lnk" id="correctLink" hidden>@@s:page.scoring.request_a_correction@@</a>'
 def load_strings():
     raw = (SRC / "js" / "strings.js").read_text(encoding="utf-8")
     body = raw.split("/*BEGIN_STRINGS*/", 1)[1].split("/*END_STRINGS*/", 1)[0]
@@ -42,13 +42,16 @@ def S(key, variant="default"):
     return variants[variant]["text"]
 
 
-_TOKEN = re.compile(r"\{\{(s|sjs):([a-z0-9_.]+)(?:\|([a-z0-9_]+))?\}\}")
+_TOKEN = re.compile(r"\{\{(s|sjs):([a-z0-9_.]+)(?:\|([a-z0-9_]+))?\}\}|@@(s):([a-z0-9_.]+)@@")
 
 
 def apply_strings(text):
     """Replace {{s:key|variant}} (HTML) and {{sjs:key|variant}} (inside a single-quoted JS string)."""
     def sub(match):
-        kind, key, variant = match.group(1), match.group(2), match.group(3) or "default"
+        if match.group(4):  # @@s:key@@ is the brace-free form used inside build.py f-strings
+            kind, key, variant = "s", match.group(5), "default"
+        else:
+            kind, key, variant = match.group(1), match.group(2), match.group(3) or "default"
         if key not in STRINGS:
             raise SystemExit(f"strings.js: unknown key {key}")
         value = S(key, variant)
@@ -56,7 +59,7 @@ def apply_strings(text):
             value = value.replace("\\", "\\\\").replace("'", "\\'")
         return value
     for _ in range(3):  # a string may itself contain {{s:brand.name}}
-        if "{{s" not in text:
+        if "{{s" not in text and "@@s:" not in text:
             break
         text = _TOKEN.sub(sub, text)
     return text
@@ -77,7 +80,7 @@ def apply_strings_to_site():
     for path in SITE.rglob("*"):
         if path.suffix in (".html", ".js", ".json", ".css") and path.is_file():
             raw = path.read_text(encoding="utf-8")
-            if "{{s" in raw:
+            if "{{s" in raw or "@@s:" in raw:
                 path.write_text(apply_strings(raw), encoding="utf-8")
 
 
@@ -160,7 +163,7 @@ def join_capped(items, render_item, limit=LIST_CAP):
     tail = "".join(render_item(item) for item in items[limit:])
     return (
         head
-        + f'<details class="more"><summary>Show more <span>{len(items) - limit} more</span></summary>'
+        + f'<details class="more"><summary>@@s:build.show_more@@ <span>{len(items) - limit} more</span></summary>'
         + f'<div class="lst">{tail}</div></details>'
     )
 
@@ -172,7 +175,7 @@ def render_takeaways(fund):
             f'<button class="tkc t{i % 5}" data-ev="{esc(tk["ev"])}">'
             f'<span class="ix">{i + 1:02d}</span><h4>{esc(tk["title"])}</h4><p>{esc(tk["text"])}</p>'
             f'<span class="src"><span>{esc(source_line(fund, tk["ev"]))}</span>'
-            f'<span class="open">Evidence →</span></span></button>'
+            f'<span class="open">@@s:build.evidence@@</span></span></button>'
         )
     return "".join(cards)
 
@@ -243,7 +246,7 @@ def fund_heading(fund):
 
 
 def empty_card(sentence, checked):
-    when = f'<p class="checked">Last checked {esc(checked)}</p>' if checked else ""
+    when = f'<p class="checked">@@s:build.last_checked@@ {esc(checked)}</p>' if checked else ""
     return f'<div class="pc emptycard"><p>{esc(sentence)}</p>{when}</div>'
 
 
@@ -253,31 +256,31 @@ def render_overview(fund, matters):
     n = len(matters)
     if fund["takeaways"]:
         take_block = (
-            f'<div class="sech"><h2 class="h2">Takeaways</h2><small>Click any card to see the evidence</small></div>'
+            f'<div class="sech"><h2 class="h2">@@s:js.gate.takeaways@@</h2><small>@@s:build.click_any_card_to_see@@</small></div>'
             f'<div class="tkg tk6">{render_takeaways(fund)}</div>'
         )
     else:
         take_block = (
-            '<div class="sech"><h2 class="h2">Takeaways</h2></div>'
-            '<p class="empty-state">No takeaways yet.</p>'
+            '<div class="sech"><h2 class="h2">@@s:js.gate.takeaways@@</h2></div>'
+            '<p class="empty-state">@@s:build.no_takeaways_yet@@</p>'
         )
     if n:
         rows = f'<div class="pc lstc"><div class="lst">{top}</div></div>' if top else ''
         legal_block = (
-            f'<div class="sech"><h2 class="h2">Top legal matters</h2>'
-            f'<button class="lnk" data-go="legal">See all {n} →</button></div>'
+            f'<div class="sech"><h2 class="h2">@@s:js.gate.top_legal_matters@@</h2>'
+            f'<button class="lnk" data-go="legal">@@s:build.see_all@@ {n} →</button></div>'
             f'{rows}'
         )
     else:
         legal_block = (
-            '<div class="sech"><h2 class="h2">Top legal matters</h2></div>'
-            '<p class="empty-state">No legal matters on file.</p>'
+            '<div class="sech"><h2 class="h2">@@s:js.gate.top_legal_matters@@</h2></div>'
+            '<p class="empty-state">@@s:build.no_legal_matters_on_file@@</p>'
         )
     summary = fund.get("summary") or ""
     if summary:
-        summary_block = f'<div class="blk sumb"><div class="lab">Summary</div><div><p class="big clamp5">{esc(summary)}</p></div></div>'
+        summary_block = f'<div class="blk sumb"><div class="lab">@@s:js.gate.summary@@</div><div><p class="big clamp5">{esc(summary)}</p></div></div>'
     else:
-        summary_block = '<p class="empty-state">No summary yet.</p>'
+        summary_block = '<p class="empty-state">@@s:build.no_summary_yet@@</p>'
     return summary_block + take_block + legal_block
 
 
@@ -292,8 +295,8 @@ def render_score(fund):
             f'<div class="scbh"><span class="wl"><i></i>{esc(part["name"])}</span>'
             f'<span class="scbar"><b style="width:{esc(part["scoreBar"])}"></b></span>'
             f'<span class="wv"><b>{esc(part["got"])}</b><small>{esc(part["maxLabel"])}</small></span></div>'
-            f'<p class="wr"><span>Rule</span>{esc(part["rule"])}</p>'
-            f'<div class="wih"><span>Input</span><span style="text-align:right">Points</span><span>Why</span></div>'
+            f'<p class="wr"><span>@@s:build.rule@@</span>{esc(part["rule"])}</p>'
+            f'<div class="wih"><span>@@s:build.input@@</span><span style="text-align:right">@@s:page.scoring.points@@</span><span>@@s:build.why@@</span></div>'
             f'<div class="wt">{score_inputs(part)}</div>'
             f'<button class="lnk sm2" data-ev="{esc(sid)}">{srcl}</button></div>'
         )
@@ -305,7 +308,7 @@ def render_regulatory(reg, matters=None):
     known = set(matters or {})
     buttons = []
     for rec in reg["records"]:
-        detail = "See the matter on this tab." if rec.get("ev") in known else rec["detail"]
+        detail = "@@s:report.regulatory.see_matter@@" if rec.get("ev") in known else rec["detail"]
         buttons.append(
             f'<button class="rr" data-ev="{esc(rec["ev"])}">'
             f'<i class="ri {esc(rec["icon"])}">{icons[rec["icon"]]}</i>'
@@ -337,7 +340,7 @@ def render_regulatory(reg, matters=None):
 def render_legal(fund, matters):
     if not matters:
         return empty_card(
-            "No data yet. We found no court cases, regulator actions or sanctions for this fund.",
+            "@@s:report.legal.empty@@",
             fund.get("updated") or "",
         )
     parts = [render_regulatory(fund["regulatory"], matters)]
@@ -395,14 +398,14 @@ def render_vehicles(vehicles):
         return f'<div class="it"><b>{esc(item["name"])}</b><span>{esc(" · ".join(bits))}</span></div>'
     body = join_capped(vehicles, one)
     return (
-        f'<div class="pc list" id="vehicles"><div class="ph3"><h3>Funds</h3>'
+        f'<div class="pc list" id="vehicles"><div class="ph3"><h3>@@s:build.funds@@</h3>'
         f'<small>{len(vehicles)} vehicle{"" if len(vehicles) == 1 else "s"}</small></div>{body}</div>'
     )
 
 
 def render_reviews(reviews, checked=""):
     if not reviews:
-        return empty_card("No data yet. We found no founder accounts for this fund.", checked)
+        return empty_card("@@s:report.founders.empty@@", checked)
     def one(item):
         who = " · ".join(bit for bit in (item.get("founder"), item.get("company"), item.get("partner")) if bit)
         flags = []
@@ -412,7 +415,7 @@ def render_reviews(reviews, checked=""):
             flags.append(item["verification"])
         dims = " ".join(f'{esc(r["dimension"])} {esc(r["score"])}' for r in item.get("ratings") or [])
         return (
-            f'<div class="it review"><div><b>{esc(who or "Founder")}</b>'
+            f'<div class="it review"><div><b>{esc(who or "@@s:js.auth.founder@@")}</b>'
             f'<div class="sm">{esc(item.get("body") or "")}</div></div>'
             f'<span class="rt gray">{esc(" · ".join(flags))}</span>'
             f'<span class="sm">{dims}</span></div>'
@@ -421,12 +424,12 @@ def render_reviews(reviews, checked=""):
     more = ""
     if len(reviews) > PAGE_SIZE:
         more = (
-            f'<button type="button" class="lnk" id="moreReviews" data-page-size="{PAGE_SIZE}">Show more</button>'
-            f'<p class="note" id="reviewCount">Showing {PAGE_SIZE} of {len(reviews)}</p>'
+            f'<button type="button" class="lnk" id="moreReviews" data-page-size="{PAGE_SIZE}">@@s:build.show_more@@</button>'
+            f'<p class="note" id="reviewCount">@@s:build.showing@@ {PAGE_SIZE} of {len(reviews)}</p>'
         )
     noun = "review" if len(reviews) == 1 else "reviews"
     return (
-        f'<div class="pc list" id="reviews"><div class="ph3"><h3>Founder reviews</h3>'
+        f'<div class="pc list" id="reviews"><div class="ph3"><h3>@@s:common.founder_reviews@@</h3>'
         f'<small>{len(reviews)} {noun}</small></div>'
         f'<div class="lst" id="reviewList">{"".join(one(item) for item in visible)}</div>{more}</div>'
     )
@@ -434,13 +437,13 @@ def render_reviews(reviews, checked=""):
 
 def render_fund_tab(tab, extras=None):
     extras = extras or {}
-    facts = "".join(render_fact_tile(t) for t in tab["facts"]) if tab["facts"] else '<p class="empty-state">No fund facts yet.</p>'
+    facts = "".join(render_fact_tile(t) for t in tab["facts"]) if tab["facts"] else '<p class="empty-state">@@s:build.no_fund_facts_yet@@</p>'
     boards = tab["boards"]
     moves = tab["moves"]
     media = tab["media"]
-    board_body = join_capped(boards["items"], render_board_item) if boards["items"] else '<p class="empty-state">No board seats on file.</p>'
-    move_body = join_capped(moves["items"], render_move_item) if moves["items"] else '<p class="empty-state">No partner moves on file.</p>'
-    media_body = join_capped(media["items"], render_pair_item) if media["items"] else '<p class="empty-state">No media reach on file.</p>'
+    board_body = join_capped(boards["items"], render_board_item) if boards["items"] else '<p class="empty-state">@@s:build.no_board_seats_on_file@@</p>'
+    move_body = join_capped(moves["items"], render_move_item) if moves["items"] else '<p class="empty-state">@@s:build.no_partner_moves_on_file@@</p>'
+    media_body = join_capped(media["items"], render_pair_item) if media["items"] else '<p class="empty-state">@@s:build.no_media_reach_on_file@@</p>'
     return (
         f'<div class="pc"><div class="ph3"><h3>{esc(tab["factsTitle"])}</h3><small>{esc(tab["factsNote"])}</small></div>'
         f'<div class="kv">{facts}</div></div>'
@@ -482,12 +485,12 @@ def render_companies(companies):
     more = ""
     if len(companies) > PAGE_SIZE:
         more = (
-            f'<button type="button" class="lnk" id="moreCos" data-page-size="{PAGE_SIZE}">Show more</button>'
-            f'<p class="note" id="coCount">Showing {min(PAGE_SIZE, len(companies))} of {len(companies)}</p>'
+            f'<button type="button" class="lnk" id="moreCos" data-page-size="{PAGE_SIZE}">@@s:build.show_more@@</button>'
+            f'<p class="note" id="coCount">@@s:build.showing@@ {min(PAGE_SIZE, len(companies))} of {len(companies)}</p>'
         )
     noun = "company" if len(companies) == 1 else "companies"
     return (
-        f'<div class="pc" id="companies"><div class="ph3"><h3>Portfolio companies</h3>'
+        f'<div class="pc" id="companies"><div class="ph3"><h3>@@s:build.portfolio_companies@@</h3>'
         f'<small>{len(companies)} {noun}</small></div>'
         f'<div class="lst" id="coList">{"".join(one(item) for item in visible)}</div>{more}</div>'
     )
@@ -498,7 +501,7 @@ def render_public(fund, prefix):
     items = pub["items"]
     if not items:
         return empty_card(
-            "No data yet. We found no press for this fund.",
+            "@@s:report.public.empty_all@@",
             fund.get("updated") or "",
         )
     visible = items if len(items) <= PAGE_SIZE else items[:PAGE_SIZE]
@@ -507,7 +510,7 @@ def render_public(fund, prefix):
         se = item["sentiment"]
         cards.append(
             f'<a class="pubc" data-sent="{esc(se)}" href="{esc(item["url"])}" target="_blank" rel="noopener" '
-            f'title="Open source on {esc(item["domain"])} (new tab)">'
+            f'title="@@s:report.public.open_source@@ {esc(item["domain"])} @@s:report.public.new_tab@@">'
             f'<span class="pt">{favicon(item["publisher"], item["domain"], prefix)}'
             f'<span class="pn"><b>{esc(item["publisher"])}</b><small>{esc(item["domain"])} · {esc(item["date"])}</small></span>'
             f'<span class="ext" aria-hidden="true">{EXT_SVG}</span></span>'
@@ -520,7 +523,7 @@ def render_public(fund, prefix):
         f'<i class="{k}" style="flex:{counts[k]} 0 0" title="{SENT_LABEL[k]}: {counts[k]}"></i>'
         for k in ("pos", "neu", "neg") if counts[k]
     )
-    filters = f'<button class="sf on" data-sf="all">All <b>{len(items)}</b></button>' + "".join(
+    filters = f'<button class="sf on" data-sf="all">@@s:build.all@@ <b>{len(items)}</b></button>' + "".join(
         f'<button class="sf {k}" data-sf="{k}"><i></i>{SENT_LABEL[k]} <b>{counts[k]}</b></button>'
         for k in ("pos", "neu", "neg")
     )
@@ -528,16 +531,16 @@ def render_public(fund, prefix):
     pager = ""
     if len(items) > PAGE_SIZE:
         pager = (
-            f'<button type="button" class="lnk" id="morePress" data-page-size="{PAGE_SIZE}" data-prefix="{esc(prefix)}">Show more</button>'
-            f'<p class="note" id="pressCount">Showing {PAGE_SIZE} of {len(items)}</p>'
+            f'<button type="button" class="lnk" id="morePress" data-page-size="{PAGE_SIZE}" data-prefix="{esc(prefix)}">@@s:build.show_more@@</button>'
+            f'<p class="note" id="pressCount">@@s:build.showing@@ {PAGE_SIZE} of {len(items)}</p>'
         )
     return (
         f'<div class="pubh"><div><h2 class="h2">{esc(pub["title"])}</h2>'
         f'<p class="note" style="margin-top:4px">{esc(pub["intro"])}</p></div>'
-        f'<span class="mi">{len(items)} sources · {publishers} publishers</span></div>'
+        f'<span class="mi">{len(items)} @@s:build.sources@@ {publishers} publishers</span></div>'
         f'<div class="pc sentc"><div class="sentt"><b>{esc(pub["sentimentTitle"])}</b>'
         f'<span class="note">{esc(pub["sentimentNote"])}</span></div>'
-        f'<div class="sbar">{bar}</div><div class="sfl" role="group" aria-label="Filter by sentiment">{filters}</div></div>'
+        f'<div class="sbar">{bar}</div><div class="sfl" role="group" aria-label="@@s:build.filter_by_sentiment@@">{filters}</div></div>'
         f'<div class="pubg"{"" if len(items) <= PAGE_SIZE else " id=\"pressList\""}>{"".join(cards)}</div>{pager}<p class="note sempty" hidden>{esc(pub["empty"])}</p>'
     )
 
@@ -580,8 +583,8 @@ def render_ask(ask):
     return (
         f'<div class="askbar"><div><h2 class="h2">{esc(ask["title"])}</h2>'
         f'<p class="note" style="margin-top:4px">{esc(ask["note"])}</p></div>'
-        f'<div class="btns"><button class="b w" id="copyq">Copy questions</button>'
-        f'<button class="b c" id="pdf">Download PDF</button></div></div>'
+        f'<div class="btns"><button class="b w" id="copyq">@@s:build.copy_questions@@</button>'
+        f'<button class="b c" id="pdf">@@s:build.download_pdf@@</button></div></div>'
         f'<div class="print-head">{esc(ask["printHead"])}</div>'
         f'<div class="askg">{"".join(cards)}</div>'
     )
@@ -606,7 +609,7 @@ def render_score_bars(fund):
 def render_worked_example(fund):
     return (
         f'<div class="ex"><div class="exh"><div class="big">{esc(fund["scoreExact"])}'
-        f'<small>{esc(fund["band"])} · coverage 39%</small></div>'
+        f'<small>{esc(fund["band"])} @@s:build.coverage_39@@</small></div>'
         f'<div style="flex:1">{render_score_bars(fund)}</div></div>'
         f'{render_score(fund)}</div>'
     )
@@ -614,7 +617,7 @@ def render_worked_example(fund):
 
 def header_meta(fund):
     """Location, founded year, and the SEC adviser line. Legal names and token chips stay off this row."""
-    chips = [fund["hq"], f'Since {fund["since"]}']
+    chips = [fund["hq"], f'@@s:report.since@@ {fund["since"]}']
     for item in fund.get("meta") or []:
         text = str(item)
         if text.startswith("SEC adviser") or "CRD" in text:
@@ -653,20 +656,24 @@ def render_hero(fund):
         f'<div class="hero"><div>'
         f'<button class="ringBtn" id="ringBtn" aria-label="Score {shown}. See why on the Score tab">'
         f'<div class="ringBox">{ring_svg(fund["scoreExact"])}'
-        f'<div class="num"><div><b>{shown}</b><span>out of 100</span></div></div></div></button>'
+        f'<div class="num"><div><b>{shown}</b><span>@@s:js.gate.out_of_100@@</span></div></div></div></button>'
         f'<span class="bandPill">{esc(fund["band"])}</span>'
         f'<button class="rng" data-ev="range">likely {esc(lo)}–{esc(hi)} ⓘ</button></div>'
         f'<div><div class="q">{esc(fund["question"])}</div><div class="dv">{esc(fund["verdict"])}</div>'
         f'<div class="vsub">{esc(fund["verdictSub"])}</div>'
         f'{badge_row}'
         f'<div class="ovx"><div class="bart"><span>{esc(fund["scoreBarNote"])}</span>'
-        f'<button class="lnk" data-ev="rules">How scoring works</button></div>'
+        f'<button class="lnk" data-ev="rules">@@s:build.how_scoring_works@@</button></div>'
         f'{render_score_bars(fund)}</div>'
         f'</div></div></div>'
     )
 
 
 def render_fund_page(fund, prefix):
+    return apply_strings(_render_fund_page(fund, prefix))
+
+
+def _render_fund_page(fund, prefix):
     fund = dedupe_founded_sentence(strip_toxy(fund))
     matters = {m["id"]: m for m in fund["matters"]}
     meta = [f'<span class="mi">{esc(item)}</span>' for item in header_meta(fund)]
@@ -679,13 +686,13 @@ def render_fund_page(fund, prefix):
         return f'<button data-tab="{key}"{zero} role="tab">{label}{badge}</button>'
 
     tab_html = "".join([
-        tab_button("overview", "Overview"),
-        tab_button("score", "Score"),
-        tab_button("legal", "Legal", n_legal),
-        tab_button("fund", "Fund &amp; people"),
-        tab_button("public", "Public", n_public),
-        tab_button("portfolio", "Portfolio"),
-        tab_button("ask", "Ask the fund"),
+        tab_button("overview", "@@s:js.gate.overview@@"),
+        tab_button("score", "@@s:page.scoring.score@@"),
+        tab_button("legal", "@@s:common.legal@@", n_legal),
+        tab_button("fund", "@@s:report.tab.fund@@"),
+        tab_button("public", "@@s:js.gate.public@@", n_public),
+        tab_button("portfolio", "@@s:js.gate.portfolio@@"),
+        tab_button("ask", "@@s:js.gate.ask_the_fund@@"),
     ])
     panels = {
         "overview": render_overview(fund, matters),
@@ -700,21 +707,21 @@ def render_fund_page(fund, prefix):
     home = prefix
     body = f'''<div class="blobs np" style="height:900px"><div class="blob" style="width:520px;height:520px;background:#CDBBFF;left:-180px;top:-120px"></div><div class="blob" style="width:460px;height:460px;background:#FFC7B8;right:-140px;top:-40px"></div><div class="blob" style="width:380px;height:380px;background:#FFEBA0;left:42%;top:420px;opacity:.35"></div></div>
 <nav class="pillnav np"><a class="logo" href="{home}"><img class="lockup" src="{prefix}assets/logo/lockup-light.svg" alt="{BRAND}" width="143" height="36"></a>
- <div class="links"><a class="on" href="{home}">VCs</a><a href="{home}scoring/">Scoring</a><a href="{home}plans/">Pricing</a><!-- Our Story --></div>
- <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#watchlist">Get alerts</a></div></nav>
+ <div class="links"><a class="on" href="{home}">@@s:common.vcs@@</a><a href="{home}scoring/">@@s:common.scoring@@</a><a href="{home}plans/">@@s:common.pricing@@</a><!-- Our Story --></div>
+ <div class="r" id="navSlot"><a class="b w" href="{home}login/">@@s:common.log_in@@</a><a class="b v" href="{home}account/#watchlist">@@s:common.get_alerts@@</a></div></nav>
 <div class="ftop"><div class="wrap">
- <div class="crumb np"><a href="{home}">← All VCs</a></div>
- <div class="fh np"><div><h1>{fund_heading(fund)}<button type="button" class="save" id="save" data-tip="Save" aria-label="Save to watchlist" aria-pressed="false">{SAVE_SVG}</button></h1>
+ <div class="crumb np"><a href="{home}">@@s:common.all_vcs@@</a></div>
+ <div class="fh np"><div><h1>{fund_heading(fund)}<button type="button" class="save" id="save" data-tip="@@s:page.settings.save@@" aria-label="@@s:build.save_to_watchlist@@" aria-pressed="false">{SAVE_SVG}</button></h1>
   {CORRECT_LINE}
   <div class="meta">{"".join(meta)}</div></div>
-  <div class="upd">Updated {esc(fund["updated"])}<br>{esc(fund["method"])}</div></div>
+  <div class="upd">@@s:build.updated@@ {esc(fund["updated"])}<br>{esc(fund["method"])}</div></div>
  <div class="np">{render_hero(fund)}</div>
  <div class="tabsW np"><div class="tabs" role="tablist">{tab_html}</div></div>
  {sections}
  <p class="fnote np">{esc(fund["footnote"])}</p>
 </div></div>
-<footer class="np"><div class="wrap"><span class="logo"><img class="lockup sm" src="{prefix}assets/logo/lockup-light.svg" alt="{BRAND}" width="111" height="28"></span><span>regretamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">Scoring</a> · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>
-<div class="scrim"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="Details"><div class="dh"><div><div class="dk" id="dk"></div><div class="dtt" id="dt"></div></div><button class="dx" id="dx" aria-label="Close">×</button></div><div class="db" id="db"></div></aside><div class="toast"></div>'''
+<footer class="np"><div class="wrap"><span class="logo"><img class="lockup sm" src="{prefix}assets/logo/lockup-light.svg" alt="{BRAND}" width="111" height="28"></span><span>regretamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">@@s:common.scoring@@</a> · <a href="{home}privacy/">@@s:common.privacy@@</a> · <a href="{home}terms/">@@s:common.terms@@</a></span></div></footer>
+<div class="scrim"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="@@s:build.details@@"><div class="dh"><div><div class="dk" id="dk"></div><div class="dtt" id="dt"></div></div><button class="dx" id="dx" aria-label="@@s:page.settings.close@@">×</button></div><div class="db" id="db"></div></aside><div class="toast"></div>'''
     title = fund.get("title") or f'{fund["name"]} · {BRAND}'
     extra = ""
     companies = fund.get("companies") or []
@@ -894,7 +901,7 @@ def load_local():
         if slug != path.stem:
             raise SystemExit(f"{path.name}: slug {slug!r} must match the filename")
         funds[slug] = fund
-    return home, funds
+    return apply_strings_to_data(home), apply_strings_to_data(funds)
 
 
 def load_site():
@@ -937,16 +944,16 @@ def render_fund_shell(fund, prefix):
     title = f'{fund["name"]} · {BRAND}'
     body = f'''<div class="blobs np" style="height:420px"><div class="blob" style="width:520px;height:520px;background:#CDBBFF;left:-180px;top:-120px"></div><div class="blob" style="width:460px;height:460px;background:#FFC7B8;right:-140px;top:-40px"></div></div>
 <nav class="pillnav np"><a class="logo" href="{home}"><img class="lockup" src="{prefix}assets/logo/lockup-light.svg" alt="{BRAND}" width="143" height="36"></a>
- <div class="links"><a class="on" href="{home}">VCs</a><a href="{home}scoring/">Scoring</a><a href="{home}plans/">Pricing</a><!-- Our Story --></div>
- <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#watchlist">Get alerts</a></div></nav>
+ <div class="links"><a class="on" href="{home}">@@s:common.vcs@@</a><a href="{home}scoring/">@@s:common.scoring@@</a><a href="{home}plans/">@@s:common.pricing@@</a><!-- Our Story --></div>
+ <div class="r" id="navSlot"><a class="b w" href="{home}login/">@@s:common.log_in@@</a><a class="b v" href="{home}account/#watchlist">@@s:common.get_alerts@@</a></div></nav>
 <div class="ftop"><div class="wrap" id="report">
- <div class="crumb np"><a href="{home}">← All VCs</a></div>
- <div class="fh np"><div><h1>{fund_heading(fund)}<button type="button" class="save" id="save" data-tip="Save" aria-label="Save to watchlist" aria-pressed="false">{SAVE_SVG}</button></h1>
+ <div class="crumb np"><a href="{home}">@@s:common.all_vcs@@</a></div>
+ <div class="fh np"><div><h1>{fund_heading(fund)}<button type="button" class="save" id="save" data-tip="@@s:page.settings.save@@" aria-label="@@s:build.save_to_watchlist@@" aria-pressed="false">{SAVE_SVG}</button></h1>
   {CORRECT_LINE}</div></div>
- <p class="report-wait">Loading the report…</p>
+ <p class="report-wait">@@s:build.loading_the_report@@</p>
 </div></div>
-<footer class="np"><div class="wrap"><span class="logo"><img class="lockup sm" src="{prefix}assets/logo/lockup-light.svg" alt="{BRAND}" width="111" height="28"></span><span>regretamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">Scoring</a> · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>
-<div class="scrim"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="Details"><div class="dh"><div><div class="dk" id="dk"></div><div class="dtt" id="dt"></div></div><button class="dx" id="dx" aria-label="Close">×</button></div><div class="db" id="db"></div></aside><div class="toast"></div>'''
+<footer class="np"><div class="wrap"><span class="logo"><img class="lockup sm" src="{prefix}assets/logo/lockup-light.svg" alt="{BRAND}" width="111" height="28"></span><span>regretamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">@@s:common.scoring@@</a> · <a href="{home}privacy/">@@s:common.privacy@@</a> · <a href="{home}terms/">@@s:common.terms@@</a></span></div></footer>
+<div class="scrim"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="@@s:build.details@@"><div class="dh"><div><div class="dk" id="dk"></div><div class="dtt" id="dt"></div></div><button class="dx" id="dx" aria-label="@@s:page.settings.close@@">×</button></div><div class="db" id="db"></div></aside><div class="toast"></div>'''
     scripts = (
         f'<script src="{prefix}js/supabase-config.js"></script>'
         f'<script src="{prefix}js/stripe-config.js"></script>'
@@ -1041,9 +1048,9 @@ def main():
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         '<meta http-equiv="refresh" content="0;url=../#watchlist">'
         '<link rel="canonical" href="../#watchlist">'
-        '<title>Watchlist · ' + BRAND + '</title>'
+        '<title>@@s:build.watchlist@@ ' + BRAND + '</title>'
         '<script>location.replace("../#watchlist")</script></head>'
-        '<body><p><a href="../#watchlist">Watchlist</a></p></body></html>\n',
+        '<body><p><a href="../#watchlist">@@s:common.watchlist@@</a></p></body></html>\n',
         encoding="utf-8",
     )
     build_shell("login.html", SITE / "login" / "index.html")

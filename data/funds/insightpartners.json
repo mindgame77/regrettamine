@@ -73,7 +73,7 @@
       "name": "{{s:page.scoring.fund_vs_founders}}",
       "legend": "{{s:page.scoring.fund_vs_founders}}",
       "got": "60",
-      "maxLabel": "of 60",
+      "maxLabel": "{{s:report.of_60}}",
       "legendOf": "/60",
       "heroFlex": "60",
       "heroFill": "100.0%",
@@ -114,9 +114,9 @@
       "barClass": "sb2",
       "legendClass": "k2",
       "name": "{{s:page.scoring.ability_to_support_you}}",
-      "legend": "Support",
+      "legend": "{{s:report.support}}",
       "got": "7",
-      "maxLabel": "of 17.5",
+      "maxLabel": "{{s:report.of_17_5}}",
       "legendOf": "/17.5",
       "heroFlex": "17.5",
       "heroFill": "40.0%",
@@ -125,7 +125,7 @@
       "rule": "Money 6 + media 6 (capped) + help after the check 5.5. Claims the fund makes about itself count at half until founders confirm them. Partner departures cost −0.5 for each calendar year with a departure, up to −2.",
       "inputs": [
         {
-          "name": "Money",
+          "name": "{{s:report.money}}",
           "points": "5 / 6",
           "why": "Fund size 2/2: Form ADV Item 5.F discretionary regulatory AUM is $92,178,934,483. Money left 1.5/2: reserves are not in the filing. Hit target 1.5/2: no published target for the current fund."
         },
@@ -149,7 +149,7 @@
       "name": "{{s:page.scoring.founder_experience}}",
       "legend": "{{s:report.founder_exp}}",
       "got": "16.6",
-      "maxLabel": "of 17.5",
+      "maxLabel": "{{s:report.of_17_5}}",
       "legendOf": "/17.5",
       "heroFlex": "17.5",
       "heroFill": "94.9%",
@@ -180,9 +180,9 @@
       "barClass": "sb4",
       "legendClass": "k4",
       "name": "{{s:page.scoring.conflicts_of_interest}}",
-      "legend": "Conflicts",
+      "legend": "{{s:report.conflicts}}",
       "got": "5",
-      "maxLabel": "of 5",
+      "maxLabel": "{{s:report.of_5}}",
       "legendOf": "/5",
       "heroFlex": "5",
       "heroFill": "100.0%",
@@ -208,7 +208,7 @@
       "barClass": "bonus",
       "legendClass": "kb",
       "name": "{{s:page.scoring.track_record_bonus}}",
-      "legend": "Bonus",
+      "legend": "{{s:report.bonus}}",
       "got": "+3",
       "maxLabel": "{{s:report.max_3}}",
       "legendOf": null,
@@ -231,7 +231,7 @@
       "barClass": "pen",
       "legendClass": "kp",
       "name": "{{s:page.scoring.regulatory_penalty}}",
-      "legend": "Regulatory",
+      "legend": "{{s:report.regulatory}}",
       "got": "−10",
       "maxLabel": "{{s:report.range_0_to_50}}",
       "legendOf": null,
@@ -289,7 +289,7 @@
     "title": "{{s:report.regulatory_records_sanctions}}",
     "note": "Form ADV read · Oct 4, 2026",
     "recordsTitle": "{{s:report.regulatory_records}}",
-    "sanctionsTitle": "Sanctions",
+    "sanctionsTitle": "{{s:report.sanctions}}",
     "records": [
       {
         "icon": "am",
@@ -339,7 +339,7 @@
         "s": "Discretionary accounts on the September 9, 2026 ADV."
       },
       {
-        "k": "Staff",
+        "k": "{{s:report.staff}}",
         "v": "438",
         "s": "Item 5.A. 147 perform investment advisory functions (Item 5.B.1)."
       },
@@ -354,7 +354,7 @@
         "s": "CRD 142994"
       },
       {
-        "k": "Performance",
+        "k": "{{s:report.performance}}",
         "v": "{{s:report.not_public}}",
         "s": "IRR / TVPI / DPI were not in the filing"
       }
@@ -416,7 +416,7 @@
       "value": "875+",
       "text": "Wikipedia, citing Insight's about page, says the firm had invested in over 875 companies as of June 30, 2025. Used as a floor."
     },
-    "healthTitle": "Health",
+    "healthTitle": "{{s:report.health}}",
     "healthNote": "Not classified",
     "health": [],
     "litigation": {
@@ -730,7 +730,7 @@
       "tone": ""
     },
     "rel": {
-      "kicker": "Sources",
+      "kicker": "{{s:page.scoring.sources}}",
       "title": "Sourced rows only",
       "body": "Each scored figure links to a filing or an article that was read. Older research files were used as leads, not as facts. Empty blocks were left empty.",
       "rows": [],
@@ -743,7 +743,7 @@
       "tone": ""
     },
     "rank": {
-      "kicker": "Ranking",
+      "kicker": "{{s:report.ranking}}",
       "title": "#11 of 11 on {{s:brand.name}} score",
       "body": "All 11 funds are on v2. Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
       "rows": [
@@ -796,7 +796,7 @@
       "tone": ""
     },
     "rules": {
-      "kicker": "Methodology",
+      "kicker": "{{s:report.methodology}}",
       "title": "{{s:report.how_score_works}}",
       "body": "Every fund starts with full points and loses them only for verified evidence about its own behavior. Bad events are a share of the portfolio: under 1% costs nothing. A missing portfolio count is not treated as a 70% rate. Regulatory is penalty-only.",
       "rows": [
@@ -813,16 +813,16 @@
           "17.5"
         ],
         [
-          "Conflicts",
+          "{{s:report.conflicts}}",
           "5"
         ],
         [
           "{{s:page.scoring.track_record_bonus}}",
-          "up to +3"
+          "{{s:report.up_to_3}}"
         ],
         [
           "{{s:page.scoring.regulatory_penalty}}",
-          "0 to −50"
+          "{{s:page.scoring.0_to_50}}"
         ]
       ],
       "sources": [],

@@ -73,7 +73,7 @@
       "name": "{{s:page.scoring.fund_vs_founders}}",
       "legend": "{{s:page.scoring.fund_vs_founders}}",
       "got": "60",
-      "maxLabel": "of 60",
+      "maxLabel": "{{s:report.of_60}}",
       "legendOf": "/60",
       "heroFlex": "60",
       "heroFill": "100.0%",
@@ -114,9 +114,9 @@
       "barClass": "sb2",
       "legendClass": "k2",
       "name": "{{s:page.scoring.ability_to_support_you}}",
-      "legend": "Support",
+      "legend": "{{s:report.support}}",
       "got": "14.25",
-      "maxLabel": "of 17.5",
+      "maxLabel": "{{s:report.of_17_5}}",
       "legendOf": "/17.5",
       "heroFlex": "17.5",
       "heroFill": "81.4%",
@@ -125,7 +125,7 @@
       "rule": "Money 6 + media 6 (capped) + help after the check 5.5. Claims the fund makes about itself count at half until founders confirm them. Partner departures cost points.",
       "inputs": [
         {
-          "name": "Money",
+          "name": "{{s:report.money}}",
           "points": "5 / 6",
           "why": "Fund size 2/2: $15B+ raised Jan 2026. Money left 1.5/2: reserves not disclosed. Hit target 1.5/2: no published target."
         },
@@ -149,7 +149,7 @@
       "name": "{{s:page.scoring.founder_experience}}",
       "legend": "{{s:report.founder_exp}}",
       "got": "16.6",
-      "maxLabel": "of 17.5",
+      "maxLabel": "{{s:report.of_17_5}}",
       "legendOf": "/17.5",
       "heroFlex": "17.5",
       "heroFill": "94.9%",
@@ -180,9 +180,9 @@
       "barClass": "sb4",
       "legendClass": "k4",
       "name": "{{s:page.scoring.conflicts_of_interest}}",
-      "legend": "Conflicts",
+      "legend": "{{s:report.conflicts}}",
       "got": "4",
-      "maxLabel": "of 5",
+      "maxLabel": "{{s:report.of_5}}",
       "legendOf": "/5",
       "heroFlex": "5",
       "heroFill": "80.0%",
@@ -218,7 +218,7 @@
       "barClass": "bonus",
       "legendClass": "kb",
       "name": "{{s:page.scoring.track_record_bonus}}",
-      "legend": "Bonus",
+      "legend": "{{s:report.bonus}}",
       "got": "+3",
       "maxLabel": "{{s:report.max_3}}",
       "legendOf": null,
@@ -241,7 +241,7 @@
       "barClass": "pen",
       "legendClass": "kp",
       "name": "{{s:page.scoring.regulatory_penalty}}",
-      "legend": "Regulatory",
+      "legend": "{{s:report.regulatory}}",
       "got": "−2.5",
       "maxLabel": "{{s:report.range_0_to_50}}",
       "legendOf": null,
@@ -430,7 +430,7 @@
     "title": "{{s:report.regulatory_records_sanctions}}",
     "note": "always checked · 3 records",
     "recordsTitle": "{{s:report.regulatory_records}}",
-    "sanctionsTitle": "Sanctions",
+    "sanctionsTitle": "{{s:report.sanctions}}",
     "records": [
       {
         "icon": "am",
@@ -521,7 +521,7 @@
         "s": "Jan 2026 · Growth $6.75B, Apps $1.7B, Infra $1.7B, Am. Dynamism $1.18B, Bio+Health $0.7B"
       },
       {
-        "k": "Staff",
+        "k": "{{s:report.staff}}",
         "v": "738",
         "s": "88 in investment roles"
       },
@@ -536,7 +536,7 @@
         "s": "CalPERS $400M, North Dakota $75M, U. Michigan, Yale"
       },
       {
-        "k": "Performance",
+        "k": "{{s:report.performance}}",
         "v": "{{s:report.not_public}}",
         "s": "IRR / TVPI / DPI only as secondary estimates"
       }
@@ -904,7 +904,7 @@
       "value": "1,456",
       "text": "companies on a16z's investment list"
     },
-    "healthTitle": "Health",
+    "healthTitle": "{{s:report.health}}",
     "healthNote": "52 classified companies",
     "health": [
       {
@@ -1871,7 +1871,7 @@
       "tone": ""
     },
     "rel": {
-      "kicker": "Sources",
+      "kicker": "{{s:page.scoring.sources}}",
       "title": "Verified sources only",
       "body": "Every scored item has a working link, names a16z, and tags its role. 17 sources were excluded (dead links, content farms, copycat names).",
       "rows": [],
@@ -1879,7 +1879,7 @@
       "tone": ""
     },
     "rank": {
-      "kicker": "Ranking",
+      "kicker": "{{s:report.ranking}}",
       "title": "#1 of 11 on {{s:brand.name}} score",
       "body": "All 11 funds are scored on v2. Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
       "rows": [
@@ -1932,7 +1932,7 @@
       "tone": ""
     },
     "rules": {
-      "kicker": "Methodology",
+      "kicker": "{{s:report.methodology}}",
       "title": "{{s:report.how_score_works}}",
       "body": "Every fund starts with full points and loses them only for verified evidence about its own behavior. Bad events are measured as a share of the portfolio: under 1% costs nothing, 1–3% small, 3–10% medium, over 10% large. Regulatory is penalty-only: open probe −2, charges −10, fine −10 to −20, fraud −30, sanctions −50 plus a red banner. Score is capped 0–100.",
       "rows": [
@@ -1949,16 +1949,16 @@
           "17.5"
         ],
         [
-          "Conflicts",
+          "{{s:report.conflicts}}",
           "5"
         ],
         [
           "{{s:page.scoring.track_record_bonus}}",
-          "up to +3"
+          "{{s:report.up_to_3}}"
         ],
         [
           "{{s:page.scoring.regulatory_penalty}}",
-          "0 to −50"
+          "{{s:page.scoring.0_to_50}}"
         ]
       ],
       "sources": [],

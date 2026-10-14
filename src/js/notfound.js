@@ -24,7 +24,7 @@
     if (!q) { dd.classList.remove('on'); dd.innerHTML = ''; return; }
     const api = sb();
     if (!api) {
-      dd.innerHTML = '<div class="none">Search is not available on this build.</div>';
+      dd.innerHTML = '<div class="none">{{sjs:js.notfound.search_is_not_available_on}}</div>';
       dd.classList.add('on');
       return;
     }
@@ -32,7 +32,7 @@
     if (mine !== token) return;
     const rows = data || [];
     if (!rows.length) {
-      dd.innerHTML = '<div class="none">No fund found</div>';
+      dd.innerHTML = '<div class="none">{{sjs:js.account.no_fund_found}}</div>';
       dd.classList.add('on');
       return;
     }

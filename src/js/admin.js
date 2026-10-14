@@ -11,11 +11,11 @@
   function row(title, lines, id, kind) {
     return '<div class="srow" data-id="' + Regret.esc(id) + '" data-kind="' + kind + '"><div><b>' + Regret.esc(title) + '</b>'
       + lines.map(line => '<span>' + line + '</span>').join('')
-      + '</div><div class="acts"><button class="b c sm" type="button" data-status="approved">Approve</button><button class="b w sm" type="button" data-status="rejected">Reject</button></div></div>';
+      + '</div><div class="acts"><button class="b c sm" type="button" data-status="approved">{{sjs:js.admin.approve}}</button><button class="b w sm" type="button" data-status="rejected">{{sjs:js.admin.reject}}</button></div></div>';
   }
 
   function names(firms, id) {
-    return (firms[id] && firms[id].name) || 'Fund';
+    return (firms[id] && firms[id].name) || '{{sjs:common.fund}}';
   }
 
   async function firmNames(ids) {
@@ -33,8 +33,8 @@
     const correctionRows = corrections.data || [];
     const firms = await firmNames(reviewRows.map(r => r.firm_id).concat(correctionRows.map(r => r.fund_id)));
     $('reviewQueue').innerHTML = reviewRows.length
-      ? reviewRows.map(item => row(names(firms, item.firm_id), [Regret.esc(item.role_label || 'Founder') + ' · ' + Regret.esc(when(item.created_at)), Regret.esc(item.body || '')], item.id, 'review')).join('')
-      : '<div class="srow"><div><b>Nothing waiting.</b><span>New founder reviews show up here.</span></div></div>';
+      ? reviewRows.map(item => row(names(firms, item.firm_id), [Regret.esc(item.role_label || '{{sjs:js.auth.founder}}') + ' · ' + Regret.esc(when(item.created_at)), Regret.esc(item.body || '')], item.id, 'review')).join('')
+      : '<div class="srow"><div><b>{{sjs:js.admin.nothing_waiting}}</b><span>{{sjs:js.admin.new_founder_reviews_show_up}}</span></div></div>';
     $('correctionQueue').innerHTML = correctionRows.length
       ? correctionRows.map(item => row(
         names(firms, item.fund_id),
@@ -46,7 +46,7 @@
         item.id,
         'correction'
       )).join('')
-      : '<div class="srow"><div><b>Nothing waiting.</b><span>New corrections show up here.</span></div></div>';
+      : '<div class="srow"><div><b>{{sjs:js.admin.nothing_waiting}}</b><span>{{sjs:js.admin.new_corrections_show_up_here}}</span></div></div>';
   }
 
   document.addEventListener('click', async e => {

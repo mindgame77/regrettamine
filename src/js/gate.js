@@ -51,40 +51,40 @@
 
   function veilHtml() {
     const take = [0, 1, 2].map(i =>
-      '<article class="tkc t' + i + '"><div class="ix">' + (i + 1) + '</div><h4>Lorem ipsum dolor</h4><p>' + lorem(1) + '</p><div class="src"><span>Lorem source</span><span class="open">Lorem</span></div></article>'
+      '<article class="tkc t' + i + '"><div class="ix">' + (i + 1) + '</div><h4>{{sjs:js.gate.lorem_ipsum_dolor}}</h4><p>' + lorem(1) + '</p><div class="src"><span>{{sjs:js.gate.lorem_source}}</span><span class="open">{{sjs:js.gate.lorem}}</span></div></article>'
     ).join('');
-    const row = '<div class="lrow"><span class="ly">0000</span><span class="ls">Lorem ipsum dolor sit amet<small>Lorem ipsum dolor sit amet</small></span><span class="lr"><span class="rt gray">Lorem</span><span class="chev">›</span></span></div>';
+    const row = '<div class="lrow"><span class="ly">0000</span><span class="ls">{{sjs:js.gate.lorem_ipsum_dolor_sit_amet_2}}<small>{{sjs:js.gate.lorem_ipsum_dolor_sit_amet_2}}</small></span><span class="lr"><span class="rt gray">{{sjs:js.gate.lorem}}</span><span class="chev">›</span></span></div>';
     const bars = ['sb1', 'sb2', 'sb3', 'sb4'].map(cls =>
       '<span class="sb ' + cls + '" style="flex:1 0 0"><span class="fill" style="width:60%"></span></span>'
     ).join('');
-    const legs = ['One', 'Two', 'Three', 'Four', 'Five', 'Six'].map(name =>
+    const legs = ['{{sjs:js.gate.one}}', '{{sjs:js.gate.two}}', '{{sjs:js.gate.three}}', '{{sjs:js.gate.four}}', '{{sjs:js.gate.five}}', '{{sjs:js.gate.six}}'].map(name =>
       '<span class="k1"><span><i></i>' + name + '</span><b>0</b></span>'
     ).join('');
     return '<div class="report-veil" inert aria-hidden="true">'
-      + '<div class="meta"><span class="mi">Lorem</span><span class="mi">Ipsum</span><span class="mi">Dolor</span></div>'
-      + '<div class="heroW"><span class="rankb"><i>#0</i> of 00 funds</span>'
-      + '<div class="hero"><div><div class="ringBox">' + ringSvg() + '<div class="num"><div><b>64</b><span>out of 100</span></div></div></div>'
-      + '<span class="bandPill">Lorem band</span><span class="rng">lorem 00–00</span></div>'
-      + '<div><div class="q">Lorem</div><div class="dv">Lorem ipsum dolor sit amet</div>'
+      + '<div class="meta"><span class="mi">{{sjs:js.gate.lorem}}</span><span class="mi">{{sjs:js.gate.ipsum}}</span><span class="mi">{{sjs:js.gate.dolor}}</span></div>'
+      + '<div class="heroW"><span class="rankb"><i>#0</i> {{sjs:js.gate.of_00_funds}}</span>'
+      + '<div class="hero"><div><div class="ringBox">' + ringSvg() + '<div class="num"><div><b>64</b><span>{{sjs:js.gate.out_of_100}}</span></div></div></div>'
+      + '<span class="bandPill">{{sjs:js.gate.lorem_band}}</span><span class="rng">{{sjs:js.gate.lorem_00_00}}</span></div>'
+      + '<div><div class="q">{{sjs:js.gate.lorem}}</div><div class="dv">{{sjs:js.gate.lorem_ipsum_dolor_sit_amet_2}}</div>'
       + '<div class="vsub">' + lorem(1) + '</div>'
-      + '<div class="ovx"><div class="bart"><span>Lorem ipsum dolor</span><span class="lnk">Lorem</span></div>'
+      + '<div class="ovx"><div class="bart"><span>{{sjs:js.gate.lorem_ipsum_dolor}}</span><span class="lnk">{{sjs:js.gate.lorem}}</span></div>'
       + '<div class="stk">' + bars + '</div><div class="sleg">' + legs + '</div></div></div></div></div>'
       + '<div class="tabsW"><div class="tabs" role="tablist">'
-      + '<button class="on" type="button">Overview</button><button type="button">Score</button>'
-      + '<button type="button">Legal <i>0</i></button><button type="button">Fund &amp; people</button>'
-      + '<button type="button">Public <i>0</i></button><button type="button">Portfolio</button><button type="button">Ask the fund</button>'
+      + '<button class="on" type="button">{{sjs:js.gate.overview}}</button><button type="button">{{sjs:page.scoring.score}}</button>'
+      + '<button type="button">{{sjs:common.legal}} <i>0</i></button><button type="button">Fund &amp; people</button>'
+      + '<button type="button">{{sjs:js.gate.public}} <i>0</i></button><button type="button">{{sjs:js.gate.portfolio}}</button><button type="button">{{sjs:js.gate.ask_the_fund}}</button>'
       + '</div></div>'
-      + '<section data-panel="overview" class="on"><div class="blk sumb"><div class="lab">Summary</div><div><p class="big">' + lorem(2) + '</p></div></div>'
-      + '<div class="sech"><h2 class="h2">Takeaways</h2></div><div class="tkg tk6">' + take + '</div>'
-      + '<div class="sech"><h2 class="h2">Top legal matters</h2></div><div class="pc lstc"><div class="lst">' + row + row + '</div></div></section>'
-      + '<section data-panel="score" class="on"><div class="scbs"><div class="scb k1"><div class="scbh"><span class="wl">Lorem</span><span class="scbar"><b style="width:40%"></b></span><span class="wv"><b>0</b><small>of 0</small></span></div><p>' + lorem(1) + '</p></div>'
-      + '<div class="scb k2"><div class="scbh"><span class="wl">Ipsum</span><span class="scbar"><b style="width:55%"></b></span><span class="wv"><b>0</b><small>of 0</small></span></div><p>' + lorem(1) + '</p></div></div></section>'
-      + '<section data-panel="legal" class="on"><div class="pc"><div class="ph3"><h3>Lorem ipsum</h3><small>Lorem</small></div><p>' + lorem(2) + '</p></div></section>'
-      + '<section data-panel="fund" class="on"><div class="pc"><h2 class="h2">Lorem ipsum</h2><p>' + lorem(2) + '</p></div></section>'
-      + '<section data-panel="public" class="on"><div class="pubh"><h2 class="h2">Lorem</h2></div><a class="pubc"><span class="ph4">Lorem ipsum dolor sit amet</span><span class="sw2"><span class="snt neu">Lorem</span><span class="swy">' + lorem(1) + '</span></span></a></section>'
-      + '<section data-panel="portfolio" class="on"><div class="pc"><h2 class="h2">Lorem</h2><p>' + lorem(1) + '</p></div></section>'
-      + '<section data-panel="ask" class="on"><div class="askbar"><div><h2 class="h2">Lorem ipsum</h2><p>' + lorem(1) + '</p></div></div></section>'
-      + '<p class="fnote">Lorem ipsum dolor sit amet.</p></div>';
+      + '<section data-panel="overview" class="on"><div class="blk sumb"><div class="lab">{{sjs:js.gate.summary}}</div><div><p class="big">' + lorem(2) + '</p></div></div>'
+      + '<div class="sech"><h2 class="h2">{{sjs:js.gate.takeaways}}</h2></div><div class="tkg tk6">' + take + '</div>'
+      + '<div class="sech"><h2 class="h2">{{sjs:js.gate.top_legal_matters}}</h2></div><div class="pc lstc"><div class="lst">' + row + row + '</div></div></section>'
+      + '<section data-panel="score" class="on"><div class="scbs"><div class="scb k1"><div class="scbh"><span class="wl">{{sjs:js.gate.lorem}}</span><span class="scbar"><b style="width:40%"></b></span><span class="wv"><b>0</b><small>{{sjs:js.gate.of_0}}</small></span></div><p>' + lorem(1) + '</p></div>'
+      + '<div class="scb k2"><div class="scbh"><span class="wl">{{sjs:js.gate.ipsum}}</span><span class="scbar"><b style="width:55%"></b></span><span class="wv"><b>0</b><small>{{sjs:js.gate.of_0}}</small></span></div><p>' + lorem(1) + '</p></div></div></section>'
+      + '<section data-panel="legal" class="on"><div class="pc"><div class="ph3"><h3>{{sjs:js.gate.lorem_ipsum}}</h3><small>{{sjs:js.gate.lorem}}</small></div><p>' + lorem(2) + '</p></div></section>'
+      + '<section data-panel="fund" class="on"><div class="pc"><h2 class="h2">{{sjs:js.gate.lorem_ipsum}}</h2><p>' + lorem(2) + '</p></div></section>'
+      + '<section data-panel="public" class="on"><div class="pubh"><h2 class="h2">{{sjs:js.gate.lorem}}</h2></div><a class="pubc"><span class="ph4">{{sjs:js.gate.lorem_ipsum_dolor_sit_amet_2}}</span><span class="sw2"><span class="snt neu">{{sjs:js.gate.lorem}}</span><span class="swy">' + lorem(1) + '</span></span></a></section>'
+      + '<section data-panel="portfolio" class="on"><div class="pc"><h2 class="h2">{{sjs:js.gate.lorem}}</h2><p>' + lorem(1) + '</p></div></section>'
+      + '<section data-panel="ask" class="on"><div class="askbar"><div><h2 class="h2">{{sjs:js.gate.lorem_ipsum}}</h2><p>' + lorem(1) + '</p></div></div></section>'
+      + '<p class="fnote">{{sjs:js.gate.lorem_ipsum_dolor_sit_amet_3}}</p></div>';
   }
 
   function showVeil(result) {

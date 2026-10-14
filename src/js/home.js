@@ -6,7 +6,7 @@ const UPD = HOME.updates;
 
 const BANDS = FundList.BANDS;
 const SIZES = [
-  ['u', 'Under $100M', a => typeof a == 'number' && a < 0.1],
+  ['u', '{{sjs:js.home.under_100m}}', a => typeof a == 'number' && a < 0.1],
   ['s', '$100M–$1B', a => typeof a == 'number' && a >= 0.1 && a < 1],
   ['m', '$1B–$10B', a => typeof a == 'number' && a >= 1 && a < 10],
   ['l', '$10B+', a => typeof a == 'number' && a >= 10]
@@ -81,12 +81,12 @@ function render() {
   const A = [];
   if (S.q) A.push(['q', '“' + S.q + '”']);
   S.band.forEach(b => A.push(['band:' + b, b]));
-  if (S.min > 0 || S.max < 100) A.push(['range', 'Score ' + lo + '–' + hi]);
+  if (S.min > 0 || S.max < 100) A.push(['range', '{{sjs:page.scoring.score}} ' + lo + '–' + hi]);
   S.size.forEach(s => A.push(['size:' + s, '{{sjs:js.home.firm_aum}}' + SIZES.find(z => z[0] == s)[1]]));
   if (S.legal) A.push(['legal', '{{sjs:page.home.has_active_legal_matters}}']);
   if (S.recent) A.push(['recent', '{{sjs:page.home.updated_in_the_last_30}}']);
   $('active').innerHTML = A.length
-    ? A.map(a => `<span class="ac">${a[1]}<i data-x="${a[0]}">×</i></span>`).join('') + '<span class="clr" id="clr">Clear all</span>'
+    ? A.map(a => `<span class="ac">${a[1]}<i data-x="${a[0]}">×</i></span>`).join('') + '<span class="clr" id="clr">{{sjs:js.home.clear_all}}</span>'
     : '';
   $('active').querySelectorAll('[data-x]').forEach(x => x.onclick = () => {
     const [k, v] = x.dataset.x.split(':');
@@ -145,7 +145,7 @@ function lockRows() {
   } else {
     const base = window.Regret && Regret.root ? Regret.root() : '';
     lock.setAttribute('aria-label', '{{sjs:js.home.more_funds_are_on_a}}');
-    lock.innerHTML = bars + '<a class="lockpill" href="' + base + 'plans/">See plans</a>';
+    lock.innerHTML = bars + '<a class="lockpill" href="' + base + '{{sjs:js.home.plans_see_plans}}</a>';
   }
   table.appendChild(lock);
 }
@@ -219,12 +219,12 @@ function paintFeed() {
     const linked = u.fid && byId[u.fid] && byId[u.fid].report;
     const name = linked ? `<a href="vc/${byId[u.fid].report}/">${u.f}</a>` : u.f;
     const ext = String(u.u).startsWith('http');
-    return `<div class="fi"><span class="dt">Update #${u.no}<small>${u.ds}</small></span><span class="fd">${name}</span><span class="ev"><span class="k ${u.k}" style="margin-right:8px">${u.k}</span>${u.t}</span><span class="sr"><a href="${u.u}" ${ext ? 'target="_blank" rel="noopener"' : ''}>${u.src} ↗</a><span>${u.v == 'ver' ? 'verified by us' : u.v == 'ours' ? 'our analysis' : 'unverified'}</span></span></div>`;
+    return `<div class="fi"><span class="dt">{{s:js.home.update}}${u.no}<small>${u.ds}</small></span><span class="fd">${name}</span><span class="ev"><span class="k ${u.k}" style="margin-right:8px">${u.k}</span>${u.t}</span><span class="sr"><a href="${u.u}" ${ext ? 'target="_blank" rel="noopener"' : ''}>${u.src} ↗</a><span>${u.v == 'ver' ? 'verified by us' : u.v == 'ours' ? 'our analysis' : 'unverified'}</span></span></div>`;
   }).join('');
 }
 function paintRecordCount(count) {
   const shown = Math.min(FEED_SHOWN, FEED.length);
-  $('updTot').textContent = (count == null ? '…' : count) + ' records · showing the newest ' + shown;
+  $('updTot').textContent = (count == null ? '…' : count) + ' {{sjs:js.home.records_showing_the_newest}} ' + shown;
 }
 async function loadRecordCount() {
   paintRecordCount(null);
