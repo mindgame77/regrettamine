@@ -1,0 +1,63 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Design catalog</title>
+<link rel="stylesheet" href="../../../src/css/common.css">
+<link rel="stylesheet" href="../../../src/css/home.css">
+<link rel="stylesheet" href="../../../src/css/list.css">
+<link rel="stylesheet" href="../../../src/css/fund.css">
+<link rel="stylesheet" href="../../../src/css/account.css">
+<style>
+main{max-width:1080px;margin:0 auto;padding:32px}
+.sg{margin:0 0 48px}.sgh{display:flex;align-items:baseline;gap:12px;border-bottom:1.5px solid var(--ink);padding-bottom:6px;margin-bottom:8px}.sgh h2{font-size:24px}
+code{font-size:12px;color:var(--vio);background:var(--viobg);border-radius:5px;padding:1px 6px}
+.note{font-size:13px;color:var(--mute);margin:4px 0 14px}
+.cswt{display:flex;flex-wrap:wrap;gap:12px}.cswt>div{width:120px;font-size:12px}.cswt i{display:block;height:46px;border-radius:12px;border:1px solid var(--line);margin-bottom:4px}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+table.v{width:100%;border-collapse:collapse;font-size:13.5px}table.v td,table.v th{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}table.v th{font-size:11px;text-transform:uppercase;color:var(--mute);letter-spacing:.06em}
+.pl{display:inline-block;font-size:10.5px;font-weight:700;text-transform:uppercase;border-radius:5px;padding:1px 6px;background:var(--sunbg);color:var(--review-tx)}
+.demo{border:1.5px solid var(--line);border-radius:16px;padding:20px;background:#fff}
+</style></head><body>
+<main>
+<h1 style="font-size:44px"><span id="brand"></span> design catalog</h1>
+<p class="note">Reads <code>src/css/tokens.css</code>, <code>src/css/common.css</code> and <code>src/js/strings.js</code> directly, so it stays in sync. Rules: <code>.cursor/rules/design.mdc</code>.</p>
+
+<section class="sg"><div class="sgh"><h2>Content rules</h2></div><ol style="padding-left:20px;line-height:1.8">
+<li>Each fact once per page; link to it elsewhere.</li><li>Show “No data yet” for a missing source; never hide the slot.</li>
+<li>Say “No red flags found in these sources”. Never “safe”.</li><li>Every fact links to a source and a checked date.</li>
+<li>Mock/example data carries the yellow <span class="ph">Mock</span> badge.</li><li>Wording changes need Alex's approval.</li></ol></section>
+
+<section class="sg"><div class="sgh"><h2>Colors</h2><code>--*</code></div><div class="cswt" id="colors"></div></section>
+<section class="sg"><div class="sgh"><h2>Status roles</h2><code>--clear/review/flag/nodata/queued</code></div><p class="note">Dot / -bg / -tx. Status only, never decoration.</p><div class="cswt" id="status"></div></section>
+<section class="sg"><div class="sgh"><h2>Type scale</h2><code>--fs-*</code></div><div id="type"></div></section>
+<section class="sg"><div class="sgh"><h2>Spacing · radius · shadow</h2></div><div class="row" id="space" style="align-items:flex-end;gap:20px"></div><div class="row" id="radius" style="margin-top:20px;gap:16px"></div><div class="row" id="shadow" style="margin-top:20px;gap:24px;padding-bottom:20px"></div></section>
+<section class="sg"><div class="sgh"><h2>Motion</h2><code>--dur-* · --ease · .rs-fade-in · .rs-tick</code></div><p class="note">Hover .15s · tabs/toggles/modal .25s · fade-in .4s · count-up 900ms · checklist stagger 60ms. All disabled under prefers-reduced-motion.</p>
+<div class="row"><button class="b c" onclick="replay()">Replay</button><div id="mo" class="row"></div><b id="cnt" class="d" style="font-size:40px">0</b></div></section>
+
+<section class="sg"><div class="sgh"><h2>Nav</h2><code>.pillnav .logo .links .r</code></div>
+<nav class="pillnav" style="position:relative;top:0;margin:0"><a class="logo"><i></i><span class="wm" id="wm"></span></a><div class="links"><a class="on">VCs</a><a>Scoring</a><a>Pricing</a></div><div class="r"><a class="b w">Log in</a><a class="b v">Get alerts</a></div></nav></section>
+<section class="sg"><div class="sgh"><h2>Buttons · chips · badge</h2><code>.b.c .b.v .b.w · .chip .on .soon · .ph</code></div>
+<div class="row"><a class="b c">Check fund</a><a class="b v">Get alerts</a><a class="b w">Log in</a><span class="chip on">All</span><span class="chip">Very low risk</span><span class="chip soon">Soon</span><span class="ph">Mock · example data</span></div></section>
+<section class="sg"><div class="sgh"><h2>Tabs</h2><code>.tabs button.on</code></div><div class="tabs"><button class="on">Overview</button><button>Score</button><button>Legal <i>14</i></button><button>Public <i>18</i></button></div></section>
+<section class="sg"><div class="sgh"><h2>Sentiment tag</h2><code>.snt.pos/.neu/.neg</code></div><div class="row" id="snt"></div></section>
+<section class="sg"><div class="sgh"><h2>Toggle</h2><code>.tog .sw2 · .tog.on</code></div><div class="row" style="gap:40px"><label class="tog on" style="width:220px"><span>Email alerts</span><span class="sw2"></span></label><label class="tog" style="width:220px"><span>Weekly digest</span><span class="sw2"></span></label></div></section>
+<section class="sg"><div class="sgh"><h2>Planned components (from approved mockups)</h2></div><p class="note">Databases checklist, Full dossier paywall, unlock/sample frames, verdict pill, “No data yet” empty state, queued state. Build into common.css when the trust-check pages ship; specs in the approved mockups (docs/design/README.md).</p></section>
+
+<section class="sg"><div class="sgh"><h2>Text slots with variants</h2><code>strings.js</code></div><p class="note">Every slot that can show different texts. Variant = the condition that selects it. <span class="pl">planned</span> = defined for the new flow, not wired yet.</p><table class="v" id="vars"><tr><th>Key</th><th>Variant</th><th>When</th><th>Text</th></tr></table></section>
+</main>
+<script src="../../../src/js/strings.js"></script>
+<script>
+var cs=getComputedStyle(document.documentElement),v=n=>cs.getPropertyValue(n).trim();
+document.getElementById('brand').textContent=RS.t('brand.name');document.getElementById('wm').innerHTML=RS.t('brand.wordmark_html');
+var sw=(n)=>'<div><i style="background:var('+n+')"></i><code>'+n+'</code><br>'+v(n)+'</div>';
+document.getElementById('colors').innerHTML=['--ink','--ink2','--mute','--line','--line-strong','--surface2','--hover','--vio','--vio2','--viobg','--coral','--coralbg','--sun','--sunbg','--mint','--mintbg','--sky','--skybg'].map(sw).join('');
+document.getElementById('status').innerHTML=['clear','review','flag','nodata','queued'].map(s=>['','-bg','-tx'].filter(x=>v('--'+s+x)).map(x=>sw('--'+s+x)).join('')).join('');
+document.getElementById('type').innerHTML=['stat','h1','h2','h3','lg','body','ui','sm','xs','meta','label'].map(n=>'<div style="display:flex;gap:16px;align-items:baseline;border-bottom:1px solid var(--line);padding:4px 0"><code style="width:90px">--fs-'+n+'</code><span class="'+(['stat','h1','h2','h3'].includes(n)?'d':'')+'" style="font-size:var(--fs-'+n+')">'+v('--fs-'+n)+' '+(['stat','h1','h2','h3'].includes(n)?'Bricolage':'DM Sans')+'</span></div>').join('');
+document.getElementById('space').innerHTML=['1','2','3','4','5','6','8','10','12','16','24'].map(n=>'<div style="text-align:center;font-size:11px"><div style="width:var(--sp-'+n+');height:var(--sp-'+n+');background:var(--vio);border-radius:3px;margin:0 auto 4px"></div>--sp-'+n+'</div>').join('');
+document.getElementById('radius').innerHTML=['tag','sm','md','lg','card','modal','pill'].map(n=>'<div style="text-align:center;font-size:11px"><div style="width:72px;height:48px;border:2px solid var(--vio);background:var(--viobg);border-radius:var(--r-'+n+')"></div>--r-'+n+'</div>').join('');
+document.getElementById('shadow').innerHTML=['sh-1','sh-2','sh-3','sh-modal','sh-cta'].map(n=>'<div style="width:140px;height:70px;border-radius:16px;background:#fff;box-shadow:var(--'+n+');display:grid;place-items:center;font-size:12px">--'+n+'</div>').join('');
+document.getElementById('snt').innerHTML=['pos','neu','neg'].map(k=>'<span class="snt '+k+'">'+RS.t('report.sentiment.label',k)+'</span>').join('');
+var t=document.getElementById('vars');Object.keys(RS.all).forEach(function(k){var e=RS.all[k],vs=Object.keys(e.variants);vs.forEach(function(n,i){var r=t.insertRow();r.innerHTML=(i?'<td></td>':'<td><code>'+k+'</code>'+(e.status==='planned'?' <span class="pl">planned</span>':'')+'<div class="note" style="margin:2px 0 0">'+(e.note||'')+'</div></td>')+'<td><code>'+n+'</code></td><td>'+e.variants[n].when+'</td><td>'+e.variants[n].text+'</td>';});});
+function replay(){var m=document.getElementById('mo');m.innerHTML=[0,1,2,3,4,5].map(i=>'<span class="snt pos rs-tick" style="--i:'+i+'">✓</span>').join('');m.classList.remove('rs-fade-in');void m.offsetWidth;m.classList.add('rs-fade-in');
+var c=document.getElementById('cnt'),t0=performance.now(),d=parseFloat(v('--dur-count'))||900;if(matchMedia('(prefers-reduced-motion: reduce)').matches){c.textContent='89';return}(function f(t){var p=Math.min(1,(t-t0)/d);c.textContent=Math.round(89*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(t0)}
+replay();
+</script>
+</body></html>

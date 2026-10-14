@@ -1,6 +1,6 @@
 /* One fund list. The landing page, the watchlist, and report history all call this. */
 (function (global) {
-  const BANDS = [['Very low risk', 'Very low', '#19C37D'], ['Low risk', 'Low', '#7BD3A8'], ['Moderate', 'Moderate', '#F2B705'], ['Elevated', 'Elevated', '#FF6B4A'], ['High', 'High', '#D7263D']];
+  const BANDS = [['{{sjs:score.band|very_low}}', '{{sjs:score.band_short|very_low}}', '#19C37D'], ['{{sjs:score.band|low}}', '{{sjs:score.band_short|low}}', '#7BD3A8'], ['{{sjs:score.band|moderate}}', '{{sjs:score.band_short|moderate}}', '#F2B705'], ['{{sjs:score.band|elevated}}', '{{sjs:score.band_short|elevated}}', '#FF6B4A'], ['{{sjs:score.band|high}}', '{{sjs:score.band_short|high}}', '#D7263D']];
   const BOOKMARK = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14l-6-4.2L6 20z"/></svg>';
   const EMPTY = '<div class="empty"><b>No funds match these filters.</b>Try widening the score range or clearing a filter.</div>';
 

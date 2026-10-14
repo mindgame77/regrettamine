@@ -1,7 +1,7 @@
 /* Pricing buttons open Stripe Payment Links. A paid member switches in the portal. */
 (function () {
   const TEST_KEY = 'regret.stripeTest';
-  const START = { monthly: 'Start monthly', annual: 'Start annual', test: '$1 test purchase' };
+  const START = { monthly: '{{sjs:plans.start_cta|monthly}}', annual: '{{sjs:plans.start_cta|annual}}', test: '{{sjs:plans.start_cta|test}}' };
 
   function cfg() {
     return window.REGRET_STRIPE || {};

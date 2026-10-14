@@ -1,0 +1,45 @@
+---
+description: Regretamin design system rules (UI, copy, tokens, motion)
+alwaysApply: true
+---
+# Regretamin design rules
+
+## Source of truth
+- Tokens: `src/css/tokens.css` (exact values, one per role). Components layer: `src/css/common.css` (loaded on every page; imports tokens.css). Page CSS in `src/css/<page>.css` only for page-specific layout.
+- Copy: `src/js/strings.js`. Every user-visible string has one key. Supabase `ui_strings` overrides at runtime once enabled (migration `20261014120000_ui_strings.sql`, not applied yet).
+- Catalog: `docs/design/catalog/index.html`. Mockups and status: `docs/design/README.md`.
+- Facts (funds, scores, sources, legal, updates, stats): Supabase only (JSON in `data/` is the fallback for local builds). Never type a fact into HTML, CSS or JS.
+
+## Workflow
+- Mockup first: a visual change starts as a mockup Alex approves; record it in `docs/design/README.md`.
+- Reuse an existing class before adding one. New component = add to common.css + catalog in the same PR.
+- Every PR with UI changes attaches before/after screenshots at 1280 for each touched page.
+
+## Type scale
+- Display/numbers: Bricolage Grotesque 700/800. Body/UI: DM Sans 400/500/700. Do not declare weights that are not loaded (600 maps to 700).
+- Sizes: `--fs-stat 64 · --fs-h1 44 · --fs-h2 30 · --fs-h3 22 · --fs-lg 18 · --fs-body 16 · --fs-ui 15 · --fs-sm 14 · --fs-xs 13 · --fs-meta 12 · --fs-label 11`. Legacy half-pixel sizes (14.5, 13.5, 12.5…) migrate to the nearest step with screenshot review.
+
+## Color roles
+- Violet `--vio` = the one primary action and links. Ink `--ink` text, `--ink2` secondary, `--mute` meta.
+- Status only for status: clear (mint), review (sun/`--review`), flag (coral), no data (grey `--nodata`), queued (sky). Each has dot / `-bg` / `-tx`.
+- Surfaces: `--surface`, `--surface2`, `--hover`; lines `--line`, `--line-strong`. No new hex values in page CSS.
+
+## Spacing, radius, shadow
+- Spacing 4px base: `--sp-1 … --sp-24`. Radius: tag 6, sm 10, md 16 (inputs, frames), lg 20 (sources), card 24, modal 28, pill 999. Shadows: `--sh-1/2/3`, `--sh-modal`, `--sh-cta` (violet-tinted only).
+
+## Motion
+- Durations `--dur-fast .15s` (hover), `--dur-base .25s` (tabs, toggles, modal), `--dur-slow .4s` (fade-in), `--dur-count 900ms` (stat count-up), `--stagger 60ms` (checklist tick-through). Easing `--ease`.
+- Patterns: `.rs-fade-in`, `.rs-tick` (set `--i` per row). Respect `prefers-reduced-motion` (tokens.css disables motion globally).
+
+## Content rules
+- Each fact once per page; link to it elsewhere.
+- Show "No data yet" for a missing source. Never hide the slot.
+- Say "No red flags found in these sources". Never "safe", "clean bill", "guaranteed".
+- Brand is `brand.name` (Regretamin). Domain regretamine.com and repo path regrettamine are not the brand.
+- Mock/example data carries the yellow dashed `.ph` badge.
+- Don't change on-screen wording without Alex's approval; propose changes in the PR description.
+
+## Strings and variants
+- One key per slot; every alternative text is a variant with its `when` condition (e.g. `auth.heading.{gate,page,list,pay,plans,confirm,forgot,reset}`, `verdict.headline.{clear,review,flag,no_data}`, `unlock.cta.{logged_out,free,paid}`).
+- Build tokens: `{{s:key|variant}}` in HTML/JSON, `{{sjs:key|variant}}` inside single-quoted JS strings. Runtime: `RS.t(key, variant, vars)`.
+- A field in the data model that can show different texts must say so (variant + condition). Add new variants to strings.js and the catalog lists them automatically.

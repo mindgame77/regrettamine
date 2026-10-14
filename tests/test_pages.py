@@ -140,7 +140,7 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "From public record to score." in scoring
     assert "We pull the public record." in scoring
     assert scoring.count("It counts only if it links, names the fund and shows its role.") == 1
-    assert scoring.count("0 to 100, higher is safer") == 1
+    assert scoring.count("0 to 100, higher means fewer red flags in the sources we checked") == 1
     assert "Copycat names are excluded." in scoring
     assert "Anonymous-only claims don't count." in scoring
     assert "Read the report, save the fund, get alerts when it changes." in scoring

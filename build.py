@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the Regretamine static site into ./site.
+"""Build the Regretamin static site into ./site.
 
 Source of truth:
   data/home.json          fund list, stats, updates
@@ -26,7 +26,49 @@ EXT_SVG = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="c
 OPEN_SVG = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h4v4M13 3 7.5 8.5"/></svg>'
 SAVE_SVG = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v14l-6-4.2L6 20z"/></svg>'
 CORRECT_LINE = '<a class="lnk" id="correctLink" hidden>Request a correction</a>'
-SENT_LABEL = {"pos": "Positive", "neu": "Neutral", "neg": "Negative"}
+def load_strings():
+    raw = (SRC / "js" / "strings.js").read_text(encoding="utf-8")
+    body = raw.split("/*BEGIN_STRINGS*/", 1)[1].split("/*END_STRINGS*/", 1)[0]
+    return json.loads(body)
+
+
+STRINGS = load_strings()
+
+
+def S(key, variant="default"):
+    variants = STRINGS[key]["variants"]
+    if variant not in variants:
+        raise SystemExit(f"strings.js: {key} has no variant {variant!r}")
+    return variants[variant]["text"]
+
+
+_TOKEN = re.compile(r"\{\{(s|sjs):([a-z0-9_.]+)(?:\|([a-z0-9_]+))?\}\}")
+
+
+def apply_strings(text):
+    """Replace {{s:key|variant}} (HTML) and {{sjs:key|variant}} (inside a single-quoted JS string)."""
+    def sub(match):
+        kind, key, variant = match.group(1), match.group(2), match.group(3) or "default"
+        if key not in STRINGS:
+            raise SystemExit(f"strings.js: unknown key {key}")
+        value = S(key, variant)
+        if kind == "sjs":
+            value = value.replace("\\", "\\\\").replace("'", "\\'")
+        return value
+    return _TOKEN.sub(sub, text)
+
+
+def apply_strings_to_site():
+    for path in SITE.rglob("*"):
+        if path.suffix in (".html", ".js", ".json", ".css") and path.is_file():
+            raw = path.read_text(encoding="utf-8")
+            if "{{s" in raw:
+                path.write_text(apply_strings(raw), encoding="utf-8")
+
+
+BRAND = S("brand.name")
+BRAND_WM = S("brand.wordmark_html")
+SENT_LABEL = {k: S("report.sentiment.label", k) for k in ("pos", "neu", "neg")}
 PAGE_SIZE = 24
 LIST_CAP = 8
 
@@ -132,7 +174,7 @@ def grouped_matter_ids(fund):
 def strip_toxy(value):
     """User-facing pages do not name the old score brand."""
     if isinstance(value, str):
-        text = value.replace("Toxy Score v2", "Regretamine score")
+        text = value.replace("Toxy Score v2", BRAND + " score")
         text = text.replace("Toxy sources", "sources")
         text = text.replace("Toxy's ", "")
         text = text.replace("Toxy ", "")
@@ -643,7 +685,7 @@ def render_fund_page(fund, prefix):
     sections = "".join(f'<section data-panel="{k}">{panels[k]}</section>' for k in panels)
     home = prefix
     body = f'''<div class="blobs np" style="height:900px"><div class="blob" style="width:520px;height:520px;background:#CDBBFF;left:-180px;top:-120px"></div><div class="blob" style="width:460px;height:460px;background:#FFC7B8;right:-140px;top:-40px"></div><div class="blob" style="width:380px;height:380px;background:#FFEBA0;left:42%;top:420px;opacity:.35"></div></div>
-<nav class="pillnav np"><a class="logo" href="{home}"><i></i><span class="wm">regret<em>amine</em></span></a>
+<nav class="pillnav np"><a class="logo" href="{home}"><i></i><span class="wm">{BRAND_WM}</span></a>
  <div class="links"><a class="on" href="{home}">VCs</a><a href="{home}scoring/">Scoring</a><a href="{home}plans/">Pricing</a><!-- Our Story --></div>
  <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#watchlist">Get alerts</a></div></nav>
 <div class="ftop"><div class="wrap">
@@ -657,9 +699,9 @@ def render_fund_page(fund, prefix):
  {sections}
  <p class="fnote np">{esc(fund["footnote"])}</p>
 </div></div>
-<footer class="np"><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regret<em>amine</em></span></span><span>regretamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">Scoring</a> · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>
+<footer class="np"><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">{BRAND_WM}</span></span><span>regretamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">Scoring</a> · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>
 <div class="scrim"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="Details"><div class="dh"><div><div class="dk" id="dk"></div><div class="dtt" id="dt"></div></div><button class="dx" id="dx" aria-label="Close">×</button></div><div class="db" id="db"></div></aside><div class="toast"></div>'''
-    title = fund.get("title") or f'{fund["name"]} · Regretamine'
+    title = fund.get("title") or f'{fund["name"]} · {BRAND}'
     extra = ""
     companies = fund.get("companies") or []
     reviews = fund.get("reviews") or []
@@ -873,9 +915,9 @@ def render_fund_shell(fund, prefix):
     """Public fund URL. The score line is static. The record stays on the server."""
     fund = strip_toxy(fund)
     home = prefix
-    title = f'{fund["name"]} · Regretamine'
+    title = f'{fund["name"]} · {BRAND}'
     body = f'''<div class="blobs np" style="height:420px"><div class="blob" style="width:520px;height:520px;background:#CDBBFF;left:-180px;top:-120px"></div><div class="blob" style="width:460px;height:460px;background:#FFC7B8;right:-140px;top:-40px"></div></div>
-<nav class="pillnav np"><a class="logo" href="{home}"><i></i><span class="wm">regret<em>amine</em></span></a>
+<nav class="pillnav np"><a class="logo" href="{home}"><i></i><span class="wm">{BRAND_WM}</span></a>
  <div class="links"><a class="on" href="{home}">VCs</a><a href="{home}scoring/">Scoring</a><a href="{home}plans/">Pricing</a><!-- Our Story --></div>
  <div class="r" id="navSlot"><a class="b w" href="{home}login/">Log in</a><a class="b v" href="{home}account/#watchlist">Get alerts</a></div></nav>
 <div class="ftop"><div class="wrap" id="report">
@@ -884,7 +926,7 @@ def render_fund_shell(fund, prefix):
   {CORRECT_LINE}</div></div>
  <p class="report-wait">Loading the report…</p>
 </div></div>
-<footer class="np"><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">regret<em>amine</em></span></span><span>regretamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">Scoring</a> · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>
+<footer class="np"><div class="wrap"><span class="logo" style="font-size:17px;color:var(--ink)"><i style="width:22px;height:22px;border-radius:7px"></i><span class="wm">{BRAND_WM}</span></span><span>regretamine.com</span><span style="margin-left:auto"><a href="{home}scoring/">Scoring</a> · <a href="{home}privacy/">Privacy</a> · <a href="{home}terms/">Terms</a></span></div></footer>
 <div class="scrim"></div><aside class="drawer" role="dialog" aria-modal="true" aria-label="Details"><div class="dh"><div><div class="dk" id="dk"></div><div class="dtt" id="dt"></div></div><button class="dx" id="dx" aria-label="Close">×</button></div><div class="db" id="db"></div></aside><div class="toast"></div>'''
     scripts = (
         f'<script src="{prefix}js/supabase-config.js"></script>'
@@ -919,7 +961,7 @@ def publish_report_pages(funds):
     from regrettamine.supabase_load import store_report
     errors = []
     for slug, fund in funds.items():
-        html = render_report_payload(fund, "../../")
+        html = apply_strings(render_report_payload(fund, "../../"))
         try:
             store_report(url, key, slug, html)
         except Exception as exc:
@@ -977,7 +1019,7 @@ def main():
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         '<meta http-equiv="refresh" content="0;url=../#watchlist">'
         '<link rel="canonical" href="../#watchlist">'
-        '<title>Watchlist · Regretamine</title>'
+        '<title>Watchlist · ' + BRAND + '</title>'
         '<script>location.replace("../#watchlist")</script></head>'
         '<body><p><a href="../#watchlist">Watchlist</a></p></body></html>\n',
         encoding="utf-8",
@@ -987,6 +1029,7 @@ def main():
     build_legal("privacy.html", SITE / "privacy" / "index.html")
     build_legal("terms.html", SITE / "terms" / "index.html")
     build_shell("how.html", SITE / "how" / "index.html")
+    build_shell("reset-redirect.html", SITE / "reset" / "index.html")
     build_shell("plans.html", SITE / "plans" / "index.html")
     build_shell("settings.html", SITE / "settings" / "index.html")
     build_shell("admin.html", SITE / "admin" / "index.html")
@@ -1007,6 +1050,7 @@ def main():
         encoding="utf-8",
     )
     write_config()
+    apply_strings_to_site()
     print(f"built {SITE} ({len(list(SITE.rglob('*')))} files)")
 
 
