@@ -38,7 +38,7 @@ alwaysApply: true
 - Each fact once per page; link to it elsewhere.
 - Show "No data yet" for a missing source. Never hide the slot.
 - Say "No red flags found in these sources". Never "safe", "clean bill", "guaranteed".
-- Brand is `brand.name` (Regretamin). Domain regretamine.com and repo path regrettamine are not the brand.
+- Brand is `brand.name` (Regretamin). Domain regretamin.com and repo path regrettamine are not the brand.
 - Mock/example data carries the yellow dashed `.ph` badge.
 - Don't change on-screen wording without Alex's approval; propose changes in the PR description.
 

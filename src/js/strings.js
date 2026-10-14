@@ -6,7 +6,7 @@
    falls back to this bundled copy on any error. Change wording only with Alex's approval. */
 window.RS_STRINGS = /*BEGIN_STRINGS*/{
  "brand.name": {
-  "note": "Product name shown to users (logo alt text, titles, copy). The logo itself is assets/logo/lockup-*.svg. Domain stays regretamine.com.",
+  "note": "Product name shown to users (logo alt text, titles, copy). The logo itself is assets/logo/lockup-*.svg. Domain stays regretamin.com.",
   "variants": {
    "default": {
     "when": "always",
@@ -19,7 +19,7 @@ window.RS_STRINGS = /*BEGIN_STRINGS*/{
   "variants": {
    "default": {
     "when": "always",
-    "text": "regretamine.com"
+    "text": "regretamin.com"
    }
   }
  },
@@ -935,7 +935,7 @@ window.RS_STRINGS = /*BEGIN_STRINGS*/{
   "variants": {
    "default": {
     "when": "always",
-    "text": "regretamine.com · Know your VC before you raise."
+    "text": "regretamin.com · Know your VC before you raise."
    }
   }
  },
@@ -6083,7 +6083,7 @@ window.RS_STRINGS = /*BEGIN_STRINGS*/{
   "variants": {
    "default": {
     "when": "always",
-    "text": "{{s:brand.name}} (regretamine.com, currently served at mindgame77.github.io/regrettamine) helps founders check venture capital funds before taking their money. It is operated by"
+    "text": "{{s:brand.name}} (regretamin.com, currently served at mindgame77.github.io/regrettamine) helps founders check venture capital funds before taking their money. It is operated by"
    }
   }
  },

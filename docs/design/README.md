@@ -44,7 +44,7 @@ Mockups are kept outside the repo in the design workspace (`toxybase/design/`). 
 
 ## Audit and decisions (Oct 14, 2026)
 - Full audit: `toxybase/design/system/audit/AUDIT.md` (pages, tokens in use, hardcoded facts/strings, data sources).
-- Brand shown to users: **Regretamin** (`brand.name`). Domain regretamine.com and path /regrettamine/ unchanged.
+- Brand shown to users: **Regretamin** (`brand.name`). Domain regretamin.com and path /regrettamine/ unchanged.
 - Approved wording: "Reasonable to take a meeting" (a16z verdict); Scoring step 03 "higher means fewer red flags in the sources we checked".
 - Logo R2 replaces the conic ring + live-text wordmark in nav, footer, 404, auth pages, fund pages and email templates. Favicons on every page.
 - Weight 600 was used but never loaded (browsers already rendered 700). Mapped to 700; screenshots show no change. Bricolage 500 was loaded but unused; dropped.
