@@ -79,11 +79,30 @@ def _who(entity):
     return entity.split(":", 1)[1].strip() if entity.startswith("partner:") else ""
 
 
+SITE_TZ = "America/Los_Angeles"
+
+
+def local_day(value):
+    """Calendar day of a timestamp in the site's time zone (Pacific), as YYYY-MM-DD."""
+    text = str(value or "")
+    if len(text) <= 10:
+        return text
+    try:
+        from zoneinfo import ZoneInfo
+
+        stamp = dt.datetime.fromisoformat(text.replace("Z", "+00:00"))
+        if stamp.tzinfo is None:
+            return text[:10]
+        return stamp.astimezone(ZoneInfo(SITE_TZ)).date().isoformat()
+    except ValueError:
+        return text[:10]
+
+
 def _src(row):
     return {
         "url": row.get("source_url") or "",
         "source": row.get("source_label") or "",
-        "retrieved": (row.get("retrieved_at") or "")[:10],
+        "retrieved": local_day(row.get("retrieved_at")),
         "published": (_val(row).get("published_date") or row.get("published_date") or "") or "",
     }
 
