@@ -1,4 +1,4 @@
-# Regretamin data architecture: proposal (DRAFT, nothing applied)
+# Regretamin data architecture
 
 Status: draft for Alex. Nothing below has been applied to Supabase. The only migration applied so far is `ui_strings` (approved, Oct 14, 2026). Current schema facts come from the live project `regrettamine` (read-only query, Oct 14).
 
@@ -104,43 +104,49 @@ vc_profiles (root)
 | app_secrets | System | keep | |
 | ui_strings | Site | keep | applied |
 
-## Test vs real data
+## Data status: real, needs_proof, test (applied Oct 15, 2026)
 
-Every content row carries `data_status` (`test` | `real`), default `test`. Tables: vc_profiles/firms and every VC-owned table (funds, people, legal, filings, dockets, regulatory, sanctions, press, sources, evidence, takeaways, score_results, fact_events), vc_source_facts, vc_ai_summaries, site_updates, site_stats, ui_strings. Public pages, RPCs and the build bundle read `data_status = 'real'` only. Test rows show only in preview/staging builds, with the yellow "Mock · example data" badge.
+Every content row carries `data_status` (`test` | `needs_proof` | `real`), default `test`. Tables: vc_profiles/firms and every VC-owned table (funds, people, legal, filings, dockets, regulatory, sanctions, press, sources, evidence, takeaways, score_results, fact_events), vc_source_facts, the five tables below, vc_ai_summaries, site_updates, site_stats, ui_strings.
+
+| Value | Meaning | Public site / counts / AI summaries | Purge |
+|---|---|---|---|
+| `real` | Sourced fact: `source_url` + `retrieved_at` (and verified for imports) | yes | never |
+| `needs_proof` | A genuine claim we have not proven yet: no source URL / retrieved date, not independently verified, or the firm's own claim ("firm says") | **no** (same as test) | **never** |
+| `test` | Placeholder or mock data only | no | yes |
 
 Rules
-- A VC fact can be `real` only if it has `source_url` and `retrieved_at` (CHECK constraint, `NOT VALID` so current rows are grandfathered until `retrieved_at` is backfilled).
-- The only way to mark a fact real is `promote_source(id)` (service role). It fails without a URL.
-- An AI summary can be approved only if it cites at least one fact, and every cited fact is `real` and `current` (trigger on vc_ai_summaries).
-- Placeholder, mock or unsourced content is `test`. Derived values (score range, coverage, rank, method card) are `real` when their inputs are real.
+- A VC fact can be `real` only with `source_url` and `retrieved_at` (CHECK constraint on vc_source_facts, sources, press_items and every new table).
+- `promote_source(id, retrieved_at default now(), source_url default null)` (service role) turns a `test` or `needs_proof` row into `real` once it has a source. It looks the id up in sources, vc_source_facts and the five tables below, and returns the table name. It fails when there is no URL.
+- An AI summary can be approved only if every cited fact is `real` and `current` (trigger), so needs_proof facts never reach AI text.
+- `fact_record_count()` (landing count) counts seed rows plus `real` import rows only. The new tables have no fact_events trigger. Live count after this change: 185 (unchanged).
+- Imports: sheet status `verified` + URL + checked date = `real`; `excluded` (the workbook rejected it) = `test`; everything else (`firm says`, `unverified`, `context`, `conflict`, `awaiting_role_review`) = `needs_proof`. Firm self-claims are always `needs_proof`. People created by an import take the best status of their links; a named person with no link is `needs_proof`. A real firm still being researched (Plug and Play) is `needs_proof`, not `test`, so the purge cannot cascade-delete it.
+- **Only our own scoring.** Workbook scores, score sections, confidence, trust tiers, sources-reliable %, verdicts, summaries, red banners, worst-case floors and judgment fields (`adverse_event_candidate`, `conflict_candidate`, `firm_claim_contradiction`, `employee_sentiment`) are not stored anywhere, not even in staging. Our scores (vc_scores `score-v2`, score_results) are unchanged.
 
-Purge: one command, cascade-safe
+Purge: one command, cascade-safe, deletes `test` only
 ```sql
 select * from public.purge_test_data();       -- dry run: counts per table
-select * from public.purge_test_data(false);  -- delete every test row
+select * from public.purge_test_data(false);  -- delete every test row (needs_proof and real are never touched)
 ```
-Deleting a test vc_profile cascades to its VC-owned rows. User rows follow their FK rule (watchlist keeps the row and shows "Removed").
 
-Replace workflow (test to real)
-1. Worker or editor inserts a fact as `test` with `source_url`, record id/quote.
-2. A reviewer checks it; `promote_source(id)` sets `retrieved_at` and `real`.
+Replace workflow
+1. A worker or editor inserts a claim as `needs_proof` (or a mock as `test`).
+2. A reviewer adds the source; `promote_source(id, now(), url)` sets `retrieved_at` and `real`.
 3. Linked AI summaries get the stale flag and are regenerated from real facts only, then approved.
-4. When a fund's facts are all real, the profile goes `real` and publishes. Run the purge to drop leftover test rows.
+4. When a fund's facts are real and it can be scored with our rules, the profile goes `real` and publishes.
 
-Draft migration (NOT applied): `regrettamine-audit/supabase/drafts/20261014130000_data_status.sql`. It lives outside `supabase/migrations/`, so migrate.py and CI skip it.
+## VC fact tables added Oct 15, 2026
 
-Current counts (live DB, Oct 14, 2026), all with nothing deleted
-| Table | Rows | Would be test | Why test |
-|---|---|---|---|
-| firms | 11 | 0 | all published, is_test = false |
-| sources | 87 | 0 | all have URL + verified (retrieved_at missing, backfill needed) |
-| site_updates | 7 | 2 | verification = 'toxy' (unverified records) |
-| site_stats | 4 | 1 | "funds sanctioned", verified = false |
-| ui_strings | 50 | 12 | status = 'planned' (copy for new flow, not live) |
-| legal 19, regulatory 13, sanctions 11, press 25, takeaways 36, evidence_cards 197, evidence_lines 557, people 19, score_results 22 | | 0 | |
-| filings, reviews, portfolio_companies | 0 | 0 | empty |
+All five: `firm_id → firms(id) on delete cascade` (vc_profiles is the view over firms), provenance `source_system` + `external_id` (unique together, re-imports upsert), `import_run_id`, the raw `entity` / `field` / `value` as published, `source_url`, `source_label`, `quote`, `published_date`, `retrieved_at`, `data_status` with the real-needs-source check. RLS on, no anon/authenticated grants, admin-only policy (`is_admin()`), like the other vc_* tables; the build reads them with the service role only.
 
-Total: 1,058 counted rows, 15 test, 1,043 real. Of the 197 evidence cards, 45 have no sources, but all are derived cards (range, coverage, sources, rank, method), so they are real, not test.
+| Table | Extra columns | Workbook fields |
+|---|---|---|
+| `vc_entity_identifiers` | `id_type` (cik, lei, company_number, entity_status), `id_value`, `jurisdiction` | cik, lei, company_number, entity_status |
+| `vc_partner_history` | `person_name`, `person_id → people (set null)`, `kind`, `organization` | career_stint, prior_firm, founded_company, deal_led, team, partner_statement |
+| `vc_political_activity` | `person_name` (null = firm), `kind` | political_donation (FEC), lobbying_spend, lobbying_issue (LDA) |
+| `vc_firm_claims` | `subject`, `kind` | stated_focus_sector, stated_focus_stage, stated_geography, team_size, investing_partner_count, platform_team (always needs_proof until independently sourced) |
+| `vc_context_notes` | `kind` | context, community_report, negative_alias |
+
+Migrations: `20261015000000_needs_proof_status.sql` (enum value, alone because a new enum value cannot be used in the transaction that adds it), `20261015000100_extra_fact_tables.sql`. Rollback: `supabase/rollback/20261015_needs_proof_rollback.sql` (restores every VC row's previous data_status from the Oct 15 backup, drops the five tables, restores the old functions; the enum value stays, unused).
 
 ## Merging existing data
 
@@ -149,7 +155,7 @@ The database must stay open to merging data we collected earlier. Draft only; no
 Rules
 - **Origin on every row.** Every content row has `source_system` (for example `toxybase_netlify`, `toxybase_files`, `repo_json`, `sec_iapd`, `courtlistener`, `opensanctions`, `manual`) and `external_id`. `unique (source_system, external_id)` makes re-imports idempotent: an upsert updates the same row instead of creating a duplicate.
 - **Firm matching on stable identifiers.** `vc_profiles` match in this order: SEC CRD, then SEC file number, then normalized legal entity name, then primary domain. `vc_aliases (vc_id, alias_type, value, source_system)` holds former names, short names, entity names, domains and CRDs, with `unique (alias_type, lower(value))`. An import that matches nothing creates a new test profile. An import that matches more than one profile goes to manual review.
-- **Staging first.** Imports land in a `staging` schema (`staging.vc_profiles`, `staging.source_facts`, etc.) with `data_status = 'test'`. Review then promotes them into `public` through the same `promote_*` path: a fact needs a source URL and `retrieved_at` before it can be real.
+- **Staging first.** Imports land in a `staging` schema (`staging.vc_profiles`, `staging.source_facts`, etc.) with `data_status = 'test'` (mock) or `'needs_proof'` (claims). Review then promotes them into `public` through the same `promote_*` path: a fact needs a source URL and `retrieved_at` before it can be real.
 - **Conflicts are kept, not overwritten.** When an imported fact disagrees with an existing one (same VC, same fact type, different value), both rows are kept. `vc_fact_conflicts (fact_a, fact_b, field, status open|resolved, resolution, resolved_by)` records the disagreement. AI summaries that cite either fact are marked stale until it is resolved.
 - **Versioned migrations only.** Every schema change goes through `supabase/migrations/` (timestamped files, applied by migrate.py/CI). No manual DDL in the dashboard. Imports are scripts, not migrations.
 - **Import log.** `import_runs (id, source_system, started_at, finished_at, file_or_url, checksum, rows_seen, inserted, updated, matched, conflicts, errors, run_by, notes)`. Every staged row carries an `import_run_id`, so a whole run can be reviewed, promoted or rolled back (deleted while still test).
