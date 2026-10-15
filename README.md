@@ -23,24 +23,7 @@ This is the fallback, used when the Supabase secrets are not set. Once Supabase 
 
 List row (shows on the homepage, no report yet):
 
-1. Copy an object in `data/home.json` → `funds`.
-2. Fill it from a real record. Fields the list uses: `id`, `name`, `hq`, `since`, `aum`, `aumAsOf`, `aumStale`, `score`, `v2`, `band`, `legal`, `legalNote`, `updated`, `updatedTs`, `updatedS`. A v2 row also needs `lo` and `hi` (and usually `short`).
-3. Leave `"report": null`. The row stays “coming soon” and does not open a page.
-
-Full report:
-
-1. Set `"report"` to a slug, for example `"sequoia"`.
-2. Copy `data/funds/a16z.json` to `data/funds/sequoia.json` and set `"slug"` to the same value. The filename, `slug`, and `report` must match.
-3. Replace the copy with that fund’s own records. The page is rendered from this file: hero, score parts, legal matters, people, public items, portfolio, questions, and the `evidence` object behind every popup. Keep the shape. Do not add facts that are not sourced.
-4. Run `python3 build.py`. It writes `site/vc/<slug>/index.html` and fails if a `report` slug has no JSON file, or if a button points at a missing evidence id.
-
-Scores, stats, and the update feed on the homepage also live in `data/home.json` (`stats`, `updates`). An update whose `fid` matches a fund with a `report` links the fund name to that report. Use a full `https://` URL in `u` for an external source.
-
-`docs/toxy-score-v2-rules.md` is the Toxy Score v2 rules. `regrettamine/score_v2.py` is the function. The published a16z inputs score **95.4** (60 / 14.25 / 16.6 / 4 / +3 / −2.5).
-
-The JSON files remain the fallback. If `SUPABASE_URL` and `SUPABASE_ANON_KEY` are both set, `build.py` reads published firms from Supabase instead. Empty or missing values keep the JSON build.
-
-How it works and the score rules are both on `/scoring/`. `/how/` redirects there. Privacy and terms are `/privacy/` and `/terms/`. `data/site.json` → `legal.company`, `legal.contact_email` and `legal.jurisdiction` fill both pages at build time. Leave a value empty and the page shows the placeholder chip. An email address becomes a mailto link.
+Firms, reports and scores live in Supabase only. Add or edit rows there; the build renders every page from `published_site_bundle()`.
 
 ## Supabase
 
@@ -57,7 +40,7 @@ One-time setup:
    DATABASE_URL="…" python3 scripts/seed.py
    ```
 
-   `seed.py` loads the 11 list rows and every report in `data/funds/`. Score inputs for the reports other than a16z are in `data/score_inputs.json`. It replaces those content tables. It does not invent vehicles, portfolio companies, reviews, or users. It does not load `templates/csv/`. The account migration adds the signup trigger, the watchlist cap, alert preferences, and the rule that a founder review stays hidden until it is approved. `20261004180000_share_review.sql` adds the share-form columns (connection type, five ratings, LinkedIn URL). The LinkedIn URL is not selectable by anon or signed-in users and is omitted from the public bundle. `first_hand` and `verification_status` stay at the server defaults for those roles.
+   `seed.py` (test databases only, never live) loads `tests/fixtures/db_snapshot.json`, an export of the live content tables. It replaces those content tables. It does not invent vehicles, portfolio companies, reviews, or users. It does not load `templates/csv/`. The account migration adds the signup trigger, the watchlist cap, alert preferences, and the rule that a founder review stays hidden until it is approved. `20261004180000_share_review.sql` adds the share-form columns (connection type, five ratings, LinkedIn URL). The LinkedIn URL is not selectable by anon or signed-in users and is omitted from the public bundle. `first_hand` and `verification_status` stay at the server defaults for those roles.
 
 3. **Project Settings → API**: copy the project URL and the `anon` public key.
 4. GitHub → this repo → **Settings → Secrets and variables → Actions**. Add:

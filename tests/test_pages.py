@@ -8,8 +8,12 @@ ROOT = Path(__file__).resolve().parents[1]
 def test_shared_list_and_auth_pages(monkeypatch):
     monkeypatch.delenv("SUPABASE_URL", raising=False)
     monkeypatch.delenv("SUPABASE_ANON_KEY", raising=False)
-    monkeypatch.setenv("SUPABASE_SERVICE_ROLE_KEY", "sb_secret_service_role_test")
-    from build import main, render_fund_page, load_local
+    monkeypatch.delenv("SUPABASE_SERVICE_ROLE_KEY", raising=False)
+    from build import main, render_fund_page
+    from conftest import db_site
+
+    db_funds = db_site()[1]
+    load_local = lambda: (None, {k: dict(v) for k, v in db_funds.items()})
 
     main()
     home_js = (ROOT / "site" / "js" / "home.js").read_text(encoding="utf-8")
@@ -60,7 +64,11 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "Plug and Play Tech Center <span>PnP</span>" in pnp
     gc = (ROOT / "site" / "vc" / "generalcatalyst" / "index.html").read_text(encoding="utf-8")
     assert "General Catalyst GC" not in gc and "General Catalyst <span>GC</span>" not in gc
-    assert 'class="zero"' in (ROOT / "site" / "vc" / "sequoia" / "index.html").read_text(encoding="utf-8") or "Legal <i>0</i>" in render_fund_page(load_local()[1]["sequoia"], "../../")
+    seq = render_fund_page(load_local()[1]["sequoia"], "../../")
+    from regrettamine.real_facts import summarize
+    info = summarize(load_local()[1]["sequoia"].get("realFacts") or {"tabs": {}})
+    assert "Legal <i>0</i>" not in seq, info
+    assert "Court records" in seq and "Last checked Oct 11, 2026" in seq, info
     assert not (ROOT / "site" / "data" / "funds").exists()
     assert (ROOT / "site" / "login" / "index.html").is_file()
     assert (ROOT / "site" / "login" / "reset" / "index.html").is_file()
@@ -289,7 +297,8 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert 'id="planCancel" hidden' in settings
     assert "Your plan is cancelled with it. No more charges." in settings
     assert "planCancel" in settings_js and "cancel.hidden = !paid" in settings_js
-    full = render_fund_page(load_local()[1]["a16z"], "../../")
+    from conftest import db_site
+    full = render_fund_page(db_site()[1]["a16z"], "../../")
     visible = full.split('<script id="evidence"', 1)[0]
     assert visible.count("DOJ is investigating a16z partners") == 1
     assert "Interlocking board seats at Databricks and Fivetran. Open, no charges." not in visible
@@ -372,9 +381,10 @@ def test_shared_list_and_auth_pages(monkeypatch):
 
 
 def test_report_copy_matches_the_landing_list():
-    from build import assign_list_ranks, esc, fund_heading, load_local, render_fund_page
+    from build import assign_list_ranks, esc, fund_heading, render_fund_page
+    from conftest import db_site
 
-    _, funds = load_local()
+    _, funds = db_site()
     assign_list_ranks(funds)
     ranked = sorted(funds.values(), key=lambda fund: (-float(fund["scoreExact"]), fund["name"]))
     names = [fund["name"] for fund in ranked]
@@ -418,10 +428,10 @@ def test_report_copy_matches_the_landing_list():
             assert "0 matters" not in panel, fund["slug"] + " " + key
     lightspeed = render_fund_page(funds["lightspeed"], "../../")
     legal = lightspeed.split('data-panel="legal"', 1)[1].split('data-panel="fund"', 1)[0]
-    assert "No data yet" in legal and "Founder-relevant" not in legal
+    assert "No data yet" not in legal and "Court records" in legal and "retrieved Oct" in legal
     sequoia = render_fund_page(funds["sequoia"], "../../")
     public = sequoia.split('data-panel="public"', 1)[1].split('data-panel="portfolio"', 1)[0]
-    assert "No data yet" in public
+    assert "No data yet" not in public and "Press found in research" in public
     a16z = render_fund_page(funds["a16z"], "../../")
     hero = a16z.split('data-panel="overview"', 1)[0]
     overview = a16z.split('data-panel="overview"', 1)[1].split('data-panel="score"', 1)[0]
@@ -432,13 +442,18 @@ def test_report_copy_matches_the_landing_list():
 def test_firm_aum_buckets_and_recent_updates():
     import subprocess
 
-    home = json.loads((ROOT / "data" / "home.json").read_text(encoding="utf-8"))
+    import tempfile
+    from conftest import db_site
+
+    home = db_site()[0]
+    tmp = Path(tempfile.mkdtemp()) / "home.json"
+    tmp.write_text(json.dumps(home), encoding="utf-8")
     script = r"""
 const fs = require('fs');
 const src = fs.readFileSync('src/js/home.js', 'utf8');
 const sizes = src.slice(src.indexOf('const SIZES'), src.indexOf('const S ='));
 const fn = src.slice(src.indexOf('function updatedWithin30'), src.indexOf('const $'));
-const funds = JSON.parse(fs.readFileSync('data/home.json', 'utf8')).funds;
+const funds = JSON.parse(fs.readFileSync(process.env.HOME_JSON, 'utf8')).funds;
 const run = new Function('funds', sizes + '\n' + fn + `
 const buckets = {};
 for (const f of funds) {
@@ -464,7 +479,7 @@ return {
 `);
 console.log(JSON.stringify(run(funds)));
 """
-    out = subprocess.check_output(["node", "-e", script], cwd=ROOT, text=True)
+    out = subprocess.check_output(["node", "-e", script], cwd=ROOT, text=True, env={**__import__("os").environ, "HOME_JSON": str(tmp)})
     data = json.loads(out)
     assert data["buckets"].get("Under $100M", []) == []
     assert data["buckets"].get("$100M–$1B", []) == ["plugandplay"]

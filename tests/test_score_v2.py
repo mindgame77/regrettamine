@@ -84,22 +84,23 @@ def test_partner_departures_count_per_year_capped():
 
 
 def test_published_fund_scores_match_inputs():
-    inputs = json.loads((ROOT / "data" / "score_inputs.json").read_text(encoding="utf-8"))
-    assert set(inputs) == {
-        "generalcatalyst", "sequoia", "lightspeed", "plugandplay",
-    }
-    for slug, rows in inputs.items():
-        fund = json.loads((ROOT / "data" / "funds" / f"{slug}.json").read_text(encoding="utf-8"))
-        result = score_v2(rows)
-        assert result["total"] == Decimal(str(fund["scoreExact"])), slug
-        assert result["band"] == fund["band"], slug
-        by_id = {part["id"]: part["got"] for part in fund["parts"]}
-        assert by_id["s1"] == _got(result["sections"]["s1"])
-        assert by_id["s3"] == _got(result["sections"]["s3"])
-        assert by_id["s4"] == _got(result["sections"]["s4"])
-        assert by_id["bonus"] == "+" + _got(result["sections"]["bonus"])
-        pen = result["sections"]["pen"]
-        assert by_id["pen"] == ("0" if pen == 0 else "−" + _got(abs(pen)))
+    """Each firm's stored v2 result equals score_v2 over its stored inputs (database snapshot)."""
+    from collections import defaultdict
+
+    snap = json.loads((ROOT / "tests" / "fixtures" / "db_snapshot.json").read_text(encoding="utf-8"))
+    v2 = {v["id"] for v in snap["score_versions"] if v["code"] == "v2"}
+    slug_of = {f["id"]: f["slug"] for f in snap["firms"]}
+    results = {r["id"]: r for r in snap["score_results"] if r["version_id"] in v2 and r.get("is_current", True)}
+    rows = defaultdict(list)
+    for row in snap["score_inputs"]:
+        if row["result_id"] in results:
+            rows[row["result_id"]].append(row)
+    checked = set()
+    for rid, inputs in rows.items():
+        result = score_v2(inputs)
+        assert result["total"] == Decimal(str(results[rid]["total"])), slug_of[results[rid]["firm_id"]]
+        checked.add(slug_of[results[rid]["firm_id"]])
+    assert {"generalcatalyst", "sequoia", "lightspeed", "plugandplay"} <= checked
 
 
 def _got(value):

@@ -4665,33 +4665,6 @@ window.RS_STRINGS = /*BEGIN_STRINGS*/{
    }
   }
  },
- "report.sequoia_capital": {
-  "note": "Fund report text identical for every fund (evidence.rank.rows[7][0]).",
-  "variants": {
-   "default": {
-    "when": "always",
-    "text": "Sequoia Capital"
-   }
-  }
- },
- "report.general_catalyst": {
-  "note": "Fund report text identical for every fund (evidence.rank.rows[8][0]).",
-  "variants": {
-   "default": {
-    "when": "always",
-    "text": "General Catalyst"
-   }
-  }
- },
- "report.lightspeed_venture_partners": {
-  "note": "Fund report text identical for every fund (evidence.rank.rows[9][0]).",
-  "variants": {
-   "default": {
-    "when": "always",
-    "text": "Lightspeed Venture Partners"
-   }
-  }
- },
  "report.how_score_works": {
   "note": "Fund report text identical for every fund (evidence.rules.title).",
   "variants": {
@@ -5929,8 +5902,12 @@ window.RS_STRINGS = /*BEGIN_STRINGS*/{
   "note": "Legal tab empty state.",
   "variants": {
    "default": {
-    "when": "always",
-    "text": "No data yet. We found no court cases, regulator actions or sanctions for this fund."
+    "when": "Legal tab: a check ran and found nothing (shown with the check date).",
+    "text": "We found no court cases or regulator actions for this fund."
+   },
+   "no_data": {
+    "when": "nothing on file and no check recorded",
+    "text": "No data yet."
    }
   }
  },
@@ -5938,8 +5915,12 @@ window.RS_STRINGS = /*BEGIN_STRINGS*/{
   "note": "Founder reviews empty state.",
   "variants": {
    "default": {
-    "when": "always",
-    "text": "No data yet. We found no founder accounts for this fund."
+    "when": "Founder reviews: a search ran and found nothing.",
+    "text": "We found no founder accounts for this fund."
+   },
+   "no_data": {
+    "when": "nothing on file and no check recorded",
+    "text": "No data yet."
    }
   }
  },
@@ -5947,8 +5928,12 @@ window.RS_STRINGS = /*BEGIN_STRINGS*/{
   "note": "Public tab empty state.",
   "variants": {
    "default": {
-    "when": "always",
-    "text": "No data yet. We found no press for this fund."
+    "when": "Public tab: a search ran and found nothing.",
+    "text": "We found no press for this fund."
+   },
+   "no_data": {
+    "when": "nothing on file and no check recorded",
+    "text": "No data yet."
    }
   }
  },

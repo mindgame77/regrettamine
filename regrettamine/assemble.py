@@ -518,10 +518,36 @@ def _vehicles(bundle, firm_id):
     return rows
 
 
+def research_export(bundle):
+    """Real rows of the research tables, in the shape regrettamine.real_facts reads."""
+    return {
+        "facts": bundle.get("vc_source_facts") or [],
+        "ids": bundle.get("vc_entity_identifiers") or [],
+        "partners": bundle.get("vc_partner_history") or [],
+        "political": bundle.get("vc_political_activity") or [],
+        "notes": bundle.get("vc_context_notes") or [],
+    }
+
+
 def assemble_site(bundle):
+    from regrettamine.real_facts import shape_firm
+
+    home = assemble_home(bundle)
+    export = research_export(bundle)
+    funds = {}
+    for firm in bundle.get("firms") or []:
+        if firm.get("report_slug"):
+            fund = assemble_fund(bundle, firm)
+            fund["realFacts"] = shape_firm(firm["slug"], export)
+            funds[firm["report_slug"]] = fund
+    return home, funds
+
+
+def assemble_public(bundle):
+    """Visitor-safe build input: list rows and stats, a name per fund page, shared fragments."""
     home = assemble_home(bundle)
     funds = {}
     for firm in bundle.get("firms") or []:
         if firm.get("report_slug"):
-            funds[firm["report_slug"]] = assemble_fund(bundle, firm)
-    return home, funds
+            funds[firm["report_slug"]] = {"slug": firm["report_slug"], "name": firm["name"], "short": firm.get("short_name") or ""}
+    return home, funds, bundle.get("fragments") or {}
