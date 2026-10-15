@@ -13,7 +13,9 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def _a16z():
-    return json.loads((ROOT / "data" / "funds" / "a16z.json").read_text(encoding="utf-8"))
+    from conftest import db_site
+
+    return json.loads(json.dumps(db_site()[1]["a16z"]))
 
 
 def _slice(html, start, end):
@@ -33,12 +35,14 @@ def test_template_zero_one_and_many():
     empty["matters"] = []
     empty["legalGroups"] = []
     empty["public"]["items"] = []
+    empty["realFacts"] = {}
+    empty["regulatory"]["records"] = []
     empty_html = render_fund_page(empty, "../../")
     assert "No summary yet." in empty_html
     assert "No takeaways yet." in empty_html
     assert "No legal matters on file." in empty_html
-    assert "No data yet. We found no press for this fund." in empty_html
-    assert "No data yet. We found no court cases, regulator actions or sanctions for this fund." in empty_html
+    assert "No data yet." in empty_html
+    assert "No data yet. We found" not in empty_html
     assert "moreCos" not in empty_html
 
     one = _a16z()

@@ -2,8 +2,7 @@
 """Build the Regretamin static site into ./site.
 
 Source of truth:
-  data/home.json          fund list, stats, updates
-  data/funds/<slug>.json  a full report
+  Supabase published_site_bundle()  every firm, report and fact (no repo data files)
 
 No third-party dependencies. Internal links are relative, so the same
 output works at a GitHub project URL (/regrettamine/) and at regretamin.com.
@@ -168,6 +167,118 @@ def join_capped(items, render_item, limit=LIST_CAP):
     )
 
 
+
+# ---- Real, sourced facts from the research tables (data/facts/<slug>.json) ----
+
+def fact_day(value):
+    from regrettamine.real_facts import day
+    return day(value)
+
+
+def sources_html(sources):
+    links = []
+    for src in sources or []:
+        url = src.get("url") or ""
+        label = esc(src.get("source") or url)
+        when = f' · retrieved {esc(fact_day(src.get("retrieved")))}' if src.get("retrieved") else ""
+        pub = f' · published {esc(fact_day(src.get("published")))}' if src.get("published") else ""
+        if url.startswith("http"):
+            links.append(f'<a href="{esc(url)}" target="_blank" rel="noopener">{label}</a>{pub}{when}')
+        else:
+            links.append(f"{label}{pub}{when}")
+    return f'<span class="fsrc">{"; ".join(links)}</span>' if links else ""
+
+
+def fact_row(item):
+    who = f' <span class="sm">{esc(item["who"])}</span>' if item.get("who") and item.get("who") != item.get("title") else ""
+    badge = f'<span class="rt {esc(item.get("tone") or "gray")}">{esc(item["badge"])}</span>' if item.get("badge") else ""
+    year = f'<span class="ly">{esc(item["year"])}</span>' if item.get("year") else ""
+    return (
+        f'<div class="it fact">{year}<div><b>{esc(item["title"])}</b>{who}'
+        f'<div class="sm">{esc(item.get("detail") or "")}</div>{sources_html(item.get("sources"))}</div>{badge}</div>'
+    )
+
+
+def fact_card(title, items, note=""):
+    if not items:
+        return ""
+    srcs = {s.get("url") for item in items for s in item.get("sources") or [] if s.get("url")}
+    small = f'{len(items)} item{"" if len(items) == 1 else "s"} · {len(srcs)} source{"" if len(srcs) == 1 else "s"}'
+    foot = f'<p class="note">{esc(note)}</p>' if note else ""
+    return (
+        f'<div class="pc list facts"><div class="ph3"><h3>{esc(title)}</h3><small>{small}</small></div>'
+        f'{join_capped(items, fact_row)}{foot}</div>'
+    )
+
+
+def real_facts(fund):
+    return (fund.get("realFacts") or {}).get("tabs") or {}
+
+
+def _matter_text(fund):
+    return " ".join(f'{m.get("text", "")} {m.get("sub", "")}' for m in fund.get("matters") or [])
+
+
+def legal_fact_items(fund):
+    """Court cases and regulator actions from the research tables, minus ones the page already lists."""
+    legal = real_facts(fund).get("legal") or {}
+    known = _matter_text(fund)
+    reg_text = " ".join(f'{r.get("title", "")} {r.get("detail", "")}' for r in (fund.get("regulatory") or {}).get("records") or [])
+    cases, dup_cases = [], []
+    for case in legal.get("cases") or []:
+        dockets = [k for k in case.get("keys") or [] if not k.startswith("url:")]
+        party = (case.get("title") or "").split(" v. ")[0].split(",")[0].strip()
+        if any(k in known for k in dockets) or (case.get("kind") == "case" and len(party) > 4 and party in known):
+            dup_cases.append(dict(case, badge="Same matter as listed above", tone="gray"))
+        else:
+            cases.append(case)
+    actions, dup_actions = [], []
+    for act in legal.get("actions") or []:
+        amount = re.sub(r"[^0-9,]", "", act.get("title") or "").strip(",")
+        if amount and amount in reg_text:
+            dup_actions.append(act)
+        else:
+            actions.append(act)
+    return cases, dup_cases, actions, dup_actions
+
+
+def penalty_records(fund, matters):
+    """Regulatory records that carry points and are not already a listed matter."""
+    out = []
+    for rec in (fund.get("regulatory") or {}).get("records") or []:
+        if str(rec.get("points") or "").startswith("−") and rec.get("ev") not in matters:
+            out.append(rec)
+    return out
+
+
+def legal_count(fund, matters):
+    cases, _dup, actions, _dupa = legal_fact_items(fund)
+    real_cases = [c for c in cases if c.get("kind") == "case"]
+    return len(matters) + len(real_cases) + len(actions) + len(penalty_records(fund, matters))
+
+
+def legal_checked(fund):
+    from regrettamine.real_facts import iter_sources
+    dates = [s.get("retrieved") for s in iter_sources(real_facts(fund).get("legal") or {}) if s.get("retrieved")]
+    return fact_day(max(dates)) if dates else ""
+
+
+def latest_checked(fund):
+    from regrettamine.real_facts import iter_sources
+    dates = [s.get("retrieved") for s in iter_sources(real_facts(fund)) if s.get("retrieved")]
+    return fact_day(max(dates)) if dates else ""
+
+
+def tab_fact_stats(fund):
+    """Items and distinct source links per tab, for the overview and the tests."""
+    from regrettamine.real_facts import iter_sources
+    out = {}
+    for tab, body in real_facts(fund).items():
+        items = sum(len(v) for v in body.values()) if isinstance(body, dict) else 0
+        urls = {s.get("url") for s in iter_sources(body) if s.get("url")}
+        out[tab] = (items, len(urls))
+    return out
+
 def render_takeaways(fund):
     cards = []
     for i, tk in enumerate(fund["takeaways"]):
@@ -253,7 +364,10 @@ def empty_card(sentence, checked):
 def render_overview(fund, matters):
     grouped = grouped_matter_ids(fund)
     top = "".join(leg_row(matters[i]) for i in fund["topLegal"] if i not in grouped)
-    n = len(matters)
+    n = legal_count(fund, matters)
+    if not top:
+        cases, _d, actions, _da = legal_fact_items(fund)
+        top = "".join(fact_row(item) for item in (actions + [c for c in cases if c.get("kind") == "case"])[:3])
     if fund["takeaways"]:
         take_block = (
             f'<div class="sech"><h2 class="h2">@@s:js.gate.takeaways@@</h2><small>@@s:build.click_any_card_to_see@@</small></div>'
@@ -281,7 +395,50 @@ def render_overview(fund, matters):
         summary_block = f'<div class="blk sumb"><div class="lab">@@s:js.gate.summary@@</div><div><p class="big clamp5">{esc(summary)}</p></div></div>'
     else:
         summary_block = '<p class="empty-state">@@s:build.no_summary_yet@@</p>'
-    return summary_block + take_block + legal_block
+    return summary_block + take_block + legal_block + render_fact_totals(fund)
+
+
+TAB_LABELS = (("legal", "Legal"), ("fund", "Fund & people"), ("public", "Public"), ("portfolio", "Portfolio"))
+
+
+def render_fact_totals(fund):
+    """Counts of sourced facts per tab, each with its latest retrieval date."""
+    from regrettamine.real_facts import iter_sources
+
+    rows = []
+    for key, label in TAB_LABELS:
+        body = real_facts(fund).get(key) or {}
+        items = sum(len(v) for v in body.values()) if isinstance(body, dict) else 0
+        if not items:
+            continue
+        srcs = list(iter_sources(body))
+        urls = {x.get("url") for x in srcs if x.get("url")}
+        latest = max((x.get("retrieved") for x in srcs if x.get("retrieved")), default="")
+        when = f" · latest retrieved {esc(fact_day(latest))}" if latest else ""
+        rows.append(
+            f'<div class="it"><b>{esc(label)}</b><span>{items} fact{"s" if items != 1 else ""} · '
+            f'{len(urls)} source{"s" if len(urls) != 1 else ""}{when}</span>'
+            f'<button class="lnk" data-go="{key}">@@s:build.see_all@@ →</button></div>'
+        )
+    if not rows:
+        return ""
+    return (
+        '<div class="sech"><h2 class="h2">Sourced facts on file</h2><small>Each fact links to its source.</small></div>'
+        f'<div class="pc lstc"><div class="lst">{"".join(rows)}</div></div>'
+    )
+
+
+def render_score_facts(fund):
+    """The legal and sanctions facts the score's core (SEC, sanctions, legal) is read from."""
+    legal = real_facts(fund).get("legal") or {}
+    cases, dup_cases, actions, dup_actions = legal_fact_items(fund)
+    return "".join([
+        fact_card("Facts behind the penalty: regulator actions", actions + dup_actions,
+                  "Regulator penalties count under the penalty rules."),
+        fact_card("Facts behind the penalty: sanctions screens", legal.get("sanctions") or [],
+                  "A sanctions match needs an exact identity match. No match takes no points."),
+        fact_card("Facts behind the penalty: regulatory checks", legal.get("checks") or []),
+    ])
 
 
 def render_score(fund):
@@ -338,13 +495,22 @@ def render_regulatory(reg, matters=None):
 
 
 def render_legal(fund, matters):
-    if not matters:
-        return empty_card(
-            "@@s:report.legal.empty@@",
-            fund.get("updated") or "",
-        )
+    legal = real_facts(fund).get("legal") or {}
+    cases, dup_cases, actions, dup_actions = legal_fact_items(fund)
+    checks = legal.get("checks") or []
+    screens = legal.get("sanctions") or []
+    has_records = bool(matters or cases or actions or penalty_records(fund, matters))
+    if not has_records and not checks and not screens and not dup_cases:
+        checked = fund.get("updated") or ""
+        # Nothing on file. Say so once; no "found nothing" sentence without a recorded check.
+        return '<div class="pc emptycard"><p>{{s:report.legal.empty|no_data}}</p></div>'
     parts = [render_regulatory(fund["regulatory"], matters)]
-    for group in fund["legalGroups"]:
+    if not has_records:
+        when = legal_checked(fund) or fund.get("updated") or ""
+        parts.insert(0, empty_card("@@s:report.legal.empty@@", when))
+    for group in fund.get("legalGroups") or []:
+        if not matters:
+            break
         rows = "".join(leg_row(matters[i]) for i in group["ids"])
         more = ""
         if group.get("more"):
@@ -358,10 +524,27 @@ def render_legal(fund, matters):
             f'<div class="pc"><div class="ph3"><h3>{esc(group["title"])}</h3><small>{esc(group["note"])}</small></div>'
             f'<div class="lst">{rows}</div>{more}</div>'
         )
-    bullets = "".join(f"<li>{esc(item)}</li>" for item in fund["notCounted"])
-    parts.append(
-        f'<div class="pc"><div class="ph3"><h3>{esc(fund["notCountedTitle"])}</h3></div><ul class="mini">{bullets}</ul></div>'
-    )
+    parts.append(fact_card(
+        "Regulator actions", actions + dup_actions,
+        "Regulator penalties and settlements found in official releases.",
+    ))
+    parts.append(fact_card(
+        "Court records", cases + dup_cases,
+        "Each row says how the fund or its people are named. Our score counts only cases in which the fund sued its own founders; none of these is classed that way, so they are listed, not scored.",
+    ))
+    parts.append(fact_card("Regulatory checks", checks, "Form ADV disclosure reads and similar checks. A clean read is listed, not scored."))
+    parts.append(fact_card(
+        f"Sanctions screens ({len(screens)} names)", screens,
+        "Each name was checked against the list named in the source. A match needs an exact identity match.",
+    ))
+    if fund.get("notCounted"):
+        bullets = "".join(f"<li>{esc(item)}</li>" for item in fund["notCounted"])
+        parts.append(
+            f'<div class="pc"><div class="ph3"><h3>{esc(fund["notCountedTitle"])}</h3></div><ul class="mini">{bullets}</ul></div>'
+        )
+    when = legal_checked(fund)
+    if when:
+        parts.append(f'<p class="note checked">@@s:build.last_checked@@ {esc(when)}</p>')
     return "".join(parts)
 
 
@@ -403,9 +586,11 @@ def render_vehicles(vehicles):
     )
 
 
-def render_reviews(reviews, checked=""):
+def render_reviews(reviews, checked="", accounts=0):
     if not reviews:
-        return empty_card("@@s:report.founders.empty@@", checked)
+        if accounts:
+            return ""
+        return '<div class="pc emptycard"><p>{{s:report.founders.empty|no_data}}</p></div>'
     def one(item):
         who = " · ".join(bit for bit in (item.get("founder"), item.get("company"), item.get("partner")) if bit)
         flags = []
@@ -456,8 +641,22 @@ def render_fund_tab(tab, extras=None):
         f'{media_body}<p class="note">{esc(media["foot"])}</p></div>'
         f'</div>'
         f'{render_vehicles(extras.get("vehicles") or [])}'
-        f'{render_reviews(extras.get("reviews") or [], (extras or {}).get("checked") or "")}'
+        f'{render_reviews(extras.get("reviews") or [], (extras or {}).get("checked") or "", len((extras.get("facts") or {}).get("accounts") or []))}'
+        f'{render_fund_facts(extras.get("facts") or {})}'
     )
+
+
+def render_fund_facts(fund_facts):
+    return "".join([
+        fact_card("Firm identity", fund_facts.get("identity") or [], "From SEC filings."),
+        fact_card("Fund facts", fund_facts.get("facts") or []),
+        fact_card("People and partner history", fund_facts.get("people") or []),
+        fact_card("Partners' outside board seats", fund_facts.get("boards") or []),
+        fact_card("Founder accounts on record", fund_facts.get("accounts") or [], "Listed as found. Our score counts founder accounts under its own rules."),
+        fact_card("Political activity", fund_facts.get("political") or []),
+        fact_card("Registered entities", fund_facts.get("entities") or [], "Fund vehicles and affiliates in SEC EDGAR, GLEIF and company registers."),
+        fact_card("Context notes", fund_facts.get("notes") or []),
+    ])
 
 
 def favicon(publisher, domain, prefix):
@@ -499,11 +698,12 @@ def render_companies(companies):
 def render_public(fund, prefix):
     pub = fund["public"]
     items = pub["items"]
+    press = (real_facts(fund).get("public") or {}).get("press") or []
+    press_card = fact_card("Press found in research", press, "Listed as found, with no sentiment rating.")
     if not items:
-        return empty_card(
-            "@@s:report.public.empty_all@@",
-            fund.get("updated") or "",
-        )
+        if press:
+            return press_card
+        return '<div class="pc emptycard"><p>{{s:report.public.empty_all|no_data}}</p></div>'
     visible = items if len(items) <= PAGE_SIZE else items[:PAGE_SIZE]
     cards = []
     for item in visible:
@@ -542,6 +742,7 @@ def render_public(fund, prefix):
         f'<span class="note">{esc(pub["sentimentNote"])}</span></div>'
         f'<div class="sbar">{bar}</div><div class="sfl" role="group" aria-label="@@s:build.filter_by_sentiment@@">{filters}</div></div>'
         f'<div class="pubg"{"" if len(items) <= PAGE_SIZE else " id=\"pressList\""}>{"".join(cards)}</div>{pager}<p class="note sempty" hidden>{esc(pub["empty"])}</p>'
+        f'{press_card}'
     )
 
 
@@ -677,8 +878,8 @@ def _render_fund_page(fund, prefix):
     fund = dedupe_founded_sentence(strip_toxy(fund))
     matters = {m["id"]: m for m in fund["matters"]}
     meta = [f'<span class="mi">{esc(item)}</span>' for item in header_meta(fund)]
-    n_legal = len(matters)
-    n_public = len(fund["public"]["items"])
+    n_legal = legal_count(fund, matters)
+    n_public = len(fund["public"]["items"]) + len((real_facts(fund).get("public") or {}).get("press") or [])
 
     def tab_button(key, label, count=None):
         zero = ' class="zero"' if count == 0 else ""
@@ -696,9 +897,9 @@ def _render_fund_page(fund, prefix):
     ])
     panels = {
         "overview": render_overview(fund, matters),
-        "score": render_score(fund),
+        "score": render_score(fund) + render_score_facts(fund),
         "legal": render_legal(fund, matters),
-        "fund": render_fund_tab(fund["fundTab"], {"vehicles": fund.get("vehicles"), "reviews": fund.get("reviews"), "checked": fund.get("updated") or ""}),
+        "fund": render_fund_tab(fund["fundTab"], {"vehicles": fund.get("vehicles"), "reviews": fund.get("reviews"), "checked": fund.get("updated") or "", "facts": real_facts(fund).get("fund") or {}}),
         "public": render_public(fund, prefix),
         "portfolio": render_portfolio(fund["portfolio"]) + render_companies(fund.get("companies") or []),
         "ask": render_ask(fund["ask"]),
@@ -839,11 +1040,20 @@ def apply_legal(raw):
     )
 
 
-def build_scoring(funds):
+SCORING_EXAMPLE = "scoring_example"
+
+
+def scoring_example_html(funds):
     fund = funds.get("a16z")
     if not fund:
         raise SystemExit("scoring page needs the a16z fund report")
-    raw = (SRC / "scoring.html").read_text(encoding="utf-8").replace("__SCORE_EXAMPLE__", render_worked_example(fund))
+    return apply_strings(render_worked_example(fund))
+
+
+def build_scoring(example_html):
+    if not example_html:
+        raise SystemExit("scoring page needs the stored scoring example (site_fragments)")
+    raw = (SRC / "scoring.html").read_text(encoding="utf-8").replace("__SCORE_EXAMPLE__", example_html)
     dest = SITE / "scoring" / "index.html"
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(raw, encoding="utf-8")
@@ -892,33 +1102,52 @@ def copy_static():
         shutil.copy(cname, SITE / "CNAME")
 
 
-def load_local():
-    home = load_json(DATA / "home.json")
-    funds = {}
-    for path in sorted((DATA / "funds").glob("*.json")):
-        fund = load_json(path)
-        slug = fund.get("slug")
-        if slug != path.stem:
-            raise SystemExit(f"{path.name}: slug {slug!r} must match the filename")
-        funds[slug] = fund
-    return apply_strings_to_data(home), apply_strings_to_data(funds)
-
-
 def load_site():
-    """Full catalog for the build. The service role key never goes into the site."""
+    """Every page renders from the database. Sources, in order:
+
+    1. SUPABASE_SERVICE_ROLE_KEY: the full published bundle (server-side only).
+    2. DATABASE_URL: the same bundle straight from Postgres (tests, local publishing).
+    3. SITE_BUNDLE: a published_site_bundle() document saved to a file (deploy stopgap).
+    4. SUPABASE_ANON_KEY: the visitor-safe public bundle. Shells and the list only;
+       report bodies stay in report_pages.
+
+    Returns (home, funds, fragments, full). There is no hand-written fallback.
+    """
+    from regrettamine.assemble import assemble_public, assemble_site
+
     url = os.environ.get("SUPABASE_URL", "").strip()
     key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "").strip()
+    db = os.environ.get("DATABASE_URL", "").strip()
+    saved = os.environ.get("SITE_BUNDLE", "").strip()
+    anon = os.environ.get("SUPABASE_ANON_KEY", "").strip()
     if url and key:
-        from regrettamine.supabase_load import load_site as load_remote
+        from regrettamine.supabase_load import fetch_bundle
         print("source: supabase (service role, server-side)")
-        home, funds = load_remote(url, key)
-        return apply_strings_to_data(home), apply_strings_to_data(funds)
-    if os.environ.get("SUPABASE_ANON_KEY", "").strip():
-        print("source: json (SUPABASE_SERVICE_ROLE_KEY is not set; the anon key cannot read the full bundle)")
+        bundle = fetch_bundle(url, key)
+    elif db:
+        from regrettamine.supabase_load import fetch_db_bundle
+        print("source: database (DATABASE_URL)")
+        bundle = fetch_db_bundle(db)
+    elif saved:
+        print(f"source: saved database bundle {saved}")
+        bundle = load_json(Path(saved))
+    elif url and anon:
+        from regrettamine.supabase_load import fetch_public_bundle
+        print("source: supabase public bundle (anon key)")
+        home, funds, fragments = assemble_public(fetch_public_bundle(url, anon))
+        return apply_strings_to_data(home), apply_strings_to_data(funds), fragments, False
     else:
-        print("source: json")
-    home, funds = load_local()
-    return apply_strings_to_data(home), apply_strings_to_data(funds)
+        raise SystemExit("No database source: set SUPABASE_URL with a key, DATABASE_URL or SITE_BUNDLE")
+    home, funds = assemble_site(bundle)
+    return apply_strings_to_data(home), apply_strings_to_data(funds), {}, True
+
+
+def load_db():
+    """Full site data from the database, for tests and tools. Same path as the build."""
+    home, funds, _fragments, full = load_site()
+    if not full:
+        raise SystemExit("load_db needs the full bundle (service key, DATABASE_URL or SITE_BUNDLE)")
+    return home, funds
 
 
 def render_report_payload(fund, prefix):
@@ -977,7 +1206,7 @@ def render_fund_shell(fund, prefix):
 '''
 
 
-def publish_report_pages(funds):
+def publish_report_pages(funds, fragments=None):
     """Rewrite every stored report. Pull requests skip this so they cannot replace production."""
     if os.environ.get("REPORT_PUBLISH", "").strip() != "1":
         print("report pages: not uploaded (REPORT_PUBLISH is not 1)")
@@ -997,6 +1226,12 @@ def publish_report_pages(funds):
             errors.append(f"{slug}: {exc}")
             continue
         print(f"stored report {slug}")
+    from regrettamine.supabase_load import store_fragment
+    for frag_key, html in (fragments or {}).items():
+        try:
+            store_fragment(url, key, frag_key, html)
+        except Exception as exc:
+            errors.append(f"fragment {frag_key}: {exc}")
     if errors:
         raise SystemExit("report upload failed: " + "; ".join(errors))
 
@@ -1031,13 +1266,15 @@ def main():
     if SITE.exists():
         shutil.rmtree(SITE)
     SITE.mkdir(parents=True)
-    home, funds = load_site()
+    home, funds, fragments, full = load_site()
     home = strip_toxy(home)
-    assign_list_ranks(funds)
+    if full:
+        assign_list_ranks(funds)
+        fragments = dict(fragments, **{SCORING_EXAMPLE: scoring_example_html(funds)})
     linked = [f.get("report") for f in home["funds"] if f.get("report")]
     missing = [slug for slug in linked if slug not in funds]
     if missing:
-        raise SystemExit("home.json links reports that have no data file: " + ", ".join(missing))
+        raise SystemExit("the list links reports the database does not have: " + ", ".join(missing))
     public = public_home(home)
     (SITE / "index.html").write_text(build_home(public), encoding="utf-8")
     account = (SRC / "account.html").read_text(encoding="utf-8").replace("__HOME_JSON__", embed(public))
@@ -1066,14 +1303,15 @@ def main():
     build_shell("deleted.html", SITE / "deleted" / "index.html")
     not_found = SITE / "404.html"
     not_found.write_text((SRC / "404.html").read_text(encoding="utf-8"), encoding="utf-8")
-    build_scoring(funds)
+    build_scoring(fragments.get(SCORING_EXAMPLE))
     for slug, fund in funds.items():
         dest = SITE / "vc" / slug / "index.html"
         dest.parent.mkdir(parents=True, exist_ok=True)
         # Two levels under the site root: /vc/<slug>/. Body comes from open_report.
         dest.write_text(render_fund_shell(fund, "../../"), encoding="utf-8")
         print(f"built /vc/{slug}/")
-    publish_report_pages(funds)
+    if full:
+        publish_report_pages(funds, fragments)
     copy_static()
     (SITE / "data" / "home.json").write_text(
         json.dumps(public, ensure_ascii=False, indent=2) + "\n",

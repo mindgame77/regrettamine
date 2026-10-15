@@ -198,3 +198,28 @@ Alex removed Accel, Bain Capital Ventures, Battery Ventures, Bessemer Venture Pa
 ## Oct 14, 2026: rank by exact score
 
 Ranks now follow the exact one-decimal v2 score (`firms.list_score_exact`, filled from the current `score_results.total`). The name only breaks exact ties. The list still shows the whole-number `list_score`. `landing_funds`, `search_funds`, `firm_list_row` (new `exact` field), `build.py`, `home.js` and the report generator all use the same order. The backup and a tested restore are in `toxybase/backups/2026-10-14-exact-rank/`.
+
+
+## Pages render from the database only (Oct 14, 2026)
+
+Every VC page is generated from Supabase through one template and one data path
+(`build.load_site` → `published_site_bundle()` → `regrettamine.assemble.assemble_site`).
+There are no per-firm files in the repo.
+
+- `published_site_bundle()` now also returns the real rows (`data_status = 'real'`) of
+  `vc_source_facts`, `vc_entity_identifiers`, `vc_partner_history`, `vc_political_activity`
+  and `vc_context_notes` for published firms. `regrettamine/real_facts.py` shapes them for
+  the Legal, Fund & people, Public, Score and Overview tabs, each fact with its source link
+  and retrieved date. needs_proof and test rows never leave the database.
+- The Legal tab count = listed matters + court records from the research tables + regulator
+  actions + penalty records, so it cannot contradict a score penalty. "Last checked" is the
+  latest retrieved date of the legal facts.
+- `public_site_bundle()` (anon) gives the static build list rows, stats, updates and
+  `site_fragments` (the scoring worked example). No report bodies. CI builds shells and the
+  list from it; report bodies are rendered from the full bundle and stored in `report_pages`
+  by the service-side publish step (by hand while CI lacks the service key).
+- Removed: `data/home.json`, `data/funds/{a16z,generalcatalyst,lightspeed,plugandplay,sequoia}.json`,
+  `data/score_inputs.json`, `scripts/build_fund_reports.py` (per-firm hand specs), unused
+  per-firm name strings. Tests seed a scratch database from `tests/fixtures/db_snapshot.json`,
+  an export of the live content tables; the site never reads it.
+- Rollback: `/workspace/toxybase/backups/2026-10-14-facts-render/rollback_db_rendered_reports.sql`.
