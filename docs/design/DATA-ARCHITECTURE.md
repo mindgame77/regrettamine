@@ -194,3 +194,7 @@ Alex removed Accel, Bain Capital Ventures, Battery Ventures, Bessemer Venture Pa
 - Landing count (real rows only) went from 193 to 137. That is −57 for deleted records and +1 because the Plug and Play firm row now counts as real.
 - Repo: the seven `data/funds/*.json` files, their score inputs, their generator specs and their UI strings were removed. Migration `20261015010000_remove_seven_firms.sql` drops the strings on fresh databases.
 - The backup (a full JSON export of live before the change), the applied SQL and a tested restore script are in `toxybase/backups/2026-10-14-delete-7/`.
+
+## Oct 14, 2026: rank by exact score
+
+Ranks now follow the exact one-decimal v2 score (`firms.list_score_exact`, filled from the current `score_results.total`). The name only breaks exact ties. The list still shows the whole-number `list_score`. `landing_funds`, `search_funds`, `firm_list_row` (new `exact` field), `build.py`, `home.js` and the report generator all use the same order. The backup and a tested restore are in `toxybase/backups/2026-10-14-exact-rank/`.

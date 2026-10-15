@@ -50,8 +50,9 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assign_list_ranks(ranked_funds)
     assert '<i>#1</i> of 5 funds' in render_fund_page(ranked_funds["a16z"], "../../")
     assert "Top 1" not in render_fund_page(ranked_funds["a16z"], "../../")
-    assert '<i>#2</i> of 5 funds' in render_fund_page(ranked_funds["generalcatalyst"], "../../")
-    assert '<i>#3</i> of 5 funds' in render_fund_page(ranked_funds["sequoia"], "../../")
+    # Exact score decides: Sequoia 89.9 ranks above General Catalyst 89.4 though both show 89.
+    assert '<i>#2</i> of 5 funds' in render_fund_page(ranked_funds["sequoia"], "../../")
+    assert '<i>#3</i> of 5 funds' in render_fund_page(ranked_funds["generalcatalyst"], "../../")
     assert '<i>#5</i> of 5 funds' in render_fund_page(ranked_funds["plugandplay"], "../../")
     assert "out of 100" not in fund and 'id="evidence"' not in fund
     assert "Loading the report…" in fund
@@ -166,7 +167,7 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "How it works" not in index and "how/" not in index
 
     home_payload = json.loads(index.split('id="home-data" type="application/json">', 1)[1].split("</script>", 1)[0])
-    assert [fund["id"] for fund in home_payload["funds"]] == ["a16z", "generalcatalyst", "sequoia"]
+    assert [fund["id"] for fund in home_payload["funds"]] == ["a16z", "sequoia", "generalcatalyst"]
     assert home_payload["fundTotal"] == 5
     assert {fund["id"] for fund in home_payload["funds"]}.isdisjoint({"lightspeed", "plugandplay"})
     assert len(home_payload["updates"]) == 6
@@ -375,9 +376,9 @@ def test_report_copy_matches_the_landing_list():
 
     _, funds = load_local()
     assign_list_ranks(funds)
-    ranked = sorted(funds.values(), key=lambda fund: (-int(fund["scoreShown"]), fund["name"]))
+    ranked = sorted(funds.values(), key=lambda fund: (-float(fund["scoreExact"]), fund["name"]))
     names = [fund["name"] for fund in ranked]
-    assert names[:3] == ["Andreessen Horowitz", "General Catalyst", "Sequoia Capital"]
+    assert names[:3] == ["Andreessen Horowitz", "Sequoia Capital", "General Catalyst"]
     for place, fund in enumerate(ranked, start=1):
         page = render_fund_page(fund, "../../")
         assert f"<i>#{place}</i> of {len(ranked)} funds" in page, fund["slug"]

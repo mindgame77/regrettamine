@@ -70,7 +70,7 @@ function render() {
     L = VCS.filter(f => match(f));
   }
   const cmp = {
-    score: (a, b) => b.score - a.score || a.name.localeCompare(b.name),
+    score: (a, b) => (b.exact ?? b.score) - (a.exact ?? a.score) || a.name.localeCompare(b.name),
     name: (a, b) => a.name.localeCompare(b.name),
     aum: (a, b) => b.aum - a.aum,
     upd: (a, b) => b.updatedTs.localeCompare(a.updatedTs) || a.name.localeCompare(b.name)

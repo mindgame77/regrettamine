@@ -57,7 +57,7 @@ def test_seed_matches_json_and_hides_stress():
             assert visitor["tier"] == "visitor"
             assert visitor["limit"] == 3
             assert visitor["total"] == 5
-            assert [row["id"] for row in visitor["funds"]] == ["a16z", "generalcatalyst", "sequoia"]
+            assert [row["id"] for row in visitor["funds"]] == ["a16z", "sequoia", "generalcatalyst"]
             cur.execute("select set_config('request.jwt.claim.sub', '11111111-1111-1111-1111-111111111111', true)")
             cur.execute("select landing_funds()")
             free = cur.fetchone()[0]

@@ -61,6 +61,7 @@ def assemble_home(bundle):
             "aumStale": bool(firm["aum_stale"]),
             "aumSrc": firm["aum_source"],
             "score": int(firm["list_score"]),
+            "exact": float(firm["list_score_exact"]) if firm.get("list_score_exact") is not None else None,
             "v2": bool(firm["list_v2"]),
             "band": firm["list_band"],
             "legal": int(firm["list_legal_active"]),
@@ -81,6 +82,8 @@ def assemble_home(bundle):
             row["cov"] = int(firm["list_coverage"])
         if firm.get("list_verdict"):
             row["verdict"] = firm["list_verdict"]
+        if row["exact"] is None:
+            del row["exact"]
         # `report` stays last, matching data/home.json, so the embedded JSON matches.
         row["report"] = firm.get("report_slug")
         funds.append(row)

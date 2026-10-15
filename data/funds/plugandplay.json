@@ -744,19 +744,19 @@
     "rank": {
       "kicker": "Ranking",
       "title": "#5 of 5",
-      "body": "Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
+      "body": "Ranked by the exact one-decimal score. Only exact ties are broken A–Z. The list shows the whole number.",
       "rows": [
         [
           "Andreessen Horowitz",
           "95.4"
         ],
         [
-          "General Catalyst",
-          "89.4"
-        ],
-        [
           "Sequoia Capital",
           "89.9"
+        ],
+        [
+          "General Catalyst",
+          "89.4"
         ],
         [
           "Lightspeed Venture Partners",

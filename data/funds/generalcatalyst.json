@@ -20,7 +20,7 @@
     93
   ],
   "rank": {
-    "place": 2,
+    "place": 3,
     "tier": "v2",
     "of": 5,
     "example": false
@@ -745,20 +745,20 @@
     },
     "rank": {
       "kicker": "{{s:report.ranking}}",
-      "title": "#2 of 5 on {{s:brand.name}} score",
-      "body": "All 5 funds are on v2. Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
+      "title": "#3 of 5 on {{s:brand.name}} score",
+      "body": "All 5 funds are on v2. Ranked by the exact one-decimal score. Only exact ties are broken A–Z. The list shows the whole number.",
       "rows": [
         [
           "{{s:common.andreessen_horowitz}}",
           "95.4 (v2)"
         ],
         [
-          "{{s:report.general_catalyst}}",
-          "89.4 (v2)"
-        ],
-        [
           "{{s:report.sequoia_capital}}",
           "89.9 (v2)"
+        ],
+        [
+          "{{s:report.general_catalyst}}",
+          "89.4 (v2)"
         ],
         [
           "{{s:report.lightspeed_venture_partners}}",

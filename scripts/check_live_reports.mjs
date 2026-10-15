@@ -143,7 +143,7 @@ try {
   const homeNames = await homePage.locator('.tbl .nm b').allTextContents();
   await home.close();
   if (loaded.length === SLUGS.length) {
-    const expected = loaded.slice().sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
+    const expected = loaded.slice().sort((a, b) => (b.exact ?? b.score) - (a.exact ?? a.score) || a.name.localeCompare(b.name));
     expected.forEach((fund, index) => {
       const want = '#' + (index + 1) + ' of ' + SLUGS.length + ' funds';
       if (fund.rank !== want) problems.push(fund.slug + ': rank ' + fund.rank + ' != ' + want);

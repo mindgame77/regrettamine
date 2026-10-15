@@ -814,7 +814,7 @@ def build_evidence(spec, cov, lo, hi, downs, ups, sections, rank_rows, place):
     evidence["rank"] = card(
         "Ranking",
         f"#{place} of {RANK_OF}",
-        "Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
+        "Ranked by the exact one-decimal score. Only exact ties are broken A–Z. The list shows the whole number.",
         [],
         rows=rank_rows,
     )
@@ -1123,7 +1123,7 @@ def main():
     a16z["evidence"]["rank"] = {
         "kicker": "Ranking",
         "title": f"#{place_of['a16z']} of {RANK_OF}",
-        "body": "Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
+        "body": "Ranked by the exact one-decimal score. Only exact ties are broken A–Z. The list shows the whole number.",
         "rows": rank_rows,
         "sources": [],
         "tone": "",
@@ -1163,7 +1163,7 @@ def main():
             "id": row["id"], "name": row["name"], "ini": row["ini"], "hq": row["hq"],
             "metro": row["metro"], "since": row["since"], "type": row["type"],
             "aum": row["aum"], "aumAsOf": row["aumAsOf"], "aumStale": row["aumStale"],
-            "aumSrc": row["aumSrc"], "score": row["score"], "v2": row["v2"],
+            "aumSrc": row["aumSrc"], "score": row["score"], "exact": row.get("exact"), "v2": row["v2"],
             "band": row["band"], "legal": row["legal"], "legalNote": row["legalNote"],
             "updated": row["updated"], "updatedTs": row["updatedTs"], "updatedS": row["updatedS"],
         }
