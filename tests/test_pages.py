@@ -65,7 +65,10 @@ def test_shared_list_and_auth_pages(monkeypatch):
     gc = (ROOT / "site" / "vc" / "generalcatalyst" / "index.html").read_text(encoding="utf-8")
     assert "General Catalyst GC" not in gc and "General Catalyst <span>GC</span>" not in gc
     seq = render_fund_page(load_local()[1]["sequoia"], "../../")
-    assert "Legal <i>0</i>" not in seq and "Court records" in seq and "Last checked Oct 11, 2026" in seq
+    from regrettamine.real_facts import summarize
+    info = summarize(load_local()[1]["sequoia"].get("realFacts") or {"tabs": {}})
+    assert "Legal <i>0</i>" not in seq, info
+    assert "Court records" in seq and "Last checked Oct 11, 2026" in seq, info
     assert not (ROOT / "site" / "data" / "funds").exists()
     assert (ROOT / "site" / "login" / "index.html").is_file()
     assert (ROOT / "site" / "login" / "reset" / "index.html").is_file()
