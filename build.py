@@ -785,7 +785,7 @@ def public_home(home):
     login. The deleted "Ten funds rescored" update stays out, and exact
     duplicate feed rows are dropped.
     """
-    ranked = sorted(home["funds"], key=lambda fund: (-fund["score"], fund["name"]))
+    ranked = sorted(home["funds"], key=lambda fund: (-float(fund.get("exact") if fund.get("exact") is not None else fund["score"]), fund["name"]))
     seen = set()
     updates = []
     for upd in home["updates"]:
@@ -1005,7 +1005,8 @@ def assign_list_ranks(funds):
     """Same order as the landing list: higher shown score first, then name."""
     ranked = sorted(
         funds.values(),
-        key=lambda fund: (-int(fund.get("scoreShown") or 0), fund.get("name") or ""),
+        # Exact (unrounded) score first; the name only breaks true ties.
+        key=lambda fund: (-float(fund.get("scoreExact") if fund.get("scoreExact") is not None else fund.get("scoreShown") or 0), fund.get("name") or ""),
     )
     total = len(ranked)
     rows = []

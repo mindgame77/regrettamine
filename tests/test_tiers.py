@@ -57,7 +57,7 @@ def test_visitor_free_and_paid_tiers():
                 """
                 select slug from firms
                 where published and not is_test
-                order by list_score desc nulls last, name
+                order by coalesce(list_score_exact, list_score) desc nulls last, name
                 """
             )
             ranked = [row[0] for row in cur.fetchall()]
@@ -72,7 +72,7 @@ def test_visitor_free_and_paid_tiers():
             assert visitor["tier"] == "visitor"
             assert visitor["limit"] == 3
             assert visitor["total"] == 13
-            assert [row["id"] for row in visitor["funds"]] == ["a16z", "generalcatalyst", "sequoia"]
+            assert [row["id"] for row in visitor["funds"]] == ["a16z", "sequoia", "generalcatalyst"]
             cur.execute("select search_funds('lightspeed')")
             sequoia = cur.fetchone()[0]
             assert len(sequoia) == 1

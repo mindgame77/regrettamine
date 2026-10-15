@@ -155,6 +155,7 @@ def seed_home(loader, home, firm_ids, version_ids):
             aum_stale=row["aumStale"],
             aum_source=row["aumSrc"],
             list_score=row["score"],
+            list_score_exact=row.get("exact"),
             list_band=row["band"],
             list_v2=row["v2"],
             list_range_low=row.get("lo"),
