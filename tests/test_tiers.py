@@ -56,7 +56,7 @@ def test_visitor_free_and_paid_tiers():
             ranked = [row[0] for row in cur.fetchall()]
             assert ranked[0] == "a16z"
             assert "zz-extra" in ranked
-            assert len(ranked) == 12
+            assert len(ranked) == 13
 
             cur.execute("select set_config('request.jwt.claim.sub', '', true)")
             cur.execute("set role anon")
@@ -64,7 +64,7 @@ def test_visitor_free_and_paid_tiers():
             visitor = cur.fetchone()[0]
             assert visitor["tier"] == "visitor"
             assert visitor["limit"] == 3
-            assert visitor["total"] == 12
+            assert visitor["total"] == 13
             assert [row["id"] for row in visitor["funds"]] == ["a16z", "battery", "bessemer"]
             cur.execute("select search_funds('sequoia')")
             sequoia = cur.fetchone()[0]
@@ -119,7 +119,7 @@ def test_visitor_free_and_paid_tiers():
             free = cur.fetchone()[0]
             assert free["tier"] == "free"
             assert free["limit"] == 11
-            assert free["total"] == 12
+            assert free["total"] == 13
             assert len(free["funds"]) == 11
             assert "zz-extra" not in [row["id"] for row in free["funds"]]
             opened = []
@@ -157,7 +157,7 @@ def test_visitor_free_and_paid_tiers():
             paid = cur.fetchone()[0]
             assert paid["tier"] == "paid"
             assert paid["limit"] is None
-            assert len(paid["funds"]) == paid["total"] == 12
+            assert len(paid["funds"]) == paid["total"] == 13
             assert "zz-extra" in [row["id"] for row in paid["funds"]]
             eighth = _open(cur, ranked[7])
             assert eighth["ok"] is True and eighth["tier"] == "paid"
