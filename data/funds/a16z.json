@@ -22,7 +22,7 @@
   "rank": {
     "place": 1,
     "tier": "Top 1",
-    "of": 11,
+    "of": 5,
     "example": false
   },
   "question": "{{s:report.should_i_take_this_money}}",
@@ -1880,52 +1880,28 @@
     },
     "rank": {
       "kicker": "{{s:report.ranking}}",
-      "title": "#1 of 11 on {{s:brand.name}} score",
-      "body": "All 11 funds are scored on v2. Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
+      "title": "#1 of 5 on {{s:brand.name}} score",
+      "body": "All 5 funds are scored on v2. Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
       "rows": [
         [
           "{{s:common.andreessen_horowitz}}",
           "95.4 (v2)"
         ],
         [
-          "{{s:report.bessemer_venture_partners}}",
-          "91.7 (v2)"
-        ],
-        [
-          "{{s:report.battery_ventures}}",
-          "91.6 (v2)"
-        ],
-        [
-          "Accel",
-          "89.9 (v2)"
-        ],
-        [
-          "{{s:report.bain_capital_ventures}}",
-          "89.9 (v2)"
-        ],
-        [
-          "{{s:report.khosla_ventures}}",
-          "89.9 (v2)"
-        ],
-        [
-          "{{s:report.lux_capital}}",
-          "89.9 (v2)"
+          "{{s:report.general_catalyst}}",
+          "89.4 (v2)"
         ],
         [
           "{{s:report.sequoia_capital}}",
           "89.9 (v2)"
         ],
         [
-          "{{s:report.general_catalyst}}",
-          "89.4 (v2)"
-        ],
-        [
           "{{s:report.lightspeed_venture_partners}}",
           "88.9 (v2)"
         ],
         [
-          "{{s:report.insight_partners}}",
-          "81.6 (v2)"
+          "Plug and Play Tech Center",
+          "79.9 (v2)"
         ]
       ],
       "sources": [],

@@ -184,3 +184,13 @@ Order: register sources, then backfill origin on existing rows (`repo_json`), th
 - Should approved founder reviews become facts automatically, or need a researcher sign-off?
 - Should legacy human-written verdicts be labelled "AI summary" or "Editor summary"? Proposal: a `author_type` column ('ai'|'editor') with the label shown accordingly.
 - Should the 30-day purge also delete anonymous `checks` rows for that VC, or keep them anonymised?
+
+## Oct 14, 2026: seven firms removed
+
+Alex removed Accel, Bain Capital Ventures, Battery Ventures, Bessemer Venture Partners, Insight Partners, Khosla Ventures and Lux Capital. The site now covers five firms: a16z, General Catalyst, Sequoia, Lightspeed and Plug and Play.
+
+- Live: the firm rows were deleted and every child table cascaded. Records only those firms used were deleted too: 31 sources, 4 press items, 4 legal matters, 1 update-feed item, 6 rank-name UI strings and their 57 `fact_events`. 1,878 rows in total. Shared records stay.
+- The five kept firms were reranked 1–5 "of 5", the site stats were recomputed (5 funds, 63 sources, 4 active matters) and the five report pages and bundles were rebuilt.
+- Landing count (real rows only) went from 193 to 137. That is −57 for deleted records and +1 because the Plug and Play firm row now counts as real.
+- Repo: the seven `data/funds/*.json` files, their score inputs, their generator specs and their UI strings were removed. Migration `20261015010000_remove_seven_firms.sql` drops the strings on fresh databases.
+- The backup (a full JSON export of live before the change), the applied SQL and a tested restore script are in `toxybase/backups/2026-10-14-delete-7/`.

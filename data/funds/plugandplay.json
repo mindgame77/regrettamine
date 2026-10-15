@@ -20,9 +20,9 @@
     84
   ],
   "rank": {
-    "place": 12,
+    "place": 5,
     "tier": "v2",
-    "of": 12,
+    "of": 5,
     "example": false
   },
   "question": "Should I take this money?",
@@ -743,7 +743,7 @@
     },
     "rank": {
       "kicker": "Ranking",
-      "title": "#12 of 12",
+      "title": "#5 of 5",
       "body": "Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
       "rows": [
         [
@@ -751,44 +751,16 @@
           "95.4"
         ],
         [
-          "Bessemer Venture Partners",
-          "91.7"
-        ],
-        [
-          "Battery Ventures",
-          "91.6"
-        ],
-        [
-          "Accel",
-          "89.9"
-        ],
-        [
-          "Bain Capital Ventures",
-          "89.9"
-        ],
-        [
-          "Khosla Ventures",
-          "89.9"
-        ],
-        [
-          "Lux Capital",
-          "89.9"
+          "General Catalyst",
+          "89.4"
         ],
         [
           "Sequoia Capital",
           "89.9"
         ],
         [
-          "General Catalyst",
-          "89.4"
-        ],
-        [
           "Lightspeed Venture Partners",
           "88.9"
-        ],
-        [
-          "Insight Partners",
-          "81.6"
         ],
         [
           "Plug and Play Tech Center",

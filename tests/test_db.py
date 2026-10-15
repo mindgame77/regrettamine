@@ -39,12 +39,12 @@ def test_seed_matches_json_and_hides_stress():
             assert assembled_funds[slug] == fund, slug
             assert render_fund_page(assembled_funds[slug], "../../") == render_fund_page(fund, "../../")
         assert build_home(assembled_home) == build_home(home)
-        assert len(home["updates"]) == 7
+        assert len(home["updates"]) == 6
         assert all("Ten funds" not in item["f"] for item in home["updates"])
 
         with conn.cursor() as cur:
             cur.execute("select count(*) from site_updates")
-            assert cur.fetchone()[0] == 7
+            assert cur.fetchone()[0] == 6
             cur.execute("select count(*) from site_updates where firm_name = 'Ten funds'")
             assert cur.fetchone()[0] == 0
             cur.execute("select fact_record_count()")
@@ -56,14 +56,14 @@ def test_seed_matches_json_and_hides_stress():
             visitor = cur.fetchone()[0]
             assert visitor["tier"] == "visitor"
             assert visitor["limit"] == 3
-            assert visitor["total"] == 12
-            assert [row["id"] for row in visitor["funds"]] == ["a16z", "battery", "bessemer"]
+            assert visitor["total"] == 5
+            assert [row["id"] for row in visitor["funds"]] == ["a16z", "generalcatalyst", "sequoia"]
             cur.execute("select set_config('request.jwt.claim.sub', '11111111-1111-1111-1111-111111111111', true)")
             cur.execute("select landing_funds()")
             free = cur.fetchone()[0]
             assert free["tier"] == "free"
             assert free["limit"] == 11
-            assert len(free["funds"]) == 11
+            assert len(free["funds"]) == 5
             cur.execute("select set_config('request.jwt.claim.sub', '', true)")
             cur.execute("savepoint anon_list")
             cur.execute("set role anon")

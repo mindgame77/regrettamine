@@ -86,8 +86,7 @@ def test_partner_departures_count_per_year_capped():
 def test_published_fund_scores_match_inputs():
     inputs = json.loads((ROOT / "data" / "score_inputs.json").read_text(encoding="utf-8"))
     assert set(inputs) == {
-        "lux", "accel", "bessemer", "battery", "insightpartners",
-        "baincapitalventures", "generalcatalyst", "sequoia", "khosla", "lightspeed", "plugandplay",
+        "generalcatalyst", "sequoia", "lightspeed", "plugandplay",
     }
     for slug, rows in inputs.items():
         fund = json.loads((ROOT / "data" / "funds" / f"{slug}.json").read_text(encoding="utf-8"))
