@@ -1116,7 +1116,7 @@
    "record_id": "board:0",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:board:0"
@@ -1138,7 +1138,7 @@
    "record_id": "board:1",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:board:1"
@@ -1158,7 +1158,7 @@
    "record_id": "board:2",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:board:2"
@@ -1178,7 +1178,7 @@
    "record_id": "board:3",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:board:3"
@@ -1198,7 +1198,7 @@
    "record_id": "board:4",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:board:4"
@@ -1218,7 +1218,7 @@
    "record_id": "board:5",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:board:5"
@@ -1238,7 +1238,7 @@
    "record_id": "board:6",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:board:6"
@@ -1258,7 +1258,7 @@
    "record_id": "board:7",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:board:7"
@@ -1280,7 +1280,7 @@
    "record_id": "move:0",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:move:0"
@@ -1302,7 +1302,7 @@
    "record_id": "move:1",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:move:1"
@@ -1324,7 +1324,7 @@
    "record_id": "move:2",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:move:2"
@@ -1346,7 +1346,7 @@
    "record_id": "move:3",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:move:3"
@@ -1384,7 +1384,7 @@
    "record_id": "pev:Regulator actions",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:pev:Regulator actions"
@@ -1405,7 +1405,7 @@
    "record_id": "pev:Shutdowns",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:pev:Shutdowns"
@@ -1426,7 +1426,7 @@
    "record_id": "pev:Founder fraud",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:pev:Founder fraud"
@@ -1447,7 +1447,7 @@
    "record_id": "pev:Founder removal / board control",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:pev:Founder removal / board control"
@@ -1468,7 +1468,7 @@
    "record_id": "pev:Harassment / discrimination",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:pev:Harassment / discrimination"
@@ -1489,7 +1489,7 @@
    "record_id": "pev:Crypto token / holder harm",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:pev:Crypto token / holder harm"
@@ -1510,7 +1510,7 @@
    "record_id": "pev:Security incidents",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:pev:Security incidents"
@@ -1531,7 +1531,7 @@
    "record_id": "pev:Customer harm",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:pev:Customer harm"
@@ -1552,7 +1552,7 @@
    "record_id": "pev:Suits against the company",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:pev:Suits against the company"
@@ -1573,7 +1573,7 @@
    "record_id": "pev:Other",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:pev:Other"
@@ -1594,7 +1594,7 @@
    "record_id": "pev:Layoffs",
    "quote": null,
    "status": "current",
-   "data_status": "test",
+   "data_status": "needs_proof",
    "needs_refetch": true,
    "source_system": "repo_json",
    "external_id": "a16z:pev:Layoffs"

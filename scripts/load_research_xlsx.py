@@ -3,9 +3,13 @@ existing schema. The workbook is only a carrier: provenance is the source URL of
 
 Usage: python3 scripts/load_research_xlsx.py OUT_DIR file.xlsx [...]
 Writes OUT_DIR/<slug>.sql and OUT_DIR/report.json (counts, conflicts, unmapped fields).
-Rules: a fact is 'real' only when its sheet status is 'verified' AND it has a source URL AND a checked date.
-Everything else is 'test'. AI text from the workbook is loaded as draft/test (not approved).
-Existing values are never overwritten: differences go to vc_fact_conflicts.
+Rules (Alex, Oct 14 2026):
+- 'real' only when the sheet status is 'verified' AND the fact has a source URL AND a checked date.
+- 'test' only for rows the workbook itself rejected ('excluded'); test means placeholder/mock data.
+- everything else is a genuine but unproven claim: 'needs_proof' (firm says, unverified, context, conflict, ...).
+- Only raw facts are imported. Workbook scores, score sections, confidence, trust tiers, verdicts, summaries,
+  red banners, worst-case floors and other AI conclusions are NOT stored anywhere (not even staging).
+- Re-runs are idempotent and also re-apply the data_status rule to rows loaded earlier.
 """
 import collections
 import datetime as dt
@@ -78,6 +82,68 @@ def day(v):
     return s[:10] if re.match(r"\d{4}-\d{2}-\d{2}", s) else None
 
 
+# Fields that are the workbook's own judgments (AI conclusions), never imported.
+SKIP_FIELDS = {"adverse_event_candidate", "conflict_candidate", "firm_claim_contradiction", "employee_sentiment"}
+# Extra fields -> (table, kind column value).
+EXTRA = {
+    **{k: "vc_entity_identifiers" for k in ("cik", "lei", "company_number", "entity_status")},
+    **{k: "vc_partner_history" for k in ("career_stint", "prior_firm", "founded_company", "deal_led", "team", "partner_statement")},
+    **{k: "vc_political_activity" for k in ("political_donation", "lobbying_spend", "lobbying_issue")},
+    **{k: "vc_firm_claims" for k in ("stated_focus_sector", "stated_focus_stage", "stated_geography", "team_size",
+                                     "investing_partner_count", "platform_team")},
+    **{k: "vc_context_notes" for k in ("context", "community_report", "negative_alias")},
+}
+
+
+def classify(status, url, checked, field=None):
+    if status == "excluded":
+        return "test"
+    if EXTRA.get(field) == "vc_firm_claims" or status == "firm says":
+        return "needs_proof"
+    if status == "verified" and url and checked:
+        return "real"
+    return "needs_proof"
+
+
+def extra_row(table, firm, f, field, ds, url, label, quote, checked, ext, slug):
+    val = str(f.get("value") or "")
+    ent = str(f.get("entity") or "")
+    person = ent.split(":", 1)[1].strip() if ent.startswith("partner:") else None
+    cols = {"firm_id": None, "entity": ent or None, "field": field, "value": val, "source_url": url, "source_label": label,
+            "quote": quote, "published_date": day(f.get("published_date")), "retrieved_at": checked,
+            "data_status": ds, "source_system": "research_workbook", "external_id": ext}
+    if table == "vc_entity_identifiers":
+        parts = [x.strip() for x in val.split("|")]
+        cols["id_type"] = field
+        if field == "cik":
+            m = re.search(r"CIK\s*(\d+)", val)
+            cols["id_value"] = m.group(1) if m else None
+        elif field == "lei":
+            m = re.search(r"\b([0-9A-Z]{20})\b", val)
+            cols["id_value"] = m.group(1) if m else None
+        elif field == "company_number":
+            cols["id_value"] = parts[2] if len(parts) > 2 else None
+            cols["jurisdiction"] = parts[1] if len(parts) > 1 else None
+        if field in ("lei",) and len(parts) > 1 and re.fullmatch(r"[A-Z]{2}", parts[1] or ""):
+            cols["jurisdiction"] = parts[1]
+    elif table == "vc_partner_history":
+        cols.update(person_name=person, kind=field, organization=val.split("|")[0].strip()[:300])
+    elif table == "vc_political_activity":
+        cols.update(person_name=person, kind=field)
+    elif table == "vc_firm_claims":
+        cols.update(subject=ent or None, kind=field)
+    elif table == "vc_context_notes":
+        cols.update(kind=field)
+    names = ", ".join(cols)
+    vals = ", ".join(firm if k == "firm_id" else (f"{q(v)}::date" if k == "published_date" else f"{q(v)}::timestamptz" if k == "retrieved_at"
+                     else f"{q(v)}::public.data_status" if k == "data_status" else q(v)) for k, v in cols.items())
+    sets = ", ".join(f"{k} = excluded.{k}" for k in cols if k not in ("firm_id", "source_system", "external_id"))
+    sql = f"insert into public.{table} ({names}) values ({vals}) on conflict (source_system, external_id) do update set {sets};"
+    if table == "vc_partner_history" and person:
+        sql += f"\nupdate public.vc_partner_history set person_id = (select id from public.people where full_name = {q(person)} limit 1) where source_system = 'research_workbook' and external_id = {q(ext)};"
+    return sql
+
+
 def slugify(name):
     return re.sub(r"[^a-z0-9]+", "", name.lower())[:40]
 
@@ -105,7 +171,8 @@ def main(out_dir, files):
         firm = f"(select id from public.firms where slug = {q(slug)})"
         out = ["begin;"]
         rep = {"firm": name, "slug": slug, "new": new, "facts_real": 0, "facts_test": 0, "by_type": collections.Counter(),
-               "other_tables": collections.Counter(), "unmapped": collections.Counter(), "conflicts": [], "status": collections.Counter()}
+               "other_tables": collections.Counter(), "unmapped": collections.Counter(), "conflicts": [], "status": collections.Counter(),
+               "data_status": collections.Counter(), "skipped_ai_judgment": collections.Counter(), "extra": collections.Counter()}
         crds = [str(f["value"]).split("|")[-1].strip() for f in facts if f["field"] == "crd"]
         crds = [re.sub(r"\D", "", c) for c in crds if re.search(r"\d{5,}", c)]
         primary_crd = crds[0] if crds else None
@@ -115,9 +182,11 @@ def main(out_dir, files):
             ini = "".join(w[0] for w in name.split()[:3]).upper()
             out.append(
                 "insert into public.firms (slug, name, initials, short_name, hq, firm_type, published, is_test, data_status, sec_crd, legal_name, source_system, external_id) "
-                f"values ({q(slug)}, {q(name)}, {q(ini)}, {q(name.split()[0])}, {q(hq)}, 'VC', false, true, 'test', {q(primary_crd)}, {q(legal)}, 'sec_iapd', {q(primary_crd)}) "
+                f"values ({q(slug)}, {q(name)}, {q(ini)}, {q(name.split()[0])}, {q(hq)}, 'VC', false, true, 'needs_proof', {q(primary_crd)}, {q(legal)}, 'sec_iapd', {q(primary_crd)}) "
                 "on conflict (slug) do nothing;"
             )
+            # a real firm we have not finished proving: needs_proof (never purged), stays unpublished
+            out.append(f"update public.firms set data_status = 'needs_proof' where slug = {q(slug)} and data_status = 'test';")
         else:
             out.append(f"update public.firms set sec_crd = coalesce(sec_crd, {q(primary_crd)}), legal_name = coalesce(legal_name, {q(legal)}) where slug = {q(slug)};")
         for f in facts:
@@ -128,7 +197,12 @@ def main(out_dir, files):
             url = (srcs[0]["url"] if srcs else None) or (str(f.get("source_urls") or "").split()[0] if f.get("source_urls") else None)
             checked = (day(fsrc[f["fact_id"]][0]["checked_date"]) if fsrc.get(f["fact_id"]) else None) or (day(srcs[0]["checked_date"]) if srcs else None)
             quote = fsrc[f["fact_id"]][0].get("quote") if fsrc.get(f["fact_id"]) else None
-            real = status == "verified" and bool(url) and bool(checked)
+            ds = classify(status, url, checked, field)
+            real = ds == "real"
+            rep["data_status"][ds] += 1
+            if field in SKIP_FIELDS:
+                rep["skipped_ai_judgment"][field] += 1
+                continue
             ext = hashlib.md5(f"{slug}|{field}|{f.get('entity')}|{f.get('value')}|{url}".encode()).hexdigest()
             ftype = FACT_TYPE.get(field)
             if ftype:
@@ -138,15 +212,15 @@ def main(out_dir, files):
                 out.append(
                     "insert into public.vc_source_facts (id, firm_id, fact_type, section, value, source_url, source_label, source_type, retrieved_at, quote, status, data_status, needs_refetch, source_system, external_id) values ("
                     f"{q(str(fid))}::uuid, {firm}, {q(ftype)}, {q(ftype)}, {qj(value)}::jsonb, {q(url)}, {q(srcs[0]['publisher'] if srcs else None)}, {q(source_system(url))}, "
-                    f"{q(checked)}::timestamptz, {q(quote)}, 'current', {q('real' if real else 'test')}::public.data_status, false, {q(source_system(url))}, {q(ext)}) on conflict (id) do nothing;"
+                    f"{q(checked)}::timestamptz, {q(quote)}, 'current', {q(ds)}::public.data_status, false, {q(source_system(url))}, {q(ext)}) on conflict (id) do nothing;"
                 )
+                out.append(f"update public.vc_source_facts set data_status = {q(ds)}::public.data_status where id = {q(str(fid))}::uuid;")
                 rep["by_type"][ftype] += 1
                 rep["facts_real" if real else "facts_test"] += 1
             elif field in OTHER_TABLE:
                 target = OTHER_TABLE[field]
                 rep["other_tables"][target] += 1
                 val = str(f.get("value") or "")
-                ds = "real" if real else "test"
                 if target == "vc_aliases":
                     kind = "domain" if re.search(r"\b[a-z0-9-]+\.(com|vc|net|org|io)\b", val.lower()) else "name"
                     alias = re.search(r"([a-z0-9-]+\.(?:com|vc|net|org|io))", val.lower()).group(1) if kind == "domain" else val.split("(")[0].strip()
@@ -157,11 +231,13 @@ def main(out_dir, files):
                         f"insert into public.funds (firm_id, name, notes, data_status, source_system, external_id) select {firm}, {q(fname)}, {q(val)}, {q(ds)}::public.data_status, {q(source_system(url))}, {q(ext)} "
                         f"where not exists (select 1 from public.funds where source_system = {q(source_system(url))} and external_id = {q(ext)});"
                     )
+                    out.append(f"update public.funds set data_status = {q(ds)}::public.data_status where source_system = {q(source_system(url))} and external_id = {q(ext)};")
                 elif target == "fund_entities":
                     out.append(
                         f"insert into public.fund_entities (firm_id, name, entity_kind, notes, data_status) select {firm}, {q(val.split('|')[0][:200])}, 'related_org', {q(val)}, {q(ds)}::public.data_status "
                         f"where not exists (select 1 from public.fund_entities where firm_id = {firm} and notes = {q(val)});"
                     )
+                    out.append(f"update public.fund_entities set data_status = {q(ds)}::public.data_status where firm_id = {firm} and notes = {q(val)};")
                 elif target == "fund_people":
                     ent = str(f.get("entity") or "")
                     if ent.startswith("partner:"):
@@ -171,61 +247,48 @@ def main(out_dir, files):
                             f"insert into public.fund_people (person_id, firm_id, role, notes, data_status) select (select id from public.people where full_name = {q(person)} limit 1), {firm}, {q(field)}, {q(val)}, {q(ds)}::public.data_status "
                             f"where not exists (select 1 from public.fund_people fp where fp.firm_id = {firm} and fp.role = {q(field)} and fp.notes = {q(val)});"
                         )
+                        out.append(f"update public.fund_people set data_status = {q(ds)}::public.data_status where firm_id = {firm} and role = {q(field)} and notes = {q(val)};")
                 elif target == "firms.hq":
                     old = existing_meta.get(slug, {}).get("hq")
                     if not new and old and old.split(",")[0].lower() not in val.lower():
                         rep["conflicts"].append({"field": "hq", "existing": old, "sheet": val, "url": url})
+            elif field in EXTRA:
+                rep["extra"][EXTRA[field]] += 1
+                lbl = srcs[0]["publisher"] if srcs else None
+                out.append(extra_row(EXTRA[field], firm, f, field, ds, url, lbl, quote, checked, ext, slug))
             else:
                 rep["unmapped"][field] += 1
-        # firm-level conflicts with what we already publish
+        # firm-level conflicts with what we already publish (facts only; workbook scores are never compared or stored)
         if not new:
             em = existing_meta.get(slug, {})
             if em.get("crd") and primary_crd and em["crd"] != primary_crd:
                 rep["conflicts"].append({"field": "sec_crd", "existing": em["crd"], "sheet": primary_crd})
-            if em.get("score") is not None and summary.get("Score") is not None and round(float(summary["Score"])) != int(em["score"]):
-                rep["conflicts"].append({"field": "score", "existing": em["score"], "sheet": summary["Score"]})
         for c in rep["conflicts"]:
             out.append(
                 "insert into public.vc_fact_conflicts (firm_id, field, fact_a_table, fact_a_id, fact_b_table, fact_b_id, status) select "
                 f"{firm}, {q(c['field'])}, 'firms', {q(slug + ':' + str(c['existing']))}, 'research_import', {q(str(c['sheet']))}, 'open' "
                 f"where not exists (select 1 from public.vc_fact_conflicts where firm_id = {firm} and field = {q(c['field'])} and fact_b_id = {q(str(c['sheet']))});"
             )
-        # draft score (test) from the Score sheet
-        score_rows = sheet(wb, "Score")
-        sid = uuid.uuid5(NS, f"{slug}:score:{summary.get('Run id')}")
-        rng = re.findall(r"[\d.]+", str(summary.get("Likely range") or ""))
-        cov = summary.get("Coverage % (firm)") or summary.get("Coverage %")
-        band = str(summary.get("Band") or "").lower().replace(" ", "_")
-        out.append(f"delete from public.vc_scores where id = {q(str(sid))}::uuid;")  # cascades parts/inputs
+        # Cleanup of what an earlier version of this loader stored from the workbook's own judgments:
+        # its scores (vc_scores 'research-draft' + parts/inputs by cascade), score conflicts, and AI text.
+        out.append(f"delete from public.vc_scores where firm_id = {firm} and method_version = 'research-draft';")
+        out.append(f"delete from public.vc_fact_conflicts where firm_id = {firm} and field = 'score' and fact_b_table = 'research_import';")
+        out.append(f"delete from public.vc_ai_summaries where firm_id = {firm} and model = 'research-bot';")
+        # people created by the import: best status of their links (fund_people roles, partner history):
+        # real > needs_proof > test. A named person with no link yet is a genuine claim: needs_proof.
         out.append(
-            "insert into public.vc_scores (id, firm_id, method_version, score_exact, score_shown, band, range_low, range_high, coverage_pct, is_current, data_status) values ("
-            f"{q(str(sid))}::uuid, {firm}, 'research-draft', {float(summary.get('Exact (unrounded)') or summary.get('Raw before cap') or summary['Score'])}, {round(float(summary['Score']))}, {q(band)}, "
-            f"{rng[0] if rng else 'null'}, {rng[1] if len(rng) > 1 else 'null'}, {cov if cov is not None else 'null'}, false, 'test');"
+            "with l as (select person_id, data_status from public.fund_people union all select person_id, data_status from public.vc_partner_history where person_id is not null) "
+            "update public.people p set data_status = coalesce((select case when bool_or(l.data_status = 'real') then 'real' "
+            "when bool_or(l.data_status = 'needs_proof') then 'needs_proof' when bool_or(l.data_status = 'test') then 'test' end from l where l.person_id = p.id), 'needs_proof')::public.data_status "
+            f"where p.data_status <> 'real' and (exists (select 1 from public.fund_people fp where fp.person_id = p.id and fp.firm_id = {firm}) "
+            f"or exists (select 1 from public.vc_partner_history h where h.person_id = p.id and h.firm_id = {firm}) "
+            "or exists (select 1 from public.fact_events e where e.table_name = 'people' and e.row_id = p.id and e.import_run_id is not null));"
         )
-        part_id = None
-        n = 0
-        for r in score_rows:
-            sec = str(r.get("section") or "")
-            if not sec.startswith(" "):
-                n += 1
-                part_id = uuid.uuid5(NS, f"{sid}:{n}:{sec}")
-                out.append(f"insert into public.vc_score_parts (id, score_id, part_key, name, got, max_label, sort_order) values ({q(str(part_id))}::uuid, {q(str(sid))}::uuid, {q(slugify(sec))}, {q(sec.strip())}, {float(r.get('points') or 0)}, {q(str(r.get('max') or ''))}, {n});")
-            elif part_id and r.get("inputs"):
-                out.append(f"insert into public.vc_score_inputs (part_id, name, points) values ({q(str(part_id))}::uuid, {q(str(r['inputs']))}, {q(str(r.get('points')))});")
-        # workbook AI text -> draft summaries (not approved; needs review)
-        for kind, key in (("verdict", "Verdict"), ("verdict_sub", "Verdict sub"), ("summary", "Summary")):
-            if summary.get(key):
-                aid = uuid.uuid5(NS, f"{slug}:ai:{kind}:{summary.get('Run id')}")
-                out.append(f"delete from public.vc_ai_summaries where id = {q(str(aid))}::uuid;")
-                out.append(
-                    "insert into public.vc_ai_summaries (id, firm_id, kind, section, text, model, prompt_version, review_status, data_status) values ("
-                    f"{q(str(aid))}::uuid, {firm}, {q(kind)}, 'overview', {qj(summary[key])}::jsonb, 'research-bot', {q(str(summary.get('Run id')))}, 'draft', 'test');"
-                )
         rep["unmapped_sheets"] = [s for s in wb.sheetnames if s not in ("Summary", "Facts", "Sources", "Fact_Sources", "Score", "Partners")]
         out.append(
             "with run as (insert into public.import_runs (source_system, file_or_url, run_by, notes, finished_at) "
             f"values ('research_workbook', {q(path.split('/')[-1])}, 'load_research_xlsx', {q(name)}, now()) returning id) "
-            "update public.fact_events set import_run_id = (select id from run) where import_run_id is null and created_at = now();"
+            "update public.fact_events set import_run_id = (select id from run) where import_run_id is null and created_at = now() and data_status <> 'real';"
         )
         out.append("commit;")
         open(f"{out_dir}/{slug}.sql", "w", encoding="utf-8").write("\n".join(out))

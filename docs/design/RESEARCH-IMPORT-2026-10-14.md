@@ -41,3 +41,9 @@ Four workbooks were loaded into the existing schema. The workbook isn't kept as 
 | firm_claim_contradiction | 1 |  |
 
 Sheet-level data not loaded: per-fact confidence, # sources, # independent roots, score_moving, firm_controlled, lens_reasons; per-source trust_tier, junk, archive_url, published_date; the Partners matrix (cross-links only; roles were loaded from Facts); the tabs Not found, Human queue, Run log, Cost, and 'What the firm says about itself'; Summary extras (worst-case floor, confidence, sources reliable %, red banner, insufficient-data flag).
+
+## Update Oct 15, 2026: needs_proof, extra fields, no workbook scores
+
+- Reclassified with the three-value rule (see DATA-ARCHITECTURE.md): verified + URL + date = real, excluded = test, everything else needs_proof. The fields in "Not loaded" above now live in vc_entity_identifiers, vc_partner_history, vc_political_activity, vc_firm_claims and vc_context_notes.
+- Removed from the earlier import (workbook judgments, not facts): 4 vc_scores rows `research-draft` (with their 47 score parts and 51 score inputs, by cascade), 12 vc_ai_summaries by `research-bot` (verdict, verdict sub, summary per firm), 3 vc_fact_conflicts rows comparing workbook scores to ours. Not imported at all: Score sheet, Summary extras, confidence, trust tiers, # sources, # independent roots, score_moving, lens_reasons, Partners "Judge summary", and the fields adverse_event_candidate, conflict_candidate, firm_claim_contradiction, employee_sentiment.
+- Plug and Play stays unpublished (firm row needs_proof): its real facts do not cover our score inputs (portfolio count, founder accounts, investing partners, media, fund size), and the site has no report for it.
