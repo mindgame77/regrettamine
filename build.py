@@ -1041,6 +1041,45 @@ def apply_legal(raw):
 
 
 SCORING_EXAMPLE = "scoring_example"
+SITE_STATS = "site_stats"
+NOT_SOURCES = ("regretamin.com", "github.io", "jsdelivr.net", "supabase.co", "stripe.com", "w3.org")
+SOURCE_URL = re.compile(r'(?:href=|"url":\s*)"(https?://[^"\s]+)"')
+
+
+def _is_match(text):
+    low = (text or "").lower().replace("-", "_")
+    return "match" in low and "no_match" not in low and "no match" not in low
+
+
+def compute_site_stats(home, funds):
+    """Landing stats from the same rendered reports and helpers the tabs use. Never typed in."""
+    names = {f.get("report"): f.get("name") for f in home.get("funds") or []}
+    urls = set()
+    legal = {}
+    sanctioned = []
+    screened = 0
+    for slug, fund in funds.items():
+        page = render_report_payload(fund, "../../")
+        urls |= {u.rstrip("/") for u in SOURCE_URL.findall(page) if not any(d in u for d in NOT_SOURCES)}
+        matters = {m["id"]: m for m in fund.get("matters") or []}
+        legal[slug] = legal_count(fund, matters)
+        screens = (real_facts(fund).get("legal") or {}).get("sanctions") or []
+        screened += len(screens)
+        if any(_is_match(x.get("detail")) for x in screens):
+            sanctioned.append(slug)
+    for upd in home.get("updates") or []:
+        if str(upd.get("u") or "").startswith("http"):
+            urls.add(upd["u"].rstrip("/"))
+    short = lambda slug: (funds[slug].get("short") or names.get(slug) or slug)
+    per_firm = ", ".join(f"{short(s)} {n}" for s, n in sorted(legal.items(), key=lambda kv: (-kv[1], kv[0])))
+    return [
+        {"n": len(funds), "l": "funds", "s": f"All {len(funds)} have a report built from the database", "v": True},
+        {"n": len(urls), "l": "sources cited", "s": f"Distinct source links on the {len(funds)} reports and the update feed", "v": True},
+        {"n": sum(legal.values()), "l": "legal matters on file", "s": f"Sum of the Legal tab counts: {per_firm}", "v": True},
+        {"n": len(sanctioned), "l": "funds sanctioned",
+         "s": (f"{screened} sanctions screens on file; a match needs an exact identity match"
+               + (": " + ", ".join(short(x) for x in sanctioned) if sanctioned else "")), "v": True},
+    ]
 
 
 def scoring_example_html(funds):
@@ -1270,7 +1309,13 @@ def main():
     home = strip_toxy(home)
     if full:
         assign_list_ranks(funds)
-        fragments = dict(fragments, **{SCORING_EXAMPLE: scoring_example_html(funds)})
+        fragments = dict(fragments, **{
+            SCORING_EXAMPLE: scoring_example_html(funds),
+            SITE_STATS: json.dumps(compute_site_stats(home, funds), ensure_ascii=False),
+        })
+    if not fragments.get(SITE_STATS):
+        raise SystemExit("landing stats need the computed site_stats fragment (publish from the database first)")
+    home = dict(home, stats=json.loads(fragments[SITE_STATS]))
     linked = [f.get("report") for f in home["funds"] if f.get("report")]
     missing = [slug for slug in linked if slug not in funds]
     if missing:
