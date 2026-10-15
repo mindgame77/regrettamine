@@ -1308,5 +1308,142 @@
       "value_numeric": 0,
       "value_text": "sanctions_clear"
     }
+  ],
+  "plugandplay": [
+    {
+      "section_code": "s1",
+      "name": "portfolio_companies",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "own_founder_lawsuits",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "founder_ceo_removals",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "downround_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "blocking_events",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s1",
+      "name": "losses_or_fraud",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s2",
+      "name": "money_fund_size",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_reserves",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "money_hit_target",
+      "value_numeric": 1.5,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "media_points",
+      "value_numeric": 0,
+      "max_numeric": 6
+    },
+    {
+      "section_code": "s2",
+      "name": "help_platform",
+      "value_numeric": 0,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "help_intros",
+      "value_numeric": 0,
+      "max_numeric": 1.5
+    },
+    {
+      "section_code": "s2",
+      "name": "help_stability",
+      "value_numeric": 2,
+      "max_numeric": 2
+    },
+    {
+      "section_code": "s2",
+      "name": "partner_departure_years",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "portfolio_companies",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "fund_age_years",
+      "value_numeric": 20
+    },
+    {
+      "section_code": "s3",
+      "name": "negative_first_hand",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s3",
+      "name": "first_hand_accounts",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "conflict_count",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "s4",
+      "name": "scaled_deduction",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "bonus",
+      "name": "years_investing",
+      "value_numeric": 20
+    },
+    {
+      "section_code": "bonus",
+      "name": "significant_harm",
+      "value_numeric": 0
+    },
+    {
+      "section_code": "pen",
+      "name": "treasury_oisp_penalty",
+      "value_numeric": -10,
+      "value_text": "fine"
+    },
+    {
+      "section_code": "pen",
+      "name": "sec_record",
+      "value_numeric": 0,
+      "value_text": "sec"
+    },
+    {
+      "section_code": "pen",
+      "name": "sanctions",
+      "value_numeric": 0,
+      "value_text": "sanctions_clear"
+    }
   ]
 }

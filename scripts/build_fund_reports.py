@@ -18,6 +18,8 @@ sys.path.insert(0, str(ROOT))
 from regrettamine.score_v2 import score_v2  # noqa: E402
 
 UPDATED = "Oct 4, 2026"
+NO_DATA = "No data yet"
+RANK_OF = 12  # a16z + the specs below
 SHORTS = {
     "lux": "Lux",
     "accel": "I",
@@ -29,6 +31,7 @@ SHORTS = {
     "sequoia": "Sequoia",
     "khosla": "Khosla",
     "lightspeed": "Lightspeed",
+    "plugandplay": "PnP",
 }
 ADV = "https://reports.adviserinfo.sec.gov/reports/ADV/{crd}/PDF/{crd}.pdf"
 IAPD = "https://adviserinfo.sec.gov/firm/summary/{crd}"
@@ -90,6 +93,19 @@ CLEAN_PEN = [
     {"section_code": "pen", "name": "sec_record", "value_numeric": 0, "value_text": "sec"},
     {"section_code": "pen", "name": "sanctions", "value_numeric": 0, "value_text": "sanctions_clear"},
 ]
+# A penalty spec: what the regulatory block, Score line and evidence cards say. Insight's text is unchanged.
+INSIGHT_PENALTY = {
+    "line": "SEC fee order, 2023",
+    "points": "−10",
+    "why": "Fine band is −10 to −20. Fees were repaid and there was no fraud finding, so −10. Not also scored as a conflict.",
+    "title": "SEC fee order, 2023",
+    "detail": "June 20, 2023 order. Excess fees repaid. $1.5 million penalty. No fraud finding.",
+    "body": "SEC order of June 20, 2023: excess management fees of $773,754.41, a $1.5 million civil penalty, and disgorgement plus interest of $864,958.17 that the SEC said had already been paid back. No fraud finding. Scored at −10, the bottom of the fine band. The same fee conflict is not also deducted under conflicts.",
+    "sources": [
+        ["SEC press release, Jun 20, 2023", "https://www.sec.gov/newsroom/press-releases/2023-112"],
+        ["SEC order IA-6332", "https://www.sec.gov/files/litigation/admin/2023/ia-6332.pdf"],
+    ],
+}
 INSIGHT_PEN = [
     {"section_code": "pen", "name": "sec_fee_order", "value_numeric": -10, "value_text": "fine"},
     {"section_code": "pen", "name": "sanctions", "value_numeric": 0, "value_text": "sanctions_clear"},
@@ -623,7 +639,7 @@ FUNDS = [
         "departures": 0,
         "pen": INSIGHT_PEN,
         "reg_down": "5",
-        "penalty": True,
+        "penalty": INSIGHT_PENALTY,
         "aum": 92.18,
         "aum_as_of": "Sep 2026",
         "aum_src": "SEC Form ADV",
@@ -1063,6 +1079,131 @@ FUNDS = [
             "mignano": ["USV, Michael Mignano", "https://www.usv.com/people/michael-mignano/"],
         },
     },
+    {
+        "slug": "plugandplay",
+        "name": "Plug and Play Tech Center",
+        "hq": "Sunnyvale, CA",
+        "since": "2006",
+        "age": 20,
+        "age_why": "Plug and Play's founder page says the firm launched in 2006. 20 ÷ 5 is capped at +3. The 2026 Treasury penalty is a regulatory penalty, not the bonus's “significant harm” test, which is about a pattern against founders.",
+        "age_source": ["Plug and Play, Saeed Amidi profile", "https://www.plugandplaytechcenter.com/member/saeed-amidi"],
+        "crd": "321635",
+        "legal_name": "PLUG AND PLAY FUND MANAGEMENT I, LLC",
+        "sec_file": NO_DATA,
+        "status": "Exempt reporting adviser, active with the SEC since July 26, 2022 and with California since March 26, 2024. Not SEC-registered.",
+        "filing": "March 30, 2026",
+        "size_label": "Private-fund GAV",
+        "size_value": "$130.5M",
+        "size_note": "Total gross assets of private funds, 5 venture funds, from the SEC's October 2026 exempt-reporting-adviser data file. Not Item 5 regulatory AUM.",
+        "size_why": "the SEC's exempt-reporting-adviser data reports $130,479,155 of private-fund gross assets across 5 venture funds, and a Form D for Plug & Play New Jersey Fund I-A, L.P. was filed on September 11, 2026.",
+        "staff_value": NO_DATA,
+        "staff_note": "ERA filing. No firmwide headcount was verified.",
+        "accounts_value": "5 funds",
+        "accounts_note": "Private funds reported for CRD 321635 in the SEC's October 2026 exempt-reporting-adviser data.",
+        "portfolio": 0,
+        "lawsuits": 0,
+        "lawsuit_cov": "0.10",
+        "departures": 0,
+        "pen": [
+            {"section_code": "pen", "name": "treasury_oisp_penalty", "value_numeric": -10, "value_text": "fine"},
+            {"section_code": "pen", "name": "sec_record", "value_numeric": 0, "value_text": "sec"},
+            {"section_code": "pen", "name": "sanctions", "value_numeric": 0, "value_text": "sanctions_clear"},
+        ],
+        "reg_down": "5",
+        "penalty": {
+            "line": "Treasury outbound-investment penalty, 2026",
+            "points": "−10",
+            "why": "Fine band is −10 to −20. $200,000 civil penalty to Amidi, LLC, the parent of the organization that does business as Plug and Play Tech Center, for a missed notification. Treasury named no harmed investor or founder and made no fraud finding, so −10.",
+            "title": "Treasury penalty, 2026",
+            "detail": "$200,000 civil penalty to Amidi, LLC (Plug and Play's parent) under the Outbound Investment Security Program. Missed notification. No fraud finding.",
+            "body": "In July 2026 Treasury issued its first civil penalty under the Outbound Investment Security Program: $200,000 to Amidi, LLC, for not notifying Treasury of a roughly $92,478 investment by its Chinese subsidiary fund in Shanghai Qiongche Intelligent Technology (Noematrix) on April 19, 2025. Treasury says Amidi is the parent of the organization that does business as Plug and Play Tech Center. No harmed investor or founder and no fraud finding, so −10, the bottom of the fine band. The SEC adviser itself (CRD 321635) has no disclosure flagged on IAPD.",
+            "sources": [
+                ["U.S. Treasury press release, Oct 7, 2026", "https://home.treasury.gov/news/press-releases/sb0652/"],
+                ["SEC IAPD search, CRD 321635", "https://api.adviserinfo.sec.gov/search/firm?query=Plug%20and%20Play"],
+            ],
+            "sec_clean_too": True,
+        },
+        "sanctions": {
+            "kicker": "Sanctions · no match",
+            "title": "No match on the OFAC lists",
+            "body": "The OFAC SDN and Consolidated (non-SDN) lists were checked on Oct 11, 2026 for the firm's fund names, Amidi, LLC, 12 people and 15 name variants. No entry matched. The one similar name on the list is a different person. A designation would need an exact identity match, not a shared word in a name.",
+            "sources": [["OFAC Sanctions List Service, SDN list", "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.CSV"]],
+            "rows": [
+                ["OFAC SDN + Consolidated", "No match"],
+                ["People screened", "12 people, 15 name variants"],
+                ["Adviser", "PLUG AND PLAY FUND MANAGEMENT I, LLC"],
+                ["EU / UK / UN lists", NO_DATA],
+            ],
+            "title_short": "No match on the OFAC lists",
+            "text": "OFAC SDN and Consolidated lists checked Oct 11, 2026 for the funds, Amidi, LLC and 12 people: no match. EU, UK and UN lists: no data yet.",
+            "why": "OFAC SDN and Consolidated lists: no match for the funds, Amidi, LLC or 12 people (Oct 11, 2026). Exact identity match required.",
+        },
+        "aum": 0.13,
+        "aum_as_of": "Oct 2026",
+        "aum_src": "SEC ERA data file, private-fund GAV",
+        "old": None,
+        "legal_n": 0,
+        "legal_note": "No open matter with the adviser as a party. One 2022 case names Plug and Play only as a non-party.",
+        "verdict": "Treasury fined Plug and Play's parent $200,000 in 2026. That is the score.",
+        "verdict_sub": "No SEC disclosure on the adviser, no OFAC sanctions match, and no founder lawsuit found. Most other parts have no data yet.",
+        "summary": "Plug and Play Fund Management I, LLC (CRD 321635) is an exempt reporting adviser with 5 venture funds and $130.5M of private-fund gross assets. IAPD flags no disclosure. Treasury penalized its parent, Amidi, LLC, $200,000 in 2026 for a missed outbound-investment notification. No founder lawsuit was found.",
+        "portfolio_value": NO_DATA,
+        "portfolio_text": "No portfolio count from an independent source was verified. The firm's own figure is not used.",
+        "lit_value": NO_DATA,
+        "lit_text": "No fund-versus-founder lawsuit was found, and there is no portfolio denominator.",
+        "matters": [
+            {
+                "id": "L1",
+                "year": "2022",
+                "text": "Cardinal Management Services sued a former contractor, White, in federal court in Florida over a doctored contract. The complaint names Plug and Play only as the other side of a 2019 services contract and says Plug and Play had no knowledge of the doctored version.",
+                "sub": "Cardinal Management Services v. White · M.D. Fla. 8:22-cv-01795",
+                "badge": "0 pts",
+                "tone": "gray",
+                "role": "Non-party",
+                "other": "Cardinal Management Services, LLC; White",
+                "status": "Complaint filed Aug 8, 2022",
+                "relevance": "Low · Plug and Play is not a party",
+                "effect": "0",
+                "kicker": "Legal · 2022",
+                "title": "Cardinal Management Services v. White",
+                "body": "Listed, not scored. Plug and Play is not a party, and the complaint says it had no knowledge of the doctored contract.",
+                "sources": [
+                    ["Complaint, M.D. Fla. (CourtListener RECAP)", "https://storage.courtlistener.com/recap/gov.uscourts.flmd.404413/gov.uscourts.flmd.404413.1.0.pdf"],
+                ],
+                "group": "other",
+                "featured": True,
+            }
+        ],
+        "moves": [],
+        "press": [
+            {
+                "publisher": "U.S. Department of the Treasury",
+                "domain": "home.treasury.gov",
+                "date": "Oct 7, 2026",
+                "headline": "Treasury Announces Enforcement Penalty for Violation of Outbound Program",
+                "url": "https://home.treasury.gov/news/press-releases/sb0652/",
+                "group": "Regulator",
+                "sentiment": "neg",
+                "why": "Cited on the regulatory record. The dollar figures live there.",
+            },
+        ],
+        "not_counted": [
+            "The firm's own figures (portfolio size, team size, focus) are claims we have not proven yet, so they are not shown or scored.",
+            "Cardinal Management Services v. White names Plug and Play only as a non-party.",
+            "EU, UK and UN sanctions lists: no data yet.",
+        ],
+        "takeaways": [
+            ("tk0", "The score comes down to one regulatory penalty.", "Treasury fined the parent company, Amidi, LLC, $200,000 in 2026 for not notifying it of an investment by a Chinese subsidiary fund. That is −10."),
+            ("tk1", "The SEC adviser record and the OFAC check show nothing.", "IAPD flags no disclosure for CRD 321635, and the OFAC lists had no match for the funds, the parent or 12 people."),
+            ("tk2", "Most founder-side parts have no data yet.", "No portfolio count, founder accounts, media reach or board list was verified, so those parts follow the same defaults as every other report."),
+        ],
+        "takeaway_sources": {
+            "tk0": [["U.S. Treasury press release, Oct 7, 2026", "https://home.treasury.gov/news/press-releases/sb0652/"]],
+            "tk1": [["SEC IAPD search, CRD 321635", "https://api.adviserinfo.sec.gov/search/firm?query=Plug%20and%20Play"],
+                    ["OFAC Sanctions List Service, SDN list", "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.CSV"]],
+        },
+        "no_data_labels": True,
+    },
 ]
 
 
@@ -1097,6 +1238,8 @@ def build_evidence(spec, cov, lo, hi, downs, ups, sections, rank_rows, place):
                 sources = [spec["extra_sources"]["portfolio"]]
             elif spec["slug"] in {"battery", "insightpartners", "baincapitalventures"}:
                 sources = [spec["age_source"]]
+        if spec.get("takeaway_sources", {}).get(key):
+            sources = spec["takeaway_sources"][key]
         evidence[key] = card(f"Takeaway", title, text, sources)
     s1_sources = [adv_src]
     for matter in spec["matters"]:
@@ -1140,16 +1283,13 @@ def build_evidence(spec, cov, lo, hi, downs, ups, sections, rank_rows, place):
         [spec["age_source"]],
     )
     pen_sources = [adv_src, iapd_src]
-    if spec.get("penalty"):
-        pen_sources = [
-            ["SEC press release, Jun 20, 2023", "https://www.sec.gov/newsroom/press-releases/2023-112"],
-            ["SEC order IA-6332", "https://www.sec.gov/files/litigation/admin/2023/ia-6332.pdf"],
-            adv_src,
-        ]
+    penalty = spec.get("penalty")
+    if penalty:
+        pen_sources = [*penalty["sources"], adv_src]
     pen_body = (
         "The Form ADV regulatory disclosure page has no information filed."
-        if not spec.get("penalty")
-        else "SEC order of June 20, 2023: excess management fees of $773,754.41, a $1.5 million civil penalty, and disgorgement plus interest of $864,958.17 that the SEC said had already been paid back. No fraud finding. Scored at −10, the bottom of the fine band. The same fee conflict is not also deducted under conflicts."
+        if not penalty
+        else penalty["body"]
     )
     evidence["pen"] = card(
         f"Penalty · {fmt_num(sections['pen']) if sections['pen'] else '0'}",
@@ -1160,7 +1300,7 @@ def build_evidence(spec, cov, lo, hi, downs, ups, sections, rank_rows, place):
     )
     evidence["sec"] = card(
         "Regulatory record",
-        "SEC disclosure page" if not spec.get("penalty") else "SEC fee order, 2023",
+        "SEC disclosure page" if not penalty else penalty["title"],
         pen_body,
         pen_sources,
         tone="open" if spec.get("penalty") else "",
@@ -1197,7 +1337,7 @@ def build_evidence(spec, cov, lo, hi, downs, ups, sections, rank_rows, place):
     )
     evidence["rank"] = card(
         "Ranking",
-        f"#{place} of 11",
+        f"#{place} of {RANK_OF}",
         "Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
         [],
         rows=rank_rows,
@@ -1216,17 +1356,21 @@ def build_evidence(spec, cov, lo, hi, downs, ups, sections, rank_rows, place):
             ["Regulatory penalty", "0 to −50"],
         ],
     )
-    evidence["sanc"] = card(
-        "Sanctions · no ADV designation",
-        "No adviser designation in the filing",
-        "The Form ADV disclosure pages were read. No sanctions designation for this adviser was in them. People were not screened one by one. A designation would need an exact identity match, not a shared word in a name.",
-        [adv_src, iapd_src],
-        rows=[
-            ["Form ADV DRP", "No sanctions designation filed"],
-            ["People screened", "Not run"],
-            ["Adviser", spec["legal_name"]],
-        ],
-    )
+    sanc = spec.get("sanctions")
+    if sanc:
+        evidence["sanc"] = card(sanc["kicker"], sanc["title"], sanc["body"], sanc["sources"], rows=sanc["rows"])
+    else:
+        evidence["sanc"] = card(
+            "Sanctions · no ADV designation",
+            "No adviser designation in the filing",
+            "The Form ADV disclosure pages were read. No sanctions designation for this adviser was in them. People were not screened one by one. A designation would need an exact identity match, not a shared word in a name.",
+            [adv_src, iapd_src],
+            rows=[
+                ["Form ADV DRP", "No sanctions designation filed"],
+                ["People screened", "Not run"],
+                ["Adviser", spec["legal_name"]],
+            ],
+        )
     for matter in spec["matters"]:
         evidence[matter["id"]] = card(
             matter["kicker"],
@@ -1306,9 +1450,9 @@ def build_fund(spec, result, cov, lo, hi, downs, ups, rank_rows, place):
         })
     sec_points = "−10 pts" if spec.get("penalty") else "0 pts"
     sec_tone = "amber" if spec.get("penalty") else "gray"
-    sec_title = "SEC fee order, 2023" if spec.get("penalty") else "SEC disciplinary record"
+    sec_title = spec["penalty"]["title"] if spec.get("penalty") else "SEC disciplinary record"
     sec_detail = (
-        "June 20, 2023 order. Excess fees repaid. $1.5 million penalty. No fraud finding."
+        spec["penalty"]["detail"]
         if spec.get("penalty")
         else f"No information filed on the disclosure pages of the {spec['filing']} Form ADV."
     )
@@ -1330,7 +1474,7 @@ def build_fund(spec, result, cov, lo, hi, downs, ups, rank_rows, place):
         "scoreExact": float(total),
         "band": band,
         "range": [lo, hi],
-        "rank": {"place": place, "tier": "Top 1" if place == 1 else "v2", "of": 11, "example": False},
+        "rank": {"place": place, "tier": "Top 1" if place == 1 else "v2", "of": RANK_OF, "example": False},
         "question": "Should I take this money?",
         "verdict": spec["verdict"],
         "verdictSub": spec["verdict_sub"],
@@ -1352,8 +1496,8 @@ def build_fund(spec, result, cov, lo, hi, downs, ups, rank_rows, place):
             ],
             "sanctions": {
                 "ok": True,
-                "title": "No adviser designation in the filing",
-                "text": f"The {spec['filing']} Form ADV for {spec['legal_name']} has no sanctions disclosure. People at the firm were not screened one by one.",
+                "title": (spec.get("sanctions") or {}).get("title", "No adviser designation in the filing"),
+                "text": (spec.get("sanctions") or {}).get("text", f"The {spec['filing']} Form ADV for {spec['legal_name']} has no sanctions disclosure. People at the firm were not screened one by one."),
                 "ev": "sanc",
                 "link": "Details →",
                 "note": "A shared word in another entity's name is not a match.",
@@ -1414,21 +1558,30 @@ def build_fund(spec, result, cov, lo, hi, downs, ups, rank_rows, place):
         "footnote": "Every scored fact links to a dated source. Empty blocks were left empty. Founder sentiment stays empty until it rests on a first-hand account.",
         "scoreFooter": "Rules: {{s:brand.name}} score (Oct 2, 2026). Inputs: this report, Oct 4, 2026.",
     }
+    if spec.get("no_data_labels"):
+        # Sparse record: every empty block says so plainly.
+        page["fundTab"]["boards"]["note"] = f"{NO_DATA}. No partner-board list was verified; empty is missing data, not a clean conflict record."
+        page["fundTab"]["moves"]["note"] = f"{NO_DATA} · verified departures only"
+        page["fundTab"]["media"]["note"] = NO_DATA
+        page["fundTab"]["media"]["foot"] = "No subscriber or audience figure was verified. Under the current rules media points are 0, the same as every other v2 report without a measured audience."
+        page["portfolio"]["note"] = NO_DATA
+        page["portfolio"]["healthNote"] = NO_DATA
+        s2 = next(x for x in page["parts"] if x["id"] == "s2")
+        s2["inputs"][1]["why"] = f"{NO_DATA}. No measured audience. Owned channels were not scored."
     page["evidence"] = build_evidence(spec, cov, lo, hi, downs, ups, sections, rank_rows, place)
     # s1 lawsuit points label is always 30/30 for these inputs because every scored rate is under 1% or the count is 0.
     return page
 
 
 def pen_lines(spec, pen):
+    sanctions_why = (spec.get("sanctions") or {}).get("why", "No sanctions designation in the Form ADV. People were not screened one by one.")
+    lines = []
     if spec.get("penalty"):
-        return [
-            {"name": "SEC fee order, 2023", "points": "−10", "why": "Fine band is −10 to −20. Fees were repaid and there was no fraud finding, so −10. Not also scored as a conflict."},
-            {"name": "Sanctions", "points": "0", "why": "No sanctions designation in the Form ADV. People were not screened one by one."},
-        ]
-    return [
-        {"name": "SEC record", "points": "0", "why": f"No information filed on the disclosure pages of the {spec['filing']} Form ADV."},
-        {"name": "Sanctions", "points": "0", "why": "No sanctions designation in the Form ADV. People were not screened one by one."},
-    ]
+        lines.append({"name": spec["penalty"]["line"], "points": spec["penalty"]["points"], "why": spec["penalty"]["why"]})
+    if not spec.get("penalty") or spec["penalty"].get("sec_clean_too"):
+        lines.append({"name": "SEC record", "points": "0", "why": f"No information filed on the disclosure pages of the {spec['filing']} Form ADV."})
+    lines.append({"name": "Sanctions", "points": "0", "why": sanctions_why})
+    return lines
 
 
 def dump(path, payload):
@@ -1476,6 +1629,7 @@ def main():
         rank_rows.append([row["name"], f"{fmt_num(row['total'])}"])
 
     out_dir = ROOT / "data" / "funds"
+    assert len(ranking) == RANK_OF, (len(ranking), RANK_OF)
     inputs_out = {}
     reports = {}
     for spec, inputs, result, cov, lo, hi, downs, ups in scored:
@@ -1489,10 +1643,10 @@ def main():
         )
     dump(ROOT / "data" / "score_inputs.json", inputs_out)
 
-    a16z["rank"] = {"place": place_of["a16z"], "tier": "Top 1", "of": 11, "example": False}
+    a16z["rank"] = {"place": place_of["a16z"], "tier": "Top 1", "of": RANK_OF, "example": False}
     a16z["evidence"]["rank"] = {
         "kicker": "Ranking",
-        "title": f"#{place_of['a16z']} of 11",
+        "title": f"#{place_of['a16z']} of {RANK_OF}",
         "body": "Ties are broken A–Z. The list shows the whole number below the one-decimal score.",
         "rows": rank_rows,
         "sources": [],
@@ -1566,10 +1720,10 @@ def main():
             urls.add(upd["u"])
     active = sum(row["legal"] for row in home["funds"])
     home["stats"] = [
-        {"n": 11, "l": "funds", "s": "All 11 have a v2 report", "v": True},
-        {"n": len(urls), "l": "sources cited", "s": "Distinct URLs in the 11 reports and the update feed", "v": True},
+        {"n": RANK_OF, "l": "funds", "s": f"All {RANK_OF} have a v2 report", "v": True},
+        {"n": len(urls), "l": "sources cited", "s": f"Distinct URLs in the {RANK_OF} reports and the update feed", "v": True},
         {"n": active, "l": "active legal matters", "s": "Open matters on the v2 reports. Insight 1, a16z 4", "v": True},
-        {"n": 0, "l": "funds sanctioned", "s": "No adviser-name designation in the Form ADVs read. Person screen only for a16z", "v": False},
+        {"n": 0, "l": "funds sanctioned", "s": "No adviser-name designation in the Form ADVs read. Person screen only for a16z and Plug and Play", "v": False},
     ]
     dump(ROOT / "data" / "home.json", home)
     print("sources", len(urls), "active", active)

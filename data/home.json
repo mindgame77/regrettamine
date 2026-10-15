@@ -307,19 +307,46 @@
       "cov": 39,
       "verdict": "Safe to take a meeting. Ask which other boards your partner sits on.",
       "report": "a16z"
+    },
+    {
+      "id": "plugandplay",
+      "name": "Plug and Play Tech Center",
+      "ini": "PP",
+      "hq": "Sunnyvale, CA",
+      "metro": "sf",
+      "since": 2006,
+      "type": "VC",
+      "aum": 0.13,
+      "aumAsOf": "Oct 2026",
+      "aumStale": false,
+      "aumSrc": "SEC ERA data file, private-fund GAV",
+      "score": 79,
+      "v2": true,
+      "band": "Low risk",
+      "legal": 0,
+      "legalNote": "No open matter with the adviser as a party. One 2022 case names Plug and Play only as a non-party.",
+      "updated": "2026-10-14",
+      "updatedTs": "2026-10-14T00:00:00-07:00",
+      "updatedS": "Oct 14, 2026",
+      "short": "PnP",
+      "lo": 69,
+      "hi": 84,
+      "cov": 8,
+      "verdict": "Treasury fined Plug and Play's parent $200,000 in 2026. That is the score.",
+      "report": "plugandplay"
     }
   ],
   "stats": [
     {
-      "n": 11,
+      "n": 12,
       "l": "funds",
-      "s": "All 11 have a v2 report",
+      "s": "All 12 have a v2 report",
       "v": true
     },
     {
-      "n": 89,
+      "n": 94,
       "l": "sources cited",
-      "s": "Distinct URLs in the 11 reports and the update feed",
+      "s": "Distinct URLs in the 12 reports and the update feed",
       "v": true
     },
     {
@@ -331,7 +358,7 @@
     {
       "n": 0,
       "l": "funds sanctioned",
-      "s": "No adviser-name designation in the Form ADVs read. Person screen only for a16z",
+      "s": "No adviser-name designation in the Form ADVs read. Person screen only for a16z and Plug and Play",
       "v": false
     }
   ],

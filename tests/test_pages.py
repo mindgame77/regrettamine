@@ -48,11 +48,11 @@ def test_shared_list_and_auth_pages(monkeypatch):
     from build import assign_list_ranks
     _, ranked_funds = load_local()
     assign_list_ranks(ranked_funds)
-    assert '<i>#1</i> of 11 funds' in render_fund_page(ranked_funds["a16z"], "../../")
+    assert '<i>#1</i> of 12 funds' in render_fund_page(ranked_funds["a16z"], "../../")
     assert "Top 1" not in render_fund_page(ranked_funds["a16z"], "../../")
-    assert '<i>#2</i> of 11 funds' in render_fund_page(ranked_funds["battery"], "../../")
-    assert '<i>#3</i> of 11 funds' in render_fund_page(ranked_funds["bessemer"], "../../")
-    assert '<i>#6</i> of 11 funds' in render_fund_page(ranked_funds["generalcatalyst"], "../../")
+    assert '<i>#2</i> of 12 funds' in render_fund_page(ranked_funds["battery"], "../../")
+    assert '<i>#3</i> of 12 funds' in render_fund_page(ranked_funds["bessemer"], "../../")
+    assert '<i>#6</i> of 12 funds' in render_fund_page(ranked_funds["generalcatalyst"], "../../")
     assert "out of 100" not in fund and 'id="evidence"' not in fund
     assert "Loading the report…" in fund
     accel = (ROOT / "site" / "vc" / "accel" / "index.html").read_text(encoding="utf-8")
@@ -169,7 +169,7 @@ def test_shared_list_and_auth_pages(monkeypatch):
 
     home_payload = json.loads(index.split('id="home-data" type="application/json">', 1)[1].split("</script>", 1)[0])
     assert [fund["id"] for fund in home_payload["funds"]] == ["a16z", "battery", "bessemer"]
-    assert home_payload["fundTotal"] == 11
+    assert home_payload["fundTotal"] == 12
     assert {fund["id"] for fund in home_payload["funds"]}.isdisjoint({"accel", "sequoia", "insightpartners"})
     assert len(home_payload["updates"]) == 7
     assert all(item["no"] != 7 for item in home_payload["updates"])
@@ -467,10 +467,10 @@ console.log(JSON.stringify(run(funds)));
     out = subprocess.check_output(["node", "-e", script], cwd=ROOT, text=True)
     data = json.loads(out)
     assert data["buckets"].get("Under $100M", []) == []
-    assert data["buckets"].get("$100M–$1B", []) == []
+    assert data["buckets"].get("$100M–$1B", []) == ["plugandplay"]
     assert data["buckets"]["$1B–$10B"] == ["baincapitalventures"]
     assert "baincapitalventures" not in data["buckets"]["$10B+"]
-    assert len(data["buckets"]["$10B+"]) == len(home["funds"]) - 1
+    assert len(data["buckets"]["$10B+"]) == len(home["funds"]) - 2
     assert data["recent"] == {
         "today": True,
         "yesterday": True,
@@ -480,7 +480,8 @@ console.log(JSON.stringify(run(funds)));
         "fromTs": True,
         "blank": False,
     }
-    assert data["listed"] == data["total"] == 11
+    # Plug and Play was updated Oct 14, after the fixed "today" of Oct 5, so it is not listed as recent.
+    assert data["total"] == 12 and data["listed"] == 11
 
 
 def test_legal_config_values():
