@@ -14,7 +14,7 @@ Score: **79.9, Low risk** (list shows 79), #12 of 12. Built only from real facts
 ## Missing data review
 - Core checks already treat missing data as neutral: fund vs. founders and conflicts start full and only lose points for verified evidence; the regulatory section is penalty-only; a missing portfolio count is never treated as a high rate; founder experience falls back to the age default.
 - The only places where missing data scores 0 are three Support sub-parts (media 6, platform 2, intros 1.5). Every v2 report except a16z has no data for them, so they cost every firm the same and do not single out sparse firms. Plug and Play gets exactly the same treatment.
-- **Not changed.** Making those three sub-parts neutral would move all ten published v2 scores (by +4.7 at the midpoint, or by +5.6 to +9.3 if rescaled) and push several firms above a16z, the only firm with measured media. That needs Alex's choice; numbers are in the PR description.
+- **Not changed.** Making those three sub-parts neutral would move all ten published v2 scores (by +2.9 to +4.8 at the midpoint, or by +5.6 to +9.3 if rescaled) and push several firms above a16z, the only firm with measured media. That needs Alex's choice; numbers are in the PR description.
 - Empty blocks on the Plug and Play page say "No data yet".
 
 ## Status changes
