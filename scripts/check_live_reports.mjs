@@ -41,6 +41,15 @@ async function readFund(page, slug) {
     const score = (document.querySelector('.num b') || {}).textContent || '';
     const rank = (document.querySelector('.rankb') || {}).innerText || '';
     const html = document.documentElement.innerHTML;
+    // The exact one-decimal score decides the order; read it from the report's own rank rows.
+    let exact = '';
+    const rankRows = html.match(/"rank": \{"kicker"[^]*?"rows": (\[\[[^]*?\]\])/);
+    if (rankRows) {
+      try {
+        const hit = JSON.parse(rankRows[1]).find(row => row[0] === name);
+        if (hit) exact = String(hit[1]).replace(/\s*\(v2\)$/, '');
+      } catch (err) { exact = ''; }
+    }
     const overviewStart = html.indexOf('data-panel="overview"');
     const scoreStart = html.indexOf('data-panel="score"');
     const overview = overviewStart >= 0 && scoreStart > overviewStart
@@ -58,6 +67,7 @@ async function readFund(page, slug) {
       name,
       short,
       score: score.trim(),
+      exact: exact.trim(),
       rank: rank.replace(/\s+/g, ' ').trim(),
       html,
       doj: (overview.match(/DOJ/g) || []).length,
@@ -80,6 +90,7 @@ async function readFund(page, slug) {
     slug,
     name: facts.name,
     score: Number(facts.score),
+    exact: facts.exact ? Number(facts.exact) : undefined,
     rank: facts.rank,
     problems,
   };
