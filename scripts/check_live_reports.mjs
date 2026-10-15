@@ -3,8 +3,7 @@ import { chromium } from 'playwright';
 
 const BASE = (process.env.REGRET_BASE || 'https://mindgame77.github.io/regrettamine/').replace(/\/?$/, '/');
 const SLUGS = [
-  'a16z', 'battery', 'bessemer', 'accel', 'baincapitalventures', 'generalcatalyst',
-  'khosla', 'lux', 'sequoia', 'lightspeed', 'insightpartners',
+  'a16z', 'generalcatalyst', 'sequoia', 'lightspeed', 'plugandplay',
 ];
 
 function redundantShort(name, short) {

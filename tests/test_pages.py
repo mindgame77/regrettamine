@@ -48,20 +48,18 @@ def test_shared_list_and_auth_pages(monkeypatch):
     from build import assign_list_ranks
     _, ranked_funds = load_local()
     assign_list_ranks(ranked_funds)
-    assert '<i>#1</i> of 12 funds' in render_fund_page(ranked_funds["a16z"], "../../")
+    assert '<i>#1</i> of 5 funds' in render_fund_page(ranked_funds["a16z"], "../../")
     assert "Top 1" not in render_fund_page(ranked_funds["a16z"], "../../")
-    assert '<i>#2</i> of 12 funds' in render_fund_page(ranked_funds["battery"], "../../")
-    assert '<i>#3</i> of 12 funds' in render_fund_page(ranked_funds["bessemer"], "../../")
-    assert '<i>#6</i> of 12 funds' in render_fund_page(ranked_funds["generalcatalyst"], "../../")
+    assert '<i>#2</i> of 5 funds' in render_fund_page(ranked_funds["generalcatalyst"], "../../")
+    assert '<i>#3</i> of 5 funds' in render_fund_page(ranked_funds["sequoia"], "../../")
+    assert '<i>#5</i> of 5 funds' in render_fund_page(ranked_funds["plugandplay"], "../../")
     assert "out of 100" not in fund and 'id="evidence"' not in fund
     assert "Loading the report…" in fund
-    accel = (ROOT / "site" / "vc" / "accel" / "index.html").read_text(encoding="utf-8")
-    assert "Accel <span>I</span>" in accel
-    bessemer = (ROOT / "site" / "vc" / "bessemer" / "index.html").read_text(encoding="utf-8")
-    assert "Bessemer Venture Partners BVP" not in bessemer
-    assert ">Bessemer Venture Partners<" in bessemer or "Bessemer Venture Partners<button" in bessemer
+    pnp = (ROOT / "site" / "vc" / "plugandplay" / "index.html").read_text(encoding="utf-8")
+    assert "Plug and Play Tech Center <span>PnP</span>" in pnp
+    gc = (ROOT / "site" / "vc" / "generalcatalyst" / "index.html").read_text(encoding="utf-8")
+    assert "General Catalyst GC" not in gc and "General Catalyst <span>GC</span>" not in gc
     assert 'class="zero"' in (ROOT / "site" / "vc" / "sequoia" / "index.html").read_text(encoding="utf-8") or "Legal <i>0</i>" in render_fund_page(load_local()[1]["sequoia"], "../../")
-    assert "Accel <span>Accel</span>" not in accel
     assert not (ROOT / "site" / "data" / "funds").exists()
     assert (ROOT / "site" / "login" / "index.html").is_file()
     assert (ROOT / "site" / "login" / "reset" / "index.html").is_file()
@@ -168,10 +166,10 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "How it works" not in index and "how/" not in index
 
     home_payload = json.loads(index.split('id="home-data" type="application/json">', 1)[1].split("</script>", 1)[0])
-    assert [fund["id"] for fund in home_payload["funds"]] == ["a16z", "battery", "bessemer"]
-    assert home_payload["fundTotal"] == 12
-    assert {fund["id"] for fund in home_payload["funds"]}.isdisjoint({"accel", "sequoia", "insightpartners"})
-    assert len(home_payload["updates"]) == 7
+    assert [fund["id"] for fund in home_payload["funds"]] == ["a16z", "generalcatalyst", "sequoia"]
+    assert home_payload["fundTotal"] == 5
+    assert {fund["id"] for fund in home_payload["funds"]}.isdisjoint({"lightspeed", "plugandplay"})
+    assert len(home_payload["updates"]) == 6
     assert all(item["no"] != 7 for item in home_payload["updates"])
     assert "Andreessen Horowitz scores 95, Very low risk." in index
     assert "Toxy" not in index and "toxybase" not in index
@@ -179,7 +177,10 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "Ten funds" not in index
     published_home = json.loads((ROOT / "site" / "data" / "home.json").read_text(encoding="utf-8"))
     assert published_home["funds"] == home_payload["funds"]
-    assert (ROOT / "site" / "vc" / "accel" / "index.html").is_file()
+    assert (ROOT / "site" / "vc" / "lightspeed" / "index.html").is_file()
+    removed = ["accel", "baincapitalventures", "battery", "bessemer", "insightpartners", "khosla", "lux"]
+    assert not any((ROOT / "site" / "vc" / slug).exists() for slug in removed)
+    assert "Insight" not in index and "Bessemer" not in index and "Safe to take a meeting" not in index
     assert 'placeholder="Andreessen Horowitz"' in index
     assert "Search a VC fund" not in index and 'class="hints"' not in index
     assert "Higher score = safer" not in index and "No filters applied" not in index
@@ -376,7 +377,7 @@ def test_report_copy_matches_the_landing_list():
     assign_list_ranks(funds)
     ranked = sorted(funds.values(), key=lambda fund: (-int(fund["scoreShown"]), fund["name"]))
     names = [fund["name"] for fund in ranked]
-    assert names[:3] == ["Andreessen Horowitz", "Battery Ventures", "Bessemer Venture Partners"]
+    assert names[:3] == ["Andreessen Horowitz", "General Catalyst", "Sequoia Capital"]
     for place, fund in enumerate(ranked, start=1):
         page = render_fund_page(fund, "../../")
         assert f"<i>#{place}</i> of {len(ranked)} funds" in page, fund["slug"]
@@ -414,11 +415,9 @@ def test_report_copy_matches_the_landing_list():
             panel = page.split(f'data-panel="{key}"', 1)[1].split(f'data-panel="{nxt}"', 1)[0]
             assert "No data yet" in panel, fund["slug"] + " " + key
             assert "0 matters" not in panel, fund["slug"] + " " + key
-    battery = render_fund_page(funds["battery"], "../../")
-    legal = battery.split('data-panel="legal"', 1)[1].split('data-panel="fund"', 1)[0]
+    lightspeed = render_fund_page(funds["lightspeed"], "../../")
+    legal = lightspeed.split('data-panel="legal"', 1)[1].split('data-panel="fund"', 1)[0]
     assert "No data yet" in legal and "Founder-relevant" not in legal
-    score = battery.split('data-panel="score"', 1)[1].split('data-panel="legal"', 1)[0]
-    assert score.count("founded in 1983") == 1
     sequoia = render_fund_page(funds["sequoia"], "../../")
     public = sequoia.split('data-panel="public"', 1)[1].split('data-panel="portfolio"', 1)[0]
     assert "No data yet" in public
@@ -468,9 +467,8 @@ console.log(JSON.stringify(run(funds)));
     data = json.loads(out)
     assert data["buckets"].get("Under $100M", []) == []
     assert data["buckets"].get("$100M–$1B", []) == ["plugandplay"]
-    assert data["buckets"]["$1B–$10B"] == ["baincapitalventures"]
-    assert "baincapitalventures" not in data["buckets"]["$10B+"]
-    assert len(data["buckets"]["$10B+"]) == len(home["funds"]) - 2
+    assert data["buckets"].get("$1B–$10B", []) == []
+    assert len(data["buckets"]["$10B+"]) == len(home["funds"]) - 1
     assert data["recent"] == {
         "today": True,
         "yesterday": True,
@@ -481,7 +479,7 @@ console.log(JSON.stringify(run(funds)));
         "blank": False,
     }
     # Plug and Play was updated Oct 14, after the fixed "today" of Oct 5, so it is not listed as recent.
-    assert data["total"] == 12 and data["listed"] == 11
+    assert data["total"] == 5 and data["listed"] == 4
 
 
 def test_legal_config_values():

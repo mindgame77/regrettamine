@@ -38,6 +38,13 @@ def test_visitor_free_and_paid_tiers():
                 values ('zz-extra', 'Zz Extra Fund', 1, true, false)
                 """
             )
+            # Only five real funds remain, so add fixture funds to exercise the free-tier limits.
+            cur.execute(
+                """
+                insert into firms (slug, name, list_score, published, is_test)
+                select 'zz-fill-' || n, 'Zz Fill Fund ' || n, 2, true, false from generate_series(1, 7) n
+                """
+            )
             cur.execute(
                 """
                 insert into report_pages (slug, html)
@@ -65,11 +72,11 @@ def test_visitor_free_and_paid_tiers():
             assert visitor["tier"] == "visitor"
             assert visitor["limit"] == 3
             assert visitor["total"] == 13
-            assert [row["id"] for row in visitor["funds"]] == ["a16z", "battery", "bessemer"]
-            cur.execute("select search_funds('sequoia')")
+            assert [row["id"] for row in visitor["funds"]] == ["a16z", "generalcatalyst", "sequoia"]
+            cur.execute("select search_funds('lightspeed')")
             sequoia = cur.fetchone()[0]
             assert len(sequoia) == 1
-            assert sequoia[0]["slug"] == "sequoia"
+            assert sequoia[0]["slug"] == "lightspeed"
             assert sequoia[0]["name"]
             assert sequoia[0]["inTier"] is False
             assert "score" not in sequoia[0]
@@ -163,7 +170,7 @@ def test_visitor_free_and_paid_tiers():
             assert eighth["ok"] is True and eighth["tier"] == "paid"
             extra = _open(cur, "zz-extra")
             assert extra["ok"] is True and "zz-extra" in extra["html"]
-            cur.execute("select search_funds('sequoia')")
+            cur.execute("select search_funds('lightspeed')")
             assert cur.fetchone()[0][0]["inTier"] is True
             cur.execute("reset role")
 
@@ -241,7 +248,7 @@ def test_alerts_require_an_opened_report_or_paid():
             assert cur.fetchone()[0] == 1
             cur.execute("select id from firms where slug = 'a16z'")
             a16z = cur.fetchone()[0]
-            cur.execute("select id from firms where slug = 'battery'")
+            cur.execute("select id from firms where slug = 'sequoia'")
             battery = cur.fetchone()[0]
             cur.execute("select set_config('request.jwt.claim.sub', %s, true)", (str(ada),))
             cur.execute("set role authenticated")
@@ -330,7 +337,7 @@ def test_alerts_require_an_opened_report_or_paid():
             cur.execute("select set_fund_alert_kind('a16z', 'score_change', false)")
             kind = cur.fetchone()[0]
             assert kind["ok"] is True and kind["score_change"] is False and kind["new_legal_matter"] is True
-            cur.execute("select set_fund_alert('battery', true)")
+            cur.execute("select set_fund_alert('sequoia', true)")
             still = cur.fetchone()[0]
             assert still["ok"] is False and still["reason"] == "unopened"
             cur.execute("select my_alert_funds()")
@@ -344,7 +351,7 @@ def test_alerts_require_an_opened_report_or_paid():
                 (ada,),
             )
             cur.execute("set role authenticated")
-            cur.execute("select set_fund_alert('battery', true)")
+            cur.execute("select set_fund_alert('sequoia', true)")
             paid = cur.fetchone()[0]
             assert paid["ok"] is True and paid["on"] is True
             cur.execute("select count(*) from report_views where profile_id = %s and firm_id = %s", (ada, battery))
@@ -385,7 +392,7 @@ def test_alerts_require_an_opened_report_or_paid():
             cur.execute("select set_fund_alert('sequoia', true)")
             expired = cur.fetchone()[0]
             assert expired["ok"] is False and expired["reason"] == "unopened"
-            cur.execute("select set_fund_alert('battery', false)")
+            cur.execute("select set_fund_alert('sequoia', false)")
             off = cur.fetchone()[0]
             assert off["ok"] is True and off["on"] is False
             cur.execute("select count(*) from fund_alert_settings where profile_id = %s and firm_id = %s", (ada, battery))

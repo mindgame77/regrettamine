@@ -4665,60 +4665,6 @@ window.RS_STRINGS = /*BEGIN_STRINGS*/{
    }
   }
  },
- "report.insight_partners": {
-  "note": "Fund report text identical for every fund (evidence.rank.rows[10][0]).",
-  "variants": {
-   "default": {
-    "when": "always",
-    "text": "Insight Partners"
-   }
-  }
- },
- "report.bessemer_venture_partners": {
-  "note": "Fund report text identical for every fund (evidence.rank.rows[1][0]).",
-  "variants": {
-   "default": {
-    "when": "always",
-    "text": "Bessemer Venture Partners"
-   }
-  }
- },
- "report.battery_ventures": {
-  "note": "Fund report text identical for every fund (evidence.rank.rows[2][0]).",
-  "variants": {
-   "default": {
-    "when": "always",
-    "text": "Battery Ventures"
-   }
-  }
- },
- "report.bain_capital_ventures": {
-  "note": "Fund report text identical for every fund (evidence.rank.rows[4][0]).",
-  "variants": {
-   "default": {
-    "when": "always",
-    "text": "Bain Capital Ventures"
-   }
-  }
- },
- "report.khosla_ventures": {
-  "note": "Fund report text identical for every fund (evidence.rank.rows[5][0]).",
-  "variants": {
-   "default": {
-    "when": "always",
-    "text": "Khosla Ventures"
-   }
-  }
- },
- "report.lux_capital": {
-  "note": "Fund report text identical for every fund (evidence.rank.rows[6][0]).",
-  "variants": {
-   "default": {
-    "when": "always",
-    "text": "Lux Capital"
-   }
-  }
- },
  "report.sequoia_capital": {
   "note": "Fund report text identical for every fund (evidence.rank.rows[7][0]).",
   "variants": {
