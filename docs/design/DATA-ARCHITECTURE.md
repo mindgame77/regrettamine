@@ -223,3 +223,12 @@ There are no per-firm files in the repo.
   per-firm name strings. Tests seed a scratch database from `tests/fixtures/db_snapshot.json`,
   an export of the live content tables; the site never reads it.
 - Rollback: `/workspace/toxybase/backups/2026-10-14-facts-render/rollback_db_rendered_reports.sql`.
+
+### Landing stats are computed (Oct 14, 2026)
+
+The `site_stats` table is no longer read. `build.compute_site_stats` derives the landing
+stats from the same rendered reports and helpers the tabs use: funds = published reports;
+sources cited = distinct source links on the reports plus the update feed; legal matters on
+file = sum of the Legal tab counts; funds sanctioned = funds with a sanctions screen marked
+as a match. The publish step stores the result as the `site_stats` fragment in
+`site_fragments`, and the public build reads it from `public_site_bundle()`.

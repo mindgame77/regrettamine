@@ -509,3 +509,19 @@ def test_legal_config_values():
     assert legal_html("not-an-email", "contact email", email=True) == "not-an-email"
     assert legal_html("Delaware", "jurisdiction") == "Delaware"
     assert legal_html("<script>", "jurisdiction") == "&lt;script&gt;"
+
+
+def test_landing_stats_agree_with_the_tabs():
+    import re
+    from build import assign_list_ranks, compute_site_stats, render_fund_page
+    from conftest import db_site
+
+    home, funds = db_site()
+    assign_list_ranks(funds)
+    stats = {s["l"]: s["n"] for s in compute_site_stats(home, funds)}
+    tabs = 0
+    for fund in funds.values():
+        tabs += int(re.search(r'data-tab="legal"[^>]*>[^<]*<i>(\d+)</i>', render_fund_page(fund, "../../")).group(1))
+    assert stats["legal matters on file"] == tabs
+    assert stats["funds"] == len(funds)
+    assert stats["sources cited"] > 63
