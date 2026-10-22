@@ -5,6 +5,8 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const PORTAL_CONFIG = "bpc_1UMuvYHcbGkfjKgmIKZWNWhe";
 const RETURN_URL = "https://mindgame77.github.io/regrettamine/settings/?tab=billing";
+// The launch Account page passes its own URL; only same-owner GitHub Pages URLs are accepted.
+const RETURN_RE = /^https:\/\/mindgame77\.github\.io\/[A-Za-z0-9._\/?=&-]*$/;
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -111,12 +113,23 @@ Deno.serve(async (req: Request) => {
     return json(401, { message: "Sign in to manage your card." });
   }
 
-  const subRes = await fetch(
-    `${url}/rest/v1/subscriptions?profile_id=eq.${uid}&stripe_customer_id=not.is.null&select=stripe_customer_id,status,flagged,current_period_end,payment_failed_at`,
+  // Launch balances first (check_balances.stripe_customer_id), then the old subscriptions table.
+  const balRes = await fetch(
+    `${url}/rest/v1/check_balances?user_id=eq.${uid}&stripe_customer_id=not.is.null&select=stripe_customer_id`,
     { headers: { apikey: service, Authorization: `Bearer ${service}` } },
   );
-  if (!subRes.ok) return json(502, { message: "Could not open the billing portal." });
-  const customer = pickCustomer(await subRes.json());
+  if (!balRes.ok) return json(502, { message: "Could not open the billing portal." });
+  const balRows = await balRes.json();
+  let customer = Array.isArray(balRows) && balRows[0] && typeof balRows[0].stripe_customer_id === "string" &&
+      balRows[0].stripe_customer_id.startsWith("cus_") ? balRows[0].stripe_customer_id : "";
+  if (!customer) {
+    const subRes = await fetch(
+      `${url}/rest/v1/subscriptions?profile_id=eq.${uid}&stripe_customer_id=not.is.null&select=stripe_customer_id,status,flagged,current_period_end,payment_failed_at`,
+      { headers: { apikey: service, Authorization: `Bearer ${service}` } },
+    );
+    if (!subRes.ok) return json(502, { message: "Could not open the billing portal." });
+    customer = pickCustomer(await subRes.json());
+  }
   if (!customer) return json(404, { message: "No card on file." });
 
   const secretRes = await fetch(
@@ -129,9 +142,11 @@ Deno.serve(async (req: Request) => {
   if (!stripeKey) return json(502, { message: "Could not open the billing portal." });
 
   let cardOnly = false;
+  let returnUrl = RETURN_URL;
   try {
     const incoming = await req.json();
     cardOnly = !!(incoming && incoming.cardOnly);
+    if (incoming && typeof incoming.returnUrl === "string" && RETURN_RE.test(incoming.returnUrl)) returnUrl = incoming.returnUrl;
   } catch (_e) { /* a portal open sends no body */ }
 
   await rememberCard(url, service, stripeKey, customer);
@@ -141,7 +156,7 @@ Deno.serve(async (req: Request) => {
   const body = new URLSearchParams({
     customer,
     configuration: PORTAL_CONFIG,
-    return_url: RETURN_URL,
+    return_url: returnUrl,
   });
   const session = await fetch("https://api.stripe.com/v1/billing_portal/sessions", {
     method: "POST",

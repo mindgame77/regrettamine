@@ -1,4 +1,5 @@
-// Cancels the caller's Stripe subscriptions, then deletes the account.
+// Cancels the caller's Stripe subscriptions (check_balances and the old subscriptions table), then deletes the account.
+// If any cancel fails, nothing is deleted.
 // The Stripe secret is app_secrets.key = 'stripe_secret_key'. verify_jwt is true.
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
@@ -52,7 +53,18 @@ Deno.serve(async (req: Request) => {
     return typeof id === "string" && id.startsWith("sub_") && status !== "canceled" && status !== "incomplete_expired";
   });
 
-  if (live.length) {
+  const balRes = await fetch(
+    `${url}/rest/v1/check_balances?user_id=eq.${uid}&stripe_subscription_id=not.is.null&select=id,stripe_subscription_id`,
+    { headers: { apikey: service, Authorization: `Bearer ${service}` } },
+  );
+  if (!balRes.ok) return json(500, { message: "Could not delete this account." });
+  const balRows = await balRes.json();
+  const balSubs = (Array.isArray(balRows) ? balRows : []).filter((row) => {
+    const id = row && row.stripe_subscription_id;
+    return typeof id === "string" && id.startsWith("sub_");
+  });
+
+  if (live.length || balSubs.length) {
     const secretRes = await fetch(
       `${url}/rest/v1/app_secrets?key=eq.stripe_secret_key&select=value`,
       { headers: { apikey: service, Authorization: `Bearer ${service}` } },
@@ -62,30 +74,34 @@ Deno.serve(async (req: Request) => {
     const stripeKey = Array.isArray(secretRows) && secretRows[0] && secretRows[0].value;
     if (!stripeKey) return json(409, { message: PLAN_MSG });
 
-    for (const row of live) {
+    const ids = [...new Set([...live, ...balSubs].map((row) => String(row.stripe_subscription_id)))];
+    for (const id of ids) {
       const canceled = await fetch(
-        `https://api.stripe.com/v1/subscriptions/${encodeURIComponent(row.stripe_subscription_id)}`,
+        `https://api.stripe.com/v1/subscriptions/${encodeURIComponent(id)}`,
         { method: "DELETE", headers: { Authorization: `Bearer ${stripeKey}` } },
       );
       if (canceled.status === 404) continue;
       if (!canceled.ok) return json(409, { message: PLAN_MSG });
     }
 
-    const ids = live.map((row) => row.stripe_subscription_id).join(",");
-    const marked = await fetch(
-      `${url}/rest/v1/subscriptions?stripe_subscription_id=in.(${ids})`,
-      {
-        method: "PATCH",
-        headers: {
-          apikey: service,
-          Authorization: `Bearer ${service}`,
-          "Content-Type": "application/json",
-          Prefer: "return=minimal",
-        },
-        body: JSON.stringify({ status: "canceled" }),
+    const patch = (path: string, body: Record<string, unknown>) => fetch(`${url}/rest/v1/${path}`, {
+      method: "PATCH",
+      headers: {
+        apikey: service,
+        Authorization: `Bearer ${service}`,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal",
       },
-    );
-    if (!marked.ok) return json(409, { message: PLAN_MSG });
+      body: JSON.stringify(body),
+    });
+    if (live.length) {
+      const marked = await patch(`subscriptions?stripe_subscription_id=in.(${live.map((row) => row.stripe_subscription_id).join(",")})`, { status: "canceled" });
+      if (!marked.ok) return json(409, { message: PLAN_MSG });
+    }
+    if (balSubs.length) {
+      const cleared = await patch(`check_balances?user_id=eq.${uid}`, { stripe_subscription_id: null, plan: null });
+      if (!cleared.ok) return json(409, { message: PLAN_MSG });
+    }
   }
 
   const deleted = await fetch(`${url}/rest/v1/rpc/delete_my_account`, {
