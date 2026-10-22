@@ -62,18 +62,39 @@
   const u = $('#unlock');
   const esc = (x) => String(x == null ? '' : x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const safeUrl = (u) => /^https?:\/\//i.test(u || '') ? u : null;
+  // Case status comes only from the status wording in the DB fact text (firm_details().text, built from
+  // vc_source_facts.value title/value; the value has no separate case-status field). Only case-like facts
+  // (a case name, or a docket line with filed/terminated) get a pill; anything unclear gets none.
+  const isCase = (f) => !!f.case || / v\.? .*\|.*\b(filed|terminated)\b/i.test(f.text || '');
+  function caseStatus(f) {
+    if (!isCase(f)) return null;
+    const t = f.text || '';
+    if (/\b(active|pending|ongoing)\b|\bopen\b[,.;:]|\bis investigating\b/i.test(t)) return 'active';
+    if (/\boutcome (unverified|not verified)\b/i.test(t)) return null;
+    if (/\b(terminated|dismissed|ended in|settled|resolved|closed|affirmed)\b/i.test(t)) return 'closed';
+    return null;
+  }
   function factHtml(f) {
     const who = f.who && f.who.startsWith('partner:') ? f.who.slice(8) + ' · ' : '';
     const head = f.case ? '<b>' + esc(f.case) + '</b>' + (f.year ? ' · ' + esc(f.year) : '') + '<br>' : '';
     const u = safeUrl(f.url);
     const src = (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(f.label || 'Source') + ' ↗</a>' : esc(f.label || '')) + (f.date ? ' · retrieved ' + esc(f.date) : '');
-    return '<div class="fct">' + (f.needs_proof ? '<span class="np">Needs proof</span>' : '') + head + esc(who) + esc(f.text) + '<div class="src">' + src + '</div></div>';
+    const st = caseStatus(f);
+    const pill = st === 'active' ? '<span class="cs cs-act">Active</span>' : st === 'closed' ? '<span class="cs cs-cl">Closed</span>' : '';
+    return '<div class="fct' + (st === 'active' ? ' act' : '') + '">' + pill + (f.needs_proof ? '<span class="np">Needs proof</span>' : '') + head + esc(who) + esc(f.text) + '<div class="src">' + src + '</div></div>';
   }
   function showDetails(rows) {
     main.classList.add('unlocked');
     const by = {}; (rows || []).forEach(r => by[r.row] = r.facts || []);
     main.querySelectorAll('.det').forEach(d => {
-      const fs = by[d.dataset.row] || [];
+      const rank = (f) => caseStatus(f) === 'active' ? 0 : 1;
+      const fs = (by[d.dataset.row] || []).map((f, i) => [f, i]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map(x => x[0]);
+      const na = fs.filter(f => caseStatus(f) === 'active').length;
+      const cnt = d.closest('.row').querySelector('.cnt');
+      if (na && !(cnt && /active|open/i.test(cnt.textContent))) {
+        const pc = d.closest('.row').querySelector('.pc');
+        if (pc && !pc.querySelector('.cnt-act')) pc.insertAdjacentHTML('beforeend', '<span class="cnt ca cnt-act">' + na + ' active</span>');
+      }
       d.innerHTML = fs.length ? fs.map(factHtml).join('') : '<div class="fct">No sourced facts on file for this check yet.</div>';
       const row = d.closest('.row'); row.classList.add('tog');
       row.onclick = (e) => { if (!e.target.closest('a')) row.classList.toggle('open'); };
