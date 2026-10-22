@@ -58,10 +58,26 @@
   }
   // Result: unlock details with 1 check
   const main = $('main[data-firm]'), u = $('#unlock');
-  async function showDetails(rows) {
-    main.classList.add('unlocked');
-    (rows || []).forEach(r => { const d = main.querySelector('.det[data-row="' + r.row + '"]'); if (d) d.innerHTML = r.html; });
+  const esc = (x) => String(x == null ? '' : x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const safeUrl = (u) => /^https?:\/\//i.test(u || '') ? u : null;
+  function factHtml(f) {
+    const who = f.who && f.who.startsWith('partner:') ? f.who.slice(8) + ' · ' : '';
+    const head = f.case ? '<b>' + esc(f.case) + '</b>' + (f.year ? ' · ' + esc(f.year) : '') + '<br>' : '';
+    const u = safeUrl(f.url);
+    const src = (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(f.label || 'Source') + ' ↗</a>' : esc(f.label || '')) + (f.date ? ' · retrieved ' + esc(f.date) : '');
+    return '<div class="fct">' + (f.needs_proof ? '<span class="np">Needs proof</span>' : '') + head + esc(who) + esc(f.text) + '<div class="src">' + src + '</div></div>';
   }
+  function showDetails(rows) {
+    main.classList.add('unlocked');
+    const by = {}; (rows || []).forEach(r => by[r.row] = r.facts || []);
+    main.querySelectorAll('.det').forEach(d => {
+      const fs = by[d.dataset.row] || [];
+      d.innerHTML = fs.length ? fs.map(factHtml).join('') : '<div class="fct">No sourced facts on file for this check yet.</div>';
+      const row = d.closest('.row'); row.classList.add('tog');
+      row.onclick = (e) => { if (!e.target.closest('a')) row.classList.toggle('open'); };
+    });
+  }
+  window.regretShowDetails = showDetails;
   async function tryUnlock(spend) {
     if (!sb) return;
     const { data, error } = await sb.rpc('unlock_firm', { p_slug: main.dataset.firm, p_anon: anonId(), p_spend: spend });

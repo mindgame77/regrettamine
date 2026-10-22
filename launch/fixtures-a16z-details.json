@@ -1,0 +1,382 @@
+[
+ {
+  "row": 1,
+  "facts": [
+   {
+    "text": "Result: no match on OFAC, EU, UK, UN \u00b7 44 people checked",
+    "case": null,
+    "year": null,
+    "who": null,
+    "needs_proof": false,
+    "url": "https://www.opensanctions.org/",
+    "label": "OpenSanctions",
+    "date": "Oct 2, 2026"
+   }
+  ]
+ },
+ {
+  "row": 2,
+  "facts": [
+   {
+    "text": "clear: no entry on OFAC SDN (SDGT/FTO), alt, non-SDN consolidated for firm, a16z Holdings, 117 funds, 6 people",
+    "case": null,
+    "year": null,
+    "who": "firm",
+    "needs_proof": false,
+    "url": "https://www.treasury.gov/ofac/downloads/sdn.csv",
+    "label": "OFAC SDN",
+    "date": "Oct 15, 2026"
+   },
+   {
+    "text": "clear: no entry on UN consolidated list",
+    "case": null,
+    "year": null,
+    "who": "firm",
+    "needs_proof": false,
+    "url": "https://scsanctions.un.org/resources/xml/en/consolidated.xml",
+    "label": "UN Security Council",
+    "date": "Oct 15, 2026"
+   }
+  ]
+ },
+ {
+  "row": 3,
+  "facts": [
+   {
+    "text": "clear: no entry on US Consolidated Screening List incl. BIS Entity List",
+    "case": null,
+    "year": null,
+    "who": "firm",
+    "needs_proof": false,
+    "url": "https://data.trade.gov/downloadable_consolidated_screening_list/v1/consolidated.csv",
+    "label": "trade.gov CSL",
+    "date": "Oct 15, 2026"
+   }
+  ]
+ },
+ {
+  "row": 4,
+  "facts": [
+   {
+    "text": "The DOJ is investigating a16z partners' seats on the boards of competing companies (Databricks: Ben Horowitz; Fivetran: Martin Casado) under Clayton Act Section 8. Open, no charges filed. Reported by Bloomberg on 2026-08-17 citing people familiar with the matter; DOJ declined to confirm or deny; no public DOJ filing found as of 2026-10-15.",
+    "case": "DOJ antitrust probe: interlocking board seats at Databricks and Fivetran",
+    "year": "2026",
+    "who": null,
+    "needs_proof": false,
+    "url": "https://www.bloomberg.com/news/articles/2026-08-17/andreessen-horowitz-focus-of-doj-probe-over-board-directors",
+    "label": "Bloomberg, Aug 17, 2026",
+    "date": "Oct 15, 2026"
+   }
+  ]
+ },
+ {
+  "row": 5,
+  "facts": [
+   {
+    "text": "Form ADV Item 11 DRPs: Criminal, Regulatory Action, Civil Judicial all \"No Information Filed\"",
+    "case": null,
+    "year": null,
+    "who": "firm",
+    "needs_proof": false,
+    "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160489/PDF/160489.pdf",
+    "label": "SEC Form ADV",
+    "date": "Oct 15, 2026"
+   },
+   {
+    "text": "clear: no OFAC civil penalty naming a16z/AH Capital/key people",
+    "case": null,
+    "year": null,
+    "who": "firm",
+    "needs_proof": false,
+    "url": "https://ofac.treasury.gov/civil-penalties-and-enforcement-information",
+    "label": "OFAC",
+    "date": "Oct 15, 2026"
+   },
+   {
+    "text": "clear: no FinCEN enforcement action naming a16z/AH Capital/key people",
+    "case": null,
+    "year": null,
+    "who": "firm",
+    "needs_proof": false,
+    "url": "https://www.fincen.gov/news-room/enforcement-actions",
+    "label": "FinCEN",
+    "date": "Oct 15, 2026"
+   }
+  ]
+ },
+ {
+  "row": 6,
+  "facts": [
+   {
+    "text": "a16z is named in an individual's suit against portfolio company Deel. a16z's role is unverified; terminated Jan 2026.",
+    "case": "Teman v. Deel",
+    "year": "2025",
+    "who": null,
+    "needs_proof": false,
+    "url": "https://www.courtlistener.com/docket/70818963/teman-v-deel-inc/",
+    "label": "Teman v. Deel",
+    "date": "Oct 2, 2026"
+   },
+   {
+    "text": "A court was asked to make AH Capital comply with a subpoena (2025). Other party not known.",
+    "case": "Motion to compel AH Capital subpoena compliance",
+    "year": "2025",
+    "who": null,
+    "needs_proof": false,
+    "url": "https://www.courtlistener.com/docket/70802517/in-re-motion-to-compel-ah-capital-management-llcs-compliance-with-a/",
+    "label": "Motion to compel AH Capital subpoena compliance",
+    "date": "Oct 2, 2026"
+   },
+   {
+    "text": "a16z joined a suit against the SEC over its crypto rules (a16z is a plaintiff). Outcome not verified.",
+    "case": "CFAT v. SEC",
+    "year": "2024",
+    "who": null,
+    "needs_proof": false,
+    "url": "https://decrypt.co/218567/coinbase-a16z-take-sec-court-unlawful-crypto-overreach",
+    "label": "CFAT v. SEC",
+    "date": "Oct 2, 2026"
+   },
+   {
+    "text": "a16z was subpoenaed as a non-party in Doe v. GitHub.",
+    "case": "Doe v. GitHub",
+    "year": "2024",
+    "who": null,
+    "needs_proof": false,
+    "url": "https://storage.courtlistener.com/recap/gov.uscourts.cand.403220/gov.uscourts.cand.403220.209.0.pdf",
+    "label": "Doe v. GitHub",
+    "date": "Oct 2, 2026"
+   },
+   {
+    "text": "Marc Andreessen is being sued by a Coinbase shareholder in his role as a Coinbase director; a16z (AH Capital Management) is not a party (non-party). Pending in Del. Ch. C.A. 2023-0464-KSJM: the special litigation committee's motion to terminate was denied 2026-01-30.",
+    "case": "Grabski ex rel. Coinbase v. Andreessen",
+    "year": "2023",
+    "who": null,
+    "needs_proof": false,
+    "url": "https://courts.delaware.gov/Opinions/Download.aspx?id=391020",
+    "label": "Delaware Court of Chancery letter decision, Jan 30, 2026",
+    "date": "Oct 15, 2026"
+   },
+   {
+    "text": "a16z (AH Capital Management) is being sued by Lido token buyers in a class action. Active: N.D. Cal. 3:23-cv-06492 is stayed pending AH Capital's 9th Cir. appeal 25-5701 (reply brief filed 2026-08-18); last joint status report 2026-06-18; no termination date.",
+    "case": "Samuels v. Lido DAO",
+    "year": "2023",
+    "who": null,
+    "needs_proof": false,
+    "url": "https://www.courtlistener.com/docket/68095676/samuels-v-lido-dao/",
+    "label": "CourtListener docket 3:23-cv-06492",
+    "date": "Oct 15, 2026"
+   },
+   {
+    "text": "a16z was sued by a former Run The World co-founder, who alleged pregnancy discrimination. Federal claims dismissed; state outcome unverified.",
+    "case": "Run The World Inc. v. Jiang",
+    "year": "2023",
+    "who": null,
+    "needs_proof": false,
+    "url": "https://www.govinfo.gov/content/pkg/USCOURTS-cand-3_23-cv-03130/pdf/USCOURTS-cand-3_23-cv-03130-1.pdf",
+    "label": "Run The World complaint (N.D. Cal., 2023)",
+    "date": "Oct 2, 2026"
+   },
+   {
+    "text": "a16z (AH Capital Management) is being sued by Compound token buyers in a class action. Active: N.D. Cal. 3:22-cv-07781 has no termination date; latest docket entry 2026-10-15 (order on discovery letter brief). a16z lost its bid to force arbitration in Oct 2025; its 9th Cir. appeal 24-7243 has no termination date.",
+    "case": "Houghton v. AH Capital Mgmt (Compound)",
+    "year": "2022",
+    "who": null,
+    "needs_proof": false,
+    "url": "https://www.courtlistener.com/docket/66623711/houghton-v-leshner/",
+    "label": "CourtListener docket 3:22-cv-07781",
+    "date": "Oct 15, 2026"
+   },
+   {
+    "text": "a16z backed Coin Center's suit against the U.S. Treasury. Outcome not verified.",
+    "case": "Coin Center v. Yellen",
+    "year": "2022",
+    "who": null,
+    "needs_proof": false,
+    "url": "https://www.courtlistener.com/docket/65418276/case/",
+    "label": "Coin Center v. Yellen",
+    "date": "Oct 2, 2026"
+   },
+   {
+    "text": "a16z was sued by Uniswap token buyers in a class action. Federal claims dismissed, affirmed in 2025.",
+    "case": "Risley v. Universal Navigation (Uniswap)",
+    "year": "2022",
+    "who": null,
+    "needs_proof": false,
+    "url": "https://www.courtlistener.com/docket/68002980/risley-v-universal-navigation-inc/",
+    "label": "Risley v. Universal Navigation (Uniswap)",
+    "date": "Oct 2, 2026"
+   },
+   {
+    "text": "a16z was sued by ICP token buyers in a class action against Dfinity. Ended in summary judgment for Dfinity.",
+    "case": "Ocampo v. Dfinity USA Research",
+    "year": "2021",
+    "who": null,
+    "needs_proof": false,
+    "url": "https://www.cravath.com/news-insights/dfinity-wins-summary-judgment-in-purported-securities-class-action.html",
+    "label": "Ocampo v. Dfinity USA Research",
+    "date": "Oct 2, 2026"
+   },
+   {
+    "text": "Marc Andreessen was sued by an eBay shareholder as an eBay director over the Skype sale. Dismissed with prejudice.",
+    "case": "Smukler v. Donahoe (eBay/Skype)",
+    "year": "2014",
+    "who": null,
+    "needs_proof": false,
+    "url": "https://v2.courthousenews.com/shareholder-rips-ebay-for-flip-of-skype/",
+    "label": "Smukler v. Donahoe (eBay/Skype)",
+    "date": "Oct 2, 2026"
+   },
+   {
+    "text": "a16z was sued by Think Computer alongside Dwolla. Dismissed.",
+    "case": "Think Computer Corp. v. Dwolla",
+    "year": "2013",
+    "who": null,
+    "needs_proof": false,
+    "url": "https://www.pacermonitor.com/public/filings/DG2GYZSQ/Think_Computer_Corporation_v_Dwolla_Inc_et_al__candce-13-02054__0001.0.pdf",
+    "label": "Think Computer Corp. v. Dwolla",
+    "date": "Oct 2, 2026"
+   }
+  ]
+ },
+ {
+  "row": 7,
+  "facts": [
+   {
+    "text": "UK Find Case Law: only Skype v Joltid [2009] EWHC 2783 (Ch), Andreessen Horowitz LLC named as investor, non-party",
+    "case": null,
+    "year": null,
+    "who": "firm",
+    "needs_proof": false,
+    "url": "https://caselaw.nationalarchives.gov.uk/ewhc/ch/2009/2783",
+    "label": "UK National Archives",
+    "date": "Oct 15, 2026"
+   }
+  ]
+ },
+ {
+  "row": 8,
+  "facts": [
+   {
+    "text": "Other names on IAPD: A16Z CAPITAL MANAGEMENT, L.L.C.; ANDREESSEN HOROWITZ",
+    "case": null,
+    "year": null,
+    "who": "firm",
+    "needs_proof": false,
+    "url": "https://adviserinfo.sec.gov/firm/summary/160489",
+    "label": "SEC IAPD",
+    "date": "Oct 15, 2026"
+   },
+   {
+    "text": "Owners (Form ADV Sched. A/B): A16Z Holdings, L.L.C. (managing member, 75%+); Benjamin Abraham Horowitz and Marc Lowell Andreessen, members of A16Z Holdings (50-75% each code D)",
+    "case": null,
+    "year": null,
+    "who": "firm",
+    "needs_proof": false,
+    "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160489/PDF/160489.pdf",
+    "label": "SEC Form ADV",
+    "date": "Oct 15, 2026"
+   },
+   {
+    "text": "SEC-registered investment adviser; status Approved effective 2019-04-11; ACTIVE; latest Form ADV filed 2026-03-30; SEC 801-114985",
+    "case": null,
+    "year": null,
+    "who": "firm",
+    "needs_proof": false,
+    "url": "https://adviserinfo.sec.gov/firm/summary/160489",
+    "label": "SEC IAPD",
+    "date": "Oct 15, 2026"
+   },
+   {
+    "text": "160489",
+    "case": null,
+    "year": null,
+    "who": null,
+    "needs_proof": false,
+    "url": "https://adviserinfo.sec.gov/firm/summary/160489",
+    "label": "SEC IAPD",
+    "date": "Oct 2, 2026"
+   },
+   {
+    "text": "AH Capital Management, L.L.C.",
+    "case": null,
+    "year": null,
+    "who": null,
+    "needs_proof": false,
+    "url": "https://adviserinfo.sec.gov/firm/summary/160489",
+    "label": "SEC IAPD",
+    "date": "Oct 2, 2026"
+   }
+  ]
+ },
+ {
+  "row": 9,
+  "facts": [
+   {
+    "text": "Teamster Union Local 142 Pension Trust v. Andreessen | N.D. Cal. | 5:10-cv-03659 | filed 2010-08-18 | terminated 2010-11-01",
+    "case": null,
+    "year": null,
+    "who": "partner:Marc Andreessen",
+    "needs_proof": false,
+    "url": "https://www.courtlistener.com/?q=caseName%3A%28Andreessen%29",
+    "label": "CourtListener RECAP",
+    "date": "Oct 15, 2026"
+   },
+   {
+    "text": "Saginaw Police & Fire Pension Fund v. Andreessen | N.D. Cal. | 5:10-cv-04720 | filed 2010-10-19 | terminated 2012-05-29",
+    "case": null,
+    "year": null,
+    "who": "partner:Marc Andreessen",
+    "needs_proof": false,
+    "url": "https://www.courtlistener.com/?q=caseName%3A%28Andreessen%29",
+    "label": "CourtListener RECAP",
+    "date": "Oct 15, 2026"
+   },
+   {
+    "text": "Saginaw Police & Fire Pension v. Marc Andreessen | 9th Cir. | 12-16473 | filed 2012-06-28 | terminated 2014-09-08",
+    "case": null,
+    "year": null,
+    "who": "partner:Marc Andreessen",
+    "needs_proof": false,
+    "url": "https://www.courtlistener.com/?q=caseName%3A%28Andreessen%29",
+    "label": "CourtListener RECAP",
+    "date": "Oct 15, 2026"
+   },
+   {
+    "text": "Louisiana Municipal Police Employees' Retirement System v. Andreessen | N.D. Cal. | 5:10-cv-03716 | filed 2010-08-20 | terminated 2010-11-01",
+    "case": null,
+    "year": null,
+    "who": "partner:Marc Andreessen",
+    "needs_proof": false,
+    "url": "https://www.courtlistener.com/?q=caseName%3A%28Andreessen%29",
+    "label": "CourtListener RECAP",
+    "date": "Oct 15, 2026"
+   }
+  ]
+ },
+ {
+  "row": 10,
+  "facts": [
+   {
+    "text": "clear for Andreessen, Horowitz, Ramaswamy, Hathaway, Walker (OpenSanctions default dataset)",
+    "case": null,
+    "year": null,
+    "who": "firm",
+    "needs_proof": false,
+    "url": "https://data.opensanctions.org/datasets/latest/default/targets.simple.csv",
+    "label": "OpenSanctions (aggregator)",
+    "date": "Oct 15, 2026"
+   },
+   {
+    "text": "Anne Neuberger: PEP (Deputy National Security Adviser of the US); counter-sanctioned by Iran (2024) and Russia (2026), not Western lists",
+    "case": null,
+    "year": null,
+    "who": "partner:Anne Neuberger",
+    "needs_proof": false,
+    "url": "https://www.opensanctions.org/entities/Q70709513/",
+    "label": "OpenSanctions entity page",
+    "date": "Oct 15, 2026"
+   }
+  ]
+ }
+]
