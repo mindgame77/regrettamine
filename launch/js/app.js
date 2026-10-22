@@ -40,10 +40,12 @@
     $('#sumsg').textContent = error ? error.message : 'Check your inbox for the sign-in link.';
   };
   if (sb) sb.auth.onAuthStateChange(async (ev) => { if (ev === 'SIGNED_IN') { await sb.rpc('claim_anon_checks', { p_anon: anonId() }); paint(); } });
+  const main = document.querySelector('main[data-firm]');
   // Search
   document.querySelectorAll('[data-search]').forEach(f => f.onsubmit = (e) => {
     e.preventDefault(); const q = f.q.value.trim(); if (!q) return;
     const slug = (window.REGRET_FIRMS || {})[q.toLowerCase()];
+    if (main && slug === main.dataset.firm) return;
     location.href = slug ? ROOT + 'vc/' + slug + '/' : ROOT + 'pending/?q=' + encodeURIComponent(q);
   });
   // Unknown firm
@@ -57,7 +59,7 @@
     };
   }
   // Result: unlock details with 1 check
-  const main = $('main[data-firm]'), u = $('#unlock');
+  const u = $('#unlock');
   const esc = (x) => String(x == null ? '' : x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const safeUrl = (u) => /^https?:\/\//i.test(u || '') ? u : null;
   function factHtml(f) {

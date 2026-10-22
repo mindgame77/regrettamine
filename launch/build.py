@@ -37,7 +37,7 @@ def result(D):
         o += (f'<div class="row{" last" if i == 10 else ""}"><span class="n">{i:02d}</span><div class="tx"><b>{E(r["title"])}</b><span>{E(r["desc"])}</span>{line}</div>'
               f'<div class="pc"><span class="pill {cls}"><i></i>{lab}</span>{cnt}</div><span class="lk">🔒 Details</span><div class="det" data-row="{i}"></div></div>')
     meta = ' · '.join(x for x in [F.get('hq'), f'since {F["founded_year"]}' if F.get('founded_year') else '', F.get('primary_domain'), f'checked {chk}'] if x)
-    return f'''<main class="wrap" data-firm="{E(F["slug"])}"><div class="hd"><div><h1>{E(F["name"])}</h1><div class="m">{E(meta)}</div></div>{SB("Check another VC", True)}</div>
+    return f'''<main class="wrap" data-firm="{E(F["slug"])}"><div class="rh"><form class="sb big" data-search><svg class="mg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input name="q" list="firms" value="{E(F["name"])}" aria-label="VC firm" autocomplete="off" onfocus="this.select()"><button class="btn">Check</button></form><div class="m">{E(meta)}</div></div>
 <div class="list">{o}</div><div class="unlock"><div><b>See details and sources for every check</b><p>Case summaries, list names and links, for this firm.</p></div><button class="btn" id="unlock">Unlock with 1 check</button></div>
 <p class="fine">Facts from public records as of {chk}. Political ties are shown for context and are not counted. Name-only matches on different people are left out.</p></main>'''
 
@@ -51,9 +51,11 @@ def main():
     dl = '<datalist id="firms">' + ''.join(f'<option value="{E(n)}">' for _, n, _ in firms) + '</datalist>'
     idx = json.dumps({(s2 or n).lower(): s for s, n, s2 in firms} | {n.lower(): s for s, n, _ in firms})
     CH = ['Sanctions & terrorism lists', 'Export & investment restrictions', 'Financial regulators', 'Money laundering penalties', 'US & worldwide courts', 'Registration', 'People behind the fund', 'Political ties']
-    page(os.path.join(OUT, 'index.html'), f'''<main class="wrap"><div class="hero"><h1>Check your VC<br><span>before you sign.</span></h1><p>10 checks on any venture firm and the people behind it, in one place.</p>
-{SB("Search a VC firm, e.g. Andreessen Horowitz")}<div class="chips">{"".join(f"<span>{c}</span>" for c in CH)}</div>
-<p class="note">We check government sanctions lists, financial regulators, court records and public registries.</p></div><div style="height:90px"></div></main>''', '')
+    DEMO = [('Sanctions', 'clear', None), ('Financial regulator actions', 'review', '1 open probe'), ('US court records', 'clear', '3 closed'), ('People behind the fund', 'clear', None)]
+    demo = ''.join(f'<div class="dr"><span>{E(t)}</span><span class="pc"><span class="pill {PILL[st][0]}"><i></i>{PILL[st][1]}</span>{f"<span class=\'cnt {"ca" if st=="review" else "cg"}\'>{E(c)}</span>" if c else ""}</span></div>' for t, st, c in DEMO)
+    page(os.path.join(OUT, 'index.html'), f'''<main class="wrap"><div class="hero"><h1>Check your VC<br><span>before you sign.</span></h1>
+{SB("Search a VC firm, e.g. Andreessen Horowitz")}<div class="chips">{"".join(f"<span>{c}</span>" for c in CH)}</div></div>
+<div class="demo" aria-hidden="true"><div class="dh"><b>Example Ventures</b><em>10 checks · example</em></div>{demo}<div class="dr fade"><span>+ 6 more checks</span></div></div><div style="height:80px"></div></main>''', '')
     page(os.path.join(OUT, 'pending', 'index.html'), '''<main class="wrap"><div class="pend"><div class="sp"></div><h1>We're checking this firm now</h1><p style="color:var(--ink2);font-size:18px"><b id="pq"></b> isn't in our database yet. We're running all 10 checks — we'll let you know in 5 minutes.</p>
 <form id="notify"><input class="in" type="email" name="email" required placeholder="you@startup.com"><button class="btn">Email me</button></form><p class="msg" id="pmsg"></p><p class="note">This uses 1 check only when the result is ready.</p></div></main>''', '../')
     open(os.path.join(OUT, 'firms.js'), 'w').write('window.REGRET_FIRMS=' + idx + ';' + f'document.addEventListener("DOMContentLoaded",()=>document.body.insertAdjacentHTML("beforeend",{json.dumps(dl)}))')
