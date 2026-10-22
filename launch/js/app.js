@@ -96,25 +96,61 @@
         if (pc && !pc.querySelector('.cnt-act')) pc.insertAdjacentHTML('beforeend', '<span class="cnt ca cnt-act">' + na + ' active</span>');
       }
       d.innerHTML = fs.length ? fs.map(factHtml).join('') : '<div class="fct">No sourced facts on file for this check yet.</div>';
-      const row = d.closest('.row'); row.classList.add('tog');
+      const row = d.closest('.row'); row.classList.add('tog', 'open');
       row.onclick = (e) => { if (!e.target.closest('a')) row.classList.toggle('open'); };
     });
   }
   window.regretShowDetails = showDetails;
+  // Option A locked state: gray lines from firm_case_outline() (row, kind, year, status only). Nothing else is sent.
+  const ROWT = {};
+  if (main) main.querySelectorAll('.row').forEach(r => { const g = r.querySelector('.gl'); if (g) ROWT[g.dataset.row] = r.querySelector('.tx b').textContent; });
+  const spill = (st) => st === 'active' ? '<span class="cs cs-act">Active</span>' : st === 'closed' ? '<span class="cs cs-cl">Closed</span>' : '';
+  function showOutline(rows) {
+    if (main.classList.contains('unlocked')) return;
+    const by = {}; (rows || []).forEach(r => by[r.row] = r.items || []);
+    main.querySelectorAll('.gl').forEach(g => {
+      g.innerHTML = (by[g.dataset.row] || []).map((e, i) => {
+        const w1 = 20 + ((e.kind || '').length * 7 + i * 13) % 45;
+        return '<button type="button" class="gc' + (e.status === 'active' ? ' act' : '') + '" data-row="' + esc(g.dataset.row) + '" data-kind="' + esc(e.kind) + '" data-year="' + esc(e.year || '') + '" data-st="' + esc(e.status || '') + '">'
+          + '<span class="y">' + esc(e.year || '—') + '</span><span class="k">' + esc(e.kind) + '</span><span class="bl"><span class="bar" style="width:' + w1 + '%"></span><span class="bar" style="width:22%"></span></span>'
+          + spill(e.status) + '<span class="lkk">🔒 Open</span></button>';
+      }).join('');
+    });
+  }
+  let BAL = null;
+  async function openPay(gc) {
+    const pc = $('#pcase');
+    pc.innerHTML = gc ? '🔒 <b>' + esc(gc.dataset.kind) + '</b>' + (gc.dataset.year ? ' · ' + esc(gc.dataset.year) : '') + ' · ' + esc(ROWT[gc.dataset.row] || '') + ' ' + spill(gc.dataset.st) : '🔒 <b>All 10 checks</b>';
+    $('#pmsg2').textContent = '';
+    open('paycase');
+    BAL = await balance();
+    const ub = $('#usecheck'), pb = $('#pbal');
+    $('#panon').hidden = !!(BAL && BAL.signed_in);
+    if (!BAL) { pb.textContent = 'Could not load your balance.'; ub.disabled = true; return; }
+    const n = BAL.left, w = n === 1 ? ' check' : ' checks';
+    pb.textContent = n > 0 ? 'You have ' + n + (BAL.signed_in ? w + ' left.' : ' free' + w + ' left on this device.') : (BAL.signed_in ? 'You have no checks left. Buy more below.' : 'No free checks left on this device. Sign in for 4 more, or buy below.');
+    ub.disabled = n <= 0;
+  }
   async function tryUnlock(spend) {
     if (!sb) return;
     const { data, error } = await sb.rpc('unlock_firm', { p_slug: main.dataset.firm, p_anon: anonId(), p_spend: spend });
-    if (error || !data) return;
-    if (data.status === 'ok') return showDetails(data.details);
-    if (!spend) return;
+    if (error || !data) { if (spend) $('#pmsg2').textContent = 'Something went wrong, try again.'; return; }
+    if (data.status === 'ok') { $('#paycase').hidden = true; return showDetails(data.details); }
+    if (!spend) return data.status;
     if (data.status === 'need_signup') { $('#suh').textContent = "You've used your free checks"; open('signup'); }
-    if (data.status === 'out') { $('#pwh').textContent = "You're out of checks"; open('paywall'); }
+    if (data.status === 'out') { $('#pmsg2').textContent = "You're out of checks. Buy more below."; $('#usecheck').disabled = true; }
   }
-  // Opening a firm's result page spends the check (revisits are free). Locks only stay if no check is available.
+  // No check is spent on page open: already-unlocked firms show details (free re-open); otherwise the gray
+  // outline shows and a check is spent only when the user presses "Use 1 check" in the popup.
+  async function load() {
+    const st = await tryUnlock(false);
+    if (st === 'locked' || st === undefined) { const { data } = await sb.rpc('firm_case_outline', { p_slug: main.dataset.firm }); showOutline(data); }
+  }
   if (main && u) {
-    u.onclick = () => tryUnlock(true).then(paint);
-    tryUnlock(true).then(paint);
-    if (sb) sb.auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_IN' && !main.classList.contains('unlocked')) setTimeout(() => tryUnlock(true).then(paint), 500); });
+    u.onclick = () => openPay(null);
+    main.addEventListener('click', (e) => { const gc = e.target.closest('.gc'); if (gc) openPay(gc); });
+    $('#usecheck').onclick = () => tryUnlock(true).then(paint);
+    if (sb) { load().then(paint); sb.auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_IN' && !main.classList.contains('unlocked')) setTimeout(() => tryUnlock(false).then(paint), 500); }); }
   }
   if (!main) paint();
 })();
