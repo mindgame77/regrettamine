@@ -34,7 +34,7 @@
   async function buy(kind) {
     if (!sb) return alert('Checkout is not configured yet.');
     const { data: s } = await sb.auth.getSession();
-    const pay = $('#paycase'), inPay = pay && !pay.hidden, msg = (t) => { if (inPay) $('#pmsg2').textContent = t; else if (t) alert(t); };
+    const pay = $('#paycase'), inPay = pay && !pay.hidden, msg = (t) => { if (inPay) $('#pmsg2').textContent = t; else if (t && !/…$/.test(t)) alert(t); };
     if (!s.session) {
       setPend(kind); // after sign-in (Google redirect or magic link) we come back here and continue to checkout
       if (inPay) { const g = $('#panon'); g.hidden = false; g.classList.add('hi'); $('#psgnh').textContent = 'Sign in to continue to checkout'; g.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
@@ -59,7 +59,7 @@
   document.querySelectorAll('[data-magic]').forEach(f => f.onsubmit = (e) => { e.preventDefault(); magic(f.email.value.trim(), f.parentNode.parentNode.querySelector('[data-magicmsg]')); });
   if (sb) sb.auth.onAuthStateChange((ev, session) => {
     if (ev === 'SIGNED_IN') setTimeout(async () => { await sb.rpc('claim_anon_checks', { p_anon: anonId() }); paint(); }, 0);
-    if ((ev === 'SIGNED_IN' || ev === 'INITIAL_SESSION') && session) { const k = takePend(); if (k) setTimeout(() => buy(k), 0); }
+    if ((ev === 'SIGNED_IN' || ev === 'INITIAL_SESSION') && session) { const k = takePend(); if (k) setTimeout(() => { if ($('#paycase')) open('paycase'); buy(k); }, 0); }
   });
   const main = document.querySelector('main[data-firm]');
   // Search
