@@ -1,4 +1,4 @@
-// Stripe webhook -> grant_checks. Secrets: STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, SUPABASE_SERVICE_ROLE_KEY.
+// Stripe webhook -> grant_checks. Secrets: STRIPE_SECRET_KEY, REGRETAMIN_STRIPE_WEBHOOK_SECRET, SUPABASE_SERVICE_ROLE_KEY.
 // Deploy with --no-verify-jwt. Events: checkout.session.completed, invoice.paid.
 import Stripe from "npm:stripe@16";
 import { createClient } from "npm:@supabase/supabase-js@2";
@@ -8,7 +8,7 @@ const PLAN: Record<string, number> = { m10: 10, m30: 30 };
 Deno.serve(async (req) => {
   let ev: Stripe.Event;
   try {
-    ev = await stripe.webhooks.constructEventAsync(await req.text(), req.headers.get("stripe-signature")!, Deno.env.get("STRIPE_WEBHOOK_SECRET")!);
+    ev = await stripe.webhooks.constructEventAsync(await req.text(), req.headers.get("stripe-signature")!, Deno.env.get("REGRETAMIN_STRIPE_WEBHOOK_SECRET")!);
   } catch { return new Response("bad signature", { status: 400 }); }
   if (ev.type === "checkout.session.completed") {
     const s = ev.data.object as Stripe.Checkout.Session;
