@@ -26,28 +26,33 @@ def page(path, body, root, title='Regretamin'):
 def SB(ph, sm=False):
     return f'<form class="sb{" sm" if sm else ""}" data-search><input name="q" list="firms" placeholder="{ph}" autocomplete="off"><button class="btn">Check</button></form>'
 
-def result(D):
+def result(D, P):
     F = D['firm']; rows = checks(D)
+    cp = P[:-5] + '.counts.json'
+    CN = json.load(open(cp)) if os.path.exists(cp) else {'rows': {}, 'total': 0}
     chk = datetime.date.fromisoformat(max(x['retrieved_at'] for x in D['facts'])[:10]).strftime('%b %-d, %Y')
     o = ''
+    def lk(i):
+        n = CN['rows'].get(str(i), 0)
+        return f'<span class="lk">🔒 {n} fact{"s" if n != 1 else ""}</span>' if n else '<span class="lk"></span>'
     for i, r in enumerate(rows, 1):
         cls, lab = PILL[r['state']]
         cnt = f'<span class="cnt {"cg" if r["state"] == "clear" else "ca"}">{E(r["count"])}</span>' if r['count'] else ''
         line = f'<em>{E(r["line"])}</em>' if r['line'] else ''
         o += (f'<div class="row{" last" if i == 10 else ""}"><span class="n">{i:02d}</span><div class="tx"><b>{E(r["title"])}</b><span>{E(r["desc"])}</span>{line}</div>'
-              f'<div class="pc"><span class="pill {cls}"><i></i>{lab}</span>{cnt}</div><span class="lk">🔒 Details</span><div class="det" data-row="{i}"></div></div>')
+              f'<div class="pc"><span class="pill {cls}"><i></i>{lab}</span>{cnt}</div>{lk(i)}<div class="det" data-row="{i}"></div></div>')
     meta = ' · '.join(x for x in [F.get('hq'), f'since {F["founded_year"]}' if F.get('founded_year') else '', F.get('primary_domain'), f'checked {chk}'] if x)
     return f'''<main class="wrap" data-firm="{E(F["slug"])}"><div class="rh"><form class="sb big" data-search><svg class="mg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input name="q" list="firms" value="{E(F["name"])}" aria-label="VC firm" autocomplete="off" onfocus="this.select()"><button class="btn">Check</button></form><div class="m">{E(meta)}</div></div>
-<div class="list">{o}</div><div class="unlock"><div><b>See details and sources for every check</b><p>Case summaries, list names and links, for this firm.</p></div><button class="btn" id="unlock">Unlock with 1 check</button></div>
+<div class="list">{o}</div><div class="unlock" id="lockcard"><div><b>🔒 {CN['total']} facts with sources about {E(F['name'])}</b><p>Case summaries, list results and links for all 10 checks.</p></div><button class="btn" id="unlock">See them with 1 check</button></div>
 <p class="fine">Facts from public records as of {chk}. Political ties are shown for context and are not counted. Name-only matches on different people are left out.</p></main>'''
 
 def main():
     shutil.rmtree(OUT, ignore_errors=True); os.makedirs(OUT)
     for f in ('style.css', 'logo.svg', 'app.js'): shutil.copy(os.path.join(HERE, f if f != 'app.js' else 'js/app.js'), OUT)
     firms = []
-    for p in sorted(glob.glob(os.path.join(ROOT, 'data', 'launch', '*.json'))):
+    for p in sorted(x for x in glob.glob(os.path.join(ROOT, 'data', 'launch', '*.json')) if not x.endswith('.counts.json')):
         D = json.load(open(p)); F = D['firm']; firms.append((F['slug'], F['name'], F.get('short_name')))
-        page(os.path.join(OUT, 'vc', F['slug'], 'index.html'), result(D), '../../', F['name'] + ' · Regretamin')
+        page(os.path.join(OUT, 'vc', F['slug'], 'index.html'), result(D, p), '../../', F['name'] + ' · Regretamin')
     dl = '<datalist id="firms">' + ''.join(f'<option value="{E(n)}">' for _, n, _ in firms) + '</datalist>'
     idx = json.dumps({(s2 or n).lower(): s for s, n, s2 in firms} | {n.lower(): s for s, n, _ in firms})
     CH = ['Sanctions & terrorism lists', 'Export & investment restrictions', 'Financial regulators', 'Money laundering penalties', 'US & worldwide courts', 'Registration', 'People behind the fund', 'Political ties']

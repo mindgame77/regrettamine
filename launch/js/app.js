@@ -83,11 +83,17 @@
   async function tryUnlock(spend) {
     if (!sb) return;
     const { data, error } = await sb.rpc('unlock_firm', { p_slug: main.dataset.firm, p_anon: anonId(), p_spend: spend });
-    if (error) return;
+    if (error || !data) return;
     if (data.status === 'ok') return showDetails(data.details);
-    if (data.status === 'need_signup') { $('#suh').textContent = "You've used your 2 free checks"; open('signup'); }
+    if (!spend) return;
+    if (data.status === 'need_signup') { $('#suh').textContent = "You've used your free checks"; open('signup'); }
     if (data.status === 'out') { $('#pwh').textContent = "You're out of checks"; open('paywall'); }
   }
-  if (main && u) { u.onclick = () => tryUnlock(true).then(paint); tryUnlock(false); }
-  paint();
+  // Opening a firm's result page spends the check (revisits are free). Locks only stay if no check is available.
+  if (main && u) {
+    u.onclick = () => tryUnlock(true).then(paint);
+    tryUnlock(true).then(paint);
+    if (sb) sb.auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_IN' && !main.classList.contains('unlocked')) setTimeout(() => tryUnlock(true).then(paint), 500); });
+  }
+  if (!main) paint();
 })();
