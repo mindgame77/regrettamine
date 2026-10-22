@@ -5,12 +5,20 @@
   const $ = (s) => document.querySelector(s);
   const ANON = 'regretamin.anon';
   function anonId() { let a = localStorage.getItem(ANON); if (!a) { a = crypto.randomUUID(); localStorage.setItem(ANON, a); } return a; }
-  const open = (id) => { document.querySelectorAll('.ov').forEach(o => o.hidden = true); $('#' + id).hidden = false; };
+  const syncBody = () => document.body.classList.toggle('ppopen', !!document.querySelector('.ov:not([hidden])'));
+  const open = (id) => { document.querySelectorAll('.ov').forEach(o => o.hidden = true); $('#' + id).hidden = false; syncBody(); };
+  const closeOv = (o) => { if (o) { o.hidden = true; syncBody(); } };
+  // Close any popup with x, Esc or a click on the backdrop
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') document.querySelectorAll('.ov:not([hidden])').forEach(closeOv); });
+  document.addEventListener('mousedown', (e) => { if (e.target.classList && e.target.classList.contains('ov')) closeOv(e.target); });
+  const PEND = 'regretamin.pendingBuy';
+  const setPend = (k) => localStorage.setItem(PEND, JSON.stringify({ k, t: Date.now() }));
+  const takePend = () => { try { const p = JSON.parse(localStorage.getItem(PEND) || 'null'); localStorage.removeItem(PEND); return p && Date.now() - p.t < 30 * 60e3 ? p.k : null; } catch (_) { return null; } };
   document.addEventListener('click', (e) => {
     const t = e.target.closest('[data-open],[data-close],[data-buy]'); if (!t) return;
     e.preventDefault();
     if (t.dataset.open) open(t.dataset.open);
-    if (t.dataset.close !== undefined) t.closest('.ov').hidden = true;
+    if (t.dataset.close !== undefined) closeOv(t.closest('.ov'));
     if (t.dataset.buy) buy(t.dataset.buy);
   });
   async function balance() {
@@ -26,20 +34,33 @@
   async function buy(kind) {
     if (!sb) return alert('Checkout is not configured yet.');
     const { data: s } = await sb.auth.getSession();
-    if (!s.session) { $('#suh').textContent = 'Sign in to buy checks'; return open('signup'); }
+    const pay = $('#paycase'), inPay = pay && !pay.hidden, msg = (t) => { if (inPay) $('#pmsg2').textContent = t; else if (t) alert(t); };
+    if (!s.session) {
+      setPend(kind); // after sign-in (Google redirect or magic link) we come back here and continue to checkout
+      if (inPay) { const g = $('#panon'); g.hidden = false; g.classList.add('hi'); $('#psgnh').textContent = 'Sign in to continue to checkout'; g.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+      $('#suh').textContent = 'Sign in to buy checks'; return open('signup');
+    }
+    document.querySelectorAll('[data-buy]').forEach(b => b.disabled = true); msg('Opening secure checkout…');
     const { data, error } = await sb.functions.invoke('create-checkout', { body: { kind } });
-    if (error || !data || !data.url) return alert('Could not start checkout.');
+    if (error || !data || !data.url) { document.querySelectorAll('[data-buy]').forEach(b => b.disabled = false); return msg('Could not start checkout. Try again.'); }
     location.href = data.url;
   }
   // Auth
-  const back = () => location.href;
-  const g = $('#google'); if (g) g.onclick = () => sb && sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: back() } });
-  const m = $('#magic'); if (m) m.onclick = async () => {
-    if (!sb) return; const email = $('#em').value.trim(); if (!email) return;
+  const back = () => location.href.split('#')[0];
+  const google = () => sb && sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: back() } });
+  const magic = async (email, out) => {
+    if (!sb || !email) return;
     const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: back() } });
-    $('#sumsg').textContent = error ? error.message : 'Check your inbox for the sign-in link.';
+    out.textContent = error ? error.message : 'Check your inbox for the sign-in link.';
   };
-  if (sb) sb.auth.onAuthStateChange(async (ev) => { if (ev === 'SIGNED_IN') { await sb.rpc('claim_anon_checks', { p_anon: anonId() }); paint(); } });
+  const g = $('#google'); if (g) g.onclick = google;
+  const m = $('#magic'); if (m) m.onclick = () => magic($('#em').value.trim(), $('#sumsg'));
+  document.querySelectorAll('[data-google]').forEach(b => b.onclick = google);
+  document.querySelectorAll('[data-magic]').forEach(f => f.onsubmit = (e) => { e.preventDefault(); magic(f.email.value.trim(), f.parentNode.parentNode.querySelector('[data-magicmsg]')); });
+  if (sb) sb.auth.onAuthStateChange((ev, session) => {
+    if (ev === 'SIGNED_IN') setTimeout(async () => { await sb.rpc('claim_anon_checks', { p_anon: anonId() }); paint(); }, 0);
+    if ((ev === 'SIGNED_IN' || ev === 'INITIAL_SESSION') && session) { const k = takePend(); if (k) setTimeout(() => buy(k), 0); }
+  });
   const main = document.querySelector('main[data-firm]');
   // Search
   document.querySelectorAll('[data-search]').forEach(f => f.onsubmit = (e) => {
@@ -117,27 +138,32 @@
       }).join('');
     });
   }
-  let BAL = null;
+  let BAL = null; const FIRM = main ? ((main.querySelector('.sb.big input') || {}).defaultValue || '') : '';
   async function openPay(gc) {
     const pc = $('#pcase');
-    pc.innerHTML = gc ? '🔒 <b>' + esc(gc.dataset.kind) + '</b>' + (gc.dataset.year ? ' · ' + esc(gc.dataset.year) : '') + ' · ' + esc(ROWT[gc.dataset.row] || '') + ' ' + spill(gc.dataset.st) : '🔒 <b>All 10 checks</b>';
+    const firm = FIRM, ST = { active: 'Active', closed: 'Closed' };
+    const parts = gc ? [gc.dataset.kind, gc.dataset.year, ST[gc.dataset.st]].filter(Boolean) : ['All ' + (main.dataset.total || '') + ' facts'];
+    pc.innerHTML = '<span>🔒 You clicked: <b>' + esc(parts.join(' · ')) + '</b></span> <span>· ' + esc(firm) + (gc && ROWT[gc.dataset.row] ? ' · ' + esc(ROWT[gc.dataset.row]) : '') + '</span>';
+    pc.dataset.row = gc ? gc.dataset.row : ''; // for tests
     $('#pmsg2').textContent = '';
+    const ub = $('#usecheck'), pb = $('#pbal'); ub.disabled = true; pb.textContent = 'Checking your balance…';
+    $('#panon').classList.remove('hi'); $('#psgnh').textContent = 'Sign in to buy';
     open('paycase');
     BAL = await balance();
-    const ub = $('#usecheck'), pb = $('#pbal');
     $('#panon').hidden = !!(BAL && BAL.signed_in);
-    if (!BAL) { pb.textContent = 'Could not load your balance.'; ub.disabled = true; return; }
+    if (!BAL) { pb.textContent = 'Could not load your balance'; return; }
     const n = BAL.left, w = n === 1 ? ' check' : ' checks';
-    pb.textContent = n > 0 ? 'You have ' + n + (BAL.signed_in ? w + ' left.' : ' free' + w + ' left on this device.') : (BAL.signed_in ? 'You have no checks left. Buy more below.' : 'No free checks left on this device. Sign in for 4 more, or buy below.');
+    pb.textContent = n > 0 ? 'You have ' + n + (BAL.signed_in ? '' : ' free') + w + ' left' : (BAL.signed_in ? 'You have no checks left' : 'No free checks left on this device');
+    if (n <= 0) $('#pmsg2').textContent = BAL.signed_in ? 'Pick a plan below to get more checks.' : 'Sign in below for 4 more free checks, or pick a plan.';
     ub.disabled = n <= 0;
   }
   async function tryUnlock(spend) {
     if (!sb) return;
     const { data, error } = await sb.rpc('unlock_firm', { p_slug: main.dataset.firm, p_anon: anonId(), p_spend: spend });
     if (error || !data) { if (spend) $('#pmsg2').textContent = 'Something went wrong, try again.'; return; }
-    if (data.status === 'ok') { $('#paycase').hidden = true; return showDetails(data.details); }
+    if (data.status === 'ok') { closeOv($('#paycase')); return showDetails(data.details); }
     if (!spend) return data.status;
-    if (data.status === 'need_signup') { $('#suh').textContent = "You've used your free checks"; open('signup'); }
+    if (data.status === 'need_signup') { $('#pmsg2').textContent = "You've used your free checks. Sign in below for 4 more."; const g = $('#panon'); g.hidden = false; g.classList.add('hi'); $('#usecheck').disabled = true; }
     if (data.status === 'out') { $('#pmsg2').textContent = "You're out of checks. Buy more below."; $('#usecheck').disabled = true; }
   }
   // No check is spent on page open: already-unlocked firms show details (free re-open); otherwise the gray
@@ -149,7 +175,7 @@
   if (main && u) {
     u.onclick = () => openPay(null);
     main.addEventListener('click', (e) => { const gc = e.target.closest('.gc'); if (gc) openPay(gc); });
-    $('#usecheck').onclick = () => tryUnlock(true).then(paint);
+    $('#usecheck').onclick = () => { $('#usecheck').disabled = true; tryUnlock(true).then(paint).finally(async () => { BAL = await balance(); if (BAL && BAL.left > 0 && !main.classList.contains('unlocked')) $('#usecheck').disabled = false; }); };
     if (sb) { load().then(paint); sb.auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_IN' && !main.classList.contains('unlocked')) setTimeout(() => tryUnlock(false).then(paint), 500); }); }
   }
   if (!main) paint();
