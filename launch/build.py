@@ -24,6 +24,18 @@ def page(path, body, root, title='Regretamin'):
 <link rel="stylesheet" href="{root}style.css"><script>window.REGRET={json.dumps(CFG)};window.REGRET_ROOT="{root}"</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="{root}firms.js"></script><script defer src="{root}app.js"></script></head><body>{nav}{body}{modals}</body></html>''')
 
+PRESS = [  # approved press option 1; links checked 2026-10-22 (Reuters/Bloomberg bot-block curl but are live)
+    ('Reuters', 'Uber investor sues to force former CEO Kalanick off board', 'Aug 2017', 'https://www.reuters.com/article/world/uber-investor-sues-to-force-former-ceo-kalanick-off-board-idUSKBN1AQ2EV/'),
+    ('CNBC', 'SoftBank sues social media startup it invested in, alleging it faked user numbers', 'Aug 2023', 'https://www.cnbc.com/2023/08/04/softbank-sues-social-media-startup-irl-alleging-fake-user-numbers.html'),
+    ('TechCrunch', 'Byju’s investors vote to remove founder', 'Feb 2024', 'https://techcrunch.com/2024/02/23/byjus-investors-unanimously-vote-to-remove-founder/'),
+    ('Bloomberg', 'A $1 Million Bet on a Tech Startup Spawns Investor-Founder Fight', 'Apr 2024', 'https://www.bloomberg.com/news/articles/2024-04-24/toptal-founder-and-investor-tensions-spark-lawsuit'),
+    ('Axios', 'Khosla sues entrepreneur for fraud', 'Sep 2017', 'https://www.axios.com/2017/12/15/khosla-sues-entrepreneur-for-fraud-1513305375'),
+]
+def press():
+    wm = lambda o: f'<span class="wm{" s" if o in ("TechCrunch", "CNBC", "Axios") else ""}">{E(o)}</span>'
+    li = ''.join(f'<li><a href="{E(u)}" target="_blank" rel="noopener">{wm(o)}<span>{E(h)}</span><em>{d}</em></a></li>' for o, h, d, u in PRESS)
+    return f'<section class="press"><h2>Founders vs. their investors, in the news</h2><div class="logos">{"".join(wm(o) for o, *_ in PRESS)}</div><ul>{li}</ul></section>'
+
 def SB(ph, sm=False):
     return f'<form class="sb{" sm" if sm else ""}" data-search><input name="q" list="firms" placeholder="{ph}" autocomplete="off"><button class="btn">Check</button></form>'
 
@@ -62,7 +74,7 @@ def main():
     demo = ''.join(f'<div class="dr"><span>{E(t)}</span><span class="pc"><span class="pill {PILL[st][0]}"><i></i>{PILL[st][1]}</span>{f"<span class=\'cnt {"ca" if st=="review" else "cg"}\'>{E(c)}</span>" if c else ""}</span></div>' for t, st, c in DEMO)
     page(os.path.join(OUT, 'index.html'), f'''<main class="wrap"><div class="hero"><h1>Check your VC<br><span>before you sign.</span></h1>
 {SB("Search a VC firm, e.g. Andreessen Horowitz")}<div class="chips">{"".join(f"<span>{c}</span>" for c in CH)}</div></div>
-<div class="demo" aria-hidden="true"><div class="dh"><b>Example Ventures</b><em>10 checks · example</em></div>{demo}<div class="dr fade"><span>+ 6 more checks</span></div></div><div style="height:80px"></div></main>''', '')
+<div class="demo" aria-hidden="true"><div class="dh"><b>Example Ventures</b><em>10 checks · example</em></div>{demo}<div class="dr fade"><span>+ 6 more checks</span></div></div><div style="height:64px"></div></main>{press()}<div style="height:80px"></div>''', '')
     page(os.path.join(OUT, 'pending', 'index.html'), '''<main class="wrap"><div class="pend"><div class="sp"></div><h1>We're checking this firm now</h1><p style="color:var(--ink2);font-size:18px"><b id="pq"></b> isn't in our database yet. We're running all 10 checks — we'll let you know in 5 minutes.</p>
 <form id="notify"><input class="in" type="email" name="email" required placeholder="you@startup.com"><button class="btn">Email me</button></form><p class="msg" id="pmsg"></p><p class="note">This uses 1 check only when the result is ready.</p></div></main>''', '../')
     open(os.path.join(OUT, 'firms.js'), 'w').write('window.REGRET_FIRMS=' + idx + ';' + f'document.addEventListener("DOMContentLoaded",()=>document.body.insertAdjacentHTML("beforeend",{json.dumps(dl)}))')
