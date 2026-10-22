@@ -1,4 +1,4 @@
-/* Regretamin launch: search, check counter, sign-up (Google + magic link), paywall, unknown-firm queue. */
+/* Regretamin launch: search, check counter, sign-up (Google + magic link), paywall, unknown-firm queue, account menu, Account and My checks pages. */
 (function () {
   const C = window.REGRET || {}, ROOT = window.REGRET_ROOT || '';
   const sb = C.url && C.key && window.supabase ? window.supabase.createClient(C.url, C.key) : null;
@@ -26,10 +26,110 @@
     const { data, error } = await sb.rpc('check_balance', { p_anon: anonId() });
     return error ? null : data; // {left, signed_in}
   }
+  const PLANS = { m10: { name: 'Starter', n: 10, price: '$19/month' }, m30: { name: 'Pro', n: 30, price: '$49/month' } };
+  const fmtDate = (d) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const leftOf = (a) => a.plan && PLANS[a.plan] && a.left <= PLANS[a.plan].n ? a.left + ' of ' + PLANS[a.plan].n : String(a.left);
+  let ACCT = null; // { email, plan, left, period_end, has_customer } once signed in
   async function paint() {
     const b = await balance(); if (!b) return;
     $('#left').textContent = b.left + (b.signed_in ? '' : ' free') + (b.left === 1 ? ' check left' : ' checks left');
-    if (b.signed_in) $('#signin').textContent = 'Account';
+    $('#signin').hidden = b.signed_in; $('#acct').hidden = !b.signed_in;
+    document.querySelectorAll('[data-out]').forEach(x => x.hidden = b.signed_in);
+    if (!b.signed_in) { document.querySelectorAll('[data-in]').forEach(x => x.hidden = true); return; }
+    const [{ data: u }, { data: a }] = await Promise.all([sb.auth.getUser(), sb.rpc('my_account')]);
+    if (!u.user || !a) return;
+    ACCT = Object.assign({ email: u.user.email || '' }, a);
+    $('#av').textContent = (ACCT.email[0] || 'A').toUpperCase();
+    $('#ddem').textContent = ACCT.email;
+    $('#ddplan').textContent = ACCT.plan && PLANS[ACCT.plan] ? PLANS[ACCT.plan].name + ' · ' + PLANS[ACCT.plan].n + ' checks/mo' : 'Free';
+    $('#ddleft').textContent = leftOf(ACCT);
+    document.querySelectorAll('[data-in]').forEach(x => x.hidden = false);
+    if ($('#account')) paintAccount(); if ($('#mychecks')) paintMyChecks();
+  }
+  // Account menu
+  const dd = $('#acctdd'), ab = $('#acctbtn');
+  const menu = (on) => { dd.hidden = !on; ab.setAttribute('aria-expanded', on); };
+  ab.onclick = (e) => { e.stopPropagation(); menu(dd.hidden); };
+  document.addEventListener('click', (e) => { if (!dd.hidden && (!e.target.closest('#acctdd') || e.target.closest('a'))) menu(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') menu(false); });
+  $('#signout').onclick = async (e) => { e.preventDefault(); if (sb) await sb.auth.signOut(); location.href = ROOT || './'; };
+  // Account page
+  async function paintAccount() {
+    const a = ACCT, P = a.plan && PLANS[a.plan];
+    $('#aem').textContent = a.email;
+    $('#aplan').textContent = P ? P.name : 'Free';
+    $('#aplan2').textContent = P ? P.n + ' checks/mo · ' + P.price : 'No plan. Buy checks any time.';
+    $('#aleft').textContent = leftOf(a);
+    $('#aleft2').textContent = P ? 'Resets to ' + P.n + ' on renewal' : (a.left === 1 ? 'check' : 'checks') + ' to use any time';
+    $('#aren').textContent = P && a.period_end ? fmtDate(a.period_end) : '—';
+    $('#aren2').textContent = P ? 'Renews monthly' : 'Nothing renews';
+    $('#manage').hidden = !P && !a.has_customer; $('#pick').hidden = !!P;
+    $('#dzp').textContent = (P ? 'Cancels your subscription, then permanently deletes' : 'Permanently deletes') + ' your account, remaining checks and history.';
+    $('#cons').innerHTML = (P ? '<li><i>1</i><span>Your <b>' + esc(P.name) + ' subscription is cancelled first</b>, so you won’t be charged again.</span></li>' : '')
+      + '<li><i>' + (P ? 2 : 1) + '</i><span>Your <b>' + esc(a.left) + ' remaining ' + (a.left === 1 ? 'check is' : 'checks are') + ' lost</b> and aren’t refunded.</span></li>'
+      + '<li><i>' + (P ? 3 : 2) + '</i><span>Your list of unlocked firms and your email are permanently deleted.</span></li>';
+    $('#delgo').textContent = P ? 'Cancel subscription & delete' : 'Delete account';
+    const { data: rows } = await sb.rpc('my_checks');
+    const n = (rows || []).length;
+    $('#mcn').textContent = n ? 'You’ve checked ' + n + (n === 1 ? ' firm' : ' firms') : 'No checks yet';
+    $('#mcl').textContent = n ? 'Latest: ' + rows[0].name + ', ' + fmtDate(rows[0].checked_at) : 'Search a firm to run your first check.';
+  }
+  if ($('#account')) {
+    $('#manage').onclick = async () => {
+      $('#amsg').textContent = '';
+      const { data, error } = await sb.functions.invoke('billing-portal', { body: { returnUrl: location.href.split('#')[0] } });
+      if (error || !data || !data.url) return ($('#amsg').textContent = 'Could not open the billing portal. Try again.');
+      location.href = data.url;
+    };
+    $('#emform').onsubmit = async (e) => {
+      e.preventDefault(); const email = $('#nem').value.trim(); if (!email) return;
+      const { error } = await sb.auth.updateUser({ email }, { emailRedirectTo: location.href.split('#')[0] });
+      $('#emmsg').textContent = error ? error.message : 'Check ' + email + ' for a confirmation link. Your email changes when you open it.';
+    };
+    $('#deltype').oninput = (e) => { $('#delgo').disabled = e.target.value.trim() !== 'DELETE'; };
+    $('#delgo').onclick = async () => {
+      const go = $('#delgo'); go.disabled = true; $('#delmsg').textContent = 'Deleting…';
+      const { data, error } = await sb.functions.invoke('delete-account', { body: {} });
+      if (error || !data || !data.deleted) {
+        let m = 'Could not delete this account. Nothing was deleted.';
+        try { const j = error && error.context && await error.context.json(); if (j && j.message) m = j.message; } catch (_) { /* keep default */ }
+        $('#delmsg').textContent = m; go.disabled = false; return;
+      }
+      await sb.auth.signOut(); location.href = ROOT;
+    };
+  }
+  // My checks page
+  let MC = [];
+  async function paintMyChecks() {
+    const a = ACCT, P = a.plan && PLANS[a.plan];
+    $('#mbal').innerHTML = '<b>' + esc(leftOf(a)) + '</b> ' + (a.left === 1 ? 'check' : 'checks') + ' left' + (P ? ' this month' + (a.period_end ? ' · resets ' + esc(fmtDate(a.period_end)) : '') : '');
+    const { data } = await sb.rpc('my_checks'); MC = data || [];
+    $('#mlist').hidden = !MC.length; $('#mempty').hidden = !!MC.length; drawChecks();
+  }
+  function drawChecks() {
+    const q = $('#mq').value.trim().toLowerCase(), so = $('#msort').value;
+    const rows = MC.filter(r => !q || (r.name + ' ' + (r.short_name || '')).toLowerCase().includes(q))
+      .sort((x, y) => so === 'az' ? x.name.localeCompare(y.name) : (so === 'old' ? 1 : -1) * (new Date(x.checked_at) - new Date(y.checked_at)));
+    $('#mnone').hidden = !!rows.length || !MC.length;
+    $('#mrows').innerHTML = rows.map(r => {
+      const d = new Date(r.checked_at), url = ROOT + 'vc/' + encodeURIComponent(r.slug) + '/';
+      const when = fmtDate(d) + ' · ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      const st = r.active ? '<span class="cs cs-act">' + r.active + ' active</span>' + r.active + ' of ' + r.cases + (r.cases === 1 ? ' case' : ' cases') + ' active'
+        : r.cases ? '<span class="cs cs-cl">Closed</span>' + r.cases + (r.cases === 1 ? ' case' : ' cases') + ', none active' : 'No court cases found in sources';
+      const nm = r.name + (r.short_name && r.short_name !== r.name ? ' (' + r.short_name + ')' : '');
+      return '<div class="mr"><button type="button" class="star' + (r.saved ? ' on' : '') + '" data-star="' + esc(r.slug) + '" aria-pressed="' + !!r.saved + '" aria-label="' + (r.saved ? 'Unsave ' : 'Save ') + esc(r.name) + '">' + (r.saved ? '★' : '☆') + '</button>'
+        + '<span class="nm2"><a href="' + esc(url) + '">' + esc(nm) + '</a></span><span class="dt">' + esc(when) + '</span><span class="st">' + st + '</span><a class="btn o" href="' + esc(url) + '">Open result</a></div>';
+    }).join('');
+  }
+  if ($('#mychecks')) {
+    $('#mq').oninput = drawChecks; $('#msort').onchange = drawChecks;
+    $('#mrows').onclick = async (e) => {
+      const b = e.target.closest('[data-star]'); if (!b) return;
+      const r = MC.find(x => x.slug === b.dataset.star), on = !r.saved; b.disabled = true;
+      const { data, error } = await sb.rpc(on ? 'watch_fund' : 'unwatch_fund', { p_slug: r.slug });
+      if (!error && (!on || (data && data.saved))) r.saved = on;
+      drawChecks();
+    };
   }
   async function buy(kind) {
     if (!sb) return alert('Checkout is not configured yet.');
@@ -87,9 +187,12 @@
   // vc_source_facts.value title/value; the value has no separate case-status field). Only case-like facts
   // (a case name, or a docket line with filed/terminated) get a pill; anything unclear gets none.
   const isCase = (f) => !!f.case || / v\.? .*\|.*\b(filed|terminated)\b/i.test(f.text || '');
+  // Only cases where the checked firm is a party get a status (and count); same rule as _firm_cases() in the DB.
+  const nonParty = (t) => /\bnon-party\b|\bnot a party\b/i.test(t);
   function caseStatus(f) {
     if (!isCase(f)) return null;
     const t = f.text || '';
+    if (nonParty(t)) return null;
     if (/\b(active|pending|ongoing)\b|\bopen\b[,.;:]|\bis investigating\b/i.test(t)) return 'active';
     if (/\boutcome (unverified|not verified)\b/i.test(t)) return null;
     if (/\b(terminated|dismissed|ended in|settled|resolved|closed|affirmed)\b/i.test(t)) return 'closed';

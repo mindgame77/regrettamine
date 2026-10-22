@@ -1,6 +1,7 @@
 """The 10 checks for a firm, derived from a DB snapshot (launch/firm_snapshot.sql). Pills only, no verdict, no score.
 Logic ported from toxybase design/flow-v5/render_a16z.py."""
 import re, json
+NON_PARTY = re.compile(r'\bnon-party\b|\bnot a party\b', re.I)  # the firm is not a party: not counted (same rule as _firm_cases() in the DB)
 NAME_ONLY = re.compile(r'different (person|people)|surname-only|name-only hit|name-order variant|not treated as a match|similar name', re.I)
 
 def _txt(x):
@@ -31,7 +32,7 @@ def checks(D):
         return [x for x in F if x['fact_type'] == ft and isinstance(x['value'], dict) and x['value'].get('field') == field]
     SAN = [x for x in F if x['fact_type'] == 'sanctions_check' and 'result' in x['value']]
     LEG = [x for x in F if x['fact_type'] == 'legal_matter' and 'title' in x['value']]
-    cases = [(_classify(x['value']['title']), x) for x in LEG]
+    cases = [(_classify(x['value']['title']), x) for x in LEG if not NON_PARTY.search(x['value']['title'])]
     probe = [x for t, x in cases if t == 'probe']; us = [(t, x) for t, x in cases if t != 'probe']
     opn = [x for t, x in us if t == 'Open']
     TER, EXP, AML, WW, PEP = (NEW(f) for f in ('terrorism_lists', 'export_restrictions', 'aml_penalties', 'courts_worldwide', 'pep'))
