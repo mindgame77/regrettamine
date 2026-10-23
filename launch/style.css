@@ -185,3 +185,7 @@ form[data-search]{position:relative}.sdd{position:absolute;left:0;right:0;top:ca
 .so2{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:var(--ink);text-decoration:none;font-size:15px}.so2.on,.so2:hover{background:var(--viobg)}
 .so2 em{font-style:normal;font-size:12px;font-weight:700;color:var(--vio);background:var(--viobg);border-radius:99px;padding:1px 8px}.so2 span{margin-left:auto;color:var(--mute);font-size:13px}.so2 mark{background:#FFD84D;color:inherit;border-radius:3px}
 .so2.none{color:var(--vio);font-weight:600}
+/* Pills stay on one line in a row (landing demo + result rows) */
+.pill,.cnt{white-space:nowrap;flex-shrink:0}.pc{min-width:0}
+.demo .dr{gap:12px}.demo .dr>span:first-child{min-width:0;flex:1 1 auto;line-height:1.3}.demo .dr .pc{flex-wrap:nowrap;flex-shrink:0}
+@media (max-width:420px){.demo{padding:4px 14px 2px}.demo .dr{font-size:13.5px;gap:8px}.demo .pill{font-size:11.5px;padding:3px 8px;gap:5px}.demo .pill i{width:6px;height:6px}.demo .cnt{font-size:11.5px;padding:3px 6px}.demo .pc{gap:4px}.row .pc{flex-wrap:nowrap}.row .pill{font-size:13px;padding:5px 11px}}
