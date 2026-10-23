@@ -147,6 +147,14 @@
     "unit_many": "facts"
    },
    {
+    "key": "lps",
+    "title": "Limited partners",
+    "subtitle": "Named LP commitments, each with its source.",
+    "renderer": "facts",
+    "unit_one": "LP",
+    "unit_many": "LPs"
+   },
+   {
     "key": "timeline",
     "title": "Timeline",
     "subtitle": "Dated events with a source.",
