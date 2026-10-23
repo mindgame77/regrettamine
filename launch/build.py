@@ -67,8 +67,9 @@ A, M, SO = S['account'], S['my_checks'], S['signed_out']
 def why(k, q):  # optional exit question; values match exit_reasons.reason
     r = ''.join(f'<label><input type="radio" name="{k}why" value="{v}">{E(t)}</label>' for v, t in A['reasons'])
     return f'<fieldset class="why" id="{k}why"><legend class="q">{E(q)}<small>{A["why_optional"]}</small></legend>{r}<textarea id="{k}other" maxlength="500" placeholder="{A["why_more"]}" aria-label="{A["why_more_aria"]}"></textarea></fieldset>'
-SIGNED_OUT = f'<div class="emp" data-out hidden><h2>{SO["h2"]}</h2><p>{SO["p"]}</p><button class="btn" data-open="signup" style="margin-top:20px">{SO["button"]}</button></div>'
-ACCOUNT = f'''<main class="ac" id="account"><h1>{A["h1"]}</h1><p class="sub" id="aem"></p>{SIGNED_OUT}<div data-in hidden>
+def signed_out(k):  # centered prompt shown by js/app.js when there is no session
+    return f'<div class="emp" data-out hidden><h2>{SO[k + "_h2"]}</h2><p>{SO[k + "_p"]}</p><button class="btn" data-open="signup" style="margin-top:20px">{SO["button"]}</button></div>'
+ACCOUNT = f'''<main class="ac" id="account"><h1>{A["h1"]}</h1><p class="sub" id="aem"></p>{signed_out("account")}<div data-in hidden>
 <div class="sum"><div><small>{A["plan"]}</small><b id="aplan"></b><span id="aplan2"></span></div><div><small>{A["checks_left"]}</small><b class="v" id="aleft"></b><span id="aleft2"></span></div><div><small id="arenl">{A["renews"]}</small><b id="aren"></b><span id="aren2"></span></div></div>
 <div class="banner" id="cban" hidden></div><div class="acts"><button class="btn" id="resume" hidden>{A["resume"]}</button><button class="btn o" id="manage" hidden>{A["manage"]}</button><button class="btn o" data-open="cancelsub" id="cancel" hidden>{A["cancel"]}</button><button class="btn o" data-open="paywall" id="pick" hidden>{A["pick"]}</button><button class="btn" data-open="paywall" id="buymore">{A["buy_more"]}</button></div><p class="msg err" id="amsg"></p>
 <section class="sec"><h2>{A["my_checks_h2"]}</h2><div class="card mck"><div><b id="mcn"></b><p id="mcl"></p></div><a class="btn o" href="../my-checks/">{A["view_all"]}</a></div></section>
@@ -78,7 +79,7 @@ ACCOUNT = f'''<main class="ac" id="account"><h1>{A["h1"]}</h1><p class="sub" id=
 {why('del', A['del_why'])}<div class="row2"><button class="btn o" data-close>{A["del_keep"]}</button><button class="btn dgs" id="delgo">{A["del_go"]}</button></div><p class="msg err" id="delmsg"></p></div></div>
 <div class="ov tall" id="cancelsub" hidden><div class="md" role="dialog" aria-modal="true" aria-labelledby="canh"><button class="x" data-close>×</button><h2 id="canh"></h2><p class="s" id="cans"></p>
 {why('can', A['can_why'])}<div class="row2"><button class="btn o" data-close>{A["can_keep"]}</button><button class="btn dgs" id="cango">{A["can_go"]}</button></div><p class="msg err" id="canmsg"></p></div></div>'''
-MYCHECKS = f'''<main class="ac mc" id="mychecks"><h1>{M["h1"]}</h1><p class="sub">{M["sub"]}</p>{SIGNED_OUT}<div data-in hidden><div class="bal2" id="mbal"></div>
+MYCHECKS = f'''<main class="ac mc" id="mychecks"><h1>{M["h1"]}</h1><p class="sub">{M["sub"]}</p>{signed_out("checks")}<div data-in hidden><div class="bal2" id="mbal"></div>
 <div id="mlist" hidden><div class="tb"><label class="srch">⌕<input id="mq" type="search" placeholder="{M["search"]}" aria-label="{M["search"]}"></label><select class="sort" id="msort" aria-label="{M["sort_aria"]}">{"".join(f'<option value="{v}">{t}</option>' for v, t in M["sort"])}</select></div>
 <div class="ck" style="margin-top:16px"><div class="mr h">{"".join(f"<span>{c}</span>" for c in M["cols"])}</div><div id="mrows"></div></div><p class="hint" id="mnone" hidden>{M["none"]}</p></div>
 <div class="emp" id="mempty" hidden><h2>{M["empty_h2"]}</h2><p>{M["empty_p"]}</p>{SB()}</div></div></main>'''
@@ -109,6 +110,10 @@ def main():
     page(os.path.join(OUT, 'pending', 'index.html'), pending(), '../')
     page(os.path.join(OUT, 'account', 'index.html'), ACCOUNT, '../', A['h1'] + S['title_suffix'])
     page(os.path.join(OUT, 'my-checks', 'index.html'), MYCHECKS, '../', M['h1'] + S['title_suffix'])
+    site = 'https://regretamin.com/'  # sitemap + robots (account and my-checks are left out)
+    urls = [site] + [site + p + '/' for p in ('how-we-check', 'pricing') if os.path.exists(os.path.join(OUT, p, 'index.html'))] + [f'{site}vc/{f}/' for f in firms]
+    open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join(f'<url><loc>{u}</loc></url>\n' for u in urls) + '</urlset>\n')
+    open(os.path.join(OUT, 'robots.txt'), 'w').write(f'User-agent: *\nAllow: /\n\nSitemap: {site}sitemap.xml\n')
     print('built', len(firms), 'firms ->', OUT)
 
 if __name__ == '__main__': main()
