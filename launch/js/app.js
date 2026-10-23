@@ -7,6 +7,7 @@
   function anonId() { let a = localStorage.getItem(ANON); if (!a) { a = crypto.randomUUID(); localStorage.setItem(ANON, a); } return a; }
   const syncBody = () => document.body.classList.toggle('ppopen', !!document.querySelector('.ov:not([hidden])'));
   const open = (id) => { document.querySelectorAll('.ov').forEach(o => o.hidden = true); $('#' + id).hidden = false; const pw = $('#pwmsg'); if (pw) pw.textContent = ''; syncBody(); };
+  if (new URLSearchParams(location.search).get('pricing') === '1') { history.replaceState(null, '', location.pathname + location.hash); setTimeout(() => open('paywall')); } // from /pricing/
   const closeOv = (o) => { if (o) { o.hidden = true; syncBody(); } };
   // Close any popup with x, Esc or a click on the backdrop
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') document.querySelectorAll('.ov:not([hidden])').forEach(closeOv); });
