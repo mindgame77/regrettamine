@@ -76,7 +76,7 @@ jobs:
         run: |
           # Supabase keeps pgcrypto in the "extensions" schema; plain Postgres needs it created first.
           PGPASSWORD=postgres psql -h localhost -U postgres -d regrettamine -c 'create schema if not exists extensions; create extension if not exists pgcrypto schema extensions;'
-          python3 scripts/migrate.py
+          CI_SEED=1 python3 scripts/migrate.py
           python3 -m pytest -q
 
   deploy:

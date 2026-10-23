@@ -47,7 +47,14 @@ begin
   return n;
 end $$;
 revoke all on function public.refill_yearly_checks() from public, anon, authenticated;
-select cron.schedule('regretamin-refill-yearly', '7 * * * *', 'select public.refill_yearly_checks()');
+-- Guarded so plain Postgres (CI) without pg_cron still migrates.
+do $cron$ begin
+  if exists (select 1 from pg_namespace where nspname = 'cron') then
+    perform cron.schedule('regretamin-refill-yearly', '7 * * * *', 'select public.refill_yearly_checks()');
+  else
+    raise notice 'pg_cron not available; regretamin-refill-yearly not scheduled';
+  end if;
+end $cron$;
 
 create or replace function public.my_account() returns json language plpgsql security definer set search_path = public as $$
 declare b public.check_balances;
