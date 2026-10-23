@@ -105,5 +105,32 @@
     main.querySelectorAll('.row.tog').forEach(row => row.onclick = (e) => { if (!e.target.closest('a')) row.classList.toggle('open'); });
     return { total, head: (key) => { const s = secs.find(x => x.key === key); return s ? fmt(COPY.pay_head, { title: s.title, firm, count: label(s) }) : fmt(COPY.pay_all, { n: total, firm }); } };
   }
-  window.RegretCompany = { render };
+
+  // Summary page (/vc/<slug>/): name, key-fact chips, the 10 checks (closed), then "See the full check".
+  // Dropdowns show info only (status pill + case or summary text, no sources); a row with nothing to show has no dropdown.
+  function sumItem(f) {
+    const who = f.who && f.who.startsWith('partner:') ? f.who.slice(8) + ' · ' : '';
+    const head = f.case ? '<b>' + esc(f.case) + '</b>' + (f.year ? ' · ' + esc(f.year) : '') + '<br>' : '';
+    const st = caseStatus(f);
+    return '<div class="fct' + (st === 'active' ? ' act' : '') + '">' + spill(st) + (f.needs_proof ? '<span class="np">Needs proof</span>' : '') + head + esc(who) + esc(f.text) + '</div>';
+  }
+  const outItem = (e) => '<div class="fct' + (e.status === 'active' ? ' act' : '') + '">' + spill(e.status) + '<b>' + esc(e.kind) + '</b>' + (e.year ? ' · ' + esc(e.year) : '') + '</div>';
+  function summary(main, P) {
+    main.querySelector('.kf').innerHTML = P.hero.map(h => '<span>' + esc(h.label) + ' <b>' + esc(h.value) + '</b>' + (h.src || []).slice(0, 1).map(c => '<i>' + esc(c.label) + (c.date ? ' · ' + esc(c.date) : '') + '</i>').join('') + '</span>').join('');
+    const det = {}, out = {}; (P.details || []).forEach(r => det[r.row] = r.facts || []); (P.outline || []).forEach(r => out[r.row] = r.items || []);
+    const rank = (f) => caseStatus(f) === 'active' ? 0 : 1;
+    main.querySelector('.list').innerHTML = P.checks.map(r => {
+      const cnt = r.count ? '<span class="cnt ' + (r.state === 'clear' ? 'cg' : 'ca') + '">' + esc(r.count) + '</span>' : '';
+      const fs = (det[r.n] || []).map((f, i) => [f, i]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map(x => x[0]);
+      const d = P.open ? fs.map(sumItem).join('') : (out[r.n] || []).map(outItem).join('');
+      return '<div class="row' + (r.n === 10 ? ' last' : '') + (d ? ' tog' : '') + '" id="check-' + r.n + '"' + (d ? ' role="button" tabindex="0" aria-expanded="false"' : '') + '><span class="n">' + String(r.n).padStart(2, '0') + '</span><div class="tx"><b>' + esc(r.title) + '</b><span>' + esc(r.descr) + '</span></div>'
+        + '<div class="pc">' + pill(r.state) + cnt + '</div>' + (d ? '<div class="det">' + d + '</div>' : '') + '</div>';
+    }).join('');
+    main.querySelectorAll('.row.tog').forEach(row => {
+      const t = () => row.setAttribute('aria-expanded', row.classList.toggle('open'));
+      row.onclick = t; row.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t(); } };
+    });
+    return { total: 0, head: () => '' };
+  }
+  window.RegretCompany = { render, summary };
 })();

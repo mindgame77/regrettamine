@@ -24,9 +24,25 @@ try {
   try { await page.waitForFunction(() => /\d/.test((document.querySelector('#left') || {}).textContent || ''), null, { timeout: 20000 }); ok('home: check counter "' + (await page.textContent('#left')).trim() + '"'); }
   catch (_) { fail('home: check counter never loaded'); }
 
-  // Firm pages: sections, TOC and Check summary
+  // Summary pages: 10 check rows and a link to the full check
   for (const slug of FIRMS) {
     const r = await page.goto(BASE + 'vc/' + slug + '/', { waitUntil: 'domcontentloaded', timeout: 45000 });
+    if (!r || r.status() !== 200) { fail(slug + ' summary: status ' + (r && r.status())); continue; }
+    try { await page.waitForFunction(() => document.querySelectorAll('.sumpg .list .row').length === 10, null, { timeout: 30000 }); } catch (_) { fail(slug + ' summary: 10 check rows never rendered'); continue; }
+    const s = await page.evaluate(() => ({ tog: document.querySelectorAll('.sumpg .row.tog').length, full: !!document.querySelector('.full a[href="full/"]'), src: document.querySelectorAll('.sumpg .det .src, .sumpg .det a').length }));
+    if (!s.full) fail(slug + ' summary: no See the full check link');
+    if (s.src) fail(slug + ' summary: dropdowns contain source links');
+    ok(slug + ' summary: 10 rows, ' + s.tog + ' with a dropdown');
+  }
+
+  // How we check
+  { const r = await page.goto(BASE + 'how-we-check/', { waitUntil: 'domcontentloaded', timeout: 45000 });
+    if (!r || r.status() !== 200) fail('how-we-check: status ' + (r && r.status()));
+    else if (!(await page.locator('nav a.on[href$="how-we-check/"]').count())) fail('how-we-check: nav link not active'); else ok('how-we-check: page and active nav link'); }
+
+  // Full pages: sections, TOC and Check summary
+  for (const slug of FIRMS) {
+    const r = await page.goto(BASE + 'vc/' + slug + '/full/', { waitUntil: 'domcontentloaded', timeout: 45000 });
     if (!r || r.status() !== 200) { fail(slug + ': status ' + (r && r.status())); continue; }
     try { await page.waitForSelector('.pmain section.ps', { timeout: 30000 }); } catch (_) { fail(slug + ': sections never rendered'); continue; }
     const f = await page.evaluate(() => ({

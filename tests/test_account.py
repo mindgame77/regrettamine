@@ -1,4 +1,4 @@
-"""Watchlist cap, signup profile, and review visibility."""
+"""Watchlist (no cap), signup profile, and review visibility."""
 import os
 
 import pytest
@@ -17,7 +17,7 @@ def _user(cur, email):
     return cur.fetchone()[0]
 
 
-def test_watchlist_cap_profile_and_review_rls():
+def test_watchlist_nocap_profile_and_review_rls():
     import psycopg
 
     from scripts.seed import main as seed_main
@@ -45,20 +45,13 @@ def test_watchlist_cap_profile_and_review_rls():
             cur.execute("select id from firms where slug like 'cap-%'")
             firm_ids = [row[0] for row in cur.fetchall()]
             assert len(firm_ids) == 101
-            for firm_id in firm_ids[:100]:
+            for firm_id in firm_ids:  # no cap since 20261023240000_save_no_cap
                 cur.execute(
                     "insert into watchlist (profile_id, firm_id) values (%s, %s)",
                     (ada, firm_id),
                 )
-            cur.execute("savepoint over_cap")
-            with pytest.raises(psycopg.errors.CheckViolation):
-                cur.execute(
-                    "insert into watchlist (profile_id, firm_id) values (%s, %s)",
-                    (ada, firm_ids[100]),
-                )
-            cur.execute("rollback to savepoint over_cap")
             cur.execute("select count(*) from watchlist where profile_id = %s", (ada,))
-            assert cur.fetchone()[0] == 100
+            assert cur.fetchone()[0] == 101
             cur.execute("delete from firms where slug like 'cap-%'")
 
             cur.execute("select id from firms where slug = 'a16z'")
