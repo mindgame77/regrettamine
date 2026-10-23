@@ -112,9 +112,11 @@
     const who = f.who && f.who.startsWith('partner:') ? f.who.slice(8) + ' · ' : '';
     const head = f.case ? '<b>' + esc(f.case) + '</b>' + (f.year ? ' · ' + esc(f.year) : '') + '<br>' : '';
     const st = caseStatus(f);
+    if (!f.case && !f.text && !f.needs_proof && !st) return ''; // nothing to show for this fact
     return '<div class="fct' + (st === 'active' ? ' act' : '') + '">' + spill(st) + (f.needs_proof ? '<span class="np">Needs proof</span>' : '') + head + esc(who) + esc(f.text) + '</div>';
   }
-  const outItem = (e) => '<div class="fct' + (e.status === 'active' ? ' act' : '') + '">' + spill(e.status) + '<b>' + esc(e.kind) + '</b>' + (e.year ? ' · ' + esc(e.year) : '') + '</div>';
+  // Signed-out outline: a bare method label (no status, no year) tells the viewer nothing, so it is not shown.
+  const outItem = (e) => !e.status && !e.year ? '' : '<div class="fct' + (e.status === 'active' ? ' act' : '') + '">' + spill(e.status) + '<b>' + esc(e.kind) + '</b>' + (e.year ? ' · ' + esc(e.year) : '') + '</div>';
   function summary(main, P) {
     main.querySelector('.kf').innerHTML = P.hero.map(h => '<span>' + esc(h.label) + ' <b>' + esc(h.value) + '</b>' + (h.src || []).slice(0, 1).map(c => '<i>' + esc(c.label) + (c.date ? ' · ' + esc(c.date) : '') + '</i>').join('') + '</span>').join('');
     const det = {}, out = {}; (P.details || []).forEach(r => det[r.row] = r.facts || []); (P.outline || []).forEach(r => out[r.row] = r.items || []);

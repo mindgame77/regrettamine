@@ -188,7 +188,8 @@
    "or": "or use email",
    "email_placeholder": "you@startup.com",
    "magic": "Send link",
-   "email_aria": "Email"
+   "email_aria": "Email",
+   "trust": ["Free account", "No card needed"]
   },
   "pricing": {
    "title": "Pricing",
