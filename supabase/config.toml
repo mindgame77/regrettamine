@@ -5,3 +5,6 @@ verify_jwt = false
 verify_jwt = false
 [functions.create-checkout]
 verify_jwt = true
+
+[functions.research-ingest]
+verify_jwt = false
