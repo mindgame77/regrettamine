@@ -3,19 +3,19 @@
  "plans": {
   "_note": "Display only. Stripe price IDs are Supabase Edge Function secrets STRIPE_PRICE_SINGLE / _M10 / _M30 / _Y10 / _Y30 (see HOW-TO-CHANGE.md). checks = checks per month; must match PLAN in supabase/functions/regretamin-stripe-webhook and CHECKS in create-checkout. amount = price in dollars (used to show code discounts). yearly = the same plan billed yearly (kind y10/y30), checks still refill monthly.",
   "single": {
-   "name": "Single check",
+   "name": "Single credit",
    "price": "$10",
    "monthly": false,
    "checks": 1,
    "per_check": "$10",
    "modal": {
     "blurb": "One firm, full details and sources.",
-    "button": "Buy 1 check"
+    "button": "Buy 1 credit"
    },
    "pay": {
     "period": "one time",
     "bill": "Opens one firm",
-    "button": "Buy 1 check",
+    "button": "Buy 1 credit",
     "features": [
      "Every gray entry for this firm",
      "Names, parties, courts, sources",
@@ -33,12 +33,12 @@
    "highlight": true,
    "tag": "Most picked",
    "modal": {
-    "blurb": "10 checks a month.",
-    "button": "Get 10 checks"
+    "blurb": "10 credits a month.",
+    "button": "Get 10 credits"
    },
    "pay": {
     "period": "/month",
-    "bill": "10 checks a month",
+    "bill": "10 credits a month",
     "button": "Start Starter",
     "features": [
      "10 firms a month",
@@ -52,8 +52,8 @@
     "amount": 190,
     "per_check": "$1.58",
     "save": "Save $38 · 2 months free",
-    "blurb": "10 checks a month, billed yearly.",
-    "bill": "10 checks a month, billed yearly"
+    "blurb": "10 credits a month, billed yearly.",
+    "bill": "10 credits a month, billed yearly"
    }
   },
   "m30": {
@@ -63,12 +63,12 @@
    "checks": 30,
    "per_check": "$1.63",
    "modal": {
-    "blurb": "30 checks a month.",
-    "button": "Get 30 checks"
+    "blurb": "30 credits a month.",
+    "button": "Get 30 credits"
    },
    "pay": {
     "period": "/month",
-    "bill": "30 checks a month",
+    "bill": "30 credits a month",
     "button": "Start Pro",
     "features": [
      "30 firms a month",
@@ -82,8 +82,8 @@
     "amount": 490,
     "per_check": "$1.36",
     "save": "Save $98 · 2 months free",
-    "blurb": "30 checks a month, billed yearly.",
-    "bill": "30 checks a month, billed yearly"
+    "blurb": "30 credits a month, billed yearly.",
+    "bill": "30 credits a month, billed yearly"
    }
   }
  },
@@ -171,26 +171,28 @@
   "search_button": "Check",
   "search_aria": "VC firm",
   "nav": {
+   "how_we_check": "How we check",
    "pricing": "Pricing",
    "sign_in": "Sign in",
    "account_btn": "Account ▾",
    "account": "Account",
    "my_checks": "My checks",
-   "buy_more": "Buy more checks",
-   "checks_left": "Checks left",
+   "buy_more": "Buy more credits",
+   "checks_left": "Credits left",
    "sign_out": "Sign out"
   },
   "signup": {
-   "title": "Get 4 more free checks",
+   "title": "Get 4 more free credits",
    "sub": "Create a free account. No card needed.",
    "google": "Continue with Google",
-   "or": "or",
+   "or": "or use email",
    "email_placeholder": "you@startup.com",
-   "magic": "Email me a sign-in link"
+   "magic": "Send link",
+   "email_aria": "Email"
   },
   "pricing": {
    "title": "Pricing",
-   "sub": "Counting is in checks: 1 firm = 1 check. Monthly plans renew; if you run out, buy more checks any time."
+   "sub": "Counting is in credits: 1 firm = 1 credit. Monthly plans renew; if you run out, buy more credits any time."
   },
   "landing": {
    "h1": "Check your VC",
@@ -202,8 +204,7 @@
     "Money laundering penalties",
     "US & worldwide courts",
     "Registration",
-    "People behind the fund",
-    "Political ties"
+    "People behind the fund"
    ],
    "demo_firm": "Example Ventures",
    "demo_tag": "10 checks · example",
@@ -296,36 +297,36 @@
    ]
   },
   "result": {
-   "lock_button": "See them with 1 check",
+   "lock_button": "See them with 1 credit",
    "toc_aria": "On this page",
    "fine": "Public-record information, not legal or investment advice."
   },
   "pay": {
    "close": "Close",
    "title": "Unlock this firm",
-   "sub": "Open the gray entries with a check. Pay once or monthly.",
+   "sub": "Open the gray entries with a credit. Pay once or monthly.",
    "balance_loading": "Checking your balance…",
-   "use": "Use 1 check",
-   "per_check": "{price} per check",
+   "use": "Use 1 credit",
+   "per_check": "{price} per credit",
    "sign_title": "Sign in to buy",
-   "sign_sub": "Checks are saved to your account. Free checks on this device move over.",
+   "sign_sub": "Credits are saved to your account. Free credits on this device move over.",
    "google": "Continue with Google",
    "or": "or",
    "email_placeholder": "you@company.com",
    "email_aria": "Email",
    "magic": "Email me a link",
-   "fine": "Monthly plans renew each month. 1 firm = 1 check."
+   "fine": "Monthly plans renew each month. 1 firm = 1 credit."
   },
   "pending": {
    "h1": "We're checking this firm now",
    "body": "isn't in our database yet. We're running all 10 checks — we'll let you know in 5 minutes.",
    "email_placeholder": "you@startup.com",
    "button": "Email me",
-   "note": "This uses 1 check only when the result is ready."
+   "note": "This uses 1 credit only when the result is ready."
   },
   "signed_out": {
    "account_h2": "Sign in to see your account",
-   "account_p": "Your plan, checks left and account settings are here once you sign in.",
+   "account_p": "Your plan, credits left and account settings are here once you sign in.",
    "checks_h2": "Sign in to see your checks",
    "checks_p": "Every firm you’ve checked is saved here once you sign in.",
    "button": "Sign in"
@@ -333,13 +334,13 @@
   "account": {
    "h1": "Account",
    "plan": "Plan",
-   "checks_left": "Checks left",
+   "checks_left": "Credits left",
    "renews": "Renews",
    "resume": "Resume plan",
    "manage": "Manage subscription",
    "cancel": "Cancel subscription",
    "pick": "Pick a plan",
-   "buy_more": "Buy more checks",
+   "buy_more": "Buy more credits",
    "my_checks_h2": "My checks",
    "view_all": "View all →",
    "email_h2": "Email",
@@ -350,7 +351,7 @@
    "email_hint": "We email a link to the new address. Your email changes when you open it.",
    "danger_h2": "Danger zone",
    "delete_b": "Delete account",
-   "delete_p": "Permanently deletes your account, remaining checks and history.",
+   "delete_p": "Permanently deletes your account, remaining credits and history.",
    "delete_button": "Delete account",
    "del_h2": "Delete your account?",
    "del_s": "This can’t be undone. Here’s what happens:",
@@ -384,7 +385,9 @@
      "other",
      "Other"
     ]
-   ]
+   ],
+   "saved_h2": "Saved firms",
+   "saved_none": "No saved firms yet. Open a firm you’ve checked and press Save."
   },
   "my_checks": {
    "h1": "My checks",
@@ -425,7 +428,7 @@
    "per_year": "/year",
    "per_month_short": "/mo",
    "per_year_short": "/yr",
-   "fine_yearly": "Yearly plans renew each year; checks refill monthly. 1 firm = 1 check."
+   "fine_yearly": "Yearly plans renew each year; credits refill monthly. 1 firm = 1 credit."
   },
   "code": {
    "link": "Have a code?",
@@ -434,23 +437,135 @@
    "apply": "Apply",
    "remove": "Remove",
    "hidden_tag": "Unlocked with code",
-   "hidden_bill": "{n} checks a month",
-   "hidden_bill_year": "{n} checks a month, billed yearly",
-   "hidden_blurb": "{n} checks a month.",
+   "hidden_bill": "{n} credits a month",
+   "hidden_bill_year": "{n} credits a month, billed yearly",
+   "hidden_blurb": "{n} credits a month.",
    "hidden_button": "Start {name}",
    "hidden_features": [
     "{n} firms a month",
     "Full sources on every entry"
    ]
+  },
+  "summary": {
+   "full_h": "See the full check on {firm} →",
+   "full_p": "Every case, the firm and its funds, people, press and every source behind these 10 checks, on one page.",
+   "full_btn": "Open the full check →"
+  },
+  "how_we_check": {
+   "title": "How we check",
+   "eyebrow": "How we check",
+   "h1": "From public record",
+   "h1_accent": "to the pill you see.",
+   "lead": "We check how a VC fund deals with founders, using public sources you can open yourself. Every fact links to where it came from.",
+   "strip": [
+    [
+     "200+",
+     "public sources and databases"
+    ],
+    [
+     "9",
+     "government sanctions lists, 8 jurisdictions"
+    ],
+    [
+     "8",
+     "US &amp; UK court record sources"
+    ],
+    [
+     "SEC",
+     "filings &amp; adviser records"
+    ],
+    [
+     "20+",
+     "named news outlets"
+    ]
+   ],
+   "steps": [
+    [
+     "We pull the public record",
+     "Government lists, SEC filings, court dockets and named press for the fund, its advisers and its partners."
+    ],
+    [
+     "We confirm the match",
+     "An exact identity match, never name-only. Copycat names are left out."
+    ],
+    [
+     "We verify every source",
+     "A fact counts only if it links to the record, names the fund and shows its role."
+    ],
+    [
+     "You check before you sign",
+     "Open each check, follow the link to the original, save the fund and draw your own conclusions."
+    ]
+   ],
+   "what_h2": "What we check",
+   "areas": [
+    [
+     "Legal records",
+     "Lawsuits by or against the fund, and its partners as directors, in US federal and state courts.",
+     "Court records"
+    ],
+    [
+     "Regulators &amp; sanctions",
+     "Registration filings, enforcement actions, and government sanctions and restriction lists.",
+     "Government filings &amp; lists"
+    ],
+    [
+     "Press",
+     "Named, dated reporting from established outlets. Anonymous-only claims don’t count.",
+     "News reporting"
+    ],
+    [
+     "People behind the fund",
+     "Partners and advisers named in filings, checked against the same records.",
+     "Filings"
+    ]
+   ],
+   "read_h2": "How to read a check",
+   "read_p": "Each check shows a pill, not a grade. A pill tells you what we found, then you open the source.",
+   "read_pills": [
+    [
+     "c",
+     "Clear"
+    ],
+    [
+     "r",
+     "Review"
+    ],
+    [
+     "o",
+     "1 open probe"
+    ],
+    [
+     "r",
+     "2 closed"
+    ]
+   ],
+   "read_list": [
+    "<b>Clear</b> means we found nothing in the sources we checked. It is not a guarantee.",
+    "<b>Review</b> means there is a record worth reading. Counts show how many."
+   ],
+   "principles_h3": "Principles",
+   "principles": [
+    "Exact matches only. Copycat names are excluded.",
+    "A suit the fund brought is shown differently from one brought against it.",
+    "A lawsuit or probe is not a finding of wrongdoing.",
+    "Where a source has no data, we say so instead of guessing."
+   ],
+   "corr_h2": "Corrections",
+   "corr_p": "Spotted a wrong fact? Send the page, what’s wrong and a source. We review every request.",
+   "corr_button": "Request a correction",
+   "corr_email": "malytskyyo@gmail.com",
+   "corr_subject": "Correction%20request",
+   "disclaimer": "Public-record information, not legal or investment advice. Records can be incomplete or out of date."
   }
  },
  "company": {
   "toc": "On this page",
   "summary": "Check summary",
   "full_check": "See the full check →",
-  "locked": "🔒 Open with 1 check",
+  "locked": "🔒 Open with 1 credit",
   "lockcard": "🔒 {n} sourced facts about {firm}",
-  "lockcard_sub": "Each section shows its count and first line. Everything else opens with 1 check.",
+  "lockcard_sub": "Each section shows its count and first line. Everything else opens with 1 credit.",
   "pay_head": "Unlock {title} for {firm} · {count}",
   "pay_all": "Unlock all {n} sourced facts for {firm}",
   "use_line": "Use 1 to open all {n} sourced facts about {firm}.",
@@ -483,19 +598,19 @@
  "js": {
   "_note": "Strings used by js/app.js. [one, many] pairs are picked by count. HTML allowed where the code uses innerHTML (values are escaped).",
   "nav_left": [
-   "{n}{free} check left",
-   "{n}{free} checks left"
+   "{n}{free} credit left",
+   "{n}{free} credits left"
   ],
   "free": " free",
   "left_of": "{left} of {n}",
-  "plan_menu": "{name} · {n} checks/mo",
+  "plan_menu": "{name} · {n} credits/mo",
   "plan_free": "Free",
-  "plan_line": "{n} checks/mo · {price}",
-  "no_plan": "No plan. Buy checks any time.",
+  "plan_line": "{n} credits/mo · {price}",
+  "no_plan": "No plan. Buy credits any time.",
   "resets": "Resets to {n} on renewal",
   "any_time": [
-   "check to use any time",
-   "checks to use any time"
+   "credit to use any time",
+   "credits to use any time"
   ],
   "tag_cancelling": "Cancelling",
   "usable_until": "Usable until {date}",
@@ -505,18 +620,18 @@
   "renews_monthly": "Renews monthly",
   "nothing_renews": "Nothing renews",
   "banner": [
-   "<b>Your {plan} plan cancels on {date}.</b> You keep your {left} check until then. Changed your mind? Resume plan and it renews as normal.",
-   "<b>Your {plan} plan cancels on {date}.</b> You keep your {left} checks until then. Changed your mind? Resume plan and it renews as normal."
+   "<b>Your {plan} plan cancels on {date}.</b> You keep your {left} credit until then. Changed your mind? Resume plan and it renews as normal.",
+   "<b>Your {plan} plan cancels on {date}.</b> You keep your {left} credits until then. Changed your mind? Resume plan and it renews as normal."
   ],
   "cancel_title": "Cancel your {plan} plan?",
-  "cancel_sub": "You keep your checks until <b>{date}</b>, then it won’t renew.",
+  "cancel_sub": "You keep your credits until <b>{date}</b>, then it won’t renew.",
   "period_end_fallback": "the end of this period",
-  "delete_desc_sub": "Cancels your subscription, then permanently deletes your account, remaining checks and history.",
-  "delete_desc": "Permanently deletes your account, remaining checks and history.",
+  "delete_desc_sub": "Cancels your subscription, then permanently deletes your account, remaining credits and history.",
+  "delete_desc": "Permanently deletes your account, remaining credits and history.",
   "cons_sub": "Your <b>{plan} subscription is cancelled first</b>, so you won’t be charged again.",
   "cons_left": [
-   "Your <b>{left} remaining check is lost</b> and aren’t refunded.",
-   "Your <b>{left} remaining checks are lost</b> and aren’t refunded."
+   "Your <b>{left} remaining credit is lost</b> and aren’t refunded.",
+   "Your <b>{left} remaining credits are lost</b> and aren’t refunded."
   ],
   "cons_data": "Your list of unlocked firms and your email are permanently deleted.",
   "delete_go_sub": "Cancel subscription & delete",
@@ -536,8 +651,8 @@
   "deleting": "Deleting…",
   "delete_fail": "Could not delete this account. Nothing was deleted.",
   "mc_left": [
-   "<b>{left}</b> check left",
-   "<b>{left}</b> checks left"
+   "<b>{left}</b> credit left",
+   "<b>{left}</b> credits left"
   ],
   "mc_month": " this month",
   "mc_resets": " · resets {date}",
@@ -555,7 +670,7 @@
   "open_result": "Open result",
   "no_checkout": "Checkout is not configured yet.",
   "sign_checkout": "Sign in to continue to checkout",
-  "sign_buy": "Sign in to buy checks",
+  "sign_buy": "Sign in to buy credits",
   "opening": "Opening secure checkout…",
   "checkout_fail": "Could not start checkout. Try again.",
   "has_plan": "You already have a plan —",
@@ -568,16 +683,16 @@
   "balance_fail": "Could not load your balance",
   "retry": "Try again",
   "have": [
-   "You have {n}{free} check left",
-   "You have {n}{free} checks left"
+   "You have {n}{free} credit left",
+   "You have {n}{free} credits left"
   ],
-  "none_signed": "You have no checks left",
-  "none_anon": "No free checks left on this device",
-  "pick_more": "Pick a plan below to get more checks.",
-  "sign_more": "Sign in below for 4 more free checks, or pick a plan.",
-  "need_signup": "You've used your free checks. Sign in below for 4 more.",
-  "out": "You're out of checks. Buy more below.",
-  "renews_yearly": "Renews yearly · checks refill monthly",
+  "none_signed": "You have no credits left",
+  "none_anon": "No free credits left on this device",
+  "pick_more": "Pick a plan below to get more credits.",
+  "sign_more": "Sign in below for 4 more free credits, or pick a plan.",
+  "need_signup": "You've used your free credits. Sign in below for 4 more.",
+  "out": "You're out of credits. Buy more below.",
+  "renews_yearly": "Renews yearly · credits refill monthly",
   "resets_monthly": "Refills to {n} on {date}",
   "code_checking": "Checking code…",
   "code_ok": "✓ Code applied: {label}",
@@ -600,6 +715,10 @@
   "disc_bill": "{label}, then {price}{unit}",
   "disc_bill_forever": "{label}",
   "dur_first_year": "{off} first year",
-  "dur_now": "{off} today"
+  "dur_now": "{off} today",
+  "google_loading": "Connecting to Google…",
+  "save_btn": "Save",
+  "saved": "Saved",
+  "saved_on": "Saved {date}"
  }
 }

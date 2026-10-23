@@ -101,9 +101,27 @@
     const n = (rows || []).length;
     $('#mcn').textContent = n ? pl(n, T.checked_n, { n }) : T.no_checks;
     $('#mcl').textContent = n ? fmt(T.latest, { name: rows[0].name, date: fmtDate(rows[0].checked_at) }) : T.first_check;
+    SAVED = (rows || []).filter(r => r.saved).sort((x, y) => new Date(y.saved_at) - new Date(x.saved_at)); drawSaved();
   }
+  let SAVED = [];
+  function drawSaved() {
+    $('#svn').textContent = SAVED.length ? String(SAVED.length) : '';
+    $('#svnone').hidden = !!SAVED.length;
+    $('#svrows').innerHTML = SAVED.map(r => {
+      const url = ROOT + 'vc/' + encodeURIComponent(r.slug) + '/', st = r.active ? pl(r.cases, T.mc_active, r) : r.cases ? pl(r.cases, T.mc_closed, r) : T.mc_none;
+      return '<div class="svr"><button type="button" class="sv on" data-unsave="' + esc(r.slug) + '" aria-label="' + fmt(T.unsave, { name: esc(r.name) }) + '">' + BM + '<span>' + esc(T.saved) + '</span></button>'
+        + '<span><b>' + esc(r.name) + '</b>' + (r.short_name && r.short_name !== r.name ? '<br><span class="m">' + esc(r.short_name) + '</span>' : '') + '</span>'
+        + '<span class="m">' + esc(fmt(T.saved_on, { date: fmtDate(r.saved_at) })) + '</span><span class="m">' + st + '</span><a class="btn o" href="' + esc(url) + '">' + T.open_result + '</a></div>';
+    }).join('');
+  }
+  const BM = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"/></svg>';
   if ($('#account')) {
     $('#manage').onclick = () => portal($('#amsg'));
+    $('#svrows').onclick = async (e) => {
+      const b = e.target.closest('[data-unsave]'); if (!b) return; b.disabled = true;
+      const { error } = await sb.rpc('unwatch_fund', { p_slug: b.dataset.unsave });
+      if (!error) SAVED = SAVED.filter(r => r.slug !== b.dataset.unsave); drawSaved();
+    };
     $('#emform').onsubmit = async (e) => {
       e.preventDefault(); const email = $('#nem').value.trim(); if (!email) return;
       const { error } = await sb.auth.updateUser({ email }, { emailRedirectTo: location.href.split('#')[0] });
@@ -274,15 +292,20 @@
   }
   // Auth
   const back = () => location.href.split('#')[0];
-  const google = () => sb && sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: back() } });
+  const google = async (e) => {
+    if (!sb) return;
+    const b = e && e.currentTarget && e.currentTarget.classList.contains('gbx') ? e.currentTarget : null, was = b && b.innerHTML;
+    if (b) { b.disabled = true; b.classList.add('ld'); b.innerHTML = '<span class="spin" aria-hidden="true"></span><span class="gl">' + esc(T.google_loading) + '</span>'; }
+    const { error } = await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: back() } }).catch((x) => ({ error: x }));
+    if (error && b) { b.disabled = false; b.classList.remove('ld'); b.innerHTML = was; }
+  };
   const magic = async (email, out) => {
     if (!sb || !email) return;
     const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: back() } });
     out.textContent = error ? error.message : T.magic_sent;
   };
-  const g = $('#google'); if (g) g.onclick = google;
   const m = $('#magic'); if (m) m.onclick = () => magic($('#em').value.trim(), $('#sumsg'));
-  document.querySelectorAll('[data-google]').forEach(b => b.onclick = google);
+  document.querySelectorAll('[data-google],#google').forEach(b => b.onclick = google);
   document.querySelectorAll('[data-magic]').forEach(f => f.onsubmit = (e) => { e.preventDefault(); magic(f.email.value.trim(), f.parentNode.parentNode.querySelector('[data-magicmsg]')); });
   if (sb) sb.auth.onAuthStateChange((ev, session) => {
     if (ev === 'SIGNED_IN') setTimeout(async () => { await sb.rpc('claim_anon_checks', { p_anon: anonId() }); paint(); }, 0);
@@ -353,8 +376,23 @@
     if (n <= 0) $('#pmsg2').textContent = BAL.signed_in ? T.pick_more : T.sign_more;
     ub.disabled = n <= 0;
   }
+  // Save button by the firm name: only for signed-in users who have checked this firm (my_checks); no cap.
+  async function saveBtn() {
+    const b = main.querySelector('[data-save]'); if (!b || !sb) return;
+    const { data: ss } = await sb.auth.getSession().catch(() => ({ data: {} }));
+    if (!(ss && ss.session)) { b.hidden = true; return; }
+    const { data } = await sb.rpc('my_checks'); const r = (data || []).find(x => x.slug === main.dataset.firm);
+    if (!r) { b.hidden = true; return; }
+    const set = (on) => { b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); b.querySelector('span').textContent = on ? T.saved : T.save_btn; };
+    set(!!r.saved); b.hidden = false;
+    b.onclick = async () => {
+      const on = !b.classList.contains('on'); b.disabled = true;
+      const { data: d, error } = await sb.rpc(on ? 'watch_fund' : 'unwatch_fund', { p_slug: main.dataset.firm });
+      b.disabled = false; if (!error && (!on || (d && d.saved))) set(on);
+    };
+  }
   function draw(P) {
-    PAGE = P; VIEW = window.RegretCompany.render(main, P);
+    PAGE = P; VIEW = window.RegretCompany[main.dataset.view === 'summary' ? 'summary' : 'render'](main, P); saveBtn();
     const id = decodeURIComponent(location.hash.slice(1)), t = id && document.getElementById(id);
     if (t) t.scrollIntoView();
   }
@@ -372,9 +410,9 @@
       const a = e.target.closest('a[href^="#"]'), id = a && a.getAttribute('href').slice(1), t = id && document.getElementById(id); if (!t) return;
       e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); history.pushState(null, '', '#' + id);
     });
-    $('#unlock').onclick = () => openPay('');
+    if ($('#unlock')) $('#unlock').onclick = () => openPay('');
     main.addEventListener('click', (e) => { const s = !main.classList.contains('unlocked') && e.target.closest('[data-sec]'); if (s) openPay(s.dataset.sec); });
-    $('#usecheck').onclick = () => { $('#usecheck').disabled = true; loadPage(true).then(paint).finally(async () => { BAL = await balance(); if (BAL && BAL.left > 0 && !(PAGE && PAGE.open)) $('#usecheck').disabled = false; }); };
+    if ($('#usecheck')) $('#usecheck').onclick = () => { $('#usecheck').disabled = true; loadPage(true).then(paint).finally(async () => { BAL = await balance(); if (BAL && BAL.left > 0 && !(PAGE && PAGE.open)) $('#usecheck').disabled = false; }); };
     if (sb) {
       const first = sb.auth.getSession().then(({ data }) => { const uid = data.session && data.session.user.id; return loadPage(false).then(paint).then(() => uid); });
       sb.auth.onAuthStateChange((ev, session) => { if (ev === 'SIGNED_IN') first.then((uid) => { if (session && session.user.id !== uid && !(PAGE && PAGE.open)) setTimeout(() => loadPage(false).then(paint), 500); }); });
