@@ -108,6 +108,14 @@ Deno.serve(async (req) => {
       if (error) return json({ error: "server error" }, 500);
       return data.error ? json({ error: data.error }, 409) : json(data);
     }
-    default: return json({ error: "action must be claim | submit | fail | status" }, 400);
+    case "skip": {
+      // out of scope / duplicate: marks the firm 'skipped' at once, no retries
+      if (!bot || typeof body.registry_id !== "string") return json({ error: "bot_id and registry_id required" }, 400);
+      const reason = String(body.reason ?? "").slice(0, 1990);
+      const { data, error } = await db.rpc("research_skip", { p_id: body.registry_id, p_bot: bot, p_reason: reason.toLowerCase().startsWith("skip:") ? reason : `skip: ${reason}` });
+      if (error) return json({ error: "server error" }, 500);
+      return data.error ? json({ error: data.error }, 409) : json(data);
+    }
+    default: return json({ error: "action must be claim | submit | fail | skip | status" }, 400);
   }
 });
