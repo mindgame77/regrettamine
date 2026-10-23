@@ -1,6 +1,6 @@
 // research-ingest: staging intake for an EXTERNAL research bot (dump format 1.2).
 // Auth: header x-ingest-key (sha256 checked against public.ingest_keys, active only). verify_jwt = false.
-// Writes ONLY to research_queue / research_submissions / research_gaps (staging). Never touches live/public tables.
+// Writes ONLY to research_queue / research_submissions / research_gaps / firm_lps (staging). Never touches live/public tables.
 // Kill switch: ingest_settings.ingest_paused = 'true' -> 503. Rate limit per key per minute -> 429.
 import { createClient } from "npm:@supabase/supabase-js@2";
 const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
@@ -20,7 +20,7 @@ const json = (b: unknown, status = 200, extra: Record<string, string> = {}) =>
   new Response(JSON.stringify(b), { status, headers: { ...CORS, "content-type": "application/json", ...extra } });
 // every 400 says what was wrong, how to fix it, and which fields the action needs
 const REQUIRED: Record<string, string[]> = { status: ["action"], gaps: ["action"], claim: ["action", "bot_id"], claim_gap: ["action", "bot_id"],
-  submit: ["action", "bot_id", "registry_id", "dump"], fail: ["action", "bot_id", "registry_id", "reason"], skip: ["action", "bot_id", "registry_id", "reason"] };
+  submit: ["action", "bot_id", "registry_id", "dump", "(optional) lps", "(optional) lps_over_100"], fail: ["action", "bot_id", "registry_id", "reason"], skip: ["action", "bot_id", "registry_id", "reason"] };
 const bad = (error: string, hint: string, action?: string) =>
   json({ error, hint, required_fields: action && REQUIRED[action] ? REQUIRED[action] : REQUIRED }, 400);
 const sha256 = async (s: string) => [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)))]
@@ -66,6 +66,38 @@ function validate(d: unknown, registryId: string) {
     if (e.length) { bad++; errors.push(`${p}: ${e.join("; ")}`); } else good++;
   });
   return { errors, good, bad };
+}
+
+// optional submit.lps: [{lp_name, lp_type, status, source_url, ...}] -> public.firm_lps (only if the dump is accepted)
+const LP_TYPES = ["pension", "endowment", "foundation", "sovereign", "family_office", "fund_of_funds", "insurance", "corporate", "other"];
+const LP_STATUS = ["confirmed", "lead"];
+const SANCTIONS = ["clear", "possible_match", "match", "not_screened"];
+const LP_FIELDS = ["lp_name", "lp_type", "country", "commitment_amount", "currency", "fund_name", "commitment_year", "status",
+  "source_url", "source_title", "checked_at", "sanctions_result", "notes"];
+const MAX_LPS = 100;
+function validateLps(lps: unknown): string[] {
+  if (!Array.isArray(lps)) return ["lps must be an array of objects"];
+  if (lps.length > MAX_LPS) return [`lps has ${lps.length} entries (max ${MAX_LPS}); list the first 100 and send "lps_over_100": true`];
+  const e: string[] = [];
+  lps.forEach((l: any, i: number) => {
+    const p = `lps[${i}]`;
+    if (!isObj(l)) { e.push(`${p}: not an object`); return; }
+    for (const k of Object.keys(l)) if (!LP_FIELDS.includes(k)) e.push(`${p}.${k}: unknown field`);
+    const str = (k: string, max: number) => l[k] == null || (typeof l[k] === "string" && l[k].length <= max) || e.push(`${p}.${k} must be a string <= ${max} chars`);
+    if (typeof l.lp_name !== "string" || l.lp_name.trim().length < 2 || l.lp_name.length > 300) e.push(`${p}.lp_name required (2-300 chars)`);
+    if (l.lp_type != null && !LP_TYPES.includes(l.lp_type)) e.push(`${p}.lp_type must be one of ${LP_TYPES.join("|")}`);
+    if (!LP_STATUS.includes(l.status)) e.push(`${p}.status required: confirmed|lead`);
+    if (typeof l.source_url !== "string" || !URL_OK.test(l.source_url)) e.push(`${p}.source_url required (http(s) URL of the page)`);
+    else if (BAD_URL.test(l.source_url)) e.push(`${p}.source_url is a search/chat page, not a source page`);
+    if (l.sanctions_result != null && !SANCTIONS.includes(l.sanctions_result)) e.push(`${p}.sanctions_result must be one of ${SANCTIONS.join("|")}`);
+    if (l.commitment_amount != null && (typeof l.commitment_amount !== "number" || !isFinite(l.commitment_amount) || l.commitment_amount < 0))
+      e.push(`${p}.commitment_amount must be a number >= 0 (full units, e.g. 25000000)`);
+    if (l.currency != null && (typeof l.currency !== "string" || !/^[A-Za-z]{3}$/.test(l.currency))) e.push(`${p}.currency must be a 3-letter ISO code`);
+    if (l.commitment_year != null && (!Number.isInteger(l.commitment_year) || l.commitment_year < 1950 || l.commitment_year > 2100)) e.push(`${p}.commitment_year must be an integer year`);
+    if (l.checked_at != null && (typeof l.checked_at !== "string" || !DATE.test(l.checked_at) || isNaN(Date.parse(l.checked_at)))) e.push(`${p}.checked_at must be an ISO date`);
+    str("country", 100); str("fund_name", 300); str("source_title", 500); str("notes", 2000);
+  });
+  return e;
 }
 
 Deno.serve(async (req) => {
@@ -127,13 +159,28 @@ async function handle(req: Request, meta: { action: string; bot: string }): Prom
     }
     case "submit": {
       if (!bot || typeof body.registry_id !== "string") return bad("bot_id and registry_id required", "send the registry_id you claimed, your bot_id, and the full dump object", "submit");
+      const hasLps = body.lps !== undefined && body.lps !== null;
+      if (body.lps_over_100 !== undefined && typeof body.lps_over_100 !== "boolean") return bad("lps_over_100 must be boolean",
+        "send \"lps_over_100\": true only when the firm has more than 100 LPs (then list at most 100), or omit it", "submit");
+      if (hasLps) {
+        const le = validateLps(body.lps);
+        if (le.length) return json({ error: "invalid lps", errors: le.slice(0, 200), hint: "nothing was stored; fix the lps entries " +
+          `(fields: ${LP_FIELDS.join(", ")}; required: lp_name, status confirmed|lead, source_url) or omit lps, then resubmit`,
+          required_fields: REQUIRED.submit }, 400);
+      }
       const v = validate(body.dump, body.registry_id);
       const valid = v.errors.length === 0;
       const { data, error } = await db.rpc("research_submit", { p_id: body.registry_id, p_bot: bot,
         p_payload: body.dump ?? null, p_count: v.good + v.bad, p_valid: valid, p_errors: valid ? null : v.errors.slice(0, 200) });
       if (error) return json({ error: "server error" }, 500);
       if (data.error) return json({ error: data.error }, 409);
-      return json({ ok: valid, status: data.status, attempts: data.attempts ?? null, accepted_records: valid ? v.good : 0,
+      let lpRes: any = undefined;
+      if (valid && (hasLps || body.lps_over_100 === true)) {
+        const r = await db.rpc("research_store_lps", { p_id: body.registry_id, p_submission: data.submission_id,
+          p_lps: hasLps ? body.lps : [], p_over_100: body.lps_over_100 === true });
+        lpRes = r.error ? { ok: false, error: "lps not stored (server error); dump was stored" } : r.data;
+      }
+      return json({ ok: valid, ...(lpRes !== undefined ? { lps: lpRes } : {}), status: data.status, attempts: data.attempts ?? null, accepted_records: valid ? v.good : 0,
         rejected_records: v.bad, errors: v.errors.slice(0, 200),
         hint: valid ? "stored; claim the next firm" : "not accepted (kept for audit only); fix ALL errors and resubmit the whole dump once (same registry_id, same bot_id)" }, valid ? 200 : 422);
     }
