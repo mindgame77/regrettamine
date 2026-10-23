@@ -1,7 +1,383 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "d818dd3e-0560-5f88-b244-1655c5288e8d",
   "slug": "pinegrove-venture-partners",
   "name": "Pinegrove Venture Partners",
-  "external_id": "vc-000027"
- }
+  "initials": null,
+  "short_name": "Pinegrove",
+  "hq": "Menlo Park, California",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:31.741899+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000027",
+  "import_run_id": null,
+  "sec_crd": "326747",
+  "sec_file_no": null,
+  "legal_name": "PINEGROVE VENTURE PARTNERS, LLC",
+  "primary_domain": "pinegrovecp.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "1d4b1fdd-e5d0-5c06-a29f-8dade74f8acb",
+   "fact_type": "firm_legal_items",
+   "label": "courthousenews.com",
+   "url": "https://www.courthousenews.com/wp-content/uploads/2025/05/raffaelli-v-brookfield-complaint.pdf",
+   "publisher": "courthousenews.com",
+   "title": "courthousenews.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1d4b1fdd-e5d0-5c06-a29f-8dade74f8acb",
+   "fact_type": "firm_legal_items",
+   "label": "govinfo.gov",
+   "url": "https://www.govinfo.gov/content/pkg/USCOURTS-cand-3_25-cv-04800/pdf/USCOURTS-cand-3_25-cv-04800-0.pdf",
+   "publisher": "govinfo.gov",
+   "title": "govinfo.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1d4b1fdd-e5d0-5c06-a29f-8dade74f8acb",
+   "fact_type": "firm_legal_items",
+   "label": "benefitsandpensionsmonitor.com",
+   "url": "https://www.benefitsandpensionsmonitor.com/investments/alternative-investments/brookfield-sued-over-alleged-whistleblower-retaliation/391981",
+   "publisher": "benefitsandpensionsmonitor.com",
+   "title": "benefitsandpensionsmonitor.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a05fa124-034b-5c52-a8a3-3f77d785851d",
+   "fact_type": "firm_legal_items",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/326747/PDF/326747.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b963366d-bcfa-54b4-9353-abed44af8e34",
+   "fact_type": "firm_legal_items",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/719739/000119312524230139/d883468dex991.htm",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "53cce06d-2ac9-5c5b-8fc3-e961c12bc13f",
+   "fact_type": "firm_legal_items",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/326747/PDF/326747.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "15608500-5922-5a7b-ba8a-9edc05663d70",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/326747/PDF/326747.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5ef338ca-eaec-56cb-b6fd-07c30469b73b",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/326747/PDF/326747.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d1e07a39-950f-5069-bf15-8cf50132e206",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/326747/PDF/326747.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ba8b0466-3c57-5f40-a944-a69ccc6fd4e2",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/326747/PDF/326747.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0fee38f6-00e3-5fa3-9607-560e4ada78bf",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/326747/PDF/326747.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "977c53d6-b341-50b2-8263-a0d1e9e9b70a",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/326747/PDF/326747.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8a88c3e8-f371-5e4a-b29f-faa771893a97",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/326747/PDF/326747.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "39e28cf9-05d5-5a4a-bf1e-936ea7ff168c",
+   "fact_type": "firm_people_roles",
+   "label": "files.adviserinfo.sec.gov",
+   "url": "https://files.adviserinfo.sec.gov/IAPD/Content/Common/crd_iapd_Brochure.aspx?BRCHR_VRSN_ID=1034171",
+   "publisher": "files.adviserinfo.sec.gov",
+   "title": "files.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "049f93e1-696d-5429-a970-e9365d59fcb7",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/326747/PDF/326747.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e1367f29-9560-5c4b-96f2-edb3da8f8ec9",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/326747/PDF/326747.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4d46c66b-11db-5809-9a20-ca938f1a8ee9",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/326747/PDF/326747.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "81d7a532-9203-55f1-86e1-5cdcb4ea44c4",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/326747/PDF/326747.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "69a42dee-7014-5d90-93d6-9028fa2c52d1",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/326747/PDF/326747.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6a0977d2-4ec3-55a5-8558-abfd80d150c8",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/326747/PDF/326747.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "660f64af-52ef-5e1b-9f4a-59b0560f8a28",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/326747/PDF/326747.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b981f635-c68c-5a64-adf0-aef43208c73d",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/719739/000119312524230139/d883468dex991.htm",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "050c010e-557e-57f5-a3f6-d0accc2f6fdd",
+   "fact_type": "firm_profile_facts",
+   "label": "files.adviserinfo.sec.gov",
+   "url": "https://files.adviserinfo.sec.gov/IAPD/Content/Common/crd_iapd_Brochure.aspx?BRCHR_VRSN_ID=1034171",
+   "publisher": "files.adviserinfo.sec.gov",
+   "title": "files.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b981f635-c68c-5a64-adf0-aef43208c73d",
+   "fact_type": "firm_profile_facts",
+   "label": "prnewswire.com",
+   "url": "https://www.prnewswire.com/news-releases/svb-financial-group-completes-sale-of-svb-capital-to-pinegrove-capital-partners-302260488.html",
+   "publisher": "prnewswire.com",
+   "title": "prnewswire.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2454163e-d0b8-5874-af82-f36cc35ebcb6",
+   "fact_type": "firm_profile_facts",
+   "label": "prnewswire.com",
+   "url": "https://www.prnewswire.com/news-releases/pinegrove-closes-1-5-billion-oversubscribed-strategic-investors-fund-xii-302875764.html",
+   "publisher": "prnewswire.com",
+   "title": "prnewswire.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "69a42dee-7014-5d90-93d6-9028fa2c52d1",
+   "fact_type": "firm_profile_facts",
+   "label": "prnewswire.com",
+   "url": "https://www.prnewswire.com/news-releases/pinegrove-closes-1-5-billion-oversubscribed-strategic-investors-fund-xii-302875764.html",
+   "publisher": "prnewswire.com",
+   "title": "prnewswire.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "936f2e62-a3ff-503b-bc82-920518aa5dc1",
+   "fact_type": "firm_profile_facts",
+   "label": "sbafla.com",
+   "url": "https://www.sbafla.com/media/3bmntb1b/q1-2025-private-equity-performance.pdf",
+   "publisher": "sbafla.com",
+   "title": "sbafla.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b6b39a0d-3ae7-5522-9424-6d90c7fb4ebb",
+   "fact_type": "firm_profile_facts",
+   "label": "sbafla.com",
+   "url": "https://www.sbafla.com/media/3bmntb1b/q1-2025-private-equity-performance.pdf",
+   "publisher": "sbafla.com",
+   "title": "sbafla.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2f5d3f91-b5d3-5375-b3a6-753f4d947e74",
+   "fact_type": "firm_profile_facts",
+   "label": "sfrhctf.org",
+   "url": "https://sfrhctf.org/wp-content/uploads/2020/09/09292020-08-RHCTF-PE-Manager-Recommendations.pdf",
+   "publisher": "sfrhctf.org",
+   "title": "sfrhctf.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "99be24e4-2df1-5d4a-afd7-d89900de100a",
+   "fact_type": "firm_profile_facts",
+   "label": "sfrhctf.org",
+   "url": "https://sfrhctf.org/wp-content/uploads/2021/11/06_11152021-Private-Equity-Recommendation.pdf",
+   "publisher": "sfrhctf.org",
+   "title": "sfrhctf.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "08081ee3-a4ed-57ea-814a-c03cd8306e27",
+   "fact_type": "firm_profile_facts",
+   "label": "prnewswire.com",
+   "url": "https://www.prnewswire.com/news-releases/pinegrove-venture-partners-announces-expanded-relationship-with-florida-state-board-of-administration-sba-302413650.html",
+   "publisher": "prnewswire.com",
+   "title": "prnewswire.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d005d342-f3e8-5001-af7e-7939c965a201",
+   "fact_type": "timeline_events",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/326747/PDF/326747.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e199a7aa-952d-550f-9d8f-3393c64410a8",
+   "fact_type": "timeline_events",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/719739/000119312524230139/d883468dex991.htm",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ac2b5e11-f824-5090-a3de-17225fd915f7",
+   "fact_type": "timeline_events",
+   "label": "courthousenews.com",
+   "url": "https://www.courthousenews.com/wp-content/uploads/2025/05/raffaelli-v-brookfield-complaint.pdf",
+   "publisher": "courthousenews.com",
+   "title": "courthousenews.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ac2b5e11-f824-5090-a3de-17225fd915f7",
+   "fact_type": "timeline_events",
+   "label": "govinfo.gov",
+   "url": "https://www.govinfo.gov/content/pkg/USCOURTS-cand-3_25-cv-04800/pdf/USCOURTS-cand-3_25-cv-04800-0.pdf",
+   "publisher": "govinfo.gov",
+   "title": "govinfo.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ac2b5e11-f824-5090-a3de-17225fd915f7",
+   "fact_type": "timeline_events",
+   "label": "benefitsandpensionsmonitor.com",
+   "url": "https://www.benefitsandpensionsmonitor.com/investments/alternative-investments/brookfield-sued-over-alleged-whistleblower-retaliation/391981",
+   "publisher": "benefitsandpensionsmonitor.com",
+   "title": "benefitsandpensionsmonitor.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

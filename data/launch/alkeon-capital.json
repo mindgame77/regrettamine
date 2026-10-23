@@ -1,7 +1,293 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "b862718a-a925-5f1f-80c8-1c3651732839",
   "slug": "alkeon-capital",
   "name": "Alkeon Capital",
-  "external_id": "vc-000020"
- }
+  "initials": null,
+  "short_name": "Alkeon",
+  "hq": "New York, New York",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:28.074241+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000020",
+  "import_run_id": null,
+  "sec_crd": "118059",
+  "sec_file_no": null,
+  "legal_name": "ALKEON CAPITAL MANAGEMENT, LLC",
+  "primary_domain": "alkeoncapital.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "bcd0a51c-eae3-5e65-849d-ad75758aa75b",
+   "fact_type": "firm_legal_items",
+   "label": "wallethub.com",
+   "url": "https://wallethub.com/profile/alkeon-capital-management-llc-13033850i",
+   "publisher": "wallethub.com",
+   "title": "wallethub.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3db58dca-2cf6-5c40-a1d0-d16923f331f6",
+   "fact_type": "firm_legal_items",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/118059/PDF/118059.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ac94f97f-aeac-57f4-a77a-2194e298843d",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/118059/PDF/118059.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d70e5562-e220-5ece-b90a-f03675c5c739",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/118059/PDF/118059.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "dc95dbc0-8ed4-5a29-b96d-a34d71f8d12b",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/118059/PDF/118059.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e65064ab-7e9f-5718-aff8-86ba88687215",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/118059/PDF/118059.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7fafdb37-08f0-5145-bf93-cf21f7407788",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/118059/PDF/118059.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d1e680e4-caba-5c02-a118-133da97941ce",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/118059/PDF/118059.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a8027941-95df-5dcc-bef3-da540ecbfefa",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/118059/PDF/118059.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e188c38c-d25f-5dfc-93c7-dc6fd6542082",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/118059/PDF/118059.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "609e5437-7df1-511d-bd97-0f489b3795b9",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/118059/PDF/118059.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "034888de-91fb-5f34-a2b2-b1ade1ea4f83",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/118059/PDF/118059.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7210dd08-6a14-5d1d-a8c0-0239b52f9010",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/118059/PDF/118059.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "409ce911-d62d-57cc-b76e-6a1149ce4bfe",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/118059/PDF/118059.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1201a74d-3fd4-550e-944b-5b0a03692600",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/118059/PDF/118059.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "902fb884-5142-5095-9238-8669d462a676",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/118059/PDF/118059.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "18e46d14-cb15-5983-bffd-6b836a3628c1",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/118059/PDF/118059.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "36710d06-4fc5-5abd-80b1-e0f50f924726",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1905379/000139834426004900/fp0096688-1_40appa.htm",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b916fb2a-dc89-5c46-b075-dd33d6483f8a",
+   "fact_type": "firm_profile_facts",
+   "label": "projects.propublica.org",
+   "url": "https://projects.propublica.org/nonprofits/full_text/202542829349100234/InvestmentsOtherSchedule2",
+   "publisher": "projects.propublica.org",
+   "title": "projects.propublica.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "779522fe-9f61-5a39-b4db-9f2f96cb0556",
+   "fact_type": "firm_profile_facts",
+   "label": "projects.propublica.org",
+   "url": "https://projects.propublica.org/nonprofits/full_text/202513179349102851/InvestmentsOtherSchedule2",
+   "publisher": "projects.propublica.org",
+   "title": "projects.propublica.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1d23082f-b3fb-5248-9230-b0db879eeb94",
+   "fact_type": "firm_profile_facts",
+   "label": "projects.propublica.org",
+   "url": "https://projects.propublica.org/nonprofits/full_text/202530319349100713/InvestmentsOtherSchedule2",
+   "publisher": "projects.propublica.org",
+   "title": "projects.propublica.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ee73d588-8806-571c-a265-2f7e05ad8fd9",
+   "fact_type": "firm_profile_facts",
+   "label": "projects.propublica.org",
+   "url": "https://projects.propublica.org/nonprofits/full_text/202513179349102916/OtherIncomeSchedule2",
+   "publisher": "projects.propublica.org",
+   "title": "projects.propublica.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5c9bf904-c863-5516-8164-3248071d02e2",
+   "fact_type": "firm_profile_facts",
+   "label": "projects.propublica.org",
+   "url": "https://projects.propublica.org/nonprofits/full_text/202532769349100823/InvestmentsOtherSchedule2",
+   "publisher": "projects.propublica.org",
+   "title": "projects.propublica.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "19ffcabc-81ed-54da-b254-b93514acf911",
+   "fact_type": "firm_profile_facts",
+   "label": "projects.propublica.org",
+   "url": "https://projects.propublica.org/nonprofits/full_text/202233049349101058/InvestmentsOtherSchedule2",
+   "publisher": "projects.propublica.org",
+   "title": "projects.propublica.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d53e4eab-9c6f-5420-8812-44a0bc280185",
+   "fact_type": "firm_profile_facts",
+   "label": "projects.propublica.org",
+   "url": "https://projects.propublica.org/nonprofits/full_text/202303189349106110/InvestmentsOtherSchedule2",
+   "publisher": "projects.propublica.org",
+   "title": "projects.propublica.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "52a7c6c9-73f8-5fec-84d2-50c9c4f620ea",
+   "fact_type": "timeline_events",
+   "label": "wallethub.com",
+   "url": "https://wallethub.com/profile/alkeon-capital-management-llc-13033850i",
+   "publisher": "wallethub.com",
+   "title": "wallethub.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

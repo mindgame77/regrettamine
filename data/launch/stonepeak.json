@@ -1,7 +1,518 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "fffda978-ea77-5629-b465-3f3f481208fc",
   "slug": "stonepeak",
   "name": "Stonepeak",
-  "external_id": "vc-000013"
- }
+  "initials": null,
+  "short_name": null,
+  "hq": "New York, New York",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:24.401735+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000013",
+  "import_run_id": null,
+  "sec_crd": "159699",
+  "sec_file_no": null,
+  "legal_name": "STONEPEAK PARTNERS LP",
+  "primary_domain": "stonepeak.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "cb4f2a8f-47f4-5d07-8faf-daf387c5806f",
+   "fact_type": "firm_legal_items",
+   "label": "yahoo.com",
+   "url": "https://www.yahoo.com/news/politics/articles/how-wind-projects-got-replaced-by-a-900-million-payday-to-a-trump-donors-firm-100001218.html",
+   "publisher": "yahoo.com",
+   "title": "yahoo.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d8979cfc-e541-563b-887a-2af58f2af18e",
+   "fact_type": "firm_legal_items",
+   "label": "prospect.org",
+   "url": "https://prospect.org/2026/10/02/ice-airline-omni-air-chicago-trump-third-country-deportation-flights/",
+   "publisher": "prospect.org",
+   "title": "prospect.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d8979cfc-e541-563b-887a-2af58f2af18e",
+   "fact_type": "firm_legal_items",
+   "label": "news.wttw.com",
+   "url": "https://news.wttw.com/2026/09/28/firm-set-buy-chicago-s-parking-meters-sells-airline-carried-out-deportations",
+   "publisher": "news.wttw.com",
+   "title": "news.wttw.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "122eadde-bfee-5797-bf2e-0ff549063487",
+   "fact_type": "firm_legal_items",
+   "label": "cbsnews.com",
+   "url": "https://www.cbsnews.com/chicago/news/chicago-city-council-to-parking-meter-sale-deal-vote/",
+   "publisher": "cbsnews.com",
+   "title": "cbsnews.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "122eadde-bfee-5797-bf2e-0ff549063487",
+   "fact_type": "firm_legal_items",
+   "label": "news.wttw.com",
+   "url": "https://news.wttw.com/2026/09/28/firm-set-buy-chicago-s-parking-meters-sells-airline-carried-out-deportations",
+   "publisher": "news.wttw.com",
+   "title": "news.wttw.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "122eadde-bfee-5797-bf2e-0ff549063487",
+   "fact_type": "firm_legal_items",
+   "label": "stonepeak.com",
+   "url": "https://stonepeak.com/news/stonepeak-completes-acquisition-of-chicago-parking-meters",
+   "publisher": "stonepeak.com",
+   "title": "stonepeak.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "24aa76d4-7b70-506a-aef4-c4c419f6fa58",
+   "fact_type": "firm_legal_items",
+   "label": "divestoregon.org",
+   "url": "https://www.divestoregon.org/how-oregons-pension-fund-helps-vladimir-putins-gas-gambit",
+   "publisher": "divestoregon.org",
+   "title": "divestoregon.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0bf01768-f38a-58c5-9b4c-c526828239fa",
+   "fact_type": "firm_legal_items",
+   "label": "en.wikipedia.org",
+   "url": "https://en.wikipedia.org/wiki/Stonepeak",
+   "publisher": "en.wikipedia.org",
+   "title": "en.wikipedia.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2f61c2ef-a8c9-5fc3-9b48-7605db7dba92",
+   "fact_type": "firm_legal_items",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/159699/PDF/159699.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "858a1269-132e-52ec-8370-d0f234931ef5",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/159699/PDF/159699.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e17a8bd3-70fc-52b4-8ce8-80b6f9ceb945",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/159699/PDF/159699.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d68106f0-a1a4-5c50-9bd1-aef7b06fbcf6",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/159699/PDF/159699.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "58731016-1621-54b2-9218-84f3e48bcad1",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/159699/PDF/159699.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5875056e-736d-5dbf-9193-757291d1b119",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/159699/PDF/159699.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "401b49da-5911-5518-91bb-0ebc7b39cb6b",
+   "fact_type": "firm_people_roles",
+   "label": "stonepeak.com",
+   "url": "https://stonepeak.com/team",
+   "publisher": "stonepeak.com",
+   "title": "stonepeak.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6d31d3be-2d48-5160-9fec-96a7367a4390",
+   "fact_type": "firm_people_roles",
+   "label": "en.wikipedia.org",
+   "url": "https://en.wikipedia.org/wiki/Stonepeak",
+   "publisher": "en.wikipedia.org",
+   "title": "en.wikipedia.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4440ffbc-b1d0-5210-acea-03b63cf09ee0",
+   "fact_type": "firm_profile_facts",
+   "label": "divestoregon.org",
+   "url": "https://www.divestoregon.org/how-oregons-pension-fund-helps-vladimir-putins-gas-gambit",
+   "publisher": "divestoregon.org",
+   "title": "divestoregon.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "718ba5ad-1ce6-54c9-a0c5-fef7ef0d4b4c",
+   "fact_type": "firm_profile_facts",
+   "label": "en.wikipedia.org",
+   "url": "https://en.wikipedia.org/wiki/Stonepeak",
+   "publisher": "en.wikipedia.org",
+   "title": "en.wikipedia.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "21f2fec3-597e-5c60-9613-c280c80ffb08",
+   "fact_type": "firm_profile_facts",
+   "label": "en.wikipedia.org",
+   "url": "https://en.wikipedia.org/wiki/Stonepeak",
+   "publisher": "en.wikipedia.org",
+   "title": "en.wikipedia.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e2fe7564-3033-5aa2-b11b-8f99c3e6b625",
+   "fact_type": "firm_profile_facts",
+   "label": "en.wikipedia.org",
+   "url": "https://en.wikipedia.org/wiki/Stonepeak",
+   "publisher": "en.wikipedia.org",
+   "title": "en.wikipedia.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8ed8a92d-e65f-5140-ac32-a4de6cfa4cce",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/159699/PDF/159699.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f191fb88-ead5-586c-b13b-42f25f6a0ef8",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/159699/PDF/159699.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e2fe7564-3033-5aa2-b11b-8f99c3e6b625",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/159699/PDF/159699.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "aca31ef0-c703-5208-ad36-e1cdbbcfa240",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/159699/PDF/159699.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9f3804c7-2f7f-5a37-8dc4-c2c8a10c4788",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/2003495/000200349525000001/0002003495-25-000001.txt",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b8649e8f-8d9b-5725-ad4b-21a8674b6686",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/2003495/000200349525000001/0002003495-25-000001.txt",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7bac3187-a7e6-5ff3-a0e5-17f687dde38b",
+   "fact_type": "firm_profile_facts",
+   "label": "realassets.ipe.com",
+   "url": "https://realassets.ipe.com/news/illinois-teachers-backs-stonepeak-fund-with-250m-commitment/10072038.article",
+   "publisher": "realassets.ipe.com",
+   "title": "realassets.ipe.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9f3804c7-2f7f-5a37-8dc4-c2c8a10c4788",
+   "fact_type": "firm_profile_facts",
+   "label": "realassets.ipe.com",
+   "url": "https://realassets.ipe.com/news/illinois-teachers-backs-stonepeak-fund-with-250m-commitment/10072038.article",
+   "publisher": "realassets.ipe.com",
+   "title": "realassets.ipe.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0a8c3617-c29e-5b01-9949-cbf375dcb829",
+   "fact_type": "firm_profile_facts",
+   "label": "opalesque.com",
+   "url": "https://www.opalesque.com/689701/Stonepeak_raises_for_North_American_infrastructure_fund970.html",
+   "publisher": "opalesque.com",
+   "title": "opalesque.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4eb60e78-1fa0-5fbc-bf0a-9ac547a6404b",
+   "fact_type": "firm_profile_facts",
+   "label": "opalesque.com",
+   "url": "https://www.opalesque.com/689701/Stonepeak_raises_for_North_American_infrastructure_fund970.html",
+   "publisher": "opalesque.com",
+   "title": "opalesque.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c5fafa47-6f6b-50c1-a9e8-290fea320719",
+   "fact_type": "firm_profile_facts",
+   "label": "opalesque.com",
+   "url": "https://www.opalesque.com/689701/Stonepeak_raises_for_North_American_infrastructure_fund970.html",
+   "publisher": "opalesque.com",
+   "title": "opalesque.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8f0b401c-9454-5fd7-a771-0cbd3bb64a81",
+   "fact_type": "firm_profile_facts",
+   "label": "opalesque.com",
+   "url": "https://www.opalesque.com/689701/Stonepeak_raises_for_North_American_infrastructure_fund970.html",
+   "publisher": "opalesque.com",
+   "title": "opalesque.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e7f0acb0-5538-5342-b003-eb67b29ddadc",
+   "fact_type": "firm_profile_facts",
+   "label": "opalesque.com",
+   "url": "https://www.opalesque.com/689701/Stonepeak_raises_for_North_American_infrastructure_fund970.html",
+   "publisher": "opalesque.com",
+   "title": "opalesque.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6fbae452-9b76-5ee9-a12d-15aa208d9de2",
+   "fact_type": "firm_profile_facts",
+   "label": "opalesque.com",
+   "url": "https://www.opalesque.com/689701/Stonepeak_raises_for_North_American_infrastructure_fund970.html",
+   "publisher": "opalesque.com",
+   "title": "opalesque.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0d23a5da-e424-5cd3-a816-86e1e9dec484",
+   "fact_type": "firm_profile_facts",
+   "label": "opalesque.com",
+   "url": "https://www.opalesque.com/689701/Stonepeak_raises_for_North_American_infrastructure_fund970.html",
+   "publisher": "opalesque.com",
+   "title": "opalesque.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "14fd9294-5038-5034-aebc-3ed4565dfac0",
+   "fact_type": "firm_profile_facts",
+   "label": "opalesque.com",
+   "url": "https://www.opalesque.com/689701/Stonepeak_raises_for_North_American_infrastructure_fund970.html",
+   "publisher": "opalesque.com",
+   "title": "opalesque.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d7ab262d-2856-5764-b53b-4ab0544010b7",
+   "fact_type": "firm_profile_facts",
+   "label": "realassets.ipe.com",
+   "url": "https://realassets.ipe.com/news/calstrs-allocates-250m-to-stonepeaks-north-american-infrastructure-fund/10129645.article",
+   "publisher": "realassets.ipe.com",
+   "title": "realassets.ipe.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7c907353-ba1a-5b90-9af4-ef1ec6a13915",
+   "fact_type": "firm_profile_facts",
+   "label": "irei.com",
+   "url": "https://irei.com/news/fubon-life-commits-200m-stonepeak-infrastructure-fund-iv/",
+   "publisher": "irei.com",
+   "title": "irei.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e1df154a-03de-5745-95e5-c303e2a25dc6",
+   "fact_type": "firm_profile_facts",
+   "label": "realassets.ipe.com",
+   "url": "https://realassets.ipe.com/news/new-york-common-puts-500m-into-stonepeak-infrastructure-funds/10047156.article",
+   "publisher": "realassets.ipe.com",
+   "title": "realassets.ipe.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1fb4de88-0d8b-5cfb-a1a4-8cf5ba5a1648",
+   "fact_type": "firm_profile_facts",
+   "label": "irei.com",
+   "url": "https://irei.com/news/oregon-public-employees-commits-350m-to-stonepeak-infrastructure-fund-v/",
+   "publisher": "irei.com",
+   "title": "irei.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "bd1f3b74-1b69-53d1-9072-ed58390cc0c1",
+   "fact_type": "firm_profile_facts",
+   "label": "irei.com",
+   "url": "https://irei.com/news/oregon-public-employees-commits-350m-to-stonepeak-infrastructure-fund-v/",
+   "publisher": "irei.com",
+   "title": "irei.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ece496c7-4acc-58f9-83d9-4fb03666b03a",
+   "fact_type": "firm_profile_facts",
+   "label": "irei.com",
+   "url": "https://irei.com/news/virginia-retirement-commits-200m-to-stonepeak-infrastructure-fund-v/",
+   "publisher": "irei.com",
+   "title": "irei.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "339bf7b0-eaf3-584f-9049-00069dd1116a",
+   "fact_type": "firm_profile_facts",
+   "label": "realassets.ipe.com",
+   "url": "https://realassets.ipe.com/news/wsib-mulls-300m-commitment-to-stonepeak-infrastructure-fund/10131261.article",
+   "publisher": "realassets.ipe.com",
+   "title": "realassets.ipe.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "56025c54-2665-54a5-949c-08d15fcc505e",
+   "fact_type": "timeline_events",
+   "label": "en.wikipedia.org",
+   "url": "https://en.wikipedia.org/wiki/Stonepeak",
+   "publisher": "en.wikipedia.org",
+   "title": "en.wikipedia.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b5cc9022-8ca8-54b7-99f8-8261a4f4c0c0",
+   "fact_type": "timeline_events",
+   "label": "divestoregon.org",
+   "url": "https://www.divestoregon.org/how-oregons-pension-fund-helps-vladimir-putins-gas-gambit",
+   "publisher": "divestoregon.org",
+   "title": "divestoregon.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "58707ceb-97c7-582b-8d7e-5a974ffe40bc",
+   "fact_type": "timeline_events",
+   "label": "yahoo.com",
+   "url": "https://www.yahoo.com/news/politics/articles/how-wind-projects-got-replaced-by-a-900-million-payday-to-a-trump-donors-firm-100001218.html",
+   "publisher": "yahoo.com",
+   "title": "yahoo.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "023873f5-7f0d-5874-87c7-9fe65581384f",
+   "fact_type": "timeline_events",
+   "label": "cbsnews.com",
+   "url": "https://www.cbsnews.com/chicago/news/chicago-city-council-to-parking-meter-sale-deal-vote/",
+   "publisher": "cbsnews.com",
+   "title": "cbsnews.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "023873f5-7f0d-5874-87c7-9fe65581384f",
+   "fact_type": "timeline_events",
+   "label": "news.wttw.com",
+   "url": "https://news.wttw.com/2026/09/28/firm-set-buy-chicago-s-parking-meters-sells-airline-carried-out-deportations",
+   "publisher": "news.wttw.com",
+   "title": "news.wttw.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "023873f5-7f0d-5874-87c7-9fe65581384f",
+   "fact_type": "timeline_events",
+   "label": "stonepeak.com",
+   "url": "https://stonepeak.com/news/stonepeak-completes-acquisition-of-chicago-parking-meters",
+   "publisher": "stonepeak.com",
+   "title": "stonepeak.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "107edcfd-c8b8-537f-8743-1f58739362bf",
+   "fact_type": "timeline_events",
+   "label": "prospect.org",
+   "url": "https://prospect.org/2026/10/02/ice-airline-omni-air-chicago-trump-third-country-deportation-flights/",
+   "publisher": "prospect.org",
+   "title": "prospect.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "107edcfd-c8b8-537f-8743-1f58739362bf",
+   "fact_type": "timeline_events",
+   "label": "news.wttw.com",
+   "url": "https://news.wttw.com/2026/09/28/firm-set-buy-chicago-s-parking-meters-sells-airline-carried-out-deportations",
+   "publisher": "news.wttw.com",
+   "title": "news.wttw.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

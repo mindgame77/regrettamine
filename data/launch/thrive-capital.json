@@ -1,7 +1,464 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "b8c55561-09a5-5c93-ab5b-1e8f91819a8b",
   "slug": "thrive-capital",
   "name": "Thrive Capital",
-  "external_id": "vc-000014"
- }
+  "initials": null,
+  "short_name": "Thrive",
+  "hq": "New York, New York",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:25.153704+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000014",
+  "import_run_id": null,
+  "sec_crd": "162771",
+  "sec_file_no": null,
+  "legal_name": "THRIVE CAPITAL MANAGEMENT, LLC",
+  "primary_domain": "thrivecap.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "130c6005-2a04-5cd5-9f46-dd669c0bc3f6",
+   "fact_type": "firm_legal_items",
+   "label": "jorgeschmidt.com",
+   "url": "https://jorgeschmidt.com/1782/uefa-fifa-section-1782/",
+   "publisher": "jorgeschmidt.com",
+   "title": "jorgeschmidt.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "130c6005-2a04-5cd5-9f46-dd669c0bc3f6",
+   "fact_type": "firm_legal_items",
+   "label": "bbc.com",
+   "url": "https://www.bbc.com/sport/football/articles/c780w17lw02o",
+   "publisher": "bbc.com",
+   "title": "bbc.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "130c6005-2a04-5cd5-9f46-dd669c0bc3f6",
+   "fact_type": "firm_legal_items",
+   "label": "nypost.com",
+   "url": "https://nypost.com/2026/09/01/business/alex-spiro-repping-josh-kushners-thrive-in-legal-fight-over-20b-fifa-deal/",
+   "publisher": "nypost.com",
+   "title": "nypost.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "63f4959e-5efc-56d8-842d-7f06e11f1011",
+   "fact_type": "firm_legal_items",
+   "label": "news.crunchbase.com",
+   "url": "https://news.crunchbase.com/venture/joshua-kushners-thrive-capital-raises-1b-amid-questions-about-brothers-ties-to-saudi-arabia/",
+   "publisher": "news.crunchbase.com",
+   "title": "news.crunchbase.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "63f4959e-5efc-56d8-842d-7f06e11f1011",
+   "fact_type": "firm_legal_items",
+   "label": "bbc.com",
+   "url": "https://www.bbc.com/sport/football/articles/c780w17lw02o",
+   "publisher": "bbc.com",
+   "title": "bbc.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f25e1091-7705-5b74-8db7-d1f50dc89037",
+   "fact_type": "firm_legal_items",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162771/PDF/162771.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "cf8812b4-862e-5ed4-af0b-693bf0eedf08",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162771/PDF/162771.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "24a7ed91-91e7-595b-86f4-f71e58102bc4",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162771/PDF/162771.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4404f401-18bd-5cdc-be5b-ec3cd7d43597",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162771/PDF/162771.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "fa287ef4-a69e-54d7-9457-b47a656fbbef",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162771/PDF/162771.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "88eb85b2-1818-598f-8887-f534d16c33c3",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162771/PDF/162771.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4dff23b1-234b-5c74-ac43-03b09acf51d7",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162771/PDF/162771.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "922e4680-cd33-5e97-9769-4cee030b55d4",
+   "fact_type": "firm_profile_facts",
+   "label": "jorgeschmidt.com",
+   "url": "https://jorgeschmidt.com/1782/uefa-fifa-section-1782/",
+   "publisher": "jorgeschmidt.com",
+   "title": "jorgeschmidt.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "13b5cb9c-cfaf-5b7a-acb5-e926e9eb03f9",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162771/PDF/162771.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "935aa9bd-26c8-5a13-8fce-22d0090f2d8e",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162771/PDF/162771.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9ebb0a1d-f19d-53d4-b196-47d2d819f3d1",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162771/PDF/162771.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "15ffdf74-057b-59dd-ad3c-98b91948663e",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162771/PDF/162771.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "fb74756a-0ed8-545c-b6a2-ff2ac103005b",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162771/PDF/162771.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e905cc4c-e9a0-506b-b1bd-96611f19bdf0",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162771/PDF/162771.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "922e4680-cd33-5e97-9769-4cee030b55d4",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162771/PDF/162771.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "13398e0e-c6a6-5930-9e4e-8c638f402da5",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162771/PDF/162771.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7c00050c-5a84-5ea1-be2d-6af5882633ab",
+   "fact_type": "firm_profile_facts",
+   "label": "thrivecap.com",
+   "url": "https://www.thrivecap.com/thrive-x",
+   "publisher": "thrivecap.com",
+   "title": "thrivecap.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0c0a0369-e9ed-5780-974f-4a41590053bc",
+   "fact_type": "firm_profile_facts",
+   "label": "thrivecap.com",
+   "url": "https://www.thrivecap.com/thrive-x",
+   "publisher": "thrivecap.com",
+   "title": "thrivecap.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7c00050c-5a84-5ea1-be2d-6af5882633ab",
+   "fact_type": "firm_profile_facts",
+   "label": "techcrunch.com",
+   "url": "https://techcrunch.com/2026/02/17/thrive-raises-10b-for-new-fund-its-largest-yet/",
+   "publisher": "techcrunch.com",
+   "title": "techcrunch.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e171e642-c2e6-51e1-8821-f5910abd1d61",
+   "fact_type": "firm_profile_facts",
+   "label": "hottub.vc",
+   "url": "https://hottub.vc/firms/thrive-capital/funds/thrive-capital-partners-viii-growth/",
+   "publisher": "hottub.vc",
+   "title": "hottub.vc",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "dcdfbad8-fa8e-590e-b0b5-dccb8cdb8c5c",
+   "fact_type": "firm_profile_facts",
+   "label": "hottub.vc",
+   "url": "https://hottub.vc/firms/thrive-capital/funds/thrive-capital-partners-ix/",
+   "publisher": "hottub.vc",
+   "title": "hottub.vc",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "80117488-a9fe-59d4-983c-7b5000692154",
+   "fact_type": "firm_profile_facts",
+   "label": "lacers.org",
+   "url": "https://www.lacers.org/sites/main/files/file-attachments/board_agenda_20260623_combined.pdf?1781805541=",
+   "publisher": "lacers.org",
+   "title": "lacers.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a2212d57-1f5f-5001-ad86-6e5b75a83238",
+   "fact_type": "firm_profile_facts",
+   "label": "lacers.org",
+   "url": "https://www.lacers.org/sites/main/files/file-attachments/board_agenda_20260623_combined.pdf?1781805541=",
+   "publisher": "lacers.org",
+   "title": "lacers.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4019d500-6dfb-5b9c-8805-00bd2aa8ff65",
+   "fact_type": "firm_profile_facts",
+   "label": "dakota.com",
+   "url": "https://www.dakota.com/hubfs/February%202026%20Pension%20Brief.pdf",
+   "publisher": "dakota.com",
+   "title": "dakota.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f4104e15-f0e0-5fe2-aaa1-22600c3c5941",
+   "fact_type": "firm_profile_facts",
+   "label": "dakota.com",
+   "url": "https://www.dakota.com/hubfs/February%202026%20Pension%20Brief.pdf",
+   "publisher": "dakota.com",
+   "title": "dakota.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8644193e-ec4f-5b99-b3ca-edfee43c9f28",
+   "fact_type": "firm_profile_facts",
+   "label": "dakota.com",
+   "url": "https://www.dakota.com/hubfs/February%202026%20Pension%20Brief.pdf",
+   "publisher": "dakota.com",
+   "title": "dakota.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "86b2a6d4-7add-5800-817d-b2b34be93e5f",
+   "fact_type": "firm_profile_facts",
+   "label": "dakota.com",
+   "url": "https://www.dakota.com/hubfs/February%202026%20Pension%20Brief.pdf",
+   "publisher": "dakota.com",
+   "title": "dakota.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "37e7d3e0-4f80-5f5f-97ce-7f7a6c3fe09f",
+   "fact_type": "firm_profile_facts",
+   "label": "dakota.com",
+   "url": "https://www.dakota.com/hubfs/February%202026%20Pension%20Brief.pdf",
+   "publisher": "dakota.com",
+   "title": "dakota.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d72b0250-26bf-5047-a225-20bf190e6cbc",
+   "fact_type": "firm_profile_facts",
+   "label": "dakota.com",
+   "url": "https://www.dakota.com/hubfs/February%202026%20Pension%20Brief.pdf",
+   "publisher": "dakota.com",
+   "title": "dakota.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3a68df08-8fa7-5027-b1df-dd3f199b115e",
+   "fact_type": "firm_profile_facts",
+   "label": "dakota.com",
+   "url": "https://www.dakota.com/hubfs/February%202026%20Pension%20Brief.pdf",
+   "publisher": "dakota.com",
+   "title": "dakota.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "84c64b33-ae7b-576b-b855-e433713957ad",
+   "fact_type": "firm_profile_facts",
+   "label": "hottub.vc",
+   "url": "https://hottub.vc/firms/thrive-capital/",
+   "publisher": "hottub.vc",
+   "title": "hottub.vc",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "20ca3a6a-65c2-5126-a587-8ff3bd347e22",
+   "fact_type": "firm_profile_facts",
+   "label": "hottub.vc",
+   "url": "https://hottub.vc/firms/thrive-capital/",
+   "publisher": "hottub.vc",
+   "title": "hottub.vc",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0b919697-d884-5ae5-b9bc-fe8ef87e4383",
+   "fact_type": "firm_profile_facts",
+   "label": "hottub.vc",
+   "url": "https://hottub.vc/firms/thrive-capital/",
+   "publisher": "hottub.vc",
+   "title": "hottub.vc",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "137c45dd-b103-5b3f-9c01-68d3ac6b8df2",
+   "fact_type": "firm_profile_facts",
+   "label": "hottub.vc",
+   "url": "https://hottub.vc/firms/thrive-capital/",
+   "publisher": "hottub.vc",
+   "title": "hottub.vc",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e1a7de53-9819-5474-a43a-0c679fb7c9c1",
+   "fact_type": "firm_profile_facts",
+   "label": "hottub.vc",
+   "url": "https://hottub.vc/firms/thrive-capital/funds/thrive-capital-partners-viii/",
+   "publisher": "hottub.vc",
+   "title": "hottub.vc",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "93333231-49f1-54c8-a20d-f0e1f0e2a240",
+   "fact_type": "timeline_events",
+   "label": "news.crunchbase.com",
+   "url": "https://news.crunchbase.com/venture/joshua-kushners-thrive-capital-raises-1b-amid-questions-about-brothers-ties-to-saudi-arabia/",
+   "publisher": "news.crunchbase.com",
+   "title": "news.crunchbase.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "93333231-49f1-54c8-a20d-f0e1f0e2a240",
+   "fact_type": "timeline_events",
+   "label": "bbc.com",
+   "url": "https://www.bbc.com/sport/football/articles/c780w17lw02o",
+   "publisher": "bbc.com",
+   "title": "bbc.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "35a00863-19ca-5fd3-8dd9-ded47725187f",
+   "fact_type": "timeline_events",
+   "label": "jorgeschmidt.com",
+   "url": "https://jorgeschmidt.com/1782/uefa-fifa-section-1782/",
+   "publisher": "jorgeschmidt.com",
+   "title": "jorgeschmidt.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "35a00863-19ca-5fd3-8dd9-ded47725187f",
+   "fact_type": "timeline_events",
+   "label": "bbc.com",
+   "url": "https://www.bbc.com/sport/football/articles/c780w17lw02o",
+   "publisher": "bbc.com",
+   "title": "bbc.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "35a00863-19ca-5fd3-8dd9-ded47725187f",
+   "fact_type": "timeline_events",
+   "label": "nypost.com",
+   "url": "https://nypost.com/2026/09/01/business/alex-spiro-repping-josh-kushners-thrive-in-legal-fight-over-20b-fifa-deal/",
+   "publisher": "nypost.com",
+   "title": "nypost.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

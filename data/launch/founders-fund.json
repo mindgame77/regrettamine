@@ -1,7 +1,788 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "febf4fe1-3816-5218-b581-a2fe90ce124b",
   "slug": "founders-fund",
   "name": "Founders Fund",
-  "external_id": "vc-000012"
- }
+  "initials": null,
+  "short_name": "FF",
+  "hq": "San Francisco, California",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:23.697914+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000012",
+  "import_run_id": null,
+  "sec_crd": "155462",
+  "sec_file_no": null,
+  "legal_name": "FOUNDERS FUND LLC",
+  "primary_domain": "foundersfund.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "013b35d5-791e-5515-9ad5-1a930fc10613",
+   "fact_type": "firm_legal_items",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/68545185/banzai-advisory-group-llc-v-the-founders-fund-vii-lp/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "013b35d5-791e-5515-9ad5-1a930fc10613",
+   "fact_type": "firm_legal_items",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/68561523/wpi-collateral-management-llc-v-ramaswamy/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "013b35d5-791e-5515-9ad5-1a930fc10613",
+   "fact_type": "firm_legal_items",
+   "label": "forbes.com",
+   "url": "https://www.forbes.com/sites/johnhyatt/2024/06/15/this-texas-tycoon-is-suing-vivek-ramaswamy-ken-griffin-peter-thiel-and-others-claiming-they-sabotaged-his-startup/",
+   "publisher": "forbes.com",
+   "title": "forbes.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "42859252-8a72-535c-ae0d-444667b1c40c",
+   "fact_type": "firm_legal_items",
+   "label": "bylinetimes.com",
+   "url": "https://bylinetimes.com/2026/02/04/jeffrey-epstein-and-peter-thiel-co-owned-venture-fund-as-thiels-palantir-entered-uk-government/",
+   "publisher": "bylinetimes.com",
+   "title": "bylinetimes.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "75d53d04-cc09-5fbe-9fd6-6dbaaff34298",
+   "fact_type": "firm_legal_items",
+   "label": "cnbc.com",
+   "url": "https://www.cnbc.com/2025/06/05/anduril-valuation-founders-fund.html",
+   "publisher": "cnbc.com",
+   "title": "cnbc.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "75d53d04-cc09-5fbe-9fd6-6dbaaff34298",
+   "fact_type": "firm_legal_items",
+   "label": "thenextweb.com",
+   "url": "https://thenextweb.com/news/founders-fund-6-billion-ai-venture",
+   "publisher": "thenextweb.com",
+   "title": "thenextweb.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d411238a-9eb2-5423-9c77-d888504945e0",
+   "fact_type": "firm_legal_items",
+   "label": "techcrunch.com",
+   "url": "https://techcrunch.com/2013/01/25/rabois-left-square-over-sexual-harassment-claim/",
+   "publisher": "techcrunch.com",
+   "title": "techcrunch.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6ef9fad9-a673-5fff-898f-6416adcc62fd",
+   "fact_type": "firm_legal_items",
+   "label": "cnbc.com",
+   "url": "https://www.cnbc.com/2024/12/03/peter-thiels-founders-fund-loses-early-partner-brian-singerman.html",
+   "publisher": "cnbc.com",
+   "title": "cnbc.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "107b5ed5-828b-51e6-93f6-d9d134bfb6ae",
+   "fact_type": "firm_legal_items",
+   "label": "en.wikipedia.org",
+   "url": "https://en.wikipedia.org/wiki/Founders_Fund",
+   "publisher": "en.wikipedia.org",
+   "title": "en.wikipedia.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "136f7f46-7326-55d0-9a75-143cb389ec02",
+   "fact_type": "firm_legal_items",
+   "label": "dk.usembassy.gov",
+   "url": "https://dk.usembassy.gov/ambassador/",
+   "publisher": "dk.usembassy.gov",
+   "title": "dk.usembassy.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "946c5ace-c0c4-53ba-9a9c-584cd1ce6d63",
+   "fact_type": "firm_legal_items",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "136f7f46-7326-55d0-9a75-143cb389ec02",
+   "fact_type": "firm_legal_items",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "136f7f46-7326-55d0-9a75-143cb389ec02",
+   "fact_type": "firm_legal_items",
+   "label": "senate.gov",
+   "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_00547.htm",
+   "publisher": "senate.gov",
+   "title": "senate.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "910cef06-eafd-5286-b01a-ce7e4e41f6a4",
+   "fact_type": "firm_people_roles",
+   "label": "cnbc.com",
+   "url": "https://www.cnbc.com/2024/12/03/peter-thiels-founders-fund-loses-early-partner-brian-singerman.html",
+   "publisher": "cnbc.com",
+   "title": "cnbc.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "31ce106c-1aff-5c22-93d8-f06bd466ffc3",
+   "fact_type": "firm_people_roles",
+   "label": "en.wikipedia.org",
+   "url": "https://en.wikipedia.org/wiki/Founders_Fund",
+   "publisher": "en.wikipedia.org",
+   "title": "en.wikipedia.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d83bd030-f7d5-5afc-9c56-3821460c809d",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "26bff9a0-8992-5832-805c-23f6c3b31c4e",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8f6804df-aeac-5f16-8ccd-5d9b5519bfe9",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "99fd1612-2441-562a-9380-d9a61b379cf3",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "555b1352-4834-533b-9245-3da3c135f411",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d5928dc7-e9ca-5e52-a7cd-d001992699c7",
+   "fact_type": "firm_people_roles",
+   "label": "foundersfund.com",
+   "url": "https://foundersfund.com/team/trae-stephens/",
+   "publisher": "foundersfund.com",
+   "title": "foundersfund.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e2122edb-4633-5020-96a9-2b5a45e95148",
+   "fact_type": "firm_people_roles",
+   "label": "cnbc.com",
+   "url": "https://www.cnbc.com/2025/04/11/peter-thiels-founders-fund-closes-4point6-billion-growth-fund.html",
+   "publisher": "cnbc.com",
+   "title": "cnbc.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9536900a-ea4b-56d4-8afa-43834b57f3e5",
+   "fact_type": "firm_people_roles",
+   "label": "foundersfund.com",
+   "url": "https://foundersfund.com/team/scott-nolan/",
+   "publisher": "foundersfund.com",
+   "title": "foundersfund.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0647e90b-9900-540c-b4b0-9bee8d418e47",
+   "fact_type": "firm_people_roles",
+   "label": "foundersfund.com",
+   "url": "https://foundersfund.com/team/john-luttig/",
+   "publisher": "foundersfund.com",
+   "title": "foundersfund.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7dbf683b-28bc-5a39-b547-44e9d9ae9552",
+   "fact_type": "firm_people_roles",
+   "label": "foundersfund.com",
+   "url": "https://foundersfund.com/team/matias-van-thienen/",
+   "publisher": "foundersfund.com",
+   "title": "foundersfund.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6fe765a0-fb07-53fd-9a8b-b7ed63360d66",
+   "fact_type": "firm_people_roles",
+   "label": "foundersfund.com",
+   "url": "https://foundersfund.com/team/delian-asparouhov/",
+   "publisher": "foundersfund.com",
+   "title": "foundersfund.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "31f5344a-92a5-51c2-b34d-0d7db66e63be",
+   "fact_type": "firm_people_roles",
+   "label": "foundersfund.com",
+   "url": "https://foundersfund.com/team/amin-mirzadegan/",
+   "publisher": "foundersfund.com",
+   "title": "foundersfund.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "cd3d1535-077f-5795-bc55-ff479cc1415c",
+   "fact_type": "firm_people_roles",
+   "label": "foundersfund.com",
+   "url": "https://foundersfund.com/team/joey-krug/",
+   "publisher": "foundersfund.com",
+   "title": "foundersfund.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "35a8926a-022f-5348-b915-894657c613eb",
+   "fact_type": "firm_people_roles",
+   "label": "foundersfund.com",
+   "url": "https://foundersfund.com/team/sean-liu/",
+   "publisher": "foundersfund.com",
+   "title": "foundersfund.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6e8a4cf4-9c16-579c-ae4a-2a746201981a",
+   "fact_type": "firm_people_roles",
+   "label": "foundersfund.com",
+   "url": "https://foundersfund.com/team/ryan-beiermeister/",
+   "publisher": "foundersfund.com",
+   "title": "foundersfund.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "31ce106c-1aff-5c22-93d8-f06bd466ffc3",
+   "fact_type": "firm_people_roles",
+   "label": "techcrunch.com",
+   "url": "https://techcrunch.com/2019/02/20/keith-rabois-is-leaving-khosla-ventures-for-founders-fund/",
+   "publisher": "techcrunch.com",
+   "title": "techcrunch.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0fcf0752-e651-53f6-9ed0-48b9babe4358",
+   "fact_type": "firm_profile_facts",
+   "label": "dk.usembassy.gov",
+   "url": "https://dk.usembassy.gov/ambassador/",
+   "publisher": "dk.usembassy.gov",
+   "title": "dk.usembassy.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f43a0555-9765-5088-90ef-d6322e5afd94",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2aa1c03c-9a65-5cfc-aa4e-b0a5dc780792",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e48b276a-164f-560a-98c5-5d7d4dd7cd08",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d54e059a-f3b9-549a-97d0-a244650da692",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2d59505d-ca78-53bf-a562-e51fd9882766",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "595b25f3-f222-5fb8-ba74-eaa6774be695",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7023175f-1916-5bd3-bc42-ccf7c4410361",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4ccb8312-8aa8-5672-913d-eafdc133f726",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e5af8ed8-ec99-574f-9104-e4221464ef5e",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "107c4eb2-24d0-5fab-9e97-5e54ef5b5ecb",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0fcf0752-e651-53f6-9ed0-48b9babe4358",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "984b728f-fdf3-5e6a-825e-2c3f603053c7",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1b855df6-5b55-503a-a09a-2987e0fe98b1",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "69bbf125-2097-5cde-909c-4e454e87dfda",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f5b2f52e-8890-5114-8d8e-809df56018a6",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ba84e945-c928-5d45-802f-f43c4e15a52b",
+   "fact_type": "firm_profile_facts",
+   "label": "cnbc.com",
+   "url": "https://www.cnbc.com/2025/04/11/peter-thiels-founders-fund-closes-4point6-billion-growth-fund.html",
+   "publisher": "cnbc.com",
+   "title": "cnbc.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "69bbf125-2097-5cde-909c-4e454e87dfda",
+   "fact_type": "firm_profile_facts",
+   "label": "x.com",
+   "url": "https://x.com/foundersfund",
+   "publisher": "x.com",
+   "title": "x.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "107c4eb2-24d0-5fab-9e97-5e54ef5b5ecb",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/2112131/000123191926000265/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "571360d4-8bea-50d8-8655-3ba572364283",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/2112131/000123191926000265/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "571360d4-8bea-50d8-8655-3ba572364283",
+   "fact_type": "firm_profile_facts",
+   "label": "techcrunch.com",
+   "url": "https://techcrunch.com/2026/03/09/founders-fund-nears-6-billion-close-for-latest-growth-fund-sources-say/",
+   "publisher": "techcrunch.com",
+   "title": "techcrunch.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e5af8ed8-ec99-574f-9104-e4221464ef5e",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1971631/000123191925000327/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1a5e5958-4a0a-513b-a984-5c6dc1c20877",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1971631/000123191925000327/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4ccb8312-8aa8-5672-913d-eafdc133f726",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/2059945/000205994525000001/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7023175f-1916-5bd3-bc42-ccf7c4410361",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1912108/000191210822000001/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "595b25f3-f222-5fb8-ba74-eaa6774be695",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1910667/000191066722000001/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2d59505d-ca78-53bf-a562-e51fd9882766",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1792034/000179203419000002/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "554c7034-9fcb-5715-b826-8d7179d4bde2",
+   "fact_type": "firm_profile_facts",
+   "label": "theassemblync.com",
+   "url": "https://www.theassemblync.com/news/education/higher-education/former-unc-chancellor-says-he-advised-against-spacex-investment/",
+   "publisher": "theassemblync.com",
+   "title": "theassemblync.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a82daec8-7c3b-595a-8727-bfb540119814",
+   "fact_type": "firm_profile_facts",
+   "label": "pitchbook.com",
+   "url": "https://pitchbook.com/profiles/fund/21006-37F",
+   "publisher": "pitchbook.com",
+   "title": "pitchbook.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "670bfe4b-9b82-5d77-96f0-b29b200434c9",
+   "fact_type": "firm_profile_facts",
+   "label": "pitchbook.com",
+   "url": "https://pitchbook.com/profiles/fund/21006-37F",
+   "publisher": "pitchbook.com",
+   "title": "pitchbook.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "fa284b90-b6e5-5094-b45f-9067bbf647d0",
+   "fact_type": "firm_profile_facts",
+   "label": "pitchbook.com",
+   "url": "https://pitchbook.com/profiles/fund/21006-37F",
+   "publisher": "pitchbook.com",
+   "title": "pitchbook.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "dc65090e-6b08-5afc-870d-3fc3f4e8c209",
+   "fact_type": "firm_profile_facts",
+   "label": "aumdb.com",
+   "url": "https://www.aumdb.com/advisors/155462-founders-fund-llc",
+   "publisher": "aumdb.com",
+   "title": "aumdb.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "46a06ce0-6b6f-57f1-86f7-b2f3eb372a03",
+   "fact_type": "firm_profile_facts",
+   "label": "aumdb.com",
+   "url": "https://www.aumdb.com/advisors/155462-founders-fund-llc",
+   "publisher": "aumdb.com",
+   "title": "aumdb.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "aefb86b6-ef7a-56cc-9c04-a78858c8325b",
+   "fact_type": "firm_profile_facts",
+   "label": "wired.com",
+   "url": "https://www.wired.com/2007/12/peter-thiels-vc/",
+   "publisher": "wired.com",
+   "title": "wired.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a458adb3-2735-5933-90e9-ab40260f89b3",
+   "fact_type": "timeline_events",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/68545185/banzai-advisory-group-llc-v-the-founders-fund-vii-lp/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a458adb3-2735-5933-90e9-ab40260f89b3",
+   "fact_type": "timeline_events",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/68561523/wpi-collateral-management-llc-v-ramaswamy/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a458adb3-2735-5933-90e9-ab40260f89b3",
+   "fact_type": "timeline_events",
+   "label": "forbes.com",
+   "url": "https://www.forbes.com/sites/johnhyatt/2024/06/15/this-texas-tycoon-is-suing-vivek-ramaswamy-ken-griffin-peter-thiel-and-others-claiming-they-sabotaged-his-startup/",
+   "publisher": "forbes.com",
+   "title": "forbes.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "00f5b875-2aac-5324-a669-e326ac493597",
+   "fact_type": "timeline_events",
+   "label": "bylinetimes.com",
+   "url": "https://bylinetimes.com/2026/02/04/jeffrey-epstein-and-peter-thiel-co-owned-venture-fund-as-thiels-palantir-entered-uk-government/",
+   "publisher": "bylinetimes.com",
+   "title": "bylinetimes.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "08309bd6-02b9-5961-85a9-74cb93ab7056",
+   "fact_type": "timeline_events",
+   "label": "cnbc.com",
+   "url": "https://www.cnbc.com/2025/06/05/anduril-valuation-founders-fund.html",
+   "publisher": "cnbc.com",
+   "title": "cnbc.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "08309bd6-02b9-5961-85a9-74cb93ab7056",
+   "fact_type": "timeline_events",
+   "label": "thenextweb.com",
+   "url": "https://thenextweb.com/news/founders-fund-6-billion-ai-venture",
+   "publisher": "thenextweb.com",
+   "title": "thenextweb.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "efd7ccd1-5937-56ac-8ae2-6c2b9a238860",
+   "fact_type": "timeline_events",
+   "label": "techcrunch.com",
+   "url": "https://techcrunch.com/2013/01/25/rabois-left-square-over-sexual-harassment-claim/",
+   "publisher": "techcrunch.com",
+   "title": "techcrunch.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a26c83f9-278b-51f8-9937-1dfa302525b8",
+   "fact_type": "timeline_events",
+   "label": "cnbc.com",
+   "url": "https://www.cnbc.com/2024/12/03/peter-thiels-founders-fund-loses-early-partner-brian-singerman.html",
+   "publisher": "cnbc.com",
+   "title": "cnbc.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3933c979-8292-5da7-b6dc-b0922ce03467",
+   "fact_type": "timeline_events",
+   "label": "en.wikipedia.org",
+   "url": "https://en.wikipedia.org/wiki/Founders_Fund",
+   "publisher": "en.wikipedia.org",
+   "title": "en.wikipedia.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "080e7a56-a15c-5dd0-8ff6-13e6688e558b",
+   "fact_type": "timeline_events",
+   "label": "dk.usembassy.gov",
+   "url": "https://dk.usembassy.gov/ambassador/",
+   "publisher": "dk.usembassy.gov",
+   "title": "dk.usembassy.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "080e7a56-a15c-5dd0-8ff6-13e6688e558b",
+   "fact_type": "timeline_events",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/155462/PDF/155462.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "080e7a56-a15c-5dd0-8ff6-13e6688e558b",
+   "fact_type": "timeline_events",
+   "label": "senate.gov",
+   "url": "https://www.senate.gov/legislative/LIS/roll_call_votes/vote1191/vote_119_1_00547.htm",
+   "publisher": "senate.gov",
+   "title": "senate.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1a6b8307-13ad-55ef-aac0-35372c50d8d9",
+   "fact_type": "timeline_events",
+   "label": "cnbc.com",
+   "url": "https://www.cnbc.com/2025/04/11/peter-thiels-founders-fund-closes-4point6-billion-growth-fund.html",
+   "publisher": "cnbc.com",
+   "title": "cnbc.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a83e179a-b6e4-5f34-8516-9d947b492fa9",
+   "fact_type": "timeline_events",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/2112131/000123191926000265/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a83e179a-b6e4-5f34-8516-9d947b492fa9",
+   "fact_type": "timeline_events",
+   "label": "techcrunch.com",
+   "url": "https://techcrunch.com/2026/03/09/founders-fund-nears-6-billion-close-for-latest-growth-fund-sources-say/",
+   "publisher": "techcrunch.com",
+   "title": "techcrunch.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7171e46f-db1d-5d4c-a179-eadfdc3d0016",
+   "fact_type": "timeline_events",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1971631/000123191925000327/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

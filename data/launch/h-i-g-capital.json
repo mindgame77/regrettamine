@@ -1,7 +1,761 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "6bd6d92f-141e-5558-9950-da10fd9e79d9",
   "slug": "h-i-g-capital",
   "name": "H.I.G. Capital",
-  "external_id": "vc-000009"
- }
+  "initials": null,
+  "short_name": "HIG",
+  "hq": "Miami, Florida",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:21.212939+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000009",
+  "import_run_id": null,
+  "sec_crd": "160711",
+  "sec_file_no": null,
+  "legal_name": "H.I.G. CAPITAL, LLC",
+  "primary_domain": "hig.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "c5e12ad9-189c-5361-96c0-c787b32c9821",
+   "fact_type": "firm_legal_items",
+   "label": "mass.gov",
+   "url": "https://www.mass.gov/news/private-equity-firm-and-former-mental-health-center-executives-pay-25-million-over-alleged-false-claims-submitted-for-unlicensed-and-unsupervised-patient-care",
+   "publisher": "mass.gov",
+   "title": "mass.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c5e12ad9-189c-5361-96c0-c787b32c9821",
+   "fact_type": "firm_legal_items",
+   "label": "jeffnewmanlaw.com",
+   "url": "https://jeffnewmanlaw.com/wp-content/uploads/2023/05/HIG-settlement.10.15.21-_2_-2.pdf",
+   "publisher": "jeffnewmanlaw.com",
+   "title": "jeffnewmanlaw.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d6457131-2842-5754-8f30-fe018c0643e3",
+   "fact_type": "firm_legal_items",
+   "label": "warren.senate.gov",
+   "url": "https://www.warren.senate.gov/wp-content/uploads/media/doc/wellpath_bankruptcy_letter.pdf",
+   "publisher": "warren.senate.gov",
+   "title": "warren.senate.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d6457131-2842-5754-8f30-fe018c0643e3",
+   "fact_type": "firm_legal_items",
+   "label": "prisonlegalnews.org",
+   "url": "https://www.prisonlegalnews.org/news/2025/may/1/wellpath-prepares-plan-exit-bankruptcy/",
+   "publisher": "prisonlegalnews.org",
+   "title": "prisonlegalnews.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d6457131-2842-5754-8f30-fe018c0643e3",
+   "fact_type": "firm_legal_items",
+   "label": "theguardian.com",
+   "url": "https://www.theguardian.com/us-news/2025/mar/04/texas-bankruptcy-courts-prison-healthcare-provider",
+   "publisher": "theguardian.com",
+   "title": "theguardian.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d6457131-2842-5754-8f30-fe018c0643e3",
+   "fact_type": "firm_legal_items",
+   "label": "worthrises.org",
+   "url": "https://worthrises.org/blogpost/2025/6/24/what-we-learned-from-the-wellpath-bankruptcy",
+   "publisher": "worthrises.org",
+   "title": "worthrises.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "52583686-781d-58d4-95e5-1d2c6d29c0eb",
+   "fact_type": "firm_legal_items",
+   "label": "courts.delaware.gov",
+   "url": "https://courts.delaware.gov/opinions/download.aspx?id=399470",
+   "publisher": "courts.delaware.gov",
+   "title": "courts.delaware.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "08608235-0e19-556d-82d3-bc799e1a833e",
+   "fact_type": "firm_legal_items",
+   "label": "storage.courtlistener.com",
+   "url": "https://storage.courtlistener.com/recap/gov.uscourts.flsd.683404/gov.uscourts.flsd.683404.70.0_1.pdf",
+   "publisher": "storage.courtlistener.com",
+   "title": "storage.courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "08608235-0e19-556d-82d3-bc799e1a833e",
+   "fact_type": "firm_legal_items",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/69620320/dailane-investments-limited-v-hig-capital-llc/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "08608235-0e19-556d-82d3-bc799e1a833e",
+   "fact_type": "firm_legal_items",
+   "label": "media.ca11.uscourts.gov",
+   "url": "https://media.ca11.uscourts.gov/opinions/unpub/files/202514213.pdf",
+   "publisher": "media.ca11.uscourts.gov",
+   "title": "media.ca11.uscourts.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "08608235-0e19-556d-82d3-bc799e1a833e",
+   "fact_type": "firm_legal_items",
+   "label": "ironroadpartners.com",
+   "url": "https://www.ironroadpartners.com/insight/private-litigation-underscores-risks-in-continuation-and-cross-fund-transactions/",
+   "publisher": "ironroadpartners.com",
+   "title": "ironroadpartners.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "cfa3bf24-f37d-52c5-b245-d56ebc5f5716",
+   "fact_type": "firm_legal_items",
+   "label": "storage.courtlistener.com",
+   "url": "https://storage.courtlistener.com/recap/gov.uscourts.flsd.703887/gov.uscourts.flsd.703887.1.0.pdf",
+   "publisher": "storage.courtlistener.com",
+   "title": "storage.courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "cfa3bf24-f37d-52c5-b245-d56ebc5f5716",
+   "fact_type": "firm_legal_items",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/72068167/clivedale-ventures-limited-v-hig-capital-llc/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c93085e3-00d2-53ae-b989-5e8424520049",
+   "fact_type": "firm_legal_items",
+   "label": "media.ca11.uscourts.gov",
+   "url": "https://media.ca11.uscourts.gov/opinions/pub/files/202014109.pdf",
+   "publisher": "media.ca11.uscourts.gov",
+   "title": "media.ca11.uscourts.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7a354dbe-8309-5e48-816e-02dddbc855bc",
+   "fact_type": "firm_legal_items",
+   "label": "courts.delaware.gov",
+   "url": "https://courts.delaware.gov/Opinions/Download.aspx?id=365810",
+   "publisher": "courts.delaware.gov",
+   "title": "courts.delaware.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7a354dbe-8309-5e48-816e-02dddbc855bc",
+   "fact_type": "firm_legal_items",
+   "label": "courts.delaware.gov",
+   "url": "https://courts.delaware.gov/Opinions/Download.aspx?id=375410",
+   "publisher": "courts.delaware.gov",
+   "title": "courts.delaware.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e9aa90f5-eac5-5473-a989-85c83ec81945",
+   "fact_type": "firm_legal_items",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/68195018/bones-v-hig-capital-llc/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e9aa90f5-eac5-5473-a989-85c83ec81945",
+   "fact_type": "firm_legal_items",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/68500117/arrington-v-hig-capital-management-llc/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e9aa90f5-eac5-5473-a989-85c83ec81945",
+   "fact_type": "firm_legal_items",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/71379867/secharan-v-hig-capital-management-llc/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "009de5b6-418a-503d-b0b9-4f5f9fa97ee3",
+   "fact_type": "firm_legal_items",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "55371905-d8e9-5201-8baa-8a9e04266aa6",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "bfc0e55d-9ff7-5302-8d59-5ee4acbcc787",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "afcdea82-aa80-53ae-8b3e-6212734b4c6f",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5251acc7-5189-5afb-8207-ffc1f0cc553f",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "55d6cead-7b31-521b-8e60-8ed4f5265fdd",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b5de7190-7a0f-536c-af68-a9ad5e11cc0a",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e619822b-282c-5d54-88c4-f69bd8802c9f",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a1b677f4-0353-543c-8061-768e99c1d4c4",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "59b30956-07a0-51f5-8be7-cb74e2cfbe4a",
+   "fact_type": "firm_people_roles",
+   "label": "hig.com",
+   "url": "https://hig.com/news/h-i-g-capital-appoints-brian-schwartz-as-chief-executive-officer/",
+   "publisher": "hig.com",
+   "title": "hig.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "59b30956-07a0-51f5-8be7-cb74e2cfbe4a",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c037897f-b1a9-58a8-833c-6f8dbd6bf5c8",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7997ebc9-c9c0-59fc-a6bc-20560bbe4a8a",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "af56e0df-2ba2-54af-9cc0-9f39edafd045",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "94d19b8f-acef-57d3-8f92-a94b083f3006",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "43d010c4-c73f-56ee-94ea-6d0c4d8107cf",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5042fb93-0619-5066-a6a9-d8bf3d449ffd",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3488bb46-b9b6-5827-8625-8c86bcedd963",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "14c3f360-96a2-5adb-afd1-6f9209468ba0",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1058086b-ecbe-5a39-ab3a-a1ef09519876",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5b04f6d2-f03b-5a63-8fe9-35cd4387d2a1",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "427abab6-fcc9-53cb-83f6-1313271837c2",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "14fee08f-e8e7-5e85-88ca-1251b4c96f19",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "98b2671a-23e2-561d-9fb1-b4967248dc6d",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8960662a-bfc9-5e99-96df-00459f808715",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e22611c3-1445-52c8-8841-525596e05a08",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5b439deb-b7fc-52e0-99c9-57dbf15d84db",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "42f1e14c-f9f9-56a1-b657-8997804a9b7d",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "58b8489b-7af0-5bf7-9998-1fcb3d99eef5",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e0cc4a39-5219-5ec8-ae13-1f5bc2ca4c2c",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3ef2f671-b824-5981-a3d9-fa67a1ec2302",
+   "fact_type": "firm_profile_facts",
+   "label": "hig.com",
+   "url": "https://hig.com/news/h-i-g-capital-announces-closing-of-oversubscribed-european-lower-middle-market-private-equity-fund/",
+   "publisher": "hig.com",
+   "title": "hig.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "12969f8b-c286-55ae-8eef-c4cdc78ba7d3",
+   "fact_type": "firm_profile_facts",
+   "label": "hig.com",
+   "url": "https://hig.com/news/h-i-g-whitehorse-closes-5-9-billion-h-i-g-whitehorse-middle-market-lending-fund-iv/",
+   "publisher": "hig.com",
+   "title": "hig.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "92398976-7fec-528f-8376-645e9252709a",
+   "fact_type": "firm_profile_facts",
+   "label": "hig.com",
+   "url": "https://hig.com/news/h-i-g-capital-closes-record-5-5-billion-h-i-g-middle-market-lbo-fund-iv/",
+   "publisher": "hig.com",
+   "title": "hig.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "72b36912-30ca-551a-9b96-77d65d71ba63",
+   "fact_type": "firm_profile_facts",
+   "label": "dakota.com",
+   "url": "https://www.dakota.com/fundraising-news/nd-state-investment-board-commits-136-to-alts",
+   "publisher": "dakota.com",
+   "title": "dakota.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8196a283-cf74-5b6d-a202-5898563a6353",
+   "fact_type": "firm_profile_facts",
+   "label": "dakota.com",
+   "url": "https://www.dakota.com/fundraising-news/nd-state-investment-board-commits-136-to-alts",
+   "publisher": "dakota.com",
+   "title": "dakota.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "eb65f41d-5b86-5ab7-99f4-84af20762b82",
+   "fact_type": "timeline_events",
+   "label": "mass.gov",
+   "url": "https://www.mass.gov/news/private-equity-firm-and-former-mental-health-center-executives-pay-25-million-over-alleged-false-claims-submitted-for-unlicensed-and-unsupervised-patient-care",
+   "publisher": "mass.gov",
+   "title": "mass.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "eb65f41d-5b86-5ab7-99f4-84af20762b82",
+   "fact_type": "timeline_events",
+   "label": "jeffnewmanlaw.com",
+   "url": "https://jeffnewmanlaw.com/wp-content/uploads/2023/05/HIG-settlement.10.15.21-_2_-2.pdf",
+   "publisher": "jeffnewmanlaw.com",
+   "title": "jeffnewmanlaw.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "40922b63-14c9-5825-a825-ddd4300e503a",
+   "fact_type": "timeline_events",
+   "label": "warren.senate.gov",
+   "url": "https://www.warren.senate.gov/wp-content/uploads/media/doc/wellpath_bankruptcy_letter.pdf",
+   "publisher": "warren.senate.gov",
+   "title": "warren.senate.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "40922b63-14c9-5825-a825-ddd4300e503a",
+   "fact_type": "timeline_events",
+   "label": "prisonlegalnews.org",
+   "url": "https://www.prisonlegalnews.org/news/2025/may/1/wellpath-prepares-plan-exit-bankruptcy/",
+   "publisher": "prisonlegalnews.org",
+   "title": "prisonlegalnews.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "40922b63-14c9-5825-a825-ddd4300e503a",
+   "fact_type": "timeline_events",
+   "label": "theguardian.com",
+   "url": "https://www.theguardian.com/us-news/2025/mar/04/texas-bankruptcy-courts-prison-healthcare-provider",
+   "publisher": "theguardian.com",
+   "title": "theguardian.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "40922b63-14c9-5825-a825-ddd4300e503a",
+   "fact_type": "timeline_events",
+   "label": "worthrises.org",
+   "url": "https://worthrises.org/blogpost/2025/6/24/what-we-learned-from-the-wellpath-bankruptcy",
+   "publisher": "worthrises.org",
+   "title": "worthrises.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "edfe42c4-d968-5fe9-a65c-f28ba779883a",
+   "fact_type": "timeline_events",
+   "label": "courts.delaware.gov",
+   "url": "https://courts.delaware.gov/opinions/download.aspx?id=399470",
+   "publisher": "courts.delaware.gov",
+   "title": "courts.delaware.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1da68f9b-ab7f-5c1d-b6e2-294507956f51",
+   "fact_type": "timeline_events",
+   "label": "storage.courtlistener.com",
+   "url": "https://storage.courtlistener.com/recap/gov.uscourts.flsd.683404/gov.uscourts.flsd.683404.70.0_1.pdf",
+   "publisher": "storage.courtlistener.com",
+   "title": "storage.courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1da68f9b-ab7f-5c1d-b6e2-294507956f51",
+   "fact_type": "timeline_events",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/69620320/dailane-investments-limited-v-hig-capital-llc/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1da68f9b-ab7f-5c1d-b6e2-294507956f51",
+   "fact_type": "timeline_events",
+   "label": "media.ca11.uscourts.gov",
+   "url": "https://media.ca11.uscourts.gov/opinions/unpub/files/202514213.pdf",
+   "publisher": "media.ca11.uscourts.gov",
+   "title": "media.ca11.uscourts.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1da68f9b-ab7f-5c1d-b6e2-294507956f51",
+   "fact_type": "timeline_events",
+   "label": "ironroadpartners.com",
+   "url": "https://www.ironroadpartners.com/insight/private-litigation-underscores-risks-in-continuation-and-cross-fund-transactions/",
+   "publisher": "ironroadpartners.com",
+   "title": "ironroadpartners.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a342f6fc-2070-546e-a8a5-f061b63ee1cd",
+   "fact_type": "timeline_events",
+   "label": "storage.courtlistener.com",
+   "url": "https://storage.courtlistener.com/recap/gov.uscourts.flsd.703887/gov.uscourts.flsd.703887.1.0.pdf",
+   "publisher": "storage.courtlistener.com",
+   "title": "storage.courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a342f6fc-2070-546e-a8a5-f061b63ee1cd",
+   "fact_type": "timeline_events",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/72068167/clivedale-ventures-limited-v-hig-capital-llc/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "cb0ad334-88ee-5492-8ab4-f330d45c12c5",
+   "fact_type": "timeline_events",
+   "label": "media.ca11.uscourts.gov",
+   "url": "https://media.ca11.uscourts.gov/opinions/pub/files/202014109.pdf",
+   "publisher": "media.ca11.uscourts.gov",
+   "title": "media.ca11.uscourts.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d6c7ed3f-6df4-5625-80a8-311495e195e1",
+   "fact_type": "timeline_events",
+   "label": "courts.delaware.gov",
+   "url": "https://courts.delaware.gov/Opinions/Download.aspx?id=365810",
+   "publisher": "courts.delaware.gov",
+   "title": "courts.delaware.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d6c7ed3f-6df4-5625-80a8-311495e195e1",
+   "fact_type": "timeline_events",
+   "label": "courts.delaware.gov",
+   "url": "https://courts.delaware.gov/Opinions/Download.aspx?id=375410",
+   "publisher": "courts.delaware.gov",
+   "title": "courts.delaware.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "50ef9f62-691d-5fe8-b852-b613322efb3e",
+   "fact_type": "timeline_events",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/68195018/bones-v-hig-capital-llc/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "50ef9f62-691d-5fe8-b852-b613322efb3e",
+   "fact_type": "timeline_events",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/68500117/arrington-v-hig-capital-management-llc/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "50ef9f62-691d-5fe8-b852-b613322efb3e",
+   "fact_type": "timeline_events",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/71379867/secharan-v-hig-capital-management-llc/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "47692b73-b689-55eb-a596-4b8c0f6ece66",
+   "fact_type": "timeline_events",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160711/PDF/160711.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "47692b73-b689-55eb-a596-4b8c0f6ece66",
+   "fact_type": "timeline_events",
+   "label": "hig.com",
+   "url": "https://hig.com/news/h-i-g-capital-appoints-brian-schwartz-as-chief-executive-officer/",
+   "publisher": "hig.com",
+   "title": "hig.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "74e7b967-606f-5c82-9425-cd9cf175084b",
+   "fact_type": "timeline_events",
+   "label": "hig.com",
+   "url": "https://hig.com/news/h-i-g-capital-announces-closing-of-oversubscribed-european-lower-middle-market-private-equity-fund/",
+   "publisher": "hig.com",
+   "title": "hig.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d32d7e84-4e4e-57bb-9c87-c6297c9986c8",
+   "fact_type": "timeline_events",
+   "label": "hig.com",
+   "url": "https://hig.com/news/h-i-g-whitehorse-closes-5-9-billion-h-i-g-whitehorse-middle-market-lending-fund-iv/",
+   "publisher": "hig.com",
+   "title": "hig.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "222b4acc-2f61-5602-9c22-990469c719b6",
+   "fact_type": "timeline_events",
+   "label": "hig.com",
+   "url": "https://hig.com/news/h-i-g-capital-closes-record-5-5-billion-h-i-g-middle-market-lbo-fund-iv/",
+   "publisher": "hig.com",
+   "title": "hig.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

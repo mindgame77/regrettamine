@@ -1,7 +1,518 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "bbb4a782-bae5-5704-b448-6027d431714d",
   "slug": "y-combinator",
   "name": "Y Combinator",
-  "external_id": "vc-000029"
- }
+  "initials": null,
+  "short_name": "YC",
+  "hq": "Mountain View, California",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:32.571285+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000029",
+  "import_run_id": null,
+  "sec_crd": "171730",
+  "sec_file_no": null,
+  "legal_name": "Y COMBINATOR MANAGEMENT, LLC",
+  "primary_domain": "ycombinator.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "29585f41-f931-5df4-9991-baa3ccd4ccd5",
+   "fact_type": "firm_legal_items",
+   "label": "harmonyoswald.com",
+   "url": "https://www.harmonyoswald.com/_files/ugd/d44885_3577ab1f90ae4138ad60dca84c3449c4.pdf",
+   "publisher": "harmonyoswald.com",
+   "title": "harmonyoswald.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "29585f41-f931-5df4-9991-baa3ccd4ccd5",
+   "fact_type": "firm_legal_items",
+   "label": "linkedin.com",
+   "url": "https://www.linkedin.com/posts/harmonyoswald_update-on-january-20-2026-the-superior-activity-7419974427242553344-rkXh",
+   "publisher": "linkedin.com",
+   "title": "linkedin.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "29585f41-f931-5df4-9991-baa3ccd4ccd5",
+   "fact_type": "firm_legal_items",
+   "label": "linkedin.com",
+   "url": "https://www.linkedin.com/posts/harmonyoswald_update-on-april-27-2026-the-superior-court-activity-7454702268890750977-x-_A",
+   "publisher": "linkedin.com",
+   "title": "linkedin.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "29585f41-f931-5df4-9991-baa3ccd4ccd5",
+   "fact_type": "firm_legal_items",
+   "label": "decisiondepot.legal",
+   "url": "https://decisiondepot.legal/cases/28785",
+   "publisher": "decisiondepot.legal",
+   "title": "decisiondepot.legal",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f274fada-cc11-5dad-96a3-ddd7157188bd",
+   "fact_type": "firm_legal_items",
+   "label": "storage.courtlistener.com",
+   "url": "https://storage.courtlistener.com/recap/gov.uscourts.flmd.414572/gov.uscourts.flmd.414572.24.0_1.pdf",
+   "publisher": "storage.courtlistener.com",
+   "title": "storage.courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b1ce7e77-4a7d-5ce4-929d-5b2ded3e9da7",
+   "fact_type": "firm_legal_items",
+   "label": "techcrunch.com",
+   "url": "https://techcrunch.com/2024/01/28/y-combinator-president-garry-tan-publishes-a-menacing-tweet-before-deleting-it-apologizing-die-slow-motherfckers/",
+   "publisher": "techcrunch.com",
+   "title": "techcrunch.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b1ce7e77-4a7d-5ce4-929d-5b2ded3e9da7",
+   "fact_type": "firm_legal_items",
+   "label": "missionlocal.org",
+   "url": "https://missionlocal.org/2024/01/stupid-shameful-say-tech-workers-of-y-combinator-ceo-garry-tans-rant/",
+   "publisher": "missionlocal.org",
+   "title": "missionlocal.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c86b3fae-122b-5891-84ce-7db4ad8dc38f",
+   "fact_type": "firm_legal_items",
+   "label": "techcrunch.com",
+   "url": "https://techcrunch.com/2023/09/20/why-is-y-combinator-so-defensive-lately/",
+   "publisher": "techcrunch.com",
+   "title": "techcrunch.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b5869cfd-fcb9-5da6-b743-a7d4d4466e26",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6f611c00-b0bb-581e-a762-0ae079c21264",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "26403a69-3e17-5fb4-bf85-f55446c5a575",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ff532418-a09e-5014-a116-4d58969c5172",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ddc1f0e1-0702-5b5f-83a7-e216477c5b6c",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1100b3b2-e56a-5bd3-8099-4a7ecbab9b7d",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1941c802-6ae9-596b-a037-6c2fed9cc34f",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "41fe95a8-73bb-5181-b0ba-e0737fbde9f5",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7d7cc116-bfc1-53db-987b-e129860a4255",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c6334998-b0c4-51cf-bd40-c1882d5d7450",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c26292ba-78aa-5318-9b87-666d413a143e",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0c35580d-7fdf-56a7-9de9-8dc9630fc6db",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6093464b-f805-5b62-bd1c-69bb8b79ef26",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f628743d-b245-58cd-95ca-071468cbb200",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4e366c0f-b382-58d0-ba56-9eaec90a6fce",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "368731e5-e7db-5756-a1f4-5baeb7497c39",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7e1f65be-0189-5c8e-a705-1a95709cc6aa",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d027f4d1-70ee-545e-9b56-bc9e57749249",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "83bf1efe-2e29-5801-8d25-8e2c514005af",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4a35e967-bb01-5df4-9507-e7ff61612278",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "45f413d6-dbac-56b8-9af3-c0aeaea1570d",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "af196b71-19cb-5dc3-879b-8e75f640be1b",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "bd662241-b1d6-5562-a424-9000452beeb6",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4078519a-3b61-5f30-9f81-111ed4fd47e7",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8bc26b32-50fe-5dc5-b78b-4fcd3c2a6e8f",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b2972232-9a26-5afc-84f4-e976ebb32bc1",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/171730/PDF/171730.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8bc26b32-50fe-5dc5-b78b-4fcd3c2a6e8f",
+   "fact_type": "firm_profile_facts",
+   "label": "ycombinator.com",
+   "url": "https://www.ycombinator.com/about",
+   "publisher": "ycombinator.com",
+   "title": "ycombinator.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8a81755e-ace8-5cc9-90ed-e9d9648832c2",
+   "fact_type": "firm_profile_facts",
+   "label": "hottub.vc",
+   "url": "https://hottub.vc/firms/y-combinator/funds/y-combinator-es20/",
+   "publisher": "hottub.vc",
+   "title": "hottub.vc",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "63e2f840-2aa5-54c1-b231-e00b609a9e55",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202601319349101535_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a5d9da24-c141-50b2-9ad4-3ac46c774d2e",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202533219349103148_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1deb6a7c-f385-51ba-8e20-f1b4cde35a2e",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202543189349104239_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "89a4509a-5a58-58e8-b49a-0c9340a8dc18",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202522549349100102_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8bb5345f-03bd-58c5-84a8-490bb9242e43",
+   "fact_type": "firm_profile_facts",
+   "label": "regents.umich.edu",
+   "url": "https://regents.umich.edu/files/meetings/12-17/2017-12-IX-6.pdf",
+   "publisher": "regents.umich.edu",
+   "title": "regents.umich.edu",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1a43756c-961f-5a11-a7ac-2c0a88772be6",
+   "fact_type": "firm_profile_facts",
+   "label": "regents.umich.edu",
+   "url": "https://regents.umich.edu/files/meetings/12-20/2020-12-IX-3.pdf",
+   "publisher": "regents.umich.edu",
+   "title": "regents.umich.edu",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b933ab9e-ca52-5554-b836-b2f699c0caad",
+   "fact_type": "firm_profile_facts",
+   "label": "dakota.com",
+   "url": "https://www.dakota.com/reports-blog/may-2026-public-pension-brief",
+   "publisher": "dakota.com",
+   "title": "dakota.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "be323e0e-22a3-516a-9bd3-3905398b67ba",
+   "fact_type": "timeline_events",
+   "label": "storage.courtlistener.com",
+   "url": "https://storage.courtlistener.com/recap/gov.uscourts.flmd.414572/gov.uscourts.flmd.414572.24.0_1.pdf",
+   "publisher": "storage.courtlistener.com",
+   "title": "storage.courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e4e13b68-d703-59da-af0f-a1cd73d1cfc3",
+   "fact_type": "timeline_events",
+   "label": "techcrunch.com",
+   "url": "https://techcrunch.com/2023/09/20/why-is-y-combinator-so-defensive-lately/",
+   "publisher": "techcrunch.com",
+   "title": "techcrunch.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "608e6f54-3554-5232-abc7-f2378d4904eb",
+   "fact_type": "timeline_events",
+   "label": "techcrunch.com",
+   "url": "https://techcrunch.com/2024/01/28/y-combinator-president-garry-tan-publishes-a-menacing-tweet-before-deleting-it-apologizing-die-slow-motherfckers/",
+   "publisher": "techcrunch.com",
+   "title": "techcrunch.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "608e6f54-3554-5232-abc7-f2378d4904eb",
+   "fact_type": "timeline_events",
+   "label": "missionlocal.org",
+   "url": "https://missionlocal.org/2024/01/stupid-shameful-say-tech-workers-of-y-combinator-ceo-garry-tans-rant/",
+   "publisher": "missionlocal.org",
+   "title": "missionlocal.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "be2987e0-877f-53d0-b95d-311d71dfe44f",
+   "fact_type": "timeline_events",
+   "label": "harmonyoswald.com",
+   "url": "https://www.harmonyoswald.com/_files/ugd/d44885_3577ab1f90ae4138ad60dca84c3449c4.pdf",
+   "publisher": "harmonyoswald.com",
+   "title": "harmonyoswald.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "be2987e0-877f-53d0-b95d-311d71dfe44f",
+   "fact_type": "timeline_events",
+   "label": "linkedin.com",
+   "url": "https://www.linkedin.com/posts/harmonyoswald_update-on-january-20-2026-the-superior-activity-7419974427242553344-rkXh",
+   "publisher": "linkedin.com",
+   "title": "linkedin.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "be2987e0-877f-53d0-b95d-311d71dfe44f",
+   "fact_type": "timeline_events",
+   "label": "linkedin.com",
+   "url": "https://www.linkedin.com/posts/harmonyoswald_update-on-april-27-2026-the-superior-court-activity-7454702268890750977-x-_A",
+   "publisher": "linkedin.com",
+   "title": "linkedin.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "be2987e0-877f-53d0-b95d-311d71dfe44f",
+   "fact_type": "timeline_events",
+   "label": "decisiondepot.legal",
+   "url": "https://decisiondepot.legal/cases/28785",
+   "publisher": "decisiondepot.legal",
+   "title": "decisiondepot.legal",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

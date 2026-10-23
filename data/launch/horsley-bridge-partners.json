@@ -1,7 +1,365 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "8336fcdd-eaff-5215-98e9-ab9aa7192f5c",
   "slug": "horsley-bridge-partners",
   "name": "Horsley Bridge Partners",
-  "external_id": "vc-000023"
- }
+  "initials": null,
+  "short_name": "HBP",
+  "hq": "San Francisco, California",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:30.279585+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000023",
+  "import_run_id": null,
+  "sec_crd": "110877",
+  "sec_file_no": null,
+  "legal_name": "HORSLEY BRIDGE PARTNERS LLC",
+  "primary_domain": "horsleybridge.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "a8ef69c4-76a5-5207-ad3e-e4b9f411f59f",
+   "fact_type": "firm_legal_items",
+   "label": "nctreasurer.gov",
+   "url": "https://www.nctreasurer.gov/documents/files/imd/meetingdocumentsarchives/meeting12-16-13/iacplacementagentreviewreport-121613/download",
+   "publisher": "nctreasurer.gov",
+   "title": "nctreasurer.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a8ef69c4-76a5-5207-ad3e-e4b9f411f59f",
+   "fact_type": "firm_legal_items",
+   "label": "carolinajournal.com",
+   "url": "https://www.carolinajournal.com/new-questions-surround-ousted-treasury-official-and-fund-managers/",
+   "publisher": "carolinajournal.com",
+   "title": "carolinajournal.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4687647e-4513-5237-a099-27cb6d1b3db7",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/110877/PDF/110877.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3101f589-ce6a-5e7c-8c91-e918afbbbee6",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/110877/PDF/110877.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ebfa655b-ca5e-5a4e-b6da-0e40126b3139",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/110877/PDF/110877.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "63f48af8-ddbc-5ce2-90c3-0e9107ae0ce2",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/110877/PDF/110877.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f1c9b88d-5b0d-513f-b6f4-5e70af4bb309",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/110877/PDF/110877.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ac3bc274-0f71-55aa-b80d-818be6a76158",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/110877/PDF/110877.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ebf7f8f0-d534-5d05-b909-68bc4b6e9c03",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/110877/PDF/110877.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b83764c8-5313-5f0b-b3ea-729b2b272cc8",
+   "fact_type": "firm_people_roles",
+   "label": "horsleybridge.com",
+   "url": "https://www.horsleybridge.com/people/team",
+   "publisher": "horsleybridge.com",
+   "title": "horsleybridge.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "dc1da668-3985-5392-b21d-bc1dbadc697d",
+   "fact_type": "firm_people_roles",
+   "label": "nctreasurer.gov",
+   "url": "https://www.nctreasurer.gov/documents/files/imd/meetingdocumentsarchives/meeting12-16-13/iacplacementagentreviewreport-121613/download",
+   "publisher": "nctreasurer.gov",
+   "title": "nctreasurer.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f1ffb48c-2df6-5ce4-b497-1a2a31b465c9",
+   "fact_type": "firm_profile_facts",
+   "label": "nctreasurer.gov",
+   "url": "https://www.nctreasurer.gov/documents/files/imd/meetingdocumentsarchives/meeting12-16-13/iacplacementagentreviewreport-121613/download",
+   "publisher": "nctreasurer.gov",
+   "title": "nctreasurer.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2c48bd3c-ef8b-5508-8a18-87041b8f0791",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/110877/PDF/110877.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "96b6abbb-a320-5f49-ab08-d9a91c5ee2c3",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/110877/PDF/110877.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e7236a33-4451-54a9-997e-554c70b4309b",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/110877/PDF/110877.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2b0c141d-1c52-57bc-91b4-9db56935b037",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/110877/PDF/110877.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "81914ee7-8080-56ef-a56d-61de5a766f69",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/110877/PDF/110877.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a6d33d9d-5dad-52b8-b1ff-90c971197743",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/110877/PDF/110877.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "bb54abaf-6956-57fd-b1c6-ba78cf21950f",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/110877/PDF/110877.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6660e56f-65c8-51b6-8a3c-276325aac31e",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/110877/PDF/110877.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2cd99770-a867-5331-bd49-435ff3721dfa",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/110877/PDF/110877.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2b0c141d-1c52-57bc-91b4-9db56935b037",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/2002856/000200285623000001/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9e187dca-f930-5ebb-bd29-8722fe9d52a5",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/2138621/000213862126000003/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "395574bf-d47d-5b47-bfe5-ffe7bd930732",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/2154766/000215476626000002/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f013e62f-97b9-5c7f-9fbc-7f9319dc3a3b",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/2023505/000202350524000001/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4765ca4b-3c76-5129-a362-e287537d28a5",
+   "fact_type": "firm_profile_facts",
+   "label": "rio.nd.gov",
+   "url": "https://www.rio.nd.gov/sites/www/files/documents/PDFs/SIB%20Investment/Board/Materials/sibinvestmat20240913.pdf",
+   "publisher": "rio.nd.gov",
+   "title": "rio.nd.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "99d20e64-368f-5a79-9299-b3870ec6a16f",
+   "fact_type": "firm_profile_facts",
+   "label": "seattle.gov",
+   "url": "https://www.seattle.gov/documents/Departments/Retirement/Board/Minutes/Minutes_2024_02.pdf",
+   "publisher": "seattle.gov",
+   "title": "seattle.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7ed1a2c1-8284-5d18-a4f4-01d8c729c00b",
+   "fact_type": "firm_profile_facts",
+   "label": "seattle.gov",
+   "url": "https://www.seattle.gov/documents/departments/retirement/board/minutes,%20investment%20committee/ic_minutes_2022_3.pdf",
+   "publisher": "seattle.gov",
+   "title": "seattle.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "97a9192c-b1d7-5daf-af85-e62662c1a968",
+   "fact_type": "firm_profile_facts",
+   "label": "cccera.gov",
+   "url": "https://www.cccera.gov/sites/main/files/file-attachments/agenda_packet_10.30.13.pdf",
+   "publisher": "cccera.gov",
+   "title": "cccera.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0ef6a82c-6f7b-5133-a5ff-7b2191b781c3",
+   "fact_type": "firm_profile_facts",
+   "label": "privateequityinternational.com",
+   "url": "https://www.privateequityinternational.com/horsley-bridge-closes-fund-ix-on-1-76bn/",
+   "publisher": "privateequityinternational.com",
+   "title": "privateequityinternational.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "259cbf01-0c39-5d70-ba98-28ad135eadf0",
+   "fact_type": "firm_profile_facts",
+   "label": "trove.nakedcapitalism.com",
+   "url": "https://trove.nakedcapitalism.com/LPAs/verified-as-LPAs/HorselyLPA_searchable.pdf",
+   "publisher": "trove.nakedcapitalism.com",
+   "title": "trove.nakedcapitalism.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e9cd5ebb-753b-584d-87af-cad86f4a68b8",
+   "fact_type": "firm_profile_facts",
+   "label": "dakota.com",
+   "url": "https://www.dakota.com/fundraising-news/south-carolina-commits-250m-to-alts",
+   "publisher": "dakota.com",
+   "title": "dakota.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "338b64b4-c707-5b10-8a59-6a11c15fefda",
+   "fact_type": "timeline_events",
+   "label": "nctreasurer.gov",
+   "url": "https://www.nctreasurer.gov/documents/files/imd/meetingdocumentsarchives/meeting12-16-13/iacplacementagentreviewreport-121613/download",
+   "publisher": "nctreasurer.gov",
+   "title": "nctreasurer.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "338b64b4-c707-5b10-8a59-6a11c15fefda",
+   "fact_type": "timeline_events",
+   "label": "carolinajournal.com",
+   "url": "https://www.carolinajournal.com/new-questions-surround-ousted-treasury-official-and-fund-managers/",
+   "publisher": "carolinajournal.com",
+   "title": "carolinajournal.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

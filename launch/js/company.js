@@ -73,6 +73,17 @@
   }
   const label = (s) => s.count + ' ' + (s.count === 1 ? s.unit_one : s.unit_many);
 
+  // "On this page": highlight the link for the section in view; set it at once on click
+  let SPY = null;
+  function spy(main) {
+    const toc = main.querySelector('.toc'), links = Array.from(toc.querySelectorAll('a[href^="#"]'));
+    const on = (id) => links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + id));
+    toc.onclick = (e) => { const a = e.target.closest('a[href^="#"]'); if (a) on(a.getAttribute('href').slice(1)); };
+    if (SPY) SPY.disconnect();
+    if (!('IntersectionObserver' in window)) return;
+    SPY = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) on(e.target.id); }), { rootMargin: '-30% 0px -60% 0px' });
+    main.querySelectorAll('.ps').forEach(s => SPY.observe(s));
+  }
   function render(main, P) {
     const firm = P.firm.name, byKey = Object.fromEntries(P.sections.map(s => [s.key, s])),
       secs = CFG.sections.list.filter(c => byKey[c.key]).map(c => Object.assign({}, byKey[c.key], c)), total = secs.filter(s => s.key !== 'checks').reduce((a, s) => a + s.count, 0);
@@ -87,6 +98,7 @@
     main.querySelector('.toc').innerHTML = '<b>' + COPY.toc + '</b>' + secs.map(s => '<a href="#' + esc(s.key) + '">' + esc(s.title) + '</a>').join('');
     main.querySelector('.pmain').innerHTML = secs.map(s => '<section id="' + esc(s.key) + '" class="ps"><h2>' + esc(s.title) + ' <em class="pc2">' + esc(label(s)) + '</em></h2><p class="psub">' + esc(s.subtitle || '') + '</p>'
       + (P.open || s.key === 'checks' ? (R[s.renderer] || R.facts)(s.items || [], P) : lockedBody(s)) + '</section>').join('');
+    spy(main);
     const lc = main.querySelector('#lockcard'); lc.hidden = P.open;
     lc.querySelector('b').textContent = fmt(COPY.lockcard, { n: total, firm }); lc.querySelector('p').textContent = COPY.lockcard_sub;
     document.getElementById('puse').textContent = fmt(COPY.use_line, { n: total, firm });

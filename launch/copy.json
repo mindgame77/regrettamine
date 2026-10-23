@@ -566,6 +566,7 @@
   "error": "Something went wrong, try again.",
   "notify_ok": "Got it. We'll email you when it's ready.",
   "balance_fail": "Could not load your balance",
+  "retry": "Try again",
   "have": [
    "You have {n}{free} check left",
    "You have {n}{free} checks left"

@@ -1,7 +1,464 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "2b3c725c-34a4-5473-85cd-45d50f1e7805",
   "slug": "encap-investments",
   "name": "EnCap Investments",
-  "external_id": "vc-000022"
- }
+  "initials": null,
+  "short_name": "EnCap",
+  "hq": "Houston, Texas",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:29.574615+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000022",
+  "import_run_id": null,
+  "sec_crd": "160695",
+  "sec_file_no": null,
+  "legal_name": "ENCAP INVESTMENTS L.P.",
+  "primary_domain": "encapinvestments.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "ae5740b0-bad7-5769-ab55-a5e0e21c5801",
+   "fact_type": "firm_legal_items",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/files/litigation/admin/2018/ia-4959.pdf",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4b354885-f78e-57d6-9903-e1ec5510afbd",
+   "fact_type": "firm_legal_items",
+   "label": "ftc.gov",
+   "url": "https://www.ftc.gov/news-events/news/press-releases/2022/09/ftc-approves-final-order-requiring-encap-sell-ep-energy-corps-entire-utah-oil-business",
+   "publisher": "ftc.gov",
+   "title": "ftc.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2f6e8a37-0a93-5aed-9f3d-2e56e578ad1e",
+   "fact_type": "firm_legal_items",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1658566/000119312523273552/d551511dex991.htm",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2f6e8a37-0a93-5aed-9f3d-2e56e578ad1e",
+   "fact_type": "firm_legal_items",
+   "label": "news.bloomberglaw.com",
+   "url": "https://news.bloomberglaw.com/litigation/encap-earthstone-sued-over-860-million-bighorn-permian-deal",
+   "publisher": "news.bloomberglaw.com",
+   "title": "news.bloomberglaw.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2f6e8a37-0a93-5aed-9f3d-2e56e578ad1e",
+   "fact_type": "firm_legal_items",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/10254/000001025423000198/R21.htm",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7c123b3a-f303-5240-986b-9825dee8464a",
+   "fact_type": "firm_legal_items",
+   "label": "law.justia.com",
+   "url": "https://law.justia.com/cases/delaware/court-of-chancery/2019/c-a-no-2019-0350-jtl.html",
+   "publisher": "law.justia.com",
+   "title": "law.justia.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4a3bbd1a-2a0e-5f6d-a662-bf0597aedb4a",
+   "fact_type": "firm_legal_items",
+   "label": "bozemandailychronicle.com",
+   "url": "https://www.bozemandailychronicle.com/news/eastern-montana-data-center-land-deal-sparks-lawsuit-over-stolen-plans/article_5e48b9fc-b471-5994-bba5-3eb024140227.html",
+   "publisher": "bozemandailychronicle.com",
+   "title": "bozemandailychronicle.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "fd173b92-b103-5c80-9615-65fccb8b7c3e",
+   "fact_type": "firm_legal_items",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/files/litigation/admin/2018/ia-4959.pdf",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e97e82a9-3b26-5858-987f-19c26d88d510",
+   "fact_type": "firm_legal_items",
+   "label": "ftc.gov",
+   "url": "https://www.ftc.gov/news-events/news/press-releases/2022/09/ftc-approves-final-order-requiring-encap-sell-ep-energy-corps-entire-utah-oil-business",
+   "publisher": "ftc.gov",
+   "title": "ftc.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f083fad8-bdcd-5486-8891-9d4b5b262777",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160695/PDF/160695.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9b9aa491-3178-56c4-b052-cc83f2191b12",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160695/PDF/160695.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "35eb0e6d-011c-50c5-8d81-dd99851d22b7",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160695/PDF/160695.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a7e110bc-9ad2-5334-9113-4ef5c5913155",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160695/PDF/160695.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "28b87ea0-1ac1-5fa2-85bc-b7b7108987ee",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160695/PDF/160695.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8cea80c4-ba4f-5679-b4f3-43a0a048df76",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160695/PDF/160695.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a5f2daae-27fa-5f2c-9445-832857c70a3a",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160695/PDF/160695.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4ed288d4-4fca-5baf-885e-94d20b7b83f2",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160695/PDF/160695.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "df9740b4-c716-546f-bc6d-7b21ff2659f6",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160695/PDF/160695.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e0e37f56-0ebe-5025-8835-a97ca1de6dd0",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160695/PDF/160695.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c6447af6-4e6d-54b2-97cf-d1a1d7581cc4",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160695/PDF/160695.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9c7b6916-715c-5d96-9bdb-c2da277c762d",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160695/PDF/160695.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "47469bfd-0642-5086-9335-216ecb5e0c2a",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160695/PDF/160695.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "eeeed138-6d69-57c1-be8c-5e2cbb6b8527",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160695/PDF/160695.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a5604506-5d44-525e-9ab3-b1555ab1fad3",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160695/PDF/160695.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d102a5f2-8027-5a6b-b3ef-63b5fb73743f",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160695/PDF/160695.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "13796ce7-2ea1-590f-9ed8-5d3e9d91b457",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160695/PDF/160695.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1ac69934-21cd-591c-acf2-0c403ae81558",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202233139349102708_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1d745a4b-0a49-5997-8cb0-2d8217758e8c",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202523189349105062_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d4c9d515-351d-55d6-afcf-3b0e056b0309",
+   "fact_type": "firm_profile_facts",
+   "label": "realassets.ipe.com",
+   "url": "https://realassets.ipe.com/news/virginia-retirement-backs-encap-carlyle-and-affinius-real-assets-funds/10075227.article",
+   "publisher": "realassets.ipe.com",
+   "title": "realassets.ipe.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b41ea4c7-1c10-59e5-b616-1209c13a358d",
+   "fact_type": "firm_profile_facts",
+   "label": "irei.com",
+   "url": "https://irei.com/news/teacher-retirement-system-of-texas-makes-250m-investment-to-encap-energy-capital-fund-xii/",
+   "publisher": "irei.com",
+   "title": "irei.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "aefcf450-7f32-5e3d-9edd-f1d64448822e",
+   "fact_type": "firm_profile_facts",
+   "label": "irei.com",
+   "url": "https://irei.com/news/teacher-retirement-system-of-texas-makes-250m-investment-to-encap-energy-capital-fund-xii/",
+   "publisher": "irei.com",
+   "title": "irei.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "275705e8-82a4-5051-983c-0a744fdfb966",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202543149349100539_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6c4b60c6-626a-55e1-8a20-02be2a46ea48",
+   "fact_type": "firm_profile_facts",
+   "label": "realassets.ipe.com",
+   "url": "https://realassets.ipe.com/news/encap-sets-4bn-target-for-new-energy-infrastructure-fund/10068641.article",
+   "publisher": "realassets.ipe.com",
+   "title": "realassets.ipe.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c4938ff0-40ff-513c-8262-1837f1d483ec",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202213199349105371_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "58509c88-2f72-5092-9de6-1b5a19d30f96",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202320129349100417_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1da836e5-acd6-50d2-8259-a56b6629993d",
+   "fact_type": "firm_profile_facts",
+   "label": "irei.com",
+   "url": "https://irei.com/news/virginia-retirement-system-pledges-200m-to-encap-oil-and-gas-fund/",
+   "publisher": "irei.com",
+   "title": "irei.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "852c70e2-993d-51ce-85b9-210a0cb0f0d2",
+   "fact_type": "timeline_events",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/files/litigation/admin/2018/ia-4959.pdf",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "fabb0c62-cd85-510d-a565-536487a9e182",
+   "fact_type": "timeline_events",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/files/litigation/admin/2018/ia-4959.pdf",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9c99cf05-486b-511c-8f67-39e6a4372ea1",
+   "fact_type": "timeline_events",
+   "label": "law.justia.com",
+   "url": "https://law.justia.com/cases/delaware/court-of-chancery/2019/c-a-no-2019-0350-jtl.html",
+   "publisher": "law.justia.com",
+   "title": "law.justia.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d36a9cfa-0c7b-5190-9201-c3b09736efcf",
+   "fact_type": "timeline_events",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1658566/000119312523273552/d551511dex991.htm",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d36a9cfa-0c7b-5190-9201-c3b09736efcf",
+   "fact_type": "timeline_events",
+   "label": "news.bloomberglaw.com",
+   "url": "https://news.bloomberglaw.com/litigation/encap-earthstone-sued-over-860-million-bighorn-permian-deal",
+   "publisher": "news.bloomberglaw.com",
+   "title": "news.bloomberglaw.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d36a9cfa-0c7b-5190-9201-c3b09736efcf",
+   "fact_type": "timeline_events",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/10254/000001025423000198/R21.htm",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d527377b-4ce7-5fc9-a30a-3f0fa6fe5ba7",
+   "fact_type": "timeline_events",
+   "label": "ftc.gov",
+   "url": "https://www.ftc.gov/news-events/news/press-releases/2022/09/ftc-approves-final-order-requiring-encap-sell-ep-energy-corps-entire-utah-oil-business",
+   "publisher": "ftc.gov",
+   "title": "ftc.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ecc0709d-8b90-5bd8-933c-074e1d11c1d5",
+   "fact_type": "timeline_events",
+   "label": "ftc.gov",
+   "url": "https://www.ftc.gov/news-events/news/press-releases/2022/09/ftc-approves-final-order-requiring-encap-sell-ep-energy-corps-entire-utah-oil-business",
+   "publisher": "ftc.gov",
+   "title": "ftc.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "850dc09b-4dae-5109-a9ba-3192c927fd93",
+   "fact_type": "timeline_events",
+   "label": "bozemandailychronicle.com",
+   "url": "https://www.bozemandailychronicle.com/news/eastern-montana-data-center-land-deal-sparks-lawsuit-over-stolen-plans/article_5e48b9fc-b471-5994-bba5-3eb024140227.html",
+   "publisher": "bozemandailychronicle.com",
+   "title": "bozemandailychronicle.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

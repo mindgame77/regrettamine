@@ -1,7 +1,680 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "00bacf58-f286-5a52-9500-f98e4d7d0d01",
   "slug": "coatue",
   "name": "Coatue",
-  "external_id": "vc-000003"
- }
+  "initials": null,
+  "short_name": "Coatue",
+  "hq": "New York, New York",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:19.715587+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000003",
+  "import_run_id": null,
+  "sec_crd": "157910",
+  "sec_file_no": null,
+  "legal_name": "COATUE MANAGEMENT, L.L.C.",
+  "primary_domain": "coatue.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "92928d15-9348-560f-acae-1a34dffaf63c",
+   "fact_type": "firm_legal_items",
+   "label": "news.bloomberglaw.com",
+   "url": "https://news.bloomberglaw.com/private-equity/coatues-latest-growth-equity-investors-eye-a-30-paper-loss",
+   "publisher": "news.bloomberglaw.com",
+   "title": "news.bloomberglaw.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6eb16c6c-29fe-56f8-8759-914ac6bd4684",
+   "fact_type": "firm_legal_items",
+   "label": "fortune.com",
+   "url": "https://fortune.com/2024/03/27/inside-stability-ai-emad-mostaque-bad-breakup-vc-investors-coatue-lightspeed/",
+   "publisher": "fortune.com",
+   "title": "fortune.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b1ebe9f9-20e2-5b7c-ad2c-82f349ee8cff",
+   "fact_type": "firm_legal_items",
+   "label": "165.g0v.tw",
+   "url": "https://165.g0v.tw/name/Coatue",
+   "publisher": "165.g0v.tw",
+   "title": "165.g0v.tw",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0552eef6-8f40-51bf-b8eb-b721f0791f78",
+   "fact_type": "firm_legal_items",
+   "label": "riamonitor.com",
+   "url": "https://www.riamonitor.com/firms/157910",
+   "publisher": "riamonitor.com",
+   "title": "riamonitor.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ec1dce09-9ad3-533d-ba6a-87d5fe9f5acf",
+   "fact_type": "firm_legal_items",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c4fe6b80-43c6-5d61-913d-ce65182ce106",
+   "fact_type": "firm_legal_items",
+   "label": "businessinsider.com",
+   "url": "https://www.businessinsider.com/coatue-management-insider-trading-philippe-laffont-2011-2",
+   "publisher": "businessinsider.com",
+   "title": "businessinsider.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "529f43de-211b-5752-8459-ddfc2b43680f",
+   "fact_type": "firm_legal_items",
+   "label": "businessinsider.com",
+   "url": "https://www.businessinsider.com/coatue-quant-fund-philippe-laffont-performance-data-science-2020-11",
+   "publisher": "businessinsider.com",
+   "title": "businessinsider.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "09dd77c0-b543-5ac7-982f-e28a79611f7b",
+   "fact_type": "firm_legal_items",
+   "label": "businessinsider.com",
+   "url": "https://www.businessinsider.com/coatue-quant-fund-philippe-laffont-performance-data-science-2020-11",
+   "publisher": "businessinsider.com",
+   "title": "businessinsider.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "defdb847-4f4f-5ef0-8b52-f527a9cf6c32",
+   "fact_type": "firm_legal_items",
+   "label": "blakeir.com",
+   "url": "https://blakeir.com/coatue-an-agile-colossus",
+   "publisher": "blakeir.com",
+   "title": "blakeir.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "20a6c75e-dc93-559c-92bf-22c38832575e",
+   "fact_type": "firm_legal_items",
+   "label": "finance.yahoo.com",
+   "url": "https://finance.yahoo.com/news/coatue-shuts-europe-venture-office-125155582.html",
+   "publisher": "finance.yahoo.com",
+   "title": "finance.yahoo.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ba22153b-8c98-5796-9998-9170c2ac622c",
+   "fact_type": "firm_legal_items",
+   "label": "businessinsider.com",
+   "url": "https://www.businessinsider.com/coatue-is-down-17-boosted-cash-exposure-to-80-percent-2022-6",
+   "publisher": "businessinsider.com",
+   "title": "businessinsider.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ba22153b-8c98-5796-9998-9170c2ac622c",
+   "fact_type": "firm_legal_items",
+   "label": "hedgefundalpha.com",
+   "url": "https://hedgefundalpha.com/news/after-racking-up-losses-in-2022-coatue-management-is-building-a-shopping-list/",
+   "publisher": "hedgefundalpha.com",
+   "title": "hedgefundalpha.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7304ed74-6e55-5815-8d70-52d14e866ab4",
+   "fact_type": "firm_legal_items",
+   "label": "fa-mag.com",
+   "url": "https://www.fa-mag.com/news/hedge-funder-invokes-specter-of-madoff-as-new-bad-assets-explode-68023.html",
+   "publisher": "fa-mag.com",
+   "title": "fa-mag.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a9d16182-57f6-5319-b9b0-98f454398526",
+   "fact_type": "firm_people_roles",
+   "label": "riamonitor.com",
+   "url": "https://www.riamonitor.com/firms/157910",
+   "publisher": "riamonitor.com",
+   "title": "riamonitor.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a2846a66-114a-5eb6-b750-cf12bc9bb11a",
+   "fact_type": "firm_people_roles",
+   "label": "riamonitor.com",
+   "url": "https://www.riamonitor.com/firms/157910",
+   "publisher": "riamonitor.com",
+   "title": "riamonitor.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "34890a78-e135-50f3-a6de-da46b4a6a4e8",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0d9d2c55-adba-57ca-b1ba-a3ebf99d2414",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "805f49d7-89cb-51ef-9a0a-a380562302b0",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9a36036e-4802-5433-9884-2096dd2213f0",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "14c3a7f6-ea5c-5325-b2f5-e1add81e64c0",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8355e558-6ca8-5902-b0cb-e97f3f0cec82",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a3de61f5-5781-5f72-b59e-5272ef6d7a11",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9a2888e6-1f66-5075-994e-2f232eccd26c",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2c03e7a2-0933-5692-a869-d31fec1840aa",
+   "fact_type": "firm_people_roles",
+   "label": "coatue.com",
+   "url": "https://www.coatue.com/blog/press/coatue-hires-blackstones-peter-wallace-as-co-president-and-head-of-private",
+   "publisher": "coatue.com",
+   "title": "coatue.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "37504451-de89-5fd0-8ad2-9d778b272eb8",
+   "fact_type": "firm_people_roles",
+   "label": "finance.yahoo.com",
+   "url": "https://finance.yahoo.com/news/coatue-shuts-europe-venture-office-125155582.html",
+   "publisher": "finance.yahoo.com",
+   "title": "finance.yahoo.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1b5308a4-d8dc-5d6e-b445-81a4294d19f7",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2bcb9c1d-2aea-55a8-84fc-acc0754b4b92",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "91c1469c-4da2-5a7e-b032-7dab4be97925",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7b6e1e79-2926-5700-a16e-07dd9531a9b7",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "17a14c91-caa7-5a75-a9dd-4930349dae40",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "655aea0b-c2ba-5c17-bf1c-93f19bfca06f",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ff4f116b-48e6-560e-9e6e-4dd338bfca0b",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d9190743-aa77-5ba8-8252-a8ac7ca19641",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0b7d54d4-eb10-535e-9ac2-ce81875405e2",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5daa015f-b1cf-5bc5-8801-8ebc5dfd7a9d",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6220d8ea-be15-55fa-b92e-495c059c6afb",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0a5f1aec-199b-5aa7-aff0-353f21fce4b0",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "dc0b5177-b29a-58ab-99c5-f242ec60fe35",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9686a00e-ebce-5dbe-82b6-114e791994b4",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "15215c74-8ee3-5ab8-95a2-d3441cc5881b",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5a565d06-2b4e-5924-8809-2c9172a7c7e2",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "617362e5-b521-5edf-9f5f-515433ebdbf4",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "337651ea-9611-51e9-878e-c6459bf37a7a",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5a565d06-2b4e-5924-8809-2c9172a7c7e2",
+   "fact_type": "firm_profile_facts",
+   "label": "api.gleif.org",
+   "url": "https://api.gleif.org/api/v1/lei-records/54930035XZQJY6VCW995",
+   "publisher": "api.gleif.org",
+   "title": "api.gleif.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "80f8a0b2-ad31-5090-9ec8-f91ae7d851f7",
+   "fact_type": "firm_profile_facts",
+   "label": "api.gleif.org",
+   "url": "https://api.gleif.org/api/v1/lei-records/549300NQWG8T2XPA5073",
+   "publisher": "api.gleif.org",
+   "title": "api.gleif.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e6681080-53ce-50dc-ba0d-f1510abfe6e5",
+   "fact_type": "firm_profile_facts",
+   "label": "api.gleif.org",
+   "url": "https://api.gleif.org/api/v1/lei-records/635400CEZVHD1WE5M720",
+   "publisher": "api.gleif.org",
+   "title": "api.gleif.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "eacb7177-ef3f-5f1b-bbaf-9064a49d0bbb",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1135730/000091957426005478/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a526463d-5ec1-5e05-a64e-5b63e1681c19",
+   "fact_type": "firm_profile_facts",
+   "label": "coatue.com",
+   "url": "https://www.coatue.com/ctek/blog/press/expanding-access-to-innovation-introducing-ctek",
+   "publisher": "coatue.com",
+   "title": "coatue.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "832e3ef5-6f78-5028-bed6-0a711529fddc",
+   "fact_type": "firm_profile_facts",
+   "label": "coatue.com",
+   "url": "https://www.coatue.com/ctek/blog/press/expanding-access-to-innovation-introducing-ctek",
+   "publisher": "coatue.com",
+   "title": "coatue.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "cc0fcc32-c067-59a4-9005-1c0a2a2a4a2b",
+   "fact_type": "firm_profile_facts",
+   "label": "coatue.com",
+   "url": "https://www.coatue.com/ctek/blog/press/expanding-access-to-innovation-introducing-ctek",
+   "publisher": "coatue.com",
+   "title": "coatue.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "87a48fd0-218a-5e61-94c7-87a32af44018",
+   "fact_type": "firm_profile_facts",
+   "label": "coatue.com",
+   "url": "https://www.coatue.com/ctek/blog/press/expanding-access-to-innovation-introducing-ctek",
+   "publisher": "coatue.com",
+   "title": "coatue.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4040729c-ff32-5e9e-b8a1-2132ab08dd32",
+   "fact_type": "timeline_events",
+   "label": "news.bloomberglaw.com",
+   "url": "https://news.bloomberglaw.com/private-equity/coatues-latest-growth-equity-investors-eye-a-30-paper-loss",
+   "publisher": "news.bloomberglaw.com",
+   "title": "news.bloomberglaw.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c8b9c8c9-2e17-555e-b493-f76c3d2e1b88",
+   "fact_type": "timeline_events",
+   "label": "fortune.com",
+   "url": "https://fortune.com/2024/03/27/inside-stability-ai-emad-mostaque-bad-breakup-vc-investors-coatue-lightspeed/",
+   "publisher": "fortune.com",
+   "title": "fortune.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "94c53f2b-cbd8-551f-b4b3-06b6f52608d5",
+   "fact_type": "timeline_events",
+   "label": "165.g0v.tw",
+   "url": "https://165.g0v.tw/name/Coatue",
+   "publisher": "165.g0v.tw",
+   "title": "165.g0v.tw",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "96ce49e8-d958-5128-91a5-133bfdf38745",
+   "fact_type": "timeline_events",
+   "label": "riamonitor.com",
+   "url": "https://www.riamonitor.com/firms/157910",
+   "publisher": "riamonitor.com",
+   "title": "riamonitor.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "cbab5b4b-3744-59cf-9e2d-de097f97b214",
+   "fact_type": "timeline_events",
+   "label": "riamonitor.com",
+   "url": "https://www.riamonitor.com/firms/157910",
+   "publisher": "riamonitor.com",
+   "title": "riamonitor.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "96813f1b-b7e4-5ae9-aa91-26672e5c3c0e",
+   "fact_type": "timeline_events",
+   "label": "riamonitor.com",
+   "url": "https://www.riamonitor.com/firms/157910",
+   "publisher": "riamonitor.com",
+   "title": "riamonitor.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "df55956d-78aa-5726-92cf-40febb066702",
+   "fact_type": "timeline_events",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/157910/PDF/157910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "21528748-38a6-5f03-a1a9-485162091a0e",
+   "fact_type": "timeline_events",
+   "label": "coatue.com",
+   "url": "https://www.coatue.com/blog/press/coatue-hires-blackstones-peter-wallace-as-co-president-and-head-of-private",
+   "publisher": "coatue.com",
+   "title": "coatue.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "08ebbee0-727d-5329-a863-04c68cebe403",
+   "fact_type": "timeline_events",
+   "label": "coatue.com",
+   "url": "https://www.coatue.com/ctek/blog/press/expanding-access-to-innovation-introducing-ctek",
+   "publisher": "coatue.com",
+   "title": "coatue.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c8432c60-6780-5bb9-9b08-01f4d982c32b",
+   "fact_type": "timeline_events",
+   "label": "businessinsider.com",
+   "url": "https://www.businessinsider.com/coatue-management-insider-trading-philippe-laffont-2011-2",
+   "publisher": "businessinsider.com",
+   "title": "businessinsider.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d41e9ba5-87b7-56a0-8752-b5ef1e99129f",
+   "fact_type": "timeline_events",
+   "label": "businessinsider.com",
+   "url": "https://www.businessinsider.com/coatue-quant-fund-philippe-laffont-performance-data-science-2020-11",
+   "publisher": "businessinsider.com",
+   "title": "businessinsider.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1b64e9a9-9221-56c4-80f5-ed3092f01db7",
+   "fact_type": "timeline_events",
+   "label": "businessinsider.com",
+   "url": "https://www.businessinsider.com/coatue-quant-fund-philippe-laffont-performance-data-science-2020-11",
+   "publisher": "businessinsider.com",
+   "title": "businessinsider.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ecc25537-9d4b-5c85-be8f-5c7b06f441f0",
+   "fact_type": "timeline_events",
+   "label": "blakeir.com",
+   "url": "https://blakeir.com/coatue-an-agile-colossus",
+   "publisher": "blakeir.com",
+   "title": "blakeir.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "563eef29-ed3c-5878-93fc-bbdf5c4c23b0",
+   "fact_type": "timeline_events",
+   "label": "finance.yahoo.com",
+   "url": "https://finance.yahoo.com/news/coatue-shuts-europe-venture-office-125155582.html",
+   "publisher": "finance.yahoo.com",
+   "title": "finance.yahoo.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "793606e8-b3b5-5955-a86d-e90c44688e8d",
+   "fact_type": "timeline_events",
+   "label": "finance.yahoo.com",
+   "url": "https://finance.yahoo.com/news/coatue-shuts-europe-venture-office-125155582.html",
+   "publisher": "finance.yahoo.com",
+   "title": "finance.yahoo.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4a158f2e-6193-5e95-8fe4-78abad1552f7",
+   "fact_type": "timeline_events",
+   "label": "businessinsider.com",
+   "url": "https://www.businessinsider.com/coatue-is-down-17-boosted-cash-exposure-to-80-percent-2022-6",
+   "publisher": "businessinsider.com",
+   "title": "businessinsider.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4a158f2e-6193-5e95-8fe4-78abad1552f7",
+   "fact_type": "timeline_events",
+   "label": "hedgefundalpha.com",
+   "url": "https://hedgefundalpha.com/news/after-racking-up-losses-in-2022-coatue-management-is-building-a-shopping-list/",
+   "publisher": "hedgefundalpha.com",
+   "title": "hedgefundalpha.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "def8fb37-ad93-5c4d-ab00-d0e6a3543611",
+   "fact_type": "timeline_events",
+   "label": "fa-mag.com",
+   "url": "https://www.fa-mag.com/news/hedge-funder-invokes-specter-of-madoff-as-new-bad-assets-explode-68023.html",
+   "publisher": "fa-mag.com",
+   "title": "fa-mag.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

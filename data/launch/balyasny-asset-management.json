@@ -1,7 +1,1031 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "15a1ec4e-4578-56dc-b3ee-b645091bf357",
   "slug": "balyasny-asset-management",
   "name": "Balyasny Asset Management",
-  "external_id": "vc-000002"
- }
+  "initials": null,
+  "short_name": "Balyasny",
+  "hq": "Chicago, Illinois",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:18.918986+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000002",
+  "import_run_id": null,
+  "sec_crd": "138111",
+  "sec_file_no": null,
+  "legal_name": "Balyasny Asset Management L.P.",
+  "primary_domain": "bamfunds.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "4ef8c71e-fb9c-5770-9649-bab86073a718",
+   "fact_type": "firm_legal_items",
+   "label": "leagle.com",
+   "url": "https://www.leagle.com/decision/innyco20250213343",
+   "publisher": "leagle.com",
+   "title": "leagle.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "45495b75-b46a-5110-a060-657f81213863",
+   "fact_type": "firm_legal_items",
+   "label": "docketalarm.com",
+   "url": "https://www.docketalarm.com/cases/New_York_State_Westchester_County_Supreme_Court/68780---2018/MADISON-DAVIS_LLC_v._BALYASNY_ASSET_MANAGEMENT_LP/16/",
+   "publisher": "docketalarm.com",
+   "title": "docketalarm.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "09c051ea-40f1-570c-810d-0bea18cb4aca",
+   "fact_type": "firm_legal_items",
+   "label": "telegraph.co.uk",
+   "url": "https://www.telegraph.co.uk/news/2016/11/02/gay-city-worker-sues-former-hedge-fund-employer-for-more-than-1m/",
+   "publisher": "telegraph.co.uk",
+   "title": "telegraph.co.uk",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "09c051ea-40f1-570c-810d-0bea18cb4aca",
+   "fact_type": "firm_legal_items",
+   "label": "dailymail.com",
+   "url": "https://www.dailymail.com/news/article-4325396/Gay-hedge-fund-manager-drops-bid-against-City-firm.html",
+   "publisher": "dailymail.com",
+   "title": "dailymail.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3c49666b-f157-5249-9e1a-c5c594254354",
+   "fact_type": "firm_legal_items",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/?q=%22Dmitry+Balyasny%22&type=r",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3c49666b-f157-5249-9e1a-c5c594254354",
+   "fact_type": "firm_legal_items",
+   "label": "institutionalinvestor.com",
+   "url": "https://www.institutionalinvestor.com/article/hedge-funds-have-reputation-ruthlessness-dmitry-balyasny-took-different-approach",
+   "publisher": "institutionalinvestor.com",
+   "title": "institutionalinvestor.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d9897a92-c15b-5911-a0f8-650218b2c181",
+   "fact_type": "firm_legal_items",
+   "label": "observer.com",
+   "url": "https://observer.com/2010/11/balyasny-said-to-be-under-examination-will-feds-bring-down-hedge-hammer-in-windy-city/",
+   "publisher": "observer.com",
+   "title": "observer.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d9897a92-c15b-5911-a0f8-650218b2c181",
+   "fact_type": "firm_legal_items",
+   "label": "archive.nytimes.com",
+   "url": "https://archive.nytimes.com/dealbook.nytimes.com/2009/11/16/balyasny-finds-nothing-improper-after-internal-probe/index.html",
+   "publisher": "archive.nytimes.com",
+   "title": "archive.nytimes.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c8bee536-2a30-5582-bdf4-df8b35735eb9",
+   "fact_type": "firm_legal_items",
+   "label": "hedgeweek.com",
+   "url": "https://hedgeweek.com/news/citadel-and-balyasny-open-new-front-in-talent-war",
+   "publisher": "hedgeweek.com",
+   "title": "hedgeweek.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e594ca62-bfb4-5bca-9750-5738404d492e",
+   "fact_type": "firm_legal_items",
+   "label": "bafin.de",
+   "url": "https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Verbrauchermitteilung/unerlaubte/2025/meldung_2025_09_05_balyasny_asset_management_en.html",
+   "publisher": "bafin.de",
+   "title": "bafin.de",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b99aec6f-56bd-5415-b427-22ac12f2af62",
+   "fact_type": "firm_legal_items",
+   "label": "institutionalinvestor.com",
+   "url": "https://www.institutionalinvestor.com/article/2bsxsuz0n6mpo7f9lr5z4/corner-office/hedge-fund-balyasny-cuts-staff-by-20-percent",
+   "publisher": "institutionalinvestor.com",
+   "title": "institutionalinvestor.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2eed4908-47fb-5089-8e2c-3d03cc3ced3c",
+   "fact_type": "firm_legal_items",
+   "label": "institutionalinvestor.com",
+   "url": "https://www.institutionalinvestor.com/article/2bsxsuz0n6mpo7f9lr5z4/corner-office/hedge-fund-balyasny-cuts-staff-by-20-percent",
+   "publisher": "institutionalinvestor.com",
+   "title": "institutionalinvestor.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "cec4e281-c040-51b0-acb4-29a5abf3acb5",
+   "fact_type": "firm_legal_items",
+   "label": "businessinsider.com",
+   "url": "https://www.businessinsider.com/balyasny-cut-a-10-person-team-many-who-joined-less-than-two-years-ago-2019-8",
+   "publisher": "businessinsider.com",
+   "title": "businessinsider.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7f85eb54-cc9c-59b4-b1a4-40a0549ce1cb",
+   "fact_type": "firm_legal_items",
+   "label": "hedgeweek.com",
+   "url": "https://www.hedgeweek.com/commodities-veteran-departs-balyasny-after-turbulent-trading-week/",
+   "publisher": "hedgeweek.com",
+   "title": "hedgeweek.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "39d96e73-3ef3-57d6-8a71-a4f9869df086",
+   "fact_type": "firm_legal_items",
+   "label": "hedgeco.net",
+   "url": "https://hedgeco.net/news/10/2018/dmitry-balyasny-shutters-his-own-best-ideas-hedge-fund.html",
+   "publisher": "hedgeco.net",
+   "title": "hedgeco.net",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "39d96e73-3ef3-57d6-8a71-a4f9869df086",
+   "fact_type": "firm_legal_items",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1439225/000143922516000002/xslFormDX01/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "85f4f145-b8cd-5e3e-9a3d-8bf751bd5720",
+   "fact_type": "firm_legal_items",
+   "label": "businessinsider.com",
+   "url": "https://www.businessinsider.com/2025-hedge-funds-returns-performance-balyasny-millennium-exoduspoint-2026-1",
+   "publisher": "businessinsider.com",
+   "title": "businessinsider.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "85f4f145-b8cd-5e3e-9a3d-8bf751bd5720",
+   "fact_type": "firm_legal_items",
+   "label": "finimize.com",
+   "url": "https://finimize.com/content/pod-shop-hedge-funds-had-a-banner-2025-on-volatility",
+   "publisher": "finimize.com",
+   "title": "finimize.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ee088ed1-fc5c-58b3-a451-4c193b7b7a01",
+   "fact_type": "firm_legal_items",
+   "label": "linkedin.com",
+   "url": "https://www.linkedin.com/posts/rupak-ghose-53084743_balyasny-is-having-its-worst-year-in-ages-activity-7501630823847153664-HKsN",
+   "publisher": "linkedin.com",
+   "title": "linkedin.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "fa9d493d-77d7-5816-a0a5-452db81e2667",
+   "fact_type": "firm_legal_items",
+   "label": "news.bloomberglaw.com",
+   "url": "https://news.bloomberglaw.com/insurance/no-limit-hedge-fund-fees-are-eating-up-their-clients-gains",
+   "publisher": "news.bloomberglaw.com",
+   "title": "news.bloomberglaw.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "fa9d493d-77d7-5816-a0a5-452db81e2667",
+   "fact_type": "firm_legal_items",
+   "label": "news.fintech.io",
+   "url": "https://news.fintech.io/post/102jzrm/hedge-funds-are-pocketing-much-of-their-clients-gains-with-no-limit-fees",
+   "publisher": "news.fintech.io",
+   "title": "news.fintech.io",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ce419be5-a000-5644-a61c-9095b96bf69f",
+   "fact_type": "firm_legal_items",
+   "label": "businessinsider.com",
+   "url": "https://www.businessinsider.com/hedge-fund-performance-november-citadel-balyasny-exoduspoint-2025-12",
+   "publisher": "businessinsider.com",
+   "title": "businessinsider.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1d91e9ca-ce26-51ef-b5de-2faf7d03083a",
+   "fact_type": "firm_legal_items",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "cf7839ac-5a3e-54e1-b8d7-8cb1bbed4e32",
+   "fact_type": "firm_legal_items",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3a42fb55-0aa7-5ed9-9fa5-7892c16f3688",
+   "fact_type": "firm_legal_items",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "233110b1-6dfa-5961-a057-66934f79c943",
+   "fact_type": "firm_people_roles",
+   "label": "businessinsider.com",
+   "url": "https://www.businessinsider.com/balyasny-cut-a-10-person-team-many-who-joined-less-than-two-years-ago-2019-8",
+   "publisher": "businessinsider.com",
+   "title": "businessinsider.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9604cde8-4b33-5442-aaef-8fc05e267b78",
+   "fact_type": "firm_people_roles",
+   "label": "hedgeweek.com",
+   "url": "https://www.hedgeweek.com/commodities-veteran-departs-balyasny-after-turbulent-trading-week/",
+   "publisher": "hedgeweek.com",
+   "title": "hedgeweek.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3a04817f-f2bb-509e-96ec-3597b06ed14c",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5b0e42c7-5e00-5d96-9552-b89853f466cd",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e1791ba2-cf9e-57c2-8af0-b2091246d3ab",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8c7ebe64-05c5-5f08-bab9-cd6d8317fab5",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "67a1a7a6-7b34-5dab-9517-06ecb104e798",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "180ba671-969e-5a81-b785-6113695a544a",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "09f5344c-790f-54c4-8b07-192a6936d293",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "67a1a7a6-7b34-5dab-9517-06ecb104e798",
+   "fact_type": "firm_people_roles",
+   "label": "projects.propublica.org",
+   "url": "https://projects.propublica.org/nonprofits/organizations/205857460",
+   "publisher": "projects.propublica.org",
+   "title": "projects.propublica.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "180ba671-969e-5a81-b785-6113695a544a",
+   "fact_type": "firm_people_roles",
+   "label": "projects.propublica.org",
+   "url": "https://projects.propublica.org/nonprofits/organizations/205857460",
+   "publisher": "projects.propublica.org",
+   "title": "projects.propublica.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "09f5344c-790f-54c4-8b07-192a6936d293",
+   "fact_type": "firm_people_roles",
+   "label": "projects.propublica.org",
+   "url": "https://projects.propublica.org/nonprofits/organizations/205857460",
+   "publisher": "projects.propublica.org",
+   "title": "projects.propublica.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b5ae3af4-5587-5ffd-afbc-eae325afb9a6",
+   "fact_type": "firm_people_roles",
+   "label": "bamcornerpoint.com",
+   "url": "https://www.bamcornerpoint.com/",
+   "publisher": "bamcornerpoint.com",
+   "title": "bamcornerpoint.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c3f345b2-876f-5c9a-af2f-37091af0a661",
+   "fact_type": "firm_people_roles",
+   "label": "hedgeweek.com",
+   "url": "https://hedgeweek.com/news/balyasny-asia-pacific-coo-to-exit-firm",
+   "publisher": "hedgeweek.com",
+   "title": "hedgeweek.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d06e5c7c-67dd-5302-9789-0f1fd51e2f01",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1218710/000119312526351940/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "03ef719f-c674-5a90-ad06-d23d332d681d",
+   "fact_type": "firm_profile_facts",
+   "label": "pitchbook.com",
+   "url": "https://pitchbook.com/news/articles/balyasny-lands-30m-for-2-new-growth-spvs",
+   "publisher": "pitchbook.com",
+   "title": "pitchbook.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "91a77f0c-d0df-5635-91b2-e894aac7a50e",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/2091027/000209102725000001/xslFormDX01/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8e92428b-ba8e-57c8-b84a-7198eb780baa",
+   "fact_type": "firm_profile_facts",
+   "label": "hedgeweek.com",
+   "url": "https://www.hedgeweek.com/hedge-fund-balyasny-targeting-350m-for-first-venture-fund/",
+   "publisher": "hedgeweek.com",
+   "title": "hedgeweek.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "cce59629-fd73-5be9-a050-a0b88dca8fd2",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1426894/000142689416000002/xslFormDX01/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "85dc8f7d-d886-5c7e-9697-65625af1f4f1",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1751159/000175115918000001/xslFormDX01/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c675ece0-9be0-5610-a903-963ffe22a1bd",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1860070/000186007023000001/xslFormDX01/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "641723f0-0499-5420-9b5e-293dc534e5ae",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/2093312/000209331225000001/xslFormDX01/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c652fa18-8b6e-5768-8688-65a149325403",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/2126081/000212608126000003/xslFormDX01/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5e981700-7241-54a2-a559-3fa9456444e3",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/2129463/000212946326000001/xslFormDX01/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9337ba16-ff18-50b7-b5b3-910a0b060834",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/2142992/000214299226000001/xslFormDX01/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d928bd06-0f36-57be-8878-2c958533dede",
+   "fact_type": "firm_profile_facts",
+   "label": "Sanctions",
+   "url": "https://scsanctions.un.org/resources/xml/en/consolidated.xml",
+   "publisher": "Sanctions",
+   "title": "Sanctions",
+   "retrieved_at": "2026-10-15T19:00:00+00:00"
+  },
+  {
+   "fact_id": "d928bd06-0f36-57be-8878-2c958533dede",
+   "fact_type": "firm_profile_facts",
+   "label": "Sanctions",
+   "url": "https://webgate.ec.europa.eu/fsd/fsf/public/files/csvFullSanctionsList_1_1/content?token=dG9rZW4tMjAxNw",
+   "publisher": "Sanctions",
+   "title": "Sanctions",
+   "retrieved_at": "2026-10-15T19:00:00+00:00"
+  },
+  {
+   "fact_id": "d928bd06-0f36-57be-8878-2c958533dede",
+   "fact_type": "firm_profile_facts",
+   "label": "Export and investment restrictions",
+   "url": "https://data.trade.gov/downloadable_consolidated_screening_list/v1/consolidated.csv",
+   "publisher": "Export and investment restrictions",
+   "title": "Export and investment restrictions",
+   "retrieved_at": "2026-10-15T19:00:00+00:00"
+  },
+  {
+   "fact_id": "d2bf5670-060f-5ee4-b564-1af0dbf9f3a9",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1439225/000143922516000002/xslFormDX01/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "91a77f0c-d0df-5635-91b2-e894aac7a50e",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "696cffaa-d998-5bd4-9cf5-b58058ee48ee",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4cff960d-cead-5e99-8b72-23ea4162d153",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "62e5da19-1873-59f3-8a45-cc699fcc2dd6",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c5bb70e8-1f04-548d-b72b-37352ef41b63",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "be27a21c-e18f-5abe-8a8c-c3256f47bf72",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c7cec33f-0e50-5a15-8113-c8c63030914a",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "468de2ce-49c4-5fb7-8368-32e7f3ce7037",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1e8f28f5-89bf-594d-9f08-478e1363235b",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "36974679-e9fd-5692-9cd0-7e9e5366e975",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4319bf21-b370-5f8f-8ef2-9f64fbaac102",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "689256c5-0eb4-516f-8a72-899ffdb8e9bb",
+   "fact_type": "firm_profile_facts",
+   "label": "bamfunds.com",
+   "url": "https://www.bamfunds.com/about-us/leadership/dmitry-balyasny",
+   "publisher": "bamfunds.com",
+   "title": "bamfunds.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "36974679-e9fd-5692-9cd0-7e9e5366e975",
+   "fact_type": "firm_profile_facts",
+   "label": "api.gleif.org",
+   "url": "https://api.gleif.org/api/v1/lei-records?filter%5Bentity.legalName%5D=Balyasny%20Asset%20Management%20L.P.",
+   "publisher": "api.gleif.org",
+   "title": "api.gleif.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "36974679-e9fd-5692-9cd0-7e9e5366e975",
+   "fact_type": "firm_profile_facts",
+   "label": "api.adviserinfo.sec.gov",
+   "url": "https://api.adviserinfo.sec.gov/search/firm/138111",
+   "publisher": "api.adviserinfo.sec.gov",
+   "title": "api.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "38d1adab-47e6-5676-b3ac-4d8fac52ded5",
+   "fact_type": "firm_profile_facts",
+   "label": "api.gleif.org",
+   "url": "https://api.gleif.org/api/v1/lei-records/549300VHOIR9DRECO718",
+   "publisher": "api.gleif.org",
+   "title": "api.gleif.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f25db8fb-4a48-55bc-9870-f06699787837",
+   "fact_type": "firm_profile_facts",
+   "label": "api.gleif.org",
+   "url": "https://api.gleif.org/api/v1/lei-records/254900HT8ORU1F0H2920",
+   "publisher": "api.gleif.org",
+   "title": "api.gleif.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "60495ef8-5569-50f5-a2a8-fe80a42e2e54",
+   "fact_type": "firm_profile_facts",
+   "label": "api.gleif.org",
+   "url": "https://api.gleif.org/api/v1/lei-records/254900UG641RV0EO2H13",
+   "publisher": "api.gleif.org",
+   "title": "api.gleif.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "22214b50-1855-5b03-868d-3fefeb0a7391",
+   "fact_type": "firm_profile_facts",
+   "label": "api.gleif.org",
+   "url": "https://api.gleif.org/api/v1/lei-records/254900RQLW7SJ41AQP35",
+   "publisher": "api.gleif.org",
+   "title": "api.gleif.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "30ed3d44-4b62-514d-af3a-27facf95953a",
+   "fact_type": "firm_profile_facts",
+   "label": "api.gleif.org",
+   "url": "https://api.gleif.org/api/v1/lei-records/254900IQ297XWXZ24B74",
+   "publisher": "api.gleif.org",
+   "title": "api.gleif.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c8648eb5-2040-5b68-8f3a-656fe2de6b70",
+   "fact_type": "firm_profile_facts",
+   "label": "api.gleif.org",
+   "url": "https://api.gleif.org/api/v1/lei-records/549300RYJEP013YME360",
+   "publisher": "api.gleif.org",
+   "title": "api.gleif.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a7a97eee-e543-5981-a998-47fb11160242",
+   "fact_type": "firm_profile_facts",
+   "label": "api.gleif.org",
+   "url": "https://api.gleif.org/api/v1/lei-records/254900LWROZ5W43QP828",
+   "publisher": "api.gleif.org",
+   "title": "api.gleif.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "38bbf4c0-687f-5522-b829-da28fa5b3ee0",
+   "fact_type": "firm_profile_facts",
+   "label": "api.gleif.org",
+   "url": "https://api.gleif.org/api/v1/lei-records/549300L9Q8A683FSLD28",
+   "publisher": "api.gleif.org",
+   "title": "api.gleif.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4c10bfd8-61bc-5398-abd4-b4d174d0dbbf",
+   "fact_type": "firm_profile_facts",
+   "label": "api.gleif.org",
+   "url": "https://api.gleif.org/api/v1/lei-records/25490030ILQO75FMLC18",
+   "publisher": "api.gleif.org",
+   "title": "api.gleif.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d928bd06-0f36-57be-8878-2c958533dede",
+   "fact_type": "firm_profile_facts",
+   "label": "ofsistorage.blob.core.windows.net",
+   "url": "https://ofsistorage.blob.core.windows.net/publishlive/2022format/ConList.csv",
+   "publisher": "ofsistorage.blob.core.windows.net",
+   "title": "ofsistorage.blob.core.windows.net",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "cddac318-9677-5003-893a-ca2104f0669c",
+   "fact_type": "firm_profile_facts",
+   "label": "bamfunds.com",
+   "url": "https://www.bamfunds.com/",
+   "publisher": "bamfunds.com",
+   "title": "bamfunds.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d3e1c19d-a22c-59f2-b65e-5cadb2183718",
+   "fact_type": "timeline_events",
+   "label": "pitchbook.com",
+   "url": "https://pitchbook.com/news/articles/balyasny-lands-30m-for-2-new-growth-spvs",
+   "publisher": "pitchbook.com",
+   "title": "pitchbook.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "199260b1-2642-518a-9308-dba61c23784a",
+   "fact_type": "timeline_events",
+   "label": "leagle.com",
+   "url": "https://www.leagle.com/decision/innyco20250213343",
+   "publisher": "leagle.com",
+   "title": "leagle.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "704e8c40-6d07-5579-99b2-27d0997b4232",
+   "fact_type": "timeline_events",
+   "label": "docketalarm.com",
+   "url": "https://www.docketalarm.com/cases/New_York_State_Westchester_County_Supreme_Court/68780---2018/MADISON-DAVIS_LLC_v._BALYASNY_ASSET_MANAGEMENT_LP/16/",
+   "publisher": "docketalarm.com",
+   "title": "docketalarm.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6b283b38-3271-5869-a37f-078c58d8a847",
+   "fact_type": "timeline_events",
+   "label": "telegraph.co.uk",
+   "url": "https://www.telegraph.co.uk/news/2016/11/02/gay-city-worker-sues-former-hedge-fund-employer-for-more-than-1m/",
+   "publisher": "telegraph.co.uk",
+   "title": "telegraph.co.uk",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6b283b38-3271-5869-a37f-078c58d8a847",
+   "fact_type": "timeline_events",
+   "label": "dailymail.com",
+   "url": "https://www.dailymail.com/news/article-4325396/Gay-hedge-fund-manager-drops-bid-against-City-firm.html",
+   "publisher": "dailymail.com",
+   "title": "dailymail.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "27012cc9-e96b-581f-8693-0d2fb037ffae",
+   "fact_type": "timeline_events",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/?q=%22Dmitry+Balyasny%22&type=r",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "27012cc9-e96b-581f-8693-0d2fb037ffae",
+   "fact_type": "timeline_events",
+   "label": "institutionalinvestor.com",
+   "url": "https://www.institutionalinvestor.com/article/hedge-funds-have-reputation-ruthlessness-dmitry-balyasny-took-different-approach",
+   "publisher": "institutionalinvestor.com",
+   "title": "institutionalinvestor.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "644bff64-35c3-5867-8c60-1580e3824033",
+   "fact_type": "timeline_events",
+   "label": "observer.com",
+   "url": "https://observer.com/2010/11/balyasny-said-to-be-under-examination-will-feds-bring-down-hedge-hammer-in-windy-city/",
+   "publisher": "observer.com",
+   "title": "observer.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "644bff64-35c3-5867-8c60-1580e3824033",
+   "fact_type": "timeline_events",
+   "label": "archive.nytimes.com",
+   "url": "https://archive.nytimes.com/dealbook.nytimes.com/2009/11/16/balyasny-finds-nothing-improper-after-internal-probe/index.html",
+   "publisher": "archive.nytimes.com",
+   "title": "archive.nytimes.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5af3d974-e915-5cd6-9ec5-44c3ed589fb5",
+   "fact_type": "timeline_events",
+   "label": "hedgeweek.com",
+   "url": "https://hedgeweek.com/news/citadel-and-balyasny-open-new-front-in-talent-war",
+   "publisher": "hedgeweek.com",
+   "title": "hedgeweek.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7cabdfe2-3325-5eaf-89f3-ef7026b1b73c",
+   "fact_type": "timeline_events",
+   "label": "bafin.de",
+   "url": "https://www.bafin.de/SharedDocs/Veroeffentlichungen/EN/Verbrauchermitteilung/unerlaubte/2025/meldung_2025_09_05_balyasny_asset_management_en.html",
+   "publisher": "bafin.de",
+   "title": "bafin.de",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6c163838-0cb9-55a2-b527-65822a403a0e",
+   "fact_type": "timeline_events",
+   "label": "institutionalinvestor.com",
+   "url": "https://www.institutionalinvestor.com/article/2bsxsuz0n6mpo7f9lr5z4/corner-office/hedge-fund-balyasny-cuts-staff-by-20-percent",
+   "publisher": "institutionalinvestor.com",
+   "title": "institutionalinvestor.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e17381a0-1eec-51b2-abcb-6e17b0169873",
+   "fact_type": "timeline_events",
+   "label": "institutionalinvestor.com",
+   "url": "https://www.institutionalinvestor.com/article/2bsxsuz0n6mpo7f9lr5z4/corner-office/hedge-fund-balyasny-cuts-staff-by-20-percent",
+   "publisher": "institutionalinvestor.com",
+   "title": "institutionalinvestor.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1e462775-3619-5040-b652-841d86cf488a",
+   "fact_type": "timeline_events",
+   "label": "businessinsider.com",
+   "url": "https://www.businessinsider.com/balyasny-cut-a-10-person-team-many-who-joined-less-than-two-years-ago-2019-8",
+   "publisher": "businessinsider.com",
+   "title": "businessinsider.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8566f1d0-a61b-568b-a089-908db94ad12c",
+   "fact_type": "timeline_events",
+   "label": "businessinsider.com",
+   "url": "https://www.businessinsider.com/balyasny-cut-a-10-person-team-many-who-joined-less-than-two-years-ago-2019-8",
+   "publisher": "businessinsider.com",
+   "title": "businessinsider.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "450904f9-760e-5f1e-a1ce-65672e3f5c97",
+   "fact_type": "timeline_events",
+   "label": "hedgeweek.com",
+   "url": "https://www.hedgeweek.com/commodities-veteran-departs-balyasny-after-turbulent-trading-week/",
+   "publisher": "hedgeweek.com",
+   "title": "hedgeweek.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d00e2d7d-4ebb-53c1-844f-af598d83935d",
+   "fact_type": "timeline_events",
+   "label": "hedgeweek.com",
+   "url": "https://www.hedgeweek.com/commodities-veteran-departs-balyasny-after-turbulent-trading-week/",
+   "publisher": "hedgeweek.com",
+   "title": "hedgeweek.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5c791f2a-1d19-5910-8016-a4e56e5ac877",
+   "fact_type": "timeline_events",
+   "label": "hedgeco.net",
+   "url": "https://hedgeco.net/news/10/2018/dmitry-balyasny-shutters-his-own-best-ideas-hedge-fund.html",
+   "publisher": "hedgeco.net",
+   "title": "hedgeco.net",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5c791f2a-1d19-5910-8016-a4e56e5ac877",
+   "fact_type": "timeline_events",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1439225/000143922516000002/xslFormDX01/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "288f3434-871f-5eb9-9518-555d82750698",
+   "fact_type": "timeline_events",
+   "label": "businessinsider.com",
+   "url": "https://www.businessinsider.com/2025-hedge-funds-returns-performance-balyasny-millennium-exoduspoint-2026-1",
+   "publisher": "businessinsider.com",
+   "title": "businessinsider.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "288f3434-871f-5eb9-9518-555d82750698",
+   "fact_type": "timeline_events",
+   "label": "finimize.com",
+   "url": "https://finimize.com/content/pod-shop-hedge-funds-had-a-banner-2025-on-volatility",
+   "publisher": "finimize.com",
+   "title": "finimize.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "72a3c3c9-8ca6-5ab6-86c7-361f7f9ae53c",
+   "fact_type": "timeline_events",
+   "label": "linkedin.com",
+   "url": "https://www.linkedin.com/posts/rupak-ghose-53084743_balyasny-is-having-its-worst-year-in-ages-activity-7501630823847153664-HKsN",
+   "publisher": "linkedin.com",
+   "title": "linkedin.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d6bdf038-6a3b-5099-b4c6-9684a0f7c539",
+   "fact_type": "timeline_events",
+   "label": "news.bloomberglaw.com",
+   "url": "https://news.bloomberglaw.com/insurance/no-limit-hedge-fund-fees-are-eating-up-their-clients-gains",
+   "publisher": "news.bloomberglaw.com",
+   "title": "news.bloomberglaw.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d6bdf038-6a3b-5099-b4c6-9684a0f7c539",
+   "fact_type": "timeline_events",
+   "label": "news.fintech.io",
+   "url": "https://news.fintech.io/post/102jzrm/hedge-funds-are-pocketing-much-of-their-clients-gains-with-no-limit-fees",
+   "publisher": "news.fintech.io",
+   "title": "news.fintech.io",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "fa8a73de-a763-5464-8008-3b1dd8554d7f",
+   "fact_type": "timeline_events",
+   "label": "businessinsider.com",
+   "url": "https://www.businessinsider.com/hedge-fund-performance-november-citadel-balyasny-exoduspoint-2025-12",
+   "publisher": "businessinsider.com",
+   "title": "businessinsider.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "43b0f89e-7294-5e76-9455-4fbcda26889c",
+   "fact_type": "timeline_events",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f5ea0fa9-0d89-54db-9d5b-c6412bc5eeeb",
+   "fact_type": "timeline_events",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "549e6a2d-8966-5cd5-b82b-db131b2ea7e4",
+   "fact_type": "timeline_events",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/138111/PDF/138111.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "df8151a3-1006-5a9e-a9a6-fa32a402abc3",
+   "fact_type": "timeline_events",
+   "label": "hedgeweek.com",
+   "url": "https://hedgeweek.com/news/balyasny-asia-pacific-coo-to-exit-firm",
+   "publisher": "hedgeweek.com",
+   "title": "hedgeweek.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }
