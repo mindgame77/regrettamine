@@ -1,6 +1,9 @@
-// Stripe webhook. verify_jwt is false: Stripe signs the body instead.
-// The signing secret lives in app_secrets.key = 'stripe_webhook_secret'.
+// Stripe webhook for the Payment Link checkout (sandbox + live). verify_jwt is false: Stripe signs the body instead.
+// Signing secrets: sandbox in app_secrets.key = 'stripe_webhook_secret', live in edge secret STRIPE_LIVE_WEBHOOK_SECRET.
+// The event must be signed by the secret of its own mode (event.livemode). Cancels use that mode's key (see _shared/stripe_mode.ts).
+// Events: checkout.session.completed, customer.subscription.created/updated/deleted, invoice.paid, invoice.payment_failed.
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { stripeKey, webhookSecrets } from "../_shared/stripe_mode.ts";
 
 const TOLERANCE_SEC = 300;
 
@@ -12,13 +15,7 @@ function timingSafeEqual(a: string, b: string): boolean {
 }
 
 async function hmacHex(secret: string, payload: string): Promise<string> {
-  const key = await crypto.subtle.importKey(
-    "raw",
-    new TextEncoder().encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"],
-  );
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
   const raw = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payload));
   return [...new Uint8Array(raw)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
@@ -39,10 +36,7 @@ async function signatureOk(body: string, header: string, secret: string): Promis
 }
 
 function json(status: number, payload: Record<string, unknown>): Response {
-  return new Response(JSON.stringify(payload), {
-    status,
-    headers: { "Content-Type": "application/json" },
-  });
+  return new Response(JSON.stringify(payload), { status, headers: { "Content-Type": "application/json" } });
 }
 
 Deno.serve(async (req: Request) => {
@@ -54,30 +48,23 @@ Deno.serve(async (req: Request) => {
 
   const body = await req.text();
   const header = req.headers.get("stripe-signature") || "";
-  const secretRes = await fetch(
-    `${url}/rest/v1/app_secrets?key=eq.stripe_webhook_secret&select=value`,
-    { headers: { apikey: key, Authorization: `Bearer ${key}` } },
-  );
-  if (!secretRes.ok) return json(500, { error: "could not read the webhook secret" });
-  const rows = await secretRes.json();
-  const secret = Array.isArray(rows) && rows[0] && rows[0].value;
-  if (!secret) return json(500, { error: "stripe_webhook_secret is not set" });
-  if (!await signatureOk(body, header, secret)) return json(400, { error: "invalid signature" });
+  const secrets = await webhookSecrets();
+  if (!secrets.length) return json(500, { error: "no webhook secret is set" });
+  let signedLive: boolean | null = null;
+  for (const s of secrets) if (await signatureOk(body, header, s.secret)) { signedLive = s.live; break; }
+  if (signedLive === null) return json(400, { error: "invalid signature" });
 
-  let event: unknown;
+  let event: { livemode?: boolean };
   try {
     event = JSON.parse(body);
   } catch (_err) {
     return json(400, { error: "invalid json" });
   }
+  if (!!event.livemode !== signedLive) return json(400, { error: "event mode does not match its signing secret" });
 
   const applied = await fetch(`${url}/rest/v1/rpc/apply_stripe_event`, {
     method: "POST",
-    headers: {
-      apikey: key,
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-    },
+    headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
     body: JSON.stringify({ p_event: event }),
   });
   if (!applied.ok) {
@@ -93,21 +80,13 @@ Deno.serve(async (req: Request) => {
   }
   const cancelIds = Array.isArray(result.cancel_at_period_end) ? result.cancel_at_period_end : [];
   if (cancelIds.length) {
-    const keyRes = await fetch(
-      `${url}/rest/v1/app_secrets?key=eq.stripe_secret_key&select=value`,
-      { headers: { apikey: key, Authorization: `Bearer ${key}` } },
-    );
-    const keyRows = keyRes.ok ? await keyRes.json() : [];
-    const stripeKey = Array.isArray(keyRows) && keyRows[0] && keyRows[0].value;
-    if (stripeKey) {
+    const sk = await stripeKey(signedLive);
+    if (sk) {
       for (const id of cancelIds) {
         if (typeof id !== "string" || !id.startsWith("sub_")) continue;
         await fetch(`https://api.stripe.com/v1/subscriptions/${encodeURIComponent(id)}`, {
           method: "POST",
-          headers: {
-            Authorization: `Bearer ${stripeKey}`,
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
+          headers: { Authorization: `Bearer ${sk}`, "Content-Type": "application/x-www-form-urlencoded" },
           body: "cancel_at_period_end=true",
         });
       }

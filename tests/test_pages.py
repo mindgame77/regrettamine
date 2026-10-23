@@ -238,6 +238,8 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "buy.stripe.com/test_8x2fZh7cM2jwab5bI08Vi03" in stripe_cfg
     assert "buy.stripe.com/test_28E5kDdBaf6iab58vO8Vi00" in stripe_cfg
     assert "billing.stripe.com/p/login/test_6oU7sL0OoaQ23MHdQ88Vi01" in stripe_cfg
+    assert 'const MODE = "test"' in stripe_cfg  # flip to "live" at launch
+    assert "buy.stripe.com/bJedR97cM6zM82XcM48Vi02" in stripe_cfg and "buy.stripe.com/8x2fZh7cM2jwab5bI08Vi03" in stripe_cfg
     assert 'monthlyLink: ""' not in stripe_cfg and 'annualLink: ""' not in stripe_cfg
     assert "client_reference_id" in plans_js and "prefilled_email" in plans_js
     assert "Current plan" in plans_js and "Switch plan" in plans_js and "portalUrl" in plans_js

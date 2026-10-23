@@ -1,6 +1,7 @@
 // Cancels the caller's Stripe subscriptions, then deletes the account.
 // The Stripe secret is app_secrets.key = 'stripe_secret_key'. verify_jwt is true.
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { stripeKey as liveOrTestKey } from "../_shared/stripe_mode.ts"; // STRIPE_MODE=live -> STRIPE_LIVE_SECRET_KEY, else app_secrets
 
 const PLAN_MSG = "We couldn't cancel your plan, contact malytskyyo@gmail.com";
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -53,13 +54,7 @@ Deno.serve(async (req: Request) => {
   });
 
   if (live.length) {
-    const secretRes = await fetch(
-      `${url}/rest/v1/app_secrets?key=eq.stripe_secret_key&select=value`,
-      { headers: { apikey: service, Authorization: `Bearer ${service}` } },
-    );
-    if (!secretRes.ok) return json(409, { message: PLAN_MSG });
-    const secretRows = await secretRes.json();
-    const stripeKey = Array.isArray(secretRows) && secretRows[0] && secretRows[0].value;
+    const stripeKey = await liveOrTestKey();
     if (!stripeKey) return json(409, { message: PLAN_MSG });
 
     for (const row of live) {
