@@ -1,7 +1,7 @@
 {
  "_readme": "All user-facing copy, plans/prices and company-page section presentation. Edit here, then run launch/deploy_preview.sh. {x} = value filled in by the code.",
  "plans": {
-  "_note": "Display only. Stripe price IDs are Supabase Edge Function secrets STRIPE_PRICE_SINGLE / STRIPE_PRICE_M10 / STRIPE_PRICE_M30 (see HOW-TO-CHANGE.md). checks = checks granted; must match PLAN in supabase/functions/regretamin-stripe-webhook.",
+  "_note": "Display only. Stripe price IDs are Supabase Edge Function secrets STRIPE_PRICE_SINGLE / _M10 / _M30 / _Y10 / _Y30 (see HOW-TO-CHANGE.md). checks = checks per month; must match PLAN in supabase/functions/regretamin-stripe-webhook and CHECKS in create-checkout. amount = price in dollars (used to show code discounts). yearly = the same plan billed yearly (kind y10/y30), checks still refill monthly.",
   "single": {
    "name": "Single check",
    "price": "$10",
@@ -21,7 +21,8 @@
      "Names, parties, courts, sources",
      "Yours to keep"
     ]
-   }
+   },
+   "amount": 10
   },
   "m10": {
    "name": "Starter",
@@ -43,6 +44,16 @@
      "10 firms a month",
      "Full sources on every entry"
     ]
+   },
+   "amount": 19,
+   "yearly": {
+    "kind": "y10",
+    "price": "$190",
+    "amount": 190,
+    "per_check": "$1.58",
+    "save": "Save $38 · 2 months free",
+    "blurb": "10 checks a month, billed yearly.",
+    "bill": "10 checks a month, billed yearly"
    }
   },
   "m30": {
@@ -63,6 +74,16 @@
      "30 firms a month",
      "Full sources on every entry"
     ]
+   },
+   "amount": 49,
+   "yearly": {
+    "kind": "y30",
+    "price": "$490",
+    "amount": 490,
+    "per_check": "$1.36",
+    "save": "Save $98 · 2 months free",
+    "blurb": "30 checks a month, billed yearly.",
+    "bill": "30 checks a month, billed yearly"
    }
   }
  },
@@ -161,8 +182,7 @@
   },
   "pricing": {
    "title": "Pricing",
-   "sub": "Counting is in checks: 1 firm = 1 check. Monthly plans renew; if you run out, buy more checks any time.",
-   "per_month_short": "/mo"
+   "sub": "Counting is in checks: 1 firm = 1 check. Monthly plans renew; if you run out, buy more checks any time."
   },
   "landing": {
    "h1": "Check your VC",
@@ -385,6 +405,33 @@
    "none": "No checks match your search.",
    "empty_h2": "No checks yet",
    "empty_p": "Check your VC before you sign. Search a firm to run your first check."
+  },
+  "billing": {
+   "monthly": "Monthly",
+   "yearly": "Yearly",
+   "badge": "2 months free",
+   "aria": "Billing period",
+   "per_month": "/month",
+   "per_year": "/year",
+   "per_month_short": "/mo",
+   "per_year_short": "/yr",
+   "fine_yearly": "Yearly plans renew each year; checks refill monthly. 1 firm = 1 check."
+  },
+  "code": {
+   "link": "Have a code?",
+   "placeholder": "Code",
+   "aria": "Promo code",
+   "apply": "Apply",
+   "remove": "Remove",
+   "hidden_tag": "Unlocked with code",
+   "hidden_bill": "{n} checks a month",
+   "hidden_bill_year": "{n} checks a month, billed yearly",
+   "hidden_blurb": "{n} checks a month.",
+   "hidden_button": "Start {name}",
+   "hidden_features": [
+    "{n} firms a month",
+    "Full sources on every entry"
+   ]
   }
  },
  "company": {
@@ -433,7 +480,7 @@
   "left_of": "{left} of {n}",
   "plan_menu": "{name} · {n} checks/mo",
   "plan_free": "Free",
-  "plan_line": "{n} checks/mo · {price}/month",
+  "plan_line": "{n} checks/mo · {price}",
   "no_plan": "No plan. Buy checks any time.",
   "resets": "Resets to {n} on renewal",
   "any_time": [
@@ -516,6 +563,25 @@
   "pick_more": "Pick a plan below to get more checks.",
   "sign_more": "Sign in below for 4 more free checks, or pick a plan.",
   "need_signup": "You've used your free checks. Sign in below for 4 more.",
-  "out": "You're out of checks. Buy more below."
+  "out": "You're out of checks. Buy more below.",
+  "renews_yearly": "Renews yearly · checks refill monthly",
+  "resets_monthly": "Refills to {n} on {date}",
+  "code_checking": "Checking code…",
+  "code_ok": "✓ Code applied: {label}",
+  "code_bad": "That code isn't valid",
+  "code_unlock": "{name} plan unlocked",
+  "code_unlock_off": "{name} plan unlocked, {off}",
+  "off_pct": "{p}% off",
+  "off_amt": "{a} off",
+  "dur_once": "{off} first payment",
+  "dur_repeating": [
+   "{off} first month",
+   "{off} first {n} months"
+  ],
+  "dur_forever": "{off}",
+  "disc_bill": "{label}, then {price}{unit}",
+  "disc_bill_forever": "{label}",
+  "dur_first_year": "{off} first year",
+  "dur_now": "{off} today"
  }
 }

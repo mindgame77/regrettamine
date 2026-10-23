@@ -8,16 +8,24 @@ import os, json, html, glob, shutil
 E = html.escape
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE); OUT = os.path.join(ROOT, 'site-launch')
 COPY = json.load(open(os.path.join(HERE, 'copy.json')))
-S, PLANS = COPY['site'], {k: v for k, v in COPY['plans'].items() if not k.startswith('_')}
+S = COPY['site']
 NOINDEX = os.environ.get('REGRET_NOINDEX') == '1'
 CFG = {'url': os.environ.get('SUPABASE_URL', ''), 'key': os.environ.get('SUPABASE_ANON_KEY', ''), 'copy': COPY}
-CHK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
 GLOGO = '''<svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>'''
+
+def billing():  # Monthly|Yearly toggle for both pricing popups; their plan cards are drawn by js/app.js (drawPlans) from copy.json plans
+    B = S['billing']
+    return (f'<div class="bt" role="radiogroup" aria-label="{B["aria"]}"><div><button type="button" role="radio" aria-checked="true" class="on" data-yearly="0">{B["monthly"]}</button>'
+            f'<button type="button" role="radio" aria-checked="false" data-yearly="1">{B["yearly"]} <em>{B["badge"]}</em></button></div></div>')
+
+def code_field():  # "Have a code?" field for both pricing popups (checked by the validate-code function)
+    K = S['code']
+    return (f'<div class="code"><a href="#" data-codeopen>{K["link"]}</a><form class="cf" data-code hidden><input name="code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="{K["placeholder"]}" aria-label="{K["aria"]}">'
+            f'<button class="pb v" data-apply>{K["apply"]}</button><button type="button" class="pb v" data-remove hidden>{K["remove"]}</button></form><p class="cn" data-codemsg></p></div>')
 
 def pricing_modal():  # nav "Pricing" popup
     p = S['pricing']
-    cards = ''.join(f'<div class="pr{" hl" if P.get("highlight") else ""}"><h4>{P["name"]}</h4><b>{P["price"]}{"<small>" + p["per_month_short"] + "</small>" if P["monthly"] else ""}</b><p>{P["modal"]["blurb"]}</p><button class="btn{"" if P.get("highlight") else " o"}" data-buy="{k}">{P["modal"]["button"]}</button></div>\n' for k, P in PLANS.items())
-    return f'<div class="ov" id="paywall" hidden><div class="md w"><button class="x" data-close>×</button><h2 id="pwh">{p["title"]}</h2><p class="s">{p["sub"]}</p><div class="price">\n{cards.rstrip()}</div></div></div>'
+    return f'<div class="ov" id="paywall" hidden><div class="md w"><button class="x" data-close>×</button><h2 id="pwh">{p["title"]}</h2><p class="s">{p["sub"]}</p>{billing()}<div class="price" data-plans="nav"></div>{code_field()}</div></div>'
 
 def page(path, body, root, title=S['brand'], company=False):
     n, su = S['nav'], S['signup']
@@ -44,14 +52,8 @@ def press():
 def SB(sm=False):
     return f'<form class="sb{" sm" if sm else ""}" data-search><input name="q" placeholder="{S["search_placeholder"]}" autocomplete="off" aria-label="{S["search_aria"]}"><button class="btn">{S["search_button"]}</button></form>'
 
-def pay_plans():  # plan cards in the company-page unlock popup
-    p = S['pay']
-    def card(k, P):
-        q = P['pay']; ul = ''.join(f'<li><i>{CHK}</i>{f}</li>' for f in q['features'])
-        return (f'<div class="pl{" rec" if P.get("highlight") else ""}">{"<span class=\"rtag\">" + P["tag"] + "</span>" if P.get("tag") else ""}<h3>{P["name"]}</h3>'
-                f'<div class="pp-price"><b>{P["price"]}</b><span>{q["period"]}</span><small>{p["per_check"].format(price=P["per_check"])}</small></div><p class="bill">{q["bill"]}</p>'
-                f'<button class="pb {"c" if P.get("highlight") else "w"}" data-buy="{k}">{q["button"]}</button><ul>{ul}</ul></div>')
-    return '<section class="pp-plans">' + ''.join(card(k, P) for k, P in PLANS.items()) + '</section>'
+def pay_plans():  # plan area in the company-page unlock popup
+    return billing() + '<section class="pp-plans" data-plans="pay"></section>' + code_field()
 
 def result(F):
     r, p = S['result'], S['pay']
@@ -59,7 +61,7 @@ def result(F):
 <div class="ph"><h1>{E(F["name"])}</h1><p class="m"></p><div class="hfs"></div></div><div class="csum" hidden></div><div class="spl"></div>
 <div class="unlock" id="lockcard" hidden><div><b></b><p></p></div><button class="btn" id="unlock">{r["lock_button"]}</button></div>
 <div class="pgrid"><div class="pmain"></div><nav class="toc" aria-label="{r["toc_aria"]}"></nav></div><p class="fine">{r["fine"]}</p></main>
-<div class="ov pp-ov" id="paycase" hidden><div class="pp" role="dialog" aria-modal="true" aria-labelledby="pph"><button class="pp-x" data-close aria-label="{p["close"]}">×</button><header class="pp-hero"><span class="lockctx" id="pcase"></span><h1 id="pph">{p["title"]}</h1><p class="sub">{p["sub"]}</p></header><div class="pp-bal"><div><b id="pbal">{p["balance_loading"]}</b><span id="puse"></span></div><button class="pb v" id="usecheck" disabled>{p["use"]}</button></div><p class="msg" id="pmsg2"></p>{pay_plans()}<div class="pp-sgn" id="panon" hidden><div><b id="psgnh">{p["sign_title"]}</b><span>{p["sign_sub"]}</span></div><div class="sb2"><button class="pb w gbtn" data-google>{GLOGO}{p["google"]}</button><div class="or">{p["or"]}</div><form class="ml" data-magic><input type="email" name="email" required placeholder="{p["email_placeholder"]}" aria-label="{p["email_aria"]}"><button class="pb v">{p["magic"]}</button></form></div><p class="msg" data-magicmsg></p></div><p class="fine2">{p["fine"]}</p></div></div>'''
+<div class="ov pp-ov" id="paycase" hidden><div class="pp" role="dialog" aria-modal="true" aria-labelledby="pph"><button class="pp-x" data-close aria-label="{p["close"]}">×</button><header class="pp-hero"><span class="lockctx" id="pcase"></span><h1 id="pph">{p["title"]}</h1><p class="sub">{p["sub"]}</p></header><div class="pp-bal"><div><b id="pbal">{p["balance_loading"]}</b><span id="puse"></span></div><button class="pb v" id="usecheck" disabled>{p["use"]}</button></div><p class="msg" id="pmsg2"></p>{pay_plans()}<div class="pp-sgn" id="panon" hidden><div><b id="psgnh">{p["sign_title"]}</b><span>{p["sign_sub"]}</span></div><div class="sb2"><button class="pb w gbtn" data-google>{GLOGO}{p["google"]}</button><div class="or">{p["or"]}</div><form class="ml" data-magic><input type="email" name="email" required placeholder="{p["email_placeholder"]}" aria-label="{p["email_aria"]}"><button class="pb v">{p["magic"]}</button></form></div><p class="msg" data-magicmsg></p></div><p class="fine2" data-fine>{p["fine"]}</p></div></div>'''
 
 A, M, SO = S['account'], S['my_checks'], S['signed_out']
 def why(k, q):  # optional exit question; values match exit_reasons.reason

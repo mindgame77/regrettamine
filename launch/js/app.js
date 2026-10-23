@@ -12,8 +12,8 @@
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') document.querySelectorAll('.ov:not([hidden])').forEach(closeOv); });
   document.addEventListener('mousedown', (e) => { if (e.target.classList && e.target.classList.contains('ov')) closeOv(e.target); });
   const PEND = 'regretamin.pendingBuy';
-  const setPend = (k) => localStorage.setItem(PEND, JSON.stringify({ k, t: Date.now() }));
-  const takePend = () => { try { const p = JSON.parse(localStorage.getItem(PEND) || 'null'); localStorage.removeItem(PEND); return p && Date.now() - p.t < 30 * 60e3 ? p.k : null; } catch (_) { return null; } };
+  const setPend = (k, code) => localStorage.setItem(PEND, JSON.stringify({ k, code, t: Date.now() }));
+  const takePend = () => { try { const p = JSON.parse(localStorage.getItem(PEND) || 'null'); localStorage.removeItem(PEND); return p && Date.now() - p.t < 30 * 60e3 ? p : null; } catch (_) { return null; } };
   document.addEventListener('click', (e) => {
     const t = e.target.closest('[data-open],[data-close],[data-buy]'); if (!t) return;
     e.preventDefault();
@@ -27,10 +27,17 @@
     return error ? null : data; // {left, signed_in}
   }
   // Copy and plans come from launch/copy.json (window.REGRET.copy). fmt fills {name}; pl picks [one, many] by count.
-  const T = C.copy.js, PLANS = Object.fromEntries(Object.entries(C.copy.plans).filter(([k, p]) => p.monthly));
+  const T = C.copy.js, B = C.copy.site.billing;
+  // Subscription plans by kind (m10, m30 and their yearly y10, y30) for the account menu, Account and My checks.
+  const PLANS = {};
+  Object.entries(C.copy.plans).filter(([, p]) => p.monthly).forEach(([k, p]) => {
+    PLANS[k] = { name: p.name, checks: p.checks, price: p.price + B.per_month };
+    if (p.yearly) PLANS[p.yearly.kind] = { name: p.name, checks: p.checks, price: p.yearly.price + B.per_year, yearly: true };
+  });
+  const planOf = (a) => a.plan === 'custom' ? { name: a.plan_name || '', checks: a.monthly_checks || 0, price: '', yearly: !!a.next_refill } : a.plan && PLANS[a.plan];
   const fmt = (t, o) => t.replace(/\{(\w+)\}/g, (_, k) => o[k]), pl = (n, t, o) => fmt(t[n === 1 ? 0 : 1], o);
   const fmtDate = (d) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  const leftOf = (a) => a.plan && PLANS[a.plan] && a.left <= PLANS[a.plan].checks ? fmt(T.left_of, { left: a.left, n: PLANS[a.plan].checks }) : String(a.left);
+  const leftOf = (a) => { const P = planOf(a); return P && a.left <= P.checks ? fmt(T.left_of, { left: a.left, n: P.checks }) : String(a.left); };
   let ACCT = null; // { email, plan, left, period_end, cancel_at_period_end, has_customer } once signed in
   async function paint() {
     const b = await balance(); if (!b) return;
@@ -43,7 +50,8 @@
     ACCT = Object.assign({ email: u.user.email || '' }, a);
     $('#av').textContent = (ACCT.email[0] || 'A').toUpperCase();
     $('#ddem').textContent = ACCT.email;
-    $('#ddplan').textContent = ACCT.plan && PLANS[ACCT.plan] ? fmt(T.plan_menu, { name: PLANS[ACCT.plan].name, n: PLANS[ACCT.plan].checks }) : T.plan_free;
+    const P = planOf(ACCT);
+    $('#ddplan').textContent = P ? fmt(T.plan_menu, { name: P.name, n: P.checks }) : T.plan_free;
     $('#ddleft').textContent = leftOf(ACCT);
     document.querySelectorAll('[data-in]').forEach(x => x.hidden = false);
     if ($('#account')) paintAccount(); if ($('#mychecks')) paintMyChecks();
@@ -57,17 +65,17 @@
   $('#signout').onclick = async (e) => { e.preventDefault(); if (sb) await sb.auth.signOut(); location.href = ROOT || './'; };
   // Account page
   async function paintAccount() {
-    const a = ACCT, P = a.plan && PLANS[a.plan];
+    const a = ACCT, P = planOf(a);
     $('#aem').textContent = a.email;
-    $('#aplan2').textContent = P ? fmt(T.plan_line, { n: P.checks, price: P.price }) : T.no_plan;
+    $('#aplan2').textContent = P ? (P.price ? fmt(T.plan_line, { n: P.checks, price: P.price }) : fmt(T.plan_menu, { name: P.name, n: P.checks })) : T.no_plan;
     $('#aleft').textContent = leftOf(a);
-    $('#aleft2').textContent = P ? fmt(T.resets, { n: P.checks }) : pl(a.left, T.any_time, {});
+    $('#aleft2').textContent = P ? (P.yearly && a.next_refill ? fmt(T.resets_monthly, { n: P.checks, date: fmtDate(a.next_refill) }) : fmt(T.resets, { n: P.checks })) : pl(a.left, T.any_time, {});
     const ending = !!(P && a.cancel_at_period_end), end = a.period_end ? fmtDate(a.period_end) : '';
     $('#aplan').innerHTML = esc(P ? P.name : T.plan_free) + (ending ? '<span class="tag">' + T.tag_cancelling + '</span>' : '');
     if (ending && end) $('#aleft2').textContent = fmt(T.usable_until, { date: end });
     $('#arenl').textContent = ending ? T.cancels_on : T.renews;
     $('#aren').textContent = P && end ? end : '—'; $('#aren').classList.toggle('cx', ending);
-    $('#aren2').textContent = ending ? T.wont_renew : P ? T.renews_monthly : T.nothing_renews;
+    $('#aren2').textContent = ending ? T.wont_renew : P ? (P.yearly ? T.renews_yearly : T.renews_monthly) : T.nothing_renews;
     $('#cban').hidden = !ending;
     if (ending) $('#cban').innerHTML = pl(a.left, T.banner, { plan: esc(P.name), date: esc(end), left: esc(a.left) });
     $('#manage').hidden = !P && !a.has_customer; $('#pick').hidden = !!P;
@@ -125,8 +133,8 @@
   // My checks page
   let MC = [];
   async function paintMyChecks() {
-    const a = ACCT, P = a.plan && PLANS[a.plan];
-    $('#mbal').innerHTML = pl(a.left, T.mc_left, { left: esc(leftOf(a)) }) + (P ? T.mc_month + (a.period_end ? fmt(T.mc_resets, { date: esc(fmtDate(a.period_end)) }) : '') : '');
+    const a = ACCT, P = planOf(a), reset = P && P.yearly ? a.next_refill : a.period_end;
+    $('#mbal').innerHTML = pl(a.left, T.mc_left, { left: esc(leftOf(a)) }) + (P ? T.mc_month + (reset ? fmt(T.mc_resets, { date: esc(fmtDate(reset)) }) : '') : '');
     const { data } = await sb.rpc('my_checks'); MC = data || [];
     $('#mlist').hidden = !MC.length; $('#mempty').hidden = !!MC.length; drawChecks();
   }
@@ -154,17 +162,88 @@
       drawChecks();
     };
   }
+  // Pricing popups: Monthly|Yearly toggle, "Have a code?" field and plan cards (both popups), all from copy.json plans.
+  const K = C.copy.site.code, PAY = C.copy.site.pay;
+  const CHK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  let YEARLY = false, CODE = null; // CODE = validate-code reply for the applied code
+  const money = (x) => '$' + (Math.round(x * 100) % 100 ? x.toFixed(2) : String(Math.round(x)));
+  const offOf = (c) => c.percent_off ? fmt(T.off_pct, { p: c.percent_off }) : fmt(T.off_amt, { a: money(c.amount_off) });
+  const codeLabel = (c, kind) => kind === 'single' ? fmt(T.dur_now, { off: offOf(c) }) : /^y/.test(kind || '') && c.duration !== 'forever' ? fmt(T.dur_first_year, { off: offOf(c) }) : c.duration === 'forever' ? fmt(T.dur_forever, { off: offOf(c) }) : c.duration === 'once' ? fmt(T.dur_once, { off: offOf(c) }) : pl(c.months, T.dur_repeating, { off: offOf(c), n: c.months });
+  const after = (amt, c) => Math.max(0, c.percent_off ? amt * (1 - c.percent_off / 100) : amt - c.amount_off);
+  const off = (kind) => CODE && (kind === 'code' ? CODE.hidden && CODE.hidden.discount : CODE.discount && CODE.kinds.includes(kind)) ? CODE : null; // code discount for this kind, if any
+  // One plan card: v = {kind, name, amount, price, unit, per, bill, blurb, button, features, tag, save, rec, hid}
+  function card(v, nav) {
+    const c = off(v.kind), now = c ? money(after(v.amount, c)) : v.price;
+    const old = c ? '<s>' + v.price + '</s>' : '';
+    const bill = !c ? v.bill : c.duration === 'forever' || v.kind === 'single' ? fmt(T.disc_bill_forever, { label: codeLabel(c, v.kind) }) : fmt(T.disc_bill, { label: codeLabel(c, v.kind), price: v.price, unit: v.unit });
+    const save = v.save ? '<span class="save">' + v.save + '</span>' : '';
+    if (nav) return '<div class="pr' + (v.rec ? ' hl' : '') + (v.hid ? ' hid' : '') + '"><h4>' + esc(v.name) + '</h4><b>' + old + now + (v.short ? '<small>' + v.short + '</small>' : '') + '</b>' + save + '<p>' + esc(c ? bill : v.blurb) + '</p><button class="btn' + (v.rec ? '' : ' o') + '" data-buy="' + v.kind + '">' + esc(v.button) + '</button></div>';
+    return '<div class="pl' + (v.rec ? ' rec' : '') + (v.hid ? ' hid' : '') + '">' + (v.tag ? '<span class="rtag' + (v.hid ? ' g' : '') + '">' + esc(v.tag) + '</span>' : '') + '<h3>' + esc(v.name) + '</h3>'
+      + '<div class="pp-price">' + old + '<b>' + now + '</b><span>' + v.unit + '</span><small>' + fmt(PAY.per_check, { price: v.per }) + '</small></div>' + save + '<p class="bill">' + esc(bill) + '</p>'
+      + '<button class="pb ' + (v.rec ? 'c' : 'w') + '" data-buy="' + v.kind + '">' + esc(v.button) + '</button><ul>' + v.features.map(f => '<li><i>' + CHK + '</i>' + f + '</li>').join('') + '</ul></div>';
+  }
+  function cards() {
+    const out = Object.entries(C.copy.plans).filter(([k]) => k[0] !== '_').map(([k, p]) => {
+      const y = YEARLY && p.yearly, base = { name: p.name, button: p.pay.button, features: p.pay.features, tag: p.tag, rec: p.highlight };
+      if (y) return Object.assign(base, { kind: y.kind, amount: y.amount, price: y.price, unit: B.per_year, short: B.per_year_short, per: y.per_check, bill: y.bill, blurb: y.blurb, save: y.save });
+      return Object.assign(base, { kind: k, amount: p.amount, price: p.price, unit: p.monthly ? B.per_month : p.pay.period, short: p.monthly ? B.per_month_short : '', per: p.per_check, bill: p.pay.bill, blurb: p.modal.blurb });
+    });
+    const h = CODE && CODE.hidden;
+    if (h) {
+      const yr = h.interval === 'year', amt = h.amount, n = h.checks; // validate-code amounts are in dollars
+      out.push({ kind: 'code', hid: true, name: h.name, amount: amt, price: money(amt), unit: yr ? B.per_year : B.per_month, short: yr ? B.per_year_short : B.per_month_short,
+        per: money(amt / n / (yr ? 12 : 1)), bill: fmt(yr ? K.hidden_bill_year : K.hidden_bill, { n }), blurb: fmt(K.hidden_blurb, { n }), tag: K.hidden_tag,
+        button: fmt(K.hidden_button, { name: h.name }), features: K.hidden_features.map(f => fmt(f, { n })) });
+    }
+    return out;
+  }
+  function drawPlans() {
+    const cs = cards();
+    document.querySelectorAll('[data-plans]').forEach((el) => {
+      el.innerHTML = cs.map(v => card(v, el.dataset.plans === 'nav')).join('');
+      el.classList.toggle('four', cs.length > 3);
+    });
+    document.querySelectorAll('.bt button').forEach((b) => { const on = (b.dataset.yearly === '1') === YEARLY; b.classList.toggle('on', on); b.setAttribute('aria-checked', String(on)); });
+    document.querySelectorAll('[data-fine]').forEach(f => f.textContent = YEARLY ? B.fine_yearly : PAY.fine);
+  }
+  function codeState(cls, text, applied) {
+    document.querySelectorAll('.code').forEach((w) => {
+      const f = w.querySelector('[data-code]'), m = w.querySelector('[data-codemsg]');
+      f.hidden = false; w.querySelector('[data-codeopen]').hidden = true;
+      f.classList.remove('ok', 'bad'); m.classList.remove('ok', 'bad'); if (cls) { f.classList.add(cls); m.classList.add(cls); }
+      m.textContent = text; f.querySelector('[data-remove]').hidden = !applied; f.querySelector('[data-apply]').hidden = applied; f.code.readOnly = applied;
+    });
+  }
+  async function applyCode(raw) {
+    const code = raw.trim().toUpperCase();
+    document.querySelectorAll('[data-code] input').forEach(i => i.value = code);
+    if (!code || !sb) return;
+    codeState('', T.code_checking, false);
+    const { data } = await sb.functions.invoke('validate-code', { body: { code } });
+    if (!data || !data.ok) { CODE = null; drawPlans(); return codeState('bad', T.code_bad, false); }
+    CODE = data; drawPlans();
+    const h = data.hidden, label = h ? fmt(data.discount ? T.code_unlock_off : T.code_unlock, { name: h.name, off: data.discount ? codeLabel(data) : '' }) : codeLabel(data);
+    codeState('ok', fmt(T.code_ok, { label }), true);
+  }
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('.bt button,[data-codeopen],[data-remove]'); if (!t) return;
+    e.preventDefault();
+    if (t.matches('.bt button')) { YEARLY = t.dataset.yearly === '1'; return drawPlans(); }
+    if (t.dataset.codeopen !== undefined) { codeState('', '', false); return t.closest('.code').querySelector('input').focus(); }
+    CODE = null; drawPlans(); codeState('', '', false); document.querySelectorAll('[data-code] input').forEach(i => i.value = '');
+  });
+  document.addEventListener('submit', (e) => { const f = e.target.closest('[data-code]'); if (!f) return; e.preventDefault(); if (!f.code.readOnly) applyCode(f.code.value); });
   async function buy(kind) {
     if (!sb) return alert(T.no_checkout);
     const { data: s } = await sb.auth.getSession();
     const pay = $('#paycase'), inPay = pay && !pay.hidden, msg = (t) => { if (inPay) $('#pmsg2').textContent = t; else if (t && !/…$/.test(t)) alert(t); };
     if (!s.session) {
-      setPend(kind); // after sign-in (Google redirect or magic link) we come back here and continue to checkout
+      setPend(kind, CODE && CODE.code); // after sign-in (Google redirect or magic link) we come back here and continue to checkout
       if (inPay) { const g = $('#panon'); g.hidden = false; g.classList.add('hi'); $('#psgnh').textContent = T.sign_checkout; g.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
       $('#suh').textContent = T.sign_buy; return open('signup');
     }
     document.querySelectorAll('[data-buy]').forEach(b => b.disabled = true); msg(T.opening);
-    const { data, error } = await sb.functions.invoke('create-checkout', { body: { kind } });
+    const { data, error } = await sb.functions.invoke('create-checkout', { body: CODE ? { kind, code: CODE.code } : { kind } });
     if (error || !data || !data.url) { document.querySelectorAll('[data-buy]').forEach(b => b.disabled = false); return msg(T.checkout_fail); }
     location.href = data.url;
   }
@@ -182,11 +261,12 @@
   document.querySelectorAll('[data-magic]').forEach(f => f.onsubmit = (e) => { e.preventDefault(); magic(f.email.value.trim(), f.parentNode.parentNode.querySelector('[data-magicmsg]')); });
   if (sb) sb.auth.onAuthStateChange((ev, session) => {
     if (ev === 'SIGNED_IN') setTimeout(async () => { await sb.rpc('claim_anon_checks', { p_anon: anonId() }); paint(); }, 0);
-    if ((ev === 'SIGNED_IN' || ev === 'INITIAL_SESSION') && session) { const k = takePend(); if (k) setTimeout(() => { if ($('#paycase')) open('paycase'); buy(k); }, 0); }
+    if ((ev === 'SIGNED_IN' || ev === 'INITIAL_SESSION') && session) { const p = takePend(); if (p) setTimeout(async () => { if ($('#paycase')) open('paycase'); YEARLY = /^y/.test(p.k); drawPlans(); if (p.code) await applyCode(p.code); if (p.k !== 'code' || CODE) buy(p.k); }, 0); }
   });
   const main = document.querySelector('main[data-firm]');
   // Search dropdown: firm_suggest() (max 8; prefix, then word, then contains). No match: run a live check.
   const esc = (x) => String(x == null ? '' : x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  drawPlans();
   const mark = (t, q) => { const i = t.toLowerCase().indexOf(q.toLowerCase()); return i < 0 || !q ? esc(t) : esc(t.slice(0, i)) + '<mark>' + esc(t.slice(i, i + q.length)) + '</mark>' + esc(t.slice(i + q.length)); };
   const firmUrl = (slug) => ROOT + 'vc/' + encodeURIComponent(slug) + '/';
   const liveUrl = (q) => ROOT + 'pending/?q=' + encodeURIComponent(q);
