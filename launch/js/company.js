@@ -1,23 +1,14 @@
-/* Company page (/vc/<slug>/): every section is rendered from firm_page() data. One renderer per section
-   (page_sections.renderer in the DB picks it); all visible copy is in COPY. Exposes window.RegretCompany. */
+/* Company page (/vc/<slug>/): section data (count, teaser, items) comes from firm_page(); which sections show,
+   their order, titles, subtitles, unit labels and renderer come from copy.json "sections". Exposes window.RegretCompany. */
 (function () {
-  const COPY = {
-    toc: 'On this page', summary: 'Check summary', fullCheck: 'See the full check →', locked: '🔒 Open with 1 check',
-    lockcard: (n, firm) => '🔒 ' + n + ' sourced facts about ' + firm, lockcardSub: 'Each section shows its count and first line. Everything else opens with 1 check.',
-    lockBtn: 'See them with 1 check', payHead: (title, firm, cnt) => 'Unlock ' + title + ' for ' + firm + ' · ' + cnt,
-    payAll: (n, firm) => 'Unlock all ' + n + ' sourced facts for ' + firm, useLine: (n, firm) => 'Use 1 to open all ' + n + ' sourced facts about ' + firm + '.',
-    legal: { case: 'Cases where the firm is a party', regulator: 'Regulators & lists', context: 'Context, not counted', contextSub: 'The firm itself is not a party in these.' },
-    people: { board: 'Board seats', move: 'Partner moves', officer: 'Officers & owners' },
-    noFacts: 'No sourced facts on file for this check yet.', retrieved: 'retrieved ',
-    pill: { clear: ['p-ok', 'Clear'], review: ['p-rev', 'Review'], red: ['p-red', 'Red flag'], wk: ['p-g', 'Worth knowing'], nf: ['p-g', 'None found'], nc: ['p-g', 'Not checked yet'] },
-    tone: { rev: 'p-rev', ok: 'p-ok', g: 'p-g' }, state: { Active: 'cs-act', Closed: 'cs-cl', Unverified: 'cs-cl' },
-  };
+  const CFG = window.REGRET.copy, COPY = CFG.company, PILL = CFG.site.pills;
+  const fmt = (t, o) => t.replace(/\{(\w+)\}/g, (_, k) => o[k]);
   const esc = (x) => String(x == null ? '' : x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const safeUrl = (u) => /^https?:\/\//i.test(u || '') ? u : null;
   const ROOT = window.REGRET_ROOT || '';
   const chips = (src) => '<div class="scs">' + (src || []).map(s => { const u = safeUrl(s.url); const t = esc(s.label) + (s.date ? ' · ' + esc(s.date) : '') + ' ↗';
     return u ? '<a class="sc" href="' + esc(u) + '" target="_blank" rel="noopener">' + t + '</a>' : ''; }).join('') + '</div>';
-  const pill = (st) => { const p = COPY.pill[st] || COPY.pill.nc; return '<span class="pill ' + p[0] + '"><i></i>' + p[1] + '</span>'; };
+  const pill = (st) => { const p = PILL[st] || PILL.nc; return '<span class="pill ' + p[0] + '"><i></i>' + p[1] + '</span>'; };
   const group = (items, key, labels, body) => Object.keys(labels).map(g => { const xs = items.filter(i => i[key] === g);
     return xs.length ? '<h3>' + esc(labels[g]) + ' · ' + xs.length + '</h3>' + (g === 'context' ? '<p class="psub">' + esc(COPY.legal.contextSub) + '</p>' : '') + body(xs) : ''; }).join('');
 
@@ -36,7 +27,7 @@
     const who = f.who && f.who.startsWith('partner:') ? f.who.slice(8) + ' · ' : '';
     const head = f.case ? '<b>' + esc(f.case) + '</b>' + (f.year ? ' · ' + esc(f.year) : '') + '<br>' : '';
     const u = safeUrl(f.url), st = caseStatus(f);
-    const src = (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(f.label || 'Source') + ' ↗</a>' : esc(f.label || '')) + (f.date ? ' · ' + COPY.retrieved + esc(f.date) : '');
+    const src = (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(f.label || COPY.source) + ' ↗</a>' : esc(f.label || '')) + (f.date ? ' · ' + COPY.retrieved + esc(f.date) : '');
     const p = st === 'active' ? '<span class="cs cs-act">Active</span>' : st === 'closed' ? '<span class="cs cs-cl">Closed</span>' : '';
     return '<div class="fct' + (st === 'active' ? ' act' : '') + '">' + p + (f.needs_proof ? '<span class="np">Needs proof</span>' : '') + head + esc(who) + esc(f.text) + '<div class="src">' + src + '</div></div>';
   }
@@ -50,13 +41,13 @@
         + spill(e.status) + '<span class="lkk">' + COPY.locked + '</span></button>').join('');
       const rank = (f) => caseStatus(f) === 'active' ? 0 : 1;
       const fs = (det[r.n] || []).map((f, i) => [f, i]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map(x => x[0]);
-      const d = P.open ? (fs.length ? fs.map(factHtml).join('') : '<div class="fct">' + COPY.noFacts + '</div>') : '';
+      const d = P.open ? (fs.length ? fs.map(factHtml).join('') : '<div class="fct">' + COPY.no_facts + '</div>') : '';
       return '<div class="row' + (r.n === 10 ? ' last' : '') + (P.open ? ' tog' : '') + '" id="check-' + r.n + '"><span class="n">' + String(r.n).padStart(2, '0') + '</span><div class="tx"><b>' + esc(r.title) + '</b><span>' + esc(r.descr) + '</span></div>'
         + '<div class="pc">' + pill(r.state) + cnt + '</div><span class="lk"></span><div class="gl">' + gl + '</div><div class="det">' + d + '</div></div>';
     }).join('') + '</div>';
   }
 
-  // Open-state renderers, keyed by page_sections.renderer
+  // Open-state renderers, keyed by copy.json sections[].renderer
   const R = {
     facts: (it) => '<div class="kvs">' + it.map(x => '<div class="kv"><span class="k">' + esc(x.label) + '</span><span>' + esc(x.value) + chips(x.src) + '</span></div>').join('') + '</div>',
     checks: (it, P) => checkRows(P),
@@ -80,15 +71,16 @@
     const bars = Array.from({ length: Math.min(s.count - 1, 4) }, (_, i) => '<span class="gb" style="width:' + (92 - i * 13) + '%"></span>').join('');
     return '<button type="button" class="lsec" data-sec="' + esc(s.key) + '"><span class="lt">' + esc(s.teaser) + '</span>' + bars + '<span class="lkk">' + COPY.locked + '</span></button>';
   }
-  const label = (s) => s.count + ' ' + s.unit;
+  const label = (s) => s.count + ' ' + (s.count === 1 ? s.unit_one : s.unit_many);
 
   function render(main, P) {
-    const firm = P.firm.name, secs = P.sections, total = secs.filter(s => s.key !== 'checks').reduce((a, s) => a + s.count, 0);
+    const firm = P.firm.name, byKey = Object.fromEntries(P.sections.map(s => [s.key, s])),
+      secs = CFG.sections.list.filter(c => byKey[c.key]).map(c => Object.assign({}, byKey[c.key], c)), total = secs.filter(s => s.key !== 'checks').reduce((a, s) => a + s.count, 0);
     main.classList.toggle('unlocked', P.open);
     main.querySelector('.m').textContent = [P.firm.hq, P.firm.short_name].filter(Boolean).join(' · ');
     const has = new Set(secs.map(s => s.key));
     main.querySelector('.hfs').innerHTML = P.hero.map(h => '<a class="hf" href="#' + (has.has(h.anchor) ? esc(h.anchor) : '') + '"><span>' + esc(h.label) + '</span><b>' + esc(h.value) + '</b>' + h.src.map(c => '<span class="sc">' + esc(c.label) + (c.date ? ' · ' + esc(c.date) : '') + '</span>').join('') + '</a>').join('');
-    main.querySelector('.csum').innerHTML = has.has('checks') ? '<div class="csh"><b>' + COPY.summary + '</b><a href="#checks">' + COPY.fullCheck + '</a></div><div class="cks">'
+    main.querySelector('.csum').innerHTML = has.has('checks') ? '<div class="csh"><b>' + COPY.summary + '</b><a href="#checks">' + COPY.full_check + '</a></div><div class="cks">'
       + P.checks.map(r => '<a class="ck" href="#checks"><span class="ckn">' + String(r.n).padStart(2, '0') + '</span>' + esc(r.title) + pill(r.state) + '</a>').join('') + '</div>' : '';
     main.querySelector('.csum').hidden = !has.has('checks');
     main.querySelector('.spl').innerHTML = secs.map(s => '<a class="spp" href="#' + esc(s.key) + '">' + esc(s.title) + ' <em>' + s.count + '</em></a>').join('');
@@ -96,10 +88,10 @@
     main.querySelector('.pmain').innerHTML = secs.map(s => '<section id="' + esc(s.key) + '" class="ps"><h2>' + esc(s.title) + ' <em class="pc2">' + esc(label(s)) + '</em></h2><p class="psub">' + esc(s.subtitle || '') + '</p>'
       + (P.open || s.key === 'checks' ? (R[s.renderer] || R.facts)(s.items || [], P) : lockedBody(s)) + '</section>').join('');
     const lc = main.querySelector('#lockcard'); lc.hidden = P.open;
-    lc.querySelector('b').textContent = COPY.lockcard(total, firm); lc.querySelector('p').textContent = COPY.lockcardSub;
-    document.getElementById('puse').textContent = COPY.useLine(total, firm);
+    lc.querySelector('b').textContent = fmt(COPY.lockcard, { n: total, firm }); lc.querySelector('p').textContent = COPY.lockcard_sub;
+    document.getElementById('puse').textContent = fmt(COPY.use_line, { n: total, firm });
     main.querySelectorAll('.row.tog').forEach(row => row.onclick = (e) => { if (!e.target.closest('a')) row.classList.toggle('open'); });
-    return { total, head: (key) => { const s = secs.find(x => x.key === key); return s ? COPY.payHead(s.title, firm, label(s)) : COPY.payAll(total, firm); } };
+    return { total, head: (key) => { const s = secs.find(x => x.key === key); return s ? fmt(COPY.pay_head, { title: s.title, firm, count: label(s) }) : fmt(COPY.pay_all, { n: total, firm }); } };
   }
-  window.RegretCompany = { render, COPY };
+  window.RegretCompany = { render };
 })();

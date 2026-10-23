@@ -1,6 +1,6 @@
 # Regretamin launch (v1)
 Two pages: search (`/`) and one result template per firm (`/vc/<slug>/`), plus `/pending/` for unknown firms. Pricing opens as a modal from the nav.
-Build: `python3 launch/build.py` -> `site-launch/` (separate from the current `site/`; nothing deploys from this branch).
+Build: `python3 launch/build.py` -> `site-launch/`. Copy, plans and section presentation: `launch/copy.json`. Deploy to preview: `launch/deploy_preview.sh`. What to edit for each kind of change: [HOW-TO-CHANGE.md](HOW-TO-CHANGE.md).
 Data: `data/launch/<slug>.json` = output of `launch/firm_snapshot.sql` (read-only, `:slug`). Row logic in `launch/checks.py`: pills only, no verdict/score, name-only hits dropped.
 
 ## To go live

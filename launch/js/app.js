@@ -26,13 +26,15 @@
     const { data, error } = await sb.rpc('check_balance', { p_anon: anonId() });
     return error ? null : data; // {left, signed_in}
   }
-  const PLANS = { m10: { name: 'Starter', n: 10, price: '$19/month' }, m30: { name: 'Pro', n: 30, price: '$49/month' } };
+  // Copy and plans come from launch/copy.json (window.REGRET.copy). fmt fills {name}; pl picks [one, many] by count.
+  const T = C.copy.js, PLANS = Object.fromEntries(Object.entries(C.copy.plans).filter(([k, p]) => p.monthly));
+  const fmt = (t, o) => t.replace(/\{(\w+)\}/g, (_, k) => o[k]), pl = (n, t, o) => fmt(t[n === 1 ? 0 : 1], o);
   const fmtDate = (d) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  const leftOf = (a) => a.plan && PLANS[a.plan] && a.left <= PLANS[a.plan].n ? a.left + ' of ' + PLANS[a.plan].n : String(a.left);
+  const leftOf = (a) => a.plan && PLANS[a.plan] && a.left <= PLANS[a.plan].checks ? fmt(T.left_of, { left: a.left, n: PLANS[a.plan].checks }) : String(a.left);
   let ACCT = null; // { email, plan, left, period_end, cancel_at_period_end, has_customer } once signed in
   async function paint() {
     const b = await balance(); if (!b) return;
-    $('#left').textContent = b.left + (b.signed_in ? '' : ' free') + (b.left === 1 ? ' check left' : ' checks left');
+    $('#left').textContent = pl(b.left, T.nav_left, { n: b.left, free: b.signed_in ? '' : T.free });
     $('#signin').hidden = b.signed_in; $('#acct').hidden = !b.signed_in;
     document.querySelectorAll('[data-out]').forEach(x => x.hidden = b.signed_in);
     if (!b.signed_in) { document.querySelectorAll('[data-in]').forEach(x => x.hidden = true); return; }
@@ -41,7 +43,7 @@
     ACCT = Object.assign({ email: u.user.email || '' }, a);
     $('#av').textContent = (ACCT.email[0] || 'A').toUpperCase();
     $('#ddem').textContent = ACCT.email;
-    $('#ddplan').textContent = ACCT.plan && PLANS[ACCT.plan] ? PLANS[ACCT.plan].name + ' · ' + PLANS[ACCT.plan].n + ' checks/mo' : 'Free';
+    $('#ddplan').textContent = ACCT.plan && PLANS[ACCT.plan] ? fmt(T.plan_menu, { name: PLANS[ACCT.plan].name, n: PLANS[ACCT.plan].checks }) : T.plan_free;
     $('#ddleft').textContent = leftOf(ACCT);
     document.querySelectorAll('[data-in]').forEach(x => x.hidden = false);
     if ($('#account')) paintAccount(); if ($('#mychecks')) paintMyChecks();
@@ -57,44 +59,43 @@
   async function paintAccount() {
     const a = ACCT, P = a.plan && PLANS[a.plan];
     $('#aem').textContent = a.email;
-    $('#aplan2').textContent = P ? P.n + ' checks/mo · ' + P.price : 'No plan. Buy checks any time.';
+    $('#aplan2').textContent = P ? fmt(T.plan_line, { n: P.checks, price: P.price }) : T.no_plan;
     $('#aleft').textContent = leftOf(a);
-    $('#aleft2').textContent = P ? 'Resets to ' + P.n + ' on renewal' : (a.left === 1 ? 'check' : 'checks') + ' to use any time';
+    $('#aleft2').textContent = P ? fmt(T.resets, { n: P.checks }) : pl(a.left, T.any_time, {});
     const ending = !!(P && a.cancel_at_period_end), end = a.period_end ? fmtDate(a.period_end) : '';
-    $('#aplan').innerHTML = esc(P ? P.name : 'Free') + (ending ? '<span class="tag">Cancelling</span>' : '');
-    if (ending && end) $('#aleft2').textContent = 'Usable until ' + end;
-    $('#arenl').textContent = ending ? 'Cancels on' : 'Renews';
+    $('#aplan').innerHTML = esc(P ? P.name : T.plan_free) + (ending ? '<span class="tag">' + T.tag_cancelling + '</span>' : '');
+    if (ending && end) $('#aleft2').textContent = fmt(T.usable_until, { date: end });
+    $('#arenl').textContent = ending ? T.cancels_on : T.renews;
     $('#aren').textContent = P && end ? end : '—'; $('#aren').classList.toggle('cx', ending);
-    $('#aren2').textContent = ending ? 'Won’t renew' : P ? 'Renews monthly' : 'Nothing renews';
+    $('#aren2').textContent = ending ? T.wont_renew : P ? T.renews_monthly : T.nothing_renews;
     $('#cban').hidden = !ending;
-    if (ending) $('#cban').innerHTML = '<b>Your ' + esc(P.name) + ' plan cancels on ' + esc(end) + '.</b> You keep your ' + esc(a.left) + (a.left === 1 ? ' check' : ' checks') + ' until then. Changed your mind? Resume plan and it renews as normal.';
+    if (ending) $('#cban').innerHTML = pl(a.left, T.banner, { plan: esc(P.name), date: esc(end), left: esc(a.left) });
     $('#manage').hidden = !P && !a.has_customer; $('#pick').hidden = !!P;
     $('#cancel').hidden = !P || ending; $('#resume').hidden = !ending;
     $('#buymore').className = ending ? 'btn o' : 'btn';
-    $('#canh').textContent = P ? 'Cancel your ' + P.name + ' plan?' : '';
-    $('#cans').innerHTML = 'You keep your checks until <b>' + esc(end || 'the end of this period') + '</b>, then it won’t renew.';
+    $('#canh').textContent = P ? fmt(T.cancel_title, { plan: P.name }) : '';
+    $('#cans').innerHTML = fmt(T.cancel_sub, { date: esc(end || T.period_end_fallback) });
     const live = P && !ending;
-    $('#dzp').textContent = (live ? 'Cancels your subscription, then permanently deletes' : 'Permanently deletes') + ' your account, remaining checks and history.';
-    $('#cons').innerHTML = (live ? '<li><i>1</i><span>Your <b>' + esc(P.name) + ' subscription is cancelled first</b>, so you won’t be charged again.</span></li>' : '')
-      + '<li><i>' + (live ? 2 : 1) + '</i><span>Your <b>' + esc(a.left) + ' remaining ' + (a.left === 1 ? 'check is' : 'checks are') + ' lost</b> and aren’t refunded.</span></li>'
-      + '<li><i>' + (live ? 3 : 2) + '</i><span>Your list of unlocked firms and your email are permanently deleted.</span></li>';
-    $('#delgo').textContent = live ? 'Cancel subscription & delete' : 'Delete account';
+    $('#dzp').textContent = live ? T.delete_desc_sub : T.delete_desc;
+    $('#cons').innerHTML = [live && fmt(T.cons_sub, { plan: esc(P.name) }), pl(a.left, T.cons_left, { left: esc(a.left) }), T.cons_data]
+      .filter(Boolean).map((t, i) => '<li><i>' + (i + 1) + '</i><span>' + t + '</span></li>').join('');
+    $('#delgo').textContent = live ? T.delete_go_sub : T.delete_go;
     const { data: rows } = await sb.rpc('my_checks');
     const n = (rows || []).length;
-    $('#mcn').textContent = n ? 'You’ve checked ' + n + (n === 1 ? ' firm' : ' firms') : 'No checks yet';
-    $('#mcl').textContent = n ? 'Latest: ' + rows[0].name + ', ' + fmtDate(rows[0].checked_at) : 'Search a firm to run your first check.';
+    $('#mcn').textContent = n ? pl(n, T.checked_n, { n }) : T.no_checks;
+    $('#mcl').textContent = n ? fmt(T.latest, { name: rows[0].name, date: fmtDate(rows[0].checked_at) }) : T.first_check;
   }
   if ($('#account')) {
     $('#manage').onclick = async () => {
       $('#amsg').textContent = '';
       const { data, error } = await sb.functions.invoke('billing-portal', { body: { returnUrl: location.href.split('#')[0] } });
-      if (error || !data || !data.url) return ($('#amsg').textContent = 'Could not open the billing portal. Try again.');
+      if (error || !data || !data.url) return ($('#amsg').textContent = T.portal_fail);
       location.href = data.url;
     };
     $('#emform').onsubmit = async (e) => {
       e.preventDefault(); const email = $('#nem').value.trim(); if (!email) return;
       const { error } = await sb.auth.updateUser({ email }, { emailRedirectTo: location.href.split('#')[0] });
-      $('#emmsg').textContent = error ? error.message : 'Check ' + email + ' for a confirmation link. Your email changes when you open it.';
+      $('#emmsg').textContent = error ? error.message : fmt(T.email_sent, { email });
     };
     // Optional exit answer for the cancel / delete modals ({} when nothing was picked or typed)
     const why = (k) => {
@@ -103,20 +104,20 @@
     };
     const failMsg = async (error, m) => { try { const j = error && error.context && await error.context.json(); if (j && j.message) return j.message; } catch (_) { /* keep default */ } return m; };
     const setPlan = async (body, btn, out) => {
-      btn.disabled = true; out.textContent = body.resume ? 'Resuming…' : 'Cancelling…';
+      btn.disabled = true; out.textContent = body.resume ? T.resuming : T.cancelling;
       const { data, error } = await sb.functions.invoke('cancel-subscription', { body });
       btn.disabled = false;
-      if (error || !data) { out.textContent = await failMsg(error, 'Could not update your plan. Try again.'); return; }
+      if (error || !data) { out.textContent = await failMsg(error, T.plan_fail); return; }
       out.textContent = ''; ACCT.cancel_at_period_end = data.cancel_at_period_end; if (data.period_end) ACCT.period_end = data.period_end;
       closeOv($('#cancelsub')); paintAccount();
     };
     $('#cango').onclick = () => setPlan(why('can'), $('#cango'), $('#canmsg'));
     $('#resume').onclick = () => setPlan({ resume: true }, $('#resume'), $('#amsg'));
     $('#delgo').onclick = async () => {
-      const go = $('#delgo'); go.disabled = true; $('#delmsg').textContent = 'Deleting…';
+      const go = $('#delgo'); go.disabled = true; $('#delmsg').textContent = T.deleting;
       const { data, error } = await sb.functions.invoke('delete-account', { body: why('del') });
       if (error || !data || !data.deleted) {
-        $('#delmsg').textContent = await failMsg(error, 'Could not delete this account. Nothing was deleted.'); go.disabled = false; return;
+        $('#delmsg').textContent = await failMsg(error, T.delete_fail); go.disabled = false; return;
       }
       await sb.auth.signOut(); location.href = ROOT;
     };
@@ -125,7 +126,7 @@
   let MC = [];
   async function paintMyChecks() {
     const a = ACCT, P = a.plan && PLANS[a.plan];
-    $('#mbal').innerHTML = '<b>' + esc(leftOf(a)) + '</b> ' + (a.left === 1 ? 'check' : 'checks') + ' left' + (P ? ' this month' + (a.period_end ? ' · resets ' + esc(fmtDate(a.period_end)) : '') : '');
+    $('#mbal').innerHTML = pl(a.left, T.mc_left, { left: esc(leftOf(a)) }) + (P ? T.mc_month + (a.period_end ? fmt(T.mc_resets, { date: esc(fmtDate(a.period_end)) }) : '') : '');
     const { data } = await sb.rpc('my_checks'); MC = data || [];
     $('#mlist').hidden = !MC.length; $('#mempty').hidden = !!MC.length; drawChecks();
   }
@@ -137,11 +138,10 @@
     $('#mrows').innerHTML = rows.map(r => {
       const d = new Date(r.checked_at), url = ROOT + 'vc/' + encodeURIComponent(r.slug) + '/';
       const when = fmtDate(d) + ' · ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-      const st = r.active ? '<span class="cs cs-act">' + r.active + ' active</span>' + r.active + ' of ' + r.cases + (r.cases === 1 ? ' case' : ' cases') + ' active'
-        : r.cases ? '<span class="cs cs-cl">Closed</span>' + r.cases + (r.cases === 1 ? ' case' : ' cases') + ', none active' : 'No court cases found in sources';
+      const st = r.active ? pl(r.cases, T.mc_active, r) : r.cases ? pl(r.cases, T.mc_closed, r) : T.mc_none;
       const nm = r.name + (r.short_name && r.short_name !== r.name ? ' (' + r.short_name + ')' : '');
-      return '<div class="mr"><button type="button" class="star' + (r.saved ? ' on' : '') + '" data-star="' + esc(r.slug) + '" aria-pressed="' + !!r.saved + '" aria-label="' + (r.saved ? 'Unsave ' : 'Save ') + esc(r.name) + '">' + (r.saved ? '★' : '☆') + '</button>'
-        + '<span class="nm2"><a href="' + esc(url) + '">' + esc(nm) + '</a></span><span class="dt">' + esc(when) + '</span><span class="st">' + st + '</span><a class="btn o" href="' + esc(url) + '">Open result</a></div>';
+      return '<div class="mr"><button type="button" class="star' + (r.saved ? ' on' : '') + '" data-star="' + esc(r.slug) + '" aria-pressed="' + !!r.saved + '" aria-label="' + fmt(r.saved ? T.unsave : T.save, { name: esc(r.name) }) + '">' + (r.saved ? '★' : '☆') + '</button>'
+        + '<span class="nm2"><a href="' + esc(url) + '">' + esc(nm) + '</a></span><span class="dt">' + esc(when) + '</span><span class="st">' + st + '</span><a class="btn o" href="' + esc(url) + '">' + T.open_result + '</a></div>';
     }).join('');
   }
   if ($('#mychecks')) {
@@ -155,17 +155,17 @@
     };
   }
   async function buy(kind) {
-    if (!sb) return alert('Checkout is not configured yet.');
+    if (!sb) return alert(T.no_checkout);
     const { data: s } = await sb.auth.getSession();
     const pay = $('#paycase'), inPay = pay && !pay.hidden, msg = (t) => { if (inPay) $('#pmsg2').textContent = t; else if (t && !/…$/.test(t)) alert(t); };
     if (!s.session) {
       setPend(kind); // after sign-in (Google redirect or magic link) we come back here and continue to checkout
-      if (inPay) { const g = $('#panon'); g.hidden = false; g.classList.add('hi'); $('#psgnh').textContent = 'Sign in to continue to checkout'; g.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
-      $('#suh').textContent = 'Sign in to buy checks'; return open('signup');
+      if (inPay) { const g = $('#panon'); g.hidden = false; g.classList.add('hi'); $('#psgnh').textContent = T.sign_checkout; g.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+      $('#suh').textContent = T.sign_buy; return open('signup');
     }
-    document.querySelectorAll('[data-buy]').forEach(b => b.disabled = true); msg('Opening secure checkout…');
+    document.querySelectorAll('[data-buy]').forEach(b => b.disabled = true); msg(T.opening);
     const { data, error } = await sb.functions.invoke('create-checkout', { body: { kind } });
-    if (error || !data || !data.url) { document.querySelectorAll('[data-buy]').forEach(b => b.disabled = false); return msg('Could not start checkout. Try again.'); }
+    if (error || !data || !data.url) { document.querySelectorAll('[data-buy]').forEach(b => b.disabled = false); return msg(T.checkout_fail); }
     location.href = data.url;
   }
   // Auth
@@ -174,7 +174,7 @@
   const magic = async (email, out) => {
     if (!sb || !email) return;
     const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: back() } });
-    out.textContent = error ? error.message : 'Check your inbox for the sign-in link.';
+    out.textContent = error ? error.message : T.magic_sent;
   };
   const g = $('#google'); if (g) g.onclick = google;
   const m = $('#magic'); if (m) m.onclick = () => magic($('#em').value.trim(), $('#sumsg'));
@@ -198,7 +198,7 @@
     const draw = (q) => {
       box.innerHTML = hits.length ? hits.map((h, i) => '<a role="option" class="so2' + (i === act ? ' on' : '') + '" aria-selected="' + (i === act) + '" href="' + esc(firmUrl(h.slug)) + '"><b>' + mark(h.name, q) + '</b>'
         + (h.short_name && h.short_name !== h.name ? '<em>' + mark(h.short_name, q) + '</em>' : '') + '<span>' + esc(h.hq || '') + '</span></a>').join('')
-        : '<a class="so2 none" href="' + esc(liveUrl(q)) + '">Not in our database yet, run a live check →</a>';
+        : '<a class="so2 none" href="' + esc(liveUrl(q)) + '">' + T.suggest_none + '</a>';
       show(true);
     };
     inp.addEventListener('input', () => {
@@ -221,11 +221,11 @@
   // Unknown firm
   const pq = $('#pq');
   if (pq) {
-    const q = new URLSearchParams(location.search).get('q') || 'This firm'; pq.textContent = q;
+    const q = new URLSearchParams(location.search).get('q') || T.this_firm; pq.textContent = q;
     $('#notify').onsubmit = async (e) => {
       e.preventDefault(); if (!sb) return;
       const { error } = await sb.rpc('request_check', { p_query: q, p_email: e.target.email.value, p_anon: anonId() });
-      $('#pmsg').textContent = error ? 'Something went wrong, try again.' : "Got it. We'll email you when it's ready.";
+      $('#pmsg').textContent = error ? T.error : T.notify_ok;
     };
   }
   // Company page: one firm_page() call returns everything (locked: counts + one line per section only).
@@ -234,15 +234,15 @@
     SEC = sec || '';
     $('#pph').textContent = VIEW.head(SEC);
     $('#pmsg2').textContent = '';
-    const ub = $('#usecheck'), pb = $('#pbal'); ub.disabled = true; pb.textContent = 'Checking your balance…';
-    $('#panon').classList.remove('hi'); $('#psgnh').textContent = 'Sign in to buy';
+    const ub = $('#usecheck'), pb = $('#pbal'); ub.disabled = true; pb.textContent = C.copy.site.pay.balance_loading;
+    $('#panon').classList.remove('hi'); $('#psgnh').textContent = C.copy.site.pay.sign_title;
     open('paycase');
     BAL = await balance();
     $('#panon').hidden = !!(BAL && BAL.signed_in);
-    if (!BAL) { pb.textContent = 'Could not load your balance'; return; }
-    const n = BAL.left, w = n === 1 ? ' check' : ' checks';
-    pb.textContent = n > 0 ? 'You have ' + n + (BAL.signed_in ? '' : ' free') + w + ' left' : (BAL.signed_in ? 'You have no checks left' : 'No free checks left on this device');
-    if (n <= 0) $('#pmsg2').textContent = BAL.signed_in ? 'Pick a plan below to get more checks.' : 'Sign in below for 4 more free checks, or pick a plan.';
+    if (!BAL) { pb.textContent = T.balance_fail; return; }
+    const n = BAL.left;
+    pb.textContent = n > 0 ? pl(n, T.have, { n, free: BAL.signed_in ? '' : T.free }) : (BAL.signed_in ? T.none_signed : T.none_anon);
+    if (n <= 0) $('#pmsg2').textContent = BAL.signed_in ? T.pick_more : T.sign_more;
     ub.disabled = n <= 0;
   }
   function draw(P) {
@@ -253,10 +253,10 @@
   async function loadPage(spend) {
     if (!sb) return;
     const { data, error } = await sb.rpc('firm_page', { p_slug: main.dataset.firm, p_anon: anonId(), p_spend: spend });
-    if (error || !data) { if (spend) $('#pmsg2').textContent = 'Something went wrong, try again.'; return; }
+    if (error || !data) { if (spend) $('#pmsg2').textContent = T.error; return; }
     if (data.status === 'ok') { if (data.open) closeOv($('#paycase')); return draw(data); }
-    if (data.status === 'need_signup') { $('#pmsg2').textContent = "You've used your free checks. Sign in below for 4 more."; const g = $('#panon'); g.hidden = false; g.classList.add('hi'); $('#usecheck').disabled = true; }
-    if (data.status === 'out') { $('#pmsg2').textContent = "You're out of checks. Buy more below."; $('#usecheck').disabled = true; }
+    if (data.status === 'need_signup') { $('#pmsg2').textContent = T.need_signup; const g = $('#panon'); g.hidden = false; g.classList.add('hi'); $('#usecheck').disabled = true; }
+    if (data.status === 'out') { $('#pmsg2').textContent = T.out; $('#usecheck').disabled = true; }
   }
   if (main) {
     // In-page anchors: smooth scroll and update the hash

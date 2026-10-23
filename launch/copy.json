@@ -1,0 +1,521 @@
+{
+ "_readme": "All user-facing copy, plans/prices and company-page section presentation. Edit here, then run launch/deploy_preview.sh. {x} = value filled in by the code.",
+ "plans": {
+  "_note": "Display only. Stripe price IDs are Supabase Edge Function secrets STRIPE_PRICE_SINGLE / STRIPE_PRICE_M10 / STRIPE_PRICE_M30 (see HOW-TO-CHANGE.md). checks = checks granted; must match PLAN in supabase/functions/regretamin-stripe-webhook.",
+  "single": {
+   "name": "Single check",
+   "price": "$10",
+   "monthly": false,
+   "checks": 1,
+   "per_check": "$10",
+   "modal": {
+    "blurb": "One firm, full details and sources.",
+    "button": "Buy 1 check"
+   },
+   "pay": {
+    "period": "one time",
+    "bill": "Opens one firm",
+    "button": "Buy 1 check",
+    "features": [
+     "Every gray entry for this firm",
+     "Names, parties, courts, sources",
+     "Yours to keep"
+    ]
+   }
+  },
+  "m10": {
+   "name": "Starter",
+   "price": "$19",
+   "monthly": true,
+   "checks": 10,
+   "per_check": "$1.90",
+   "highlight": true,
+   "tag": "Most picked",
+   "modal": {
+    "blurb": "10 checks a month.",
+    "button": "Get 10 checks"
+   },
+   "pay": {
+    "period": "/month",
+    "bill": "10 checks a month",
+    "button": "Start Starter",
+    "features": [
+     "10 firms a month",
+     "Full sources on every entry"
+    ]
+   }
+  },
+  "m30": {
+   "name": "Pro",
+   "price": "$49",
+   "monthly": true,
+   "checks": 30,
+   "per_check": "$1.63",
+   "modal": {
+    "blurb": "30 checks a month.",
+    "button": "Get 30 checks"
+   },
+   "pay": {
+    "period": "/month",
+    "bill": "30 checks a month",
+    "button": "Start Pro",
+    "features": [
+     "30 firms a month",
+     "Full sources on every entry"
+    ]
+   }
+  }
+ },
+ "sections": {
+  "_note": "Company page sections, in display order. renderer = facts | checks | legal | press | founders | people | timeline (js/company.js). Remove an entry to hide a section. The DB only supplies the data per key.",
+  "list": [
+   {
+    "key": "overview",
+    "title": "Overview",
+    "subtitle": "Registration and ownership from the firm's own filings.",
+    "renderer": "facts",
+    "unit_one": "fact",
+    "unit_many": "facts"
+   },
+   {
+    "key": "checks",
+    "title": "The 10 checks",
+    "subtitle": "Sanctions, regulators, courts, registration and people.",
+    "renderer": "checks",
+    "unit_one": "check",
+    "unit_many": "checks"
+   },
+   {
+    "key": "legal",
+    "title": "Legal & regulatory",
+    "subtitle": "Cases where the firm itself is a party, and regulator records.",
+    "renderer": "legal",
+    "unit_one": "record",
+    "unit_many": "records"
+   },
+   {
+    "key": "press",
+    "title": "Press coverage",
+    "subtitle": "Articles naming the firm, with the outlet and date.",
+    "renderer": "press",
+    "unit_one": "article",
+    "unit_many": "articles"
+   },
+   {
+    "key": "founders",
+    "title": "What founders say",
+    "subtitle": "Accounts from founders, each with its source.",
+    "renderer": "founders",
+    "unit_one": "account",
+    "unit_many": "accounts"
+   },
+   {
+    "key": "people",
+    "title": "People & board seats",
+    "subtitle": "Officers, partner moves and board seats.",
+    "renderer": "people",
+    "unit_one": "person",
+    "unit_many": "people"
+   },
+   {
+    "key": "funds",
+    "title": "Firm & funds",
+    "subtitle": "Assets and funds from Form ADV.",
+    "renderer": "facts",
+    "unit_one": "fact",
+    "unit_many": "facts"
+   },
+   {
+    "key": "timeline",
+    "title": "Timeline",
+    "subtitle": "Dated events with a source.",
+    "renderer": "timeline",
+    "unit_one": "event",
+    "unit_many": "events"
+   }
+  ]
+ },
+ "site": {
+  "brand": "Regretamin",
+  "title_suffix": " · Regretamin",
+  "search_placeholder": "Search a VC firm, e.g. Andreessen Horowitz",
+  "search_button": "Check",
+  "search_aria": "VC firm",
+  "nav": {
+   "pricing": "Pricing",
+   "sign_in": "Sign in",
+   "account_btn": "Account ▾",
+   "account": "Account",
+   "my_checks": "My checks",
+   "buy_more": "Buy more checks",
+   "checks_left": "Checks left",
+   "sign_out": "Sign out"
+  },
+  "signup": {
+   "title": "Get 4 more free checks",
+   "sub": "Create a free account. No card needed.",
+   "google": "Continue with Google",
+   "or": "or",
+   "email_placeholder": "you@startup.com",
+   "magic": "Email me a sign-in link"
+  },
+  "pricing": {
+   "title": "Pricing",
+   "sub": "Counting is in checks: 1 firm = 1 check. Monthly plans renew; if you run out, buy more checks any time.",
+   "per_month_short": "/mo"
+  },
+  "landing": {
+   "h1": "Check your VC",
+   "h1_accent": "before you sign.",
+   "chips": [
+    "Sanctions & terrorism lists",
+    "Export & investment restrictions",
+    "Financial regulators",
+    "Money laundering penalties",
+    "US & worldwide courts",
+    "Registration",
+    "People behind the fund",
+    "Political ties"
+   ],
+   "demo_firm": "Example Ventures",
+   "demo_tag": "10 checks · example",
+   "demo_more": "+ 6 more checks",
+   "demo_rows": [
+    [
+     "Sanctions",
+     "clear",
+     null
+    ],
+    [
+     "Financial regulator actions",
+     "review",
+     "1 open probe"
+    ],
+    [
+     "US court records",
+     "clear",
+     "3 closed"
+    ],
+    [
+     "People behind the fund",
+     "clear",
+     null
+    ]
+   ],
+   "press_h2": "Founders vs. their investors, in the news",
+   "press": [
+    [
+     "Reuters",
+     "Uber investor sues to force former CEO Kalanick off board",
+     "Aug 2017",
+     "https://www.reuters.com/article/world/uber-investor-sues-to-force-former-ceo-kalanick-off-board-idUSKBN1AQ2EV/"
+    ],
+    [
+     "CNBC",
+     "SoftBank sues social media startup it invested in, alleging it faked user numbers",
+     "Aug 2023",
+     "https://www.cnbc.com/2023/08/04/softbank-sues-social-media-startup-irl-alleging-fake-user-numbers.html"
+    ],
+    [
+     "TechCrunch",
+     "Byju’s investors vote to remove founder",
+     "Feb 2024",
+     "https://techcrunch.com/2024/02/23/byjus-investors-unanimously-vote-to-remove-founder/"
+    ],
+    [
+     "Bloomberg",
+     "A $1 Million Bet on a Tech Startup Spawns Investor-Founder Fight",
+     "Apr 2024",
+     "https://www.bloomberg.com/news/articles/2024-04-24/toptal-founder-and-investor-tensions-spark-lawsuit"
+    ],
+    [
+     "Axios",
+     "Khosla sues entrepreneur for fraud",
+     "Sep 2017",
+     "https://www.axios.com/2017/12/15/khosla-sues-entrepreneur-for-fraud-1513305375"
+    ]
+   ],
+   "press_small_wordmarks": [
+    "TechCrunch",
+    "CNBC",
+    "Axios"
+   ]
+  },
+  "pills": {
+   "clear": [
+    "p-ok",
+    "Clear"
+   ],
+   "review": [
+    "p-rev",
+    "Review"
+   ],
+   "red": [
+    "p-red",
+    "Red flag"
+   ],
+   "wk": [
+    "p-g",
+    "Worth knowing"
+   ],
+   "nf": [
+    "p-g",
+    "None found"
+   ],
+   "nc": [
+    "p-g",
+    "Not checked yet"
+   ]
+  },
+  "result": {
+   "lock_button": "See them with 1 check",
+   "toc_aria": "On this page",
+   "fine": "Public-record information, not legal or investment advice."
+  },
+  "pay": {
+   "close": "Close",
+   "title": "Unlock this firm",
+   "sub": "Open the gray entries with a check. Pay once or monthly.",
+   "balance_loading": "Checking your balance…",
+   "use": "Use 1 check",
+   "per_check": "{price} per check",
+   "sign_title": "Sign in to buy",
+   "sign_sub": "Checks are saved to your account. Free checks on this device move over.",
+   "google": "Continue with Google",
+   "or": "or",
+   "email_placeholder": "you@company.com",
+   "email_aria": "Email",
+   "magic": "Email me a link",
+   "fine": "Monthly plans renew each month. 1 firm = 1 check."
+  },
+  "pending": {
+   "h1": "We're checking this firm now",
+   "body": "isn't in our database yet. We're running all 10 checks — we'll let you know in 5 minutes.",
+   "email_placeholder": "you@startup.com",
+   "button": "Email me",
+   "note": "This uses 1 check only when the result is ready."
+  },
+  "signed_out": {
+   "h2": "Sign in to see this page",
+   "p": "Your account, checks and saved firms are here once you sign in.",
+   "button": "Sign in"
+  },
+  "account": {
+   "h1": "Account",
+   "plan": "Plan",
+   "checks_left": "Checks left",
+   "renews": "Renews",
+   "resume": "Resume plan",
+   "manage": "Manage subscription",
+   "cancel": "Cancel subscription",
+   "pick": "Pick a plan",
+   "buy_more": "Buy more checks",
+   "my_checks_h2": "My checks",
+   "view_all": "View all →",
+   "email_h2": "Email",
+   "email_d": "Used to sign in. No password needed.",
+   "email_label": "New email",
+   "email_placeholder": "you@company.com",
+   "email_button": "Send confirmation link",
+   "email_hint": "We email a link to the new address. Your email changes when you open it.",
+   "danger_h2": "Danger zone",
+   "delete_b": "Delete account",
+   "delete_p": "Permanently deletes your account, remaining checks and history.",
+   "delete_button": "Delete account",
+   "del_h2": "Delete your account?",
+   "del_s": "This can’t be undone. Here’s what happens:",
+   "del_why": "Why are you leaving?",
+   "del_keep": "Keep my account",
+   "del_go": "Delete account",
+   "can_why": "Why are you cancelling?",
+   "can_keep": "Keep plan",
+   "can_go": "Cancel subscription",
+   "why_optional": "Optional",
+   "why_more": "Tell us more (optional)",
+   "why_more_aria": "Tell us more",
+   "reasons": [
+    [
+     "got_what_i_needed",
+     "Got what I needed"
+    ],
+    [
+     "too_expensive",
+     "Too expensive"
+    ],
+    [
+     "didnt_find_my_vc",
+     "Didn’t find my VC"
+    ],
+    [
+     "data_not_useful",
+     "Data not useful"
+    ],
+    [
+     "other",
+     "Other"
+    ]
+   ]
+  },
+  "my_checks": {
+   "h1": "My checks",
+   "sub": "Every firm you’ve checked. Reopening a result is free.",
+   "search": "Search your checks",
+   "sort_aria": "Sort",
+   "sort": [
+    [
+     "new",
+     "Newest first"
+    ],
+    [
+     "old",
+     "Oldest first"
+    ],
+    [
+     "az",
+     "Name A–Z"
+    ]
+   ],
+   "cols": [
+    "",
+    "Firm",
+    "Checked",
+    "Status",
+    ""
+   ],
+   "none": "No checks match your search.",
+   "empty_h2": "No checks yet",
+   "empty_p": "Check your VC before you sign. Search a firm to run your first check."
+  }
+ },
+ "company": {
+  "toc": "On this page",
+  "summary": "Check summary",
+  "full_check": "See the full check →",
+  "locked": "🔒 Open with 1 check",
+  "lockcard": "🔒 {n} sourced facts about {firm}",
+  "lockcard_sub": "Each section shows its count and first line. Everything else opens with 1 check.",
+  "pay_head": "Unlock {title} for {firm} · {count}",
+  "pay_all": "Unlock all {n} sourced facts for {firm}",
+  "use_line": "Use 1 to open all {n} sourced facts about {firm}.",
+  "legal": {
+   "case": "Cases where the firm is a party",
+   "regulator": "Regulators & lists",
+   "context": "Context, not counted",
+   "contextSub": "The firm itself is not a party in these."
+  },
+  "people": {
+   "board": "Board seats",
+   "move": "Partner moves",
+   "officer": "Officers & owners"
+  },
+  "no_facts": "No sourced facts on file for this check yet.",
+  "retrieved": "retrieved ",
+  "source": "Source",
+  "_colors": "CSS classes; the colors themselves are in launch/style.css",
+  "tone": {
+   "rev": "p-rev",
+   "ok": "p-ok",
+   "g": "p-g"
+  },
+  "state": {
+   "Active": "cs-act",
+   "Closed": "cs-cl",
+   "Unverified": "cs-cl"
+  }
+ },
+ "js": {
+  "_note": "Strings used by js/app.js. [one, many] pairs are picked by count. HTML allowed where the code uses innerHTML (values are escaped).",
+  "nav_left": [
+   "{n}{free} check left",
+   "{n}{free} checks left"
+  ],
+  "free": " free",
+  "left_of": "{left} of {n}",
+  "plan_menu": "{name} · {n} checks/mo",
+  "plan_free": "Free",
+  "plan_line": "{n} checks/mo · {price}/month",
+  "no_plan": "No plan. Buy checks any time.",
+  "resets": "Resets to {n} on renewal",
+  "any_time": [
+   "check to use any time",
+   "checks to use any time"
+  ],
+  "tag_cancelling": "Cancelling",
+  "usable_until": "Usable until {date}",
+  "cancels_on": "Cancels on",
+  "renews": "Renews",
+  "wont_renew": "Won’t renew",
+  "renews_monthly": "Renews monthly",
+  "nothing_renews": "Nothing renews",
+  "banner": [
+   "<b>Your {plan} plan cancels on {date}.</b> You keep your {left} check until then. Changed your mind? Resume plan and it renews as normal.",
+   "<b>Your {plan} plan cancels on {date}.</b> You keep your {left} checks until then. Changed your mind? Resume plan and it renews as normal."
+  ],
+  "cancel_title": "Cancel your {plan} plan?",
+  "cancel_sub": "You keep your checks until <b>{date}</b>, then it won’t renew.",
+  "period_end_fallback": "the end of this period",
+  "delete_desc_sub": "Cancels your subscription, then permanently deletes your account, remaining checks and history.",
+  "delete_desc": "Permanently deletes your account, remaining checks and history.",
+  "cons_sub": "Your <b>{plan} subscription is cancelled first</b>, so you won’t be charged again.",
+  "cons_left": [
+   "Your <b>{left} remaining check is lost</b> and aren’t refunded.",
+   "Your <b>{left} remaining checks are lost</b> and aren’t refunded."
+  ],
+  "cons_data": "Your list of unlocked firms and your email are permanently deleted.",
+  "delete_go_sub": "Cancel subscription & delete",
+  "delete_go": "Delete account",
+  "checked_n": [
+   "You’ve checked {n} firm",
+   "You’ve checked {n} firms"
+  ],
+  "no_checks": "No checks yet",
+  "latest": "Latest: {name}, {date}",
+  "first_check": "Search a firm to run your first check.",
+  "portal_fail": "Could not open the billing portal. Try again.",
+  "email_sent": "Check {email} for a confirmation link. Your email changes when you open it.",
+  "resuming": "Resuming…",
+  "cancelling": "Cancelling…",
+  "plan_fail": "Could not update your plan. Try again.",
+  "deleting": "Deleting…",
+  "delete_fail": "Could not delete this account. Nothing was deleted.",
+  "mc_left": [
+   "<b>{left}</b> check left",
+   "<b>{left}</b> checks left"
+  ],
+  "mc_month": " this month",
+  "mc_resets": " · resets {date}",
+  "mc_active": [
+   "<span class=\"cs cs-act\">{active} active</span>{active} of {cases} case active",
+   "<span class=\"cs cs-act\">{active} active</span>{active} of {cases} cases active"
+  ],
+  "mc_closed": [
+   "<span class=\"cs cs-cl\">Closed</span>{cases} case, none active",
+   "<span class=\"cs cs-cl\">Closed</span>{cases} cases, none active"
+  ],
+  "mc_none": "No court cases found in sources",
+  "save": "Save {name}",
+  "unsave": "Unsave {name}",
+  "open_result": "Open result",
+  "no_checkout": "Checkout is not configured yet.",
+  "sign_checkout": "Sign in to continue to checkout",
+  "sign_buy": "Sign in to buy checks",
+  "opening": "Opening secure checkout…",
+  "checkout_fail": "Could not start checkout. Try again.",
+  "magic_sent": "Check your inbox for the sign-in link.",
+  "suggest_none": "Not in our database yet, run a live check →",
+  "this_firm": "This firm",
+  "error": "Something went wrong, try again.",
+  "notify_ok": "Got it. We'll email you when it's ready.",
+  "balance_fail": "Could not load your balance",
+  "have": [
+   "You have {n}{free} check left",
+   "You have {n}{free} checks left"
+  ],
+  "none_signed": "You have no checks left",
+  "none_anon": "No free checks left on this device",
+  "pick_more": "Pick a plan below to get more checks.",
+  "sign_more": "Sign in below for 4 more free checks, or pick a plan.",
+  "need_signup": "You've used your free checks. Sign in below for 4 more.",
+  "out": "You're out of checks. Buy more below."
+ }
+}
