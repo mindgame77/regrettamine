@@ -47,7 +47,8 @@
   const leftOf = (a) => { const P = planOf(a); return P && a.left <= P.checks ? fmt(T.left_of, { left: a.left, n: P.checks }) : String(a.left); };
   let ACCT = null; // { email, plan, left, period_end, cancel_at_period_end, has_customer } once signed in
   async function paint() {
-    const b = await balance(); if (!b) return;
+    const b = await balance();
+    if (!b) { const s = sb && (await sb.auth.getSession()).data.session; if (!s) document.querySelectorAll('[data-out]').forEach(x => x.hidden = false); return; }
     $('#left').textContent = pl(b.left, T.nav_left, { n: b.left, free: b.signed_in ? '' : T.free });
     $('#signin').hidden = b.signed_in; $('#acct').hidden = !b.signed_in;
     document.querySelectorAll('[data-out]').forEach(x => x.hidden = b.signed_in);

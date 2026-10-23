@@ -324,8 +324,10 @@
    "note": "This uses 1 check only when the result is ready."
   },
   "signed_out": {
-   "h2": "Sign in to see this page",
-   "p": "Your account, checks and saved firms are here once you sign in.",
+   "account_h2": "Sign in to see your account",
+   "account_p": "Your plan, checks left and account settings are here once you sign in.",
+   "checks_h2": "Sign in to see your checks",
+   "checks_p": "Every firm you’ve checked is saved here once you sign in.",
    "button": "Sign in"
   },
   "account": {
