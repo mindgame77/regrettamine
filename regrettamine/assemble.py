@@ -45,7 +45,8 @@ def _version_code(bundle, version_id):
 
 
 def assemble_home(bundle):
-    firms = _sort(bundle.get("firms"), "list_sort", "slug")
+    # Launch-only firms (no report yet) have no list data; the legacy list skips them.
+    firms = _sort([f for f in bundle.get("firms") or [] if f.get("report_slug")], "list_sort", "slug")
     funds = []
     for firm in firms:
         row = {

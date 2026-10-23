@@ -314,9 +314,10 @@ def test_shared_list_and_auth_pages(monkeypatch):
     portal_fn = (ROOT / "supabase" / "functions" / "billing-portal" / "index.ts").read_text(encoding="utf-8")
     assert "billing_portal/sessions" in portal_fn
     assert "Access-Control-Allow-Origin" in portal_fn and "OPTIONS" in portal_fn
-    assert "bpc_1UMuvYHcbGkfjKgmIKZWNWhe" in portal_fn
+    # Portal config and key come from env (test/live switch in _shared/stripe_env.ts).
+    assert "portalConfig()" in portal_fn
     assert "settings/?tab=billing" in portal_fn
-    assert "stripe_secret_key" in portal_fn
+    assert "activeKey" in portal_fn
     assert "payment_methods" in portal_fn and "cardOnly" in portal_fn
     assert "card_last4" in (ROOT / "supabase" / "migrations" / "20261004300000_gate_card.sql").read_text(encoding="utf-8")
     assert "openBillingPortal" in auth_js and "billing-portal" in auth_js and "portalUrl" in auth_js

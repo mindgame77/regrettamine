@@ -50,7 +50,9 @@ def insert_rows(cur, table, rows):
         "and is_generated = 'NEVER' order by ordinal_position",
         (table,),
     )
-    cols = [row[0] for row in cur.fetchall()]
+    # Only columns present in the seed rows, so newer columns keep their defaults.
+    present = set().union(*(r.keys() for r in rows))
+    cols = [row[0] for row in cur.fetchall() if row[0] in present]
     col_list = ", ".join(f'"{c}"' for c in cols)
     cur.execute(
         f'insert into public."{table}" ({col_list}) overriding system value '
