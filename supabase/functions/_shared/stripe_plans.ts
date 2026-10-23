@@ -1,14 +1,12 @@
 // Plans sold by Regretamin and promotion-code lookup, shared by create-checkout and validate-code.
-// Secrets: STRIPE_PRICE_SINGLE, STRIPE_PRICE_M10, STRIPE_PRICE_M30, STRIPE_PRICE_Y10, STRIPE_PRICE_Y30.
+// Secrets: STRIPE_MODE + STRIPE_<LIVE|TEST>_PRICE_SINGLE/M10/M30/Y10/Y30 (see stripe_env.ts).
 // Codes are Stripe promotion codes. Optional promotion-code metadata:
 //   unlock_price=price_…  the code also unlocks this hidden price (price metadata hidden=true, checks=<per month>, name=<plan name>)
 //   unlock_only=true      the code only unlocks the hidden plan; its coupon discount is not applied
 import Stripe from "npm:stripe@16";
 export type Kind = "single" | "m10" | "m30" | "y10" | "y30";
-export const PRICES: Record<Kind, string> = {
-  single: Deno.env.get("STRIPE_PRICE_SINGLE")!, m10: Deno.env.get("STRIPE_PRICE_M10")!, m30: Deno.env.get("STRIPE_PRICE_M30")!,
-  y10: Deno.env.get("STRIPE_PRICE_Y10")!, y30: Deno.env.get("STRIPE_PRICE_Y30")!,
-};
+import { price } from "./stripe_env.ts"; // STRIPE_<MODE>_PRICE_* (see stripe_env.ts)
+export const PRICES: Record<Kind, string> = { single: price("single"), m10: price("m10"), m30: price("m30"), y10: price("y10"), y30: price("y30") };
 export type Hidden = { price: Stripe.Price; name: string; checks: number };
 export type Code = { promo: Stripe.PromotionCode; discount: boolean; kinds: Kind[]; hidden: Hidden | null; hiddenDiscount: boolean };
 

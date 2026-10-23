@@ -2,6 +2,7 @@
 // Sets Stripe cancel_at_period_end and mirrors it plus the period end into check_balances.
 // A cancel with a reason writes one anonymous exit_reasons row. The Stripe secret is app_secrets.key = 'stripe_secret_key'. verify_jwt is true.
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { stripeKey as activeKey } from "../_shared/stripe_env.ts";
 import { exitReason } from "../_shared/exit_reason.ts";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -43,9 +44,7 @@ Deno.serve(async (req: Request) => {
   const subId = bal && bal.stripe_subscription_id;
   if (typeof subId !== "string" || !subId.startsWith("sub_")) return json(404, { message: "You don't have a plan to cancel." });
 
-  const secretRes = await fetch(`${url}/rest/v1/app_secrets?key=eq.stripe_secret_key&select=value`, { headers: svc });
-  const secretRows = secretRes.ok ? await secretRes.json() : [];
-  const stripeKey = Array.isArray(secretRows) && secretRows[0] && secretRows[0].value;
+  const stripeKey = activeKey(); // STRIPE_MODE picks live or test
   if (!stripeKey) return json(500, { message: FAIL });
 
   const subRes = await fetch(`https://api.stripe.com/v1/subscriptions/${encodeURIComponent(subId)}`, {

@@ -100,6 +100,7 @@ def main():
     shutil.rmtree(OUT, ignore_errors=True); os.makedirs(OUT)
     for f in ('style.css', 'logo.svg', 'js/app.js', 'js/company.js'): shutil.copy(os.path.join(HERE, f), OUT)
     shutil.copytree(os.path.join(HERE, 'fav'), os.path.join(OUT, 'fav'))
+    shutil.copy(os.path.join(HERE, 'CNAME'), OUT)  # GitHub Pages custom domain (regretamin.com)
     firms = []
     for p in sorted(glob.glob(os.path.join(ROOT, 'data', 'launch', '*.json'))):
         F = json.load(open(p))['firm']; firms.append(F['slug'])

@@ -1,9 +1,10 @@
 // Opens a Stripe Customer Portal session for the signed-in user.
 // verify_jwt is true. The client falls back to the portal login URL if this fails.
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { portalConfig, stripeKey as activeKey } from "../_shared/stripe_env.ts";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const PORTAL_CONFIG = "bpc_1UMuvYHcbGkfjKgmIKZWNWhe";
+const PORTAL_CONFIG = portalConfig(); // STRIPE_<MODE>_PORTAL_CONFIG
 const RETURN_URL = "https://mindgame77.github.io/regrettamine/settings/?tab=billing";
 // The launch Account page passes its own URL; only same-owner GitHub Pages URLs are accepted.
 const RETURN_RE = /^https:\/\/mindgame77\.github\.io\/[A-Za-z0-9._\/?=&-]*$/;
@@ -132,13 +133,7 @@ Deno.serve(async (req: Request) => {
   }
   if (!customer) return json(404, { message: "No card on file." });
 
-  const secretRes = await fetch(
-    `${url}/rest/v1/app_secrets?key=eq.stripe_secret_key&select=value`,
-    { headers: { apikey: service, Authorization: `Bearer ${service}` } },
-  );
-  if (!secretRes.ok) return json(502, { message: "Could not open the billing portal." });
-  const secretRows = await secretRes.json();
-  const stripeKey = Array.isArray(secretRows) && secretRows[0] && secretRows[0].value;
+  const stripeKey = activeKey(); // STRIPE_MODE picks live or test
   if (!stripeKey) return json(502, { message: "Could not open the billing portal." });
 
   let cardOnly = false;

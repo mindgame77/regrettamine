@@ -3,6 +3,7 @@
 // Optional body {reason, other} writes one anonymous exit_reasons row after the delete; an empty or missing body (old settings page) still works.
 // The Stripe secret is app_secrets.key = 'stripe_secret_key'. verify_jwt is true.
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { stripeKey as activeKey } from "../_shared/stripe_env.ts";
 import { exitReason } from "../_shared/exit_reason.ts";
 
 const PLAN_MSG = "We couldn't cancel your plan, contact malytskyyo@gmail.com";
@@ -70,13 +71,7 @@ Deno.serve(async (req: Request) => {
   });
 
   if (live.length || balSubs.length) {
-    const secretRes = await fetch(
-      `${url}/rest/v1/app_secrets?key=eq.stripe_secret_key&select=value`,
-      { headers: { apikey: service, Authorization: `Bearer ${service}` } },
-    );
-    if (!secretRes.ok) return json(409, { message: PLAN_MSG });
-    const secretRows = await secretRes.json();
-    const stripeKey = Array.isArray(secretRows) && secretRows[0] && secretRows[0].value;
+    const stripeKey = activeKey(); // STRIPE_MODE picks live or test
     if (!stripeKey) return json(409, { message: PLAN_MSG });
 
     const ids = [...new Set([...live, ...balSubs].map((row) => String(row.stripe_subscription_id)))];

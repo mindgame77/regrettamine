@@ -3,7 +3,8 @@
 // create-checkout re-checks the code and applies the discount itself. Secrets: STRIPE_SECRET_KEY + price IDs (see _shared/stripe_plans.ts).
 import Stripe from "npm:stripe@16";
 import { lookupCode } from "../_shared/stripe_plans.ts";
-const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!);
+import { stripeKey } from "../_shared/stripe_env.ts";
+const stripe = new Stripe(stripeKey()); // STRIPE_MODE picks the live or test key
 const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, content-type, apikey, x-client-info" };
 const json = (o: unknown) => new Response(JSON.stringify(o), { headers: { ...cors, "Content-Type": "application/json" } });
 Deno.serve(async (req) => {

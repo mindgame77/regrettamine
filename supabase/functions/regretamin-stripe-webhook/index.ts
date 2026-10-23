@@ -1,19 +1,24 @@
-// Stripe webhook -> grant_checks. Secrets: STRIPE_SECRET_KEY, REGRETAMIN_STRIPE_WEBHOOK_SECRET, SUPABASE_SERVICE_ROLE_KEY.
+// Stripe webhook -> grant_checks. Secrets: STRIPE_LIVE/TEST_SECRET_KEY, REGRETAMIN_STRIPE_WEBHOOK_SECRET[_LIVE|_TEST], SUPABASE_SERVICE_ROLE_KEY.
 // Deploy with --no-verify-jwt. Events: checkout.session.completed, invoice.paid,
 // customer.subscription.updated (mirrors cancel_at_period_end + period end), customer.subscription.deleted (plan ends).
 import Stripe from "npm:stripe@16";
 import { createClient } from "npm:@supabase/supabase-js@2";
-const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!);
+import { stripeKey, webhookSecrets } from "../_shared/stripe_env.ts";
+const clients = { live: new Stripe(stripeKey(true)), test: new Stripe(stripeKey(false)) };
+const verifier = clients.test; // signature checks need no key
 const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 // Checks per month. Code-unlocked plans have kind "custom" with checks in subscription metadata (set by create-checkout).
 // Yearly-billed plans are refilled monthly by the DB job refill_yearly_checks(); monthly ones by each paid invoice.
 const PLAN: Record<string, number> = { m10: 10, m30: 30, y10: 10, y30: 30 };
 const monthLater = (t: number) => { const d = new Date(t * 1000); d.setUTCMonth(d.getUTCMonth() + 1); return d.toISOString(); };
 Deno.serve(async (req) => {
-  let ev: Stripe.Event;
-  try {
-    ev = await stripe.webhooks.constructEventAsync(await req.text(), req.headers.get("stripe-signature")!, Deno.env.get("REGRETAMIN_STRIPE_WEBHOOK_SECRET")!);
-  } catch { return new Response("bad signature", { status: 400 }); }
+  let ev: Stripe.Event | null = null;
+  const body = await req.text(), sig = req.headers.get("stripe-signature") ?? "";
+  for (const secret of webhookSecrets()) {
+    try { ev = await verifier.webhooks.constructEventAsync(body, sig, secret); break; } catch { /* try the next endpoint's secret */ }
+  }
+  if (!ev) return new Response("bad signature", { status: 400 });
+  const stripe = ev.livemode ? clients.live : clients.test; // API calls use the key of the event's own mode
   if (ev.type === "checkout.session.completed") {
     const s = ev.data.object as Stripe.Checkout.Session;
     if (s.mode === "payment" && s.metadata?.kind === "single") {

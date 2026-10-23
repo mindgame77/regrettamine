@@ -3,11 +3,12 @@
 // Reuses the user's Stripe customer (check_balances, then the older subscriptions table). A user whose subscription is active or
 // trialing cannot start another one: 409 { error: "has_plan", has_plan: true } and the site points them to the billing portal
 // (plan changes go through the portal). Single one-time checks stay open to subscribers.
-// Secrets: STRIPE_SECRET_KEY (sk_test_ only until launch), price IDs (see _shared/stripe_plans.ts), SITE_URL, SUPABASE_SERVICE_ROLE_KEY.
+// Secrets: STRIPE_MODE + STRIPE_<LIVE|TEST>_SECRET_KEY, price IDs (see _shared/stripe_plans.ts), SITE_URL, SUPABASE_SERVICE_ROLE_KEY.
 import Stripe from "npm:stripe@16";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { type Kind, lookupCode, PRICES } from "../_shared/stripe_plans.ts";
-const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!);
+import { stripeKey } from "../_shared/stripe_env.ts";
+const stripe = new Stripe(stripeKey()); // STRIPE_MODE picks the live or test key
 const CHECKS: Record<Kind, number> = { single: 1, m10: 10, m30: 30, y10: 10, y30: 30 };
 const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, content-type, apikey, x-client-info" };
 const err = (error: string, status: number, extra = {}) => new Response(JSON.stringify({ error, ...extra }), { status, headers: cors });
@@ -57,6 +58,7 @@ Deno.serve(async (req) => {
     client_reference_id: user.id, metadata: meta, ...(discount ? { discounts: [{ promotion_code: c!.promo.id }] } : {}),
     ...(sub ? { subscription_data: { metadata: meta } } : {}),
     success_url: site + "?paid=1", cancel_url: site,
+    ...(discount ? {} : { allow_promotion_codes: true }), // Stripe rejects allow_promotion_codes together with discounts
   });
   return new Response(JSON.stringify({ url: s.url }), { headers: { ...cors, "Content-Type": "application/json" } });
 });
