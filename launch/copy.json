@@ -189,7 +189,10 @@
    "email_placeholder": "you@startup.com",
    "magic": "Send link",
    "email_aria": "Email",
-   "trust": ["Free account", "No card needed"]
+   "trust": [
+    "Free account",
+    "No card needed"
+   ]
   },
   "pricing": {
    "title": "Pricing",
@@ -594,7 +597,21 @@
    "Active": "cs-act",
    "Closed": "cs-cl",
    "Unverified": "cs-cl"
-  }
+  },
+  "searched": {
+   "1": "Searched government sanctions lists.",
+   "2": "Searched terrorism financing lists.",
+   "3": "Searched export and investment restriction lists.",
+   "4": "Searched financial regulator actions.",
+   "5": "Searched anti-money-laundering enforcement records.",
+   "6": "Searched U.S. court records.",
+   "7": "Searched court records outside the U.S.",
+   "8": "Searched the regulator's investment adviser register.",
+   "9": "Searched the lists above for the firm's partners and owners.",
+   "10": "Searched public records for government or political roles."
+  },
+  "searched_nf": "Nothing found.",
+  "searched_nc": "Not checked yet."
  },
  "js": {
   "_note": "Strings used by js/app.js. [one, many] pairs are picked by count. HTML allowed where the code uses innerHTML (values are escaped).",

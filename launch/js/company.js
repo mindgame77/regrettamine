@@ -117,6 +117,10 @@
   }
   // Signed-out outline: a bare method label (no status, no year) tells the viewer nothing, so it is not shown.
   const outItem = (e) => !e.status && !e.year ? '' : '<div class="fct' + (e.status === 'active' ? ' act' : '') + '">' + spill(e.status) + '<b>' + esc(e.kind) + '</b>' + (e.year ? ' · ' + esc(e.year) : '') + '</div>';
+  // Rows with no dropdown: one muted line saying what was searched. "Nothing found" only when the row really is clear / none found.
+  const srch = (r) => { const S = COPY.searched || {}, st = PILL[r.state] ? r.state : 'nc';
+    const t = st === 'nc' ? COPY.searched_nc : S[r.n] ? S[r.n] + (st === 'clear' || st === 'nf' ? ' ' + COPY.searched_nf : '') : '';
+    return t ? '<em class="srch">' + esc(t) + '</em>' : ''; };
   function summary(main, P) {
     main.querySelector('.kf').innerHTML = P.hero.map(h => '<span>' + esc(h.label) + ' <b>' + esc(h.value) + '</b>' + (h.src || []).slice(0, 1).map(c => '<i>' + esc(c.label) + (c.date ? ' · ' + esc(c.date) : '') + '</i>').join('') + '</span>').join('');
     const det = {}, out = {}; (P.details || []).forEach(r => det[r.row] = r.facts || []); (P.outline || []).forEach(r => out[r.row] = r.items || []);
@@ -125,7 +129,7 @@
       const cnt = r.count ? '<span class="cnt ' + (r.state === 'clear' ? 'cg' : 'ca') + '">' + esc(r.count) + '</span>' : '';
       const fs = (det[r.n] || []).map((f, i) => [f, i]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map(x => x[0]);
       const d = P.open ? fs.map(sumItem).join('') : (out[r.n] || []).map(outItem).join('');
-      return '<div class="row' + (r.n === 10 ? ' last' : '') + (d ? ' tog' : '') + '" id="check-' + r.n + '"' + (d ? ' role="button" tabindex="0" aria-expanded="false"' : '') + '><span class="n">' + String(r.n).padStart(2, '0') + '</span><div class="tx"><b>' + esc(r.title) + '</b><span>' + esc(r.descr) + '</span></div>'
+      return '<div class="row' + (r.n === 10 ? ' last' : '') + (d ? ' tog' : '') + '" id="check-' + r.n + '"' + (d ? ' role="button" tabindex="0" aria-expanded="false"' : '') + '><span class="n">' + String(r.n).padStart(2, '0') + '</span><div class="tx"><b>' + esc(r.title) + '</b><span>' + esc(r.descr) + '</span>' + (d ? '' : srch(r)) + '</div>'
         + '<div class="pc">' + pill(r.state) + cnt + '</div>' + (d ? '<div class="det">' + d + '</div>' : '') + '</div>';
     }).join('');
     main.querySelectorAll('.row.tog').forEach(row => {
