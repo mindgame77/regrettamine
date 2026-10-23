@@ -16,6 +16,12 @@ def _classify(t):
     if re.search(r'[Dd]ismissed|terminated|summary judgment', t): return 'Closed'
     return 'Unverified'
 
+NON_US = re.compile(r'\bUK\b|UKSC|\bEWHC\b|\bEWCA\b')
+def _status(t):  # matter_status text of a field-format case
+    if re.search(r'\b(active|pending|ongoing)\b', t, re.I): return 'Open'
+    if re.search(r'dismissed|terminated|closed|summary judgment', t, re.I): return 'Closed'
+    return 'Unverified'
+
 def _pl(n, w): return f'{n} {w}' + ('s' if n != 1 else '')
 def _and(xs): return ', '.join(xs[:-1]) + ' and ' + xs[-1] if len(xs) > 1 else (xs[0] if xs else '')
 
@@ -30,16 +36,24 @@ def checks(D):
     F = [x for x in F if not (x['fact_type'] == 'legal_matter' and isinstance(x['value'], dict) and 'detail' in x['value'] and latest[x['value']['detail']] is not x)]
     def NEW(field, ft='sanctions_check'):
         return [x for x in F if x['fact_type'] == ft and isinstance(x['value'], dict) and x['value'].get('field') == field]
-    SAN = [x for x in F if x['fact_type'] == 'sanctions_check' and 'result' in x['value']]
+    SAN = [x for x in F if x['fact_type'] == 'sanctions_check' and 'result' in x['value']] or NEW('sanctions')
     LEG = [x for x in F if x['fact_type'] == 'legal_matter' and 'title' in x['value']]
+    # Field-format facts (one fact per field, joined by record_id): the case line, its role and its status.
+    STATUS = {x['record_id']: x['value']['value'] for x in NEW('matter_status', 'legal_matter')}
+    FCASE = [x for x in NEW('legal_matter', 'legal_matter') if x['value'].get('entity') == 'firm']
     cases = [(_classify(x['value']['title']), x) for x in LEG if not NON_PARTY.search(x['value']['title'])]
+    cases += [(_status(STATUS.get(x['record_id'], '')), x) for x in FCASE]
     probe = [x for t, x in cases if t == 'probe']; us = [(t, x) for t, x in cases if t != 'probe']
     opn = [x for t, x in us if t == 'Open']
     TER, EXP, AML, WW, PEP = (NEW(f) for f in ('terrorism_lists', 'export_restrictions', 'aml_penalties', 'courts_worldwide', 'pep'))
     PEPHIT = [x for x in PEP if x['value'].get('entity', '').startswith('partner:')]
     REG = NEW('registration_status', 'fund_fact')
-    san_ok = bool(SAN) and SAN[0]['value'].get('result') == 'no_match'
-    tok = [m.group(1) for x in opn for m in [re.search(r'by (\w+) token buyers', x['value']['title'])] if m]
+    REGACT = [x for x in NEW('regulatory_action', 'regulatory_record') if x['value'].get('entity') == 'firm']
+    WW += [x for x in NEW('legal_matter', 'legal_matter') if x['value'].get('entity', 'firm') != 'firm' and NON_US.search(x['value']['value'])]
+    san_ok = bool(SAN) and all(x['value'].get('result') == 'no_match' or str(x['value'].get('value', '')).startswith('clear') for x in SAN)
+    ppl = NEW('people_screen')
+    ppl_ok = all(str(x['value'].get('value', '')).startswith('clear') for x in ppl) if ppl else san_ok
+    tok = [m.group(1) for x in opn for m in [re.search(r'by (\w+) token buyers', x['value'].get('title', ''))] if m]
     R = lambda t, d, s, c=None, l=None: dict(title=t, desc=d, state=s, count=c, line=l)
     closed = len(us) - len(opn)
     return [
@@ -47,15 +61,15 @@ def checks(D):
         R('Terrorism financing lists', 'Lists of people and groups linked to funding terrorism.', 'clear' if TER else 'nc'),
         R('Export and investment restrictions', 'Trade or investment bans, e.g. deals with military-linked firms.', 'clear' if EXP else 'nc'),
         R('Financial regulator actions', 'Fines, bans and charges from financial regulators.',
-          'review' if probe else 'nc', _pl(len(probe), 'open probe') if probe else None,
+          'review' if probe or REGACT else 'nc', _pl(len(probe), 'open probe') if probe else (_pl(len(REGACT), 'settled order') if REGACT else None),
           '; '.join(re.sub(r':\s*interlocking', ' into', x['value']['detail']).replace(' at Databricks and Fivetran', '') + (', no charges' if 'no charges' in x['value']['title'] else '') for x in probe) or None),
         R('Money laundering penalties', 'Anti-money-laundering fines and enforcement.', 'clear' if AML else 'nc'),
         R('US court records', 'Federal and state cases, civil and criminal.',
           ('review' if opn else 'clear') if us else 'nc',
           (f'{_pl(len(opn), "active case")} · {len(us)} on file' if opn else (f'{closed} closed' if closed else None)),
-          ((_and(tok) + ' token class actions') if tok and len(tok) == len(opn) else _and([x['value']['detail'] for x in opn])) if opn else None),
+          ((_and(tok) + ' token class actions') if tok and len(tok) == len(opn) else _and([x['value'].get('detail') or x['value'].get('value', '') for x in opn])) if opn else None),
         R('Court records worldwide', 'Cases outside the U.S.', 'clear' if WW else 'nc', _pl(len(WW), 'non-party mention') if WW else None),
         R('Registration check', 'Registered with the regulator as an investment adviser, and active.', 'clear' if REG else 'nc'),
-        R('People behind the fund', 'Partners and owners, each checked against the lists above.', 'clear' if san_ok else 'nc'),
+        R('People behind the fund', 'Partners and owners, each checked against the lists above.', 'clear' if ppl_ok else 'nc'),
         R('Political ties', 'People at the firm who held government or political roles.', 'wk' if PEPHIT else ('nf' if PEP else 'nc')),
     ]
