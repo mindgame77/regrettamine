@@ -117,9 +117,9 @@
   }
   // Signed-out outline: a bare method label (no status, no year) tells the viewer nothing, so it is not shown.
   const outItem = (e) => !e.status && !e.year ? '' : '<div class="fct' + (e.status === 'active' ? ' act' : '') + '">' + spill(e.status) + '<b>' + esc(e.kind) + '</b>' + (e.year ? ' · ' + esc(e.year) : '') + '</div>';
-  // Rows with no dropdown: one muted line saying what was searched. "Nothing found" only when the row really is clear / none found.
+  // Rows with no dropdown: one muted line saying what was searched. "Nothing found" only when the row really is clear / none found; Not checked yet rows get no line (the pill says it).
   const srch = (r) => { const S = COPY.searched || {}, st = PILL[r.state] ? r.state : 'nc';
-    const t = st === 'nc' ? COPY.searched_nc : S[r.n] ? S[r.n] + (st === 'clear' || st === 'nf' ? ' ' + COPY.searched_nf : '') : '';
+    const t = st === 'nc' ? '' : S[r.n] ? S[r.n] + (st === 'clear' || st === 'nf' ? ' ' + COPY.searched_nf : '') : '';
     return t ? '<em class="srch">' + esc(t) + '</em>' : ''; };
   function summary(main, P) {
     main.querySelector('.kf').innerHTML = P.hero.map(h => '<span>' + esc(h.label) + ' <b>' + esc(h.value) + '</b>' + (h.src || []).slice(0, 1).map(c => '<i>' + esc(c.label) + (c.date ? ' · ' + esc(c.date) : '') + '</i>').join('') + '</span>').join('');
