@@ -144,8 +144,10 @@ def main():
     page(os.path.join(OUT, 'my-checks', 'index.html'), MYCHECKS, '../', M['h1'] + S['title_suffix'])
     page(os.path.join(OUT, 'privacy', 'index.html'), privacy(), '../', 'Privacy Policy' + S['title_suffix'])
     page(os.path.join(OUT, 'terms', 'index.html'), terms(), '../', 'Terms of Service' + S['title_suffix'])
+    os.makedirs(os.path.join(OUT, 'pricing'), exist_ok=True)  # /pricing/ has no page of its own: send it to the home page Pricing popup (no 404); kept out of the sitemap
+    open(os.path.join(OUT, 'pricing', 'index.html'), 'w').write('<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex"><link rel="canonical" href="/"><meta http-equiv="refresh" content="0;url=../?pricing=1"><script>location.replace("../?pricing=1"+location.hash)</script><title>Pricing</title><a href="../?pricing=1">Pricing</a>')
     site = 'https://regretamin.com/'  # sitemap + robots (account and my-checks are left out)
-    urls = [site] + [site + p + '/' for p in ('how-we-check', 'pricing', 'privacy', 'terms') if os.path.exists(os.path.join(OUT, p, 'index.html'))] + [f'{site}vc/{f}/{x}' for f in firms for x in ('', 'full/')]
+    urls = [site] + [site + p + '/' for p in ('how-we-check', 'privacy', 'terms') if os.path.exists(os.path.join(OUT, p, 'index.html'))] + [f'{site}vc/{f}/{x}' for f in firms for x in ('', 'full/')]
     open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join(f'<url><loc>{u}</loc></url>\n' for u in urls) + '</urlset>\n')
     open(os.path.join(OUT, 'robots.txt'), 'w').write(f'User-agent: *\nAllow: /\n\nSitemap: {site}sitemap.xml\n')
     print('built', len(firms), 'firms ->', OUT)
