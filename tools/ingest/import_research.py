@@ -2,7 +2,7 @@
 Takes the latest valid submission per firm (research_submissions, id <= --max-id), reviews it, writes a review CSV,
 and (with --apply) upserts only the firms that pass. Idempotent: rows get deterministic ids and each firm's
 imported rows are replaced in one transaction. New firms: launch_page = true, published = false (old site unchanged).
-Usage: python3 tools/ingest/import_research.py --max-id 48 [--apply]   (needs SUPABASE_ACCESS_TOKEN, never printed)"""
+Usage: python3 tools/ingest/import_research.py --max-id 48 [--only vc-000004,...] [--apply]   (needs SUPABASE_ACCESS_TOKEN, never printed)"""
 import argparse, csv, json, os, re, sys, urllib.error, uuid
 from urllib.parse import urlparse
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -16,7 +16,7 @@ FIELD_PATHS = {'hq', 'founded', 'aum', 'legal_entities', 'people', 'peopleMoves'
 URL_OK = re.compile(r'^https?://[^\s/]+\.[^\s]+$', re.I)
 COLLISION = re.compile(r'same[- ]name|name[- ]collision|namesake|not the same (firm|entity|company|person)|different (firm|entity|company)'
                        r'|unrelated (firm|entity|company)|no relation to|not affiliated with', re.I)
-BANNED = re.compile(r'\bsafe\b', re.I)
+BANNED = re.compile(r'\b(safe|verdict|score)\b', re.I)
 TEST_BOT = re.compile(r'test', re.I)
 CHILD = ['firm_profile_facts', 'firm_legal_items', 'firm_people_roles', 'timeline_events']
 
@@ -73,7 +73,7 @@ def review(sub, lps, taken):
         if r['field_path'] in ('controversies', 'lawsuits') and COLLISION.search(txt):
             warn.append(f"{rid} ({r['field_path']}) name-collision/same-name flag: not imported"); continue
         if BANNED.search(txt):
-            warn.append(f"{rid} contains the word 'safe': not imported"); continue
+            warn.append(f"{rid} contains banned word '{BANNED.search(txt).group(0)}': not imported"); continue
         v = r['value']
         if r['field_path'] in ('funds', 'people'):  # same vehicle / person twice: one fact, values and sources merged
             key = (r['field_path'], norm(v.get('vehicle_name') or v.get('name') or r['entity']['name']))
@@ -233,8 +233,11 @@ def firm_sql(sub, brand, slug, rows, p):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--max-id', type=int, required=True); ap.add_argument('--apply', action='store_true')
-    ap.add_argument('--out', default='/workspace/toxybase/import-review'); a = ap.parse_args()
+    ap.add_argument('--out', default='/workspace/toxybase/import-review')
+    ap.add_argument('--only', help='comma-separated registry_ids: review/import just these firms (sheet gets a -<tag> suffix)')
+    ap.add_argument('--tag', default='run2'); a = ap.parse_args()
     subs = latest(a.max_id)
+    if a.only: subs = [s for s in subs if s['registry_id'] in a.only.split(',')]
     lps_all = sql("select id, registry_id, lp_name, lp_type, fund_name, commitment_amount, commitment_year, status, source_url, checked_at from firm_lps")
     taken = {}
     for f in sql("select slug, sec_crd, external_id from firms where deleted_at is null"):
@@ -253,7 +256,7 @@ def main():
             records_in_dump=len(s['payload'].get('records') or []), records_kept=len(kept), firm_lps=len(lps), **cnt,
             fact_sources=sum(len(r[3]) for r in rows), issues=' | '.join(fail + warn) or 'none'))
         if not fail: plan.append((s, brand, slug, rows))
-    path = os.path.join(a.out, 'review-2026-10-23.csv')
+    path = os.path.join(a.out, 'review-2026-10-23' + (f'-{a.tag}' if a.only else '') + '.csv')
     with open(path, 'w', newline='') as f:
         w = csv.DictWriter(f, fieldnames=list(sheet[0])); w.writeheader(); w.writerows(sheet)
     print('review sheet:', path)
