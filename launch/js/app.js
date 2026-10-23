@@ -17,6 +17,7 @@
   document.addEventListener('click', (e) => {
     const t = e.target.closest('[data-open],[data-close],[data-buy]'); if (!t) return;
     e.preventDefault();
+    if (t.dataset.open === 'signup') { $('#suh').textContent = T.signup_title || $('#suh').dataset.t; $('#signup').classList.remove('buy'); }
     if (t.dataset.open) open(t.dataset.open);
     if (t.dataset.close !== undefined) closeOv(t.closest('.ov'));
     if (t.dataset.buy) buy(t.dataset.buy);
@@ -278,7 +279,7 @@
     if (!s.session) {
       setPend(kind, CODE && CODE.code); // after sign-in (Google redirect or magic link) we come back here and continue to checkout
       if (inPay) { const g = $('#panon'); g.hidden = false; g.classList.add('hi'); $('#psgnh').textContent = T.sign_checkout; g.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
-      $('#suh').textContent = T.sign_buy; return open('signup');
+      $('#suh').textContent = T.sign_buy; $('#signup').classList.add('buy'); return open('signup');
     }
     document.querySelectorAll('[data-buy]').forEach(b => b.disabled = true); msg(T.opening);
     const { data, error } = await sb.functions.invoke('create-checkout', { body: CODE ? { kind, code: CODE.code } : { kind } });
@@ -293,9 +294,11 @@
   // Auth
   const back = () => location.href.split('#')[0];
   const google = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
     if (!sb) return;
     const b = e && e.currentTarget && e.currentTarget.classList.contains('gbx') ? e.currentTarget : null, was = b && b.innerHTML;
-    if (b) { b.disabled = true; b.classList.add('ld'); b.innerHTML = '<span class="spin" aria-hidden="true"></span><span class="gl">' + esc(T.google_loading) + '</span>'; }
+    if (b) { const since = b._pd ? performance.now() - b._pd : 0; b._pd = 0; b.classList.add('prs'); await new Promise(r => setTimeout(r, Math.max(0, 140 - since))); } // keep the pressed frame on screen >=120ms
+    if (b) { b.classList.remove('prs'); b.disabled = true; b.classList.add('ld'); b.innerHTML = '<span class="spin" aria-hidden="true"></span><span class="gl">' + esc(T.google_loading) + '</span>'; }
     const { error } = await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: back() } }).catch((x) => ({ error: x }));
     if (error && b) { b.disabled = false; b.classList.remove('ld'); b.innerHTML = was; }
   };
@@ -306,6 +309,10 @@
   };
   const m = $('#magic'); if (m) m.onclick = () => magic($('#em').value.trim(), $('#sumsg'));
   document.querySelectorAll('[data-google],#google').forEach(b => b.onclick = google);
+  document.querySelectorAll('.gbx').forEach(b => { // touch: :active is unreliable, so mirror it with a class
+    b.addEventListener('pointerdown', () => { b._pd = performance.now(); b.classList.add('prs'); });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(t => b.addEventListener(t, () => setTimeout(() => b.classList.remove('prs'), Math.max(0, 120 - (performance.now() - (b._pd || 0))))));
+  });
   document.querySelectorAll('[data-magic]').forEach(f => f.onsubmit = (e) => { e.preventDefault(); magic(f.email.value.trim(), f.parentNode.parentNode.querySelector('[data-magicmsg]')); });
   if (sb) sb.auth.onAuthStateChange((ev, session) => {
     if (ev === 'SIGNED_IN') setTimeout(async () => { await sb.rpc('claim_anon_checks', { p_anon: anonId() }); paint(); }, 0);
