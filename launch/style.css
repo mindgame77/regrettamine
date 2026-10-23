@@ -34,7 +34,7 @@ nav .r{display:flex;gap:22px;align-items:center;font-weight:500;color:var(--ink2
 .mob nav{padding:14px 18px}.mob nav .r a{display:none}.mob .wrap{padding:0 16px}.mob .hd{flex-direction:column;align-items:stretch;padding:24px 0 16px}.mob .hd h1{font-size:32px}.mob .sb.sm{max-width:none}
 .mob .row{grid-template-columns:28px 1fr;padding:14px 16px}.mob .row .pc{grid-column:2}.mob .row .lk{display:none}.mob .unlock{flex-direction:column;align-items:stretch;gap:12px}
 
-.ov[hidden]{display:none}.x{float:right;border:0;background:none;font-size:22px;cursor:pointer;color:var(--mute)}.msg{color:#0E8A55;font-weight:700;margin-top:10px}
+.ov[hidden]{display:none}.x{float:right;border:0;background:none;font-size:22px;cursor:pointer;color:var(--mute)}.msg{color:#0E8A55;font-weight:700;margin-top:10px}.msg a{color:inherit;text-decoration:underline;text-underline-offset:3px}
 .det{display:none;grid-column:2/-1;font-size:14px;color:var(--ink2)}.unlocked .row.open .det{display:block}.unlocked .lk,.unlocked .unlock{display:none}.det a{color:var(--vio)}
 a{color:inherit;text-decoration:none}.left:empty{display:none}
 .row.tog{cursor:pointer}.row.tog:after{content:"+";font:700 20px 'Bricolage Grotesque';color:var(--mute);grid-column:4;grid-row:1;justify-self:end}.row.open:after{content:"−"}

@@ -548,6 +548,8 @@
   "sign_buy": "Sign in to buy checks",
   "opening": "Opening secure checkout…",
   "checkout_fail": "Could not start checkout. Try again.",
+  "has_plan": "You already have a plan —",
+  "has_plan_link": "manage it",
   "magic_sent": "Check your inbox for the sign-in link.",
   "suggest_none": "Not in our database yet, run a live check →",
   "this_firm": "This firm",
@@ -578,7 +580,12 @@
    "{off} first month",
    "{off} first {n} months"
   ],
-  "dur_forever": "{off}",
+  "dur_years": [
+   "{off} first year",
+   "{off} first {n} years"
+  ],
+  "dur_forever_month": "{off} every month",
+  "dur_forever_year": "{off} every year",
   "disc_bill": "{label}, then {price}{unit}",
   "disc_bill_forever": "{label}",
   "dur_first_year": "{off} first year",

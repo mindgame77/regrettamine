@@ -6,7 +6,7 @@
   const ANON = 'regretamin.anon';
   function anonId() { let a = localStorage.getItem(ANON); if (!a) { a = crypto.randomUUID(); localStorage.setItem(ANON, a); } return a; }
   const syncBody = () => document.body.classList.toggle('ppopen', !!document.querySelector('.ov:not([hidden])'));
-  const open = (id) => { document.querySelectorAll('.ov').forEach(o => o.hidden = true); $('#' + id).hidden = false; syncBody(); };
+  const open = (id) => { document.querySelectorAll('.ov').forEach(o => o.hidden = true); $('#' + id).hidden = false; const pw = $('#pwmsg'); if (pw) pw.textContent = ''; syncBody(); };
   const closeOv = (o) => { if (o) { o.hidden = true; syncBody(); } };
   // Close any popup with x, Esc or a click on the backdrop
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') document.querySelectorAll('.ov:not([hidden])').forEach(closeOv); });
@@ -28,6 +28,13 @@
   }
   // Copy and plans come from launch/copy.json (window.REGRET.copy). fmt fills {name}; pl picks [one, many] by count.
   const T = C.copy.js, B = C.copy.site.billing;
+  // Stripe billing portal (Account "Manage" and the "You already have a plan" link); out = element for the failure message
+  async function portal(out) {
+    out.textContent = '';
+    const { data, error } = await sb.functions.invoke('billing-portal', { body: { returnUrl: location.href.split('#')[0] } });
+    if (error || !data || !data.url) return (out.textContent = T.portal_fail);
+    location.href = data.url;
+  }
   // Subscription plans by kind (m10, m30 and their yearly y10, y30) for the account menu, Account and My checks.
   const PLANS = {};
   Object.entries(C.copy.plans).filter(([, p]) => p.monthly).forEach(([k, p]) => {
@@ -94,12 +101,7 @@
     $('#mcl').textContent = n ? fmt(T.latest, { name: rows[0].name, date: fmtDate(rows[0].checked_at) }) : T.first_check;
   }
   if ($('#account')) {
-    $('#manage').onclick = async () => {
-      $('#amsg').textContent = '';
-      const { data, error } = await sb.functions.invoke('billing-portal', { body: { returnUrl: location.href.split('#')[0] } });
-      if (error || !data || !data.url) return ($('#amsg').textContent = T.portal_fail);
-      location.href = data.url;
-    };
+    $('#manage').onclick = () => portal($('#amsg'));
     $('#emform').onsubmit = async (e) => {
       e.preventDefault(); const email = $('#nem').value.trim(); if (!email) return;
       const { error } = await sb.auth.updateUser({ email }, { emailRedirectTo: location.href.split('#')[0] });
@@ -168,7 +170,19 @@
   let YEARLY = false, CODE = null; // CODE = validate-code reply for the applied code
   const money = (x) => '$' + (Math.round(x * 100) % 100 ? x.toFixed(2) : String(Math.round(x)));
   const offOf = (c) => c.percent_off ? fmt(T.off_pct, { p: c.percent_off }) : fmt(T.off_amt, { a: money(c.amount_off) });
-  const codeLabel = (c, kind) => kind === 'single' ? fmt(T.dur_now, { off: offOf(c) }) : /^y/.test(kind || '') && c.duration !== 'forever' ? fmt(T.dur_first_year, { off: offOf(c) }) : c.duration === 'forever' ? fmt(T.dur_forever, { off: offOf(c) }) : c.duration === 'once' ? fmt(T.dur_once, { off: offOf(c) }) : pl(c.months, T.dur_repeating, { off: offOf(c), n: c.months });
+  // How long a code's discount lasts on this kind, from the coupon's real duration (validate-code) and the plan's billing interval.
+  // Stripe discounts every invoice inside a repeating coupon's N months, so on a yearly plan N months = the first ceil(N/12) yearly payments.
+  const yearlyKind = (kind) => /^y/.test(kind) || (kind === 'code' && !!CODE && !!CODE.hidden && CODE.hidden.interval === 'year');
+  const codeLabel = (c, kind) => {
+    const o = { off: offOf(c) };
+    if (kind === 'single') return fmt(T.dur_now, o);
+    const yr = yearlyKind(kind);
+    if (c.duration === 'forever') return fmt(yr ? T.dur_forever_year : T.dur_forever_month, o);
+    if (c.duration === 'once') return fmt(yr ? T.dur_first_year : T.dur_once, o);
+    return yr ? pl(Math.ceil(c.months / 12), T.dur_years, Object.assign(o, { n: Math.ceil(c.months / 12) })) : pl(c.months, T.dur_repeating, Object.assign(o, { n: c.months }));
+  };
+  // The plan kind the "Code applied" note describes: the unlocked plan, else a discounted plan on the shown Monthly/Yearly tab, else Single check
+  const noteKind = (c) => c.hidden ? 'code' : c.kinds.find(k => k !== 'single' && /^y/.test(k) === YEARLY) || 'single';
   const after = (amt, c) => Math.max(0, c.percent_off ? amt * (1 - c.percent_off / 100) : amt - c.amount_off);
   const off = (kind) => CODE && (kind === 'code' ? CODE.hidden && CODE.hidden.discount : CODE.discount && CODE.kinds.includes(kind)) ? CODE : null; // code discount for this kind, if any
   // One plan card: v = {kind, name, amount, price, unit, per, bill, blurb, button, features, tag, save, rec, hid}
@@ -205,6 +219,7 @@
     });
     document.querySelectorAll('.bt button').forEach((b) => { const on = (b.dataset.yearly === '1') === YEARLY; b.classList.toggle('on', on); b.setAttribute('aria-checked', String(on)); });
     document.querySelectorAll('[data-fine]').forEach(f => f.textContent = YEARLY ? B.fine_yearly : PAY.fine);
+    if (CODE) codeState('ok', codeNote(CODE), true);
   }
   function codeState(cls, text, applied) {
     document.querySelectorAll('.code').forEach((w) => {
@@ -222,8 +237,10 @@
     const { data } = await sb.functions.invoke('validate-code', { body: { code } });
     if (!data || !data.ok) { CODE = null; drawPlans(); return codeState('bad', T.code_bad, false); }
     CODE = data; drawPlans();
-    const h = data.hidden, label = h ? fmt(data.discount ? T.code_unlock_off : T.code_unlock, { name: h.name, off: data.discount ? codeLabel(data) : '' }) : codeLabel(data);
-    codeState('ok', fmt(T.code_ok, { label }), true);
+  }
+  function codeNote(c) {
+    const h = c.hidden, label = h ? fmt(h.discount ? T.code_unlock_off : T.code_unlock, { name: h.name, off: h.discount ? codeLabel(c, 'code') : '' }) : codeLabel(c, noteKind(c));
+    return fmt(T.code_ok, { label });
   }
   document.addEventListener('click', (e) => {
     const t = e.target.closest('.bt button,[data-codeopen],[data-remove]'); if (!t) return;
@@ -232,11 +249,12 @@
     if (t.dataset.codeopen !== undefined) { codeState('', '', false); return t.closest('.code').querySelector('input').focus(); }
     CODE = null; drawPlans(); codeState('', '', false); document.querySelectorAll('[data-code] input').forEach(i => i.value = '');
   });
+  document.addEventListener('click', (e) => { const a = e.target.closest('[data-portal]'); if (a) { e.preventDefault(); portal(a.parentNode); } });
   document.addEventListener('submit', (e) => { const f = e.target.closest('[data-code]'); if (!f) return; e.preventDefault(); if (!f.code.readOnly) applyCode(f.code.value); });
   async function buy(kind) {
     if (!sb) return alert(T.no_checkout);
     const { data: s } = await sb.auth.getSession();
-    const pay = $('#paycase'), inPay = pay && !pay.hidden, msg = (t) => { if (inPay) $('#pmsg2').textContent = t; else if (t && !/…$/.test(t)) alert(t); };
+    const pay = $('#paycase'), inPay = pay && !pay.hidden, out = inPay ? $('#pmsg2') : $('#pwmsg'), msg = (t) => { if (out) out.textContent = t; else if (t && !/…$/.test(t)) alert(t); };
     if (!s.session) {
       setPend(kind, CODE && CODE.code); // after sign-in (Google redirect or magic link) we come back here and continue to checkout
       if (inPay) { const g = $('#panon'); g.hidden = false; g.classList.add('hi'); $('#psgnh').textContent = T.sign_checkout; g.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
@@ -244,7 +262,12 @@
     }
     document.querySelectorAll('[data-buy]').forEach(b => b.disabled = true); msg(T.opening);
     const { data, error } = await sb.functions.invoke('create-checkout', { body: CODE ? { kind, code: CODE.code } : { kind } });
-    if (error || !data || !data.url) { document.querySelectorAll('[data-buy]').forEach(b => b.disabled = false); return msg(T.checkout_fail); }
+    if (error || !data || !data.url) {
+      document.querySelectorAll('[data-buy]').forEach(b => b.disabled = false);
+      const j = error && error.context ? await error.context.json().catch(() => null) : null;
+      if (j && j.has_plan && out) return (out.innerHTML = esc(T.has_plan) + ' <a href="#" data-portal>' + esc(T.has_plan_link) + '</a>'); // plan changes go through the billing portal
+      return msg(T.checkout_fail);
+    }
     location.href = data.url;
   }
   // Auth

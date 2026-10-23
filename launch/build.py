@@ -25,7 +25,7 @@ def code_field():  # "Have a code?" field for both pricing popups (checked by th
 
 def pricing_modal():  # nav "Pricing" popup
     p = S['pricing']
-    return f'<div class="ov" id="paywall" hidden><div class="md w"><button class="x" data-close>×</button><h2 id="pwh">{p["title"]}</h2><p class="s">{p["sub"]}</p>{billing()}<div class="price" data-plans="nav"></div>{code_field()}</div></div>'
+    return f'<div class="ov" id="paywall" hidden><div class="md w"><button class="x" data-close>×</button><h2 id="pwh">{p["title"]}</h2><p class="s">{p["sub"]}</p>{billing()}<div class="price" data-plans="nav"></div><p class="msg" id="pwmsg"></p>{code_field()}</div></div>'
 
 def page(path, body, root, title=S['brand'], company=False):
     n, su = S['nav'], S['signup']
