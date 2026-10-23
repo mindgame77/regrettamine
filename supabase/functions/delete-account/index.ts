@@ -1,7 +1,9 @@
 // Cancels the caller's Stripe subscriptions (check_balances and the old subscriptions table), then deletes the account.
 // If any cancel fails, nothing is deleted.
+// Optional body {reason, other} writes one anonymous exit_reasons row after the delete; an empty or missing body (old settings page) still works.
 // The Stripe secret is app_secrets.key = 'stripe_secret_key'. verify_jwt is true.
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { exitReason } from "../_shared/exit_reason.ts";
 
 const PLAN_MSG = "We couldn't cancel your plan, contact malytskyyo@gmail.com";
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -41,6 +43,8 @@ Deno.serve(async (req: Request) => {
     return json(401, { message: "Sign in again, then delete the account." });
   }
 
+  const body = await req.json().catch(() => ({}));
+
   const subRes = await fetch(
     `${url}/rest/v1/subscriptions?profile_id=eq.${uid}&select=stripe_subscription_id,status`,
     { headers: { apikey: service, Authorization: `Bearer ${service}` } },
@@ -54,11 +58,12 @@ Deno.serve(async (req: Request) => {
   });
 
   const balRes = await fetch(
-    `${url}/rest/v1/check_balances?user_id=eq.${uid}&stripe_subscription_id=not.is.null&select=id,stripe_subscription_id`,
+    `${url}/rest/v1/check_balances?user_id=eq.${uid}&select=id,plan,stripe_subscription_id`,
     { headers: { apikey: service, Authorization: `Bearer ${service}` } },
   );
   if (!balRes.ok) return json(500, { message: "Could not delete this account." });
   const balRows = await balRes.json();
+  const plan = Array.isArray(balRows) && balRows[0] ? balRows[0].plan : null;
   const balSubs = (Array.isArray(balRows) ? balRows : []).filter((row) => {
     const id = row && row.stripe_subscription_id;
     return typeof id === "string" && id.startsWith("sub_");
@@ -117,6 +122,14 @@ Deno.serve(async (req: Request) => {
     const detail = await deleted.text();
     if (detail.includes("couldn't cancel your plan")) return json(409, { message: PLAN_MSG });
     return json(500, { message: "Could not delete this account." });
+  }
+  const why = exitReason(body, "delete", plan);
+  if (why) {
+    await fetch(`${url}/rest/v1/exit_reasons`, {
+      method: "POST",
+      headers: { apikey: service, Authorization: `Bearer ${service}`, "Content-Type": "application/json", Prefer: "return=minimal" },
+      body: JSON.stringify(why),
+    });
   }
   return json(200, { deleted: true });
 });

@@ -29,7 +29,7 @@
   const PLANS = { m10: { name: 'Starter', n: 10, price: '$19/month' }, m30: { name: 'Pro', n: 30, price: '$49/month' } };
   const fmtDate = (d) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   const leftOf = (a) => a.plan && PLANS[a.plan] && a.left <= PLANS[a.plan].n ? a.left + ' of ' + PLANS[a.plan].n : String(a.left);
-  let ACCT = null; // { email, plan, left, period_end, has_customer } once signed in
+  let ACCT = null; // { email, plan, left, period_end, cancel_at_period_end, has_customer } once signed in
   async function paint() {
     const b = await balance(); if (!b) return;
     $('#left').textContent = b.left + (b.signed_in ? '' : ' free') + (b.left === 1 ? ' check left' : ' checks left');
@@ -57,18 +57,28 @@
   async function paintAccount() {
     const a = ACCT, P = a.plan && PLANS[a.plan];
     $('#aem').textContent = a.email;
-    $('#aplan').textContent = P ? P.name : 'Free';
     $('#aplan2').textContent = P ? P.n + ' checks/mo · ' + P.price : 'No plan. Buy checks any time.';
     $('#aleft').textContent = leftOf(a);
     $('#aleft2').textContent = P ? 'Resets to ' + P.n + ' on renewal' : (a.left === 1 ? 'check' : 'checks') + ' to use any time';
-    $('#aren').textContent = P && a.period_end ? fmtDate(a.period_end) : '—';
-    $('#aren2').textContent = P ? 'Renews monthly' : 'Nothing renews';
+    const ending = !!(P && a.cancel_at_period_end), end = a.period_end ? fmtDate(a.period_end) : '';
+    $('#aplan').innerHTML = esc(P ? P.name : 'Free') + (ending ? '<span class="tag">Cancelling</span>' : '');
+    if (ending && end) $('#aleft2').textContent = 'Usable until ' + end;
+    $('#arenl').textContent = ending ? 'Cancels on' : 'Renews';
+    $('#aren').textContent = P && end ? end : '—'; $('#aren').classList.toggle('cx', ending);
+    $('#aren2').textContent = ending ? 'Won’t renew' : P ? 'Renews monthly' : 'Nothing renews';
+    $('#cban').hidden = !ending;
+    if (ending) $('#cban').innerHTML = '<b>Your ' + esc(P.name) + ' plan cancels on ' + esc(end) + '.</b> You keep your ' + esc(a.left) + (a.left === 1 ? ' check' : ' checks') + ' until then. Changed your mind? Resume plan and it renews as normal.';
     $('#manage').hidden = !P && !a.has_customer; $('#pick').hidden = !!P;
-    $('#dzp').textContent = (P ? 'Cancels your subscription, then permanently deletes' : 'Permanently deletes') + ' your account, remaining checks and history.';
-    $('#cons').innerHTML = (P ? '<li><i>1</i><span>Your <b>' + esc(P.name) + ' subscription is cancelled first</b>, so you won’t be charged again.</span></li>' : '')
-      + '<li><i>' + (P ? 2 : 1) + '</i><span>Your <b>' + esc(a.left) + ' remaining ' + (a.left === 1 ? 'check is' : 'checks are') + ' lost</b> and aren’t refunded.</span></li>'
-      + '<li><i>' + (P ? 3 : 2) + '</i><span>Your list of unlocked firms and your email are permanently deleted.</span></li>';
-    $('#delgo').textContent = P ? 'Cancel subscription & delete' : 'Delete account';
+    $('#cancel').hidden = !P || ending; $('#resume').hidden = !ending;
+    $('#buymore').className = ending ? 'btn o' : 'btn';
+    $('#canh').textContent = P ? 'Cancel your ' + P.name + ' plan?' : '';
+    $('#cans').innerHTML = 'You keep your checks until <b>' + esc(end || 'the end of this period') + '</b>, then it won’t renew.';
+    const live = P && !ending;
+    $('#dzp').textContent = (live ? 'Cancels your subscription, then permanently deletes' : 'Permanently deletes') + ' your account, remaining checks and history.';
+    $('#cons').innerHTML = (live ? '<li><i>1</i><span>Your <b>' + esc(P.name) + ' subscription is cancelled first</b>, so you won’t be charged again.</span></li>' : '')
+      + '<li><i>' + (live ? 2 : 1) + '</i><span>Your <b>' + esc(a.left) + ' remaining ' + (a.left === 1 ? 'check is' : 'checks are') + ' lost</b> and aren’t refunded.</span></li>'
+      + '<li><i>' + (live ? 3 : 2) + '</i><span>Your list of unlocked firms and your email are permanently deleted.</span></li>';
+    $('#delgo').textContent = live ? 'Cancel subscription & delete' : 'Delete account';
     const { data: rows } = await sb.rpc('my_checks');
     const n = (rows || []).length;
     $('#mcn').textContent = n ? 'You’ve checked ' + n + (n === 1 ? ' firm' : ' firms') : 'No checks yet';
@@ -86,14 +96,27 @@
       const { error } = await sb.auth.updateUser({ email }, { emailRedirectTo: location.href.split('#')[0] });
       $('#emmsg').textContent = error ? error.message : 'Check ' + email + ' for a confirmation link. Your email changes when you open it.';
     };
-    $('#deltype').oninput = (e) => { $('#delgo').disabled = e.target.value.trim() !== 'DELETE'; };
+    // Optional exit answer for the cancel / delete modals ({} when nothing was picked or typed)
+    const why = (k) => {
+      const r = document.querySelector('input[name="' + k + 'why"]:checked'), o = $('#' + k + 'other').value.trim().slice(0, 500), b = {};
+      if (r) b.reason = r.value; if (o) b.other = o; return b;
+    };
+    const failMsg = async (error, m) => { try { const j = error && error.context && await error.context.json(); if (j && j.message) return j.message; } catch (_) { /* keep default */ } return m; };
+    const setPlan = async (body, btn, out) => {
+      btn.disabled = true; out.textContent = body.resume ? 'Resuming…' : 'Cancelling…';
+      const { data, error } = await sb.functions.invoke('cancel-subscription', { body });
+      btn.disabled = false;
+      if (error || !data) { out.textContent = await failMsg(error, 'Could not update your plan. Try again.'); return; }
+      out.textContent = ''; ACCT.cancel_at_period_end = data.cancel_at_period_end; if (data.period_end) ACCT.period_end = data.period_end;
+      closeOv($('#cancelsub')); paintAccount();
+    };
+    $('#cango').onclick = () => setPlan(why('can'), $('#cango'), $('#canmsg'));
+    $('#resume').onclick = () => setPlan({ resume: true }, $('#resume'), $('#amsg'));
     $('#delgo').onclick = async () => {
       const go = $('#delgo'); go.disabled = true; $('#delmsg').textContent = 'Deleting…';
-      const { data, error } = await sb.functions.invoke('delete-account', { body: {} });
+      const { data, error } = await sb.functions.invoke('delete-account', { body: why('del') });
       if (error || !data || !data.deleted) {
-        let m = 'Could not delete this account. Nothing was deleted.';
-        try { const j = error && error.context && await error.context.json(); if (j && j.message) m = j.message; } catch (_) { /* keep default */ }
-        $('#delmsg').textContent = m; go.disabled = false; return;
+        $('#delmsg').textContent = await failMsg(error, 'Could not delete this account. Nothing was deleted.'); go.disabled = false; return;
       }
       await sb.auth.signOut(); location.href = ROOT;
     };

@@ -1,5 +1,6 @@
 // Stripe webhook -> grant_checks. Secrets: STRIPE_SECRET_KEY, REGRETAMIN_STRIPE_WEBHOOK_SECRET, SUPABASE_SERVICE_ROLE_KEY.
-// Deploy with --no-verify-jwt. Events: checkout.session.completed, invoice.paid.
+// Deploy with --no-verify-jwt. Events: checkout.session.completed, invoice.paid,
+// customer.subscription.updated (mirrors cancel_at_period_end + period end), customer.subscription.deleted (plan ends).
 import Stripe from "npm:stripe@16";
 import { createClient } from "npm:@supabase/supabase-js@2";
 const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!);
@@ -24,6 +25,18 @@ Deno.serve(async (req) => {
       await admin.rpc("grant_checks", { p_user: sub.metadata.user_id, p_kind: "grant_plan", p_amount: PLAN[kind], p_event: ev.id,
         p_plan: kind, p_period_end: new Date(sub.current_period_end * 1000).toISOString(), p_customer: sub.customer as string, p_sub: sub.id });
     }
+  }
+  if (ev.type === "customer.subscription.updated") {
+    const sub = ev.data.object as Stripe.Subscription;
+    const { error } = await admin.from("check_balances").update({ cancel_at_period_end: sub.cancel_at_period_end,
+      period_end: new Date(sub.current_period_end * 1000).toISOString(), updated_at: new Date().toISOString() }).eq("stripe_subscription_id", sub.id);
+    if (error) return new Response("db error", { status: 500 });
+  }
+  if (ev.type === "customer.subscription.deleted") {
+    const sub = ev.data.object as Stripe.Subscription;
+    const { error } = await admin.from("check_balances").update({ plan: null, stripe_subscription_id: null, cancel_at_period_end: false,
+      updated_at: new Date().toISOString() }).eq("stripe_subscription_id", sub.id);
+    if (error) return new Response("db error", { status: 500 });
   }
   return new Response("ok");
 });
