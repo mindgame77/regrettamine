@@ -9,7 +9,7 @@ def _doc(kicker, title, lead, sections, other):
     toc = ''.join(f'<a href="#{i}">{h}</a>' for i, h, _ in sections)
     body = ''.join(f'<section id="{i}"><h2>{h}</h2>{b}</section>' for i, h, b in sections)
     return (f'<main class="hp lg"><span class="ey">{kicker}</span><h1>{title}</h1><p class="lead">{lead}</p>'
-            f'<p class="eff">Effective {DATE} · See also {other}</p><nav class="toc">{toc}</nav>{body}</main>')
+            f'<p class="eff">Effective {DATE} · See also {other}</p><div class="toc">{toc}</div>{body}</main>')
 
 def privacy():
     S = [
