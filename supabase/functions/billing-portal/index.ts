@@ -1,6 +1,7 @@
 // Opens a Stripe Customer Portal session for the signed-in user.
 // verify_jwt is true. The client falls back to the portal login URL if this fails.
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { stripeKey as liveOrTestKey } from "../_shared/stripe_mode.ts"; // STRIPE_MODE=live -> STRIPE_LIVE_SECRET_KEY, else app_secrets
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const PORTAL_CONFIG = "bpc_1UMuvYHcbGkfjKgmIKZWNWhe";
@@ -119,13 +120,7 @@ Deno.serve(async (req: Request) => {
   const customer = pickCustomer(await subRes.json());
   if (!customer) return json(404, { message: "No card on file." });
 
-  const secretRes = await fetch(
-    `${url}/rest/v1/app_secrets?key=eq.stripe_secret_key&select=value`,
-    { headers: { apikey: service, Authorization: `Bearer ${service}` } },
-  );
-  if (!secretRes.ok) return json(502, { message: "Could not open the billing portal." });
-  const secretRows = await secretRes.json();
-  const stripeKey = Array.isArray(secretRows) && secretRows[0] && secretRows[0].value;
+  const stripeKey = await liveOrTestKey();
   if (!stripeKey) return json(502, { message: "Could not open the billing portal." });
 
   let cardOnly = false;
