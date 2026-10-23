@@ -1,7 +1,491 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "c85d2ddd-568e-5cd0-bbfe-77524bd39c59",
   "slug": "sali-fund-services",
   "name": "SALI Fund Services",
-  "external_id": "vc-000017"
- }
+  "initials": null,
+  "short_name": "SALI",
+  "hq": "Austin, Texas",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:25.858917+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000017",
+  "import_run_id": null,
+  "sec_crd": "124235",
+  "sec_file_no": null,
+  "legal_name": "SALI FUND SERVICES",
+  "primary_domain": "sali.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "6370c993-849e-51e7-aedb-977e3e141fea",
+   "fact_type": "firm_legal_items",
+   "label": "finance.senate.gov",
+   "url": "https://www.finance.senate.gov/imo/media/doc/ppli_report_final.pdf",
+   "publisher": "finance.senate.gov",
+   "title": "finance.senate.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "382de53d-92ee-5306-bf9c-1e2c422c8f6f",
+   "fact_type": "firm_legal_items",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/4229364/palm-beach-finance-partners-lp/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9f2a7006-e74d-5147-9a56-ef91fac3d641",
+   "fact_type": "firm_legal_items",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/124235/PDF/124235.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3296c191-743c-531d-b588-ccd0dc66d88f",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/124235/PDF/124235.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d519969d-3983-537b-826e-a0ed1765bacf",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/124235/PDF/124235.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9ec10c4c-6042-5ce7-a7e0-8b18c1decc2d",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/124235/PDF/124235.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5e34f5df-8163-58cf-b79d-db64eea6110a",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/124235/PDF/124235.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "adbed974-a239-5e6f-b13c-a224afabb39d",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/124235/PDF/124235.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "98996d33-be23-5be6-bb8d-1e3ebed934b3",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/124235/PDF/124235.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d5226a51-c7bf-55e3-b760-b00d47b14c26",
+   "fact_type": "firm_people_roles",
+   "label": "sali.com",
+   "url": "https://www.sali.com/team/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "78e2fb36-8f1a-573a-a1a9-7e017d5065de",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/124235/PDF/124235.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "20891da1-2a60-577f-92b7-8d0963bfeffb",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/124235/PDF/124235.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e0a30457-a412-557f-bc98-df4114142b87",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/124235/PDF/124235.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "fc736175-3320-5cd1-8b61-f2b43aae8d20",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/124235/PDF/124235.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0a33d050-b3e7-5f56-bb3a-2bb21c02ffdd",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/124235/PDF/124235.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7dd4d954-0b65-5c36-8d80-1442e4ade455",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/124235/PDF/124235.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "61c7851e-fe06-50e4-ae18-004415e10142",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/124235/PDF/124235.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b06d48b3-b9f8-523a-a041-3a6531d8920d",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/124235/PDF/124235.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d209d753-a08b-50cd-9c85-ec331b4299bb",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/124235/PDF/124235.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b06d48b3-b9f8-523a-a041-3a6531d8920d",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/about/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a459fbcc-64c7-52f7-88bd-877e136edeb5",
+   "fact_type": "firm_profile_facts",
+   "label": "jtcgroup.com",
+   "url": "https://www.jtcgroup.com/news/jtc-acquisition-completes/",
+   "publisher": "jtcgroup.com",
+   "title": "jtcgroup.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a459fbcc-64c7-52f7-88bd-877e136edeb5",
+   "fact_type": "firm_profile_facts",
+   "label": "newswire.ca",
+   "url": "https://www.newswire.ca/news-releases/cpp-investments-confirms-investment-in-jtc-plc-following-successful-shareholder-and-regulatory-approvals-859738718.html",
+   "publisher": "newswire.ca",
+   "title": "newswire.ca",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "81634747-2721-5990-afcd-dc490341dd77",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e7972084-2d9e-586e-be61-0ab6d4dbc647",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8c58d7f3-c5b0-573c-82f8-a6f943804776",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c5d6e8b2-4c6a-55f4-8be0-9d6b6270f529",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8c9e77df-06d8-51b3-a561-f2aa494a6f20",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e63dcc74-0d76-5487-b5f2-6b7e362d7919",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "eccd275b-3546-5f4c-812e-d5bd8b619e64",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3bcecf7e-b409-5bcd-adbb-640611bf9ac4",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d656cc59-e064-5c73-b4a9-116137b98acb",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "04b9fac4-3527-5b79-b0b1-23eef4129375",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "15741e5c-07d5-5ce9-b6e4-90271f4ecb8b",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2772c3a3-4801-532c-9f7e-120a08b33daa",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d3c2f7e8-1004-5e6c-89ca-9e52feb2f7c1",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a9991527-d3fc-56bd-92b1-521fe1cc9c70",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ffa9c860-5111-5270-9e5e-1f3ce56ae756",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "89cca02e-de41-5ff4-aa40-b22c0d2b3b45",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3200ce94-3f16-51c1-8e04-f73c02476dca",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9a4ffc22-724d-58d7-9cc8-006954408ebd",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "067ac240-9940-567c-9069-7568a0cd3bf3",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a03ce8e5-10fb-5ed3-864b-5f2c1f6672c1",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "169c063a-5a18-5b9f-bc4f-9d600e7e78ab",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5d0ae218-8989-5aa4-96d4-01f285e38da5",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4c39e124-9b66-5513-9399-82b8a80af3c5",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9c3d23e6-5a0a-5e73-b47d-f2a9d3bc9791",
+   "fact_type": "firm_profile_facts",
+   "label": "sali.com",
+   "url": "https://www.sali.com/insurance-companies/",
+   "publisher": "sali.com",
+   "title": "sali.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "bfaaf778-d640-54b3-8355-29a1b2ade595",
+   "fact_type": "timeline_events",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/4229364/palm-beach-finance-partners-lp/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2710a0f2-e788-5e1f-98f3-9b0be859434b",
+   "fact_type": "timeline_events",
+   "label": "finance.senate.gov",
+   "url": "https://www.finance.senate.gov/imo/media/doc/ppli_report_final.pdf",
+   "publisher": "finance.senate.gov",
+   "title": "finance.senate.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

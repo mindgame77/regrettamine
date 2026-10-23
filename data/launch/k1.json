@@ -1,7 +1,410 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "50ba01ce-01e4-5627-aea3-83ee5d9ee093",
   "slug": "k1",
   "name": "K1",
-  "external_id": "vc-000025"
- }
+  "initials": null,
+  "short_name": "K1",
+  "hq": "Manhattan Beach, California",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:30.996446+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000025",
+  "import_run_id": null,
+  "sec_crd": "161953",
+  "sec_file_no": null,
+  "legal_name": "K1 INVESTMENT MANAGEMENT LLC",
+  "primary_domain": "k1.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "75f65ffa-203a-5781-b379-f583bc4efd03",
+   "fact_type": "firm_legal_items",
+   "label": "news.bloomberglaw.com",
+   "url": "https://news.bloomberglaw.com/litigation/waste-focused-tech-company-says-investor-worked-to-undermine-it",
+   "publisher": "news.bloomberglaw.com",
+   "title": "news.bloomberglaw.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "75f65ffa-203a-5781-b379-f583bc4efd03",
+   "fact_type": "firm_legal_items",
+   "label": "transacted.io",
+   "url": "https://www.transacted.io/k1-investment-management-accused-of-hostile-takeover-plot-at-portfolio-company",
+   "publisher": "transacted.io",
+   "title": "transacted.io",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "75f65ffa-203a-5781-b379-f583bc4efd03",
+   "fact_type": "firm_legal_items",
+   "label": "docketalarm.com",
+   "url": "https://www.docketalarm.com/cases/Delaware_State_Court_of_Chancery/2025-0059/CONF_RTS_Holding_Inc._v._Ronald_E._Cano_II_et_al/102495798/102495799/",
+   "publisher": "docketalarm.com",
+   "title": "docketalarm.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "38f1bbe3-84e8-5404-9982-fad0c4fb0b91",
+   "fact_type": "firm_legal_items",
+   "label": "courts.delaware.gov",
+   "url": "https://courts.delaware.gov/Opinions/Download.aspx?id=381530",
+   "publisher": "courts.delaware.gov",
+   "title": "courts.delaware.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1fdd3e58-1020-52e8-819a-abdcbf090874",
+   "fact_type": "firm_legal_items",
+   "label": "courtconnect.courts.delaware.gov",
+   "url": "https://courtconnect.courts.delaware.gov/cc/cconnect/ck_public_qry_doct.cp_dktrpt_docket_report?case_id=N24C-05-259",
+   "publisher": "courtconnect.courts.delaware.gov",
+   "title": "courtconnect.courts.delaware.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4505eb00-7e1a-5d21-9510-5dcc651d9023",
+   "fact_type": "firm_legal_items",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/69373704/khan-v-k1-investment-management/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0513c562-17f3-509f-8014-c9ce9bb9a677",
+   "fact_type": "firm_legal_items",
+   "label": "pacermonitor.com",
+   "url": "https://www.pacermonitor.com/public/case/57756321/SCHMIDT_ROBERTSON_v_K1_INVESTMENT_MANAGEMENT_LLC_et_al",
+   "publisher": "pacermonitor.com",
+   "title": "pacermonitor.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6ab3b4ec-5f3b-51fe-a14a-1d6bc2f686bc",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161953/PDF/161953.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ebb2e392-f5a8-524b-bdfe-4a514bdf698b",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161953/PDF/161953.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2d2e9ff5-1e97-5546-9c5b-aa8548bc9bc9",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161953/PDF/161953.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4e00cb38-64f0-5bdd-851a-3e3e862be16c",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161953/PDF/161953.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b9457242-5c04-595a-b1ea-1694e4da40d1",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161953/PDF/161953.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d85cbba0-25a1-5854-ab57-bc301c21f884",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161953/PDF/161953.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "bdbb9be4-464d-5dcc-9348-32528ada6b10",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161953/PDF/161953.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e97ccc48-b63d-56b8-ac00-2daa7f2dc159",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161953/PDF/161953.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "16b022e7-583d-5784-8231-58cf959ddf96",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161953/PDF/161953.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "824b548a-d88f-5d72-94e1-f9f3c76b643e",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161953/PDF/161953.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c3c556d3-b629-535e-a901-76c431c3ac68",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161953/PDF/161953.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4b9b3418-8d0f-51b3-8e09-b21b91941be7",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161953/PDF/161953.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5670a78f-8817-5a1c-911d-8366fa605548",
+   "fact_type": "firm_profile_facts",
+   "label": "dakota.com",
+   "url": "https://www.dakota.com/hubfs/September%202024%20Pension%20Brief.pdf",
+   "publisher": "dakota.com",
+   "title": "dakota.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7c3cecef-268d-5c3b-a487-92f394385769",
+   "fact_type": "firm_profile_facts",
+   "label": "labusinessjournal.com",
+   "url": "https://labusinessjournal.com/finance/k1-investment-raise-4b-fifth-fund/",
+   "publisher": "labusinessjournal.com",
+   "title": "labusinessjournal.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1f3fe6d3-1e8e-5671-b6e4-215031cee98c",
+   "fact_type": "firm_profile_facts",
+   "label": "labusinessjournal.com",
+   "url": "https://labusinessjournal.com/finance/k1-investment-raise-4b-fifth-fund/",
+   "publisher": "labusinessjournal.com",
+   "title": "labusinessjournal.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4f342888-1528-5836-a98b-66de2c925ff6",
+   "fact_type": "firm_profile_facts",
+   "label": "privateequityinternational.com",
+   "url": "https://www.privateequityinternational.com/el-paso-fpp-commits-10m-to-k1-investment-management/",
+   "publisher": "privateequityinternational.com",
+   "title": "privateequityinternational.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2d234bc6-0fda-534b-9bea-a9184671cc07",
+   "fact_type": "firm_profile_facts",
+   "label": "7674427.fs1.hubspotusercontent-na1.net",
+   "url": "https://7674427.fs1.hubspotusercontent-na1.net/hubfs/7674427/November%202024%20Pension%20Brief.pdf",
+   "publisher": "7674427.fs1.hubspotusercontent-na1.net",
+   "title": "7674427.fs1.hubspotusercontent-na1.net",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f4d9ba5a-898d-5407-b9ce-4be65dba51db",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202333199349106308_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6025fc23-a7bf-5df5-a6fc-11491a4b02e9",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202433419349100508_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4cfac04b-32b0-5a5e-af83-0c378ce21cca",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202533219349108678_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e1930255-5d86-53b1-b85f-e6f0344379f2",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202543159349100339_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e87d8588-df0c-5b59-abc7-8e8899b89d69",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202503189349103060_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4155e3b0-327c-59ac-aadb-6b8130739e1f",
+   "fact_type": "firm_profile_facts",
+   "label": "pa.gov",
+   "url": "https://www.pa.gov/content/dam/copapwp-pagov/en/psers/documents/board3/resolutions/2025/2025.23%20pserb%20resolution%20k6%20private%20investors%20lp.pdf",
+   "publisher": "pa.gov",
+   "title": "pa.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "bc9e4300-fd4d-5561-8dcb-edfe9d4fc87a",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202533219349103478_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "34daf1f1-acc2-559b-b644-273fa85ea6ec",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202543189349103579_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4109a86c-6a3d-5455-a1f6-e408c389a5ce",
+   "fact_type": "timeline_events",
+   "label": "courts.delaware.gov",
+   "url": "https://courts.delaware.gov/Opinions/Download.aspx?id=381530",
+   "publisher": "courts.delaware.gov",
+   "title": "courts.delaware.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "84eca3b7-44b4-573c-97e9-8b71fed13478",
+   "fact_type": "timeline_events",
+   "label": "courtconnect.courts.delaware.gov",
+   "url": "https://courtconnect.courts.delaware.gov/cc/cconnect/ck_public_qry_doct.cp_dktrpt_docket_report?case_id=N24C-05-259",
+   "publisher": "courtconnect.courts.delaware.gov",
+   "title": "courtconnect.courts.delaware.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6096cf18-97cf-5125-8946-2dbf3d3e7b02",
+   "fact_type": "timeline_events",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/69373704/khan-v-k1-investment-management/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e1532e72-3bf6-56e0-9bd1-ee01f574e024",
+   "fact_type": "timeline_events",
+   "label": "news.bloomberglaw.com",
+   "url": "https://news.bloomberglaw.com/litigation/waste-focused-tech-company-says-investor-worked-to-undermine-it",
+   "publisher": "news.bloomberglaw.com",
+   "title": "news.bloomberglaw.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e1532e72-3bf6-56e0-9bd1-ee01f574e024",
+   "fact_type": "timeline_events",
+   "label": "transacted.io",
+   "url": "https://www.transacted.io/k1-investment-management-accused-of-hostile-takeover-plot-at-portfolio-company",
+   "publisher": "transacted.io",
+   "title": "transacted.io",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e1532e72-3bf6-56e0-9bd1-ee01f574e024",
+   "fact_type": "timeline_events",
+   "label": "docketalarm.com",
+   "url": "https://www.docketalarm.com/cases/Delaware_State_Court_of_Chancery/2025-0059/CONF_RTS_Holding_Inc._v._Ronald_E._Cano_II_et_al/102495798/102495799/",
+   "publisher": "docketalarm.com",
+   "title": "docketalarm.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f7bbe76f-5e97-56c7-a388-517e6cca0e21",
+   "fact_type": "timeline_events",
+   "label": "pacermonitor.com",
+   "url": "https://www.pacermonitor.com/public/case/57756321/SCHMIDT_ROBERTSON_v_K1_INVESTMENT_MANAGEMENT_LLC_et_al",
+   "publisher": "pacermonitor.com",
+   "title": "pacermonitor.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

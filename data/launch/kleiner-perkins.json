@@ -1,7 +1,311 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "05d9025d-b2e6-5f64-9723-5bd0f9a6f38a",
   "slug": "kleiner-perkins",
   "name": "Kleiner Perkins",
-  "external_id": "vc-000033"
- }
+  "initials": null,
+  "short_name": "KP",
+  "hq": "Menlo Park, California",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:35.622066+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000033",
+  "import_run_id": null,
+  "sec_crd": "161035",
+  "sec_file_no": null,
+  "legal_name": "KLEINER PERKINS CAUFIELD & BYERS, LLC",
+  "primary_domain": "kleinerperkins.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "ea9aacf1-c670-515d-8703-cc0e42ed347c",
+   "fact_type": "firm_legal_items",
+   "label": "en.wikipedia.org",
+   "url": "https://en.wikipedia.org/wiki/Pao_v._Kleiner_Perkins",
+   "publisher": "en.wikipedia.org",
+   "title": "en.wikipedia.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ea9aacf1-c670-515d-8703-cc0e42ed347c",
+   "fact_type": "firm_legal_items",
+   "label": "latimes.com",
+   "url": "https://www.latimes.com/business/technology/la-fi-tn-ellen-pao-loses-kleiner-perkins-20150325-story.html",
+   "publisher": "latimes.com",
+   "title": "latimes.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8f9ec815-6896-5f65-b99e-095ba43d6b7f",
+   "fact_type": "firm_legal_items",
+   "label": "govinfo.gov",
+   "url": "https://www.govinfo.gov/content/pkg/USCOURTS-ilnd-1_16-cv-10849/pdf/USCOURTS-ilnd-1_16-cv-10849-1.pdf",
+   "publisher": "govinfo.gov",
+   "title": "govinfo.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7d1133f3-55fe-5a22-a01e-7b194d9b7929",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161035/PDF/161035.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "25e45c71-ebbf-59e1-8991-ada6fbbdbaa3",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161035/PDF/161035.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "368f35e6-c70b-5c74-920c-2b254e5e9bcf",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161035/PDF/161035.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2b47c48a-cfa9-5044-aa95-a6b256210480",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161035/PDF/161035.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "461228f3-9199-5f9f-a46b-abc40e0a9a56",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161035/PDF/161035.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d4aec867-6377-5111-bfcc-41f8e05010d0",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161035/PDF/161035.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "340be4f9-506a-5547-ac1d-d12a98f7a16f",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161035/PDF/161035.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "51e5a757-6304-5c50-8425-1afc4bfae80d",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202601319349101535_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "120b3334-8e04-5a92-a6c4-3e55d088c1de",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161035/PDF/161035.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5c9e4713-32e5-50a3-b941-341e9e7c8e2e",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161035/PDF/161035.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5760848a-1303-577c-bddb-8a98051f20f5",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161035/PDF/161035.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "46d449f6-cc86-5b3f-a5cc-d2bd04fb9c12",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161035/PDF/161035.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "bae7f0f6-80d7-5a35-b8bf-6beacfbef987",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161035/PDF/161035.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "bc4fa4b1-c808-54b5-ad70-ac2f4daaff37",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161035/PDF/161035.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "64425d9c-2521-5569-9029-b348f45b6014",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161035/PDF/161035.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1bf4d4e7-b0ff-50dc-912b-40f4496b1eec",
+   "fact_type": "firm_profile_facts",
+   "label": "kleinerperkins.com",
+   "url": "https://www.kleinerperkins.com/perspectives/our-new-funds-kp22-select-iv-flex/",
+   "publisher": "kleinerperkins.com",
+   "title": "kleinerperkins.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1bf4d4e7-b0ff-50dc-912b-40f4496b1eec",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/2115014/0002115014-26-000001.txt",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c0394c8d-b57e-5942-bde0-47f0b75015dc",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202541189349101429_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3ea7fcba-aeaf-5444-a4c4-7f1c465c1bd6",
+   "fact_type": "firm_profile_facts",
+   "label": "ucop.edu",
+   "url": "https://www.ucop.edu/investment-office/_files/updates/pe_irr_12_31_16.pdf",
+   "publisher": "ucop.edu",
+   "title": "ucop.edu",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5598843c-e41a-554d-9e30-6a19a738fd75",
+   "fact_type": "firm_profile_facts",
+   "label": "regents.umich.edu",
+   "url": "https://regents.umich.edu/files/meetings/05-11/2011-05-IX-1.pdf",
+   "publisher": "regents.umich.edu",
+   "title": "regents.umich.edu",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e3033a31-c3b7-507a-90a5-bf6434b7c497",
+   "fact_type": "firm_profile_facts",
+   "label": "pitchbook.com",
+   "url": "https://pitchbook.com/profiles/fund/16540-21F",
+   "publisher": "pitchbook.com",
+   "title": "pitchbook.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ce77e962-0269-59f0-a06e-6455aa32ada5",
+   "fact_type": "firm_profile_facts",
+   "label": "pitchbook.com",
+   "url": "https://pitchbook.com/profiles/fund/16540-21F",
+   "publisher": "pitchbook.com",
+   "title": "pitchbook.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a946072f-07bd-54e9-a5f6-116a1e06a3f4",
+   "fact_type": "timeline_events",
+   "label": "en.wikipedia.org",
+   "url": "https://en.wikipedia.org/wiki/Pao_v._Kleiner_Perkins",
+   "publisher": "en.wikipedia.org",
+   "title": "en.wikipedia.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a946072f-07bd-54e9-a5f6-116a1e06a3f4",
+   "fact_type": "timeline_events",
+   "label": "latimes.com",
+   "url": "https://www.latimes.com/business/technology/la-fi-tn-ellen-pao-loses-kleiner-perkins-20150325-story.html",
+   "publisher": "latimes.com",
+   "title": "latimes.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b8ffa760-e1d2-5599-8e3b-c05f2fa3094d",
+   "fact_type": "timeline_events",
+   "label": "govinfo.gov",
+   "url": "https://www.govinfo.gov/content/pkg/USCOURTS-ilnd-1_16-cv-10849/pdf/USCOURTS-ilnd-1_16-cv-10849-1.pdf",
+   "publisher": "govinfo.gov",
+   "title": "govinfo.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

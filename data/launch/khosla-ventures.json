@@ -1,7 +1,662 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "3b13d5c5-3832-545b-a7cc-913de75237d1",
   "slug": "khosla-ventures",
   "name": "Khosla Ventures",
-  "external_id": "vc-000031"
- }
+  "initials": null,
+  "short_name": "KV",
+  "hq": "Menlo Park, California",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:34.024877+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000031",
+  "import_run_id": null,
+  "sec_crd": "162910",
+  "sec_file_no": null,
+  "legal_name": "KHOSLA VENTURES, LLC",
+  "primary_domain": "khoslaventures.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "866b73c9-368b-56b8-af63-c9d55e024fd7",
+   "fact_type": "firm_legal_items",
+   "label": "courts.ms.gov",
+   "url": "https://courts.ms.gov/Images/Opinions/CO137805.pdf",
+   "publisher": "courts.ms.gov",
+   "title": "courts.ms.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8ac7165e-6c24-589f-aa0a-74c409e25c5f",
+   "fact_type": "firm_legal_items",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1846069/000184606926000098/R13.htm",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8ac7165e-6c24-589f-aa0a-74c409e25c5f",
+   "fact_type": "firm_legal_items",
+   "label": "law360.com",
+   "url": "https://www.law360.com/articles/2530815/nextdoor-khosla-say-investor-brought-de-spac-suit-too-late",
+   "publisher": "law360.com",
+   "title": "law360.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c8320bdc-abaf-5c6d-aeb4-aea8d0ed02cb",
+   "fact_type": "firm_legal_items",
+   "label": "sfexaminer.com",
+   "url": "https://www.sfexaminer.com/news/climate/martins-beach-case-pauses-for-vinod-khosla-settlement-talks/article_2d71f6e6-2b72-462f-bf9e-754899a6b7bd.html",
+   "publisher": "sfexaminer.com",
+   "title": "sfexaminer.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c8320bdc-abaf-5c6d-aeb4-aea8d0ed02cb",
+   "fact_type": "firm_legal_items",
+   "label": "sfexaminer.com",
+   "url": "https://www.sfexaminer.com/news/business/martins-beach-battle-delayed-again-for-settlement-talks/article_fdf9b814-e516-4ab8-ab7e-fe8b9b31f6c5.html",
+   "publisher": "sfexaminer.com",
+   "title": "sfexaminer.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "cdf3e7d5-b672-5938-8ecc-d7f9258021e7",
+   "fact_type": "firm_legal_items",
+   "label": "timesofindia.indiatimes.com",
+   "url": "https://timesofindia.indiatimes.com/technology/tech-news/vinod-khosla-give-230-word-long-reply-to-elon-musk-says-instead-of-bringing-your-family-try-not-/articleshow/127761013.cms",
+   "publisher": "timesofindia.indiatimes.com",
+   "title": "timesofindia.indiatimes.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7dc826b4-0981-5e9b-9095-741640cf46d6",
+   "fact_type": "firm_legal_items",
+   "label": "techcrunch.com",
+   "url": "https://techcrunch.com/2013/01/25/rabois-left-square-over-sexual-harassment-claim/",
+   "publisher": "techcrunch.com",
+   "title": "techcrunch.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "eb62ba14-6327-5baa-95ee-dc3bc869e57c",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3331502a-c0ef-5ac6-94eb-51bf19188137",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "13e2bc93-48f2-58dc-9275-581c52775884",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0ee96988-0110-59ac-af60-3031e05838f3",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "eedcb0e4-0ded-5265-896c-d252a944c32d",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "261c9781-1716-5f9d-90e6-5c23db84ca60",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "271a21ba-e928-5f3e-9d91-e9823c027772",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "87b85ce0-f836-5e8e-a45b-298208220ad2",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3730124d-b9f9-5efc-ad7a-42f1c1731967",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3113ebb8-52a5-552b-9116-b90fa8c04b0f",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a0a1be04-c3a4-5a54-bd28-2e6b3f414a26",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a2a8d021-8322-5f8d-8cdc-3aeeb95bda43",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "fb56058f-096d-582a-a450-177517844267",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a476ca82-5643-5b1d-acc0-24ddd94cef53",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "581bce73-cebb-501c-ad68-d793f560bf36",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "22a34706-7661-5686-bcd0-e1acdf35d53f",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "cf73fcf9-eee7-5eb4-ad16-03a35ae55712",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d197a208-5de5-5df4-b888-d9a53729c3c8",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f0bf8300-6c9f-57a0-91a8-4ee3a38baa05",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "93fd75a3-e857-5a74-8ef3-1f523f5812a3",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d60dd815-bd3c-5173-924a-efb056360940",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "fdcc5200-0e0a-55d7-b87c-d3b0a3fe2880",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "fd84a18d-f978-5df8-af3b-c05183bf1905",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "70bc8eed-47f2-5295-9248-ee126d43a5b3",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c64e8083-f9c7-53d2-900f-3de3f78f3c43",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e8a5d036-0513-50f2-b21d-1e89c7f88bba",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1f74761f-07dd-5d6d-a81f-85c654f8c0e0",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5d3133a5-1f31-5dba-a5b4-53bb76787871",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "15ba03f0-7f89-5dea-ac7f-56f7d1ae8e4a",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "90316120-c05d-5097-a409-e86099bc1c71",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b4a1f0bf-0994-5743-a9d8-42db34136ba1",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "947635d4-ef71-504a-9e5f-7fb41f726af2",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f1a6d5a1-7366-5d82-a320-db214046a265",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "503cd649-b55e-55a7-be66-76be11838952",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3e5d9f0f-e789-5ffe-9b79-6a9ecfe0e1b1",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "66568983-0124-5a34-b4c2-51103675edbd",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a6ec9b39-f127-59dd-9b80-a2e27f863ceb",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5326e0eb-f58e-5e38-9302-6ff2bea64f37",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "caa140f2-5740-5360-95cb-98e211f5c29a",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ea9476d6-528d-51bf-ac0d-46f4ed5471de",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "59eb209f-c648-5aa4-831a-c802a3f4e817",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d6c9bf8e-b289-5eee-9b5d-8359e9a45001",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/162910/PDF/162910.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "59eb209f-c648-5aa4-831a-c802a3f4e817",
+   "fact_type": "firm_profile_facts",
+   "label": "khoslaventures.com",
+   "url": "https://www.khoslaventures.com/",
+   "publisher": "khoslaventures.com",
+   "title": "khoslaventures.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "be2cc3e3-3343-56f7-8b5f-3b2bf3550ef6",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202503189349104100_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2f5684fc-3519-5518-986b-c956354a993a",
+   "fact_type": "firm_profile_facts",
+   "label": "imrf.org",
+   "url": "https://www.imrf.org/en/news/2025/05-may/may-2025-investments-news",
+   "publisher": "imrf.org",
+   "title": "imrf.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e6521b0e-7094-5912-a49f-419108f1b126",
+   "fact_type": "firm_profile_facts",
+   "label": "nj.gov",
+   "url": "https://www.nj.gov/treasury/doinvest/pdf/AlternativeInvestments/PrivateEquity/Khosla.pdf",
+   "publisher": "nj.gov",
+   "title": "nj.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "618efe2c-7f43-5870-a8e5-68fbc7e4a144",
+   "fact_type": "firm_profile_facts",
+   "label": "hottub.vc",
+   "url": "https://hottub.vc/lps/newjersey/",
+   "publisher": "hottub.vc",
+   "title": "hottub.vc",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "67166b98-0b70-5acc-9a76-4f2f1b6b7ee2",
+   "fact_type": "firm_profile_facts",
+   "label": "privateequitywire.co.uk",
+   "url": "https://www.privateequitywire.co.uk/scers-commits-40m-to-khosla-ventures-ix/",
+   "publisher": "privateequitywire.co.uk",
+   "title": "privateequitywire.co.uk",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "450b89a2-ba8b-587e-a778-548e9ce61d08",
+   "fact_type": "firm_profile_facts",
+   "label": "privateequityinternational.com",
+   "url": "https://www.privateequityinternational.com/smrs-strengthens-relationship-with-khosla-ventures/",
+   "publisher": "privateequityinternational.com",
+   "title": "privateequityinternational.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3fb6bf0f-a952-5f13-8d04-ce633de3fca2",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202513189349105506_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "78b9c84f-9621-5c9c-b65f-fc16b68ca3bf",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202540179349100519_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a8815207-d8cd-5cb6-b60b-27bfda6899f0",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202523159349100442_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e271964d-f976-5cbb-9e90-afd920024757",
+   "fact_type": "firm_profile_facts",
+   "label": "meetings.boardbook.org",
+   "url": "https://meetings.boardbook.org/Documents/DownloadPDF/14299034?org=685",
+   "publisher": "meetings.boardbook.org",
+   "title": "meetings.boardbook.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6ca59c9c-5a96-5ff4-ae53-46386f5a7417",
+   "fact_type": "timeline_events",
+   "label": "techcrunch.com",
+   "url": "https://techcrunch.com/2013/01/25/rabois-left-square-over-sexual-harassment-claim/",
+   "publisher": "techcrunch.com",
+   "title": "techcrunch.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2d102490-4932-55c6-9b42-a769dabc5f78",
+   "fact_type": "timeline_events",
+   "label": "courts.ms.gov",
+   "url": "https://courts.ms.gov/Images/Opinions/CO137805.pdf",
+   "publisher": "courts.ms.gov",
+   "title": "courts.ms.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "be5166e4-21ad-5924-a49e-3dd8a2f4f7d5",
+   "fact_type": "timeline_events",
+   "label": "sfexaminer.com",
+   "url": "https://www.sfexaminer.com/news/climate/martins-beach-case-pauses-for-vinod-khosla-settlement-talks/article_2d71f6e6-2b72-462f-bf9e-754899a6b7bd.html",
+   "publisher": "sfexaminer.com",
+   "title": "sfexaminer.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "be5166e4-21ad-5924-a49e-3dd8a2f4f7d5",
+   "fact_type": "timeline_events",
+   "label": "sfexaminer.com",
+   "url": "https://www.sfexaminer.com/news/business/martins-beach-battle-delayed-again-for-settlement-talks/article_fdf9b814-e516-4ab8-ab7e-fe8b9b31f6c5.html",
+   "publisher": "sfexaminer.com",
+   "title": "sfexaminer.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d3f45f4e-cc9f-55a3-b03c-5a00cc79d821",
+   "fact_type": "timeline_events",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1846069/000184606926000098/R13.htm",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d3f45f4e-cc9f-55a3-b03c-5a00cc79d821",
+   "fact_type": "timeline_events",
+   "label": "law360.com",
+   "url": "https://www.law360.com/articles/2530815/nextdoor-khosla-say-investor-brought-de-spac-suit-too-late",
+   "publisher": "law360.com",
+   "title": "law360.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "69fea6ae-f271-5a23-90d2-2a4d13ac7f81",
+   "fact_type": "timeline_events",
+   "label": "timesofindia.indiatimes.com",
+   "url": "https://timesofindia.indiatimes.com/technology/tech-news/vinod-khosla-give-230-word-long-reply-to-elon-musk-says-instead-of-bringing-your-family-try-not-/articleshow/127761013.cms",
+   "publisher": "timesofindia.indiatimes.com",
+   "title": "timesofindia.indiatimes.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

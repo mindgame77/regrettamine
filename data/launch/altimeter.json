@@ -1,7 +1,284 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "28533da4-6f99-57cb-af65-856849d045d8",
   "slug": "altimeter",
   "name": "Altimeter",
-  "external_id": "vc-000039"
- }
+  "initials": null,
+  "short_name": "Altimeter Capital",
+  "hq": "Menlo Park, California",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T20:11:37.09005+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000039",
+  "import_run_id": null,
+  "sec_crd": "160017",
+  "sec_file_no": null,
+  "legal_name": "ALTIMETER CAPITAL MANAGEMENT, LP",
+  "primary_domain": "altimeter.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "0dcb80dc-5e1c-5232-abf5-75efe7585367",
+   "fact_type": "firm_legal_items",
+   "label": "storage.courtlistener.com",
+   "url": "https://storage.courtlistener.com/recap/gov.uscourts.flsd.648382/gov.uscourts.flsd.648382.217.0_1.pdf",
+   "publisher": "storage.courtlistener.com",
+   "title": "storage.courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "76d11164-1043-540e-b27d-98ec17968b17",
+   "fact_type": "firm_legal_items",
+   "label": "nasdaq.com",
+   "url": "https://www.nasdaq.com/press-release/greenoaks-takes-legal-action-stop-koreas-discrimination-against-coupang-and-other-us",
+   "publisher": "nasdaq.com",
+   "title": "nasdaq.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "76d11164-1043-540e-b27d-98ec17968b17",
+   "fact_type": "firm_legal_items",
+   "label": "ajupress.com",
+   "url": "https://www.ajupress.com/view/20260310073122199",
+   "publisher": "ajupress.com",
+   "title": "ajupress.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f380f977-076b-59ec-bdd3-bc1e9df71a08",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160017/PDF/160017.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b5f1f46d-bb38-59ba-b303-7f5b768790cb",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160017/PDF/160017.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "af49293e-b250-539c-baf3-e905bc9f4438",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160017/PDF/160017.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7bbea8e7-ebd3-542a-a310-ade67e2f5339",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160017/PDF/160017.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ef1a63aa-cb57-54cc-b72d-864d6235df98",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160017/PDF/160017.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "49d9c8e7-c8e8-531f-851b-bdbd324ded8e",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202523189349102632_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "441bd7fb-f1dd-569e-8ba8-b0aa13708992",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160017/PDF/160017.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b5b72a90-d663-5a72-9ebd-3419dbe4cc4b",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160017/PDF/160017.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "bd169c1f-9ad6-5e05-beb0-7141040310e0",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160017/PDF/160017.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5fce90a7-eaaf-50d3-afa9-2a9018690eaf",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160017/PDF/160017.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ed3e52a3-cf8f-5763-89bf-8be18bd7a2af",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160017/PDF/160017.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "270babe7-760b-5bb5-952b-8380cbf75ff4",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160017/PDF/160017.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1a76ff0e-8da3-58f8-bf39-5fbfa6aff305",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160017/PDF/160017.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e48f7bc3-d534-5b09-a312-ad23925375c1",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160017/PDF/160017.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1a76ff0e-8da3-58f8-bf39-5fbfa6aff305",
+   "fact_type": "firm_profile_facts",
+   "label": "api.gleif.org",
+   "url": "https://api.gleif.org/api/v1/lei-records?filter[fulltext]=Altimeter%20Capital",
+   "publisher": "api.gleif.org",
+   "title": "api.gleif.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "02fa8714-a776-5135-8121-dd9db5be5141",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202533219349105788_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f6af6746-6ad4-5ca0-8fd5-708490ae2267",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202513189349104206_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b61454cc-53d5-5b5e-8c7b-2b178a4eabfd",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202611339349104016_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6d33bff6-8afa-5bc4-b2de-7ad0360939ee",
+   "fact_type": "firm_profile_facts",
+   "label": "tmrs.com",
+   "url": "https://www.tmrs.com/uploads/investments/files/general/2026-06-30-Private-Investment-Performance.pdf",
+   "publisher": "tmrs.com",
+   "title": "tmrs.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "40797b87-8853-52ae-af9a-6eb08597ee16",
+   "fact_type": "timeline_events",
+   "label": "storage.courtlistener.com",
+   "url": "https://storage.courtlistener.com/recap/gov.uscourts.flsd.648382/gov.uscourts.flsd.648382.217.0_1.pdf",
+   "publisher": "storage.courtlistener.com",
+   "title": "storage.courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5aa32f2d-5f45-5ee4-b525-7d51c2b7d89d",
+   "fact_type": "timeline_events",
+   "label": "nasdaq.com",
+   "url": "https://www.nasdaq.com/press-release/greenoaks-takes-legal-action-stop-koreas-discrimination-against-coupang-and-other-us",
+   "publisher": "nasdaq.com",
+   "title": "nasdaq.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5aa32f2d-5f45-5ee4-b525-7d51c2b7d89d",
+   "fact_type": "timeline_events",
+   "label": "ajupress.com",
+   "url": "https://www.ajupress.com/view/20260310073122199",
+   "publisher": "ajupress.com",
+   "title": "ajupress.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

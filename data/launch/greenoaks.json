@@ -1,7 +1,284 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "f7859242-8697-5a7d-aa2f-e3bf52f6f8f0",
   "slug": "greenoaks",
   "name": "Greenoaks",
-  "external_id": "vc-000038"
- }
+  "initials": null,
+  "short_name": "Greenoaks Capital",
+  "hq": "San Francisco, California",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T20:11:36.333396+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000038",
+  "import_run_id": null,
+  "sec_crd": "165941",
+  "sec_file_no": null,
+  "legal_name": "GREENOAKS LLC",
+  "primary_domain": "greenoaks.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "6f9afac9-db67-5cc1-948d-e5ac3e2968aa",
+   "fact_type": "firm_legal_items",
+   "label": "nasdaq.com",
+   "url": "https://www.nasdaq.com/press-release/greenoaks-takes-legal-action-stop-koreas-discrimination-against-coupang-and-other-us",
+   "publisher": "nasdaq.com",
+   "title": "nasdaq.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6f9afac9-db67-5cc1-948d-e5ac3e2968aa",
+   "fact_type": "firm_legal_items",
+   "label": "ajupress.com",
+   "url": "https://www.ajupress.com/view/20260310073122199",
+   "publisher": "ajupress.com",
+   "title": "ajupress.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "645f64b1-b95e-5575-9ff4-38f9a822c29a",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/165941/PDF/165941.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "421e15e9-254f-5de3-bd4d-c1c0d442759b",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/165941/PDF/165941.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9ae3fe7a-e428-5aac-9579-3da74e132f0b",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/165941/PDF/165941.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b979b3a1-66bb-5e71-988d-1e754d48d6ca",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/165941/PDF/165941.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b1d5859a-0777-5cdc-8e45-7d0ef81f118c",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/165941/PDF/165941.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8030ee89-ce01-5afd-b698-bd0d3e96cf91",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/165941/PDF/165941.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "70577e26-ceed-5f4b-b9e8-4a57c2d46c09",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/165941/PDF/165941.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "20588853-669a-53ac-9326-8f827e51f601",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/165941/PDF/165941.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d70be37a-5df9-58cc-97e0-5d9944e2aaaf",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/165941/PDF/165941.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "281ef558-41f8-5564-a785-881dd2cadf9e",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/165941/PDF/165941.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "fc00b54e-6987-52b8-b09d-881e0207f418",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/165941/PDF/165941.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5f96e8e9-4eb9-5d19-9fcd-41a7c3dd2a9f",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/165941/PDF/165941.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "80606089-2241-5006-8ec4-079efb956fd9",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/165941/PDF/165941.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5f96e8e9-4eb9-5d19-9fcd-41a7c3dd2a9f",
+   "fact_type": "firm_profile_facts",
+   "label": "api.gleif.org",
+   "url": "https://api.gleif.org/api/v1/lei-records?filter[fulltext]=Greenoaks%20Capital",
+   "publisher": "api.gleif.org",
+   "title": "api.gleif.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f54cd85f-7e96-583f-b727-ef75f6048cc3",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202523189349102632_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "af70af9b-7062-5e1a-9ec3-487f545c7985",
+   "fact_type": "firm_profile_facts",
+   "label": "ocers.org",
+   "url": "https://www.ocers.org/sites/main/files/file-attachments/q3_2025_ocers_private_equity_portfolio_summary.pdf?1772150131=",
+   "publisher": "ocers.org",
+   "title": "ocers.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e01b429a-e061-5a92-aff4-2fbefe14c88e",
+   "fact_type": "firm_profile_facts",
+   "label": "pa.gov",
+   "url": "https://www.pa.gov/content/dam/copapwp-pagov/en/psers/documents/board3/resolutions/2022/greenoak%20capital%20opportunities%20fund%20v%20lp%20-%20public%20im.pdf",
+   "publisher": "pa.gov",
+   "title": "pa.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a10720eb-9677-5f76-9ea8-87bf27bef9a5",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202333199349101433_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7994f327-49f3-5bbc-a34d-a2c23e77982c",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202503219349107595_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "cf3beed4-9849-594c-9bb3-0a2ba0de9bff",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202133159349103258_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "87de316e-2cfc-592f-9c47-f4a5c4157344",
+   "fact_type": "firm_profile_facts",
+   "label": "gt990datalake-rawdata.s3.amazonaws.com",
+   "url": "https://gt990datalake-rawdata.s3.amazonaws.com/EfileData/XmlFiles/202421069349101057_public.xml",
+   "publisher": "gt990datalake-rawdata.s3.amazonaws.com",
+   "title": "gt990datalake-rawdata.s3.amazonaws.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0d7f014d-2410-5538-a2d6-69cd29893c6a",
+   "fact_type": "timeline_events",
+   "label": "nasdaq.com",
+   "url": "https://www.nasdaq.com/press-release/greenoaks-takes-legal-action-stop-koreas-discrimination-against-coupang-and-other-us",
+   "publisher": "nasdaq.com",
+   "title": "nasdaq.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0d7f014d-2410-5538-a2d6-69cd29893c6a",
+   "fact_type": "timeline_events",
+   "label": "ajupress.com",
+   "url": "https://www.ajupress.com/view/20260310073122199",
+   "publisher": "ajupress.com",
+   "title": "ajupress.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

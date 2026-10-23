@@ -1,7 +1,509 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "44259c1a-9de2-5a4d-9e48-7feeb9afd7cf",
   "slug": "accel",
   "name": "Accel",
-  "external_id": "vc-000018"
- }
+  "initials": null,
+  "short_name": "Accel",
+  "hq": "Palo Alto, California",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:26.611488+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000018",
+  "import_run_id": null,
+  "sec_crd": "331435",
+  "sec_file_no": null,
+  "legal_name": "ACCEL MANAGEMENT CO. L.L.C",
+  "primary_domain": "accel.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "aa3eeebd-fc2e-5d51-9666-8a6f948485f8",
+   "fact_type": "firm_legal_items",
+   "label": "news.bloomberglaw.com",
+   "url": "https://news.bloomberglaw.com/esg/squarespaces-7-2-billion-sale-hit-with-hedge-fund-challenge",
+   "publisher": "news.bloomberglaw.com",
+   "title": "news.bloomberglaw.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "233ed472-e0c0-56f0-9f28-5746ce2fc647",
+   "fact_type": "firm_legal_items",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/67767894/x/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d6b5895a-aed2-5801-b0f8-fdec03677a35",
+   "fact_type": "firm_legal_items",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/16222193/x/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "94fe0273-aca6-55c8-9530-1097f0720607",
+   "fact_type": "firm_legal_items",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/331435/PDF/331435.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "cc57cb3a-0a8b-5868-88db-61b8d56e1dbc",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/331435/PDF/331435.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "dcc0d8e6-bade-552f-bea5-89b877780bdf",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/331435/PDF/331435.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "41d6660c-84d5-5591-b66e-09c181112801",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/331435/PDF/331435.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9d689b0d-6b09-5406-a826-1a99c139b3a0",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/331435/PDF/331435.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6d1ca1c4-b755-569c-b97f-5006545eac4d",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/331435/PDF/331435.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "842575ce-2edc-5a32-b9fc-d4f9627f0534",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/331435/PDF/331435.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ce125f7c-defb-5b53-90d9-754c08d28b9d",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/331435/PDF/331435.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e94234fa-404b-5409-a320-b5c5d308b382",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/331435/PDF/331435.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2520245b-fb3c-54fe-91c4-30c2d3b9c438",
+   "fact_type": "firm_people_roles",
+   "label": "accel.com",
+   "url": "https://www.accel.com/people",
+   "publisher": "accel.com",
+   "title": "accel.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "54a0fccd-79f9-5ecb-bd84-3cedaf81e94f",
+   "fact_type": "firm_people_roles",
+   "label": "accel.com",
+   "url": "https://www.accel.com/people",
+   "publisher": "accel.com",
+   "title": "accel.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "41decfd3-c7a0-5cad-bf56-3b1d71b35736",
+   "fact_type": "firm_people_roles",
+   "label": "en.wikipedia.org",
+   "url": "https://en.wikipedia.org/wiki/Accel_(company)",
+   "publisher": "en.wikipedia.org",
+   "title": "en.wikipedia.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6d129a1c-e4b3-591e-874c-6ed86316884c",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/331435/PDF/331435.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d9fff339-e18c-51d5-8864-3525e5971f64",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/331435/PDF/331435.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6b5bb07b-626e-570e-8bca-6a961fca843d",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/331435/PDF/331435.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "44f785c7-5885-5bec-afea-7a0dbe50694c",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/331435/PDF/331435.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "fc61c789-aef4-55c4-b63e-adf59fd39a9e",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/331435/PDF/331435.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d3546f69-a7b8-504e-9699-f67971c286f5",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/331435/PDF/331435.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "956a2145-f0df-5d44-a8b8-a3d3c8fcd18d",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/331435/PDF/331435.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "65908fed-f65b-5118-9362-b08ede1d4b39",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/331435/PDF/331435.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "77efeb66-3e5d-5807-972d-40da2050cf9b",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/331435/PDF/331435.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "202a7864-10ab-59df-a211-367fb086ca2e",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/331435/PDF/331435.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2ff9fc69-dc30-522a-984e-2908bdfd0fb6",
+   "fact_type": "firm_profile_facts",
+   "label": "techcrunch.com",
+   "url": "https://techcrunch.com/2026/04/15/accel-raises-5b-to-back-late-stage-bets/",
+   "publisher": "techcrunch.com",
+   "title": "techcrunch.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2ff9fc69-dc30-522a-984e-2908bdfd0fb6",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/2094109/000209410925000004/primary_doc.xml",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c98ae993-220f-58b7-96a4-8d0915414644",
+   "fact_type": "firm_profile_facts",
+   "label": "accel.com",
+   "url": "https://www.accel.com/news/our-enduring-commitment-to-investing-at-the-earliest-stages",
+   "publisher": "accel.com",
+   "title": "accel.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "082fae84-0b3e-51a7-bb67-ecb6fda2d009",
+   "fact_type": "firm_profile_facts",
+   "label": "techcrunch.com",
+   "url": "https://techcrunch.com/2025/01/01/accel-closes-650-million-for-new-india-fund/",
+   "publisher": "techcrunch.com",
+   "title": "techcrunch.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "91a7ab0e-6df9-5c95-9e00-f59649fbc44f",
+   "fact_type": "firm_profile_facts",
+   "label": "open.omb.delaware.gov",
+   "url": "https://open.omb.delaware.gov/information/InvestCommittee/2025/10-21-25-DPERS-Minutes.pdf",
+   "publisher": "open.omb.delaware.gov",
+   "title": "open.omb.delaware.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "80a8439b-7394-5acf-8882-dfae961a7648",
+   "fact_type": "firm_profile_facts",
+   "label": "open.omb.delaware.gov",
+   "url": "https://open.omb.delaware.gov/information/InvestCommittee/2024/11-19-24-DPERS-Minutes.pdf",
+   "publisher": "open.omb.delaware.gov",
+   "title": "open.omb.delaware.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "013cb596-b101-5eac-bce4-a53c4abb732e",
+   "fact_type": "firm_profile_facts",
+   "label": "open.omb.delaware.gov",
+   "url": "https://open.omb.delaware.gov/information/InvestCommittee/2024/11-19-24-DPERS-Minutes.pdf",
+   "publisher": "open.omb.delaware.gov",
+   "title": "open.omb.delaware.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7ab694d0-c4ac-5997-91c2-9c9a78be1fe1",
+   "fact_type": "firm_profile_facts",
+   "label": "michigan.gov",
+   "url": "https://www.michigan.gov/treasury/-/media/Project/Websites/treasury/SMIB/2026/SMIB-Report-3252026.pdf",
+   "publisher": "michigan.gov",
+   "title": "michigan.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "511c1a11-2e45-539f-8031-8414a0c16a4c",
+   "fact_type": "firm_profile_facts",
+   "label": "michigan.gov",
+   "url": "https://www.michigan.gov/treasury/-/media/Project/Websites/treasury/SMIB/2026/SMIB-Report-3252026.pdf",
+   "publisher": "michigan.gov",
+   "title": "michigan.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8f641d83-1da4-5c9c-9561-c4aaaa8e67dc",
+   "fact_type": "firm_profile_facts",
+   "label": "michigan.gov",
+   "url": "https://www.michigan.gov/treasury/-/media/Project/Websites/treasury/SMIB/2026/SMIB-Report-3252026.pdf",
+   "publisher": "michigan.gov",
+   "title": "michigan.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e4d2e515-82e4-5d0f-b034-5016ce8083b5",
+   "fact_type": "firm_profile_facts",
+   "label": "pitchbook.com",
+   "url": "https://pitchbook.com/profiles/fund/15508-63F",
+   "publisher": "pitchbook.com",
+   "title": "pitchbook.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "fff596a2-9882-53a2-8872-6e98ea06ad07",
+   "fact_type": "firm_profile_facts",
+   "label": "pitchbook.com",
+   "url": "https://pitchbook.com/profiles/fund/15508-63F",
+   "publisher": "pitchbook.com",
+   "title": "pitchbook.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6897c74d-222e-58e6-8a05-8876e4abbd2b",
+   "fact_type": "firm_profile_facts",
+   "label": "pitchbook.com",
+   "url": "https://pitchbook.com/profiles/fund/15508-63F",
+   "publisher": "pitchbook.com",
+   "title": "pitchbook.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "37e55c1c-0a6c-5b46-8c2f-ca18893a08af",
+   "fact_type": "firm_profile_facts",
+   "label": "pitchbook.com",
+   "url": "https://pitchbook.com/profiles/fund/15508-63F",
+   "publisher": "pitchbook.com",
+   "title": "pitchbook.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d6436983-71be-56e2-a7af-1a8db274d2dc",
+   "fact_type": "firm_profile_facts",
+   "label": "pitchbook.com",
+   "url": "https://pitchbook.com/profiles/fund/18973-63F",
+   "publisher": "pitchbook.com",
+   "title": "pitchbook.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d8ccc87c-7614-59fc-a68f-50ee3f82d139",
+   "fact_type": "firm_profile_facts",
+   "label": "pitchbook.com",
+   "url": "https://pitchbook.com/profiles/fund/18973-63F",
+   "publisher": "pitchbook.com",
+   "title": "pitchbook.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "af7d856a-6070-53bf-8106-3c7ceb92ea2f",
+   "fact_type": "firm_profile_facts",
+   "label": "pitchbook.com",
+   "url": "https://pitchbook.com/profiles/fund/18973-63F",
+   "publisher": "pitchbook.com",
+   "title": "pitchbook.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "dc25aef6-24ff-50ae-bd6a-208450d326ca",
+   "fact_type": "firm_profile_facts",
+   "label": "pitchbook.com",
+   "url": "https://pitchbook.com/profiles/fund/18973-63F",
+   "publisher": "pitchbook.com",
+   "title": "pitchbook.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "767a1845-3924-50c5-aa05-bdbf03b674e9",
+   "fact_type": "firm_profile_facts",
+   "label": "hottub.vc",
+   "url": "https://hottub.vc/firms/accel/",
+   "publisher": "hottub.vc",
+   "title": "hottub.vc",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b2eec87a-cf9a-5e7c-9302-c550c7291914",
+   "fact_type": "firm_profile_facts",
+   "label": "hottub.vc",
+   "url": "https://hottub.vc/firms/accel/",
+   "publisher": "hottub.vc",
+   "title": "hottub.vc",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "30647ba5-7096-5215-addc-064b97de6084",
+   "fact_type": "firm_profile_facts",
+   "label": "hottub.vc",
+   "url": "https://hottub.vc/firms/accel/",
+   "publisher": "hottub.vc",
+   "title": "hottub.vc",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ad8bf10d-2777-5795-8241-f177a412487e",
+   "fact_type": "firm_profile_facts",
+   "label": "hottub.vc",
+   "url": "https://hottub.vc/firms/accel/",
+   "publisher": "hottub.vc",
+   "title": "hottub.vc",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "285b5592-b5e7-57a7-b4b7-9caa98bcd59c",
+   "fact_type": "timeline_events",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/16222193/x/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "cf3acad1-adab-5cfa-a556-baf245342b99",
+   "fact_type": "timeline_events",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/67767894/x/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d38046d5-9a9b-51d3-9d16-8f5989018527",
+   "fact_type": "timeline_events",
+   "label": "news.bloomberglaw.com",
+   "url": "https://news.bloomberglaw.com/esg/squarespaces-7-2-billion-sale-hit-with-hedge-fund-challenge",
+   "publisher": "news.bloomberglaw.com",
+   "title": "news.bloomberglaw.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

@@ -1,7 +1,293 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "0bd6bb9b-2db7-56f1-bf32-799a7de9e643",
   "slug": "morgan-stanley-capital-partners",
   "name": "Morgan Stanley Capital Partners",
-  "external_id": "vc-000030"
- }
+  "initials": null,
+  "short_name": "MSCP",
+  "hq": "New York, New York",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:33.305452+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000030",
+  "import_run_id": null,
+  "sec_crd": "147521",
+  "sec_file_no": null,
+  "legal_name": "MS CAPITAL PARTNERS ADVISER INC.",
+  "primary_domain": "morganstanley.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "55dcade8-a636-57f3-bf48-e4fe24527015",
+   "fact_type": "firm_legal_items",
+   "label": "nysb.uscourts.gov",
+   "url": "https://www.nysb.uscourts.gov/sites/default/files/opinions/300406_87_opinion.pdf",
+   "publisher": "nysb.uscourts.gov",
+   "title": "nysb.uscourts.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "55dcade8-a636-57f3-bf48-e4fe24527015",
+   "fact_type": "firm_legal_items",
+   "label": "casedocs.omniagentsolutions.com",
+   "url": "https://casedocs.omniagentsolutions.com/cmsvol2/pub_47471/f70eac78-48fb-4acb-98aa-faf117971c61_318.pdf",
+   "publisher": "casedocs.omniagentsolutions.com",
+   "title": "casedocs.omniagentsolutions.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "55dcade8-a636-57f3-bf48-e4fe24527015",
+   "fact_type": "firm_legal_items",
+   "label": "creditorcoalition.org",
+   "url": "https://creditorcoalition.org/settlement-of-tops-trustee-litigation-ends-epic-journey/",
+   "publisher": "creditorcoalition.org",
+   "title": "creditorcoalition.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "bcc3fd49-2a4f-5f54-98c1-0f11bfbf5ce6",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/147521/PDF/147521.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7bfda232-b088-562a-8569-1d5df0c28b1c",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/147521/PDF/147521.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1d888570-a08f-5d88-8e8b-ea8c86987c34",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/147521/PDF/147521.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a44b5646-9385-5fdc-9cfe-3817eaf9b886",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/147521/PDF/147521.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5342aa31-969e-5adb-8512-04b8f098580c",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/147521/PDF/147521.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "94ea3289-e7c1-5968-a49e-114c80b8b905",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/147521/PDF/147521.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9c9f6bd6-5f42-52d2-98a3-2173cffad802",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/147521/PDF/147521.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "aee2cccf-b0ed-58d6-a79d-12dc99873929",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/147521/PDF/147521.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "090093b0-259b-5b40-87e6-e58d4b6e6f79",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/147521/PDF/147521.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ccbf8009-0568-5454-9dc1-37247d522eb7",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/147521/PDF/147521.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3bd2c6ad-8dd1-566e-abd9-edfa54f4148b",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/147521/PDF/147521.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "de806edf-71e0-5b07-ab40-965aa737b567",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/147521/PDF/147521.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b69c5130-54b0-5309-85b3-1a9e00ed2e88",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/147521/PDF/147521.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1b68245b-1a8f-5c8f-adb9-95681d15c1d3",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/147521/PDF/147521.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "049429a6-449e-5540-bf4c-76df7a8f970a",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/147521/PDF/147521.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7dadae5f-33db-5d09-86b6-ebdd2900d33f",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/147521/PDF/147521.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "167f1a4c-d019-5899-8f63-132aa64793cf",
+   "fact_type": "firm_profile_facts",
+   "label": "alternativeswatch.com",
+   "url": "https://www.alternativeswatch.com/2025/06/23/morgan-stanley-capital-partners-north-haven-viii-private-equity/",
+   "publisher": "alternativeswatch.com",
+   "title": "alternativeswatch.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "17a4cb1d-2bd2-5bce-966b-8ecf36e4829d",
+   "fact_type": "firm_profile_facts",
+   "label": "alternativeswatch.com",
+   "url": "https://www.alternativeswatch.com/2025/06/23/morgan-stanley-capital-partners-north-haven-viii-private-equity/",
+   "publisher": "alternativeswatch.com",
+   "title": "alternativeswatch.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "dc944316-db1f-5c9c-b1be-9d90986c7792",
+   "fact_type": "firm_profile_facts",
+   "label": "alternativeswatch.com",
+   "url": "https://www.alternativeswatch.com/2025/06/23/morgan-stanley-capital-partners-north-haven-viii-private-equity/",
+   "publisher": "alternativeswatch.com",
+   "title": "alternativeswatch.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "852725ba-e82b-5689-9c81-5b96bdf93861",
+   "fact_type": "firm_profile_facts",
+   "label": "statetreasurer.wyo.gov",
+   "url": "https://statetreasurer.wyo.gov/wp-content/uploads/2026/04/2025-09-30-WSTO-Quarterly-Alternative-Investment-Supplemental-Disclosure-Final.pdf",
+   "publisher": "statetreasurer.wyo.gov",
+   "title": "statetreasurer.wyo.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "16f10ef8-c297-5ccf-876a-0f02c4d1f45d",
+   "fact_type": "timeline_events",
+   "label": "nysb.uscourts.gov",
+   "url": "https://www.nysb.uscourts.gov/sites/default/files/opinions/300406_87_opinion.pdf",
+   "publisher": "nysb.uscourts.gov",
+   "title": "nysb.uscourts.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "16f10ef8-c297-5ccf-876a-0f02c4d1f45d",
+   "fact_type": "timeline_events",
+   "label": "casedocs.omniagentsolutions.com",
+   "url": "https://casedocs.omniagentsolutions.com/cmsvol2/pub_47471/f70eac78-48fb-4acb-98aa-faf117971c61_318.pdf",
+   "publisher": "casedocs.omniagentsolutions.com",
+   "title": "casedocs.omniagentsolutions.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "16f10ef8-c297-5ccf-876a-0f02c4d1f45d",
+   "fact_type": "timeline_events",
+   "label": "creditorcoalition.org",
+   "url": "https://creditorcoalition.org/settlement-of-tops-trustee-litigation-ends-epic-journey/",
+   "publisher": "creditorcoalition.org",
+   "title": "creditorcoalition.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

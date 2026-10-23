@@ -1,9 +1,11 @@
 // Stripe webhook -> grant_checks. Secrets: STRIPE_LIVE/TEST_SECRET_KEY, REGRETAMIN_STRIPE_WEBHOOK_SECRET[_LIVE|_TEST], SUPABASE_SERVICE_ROLE_KEY.
 // Deploy with --no-verify-jwt. Events: checkout.session.completed, invoice.paid,
-// customer.subscription.updated (mirrors cancel_at_period_end + period end), customer.subscription.deleted (plan ends).
+// customer.subscription.updated (mirrors cancel_at_period_end + period end), customer.subscription.deleted (plan ends),
+// invoice.payment_failed (past_due; free after 24h unpaid) and invoice.paid (clears past_due), see past_due.js.
 import Stripe from "npm:stripe@16";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { stripeKey, webhookSecrets } from "../_shared/stripe_env.ts";
+import { handlePastDue } from "./past_due.js";
 const clients = { live: new Stripe(stripeKey(true)), test: new Stripe(stripeKey(false)) };
 const verifier = clients.test; // signature checks need no key
 const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
@@ -24,6 +26,10 @@ Deno.serve(async (req) => {
     if (s.mode === "payment" && s.metadata?.kind === "single") {
       await admin.rpc("grant_checks", { p_user: s.metadata.user_id, p_kind: "grant_single", p_amount: 1, p_event: ev.id, p_customer: s.customer as string | null });
     }
+  }
+  if (ev.type === "invoice.payment_failed" || ev.type === "invoice.paid") {
+    const bad = await handlePastDue(ev, admin);
+    if (bad) return new Response(bad.body, { status: bad.status });
   }
   if (ev.type === "invoice.paid") {
     const inv = ev.data.object as Stripe.Invoice;

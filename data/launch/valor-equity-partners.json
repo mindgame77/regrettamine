@@ -1,7 +1,689 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "d2d14e55-5397-5257-a328-4418b83f9378",
   "slug": "valor-equity-partners",
   "name": "Valor Equity Partners",
-  "external_id": "vc-000010"
- }
+  "initials": null,
+  "short_name": "Valor",
+  "hq": "Chicago, Illinois",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:21.94064+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000010",
+  "import_run_id": null,
+  "sec_crd": "160014",
+  "sec_file_no": null,
+  "legal_name": "VALOR MANAGEMENT LLC",
+  "primary_domain": "valorep.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "338c290d-e81b-5dab-a541-6e9ced66f1fc",
+   "fact_type": "firm_legal_items",
+   "label": "npr.org",
+   "url": "https://www.npr.org/2025/04/11/nx-s1-5352470/doge-musk-social-security-voting",
+   "publisher": "npr.org",
+   "title": "npr.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4af4ce85-3c08-5081-91c9-0427429053c6",
+   "fact_type": "firm_legal_items",
+   "label": "npr.org",
+   "url": "https://www.npr.org/2025/04/11/nx-s1-5352470/doge-musk-social-security-voting",
+   "publisher": "npr.org",
+   "title": "npr.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4af4ce85-3c08-5081-91c9-0427429053c6",
+   "fact_type": "firm_legal_items",
+   "label": "cnbc.com",
+   "url": "https://www.cnbc.com/2025/07/24/high-ranking-doge-official-and-elon-musk-ally-antonio-gracias-has-left-government.html",
+   "publisher": "cnbc.com",
+   "title": "cnbc.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4af4ce85-3c08-5081-91c9-0427429053c6",
+   "fact_type": "firm_legal_items",
+   "label": "aft.org",
+   "url": "https://www.aft.org/sites/default/files/media/documents/2025/7.23.25.pdf",
+   "publisher": "aft.org",
+   "title": "aft.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4af4ce85-3c08-5081-91c9-0427429053c6",
+   "fact_type": "firm_legal_items",
+   "label": "aflcio.org",
+   "url": "https://aflcio.org/sites/default/files/2026-03/AFL-CIO%20Report%20on%20Valor%20Equity%20Partners%20and%20DOGE%20January%202026.pdf",
+   "publisher": "aflcio.org",
+   "title": "aflcio.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4af4ce85-3c08-5081-91c9-0427429053c6",
+   "fact_type": "firm_legal_items",
+   "label": "chicago.suntimes.com",
+   "url": "https://chicago.suntimes.com/money/2025/09/08/chicago-valor-equity-partners-antonio-gracias-doge-labor-activists-afl-cio",
+   "publisher": "chicago.suntimes.com",
+   "title": "chicago.suntimes.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c49678cb-f5f9-5241-92ea-035cda2cf1ab",
+   "fact_type": "firm_legal_items",
+   "label": "hsgac.senate.gov",
+   "url": "https://www.hsgac.senate.gov/wp-content/uploads/2026-6-4-Blumenthal-Warren-Letter-to-Antonio-Gracias.pdf",
+   "publisher": "hsgac.senate.gov",
+   "title": "hsgac.senate.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "338c290d-e81b-5dab-a541-6e9ced66f1fc",
+   "fact_type": "firm_legal_items",
+   "label": "ca4.uscourts.gov",
+   "url": "https://www.ca4.uscourts.gov/opinions/251411.P.pdf",
+   "publisher": "ca4.uscourts.gov",
+   "title": "ca4.uscourts.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3a233514-b918-5e2a-9d87-a812f2afca64",
+   "fact_type": "firm_legal_items",
+   "label": "tesladetroitderivativeaction.com",
+   "url": "https://tesladetroitderivativeaction.com/media/4417215/tesla_detroit_derivative_-_stipulation.pdf",
+   "publisher": "tesladetroitderivativeaction.com",
+   "title": "tesladetroitderivativeaction.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3a233514-b918-5e2a-9d87-a812f2afca64",
+   "fact_type": "firm_legal_items",
+   "label": "cdn.arstechnica.net",
+   "url": "https://cdn.arstechnica.net/wp-content/uploads/2023/07/tesla-detroit-shareholder-complaint.pdf",
+   "publisher": "cdn.arstechnica.net",
+   "title": "cdn.arstechnica.net",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3a233514-b918-5e2a-9d87-a812f2afca64",
+   "fact_type": "firm_legal_items",
+   "label": "courts.delaware.gov",
+   "url": "https://courts.delaware.gov/Opinions/Download.aspx?id=359340",
+   "publisher": "courts.delaware.gov",
+   "title": "courts.delaware.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e1ad01af-e8dd-5415-8a9d-c7745b1ebfec",
+   "fact_type": "firm_legal_items",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/7627895/mfc-capital-funding-inc-v-valor-equity-partners-lp/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "252c3fe3-d003-578c-8c92-207741193789",
+   "fact_type": "firm_legal_items",
+   "label": "courts.delaware.gov",
+   "url": "https://courts.delaware.gov/opinions/download.aspx?ID=161100",
+   "publisher": "courts.delaware.gov",
+   "title": "courts.delaware.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "252c3fe3-d003-578c-8c92-207741193789",
+   "fact_type": "firm_legal_items",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/4391594/asdc-holdings-llc-v-the-richard-j-malouf-2008-all-smiles-grantor-retained/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b0e7ae6a-164a-5417-b39d-35ae34bb3314",
+   "fact_type": "firm_legal_items",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b0e7ae6a-164a-5417-b39d-35ae34bb3314",
+   "fact_type": "firm_legal_items",
+   "label": "files.adviserinfo.sec.gov",
+   "url": "https://files.adviserinfo.sec.gov/IAPD/Content/Common/crd_iapd_Brochure.aspx?BRCHR_VRSN_ID=971705",
+   "publisher": "files.adviserinfo.sec.gov",
+   "title": "files.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5cb23f6d-f158-59d1-b0b7-5dd41e437aaa",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "58f70c86-fbbe-51a7-b154-03afe56d8a26",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d79c3814-c501-5ac7-b8b3-10a56be35658",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "97806700-2362-5963-bb37-0326d86cdbe1",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5d0950e9-4679-5bd3-b049-8792c81d04fd",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "47bbeff6-007d-5efb-8892-e9634f173fd2",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4a861595-0f97-5890-b940-4ed0ebdc6c18",
+   "fact_type": "firm_profile_facts",
+   "label": "aft.org",
+   "url": "https://www.aft.org/sites/default/files/media/documents/2025/7.23.25.pdf",
+   "publisher": "aft.org",
+   "title": "aft.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a1fc1ad5-c930-58ea-bc4e-0638b54da3e4",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5d852a3b-ca32-5878-844e-ba6b6940852b",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "de4fc543-0aef-5aee-858e-61ec36059da9",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e7fbca9f-60ea-51b4-9873-2591b410f466",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e9cf632e-44ee-5b56-a041-15da771cf5d0",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c7665794-d649-5cb5-9c33-e62ed7327f55",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e657c050-7212-567e-a4d4-638fb6e4469c",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3f0317c4-23c9-542c-ba9a-206471802719",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "25007c6a-e3c4-51bc-88cc-7541eda9a006",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d57b7179-e60e-5b9e-bf20-0febc63e3131",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "520af4b1-ba11-5642-81db-cb41f460899d",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b616c2f2-9e2c-5733-b777-d9172a10f8f5",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "45f5f865-cfc0-5ccd-9f20-26f61af7cb97",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "25f9203b-c27a-5c15-a6c6-783780aa4f30",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5c1e238f-b32d-5cc2-a68d-e0078579d8fd",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f247271b-a577-59a2-a62d-1ab260155106",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "731a2068-f1e8-5e5f-aaf0-4c5005858c22",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3d053c26-12af-54fb-af99-c00e0e49ad61",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "992de9b7-8522-5696-ba4b-9f646eb43747",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e9976152-0239-5497-b5aa-610b9181d4d6",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160014/PDF/160014.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "992de9b7-8522-5696-ba4b-9f646eb43747",
+   "fact_type": "firm_profile_facts",
+   "label": "files.adviserinfo.sec.gov",
+   "url": "https://files.adviserinfo.sec.gov/IAPD/Content/Common/crd_iapd_Brochure.aspx?BRCHR_VRSN_ID=971705",
+   "publisher": "files.adviserinfo.sec.gov",
+   "title": "files.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "799f3fa5-f219-50ae-be3a-a485ba69ec9a",
+   "fact_type": "firm_profile_facts",
+   "label": "prnewswire.com",
+   "url": "https://www.prnewswire.com/news-releases/valor-equity-partners-announces-closing-of-oversubscribed-flagship-growth-fund-vi-and-3-4-billion-in-commitments-to-valor-funds-302218093.html",
+   "publisher": "prnewswire.com",
+   "title": "prnewswire.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5c1e238f-b32d-5cc2-a68d-e0078579d8fd",
+   "fact_type": "firm_profile_facts",
+   "label": "prnewswire.com",
+   "url": "https://www.prnewswire.com/news-releases/valor-equity-partners-announces-closing-of-oversubscribed-flagship-growth-fund-vi-and-3-4-billion-in-commitments-to-valor-funds-302218093.html",
+   "publisher": "prnewswire.com",
+   "title": "prnewswire.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c1e257cb-67be-5500-bda5-b784422c75e1",
+   "fact_type": "firm_profile_facts",
+   "label": "techcrunch.com",
+   "url": "https://techcrunch.com/2026/06/24/valor-equity-partners-looks-to-raise-a-2-5b-fund-vii-per-bloomberg/",
+   "publisher": "techcrunch.com",
+   "title": "techcrunch.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d83dc6db-591d-5be4-aec8-6951b585058d",
+   "fact_type": "firm_profile_facts",
+   "label": "dakota.com",
+   "url": "https://www.dakota.com/resources/blog/fund-launches-and-lp/gp-moves-week-of-sept-28-2026",
+   "publisher": "dakota.com",
+   "title": "dakota.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c1e257cb-67be-5500-bda5-b784422c75e1",
+   "fact_type": "firm_profile_facts",
+   "label": "dakota.com",
+   "url": "https://www.dakota.com/resources/blog/fund-launches-and-lp/gp-moves-week-of-sept-28-2026",
+   "publisher": "dakota.com",
+   "title": "dakota.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e072d623-8ad3-5c8c-a233-72272de10132",
+   "fact_type": "firm_profile_facts",
+   "label": "dakota.com",
+   "url": "https://www.dakota.com/fundraising-news/philadelphia-board-commits-50m-to-valor-equity-partners",
+   "publisher": "dakota.com",
+   "title": "dakota.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c47fcf9d-b93b-5a4a-8c84-eda677a1c971",
+   "fact_type": "firm_profile_facts",
+   "label": "dakota.com",
+   "url": "https://www.dakota.com/fundraising-news/philadelphia-board-commits-50m-to-valor-equity-partners",
+   "publisher": "dakota.com",
+   "title": "dakota.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4eb808e6-016b-5fb8-913b-705dd7f17cd4",
+   "fact_type": "firm_profile_facts",
+   "label": "kyret.ky.gov",
+   "url": "https://www.kyret.ky.gov/About/Meeting-Calendar/Materials/June%2029%202026%20CERS%20Investment%20Committee%20Meeting%20Material.pdf",
+   "publisher": "kyret.ky.gov",
+   "title": "kyret.ky.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "83dd19da-ddbb-5678-918f-a2a15d0d2350",
+   "fact_type": "timeline_events",
+   "label": "npr.org",
+   "url": "https://www.npr.org/2025/04/11/nx-s1-5352470/doge-musk-social-security-voting",
+   "publisher": "npr.org",
+   "title": "npr.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d3e41116-e57a-5dcd-91ae-3577334e5172",
+   "fact_type": "timeline_events",
+   "label": "npr.org",
+   "url": "https://www.npr.org/2025/04/11/nx-s1-5352470/doge-musk-social-security-voting",
+   "publisher": "npr.org",
+   "title": "npr.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "83dd19da-ddbb-5678-918f-a2a15d0d2350",
+   "fact_type": "timeline_events",
+   "label": "cnbc.com",
+   "url": "https://www.cnbc.com/2025/07/24/high-ranking-doge-official-and-elon-musk-ally-antonio-gracias-has-left-government.html",
+   "publisher": "cnbc.com",
+   "title": "cnbc.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "83dd19da-ddbb-5678-918f-a2a15d0d2350",
+   "fact_type": "timeline_events",
+   "label": "aft.org",
+   "url": "https://www.aft.org/sites/default/files/media/documents/2025/7.23.25.pdf",
+   "publisher": "aft.org",
+   "title": "aft.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "83dd19da-ddbb-5678-918f-a2a15d0d2350",
+   "fact_type": "timeline_events",
+   "label": "aflcio.org",
+   "url": "https://aflcio.org/sites/default/files/2026-03/AFL-CIO%20Report%20on%20Valor%20Equity%20Partners%20and%20DOGE%20January%202026.pdf",
+   "publisher": "aflcio.org",
+   "title": "aflcio.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "83dd19da-ddbb-5678-918f-a2a15d0d2350",
+   "fact_type": "timeline_events",
+   "label": "chicago.suntimes.com",
+   "url": "https://chicago.suntimes.com/money/2025/09/08/chicago-valor-equity-partners-antonio-gracias-doge-labor-activists-afl-cio",
+   "publisher": "chicago.suntimes.com",
+   "title": "chicago.suntimes.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a817eeee-3a15-5658-9464-d90bd8b0875b",
+   "fact_type": "timeline_events",
+   "label": "hsgac.senate.gov",
+   "url": "https://www.hsgac.senate.gov/wp-content/uploads/2026-6-4-Blumenthal-Warren-Letter-to-Antonio-Gracias.pdf",
+   "publisher": "hsgac.senate.gov",
+   "title": "hsgac.senate.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d3e41116-e57a-5dcd-91ae-3577334e5172",
+   "fact_type": "timeline_events",
+   "label": "ca4.uscourts.gov",
+   "url": "https://www.ca4.uscourts.gov/opinions/251411.P.pdf",
+   "publisher": "ca4.uscourts.gov",
+   "title": "ca4.uscourts.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a02415b7-c944-5c66-9830-bf27fa6ba8ae",
+   "fact_type": "timeline_events",
+   "label": "tesladetroitderivativeaction.com",
+   "url": "https://tesladetroitderivativeaction.com/media/4417215/tesla_detroit_derivative_-_stipulation.pdf",
+   "publisher": "tesladetroitderivativeaction.com",
+   "title": "tesladetroitderivativeaction.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a02415b7-c944-5c66-9830-bf27fa6ba8ae",
+   "fact_type": "timeline_events",
+   "label": "cdn.arstechnica.net",
+   "url": "https://cdn.arstechnica.net/wp-content/uploads/2023/07/tesla-detroit-shareholder-complaint.pdf",
+   "publisher": "cdn.arstechnica.net",
+   "title": "cdn.arstechnica.net",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a02415b7-c944-5c66-9830-bf27fa6ba8ae",
+   "fact_type": "timeline_events",
+   "label": "courts.delaware.gov",
+   "url": "https://courts.delaware.gov/Opinions/Download.aspx?id=359340",
+   "publisher": "courts.delaware.gov",
+   "title": "courts.delaware.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "512cb191-26f6-5011-9644-9a01811a6c3f",
+   "fact_type": "timeline_events",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/7627895/mfc-capital-funding-inc-v-valor-equity-partners-lp/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "118242a9-0e85-5aaf-8372-8611af7a43e5",
+   "fact_type": "timeline_events",
+   "label": "courts.delaware.gov",
+   "url": "https://courts.delaware.gov/opinions/download.aspx?ID=161100",
+   "publisher": "courts.delaware.gov",
+   "title": "courts.delaware.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "118242a9-0e85-5aaf-8372-8611af7a43e5",
+   "fact_type": "timeline_events",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/4391594/asdc-holdings-llc-v-the-richard-j-malouf-2008-all-smiles-grantor-retained/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ff242b97-465f-505d-9d9d-a62a1ab68805",
+   "fact_type": "timeline_events",
+   "label": "prnewswire.com",
+   "url": "https://www.prnewswire.com/news-releases/valor-equity-partners-announces-closing-of-oversubscribed-flagship-growth-fund-vi-and-3-4-billion-in-commitments-to-valor-funds-302218093.html",
+   "publisher": "prnewswire.com",
+   "title": "prnewswire.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b6b3f831-9388-5bc0-bb3a-ec24f167af86",
+   "fact_type": "timeline_events",
+   "label": "techcrunch.com",
+   "url": "https://techcrunch.com/2026/06/24/valor-equity-partners-looks-to-raise-a-2-5b-fund-vii-per-bloomberg/",
+   "publisher": "techcrunch.com",
+   "title": "techcrunch.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e8d578e6-ca34-574a-8ae6-bb38802492a9",
+   "fact_type": "timeline_events",
+   "label": "dakota.com",
+   "url": "https://www.dakota.com/resources/blog/fund-launches-and-lp/gp-moves-week-of-sept-28-2026",
+   "publisher": "dakota.com",
+   "title": "dakota.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b6b3f831-9388-5bc0-bb3a-ec24f167af86",
+   "fact_type": "timeline_events",
+   "label": "dakota.com",
+   "url": "https://www.dakota.com/resources/blog/fund-launches-and-lp/gp-moves-week-of-sept-28-2026",
+   "publisher": "dakota.com",
+   "title": "dakota.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

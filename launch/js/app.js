@@ -21,10 +21,11 @@
     if (t.dataset.close !== undefined) closeOv(t.closest('.ov'));
     if (t.dataset.buy) buy(t.dataset.buy);
   });
-  async function balance() {
+  async function balance(ms = 5000) { // null on error or after ms (5s) so callers never hang
     if (!sb) return null;
-    const { data, error } = await sb.rpc('check_balance', { p_anon: anonId() });
-    return error ? null : data; // {left, signed_in}
+    let to; const late = new Promise(r => { to = setTimeout(() => r({ error: 'timeout' }), ms); });
+    try { const { data, error } = await Promise.race([sb.rpc('check_balance', { p_anon: anonId() }), late]); return error ? null : data; } // {left, signed_in}
+    catch (_) { return null; } finally { clearTimeout(to); }
   }
   // Copy and plans come from launch/copy.json (window.REGRET.copy). fmt fills {name}; pl picks [one, many] by count.
   const T = C.copy.js, B = C.copy.site.billing;
@@ -341,10 +342,13 @@
     const ub = $('#usecheck'), pb = $('#pbal'); ub.disabled = true; pb.textContent = C.copy.site.pay.balance_loading;
     $('#panon').classList.remove('hi'); $('#psgnh').textContent = C.copy.site.pay.sign_title;
     open('paycase');
+    const { data: ss } = sb ? await sb.auth.getSession().catch(() => ({ data: {} })) : { data: {} }; // session first (local, no network)
+    $('#panon').hidden = !!(ss && ss.session);
     BAL = await balance();
-    $('#panon').hidden = !!(BAL && BAL.signed_in);
-    if (!BAL) { pb.textContent = T.balance_fail; return; }
+    if (!BAL) { pb.innerHTML = esc(T.balance_fail) + ' <a href="#" data-retry>' + esc(T.retry) + '</a>'; pb.querySelector('[data-retry]').onclick = (e) => { e.preventDefault(); openPay(SEC); }; return; }
+    $('#panon').hidden = !!BAL.signed_in;
     const n = BAL.left;
+    if (n <= 0 && !BAL.signed_in) return open('signup'); // anonymous free checks used up: sign-in popup right away
     pb.textContent = n > 0 ? pl(n, T.have, { n, free: BAL.signed_in ? '' : T.free }) : (BAL.signed_in ? T.none_signed : T.none_anon);
     if (n <= 0) $('#pmsg2').textContent = BAL.signed_in ? T.pick_more : T.sign_more;
     ub.disabled = n <= 0;

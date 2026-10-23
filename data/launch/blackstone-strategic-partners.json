@@ -1,7 +1,482 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "5760875e-bdb8-503f-b09c-89871aca9b9f",
   "slug": "blackstone-strategic-partners",
   "name": "Blackstone Strategic Partners",
-  "external_id": "vc-000008"
- }
+  "initials": null,
+  "short_name": "Strategic Partners",
+  "hq": "New York, New York",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:20.486417+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000008",
+  "import_run_id": null,
+  "sec_crd": "134009",
+  "sec_file_no": null,
+  "legal_name": "STRATEGIC PARTNERS FUND SOLUTIONS ADVISORS L.P.",
+  "primary_domain": "blackstone.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "35635462-b884-55e8-ad61-15a9aeba3cd6",
+   "fact_type": "firm_legal_items",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/newsroom/press-releases/2015-235",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "35635462-b884-55e8-ad61-15a9aeba3cd6",
+   "fact_type": "firm_legal_items",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/files/litigation/admin/2015/ia-4219.pdf",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9bb82579-dd6d-5580-a241-bdfbae18392f",
+   "fact_type": "firm_legal_items",
+   "label": "lpm.org",
+   "url": "https://www.lpm.org/news/2025-01-08/kentucky-hedge-fund-firms-reach-227-million-settlement-in-long-running-pension-lawsuit",
+   "publisher": "lpm.org",
+   "title": "lpm.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f5498580-46c9-5796-a840-67bb03e1a71b",
+   "fact_type": "firm_legal_items",
+   "label": "wilshirelawfirm.com",
+   "url": "https://wilshirelawfirm.com/blog/blackstone-data-breach/",
+   "publisher": "wilshirelawfirm.com",
+   "title": "wilshirelawfirm.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2d5c7d0c-d045-54db-85e4-bdb63bac8d1e",
+   "fact_type": "firm_legal_items",
+   "label": "blackstone.com",
+   "url": "https://www.blackstone.com/phishing-and-fraud-awareness/",
+   "publisher": "blackstone.com",
+   "title": "blackstone.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "13c5c424-2c7b-59a0-9ff3-516f54e51848",
+   "fact_type": "firm_legal_items",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "21dac597-a4fa-5a47-95cd-4c65bd0f56c0",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f0bd92a2-c295-5ba7-9e13-b71bfbc343f0",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "71bc3b6e-1896-579d-b4ce-f228e90f2959",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f703d415-ccbf-5b4b-97a8-d83e10ad82fd",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "096d7a70-5aee-53bd-8edb-28768e0b35b3",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "83ccd698-fbf2-59e4-a4e2-033dbecaedcd",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "45e84b6d-a742-5f99-859d-b3dd5d2f44c7",
+   "fact_type": "firm_people_roles",
+   "label": "secondarylink.com",
+   "url": "https://secondarylink.com/news/65d76e4b1e98a92e6abf21a7/blackstone-to-move-gp-stakes-business-under-strategic-partners",
+   "publisher": "secondarylink.com",
+   "title": "secondarylink.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a85a3588-65c1-5bf0-af6d-c70999736368",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5b13fc6d-bd35-5910-b993-8e37c8426a72",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e3e04bd8-0300-5fe4-a80f-11d79fef79a2",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e7ea378d-f077-5e5d-8fb0-ce20ab9e6cc4",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5528af53-674f-5a21-9211-dbfc624916e3",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "79e56d5b-b4c1-5e2d-8bf5-0e008daa7f71",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4357e488-0879-55e2-b442-38f14c25b85e",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ec1442a4-8e95-5cc7-a0b7-6916f18ebf85",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ccab76f0-eae3-538c-a884-fce744ff6735",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "db8fd8cc-d20d-5814-bd9f-65759226280f",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "45e56113-243c-53c8-b8dd-d95105739775",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8a4b8f26-455e-51f1-8eb4-dacea7c2e0aa",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a1edc794-3278-5492-b859-554a8b9f9674",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3e630abb-5ca7-5698-b4a4-4e11d80be565",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "af2aca46-b0d7-530d-b735-96b2d1b4d3b7",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "cf559691-d0c3-548e-8ca0-0e5c4b38746c",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "65fa9f61-b0bf-50c6-85a6-06c8ee83d26e",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4bfdb6a7-3ea0-5f54-ae6f-b05f1a84f8af",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/134009/PDF/134009.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7019a444-a7db-5291-91a7-7d5e9dc5e9a5",
+   "fact_type": "firm_profile_facts",
+   "label": "blackstone.com",
+   "url": "https://www.blackstone.com/news/press/blackstone-closes-acquisition-of-strategic-partners-from-credit-suisse/",
+   "publisher": "blackstone.com",
+   "title": "blackstone.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e1890078-0f33-500b-a881-e9bec5d1710a",
+   "fact_type": "firm_profile_facts",
+   "label": "blackstone.com",
+   "url": "https://www.blackstone.com/news/press/blackstone-closes-acquisition-of-strategic-partners-from-credit-suisse/",
+   "publisher": "blackstone.com",
+   "title": "blackstone.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "65fa9f61-b0bf-50c6-85a6-06c8ee83d26e",
+   "fact_type": "firm_profile_facts",
+   "label": "api.gleif.org",
+   "url": "https://api.gleif.org/api/v1/lei-records/549300YI1N8IELZUMK98",
+   "publisher": "api.gleif.org",
+   "title": "api.gleif.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c43d1f42-fc84-5904-8805-9928687d8340",
+   "fact_type": "firm_profile_facts",
+   "label": "blackstone.com",
+   "url": "https://www.blackstone.com/our-businesses/strategic-partners/",
+   "publisher": "blackstone.com",
+   "title": "blackstone.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5ed45f01-b8e6-5c7b-a85c-77bc0f0d3a3d",
+   "fact_type": "firm_profile_facts",
+   "label": "caproasia.com",
+   "url": "https://www.caproasia.com/2026/07/31/united-states-1-3-trillion-private-equity-firm-blackstone-raised-14-billion-in-current-commitments-for-5th-private-equity-secondaries-fund-blackstone-strategic-partners-fund-x-after-initial-close/",
+   "publisher": "caproasia.com",
+   "title": "caproasia.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a15d1c01-9891-5327-8416-e607f54eaf38",
+   "fact_type": "firm_profile_facts",
+   "label": "dpfp.org",
+   "url": "https://www.dpfp.org/Resources/a371a9a3-9f23-43d0-8e8c-d392ed3dc4b5/MS%2003%2012%202026.pdf",
+   "publisher": "dpfp.org",
+   "title": "dpfp.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "69acb30c-cc9d-5e6a-8629-46438b48b5bc",
+   "fact_type": "firm_profile_facts",
+   "label": "msbi.us",
+   "url": "https://www.msbi.us/sites/default/files/2025-10/Board%20Approvals%20-%20October%202025.pdf",
+   "publisher": "msbi.us",
+   "title": "msbi.us",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "fc93cb8e-f90b-598d-a71e-db029b84b00f",
+   "fact_type": "firm_profile_facts",
+   "label": "realassets.ipe.com",
+   "url": "https://realassets.ipe.com/news/ohio-sers-commits-125m-to-blackstone-secondaries-and-residential-funds/10139061.article",
+   "publisher": "realassets.ipe.com",
+   "title": "realassets.ipe.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "52cd346b-9ab4-5085-a5ae-dadff4a4b6c1",
+   "fact_type": "firm_profile_facts",
+   "label": "realassets.ipe.com",
+   "url": "https://realassets.ipe.com/news/ohio-sers-commits-125m-to-blackstone-secondaries-and-residential-funds/10139061.article",
+   "publisher": "realassets.ipe.com",
+   "title": "realassets.ipe.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7476622c-c22f-5028-94b5-d070014cc441",
+   "fact_type": "timeline_events",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/newsroom/press-releases/2015-235",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7476622c-c22f-5028-94b5-d070014cc441",
+   "fact_type": "timeline_events",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/files/litigation/admin/2015/ia-4219.pdf",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ff89e1ba-1d8d-5ddf-9101-90364a9d9c72",
+   "fact_type": "timeline_events",
+   "label": "secondarylink.com",
+   "url": "https://secondarylink.com/news/65d76e4b1e98a92e6abf21a7/blackstone-to-move-gp-stakes-business-under-strategic-partners",
+   "publisher": "secondarylink.com",
+   "title": "secondarylink.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d4996b7a-7178-5d53-bb57-f1d19f865a84",
+   "fact_type": "timeline_events",
+   "label": "lpm.org",
+   "url": "https://www.lpm.org/news/2025-01-08/kentucky-hedge-fund-firms-reach-227-million-settlement-in-long-running-pension-lawsuit",
+   "publisher": "lpm.org",
+   "title": "lpm.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7e4ac4ef-741d-524e-b060-f223bdc45f7f",
+   "fact_type": "timeline_events",
+   "label": "blackstone.com",
+   "url": "https://www.blackstone.com/phishing-and-fraud-awareness/",
+   "publisher": "blackstone.com",
+   "title": "blackstone.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "51da755d-1733-590c-bd1c-c592e4eadcec",
+   "fact_type": "timeline_events",
+   "label": "wilshirelawfirm.com",
+   "url": "https://wilshirelawfirm.com/blog/blackstone-data-breach/",
+   "publisher": "wilshirelawfirm.com",
+   "title": "wilshirelawfirm.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "95d16936-ca34-5d40-9ba9-258cc0ca1b28",
+   "fact_type": "timeline_events",
+   "label": "caproasia.com",
+   "url": "https://www.caproasia.com/2026/07/31/united-states-1-3-trillion-private-equity-firm-blackstone-raised-14-billion-in-current-commitments-for-5th-private-equity-secondaries-fund-blackstone-strategic-partners-fund-x-after-initial-close/",
+   "publisher": "caproasia.com",
+   "title": "caproasia.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

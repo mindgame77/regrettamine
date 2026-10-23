@@ -1,7 +1,446 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "f601f2af-9981-5a9f-9213-f789b51a508d",
   "slug": "nea",
   "name": "NEA",
-  "external_id": "vc-000019"
- }
+  "initials": null,
+  "short_name": "NEA",
+  "hq": "Menlo Park, California",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:27.337439+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000019",
+  "import_run_id": null,
+  "sec_crd": "161004",
+  "sec_file_no": null,
+  "legal_name": "NEW ENTERPRISE ASSOCIATES",
+  "primary_domain": "nea.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "595a3bac-829c-5aa7-91a9-9096f7745e55",
+   "fact_type": "firm_legal_items",
+   "label": "courts.delaware.gov",
+   "url": "https://courts.delaware.gov/opinions/download.aspx?id=394050",
+   "publisher": "courts.delaware.gov",
+   "title": "courts.delaware.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ed1ac87b-6e33-532a-b43b-d031bbaabce8",
+   "fact_type": "firm_legal_items",
+   "label": "unicourt.com",
+   "url": "https://unicourt.com/case/pc-db5-casegub40fd457998e-2395927",
+   "publisher": "unicourt.com",
+   "title": "unicourt.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2b362107-e63c-5ec2-a5ff-7300d18710bf",
+   "fact_type": "firm_legal_items",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161004/PDF/161004.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7fe7ab9e-fe9f-528c-bd50-4f28707c1d55",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161004/PDF/161004.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "eee310ef-aeea-5e4f-bc6a-e8b521de434b",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161004/PDF/161004.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0fcebe07-6eb3-5c3a-987e-86635bc3b515",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161004/PDF/161004.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2bb1f813-f00c-59a1-9661-f05be68cfe36",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161004/PDF/161004.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d2450ddb-187b-567c-bff7-89e90465f79e",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161004/PDF/161004.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "49b6f82a-d7b0-56b5-be33-07bfa521774b",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161004/PDF/161004.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4ebb99b3-9bfa-510e-ad5f-ce48ae5422d1",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161004/PDF/161004.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ab4d7757-6427-5ae1-94b5-453d72d8d29d",
+   "fact_type": "firm_people_roles",
+   "label": "nea.com",
+   "url": "https://www.nea.com/team",
+   "publisher": "nea.com",
+   "title": "nea.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "899dae90-fb4d-50b4-91a5-c815c526c54a",
+   "fact_type": "firm_people_roles",
+   "label": "nea.com",
+   "url": "https://www.nea.com/team",
+   "publisher": "nea.com",
+   "title": "nea.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9898a7f7-51c6-510c-9bc8-7e7cb9a74913",
+   "fact_type": "firm_people_roles",
+   "label": "en.wikipedia.org",
+   "url": "https://en.wikipedia.org/wiki/New_Enterprise_Associates",
+   "publisher": "en.wikipedia.org",
+   "title": "en.wikipedia.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "75533684-b4e2-5673-876d-506979a92228",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161004/PDF/161004.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8b8bc340-0f43-58bf-9017-bf71cfbeb13e",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161004/PDF/161004.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "83e906b6-30d8-5e4f-a427-560aacfcf89d",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161004/PDF/161004.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "bdf7425a-fed1-521b-8db9-48c6aa8edcb8",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161004/PDF/161004.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8eba2dc4-1bee-5bbf-93f1-b50a113dc454",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161004/PDF/161004.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f42c9719-2b3e-573f-a523-7331d57b9f4a",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161004/PDF/161004.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b2f76694-2c01-57d4-a7fc-fed9745907fa",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161004/PDF/161004.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5bade642-0b6c-566a-8b57-c28c67115844",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161004/PDF/161004.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "bd987506-82bb-555f-bd4e-efa0fd6318e7",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161004/PDF/161004.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "bea185ec-0e78-5c61-9de9-728306782c59",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/161004/PDF/161004.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "66f81839-6148-58e3-9452-9a412d7914f4",
+   "fact_type": "firm_profile_facts",
+   "label": "nic.nebraska.gov",
+   "url": "https://nic.nebraska.gov/sites/default/files/doc/6c%20New%20Enterprise%20Associates%2019%20-%20Public.pdf",
+   "publisher": "nic.nebraska.gov",
+   "title": "nic.nebraska.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "963188ab-8c22-5d5e-bfd2-9952b0adbb36",
+   "fact_type": "firm_profile_facts",
+   "label": "j-ic.co.jp",
+   "url": "https://www.j-ic.co.jp/en/news/20260311-jic-pressrelease-en",
+   "publisher": "j-ic.co.jp",
+   "title": "j-ic.co.jp",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f48f2f3a-b801-5605-bd40-80bb33de352c",
+   "fact_type": "firm_profile_facts",
+   "label": "j-ic.co.jp",
+   "url": "https://www.j-ic.co.jp/en/news/20260311-jic-pressrelease-en",
+   "publisher": "j-ic.co.jp",
+   "title": "j-ic.co.jp",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "74a205fe-b1e3-52c4-b8f6-93dde6c2cb73",
+   "fact_type": "firm_profile_facts",
+   "label": "j-ic.co.jp",
+   "url": "https://www.j-ic.co.jp/en/news/20230131-jic-pressrelease-en",
+   "publisher": "j-ic.co.jp",
+   "title": "j-ic.co.jp",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1be8acf8-f47d-5809-9bb7-bd371f838472",
+   "fact_type": "firm_profile_facts",
+   "label": "j-ic.co.jp",
+   "url": "https://www.j-ic.co.jp/en/news/20230131-jic-pressrelease-en",
+   "publisher": "j-ic.co.jp",
+   "title": "j-ic.co.jp",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "25147c43-ebde-5ae6-8870-dc9e55fcbb8d",
+   "fact_type": "firm_profile_facts",
+   "label": "nic.nebraska.gov",
+   "url": "https://nic.nebraska.gov/sites/default/files/doc/December%204%2C%202025%20Council%20Meeting%20Minutes.pdf",
+   "publisher": "nic.nebraska.gov",
+   "title": "nic.nebraska.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a960703b-aa9f-50b7-a6e2-8e5db94b896f",
+   "fact_type": "firm_profile_facts",
+   "label": "nic.nebraska.gov",
+   "url": "https://nic.nebraska.gov/sites/default/files/doc/December%204%2C%202025%20Council%20Meeting%20Minutes.pdf",
+   "publisher": "nic.nebraska.gov",
+   "title": "nic.nebraska.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1dfc186f-94e3-5065-a8cb-346e4dab170d",
+   "fact_type": "firm_profile_facts",
+   "label": "nic.nebraska.gov",
+   "url": "https://nic.nebraska.gov/sites/default/files/doc/December%209%202021%20Approved%20Minutes.pdf",
+   "publisher": "nic.nebraska.gov",
+   "title": "nic.nebraska.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "bcb300d7-ae4f-500f-a3a9-0e9ebaf8a37c",
+   "fact_type": "firm_profile_facts",
+   "label": "nic.nebraska.gov",
+   "url": "https://nic.nebraska.gov/sites/default/files/doc/NEA%2018%20-%20From%20Staff.pdf",
+   "publisher": "nic.nebraska.gov",
+   "title": "nic.nebraska.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c780aec7-dd30-5015-9c65-9a2900be9450",
+   "fact_type": "firm_profile_facts",
+   "label": "nic.nebraska.gov",
+   "url": "https://nic.nebraska.gov/sites/default/files/doc/NEA%2018%20-%20From%20Staff.pdf",
+   "publisher": "nic.nebraska.gov",
+   "title": "nic.nebraska.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c6af7987-0113-5e19-a2ba-062cdf4e6ef8",
+   "fact_type": "firm_profile_facts",
+   "label": "nic.nebraska.gov",
+   "url": "https://nic.nebraska.gov/sites/default/files/doc/NEA%2018%20-%20From%20Staff.pdf",
+   "publisher": "nic.nebraska.gov",
+   "title": "nic.nebraska.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ea0c6817-d553-5d4d-a4f1-4d7e13e374f3",
+   "fact_type": "firm_profile_facts",
+   "label": "hottub.vc",
+   "url": "https://hottub.vc/firms/new-enterprise-associates/",
+   "publisher": "hottub.vc",
+   "title": "hottub.vc",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "36997734-79a5-5f7c-a0a3-7f1d4c47a719",
+   "fact_type": "firm_profile_facts",
+   "label": "hottub.vc",
+   "url": "https://hottub.vc/firms/new-enterprise-associates/",
+   "publisher": "hottub.vc",
+   "title": "hottub.vc",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "08c849cd-8fcd-5913-9189-de35b9d648da",
+   "fact_type": "firm_profile_facts",
+   "label": "hottub.vc",
+   "url": "https://hottub.vc/firms/new-enterprise-associates/",
+   "publisher": "hottub.vc",
+   "title": "hottub.vc",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9d94c100-a896-5f03-b1bd-15518948ce28",
+   "fact_type": "firm_profile_facts",
+   "label": "arboralt.com",
+   "url": "https://arboralt.com/gp/new-enterprise-associates",
+   "publisher": "arboralt.com",
+   "title": "arboralt.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a1dc5a83-3e3f-5c92-a893-372c9113ffc9",
+   "fact_type": "firm_profile_facts",
+   "label": "arboralt.com",
+   "url": "https://arboralt.com/gp/new-enterprise-associates",
+   "publisher": "arboralt.com",
+   "title": "arboralt.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "cc96b2c8-da49-54a8-ab5d-fa449380c769",
+   "fact_type": "firm_profile_facts",
+   "label": "arboralt.com",
+   "url": "https://arboralt.com/gp/new-enterprise-associates",
+   "publisher": "arboralt.com",
+   "title": "arboralt.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1a621227-d139-5f94-beb1-7588de6cdf87",
+   "fact_type": "firm_profile_facts",
+   "label": "arboralt.com",
+   "url": "https://arboralt.com/gp/new-enterprise-associates",
+   "publisher": "arboralt.com",
+   "title": "arboralt.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6db56d32-a645-552a-9121-4b185f945319",
+   "fact_type": "timeline_events",
+   "label": "courts.delaware.gov",
+   "url": "https://courts.delaware.gov/opinions/download.aspx?id=394050",
+   "publisher": "courts.delaware.gov",
+   "title": "courts.delaware.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ddf807f9-c73a-5a9b-aa7a-b8b3b5ee95ef",
+   "fact_type": "timeline_events",
+   "label": "unicourt.com",
+   "url": "https://unicourt.com/case/pc-db5-casegub40fd457998e-2395927",
+   "publisher": "unicourt.com",
+   "title": "unicourt.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

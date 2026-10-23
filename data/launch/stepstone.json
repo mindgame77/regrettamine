@@ -1,7 +1,617 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "0d7fd463-b333-5293-ba49-c9a0ac456006",
   "slug": "stepstone",
   "name": "StepStone",
-  "external_id": "vc-000004"
- }
+  "initials": null,
+  "short_name": "StepStone",
+  "hq": "La Jolla, California",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T20:11:34.79131+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000004",
+  "import_run_id": null,
+  "sec_crd": "143635",
+  "sec_file_no": null,
+  "legal_name": "STEPSTONE GROUP LP",
+  "primary_domain": "stepstonegroup.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "d0abe910-c92a-53d8-83b6-fd05a0667f43",
+   "fact_type": "firm_legal_items",
+   "label": "privateequityinternational.com",
+   "url": "https://www.privateequityinternational.com/stepstone-president-resigns-amid-kick-back-scandal-reports/",
+   "publisher": "privateequityinternational.com",
+   "title": "privateequityinternational.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d0abe910-c92a-53d8-83b6-fd05a0667f43",
+   "fact_type": "firm_legal_items",
+   "label": "privateequityinternational.com",
+   "url": "https://www.privateequityinternational.com/moseley-quits-stepstone-had-become-an-unnecessary-distraction/",
+   "publisher": "privateequityinternational.com",
+   "title": "privateequityinternational.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d0abe910-c92a-53d8-83b6-fd05a0667f43",
+   "fact_type": "firm_legal_items",
+   "label": "sethhettena.com",
+   "url": "https://sethhettena.com/2010/09/23/rico-lawsuit-filed-in-sd-over-ny-pension-corruption/",
+   "publisher": "sethhettena.com",
+   "title": "sethhettena.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a8553a1c-83e9-5c7a-8196-8f25a079bb6a",
+   "fact_type": "firm_legal_items",
+   "label": "einpresswire.com",
+   "url": "https://www.einpresswire.com/article/601855419",
+   "publisher": "einpresswire.com",
+   "title": "einpresswire.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a8553a1c-83e9-5c7a-8196-8f25a079bb6a",
+   "fact_type": "firm_legal_items",
+   "label": "stocks.observer-reporter.com",
+   "url": "https://stocks.observer-reporter.com/observerreporter/news/read/bizwire-2022-9-13",
+   "publisher": "stocks.observer-reporter.com",
+   "title": "stocks.observer-reporter.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "130b5f91-a625-56f1-a2c9-f33c4015df1a",
+   "fact_type": "firm_legal_items",
+   "label": "accessnewswire.com",
+   "url": "https://www.accessnewswire.com/newsroom/en/business-and-professional-services/stepstone-private-wealth-llc-data-breach-under-investigation-by-l-993609",
+   "publisher": "accessnewswire.com",
+   "title": "accessnewswire.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3c177a83-86e4-591d-88dc-0f186c6a0f12",
+   "fact_type": "firm_legal_items",
+   "label": "irei.com",
+   "url": "https://irei.com/news/stepstone-resigns-calpers-infrastructure-consultant/",
+   "publisher": "irei.com",
+   "title": "irei.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3c177a83-86e4-591d-88dc-0f186c6a0f12",
+   "fact_type": "firm_legal_items",
+   "label": "calpers.ca.gov",
+   "url": "https://www.calpers.ca.gov/documents/201709-invest-item05a-00/download",
+   "publisher": "calpers.ca.gov",
+   "title": "calpers.ca.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "904cbca1-9114-5295-ae53-d9fe0d96e61e",
+   "fact_type": "firm_legal_items",
+   "label": "crowdfundedwealth.com",
+   "url": "https://www.crowdfundedwealth.com/articles/stepstone-private-markets-fund-sprim-tender-offers-2026",
+   "publisher": "crowdfundedwealth.com",
+   "title": "crowdfundedwealth.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4b78c74f-fe75-5dc2-9e25-6a204fef4bb2",
+   "fact_type": "firm_legal_items",
+   "label": "hoellbach.de",
+   "url": "https://www.hoellbach.de/news/260507-stepstone-group-trading-stepmpx-pro/",
+   "publisher": "hoellbach.de",
+   "title": "hoellbach.de",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4b78c74f-fe75-5dc2-9e25-6a204fef4bb2",
+   "fact_type": "firm_legal_items",
+   "label": "stepstonegroup.com",
+   "url": "https://www.stepstonegroup.com/investor-security/",
+   "publisher": "stepstonegroup.com",
+   "title": "stepstonegroup.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "afaa8562-f4e5-5fa6-8a57-5a74fcb5bdff",
+   "fact_type": "firm_legal_items",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "77c9b543-c43a-52a9-b1d9-a710c7ac6fe6",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5ea84b15-d083-5519-b1f3-14a02b85923b",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f1d1cbb2-17f0-5ec0-aae8-7d5824ad6aae",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "179d4db9-dcac-578d-82a6-73368947f72f",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b33df4e5-bb36-5908-9827-9464ba28ce8a",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1aeb3d4f-bc03-5984-828f-7967fba79bb1",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "180f6c93-8d31-58ea-af6b-94ffe0aa564d",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "64471ad7-da3b-554d-a8b4-dc9c99a8c819",
+   "fact_type": "firm_people_roles",
+   "label": "privateequityinternational.com",
+   "url": "https://www.privateequityinternational.com/moseley-quits-stepstone-had-become-an-unnecessary-distraction/",
+   "publisher": "privateequityinternational.com",
+   "title": "privateequityinternational.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "89bc2b5e-9bcf-56d6-a58d-1aa58b1273b5",
+   "fact_type": "firm_profile_facts",
+   "label": "calpers.ca.gov",
+   "url": "https://www.calpers.ca.gov/documents/201709-invest-item05a-00/download",
+   "publisher": "calpers.ca.gov",
+   "title": "calpers.ca.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "91b238f5-9f2a-564a-975f-c35aadc5ec99",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "84a35bc7-04e8-5b64-8792-9b39b8ea7abd",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ac633091-dc61-5646-901a-2f91eaae4fde",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e11f677d-12d9-5353-9b9e-031c120610ce",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7a0265bc-343a-5686-b8b9-bc86ee47691b",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e3946b53-a511-5785-90c0-37a860d7e0d0",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "27bbe79e-0e7f-5ebe-857e-81f9a69e80db",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "05c06bc2-9523-5b8a-9a5c-5b71cf2ee7de",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5d21a4d4-6639-5100-8320-a4d5f8d1de1e",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "219a5e58-69fd-5674-a302-40d4bfc75e9e",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "aff5a0e8-cd27-5e4f-b825-d48756cb8035",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9aa031b9-b240-5009-b2d3-d00e29fa8c61",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2261c64f-74d6-57ac-9134-a242ca0a82e8",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e3e02ced-1790-5a29-91c2-3a4e93c63173",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c3669973-c082-5089-81a8-90524c6b2a49",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "657fbc62-548d-5802-b26a-930d21166a6c",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ac4b0f98-0dd0-587f-99e7-8d9ec102b09b",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6744c421-eba8-511a-879c-eca9aa538559",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0a499e7a-7237-56e7-aa22-8c65bad4af69",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1796022/000162828026038446/step-20260331.htm",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a4022ae4-b948-5ede-888b-2764ba68272f",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1796022/000162828026038446/step-20260331.htm",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "733b13c7-08ba-5186-a388-d25fd8329d22",
+   "fact_type": "firm_profile_facts",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1796022/000162828026038446/step-20260331.htm",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ac4b0f98-0dd0-587f-99e7-8d9ec102b09b",
+   "fact_type": "firm_profile_facts",
+   "label": "api.gleif.org",
+   "url": "https://api.gleif.org/api/v1/lei-records/5493007ACNHXP1QZLI35",
+   "publisher": "api.gleif.org",
+   "title": "api.gleif.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "657fbc62-548d-5802-b26a-930d21166a6c",
+   "fact_type": "firm_profile_facts",
+   "label": "api.gleif.org",
+   "url": "https://api.gleif.org/api/v1/lei-records/2549007I2AGBHI2F7C52",
+   "publisher": "api.gleif.org",
+   "title": "api.gleif.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0a499e7a-7237-56e7-aa22-8c65bad4af69",
+   "fact_type": "firm_profile_facts",
+   "label": "stepstonegroup.com",
+   "url": "https://www.stepstonegroup.com/",
+   "publisher": "stepstonegroup.com",
+   "title": "stepstonegroup.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6e4963b6-df1e-5379-85f3-88e10b81980b",
+   "fact_type": "firm_profile_facts",
+   "label": "shareholders.stepstonegroup.com",
+   "url": "https://shareholders.stepstonegroup.com/news-releases/news-release-details/stepstone-group-closes-second-credit-opportunities-fund",
+   "publisher": "shareholders.stepstonegroup.com",
+   "title": "shareholders.stepstonegroup.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "70323ea4-38f7-5831-95de-05896ea3107d",
+   "fact_type": "firm_profile_facts",
+   "label": "treasury.ri.gov",
+   "url": "https://treasury.ri.gov/press-releases/ri-pension-and-opeb-funds-deliver-strong-performance-fy25",
+   "publisher": "treasury.ri.gov",
+   "title": "treasury.ri.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f60c893e-aa47-5d4b-869f-54272afba036",
+   "fact_type": "firm_profile_facts",
+   "label": "nystrs.org",
+   "url": "https://www.nystrs.org/getmedia/3e1d2c69-accd-4446-a55f-18cb0f183388/october_2025.pdf",
+   "publisher": "nystrs.org",
+   "title": "nystrs.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2e7d8bb6-3433-5ea5-acb7-216da27f63d8",
+   "fact_type": "timeline_events",
+   "label": "privateequityinternational.com",
+   "url": "https://www.privateequityinternational.com/stepstone-president-resigns-amid-kick-back-scandal-reports/",
+   "publisher": "privateequityinternational.com",
+   "title": "privateequityinternational.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c1f50d0b-199a-57d3-ad15-e7b8b383da9f",
+   "fact_type": "timeline_events",
+   "label": "privateequityinternational.com",
+   "url": "https://www.privateequityinternational.com/moseley-quits-stepstone-had-become-an-unnecessary-distraction/",
+   "publisher": "privateequityinternational.com",
+   "title": "privateequityinternational.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2e7d8bb6-3433-5ea5-acb7-216da27f63d8",
+   "fact_type": "timeline_events",
+   "label": "privateequityinternational.com",
+   "url": "https://www.privateequityinternational.com/moseley-quits-stepstone-had-become-an-unnecessary-distraction/",
+   "publisher": "privateequityinternational.com",
+   "title": "privateequityinternational.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2e7d8bb6-3433-5ea5-acb7-216da27f63d8",
+   "fact_type": "timeline_events",
+   "label": "sethhettena.com",
+   "url": "https://sethhettena.com/2010/09/23/rico-lawsuit-filed-in-sd-over-ny-pension-corruption/",
+   "publisher": "sethhettena.com",
+   "title": "sethhettena.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d186f942-76a0-5fcd-b5b4-4bce4c7e0594",
+   "fact_type": "timeline_events",
+   "label": "einpresswire.com",
+   "url": "https://www.einpresswire.com/article/601855419",
+   "publisher": "einpresswire.com",
+   "title": "einpresswire.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d186f942-76a0-5fcd-b5b4-4bce4c7e0594",
+   "fact_type": "timeline_events",
+   "label": "stocks.observer-reporter.com",
+   "url": "https://stocks.observer-reporter.com/observerreporter/news/read/bizwire-2022-9-13",
+   "publisher": "stocks.observer-reporter.com",
+   "title": "stocks.observer-reporter.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "aad3fc6e-029d-5040-9acd-f1a6157a5e56",
+   "fact_type": "timeline_events",
+   "label": "accessnewswire.com",
+   "url": "https://www.accessnewswire.com/newsroom/en/business-and-professional-services/stepstone-private-wealth-llc-data-breach-under-investigation-by-l-993609",
+   "publisher": "accessnewswire.com",
+   "title": "accessnewswire.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "54775481-1514-5b74-b083-bbf491af1655",
+   "fact_type": "timeline_events",
+   "label": "irei.com",
+   "url": "https://irei.com/news/stepstone-resigns-calpers-infrastructure-consultant/",
+   "publisher": "irei.com",
+   "title": "irei.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "54775481-1514-5b74-b083-bbf491af1655",
+   "fact_type": "timeline_events",
+   "label": "calpers.ca.gov",
+   "url": "https://www.calpers.ca.gov/documents/201709-invest-item05a-00/download",
+   "publisher": "calpers.ca.gov",
+   "title": "calpers.ca.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c2147e99-f283-5bdf-a87d-ce75531d5383",
+   "fact_type": "timeline_events",
+   "label": "crowdfundedwealth.com",
+   "url": "https://www.crowdfundedwealth.com/articles/stepstone-private-markets-fund-sprim-tender-offers-2026",
+   "publisher": "crowdfundedwealth.com",
+   "title": "crowdfundedwealth.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5b02254d-21b1-5511-bf6f-5db065620b1b",
+   "fact_type": "timeline_events",
+   "label": "hoellbach.de",
+   "url": "https://www.hoellbach.de/news/260507-stepstone-group-trading-stepmpx-pro/",
+   "publisher": "hoellbach.de",
+   "title": "hoellbach.de",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "5b02254d-21b1-5511-bf6f-5db065620b1b",
+   "fact_type": "timeline_events",
+   "label": "stepstonegroup.com",
+   "url": "https://www.stepstonegroup.com/investor-security/",
+   "publisher": "stepstonegroup.com",
+   "title": "stepstonegroup.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "b8d3ffb0-f8c0-5ffd-8b6a-d725b1241aae",
+   "fact_type": "timeline_events",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/143635/PDF/143635.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "71da398d-7612-5f01-9811-ec118a16daef",
+   "fact_type": "timeline_events",
+   "label": "shareholders.stepstonegroup.com",
+   "url": "https://shareholders.stepstonegroup.com/news-releases/news-release-details/stepstone-group-closes-second-credit-opportunities-fund",
+   "publisher": "shareholders.stepstonegroup.com",
+   "title": "shareholders.stepstonegroup.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }

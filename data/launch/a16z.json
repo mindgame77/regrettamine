@@ -1,5 +1,5 @@
 {
- "pulled_at": "2026-10-22T03:19:49.411896+00:00",
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
   "id": "12876402-54cb-47e2-ad2a-d270d5c5bd79",
   "slug": "a16z",
@@ -33,7 +33,7 @@
   "published": true,
   "is_test": false,
   "created_at": "2026-10-04T11:52:11.818736+00:00",
-  "updated_at": "2026-10-15T01:45:59.308283+00:00",
+  "updated_at": "2026-10-23T00:39:08.472783+00:00",
   "data_status": "real",
   "source_system": "repo_json",
   "external_id": "a16z",
@@ -45,7 +45,8 @@
   "disambiguation": "Not the $AI16Z token",
   "report_date": "2026-10-02",
   "deleted_at": null,
-  "list_score_exact": 95.4
+  "list_score_exact": 95.4,
+  "launch_page": true
  },
  "facts": [
   {
@@ -108,12 +109,12 @@
    "fact_type": "fund_fact",
    "section": "fund",
    "value": {
-    "note": "Jan 2026 \u00b7 Growth $6.75B, Apps $1.7B, Infra $1.7B, Am. Dynamism $1.18B, Bio+Health $0.7B",
+    "note": "Jan 2026 · Growth $6.75B, Apps $1.7B, Infra $1.7B, Am. Dynamism $1.18B, Bio+Health $0.7B",
     "label": "Latest raise",
     "value": "$15B+"
    },
    "source_url": "https://adviserinfo.sec.gov/firm/summary/160489",
-   "source_label": "Jan 2026 \u00b7 Growth $6.75B, Apps $1.7B, Infra $1.7B, Am. Dynamism $1.18B, Bio+Health $0.7B",
+   "source_label": "Jan 2026 · Growth $6.75B, Apps $1.7B, Infra $1.7B, Am. Dynamism $1.18B, Bio+Health $0.7B",
    "source_type": "sec_iapd",
    "retrieved_at": "2026-10-02T00:00:00+00:00",
    "record_id": "fundfact:Latest raise",
@@ -135,12 +136,12 @@
    "fact_type": "fund_fact",
    "section": "fund",
    "value": {
-    "note": "119 funds \u00b7 Form ADV, Mar 2026",
+    "note": "119 funds · Form ADV, Mar 2026",
     "label": "Regulatory AUM",
     "value": "$106.5B"
    },
    "source_url": "https://adviserinfo.sec.gov/firm/summary/160489",
-   "source_label": "119 funds \u00b7 Form ADV, Mar 2026",
+   "source_label": "119 funds · Form ADV, Mar 2026",
    "source_type": "sec_iapd",
    "retrieved_at": "2026-10-02T00:00:00+00:00",
    "record_id": "fundfact:Regulatory AUM",
@@ -448,7 +449,7 @@
     "year": "2023",
     "title": "Marc Andreessen is being sued by a Coinbase shareholder in his role as a Coinbase director. Active.",
     "detail": "Grabski ex rel. Coinbase v. Andreessen",
-    "status_badge": "\u22120.5"
+    "status_badge": "−0.5"
    },
    "source_url": "https://courts.delaware.gov/Opinions/Download.aspx?id=391020",
    "source_label": "Delaware Chancery opinion",
@@ -644,7 +645,7 @@
     "year": "2026",
     "title": "The DOJ is investigating a16z partners' seats on the boards of competing companies (Databricks, Fivetran). Open, no charges filed.",
     "detail": "DOJ antitrust probe: interlocking board seats at Databricks and Fivetran",
-    "status_badge": "Open probe \u00b7 \u22122"
+    "status_badge": "Open probe · −2"
    },
    "source_url": "https://techcrunch.com/2026/08/18/dojs-probe-into-andreessen-horowitz-over-board-seats-baffles-vcs/",
    "source_label": "TechCrunch, Aug 18 2026",
@@ -932,7 +933,7 @@
     "year": "2023",
     "title": "Marc Andreessen is being sued by a Coinbase shareholder in his role as a Coinbase director; a16z (AH Capital Management) is not a party (non-party). Pending in Del. Ch. C.A. 2023-0464-KSJM: the special litigation committee's motion to terminate was denied 2026-01-30.",
     "detail": "Grabski ex rel. Coinbase v. Andreessen",
-    "status_badge": "\u22120.5"
+    "status_badge": "−0.5"
    },
    "source_url": "https://courts.delaware.gov/Opinions/Download.aspx?id=391020",
    "source_label": "Delaware Court of Chancery letter decision, Jan 30, 2026",
@@ -960,7 +961,7 @@
     "year": "2026",
     "title": "The DOJ is investigating a16z partners' seats on the boards of competing companies (Databricks: Ben Horowitz; Fivetran: Martin Casado) under Clayton Act Section 8. Open, no charges filed. Reported by Bloomberg on 2026-08-17 citing people familiar with the matter; DOJ declined to confirm or deny; no public DOJ filing found as of 2026-10-15.",
     "detail": "DOJ antitrust probe: interlocking board seats at Databricks and Fivetran",
-    "status_badge": "Open probe \u00b7 \u22122"
+    "status_badge": "Open probe · −2"
    },
    "source_url": "https://www.bloomberg.com/news/articles/2026-08-17/andreessen-horowitz-focus-of-doj-probe-over-board-directors",
    "source_label": "Bloomberg, Aug 17, 2026",
@@ -1183,7 +1184,7 @@
    "value": {
     "date": "Jun 11, 2026",
     "group": "People & partners",
-    "headline": "Ex-partner John O'Farrell accuses a16z of \u201cpolitical infiltration\u201d",
+    "headline": "Ex-partner John O'Farrell accuses a16z of “political infiltration”",
     "publisher": "CNBC",
     "sentiment": "neg"
    },
@@ -1357,7 +1358,7 @@
    "value": {
     "date": "c. 2020",
     "group": "Fund & founders",
-    "headline": "Ben Horowitz: \u201cwe're not founder-friendly\u2026 our obligation is to the employees\u201d",
+    "headline": "Ben Horowitz: “we're not founder-friendly… our obligation is to the employees”",
     "publisher": "Business Insider",
     "sentiment": "neg"
    },
@@ -2040,6 +2041,609 @@
    "publisher": null,
    "title": null,
    "retrieved_at": "2026-10-15T18:00:00+00:00"
+  },
+  {
+   "fact_id": "493b902d-14bb-5e1e-b618-12b4e3a21bdc",
+   "fact_type": "firm_profile_facts",
+   "label": "SEC IAPD",
+   "url": "https://adviserinfo.sec.gov/firm/summary/160489",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "d25a304f-2a20-59a4-ad51-15687ac68e70",
+   "fact_type": "firm_profile_facts",
+   "label": "SEC IAPD",
+   "url": "https://adviserinfo.sec.gov/firm/summary/160489",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "21e241a4-68a1-5f29-9e81-969689dfa211",
+   "fact_type": "firm_profile_facts",
+   "label": "SEC IAPD",
+   "url": "https://adviserinfo.sec.gov/firm/summary/160489",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "90eb4043-5950-59f8-bce0-79952a3e76a2",
+   "fact_type": "firm_profile_facts",
+   "label": "SEC IAPD",
+   "url": "https://adviserinfo.sec.gov/firm/summary/160489",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "fe0bae30-012d-5c0a-8117-9ca268fd8424",
+   "fact_type": "firm_profile_facts",
+   "label": "SEC IAPD",
+   "url": "https://adviserinfo.sec.gov/firm/summary/160489",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "fe0bae30-012d-5c0a-8117-9ca268fd8424",
+   "fact_type": "firm_profile_facts",
+   "label": "SEC Form ADV",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160489/PDF/160489.pdf",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "585c7fdc-24c9-5578-9cf9-88e8be37063f",
+   "fact_type": "firm_profile_facts",
+   "label": "SEC Form ADV",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160489/PDF/160489.pdf",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "48fbe345-baf1-5c12-a7cd-d29be3cd0af1",
+   "fact_type": "firm_profile_facts",
+   "label": "SEC Form ADV",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160489/PDF/160489.pdf",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "d16e5ee3-c050-5470-8392-7df196e754f0",
+   "fact_type": "firm_profile_facts",
+   "label": "SEC Form ADV",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160489/PDF/160489.pdf",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "1739aff5-e78d-5c07-a7fa-9fa62505e0b6",
+   "fact_type": "firm_profile_facts",
+   "label": "SEC Form ADV",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160489/PDF/160489.pdf",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "342ec666-438a-5971-9480-aaa44bf5d7d7",
+   "fact_type": "firm_profile_facts",
+   "label": "SEC Form ADV",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160489/PDF/160489.pdf",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "52a78e89-fe13-51c7-9ea9-0dc76c9e85ac",
+   "fact_type": "firm_profile_facts",
+   "label": "a16z",
+   "url": "https://a16z.com/why-did-we-raise-15b/",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "6615006a-17fa-52c8-8198-7e5af3026dc7",
+   "fact_type": "firm_profile_facts",
+   "label": "a16z",
+   "url": "https://a16z.com/why-did-we-raise-15b/",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "80e8c11f-d195-5a46-b2f1-8c50863f7f14",
+   "fact_type": "firm_profile_facts",
+   "label": "a16z",
+   "url": "https://a16z.com/why-did-we-raise-15b/",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "9b73b725-54f5-51e4-911b-d0f5f3729b31",
+   "fact_type": "firm_profile_facts",
+   "label": "a16z",
+   "url": "https://a16z.com/why-did-we-raise-15b/",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "a0f9bd08-d2c1-51ed-9c74-cbcf846bf2c0",
+   "fact_type": "firm_profile_facts",
+   "label": "a16z",
+   "url": "https://a16z.com/why-did-we-raise-15b/",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "6640c525-6154-5f3f-a0be-10f5a3ad486f",
+   "fact_type": "firm_legal_items",
+   "label": "CourtListener 3:23-cv-06492",
+   "url": "https://www.courtlistener.com/docket/68095676/samuels-v-lido-dao/",
+   "publisher": "CourtListener 3:23-cv-06492",
+   "title": "CourtListener 3:23-cv-06492",
+   "retrieved_at": "2026-10-15T18:15:00+00:00"
+  },
+  {
+   "fact_id": "891e8c91-2771-536f-b984-872d0a001b43",
+   "fact_type": "firm_legal_items",
+   "label": "CourtListener 3:22-cv-07781",
+   "url": "https://www.courtlistener.com/docket/66623711/houghton-v-leshner/",
+   "publisher": "CourtListener 3:22-cv-07781",
+   "title": "CourtListener 3:22-cv-07781",
+   "retrieved_at": "2026-10-15T18:15:00+00:00"
+  },
+  {
+   "fact_id": "fe7164e7-cee5-5396-bfe0-d8afd815c2ac",
+   "fact_type": "firm_legal_items",
+   "label": "CourtListener",
+   "url": "https://www.courtlistener.com/docket/70818963/teman-v-deel-inc/",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "f01d7b01-0ea4-5674-b1bd-c11f0fc1bdc5",
+   "fact_type": "firm_legal_items",
+   "label": "Decrypt",
+   "url": "https://decrypt.co/218567/coinbase-a16z-take-sec-court-unlawful-crypto-overreach",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "946a71dd-be95-5621-8d8c-053207a32b76",
+   "fact_type": "firm_legal_items",
+   "label": "Complaint, N.D. Cal. 2023",
+   "url": "https://www.govinfo.gov/content/pkg/USCOURTS-cand-3_23-cv-03130/pdf/USCOURTS-cand-3_23-cv-03130-1.pdf",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "07130d29-03b5-5b24-bcb9-85634d4b519c",
+   "fact_type": "firm_legal_items",
+   "label": "CourtListener",
+   "url": "https://www.courtlistener.com/docket/68002980/risley-v-universal-navigation-inc/",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "b258dad4-3ba4-5d41-846c-8077b8663c28",
+   "fact_type": "firm_legal_items",
+   "label": "Cravath",
+   "url": "https://www.cravath.com/news-insights/dfinity-wins-summary-judgment-in-purported-securities-class-action.html",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "29539697-f643-5ca4-ba20-fa201e2fa269",
+   "fact_type": "firm_legal_items",
+   "label": "PacerMonitor",
+   "url": "https://www.pacermonitor.com/public/filings/DG2GYZSQ/Think_Computer_Corporation_v_Dwolla_Inc_et_al__candce-13-02054__0001.0.pdf",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "9c01167d-b91e-507f-9e36-833817c249cc",
+   "fact_type": "firm_legal_items",
+   "label": "Bloomberg",
+   "url": "https://www.bloomberg.com/news/articles/2026-08-17/andreessen-horowitz-focus-of-doj-probe-over-board-directors",
+   "publisher": "Bloomberg",
+   "title": "Bloomberg",
+   "retrieved_at": "2026-10-15T18:15:00+00:00"
+  },
+  {
+   "fact_id": "9c01167d-b91e-507f-9e36-833817c249cc",
+   "fact_type": "firm_legal_items",
+   "label": "TechCrunch",
+   "url": "https://techcrunch.com/2026/08/18/dojs-probe-into-andreessen-horowitz-over-board-seats-baffles-vcs/",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "b5b8f6a6-0fed-553f-bba5-900a2de80ec7",
+   "fact_type": "firm_legal_items",
+   "label": "SEC IAPD",
+   "url": "https://adviserinfo.sec.gov/firm/summary/160489",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "b5b8f6a6-0fed-553f-bba5-900a2de80ec7",
+   "fact_type": "firm_legal_items",
+   "label": "SEC Form ADV",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160489/PDF/160489.pdf",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "331a1e23-4c59-54c9-86ee-cc9395e0ddf2",
+   "fact_type": "firm_legal_items",
+   "label": "OFAC",
+   "url": "https://ofac.treasury.gov/civil-penalties-and-enforcement-information",
+   "publisher": "Money laundering penalties",
+   "title": "Money laundering penalties",
+   "retrieved_at": "2026-10-15T19:00:00+00:00"
+  },
+  {
+   "fact_id": "331a1e23-4c59-54c9-86ee-cc9395e0ddf2",
+   "fact_type": "firm_legal_items",
+   "label": "FinCEN",
+   "url": "https://www.fincen.gov/news-room/enforcement-actions",
+   "publisher": "Money laundering penalties",
+   "title": "Money laundering penalties",
+   "retrieved_at": "2026-10-15T19:00:00+00:00"
+  },
+  {
+   "fact_id": "454e122d-224e-5c69-adc6-1a36753c3b35",
+   "fact_type": "firm_legal_items",
+   "label": "OpenSanctions",
+   "url": "https://www.opensanctions.org/",
+   "publisher": "OpenSanctions",
+   "title": "OpenSanctions",
+   "retrieved_at": "2026-10-02T00:00:00+00:00"
+  },
+  {
+   "fact_id": "454e122d-224e-5c69-adc6-1a36753c3b35",
+   "fact_type": "firm_legal_items",
+   "label": "OFAC SDN",
+   "url": "https://www.treasury.gov/ofac/downloads/sdn.csv",
+   "publisher": "Sanctions",
+   "title": "Sanctions",
+   "retrieved_at": "2026-10-15T19:00:00+00:00"
+  },
+  {
+   "fact_id": "454e122d-224e-5c69-adc6-1a36753c3b35",
+   "fact_type": "firm_legal_items",
+   "label": "UN Security Council",
+   "url": "https://scsanctions.un.org/resources/xml/en/consolidated.xml",
+   "publisher": "Sanctions",
+   "title": "Sanctions",
+   "retrieved_at": "2026-10-15T19:00:00+00:00"
+  },
+  {
+   "fact_id": "454e122d-224e-5c69-adc6-1a36753c3b35",
+   "fact_type": "firm_legal_items",
+   "label": "trade.gov CSL",
+   "url": "https://data.trade.gov/downloadable_consolidated_screening_list/v1/consolidated.csv",
+   "publisher": "Export and investment restrictions",
+   "title": "Export and investment restrictions",
+   "retrieved_at": "2026-10-15T19:00:00+00:00"
+  },
+  {
+   "fact_id": "00671fed-4b55-5694-8892-7a69cec347f0",
+   "fact_type": "firm_legal_items",
+   "label": "Axios",
+   "url": "https://www.axios.com/2026/06/04/anne-neuberger-andreessen-horowitz",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "00671fed-4b55-5694-8892-7a69cec347f0",
+   "fact_type": "firm_legal_items",
+   "label": "OpenSanctions entity page",
+   "url": "https://www.opensanctions.org/entities/Q70709513/",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "78f06923-2263-55f9-8286-e1a79eddf6de",
+   "fact_type": "firm_legal_items",
+   "label": "Delaware Court of Chancery letter decision, Jan 30, 2026",
+   "url": "https://courts.delaware.gov/Opinions/Download.aspx?id=391020",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "dea3bc5f-a241-5402-a007-8304f76487a1",
+   "fact_type": "firm_legal_items",
+   "label": "Smukler v. Donahoe (eBay/Skype)",
+   "url": "https://v2.courthousenews.com/shareholder-rips-ebay-for-flip-of-skype/",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "f539ed08-8501-5143-9956-a864987b7261",
+   "fact_type": "firm_legal_items",
+   "label": "Coin Center v. Yellen",
+   "url": "https://www.courtlistener.com/docket/65418276/case/",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "fb6c9046-d287-5056-8f70-18ed316bfdc7",
+   "fact_type": "firm_legal_items",
+   "label": "Doe v. GitHub",
+   "url": "https://storage.courtlistener.com/recap/gov.uscourts.cand.403220/gov.uscourts.cand.403220.209.0.pdf",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "fb6c9046-d287-5056-8f70-18ed316bfdc7",
+   "fact_type": "firm_legal_items",
+   "label": "Motion to compel AH Capital subpoena compliance",
+   "url": "https://www.courtlistener.com/docket/70802517/in-re-motion-to-compel-ah-capital-management-llcs-compliance-with-a/",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "a7a10acf-0ec8-517b-b8ef-dde08b8640c6",
+   "fact_type": "firm_legal_items",
+   "label": "CourtListener RECAP",
+   "url": "https://www.courtlistener.com/?q=caseName%3A%28Andreessen%29",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-15T18:00:00+00:00"
+  },
+  {
+   "fact_id": "16b55d03-8db5-5e62-a438-a20f0cd35cd3",
+   "fact_type": "founder_accounts",
+   "label": "Axios",
+   "url": "https://www.axios.com/2023/09/11/andreessen-horowitz-run-the-word-discrimination-venture-capital",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "dee8168a-dc3d-5d8a-b6d8-fed6b02dc6a8",
+   "fact_type": "founder_accounts",
+   "label": "Court filing",
+   "url": "https://www.govinfo.gov/content/pkg/USCOURTS-cand-3_23-cv-03130/pdf/USCOURTS-cand-3_23-cv-03130-1.pdf",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "920d8cd0-948d-5f17-9746-c48c001e79bd",
+   "fact_type": "founder_accounts",
+   "label": "BuzzFeed News",
+   "url": "https://www.buzzfeednews.com/article/williamalden/how-high-flying-zenefits-fell-to-earth",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "ce713e4f-6133-51f2-ade8-68c35fb49a89",
+   "fact_type": "firm_people_roles",
+   "label": "Bloomberg",
+   "url": "https://www.bloomberg.com/news/articles/2026-08-17/andreessen-horowitz-focus-of-doj-probe-over-board-directors",
+   "publisher": "Bloomberg",
+   "title": "Bloomberg",
+   "retrieved_at": "2026-10-15T18:15:00+00:00"
+  },
+  {
+   "fact_id": "44397fd3-5d5c-5c37-9b0d-dfb3f7a85497",
+   "fact_type": "firm_people_roles",
+   "label": "Bloomberg",
+   "url": "https://www.bloomberg.com/news/articles/2026-08-17/andreessen-horowitz-focus-of-doj-probe-over-board-directors",
+   "publisher": "Bloomberg",
+   "title": "Bloomberg",
+   "retrieved_at": "2026-10-15T18:15:00+00:00"
+  },
+  {
+   "fact_id": "186754d2-fdda-5c4c-82de-731b86d7c71e",
+   "fact_type": "firm_people_roles",
+   "label": "Endpoints News",
+   "url": "https://endpoints.news/former-a16z-biotech-investment-leader-vijay-pande-exits-the-vc-firm/",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "cef62684-34a4-53cb-bacb-bc138b90b5c4",
+   "fact_type": "firm_people_roles",
+   "label": "PitchBook",
+   "url": "https://pitchbook.com/news/articles/andreessen-horowitz-marketing-maestro-margit-wennmachers-leaving-a16z",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "e78379ca-2d85-59a9-afae-ea524190e8e5",
+   "fact_type": "firm_people_roles",
+   "label": "CNBC",
+   "url": "https://www.cnbc.com/2026/06/11/ex-a16z-partner-slams-old-firm-othes-political-infiltration-in-ai.html",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "d612e91e-9632-5eb7-9336-4864b76a44e1",
+   "fact_type": "firm_people_roles",
+   "label": "Axios",
+   "url": "https://www.axios.com/2026/06/04/anne-neuberger-andreessen-horowitz",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "ae0a9142-1073-5725-a6dd-95f0a4403660",
+   "fact_type": "firm_people_roles",
+   "label": "SEC Form ADV",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160489/PDF/160489.pdf",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "9aee0447-a8c3-542b-9b49-2b8740b0a16b",
+   "fact_type": "firm_people_roles",
+   "label": "SEC Form ADV",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160489/PDF/160489.pdf",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "21f87fae-5c5e-57b1-943b-0114c078c39b",
+   "fact_type": "firm_people_roles",
+   "label": "SEC Form ADV",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160489/PDF/160489.pdf",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "6dadc14d-3610-560d-a151-0eb32b15e9a1",
+   "fact_type": "firm_people_roles",
+   "label": "SEC Form ADV",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160489/PDF/160489.pdf",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "b4bbcc43-2c04-580b-aa0f-f071868bb057",
+   "fact_type": "firm_people_roles",
+   "label": "SEC Form ADV",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160489/PDF/160489.pdf",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "20644c24-ac74-504c-836d-13a2bc4c565f",
+   "fact_type": "timeline_events",
+   "label": "CourtListener docket 3:22-cv-07781",
+   "url": "https://www.courtlistener.com/docket/66623711/houghton-v-leshner/",
+   "publisher": "CourtListener 3:22-cv-07781",
+   "title": "CourtListener 3:22-cv-07781",
+   "retrieved_at": "2026-10-15T18:15:00+00:00"
+  },
+  {
+   "fact_id": "c50b45de-ac84-5dd6-8a61-5ae495456822",
+   "fact_type": "timeline_events",
+   "label": "TechCrunch",
+   "url": "https://techcrunch.com/2026/08/18/dojs-probe-into-andreessen-horowitz-over-board-seats-baffles-vcs/",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "86a20884-25b6-5277-8624-484e5eb3510e",
+   "fact_type": "timeline_events",
+   "label": "Axios",
+   "url": "https://www.axios.com/2026/06/04/anne-neuberger-andreessen-horowitz",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "5a43323d-121d-5214-a0c5-3935fa7431f6",
+   "fact_type": "timeline_events",
+   "label": "SEC Form ADV",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/160489/PDF/160489.pdf",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "2a41e2b6-faaf-5da9-9847-7e0bffc35d2b",
+   "fact_type": "timeline_events",
+   "label": "Delaware Court of Chancery letter decision, Jan 30, 2026",
+   "url": "https://courts.delaware.gov/Opinions/Download.aspx?id=391020",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "e1458eb0-90ea-5071-9de0-86055067fa05",
+   "fact_type": "timeline_events",
+   "label": "a16z",
+   "url": "https://a16z.com/why-did-we-raise-15b/",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "6df93a03-4f9b-5d2a-a407-eb9da095c9ba",
+   "fact_type": "timeline_events",
+   "label": "TechCrunch",
+   "url": "https://techcrunch.com/2025/11/03/a16z-pauses-its-famed-txo-fund-for-underserved-founders-lays-off-staff/",
+   "publisher": "TechCrunch",
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "9851bbc5-7303-5d9b-8d1d-0233821a25be",
+   "fact_type": "timeline_events",
+   "label": "CourtListener docket 3:22-cv-07781",
+   "url": "https://www.courtlistener.com/docket/66623711/houghton-v-leshner/",
+   "publisher": "CourtListener 3:22-cv-07781",
+   "title": "CourtListener 3:22-cv-07781",
+   "retrieved_at": "2026-10-15T18:15:00+00:00"
+  },
+  {
+   "fact_id": "5223e4b6-5c65-54e5-8f3f-ca4ba3009c54",
+   "fact_type": "timeline_events",
+   "label": "CNBC",
+   "url": "https://www.cnbc.com/2026/06/11/ex-a16z-partner-slams-old-firm-othes-political-infiltration-in-ai.html",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "5223e4b6-5c65-54e5-8f3f-ca4ba3009c54",
+   "fact_type": "timeline_events",
+   "label": "Endpoints News",
+   "url": "https://endpoints.news/former-a16z-biotech-investment-leader-vijay-pande-exits-the-vc-firm/",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
+  },
+  {
+   "fact_id": "5223e4b6-5c65-54e5-8f3f-ca4ba3009c54",
+   "fact_type": "timeline_events",
+   "label": "PitchBook",
+   "url": "https://pitchbook.com/news/articles/andreessen-horowitz-marketing-maestro-margit-wennmachers-leaving-a16z",
+   "publisher": null,
+   "title": null,
+   "retrieved_at": "2026-10-04T11:49:21.58721+00:00"
   },
   {
    "fact_id": "ba3a015f-4b03-4a1f-a43d-20459c95b86a",

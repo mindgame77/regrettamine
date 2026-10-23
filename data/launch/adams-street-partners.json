@@ -1,7 +1,626 @@
 {
+ "pulled_at": "2026-10-23T22:18:28.670246+00:00",
  "firm": {
+  "id": "66d8398c-61fa-5eda-9d3e-bc4d0056c1ac",
   "slug": "adams-street-partners",
   "name": "Adams Street Partners",
-  "external_id": "vc-000011"
- }
+  "initials": null,
+  "short_name": "Adams Street",
+  "hq": "Chicago, Illinois",
+  "metro": null,
+  "founded_year": null,
+  "firm_type": null,
+  "aum_billions": null,
+  "aum_display": null,
+  "aum_as_of": null,
+  "aum_stale": false,
+  "aum_source": null,
+  "list_score": null,
+  "list_band": null,
+  "list_v2": false,
+  "list_range_low": null,
+  "list_range_high": null,
+  "list_previous_score": null,
+  "list_coverage": null,
+  "list_verdict": null,
+  "list_legal_active": 0,
+  "legal_note": null,
+  "updated_on": null,
+  "updated_ts": null,
+  "updated_label": null,
+  "report_slug": null,
+  "list_sort": 0,
+  "published": true,
+  "is_test": false,
+  "created_at": "2026-10-23T19:49:22.922913+00:00",
+  "updated_at": "2026-10-23T21:09:25.315785+00:00",
+  "data_status": "real",
+  "source_system": "research_import",
+  "external_id": "vc-000011",
+  "import_run_id": null,
+  "sec_crd": "109358",
+  "sec_file_no": null,
+  "legal_name": "ADAMS STREET PARTNERS, LLC",
+  "primary_domain": "adamsstreetpartners.com",
+  "disambiguation": null,
+  "report_date": null,
+  "deleted_at": null,
+  "list_score_exact": null,
+  "launch_page": true
+ },
+ "facts": [],
+ "fact_sources": [
+  {
+   "fact_id": "535ccf1e-2802-556c-a152-af152e40ad28",
+   "fact_type": "firm_legal_items",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/files/litigation/admin/2012/34-67761.pdf",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "535ccf1e-2802-556c-a152-af152e40ad28",
+   "fact_type": "firm_legal_items",
+   "label": "fortune.com",
+   "url": "https://fortune.com/2011/08/31/venture-capitalist-charged-with-fraud/",
+   "publisher": "fortune.com",
+   "title": "fortune.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3d773171-4fce-5c7d-8519-324270111adf",
+   "fact_type": "firm_legal_items",
+   "label": "rio.nd.gov",
+   "url": "https://www.rio.nd.gov/sites/www/files/documents/PDFs/SIB/Board/Materials/sibmat20170127.pdf",
+   "publisher": "rio.nd.gov",
+   "title": "rio.nd.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "fc4407be-f545-5d19-b99d-beffca43a417",
+   "fact_type": "firm_legal_items",
+   "label": "storage.courtlistener.com",
+   "url": "https://storage.courtlistener.com/recap/gov.uscourts.ilnd.145952/gov.uscourts.ilnd.145952.35.0.pdf",
+   "publisher": "storage.courtlistener.com",
+   "title": "storage.courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3e9280aa-c952-521c-8b8b-fd7540cfda4a",
+   "fact_type": "firm_legal_items",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/13095769/hackhel-v-adams-street-partners/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1eb8b5f3-8027-5164-9da2-7b20231f9d06",
+   "fact_type": "firm_legal_items",
+   "label": "mass.gov",
+   "url": "https://www.mass.gov/doc/assigned-data-breach-number-28816-adams-street-partners-llc/download",
+   "publisher": "mass.gov",
+   "title": "mass.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2c5d2699-2c3d-559e-8c26-ff0591711f3d",
+   "fact_type": "firm_legal_items",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2c5d2699-2c3d-559e-8c26-ff0591711f3d",
+   "fact_type": "firm_legal_items",
+   "label": "files.adviserinfo.sec.gov",
+   "url": "https://files.adviserinfo.sec.gov/IAPD/Content/Common/crd_iapd_Brochure.aspx?BRCHR_VRSN_ID=1048767",
+   "publisher": "files.adviserinfo.sec.gov",
+   "title": "files.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c715d38e-fc44-51a3-85ef-94ad9947ef7f",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "896eae85-bd06-52d1-a0ed-893af1e05188",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "410d47b8-7cdd-5ca8-8057-aa9af7df8387",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "f0f0d974-096b-5d96-b612-b9e40d54c5c8",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0d98589c-22d7-52ee-858b-68db95fb2829",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "baeebab3-2065-517f-a6a7-fadcfec1faee",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ba566a52-7999-5d9f-860a-562e3190f7f7",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8b323f40-fa4d-5463-a21e-f843eb47cd32",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e95d9f64-569b-5bb3-98d3-96d9202d0293",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0c72cac7-f1b1-5761-8e44-12ced06e7a6b",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c9f29326-58bc-52f3-ae41-3241c62dc018",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8cb81ecc-a5c0-5047-bd8e-f91fb1398503",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "4c194eb8-d6da-5006-9deb-82c298bcdbc0",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2bdf8a32-cf56-5eae-aa63-656647b281b9",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8e55ac87-61c2-5737-a645-52d4ed268a2b",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0c10dece-81f6-5fe9-be8a-f0a542d1b30e",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "fecfd433-b0c6-5ae5-9363-a70134c4f775",
+   "fact_type": "firm_people_roles",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0c10dece-81f6-5fe9-be8a-f0a542d1b30e",
+   "fact_type": "firm_people_roles",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/Archives/edgar/data/1410384/000141038425000064/qtwo-20250307.htm",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c8d9821e-f20b-53db-8d7f-ec88c1c34f91",
+   "fact_type": "firm_profile_facts",
+   "label": "rio.nd.gov",
+   "url": "https://www.rio.nd.gov/sites/www/files/documents/PDFs/SIB/Board/Materials/sibmat20170127.pdf",
+   "publisher": "rio.nd.gov",
+   "title": "rio.nd.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "301a28c6-fc01-5e2e-96f4-0894a2a40cf9",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "6b9c5a7e-4fa6-5e27-a096-5677ae2723c5",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a66c9dd5-2fdb-5aa8-9571-62c9a4d2069f",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e978cb31-af93-528f-a5cf-62f7c6eda62e",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "498d11d0-c568-5440-85be-ba685ef7882f",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "19489cb3-4d50-5dfc-8e36-f8d9d9d59631",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "43e575ac-9f1b-58e9-81b9-2fd217276dfd",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d69deca3-e9fa-52fe-8be7-5127bea5daaa",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "1992b312-c1a5-51a9-8d82-98b50b41dde0",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ff326011-15a5-577e-a91f-66863073d148",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2653bddf-a4cf-514c-b0ec-9838a0471e54",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "8c201325-62c5-5666-a939-2663ce1c96b1",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ba72d998-2c54-55d6-b1b0-c041585069cf",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "da70d4f8-0c6d-5b04-bc12-3885b1b9970d",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ecd92aba-fa2a-5a87-8c5e-68c5af2ffad2",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "e60da97e-a45c-5b64-aef9-16508cc9583a",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7ebd986f-d963-53bb-b81f-34b4e0149e6c",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3506a730-430f-57e7-9af3-c828ef7ef586",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c96d39c7-7904-520c-8fb4-c9c566bbb5ec",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "ca8a3ac2-578f-5832-9e23-920e1435d61b",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "c07da23d-4c34-596d-90c8-9c9824386cf1",
+   "fact_type": "firm_profile_facts",
+   "label": "reports.adviserinfo.sec.gov",
+   "url": "https://reports.adviserinfo.sec.gov/reports/ADV/109358/PDF/109358.pdf",
+   "publisher": "reports.adviserinfo.sec.gov",
+   "title": "reports.adviserinfo.sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "2052a223-8771-5e55-b390-3177e8d38853",
+   "fact_type": "firm_profile_facts",
+   "label": "adamsstreetpartners.com",
+   "url": "https://www.adamsstreetpartners.com/news/adams-street-raises-over-5-billion-for-secondaries-investment-program/",
+   "publisher": "adamsstreetpartners.com",
+   "title": "adamsstreetpartners.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7ebd986f-d963-53bb-b81f-34b4e0149e6c",
+   "fact_type": "firm_profile_facts",
+   "label": "adamsstreetpartners.com",
+   "url": "https://www.adamsstreetpartners.com/news/adams-street-raises-over-5-billion-for-secondaries-investment-program/",
+   "publisher": "adamsstreetpartners.com",
+   "title": "adamsstreetpartners.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "3ca2633f-85df-5c5a-8f1c-8a1fd390292c",
+   "fact_type": "firm_profile_facts",
+   "label": "adamsstreetpartners.com",
+   "url": "https://www.adamsstreetpartners.com/news/closes-sixth-co-investment-fund-with-2-5-billion-of-capital/",
+   "publisher": "adamsstreetpartners.com",
+   "title": "adamsstreetpartners.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "14666f32-e143-565b-8603-c5c42d0190d1",
+   "fact_type": "firm_profile_facts",
+   "label": "adamsstreetpartners.com",
+   "url": "https://www.adamsstreetpartners.com/news/adams-street-partners-closes-third-private-credit-platform/",
+   "publisher": "adamsstreetpartners.com",
+   "title": "adamsstreetpartners.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "d2e34c23-7ee9-5769-92bc-93181b510c23",
+   "fact_type": "firm_profile_facts",
+   "label": "trsil.org",
+   "url": "https://www.trsil.org/news-and-events/Sakkaria-Appointed-to-TRS-Board",
+   "publisher": "trsil.org",
+   "title": "trsil.org",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "13b1a944-4793-5c4f-b58e-8847d5930fc3",
+   "fact_type": "firm_profile_facts",
+   "label": "governance.enfield.gov.uk",
+   "url": "https://governance.enfield.gov.uk/documents/s106432/Investment+in+Private+Equity.pdf",
+   "publisher": "governance.enfield.gov.uk",
+   "title": "governance.enfield.gov.uk",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "63500da9-dbac-5831-b0b3-20c3986a345d",
+   "fact_type": "timeline_events",
+   "label": "storage.courtlistener.com",
+   "url": "https://storage.courtlistener.com/recap/gov.uscourts.ilnd.145952/gov.uscourts.ilnd.145952.35.0.pdf",
+   "publisher": "storage.courtlistener.com",
+   "title": "storage.courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "27023883-b345-5019-a736-5b495de61a0d",
+   "fact_type": "timeline_events",
+   "label": "sec.gov",
+   "url": "https://www.sec.gov/files/litigation/admin/2012/34-67761.pdf",
+   "publisher": "sec.gov",
+   "title": "sec.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "27023883-b345-5019-a736-5b495de61a0d",
+   "fact_type": "timeline_events",
+   "label": "fortune.com",
+   "url": "https://fortune.com/2011/08/31/venture-capitalist-charged-with-fraud/",
+   "publisher": "fortune.com",
+   "title": "fortune.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "0fb311db-d20d-5e26-b41c-5e84242a8cc9",
+   "fact_type": "timeline_events",
+   "label": "courtlistener.com",
+   "url": "https://www.courtlistener.com/docket/13095769/hackhel-v-adams-street-partners/",
+   "publisher": "courtlistener.com",
+   "title": "courtlistener.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "7e97b12f-096d-5350-943e-56eb67a20a60",
+   "fact_type": "timeline_events",
+   "label": "rio.nd.gov",
+   "url": "https://www.rio.nd.gov/sites/www/files/documents/PDFs/SIB/Board/Materials/sibmat20170127.pdf",
+   "publisher": "rio.nd.gov",
+   "title": "rio.nd.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "a02e9e57-cf95-55d5-a081-7d14f74d7644",
+   "fact_type": "timeline_events",
+   "label": "mass.gov",
+   "url": "https://www.mass.gov/doc/assigned-data-breach-number-28816-adams-street-partners-llc/download",
+   "publisher": "mass.gov",
+   "title": "mass.gov",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "9be0a7b9-51f6-5a64-8932-436774258339",
+   "fact_type": "timeline_events",
+   "label": "adamsstreetpartners.com",
+   "url": "https://www.adamsstreetpartners.com/news/adams-street-partners-closes-third-private-credit-platform/",
+   "publisher": "adamsstreetpartners.com",
+   "title": "adamsstreetpartners.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "68e48e71-f164-5827-98fe-5e8a5a462657",
+   "fact_type": "timeline_events",
+   "label": "adamsstreetpartners.com",
+   "url": "https://www.adamsstreetpartners.com/news/closes-sixth-co-investment-fund-with-2-5-billion-of-capital/",
+   "publisher": "adamsstreetpartners.com",
+   "title": "adamsstreetpartners.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  },
+  {
+   "fact_id": "42895ed7-95fc-5385-9335-caf8991355db",
+   "fact_type": "timeline_events",
+   "label": "adamsstreetpartners.com",
+   "url": "https://www.adamsstreetpartners.com/news/adams-street-raises-over-5-billion-for-secondaries-investment-program/",
+   "publisher": "adamsstreetpartners.com",
+   "title": "adamsstreetpartners.com",
+   "retrieved_at": "2026-10-23T00:00:00+00:00"
+  }
+ ],
+ "people": [],
+ "context": [],
+ "aliases": [],
+ "team": [],
+ "needs_proof_count": 0
 }
