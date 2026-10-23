@@ -5,6 +5,7 @@ Output: site-launch/. Deploy to the preview with launch/deploy_preview.sh (see l
 Refresh a snapshot (read-only): run launch/firm_snapshot.sql with :slug, save the JSON as data/launch/<slug>.json;
 then python3 launch/sync_checks.py data/launch/*.json > a new migration to update the 10 check rows."""
 import os, json, html, glob, shutil
+from legal import privacy, terms
 E = html.escape
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE); OUT = os.path.join(ROOT, 'site-launch')
 COPY = json.load(open(os.path.join(HERE, 'copy.json')))
@@ -42,7 +43,9 @@ def page(path, body, root, title=S['brand'], company=False, active=''):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     open(path, 'w').write(f'''<!doctype html><html lang="en"><head>{'<meta name="robots" content="noindex">' if NOINDEX else ''}<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{E(title)}</title>
 <link rel="icon" href="{root}logo.svg"><link rel="stylesheet" href="{root}style.css"><script>window.REGRET={json.dumps(CFG)};window.REGRET_ROOT="{root}"</script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>{scripts}</head><body>{nav}{body}{modals}</body></html>''')
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>{scripts}</head><body>{nav}{body}{FOOT(root)}{modals}</body></html>''')
+
+FOOT = lambda root: f'<footer class="ft"><span>© 2026 Know Your Group INC.</span><a href="{root}privacy/">Privacy</a><a href="{root}terms/">Terms</a></footer>'
 
 def press():
     L = S['landing']
@@ -139,8 +142,10 @@ def main():
     page(os.path.join(OUT, 'how-we-check', 'index.html'), how_we_check(), '../', S['how_we_check']['title'] + S['title_suffix'], active='hwc')
     page(os.path.join(OUT, 'account', 'index.html'), ACCOUNT, '../', A['h1'] + S['title_suffix'])
     page(os.path.join(OUT, 'my-checks', 'index.html'), MYCHECKS, '../', M['h1'] + S['title_suffix'])
+    page(os.path.join(OUT, 'privacy', 'index.html'), privacy(), '../', 'Privacy Policy' + S['title_suffix'])
+    page(os.path.join(OUT, 'terms', 'index.html'), terms(), '../', 'Terms of Service' + S['title_suffix'])
     site = 'https://regretamin.com/'  # sitemap + robots (account and my-checks are left out)
-    urls = [site] + [site + p + '/' for p in ('how-we-check', 'pricing') if os.path.exists(os.path.join(OUT, p, 'index.html'))] + [f'{site}vc/{f}/{x}' for f in firms for x in ('', 'full/')]
+    urls = [site] + [site + p + '/' for p in ('how-we-check', 'pricing', 'privacy', 'terms') if os.path.exists(os.path.join(OUT, p, 'index.html'))] + [f'{site}vc/{f}/{x}' for f in firms for x in ('', 'full/')]
     open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join(f'<url><loc>{u}</loc></url>\n' for u in urls) + '</urlset>\n')
     open(os.path.join(OUT, 'robots.txt'), 'w').write(f'User-agent: *\nAllow: /\n\nSitemap: {site}sitemap.xml\n')
     print('built', len(firms), 'firms ->', OUT)
