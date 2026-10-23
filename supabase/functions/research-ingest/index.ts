@@ -1,6 +1,6 @@
 // research-ingest: staging intake for an EXTERNAL research bot (dump format 1.2).
 // Auth: header x-ingest-key (sha256 checked against public.ingest_keys, active only). verify_jwt = false.
-// Writes ONLY to research_queue / research_submissions (staging). Never touches live/public tables.
+// Writes ONLY to research_queue / research_submissions / research_gaps (staging). Never touches live/public tables.
 // Kill switch: ingest_settings.ingest_paused = 'true' -> 503. Rate limit per key per minute -> 429.
 import { createClient } from "npm:@supabase/supabase-js@2";
 const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
@@ -116,6 +116,21 @@ Deno.serve(async (req) => {
       if (error) return json({ error: "server error" }, 500);
       return data.error ? json({ error: data.error }, 409) : json(data);
     }
-    default: return json({ error: "action must be claim | submit | fail | skip | status" }, 400);
+    case "gaps": {
+      // list open gaps (optionally registry_id) so a gap-fill bot researches ONLY those items
+      const rid = typeof body.registry_id === "string" ? body.registry_id : null;
+      const n = Number(body.limit ?? 100);
+      const { data, error } = await db.rpc("research_gaps_list", { p_registry: rid, p_limit: Number.isInteger(n) ? n : 100 });
+      return error ? json({ error: "server error" }, 500) : json({ gaps: data, count: (data ?? []).length });
+    }
+    case "claim_gap": {
+      // claims ALL open gaps of one firm (optional registry_id) and puts the firm in 'claimed' for one merged resubmit
+      if (!bot) return json({ error: "bot_id required" }, 400);
+      const rid = typeof body.registry_id === "string" ? body.registry_id : null;
+      const { data, error } = await db.rpc("research_claim_gaps", { p_bot: bot, p_registry: rid });
+      if (error) return json({ error: "server error" }, 500);
+      return data.error ? json({ error: data.error }, 409) : json(data);
+    }
+    default: return json({ error: "action must be claim | submit | fail | skip | status | gaps | claim_gap" }, 400);
   }
 });
