@@ -3,7 +3,7 @@
 // Sends 'ready' (research done, link to the page) and 'refund' (not done within 24 h, credit returned) emails via Resend.
 // Secrets: RESEND_API_KEY, EMAIL_FROM (verified Resend sender). Optional TEST_ONLY_TO: only this address gets mail.
 // Email links: the ONE setting below. Flip to "https://regretamin.com/" after the DNS switch, then redeploy this function.
-const SITE_URL = "https://regretamin.pages.dev/";
+const SITE_URL = "https://regretamin.com/";
 import { createClient } from "npm:@supabase/supabase-js@2";
 const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]!));
