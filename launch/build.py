@@ -31,7 +31,7 @@ def pricing_modal():  # nav "Pricing" popup
     p = S['pricing']
     return f'<div class="ov" id="paywall" hidden><div class="md w"><button class="x" data-close>×</button><h2 id="pwh">{p["title"]}</h2><p class="s">{p["sub"]}</p>{billing()}<div class="price" data-plans="nav"></div><p class="msg" id="pwmsg"></p>{code_field()}</div></div>'
 
-def page(path, body, root, title=S['brand'], company=False, active=''):
+def page(path, body, root, title=S['brand'], company=False, active='', head=''):
     n, su = S['nav'], S['signup']
     hon = ' class="on" aria-current="page"' if active == 'hwc' else ''
     scripts = (f'<script defer src="{root}company.js?v={V['company']}"></script>' if company else '') + f'<script defer src="{root}app.js?v={V['app']}"></script>'
@@ -44,9 +44,37 @@ def page(path, body, root, title=S['brand'], company=False, active=''):
 <button type="button" class="gbx" id="google"><span class="gi">{GLOGO}</span><span class="gl">{su["google"]}</span></button><div class="orx">{su["or"]}</div><div class="emr"><input class="in" id="em" type="email" placeholder="{su["email_placeholder"]}" aria-label="{su["email_aria"]}"><button type="button" class="btn o" id="magic">{su["magic"]}</button></div><p class="sgt">{"".join(f"<span>{t}</span>" for t in su["trust"])}</p><p class="msg" id="sumsg"></p></div></div></div>
 {pricing_modal()}'''
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    open(path, 'w').write(f'''<!doctype html><html lang="en"><head>{'<meta name="robots" content="noindex">' if NOINDEX else ''}<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{E(title)}</title>
+    open(path, 'w').write(f'''<!doctype html><html lang="en"><head>{'<meta name="robots" content="noindex">' if NOINDEX else ''}<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{E(title)}</title>{head}
 <link rel="icon" href="{root}logo.svg"><link rel="stylesheet" href="{root}style.css?v={V['css']}"><script>window.REGRET={json.dumps(CFG)};window.REGRET_ROOT="{root}"</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>{scripts}</head><body>{nav}{body}{FOOT(root)}{modals}</body></html>''')
+
+SITE = 'https://regretamin.com/'
+# Firm pages: ONE template per view (summary, full) with {{...}} placeholders. Static pages (GitHub Pages) and the
+# Cloudflare Pages Function (launch/functions/_firm.js) fill the same template the same way: keep fill() and fillFirm() identical.
+T_NAME, T_SLUG, T_HEAD = '{{NAME}}', '{{SLUG}}', '{{HEAD}}'
+
+def firm_desc(F):
+    bits = ', '.join(E(x) for x in (F.get('firm_type'), F.get('hq')) if x)
+    return f'Background check on {E(F["name"])}' + (f' ({bits})' if bits else '') + ': SEC filings, legal matters, team changes and 10 checks before you take the meeting or the money.'
+
+def firm_head(F, full=False):
+    url = f'{SITE}vc/{F["slug"]}/' + ('full/' if full else '')
+    title = E(F['name'] + S['title_suffix'])
+    d = firm_desc(F)
+    org = {'@type': 'Organization', 'name': F['name']}
+    if F.get('legal_name'): org['legalName'] = F['legal_name']
+    if F.get('primary_domain'): org['url'] = 'https://' + F['primary_domain']
+    if F.get('hq'): org['address'] = F['hq']
+    if F.get('founded_year'): org['foundingDate'] = str(F['founded_year'])
+    ld = {'@context': 'https://schema.org', '@type': 'WebPage', 'name': F['name'] + S['title_suffix'], 'url': url, 'about': org}
+    ldj = json.dumps(ld, ensure_ascii=False, separators=(',', ':')).replace('<', '\\u003c').replace('>', '\\u003e').replace('&', '\\u0026')
+    return (f'<meta name="description" content="{d}"><link rel="canonical" href="{url}">'
+            f'<meta property="og:type" content="website"><meta property="og:site_name" content="{S["brand"]}"><meta property="og:title" content="{title}">'
+            f'<meta property="og:description" content="{d}"><meta property="og:url" content="{url}"><meta name="twitter:card" content="summary">'
+            f'<script type="application/ld+json">{ldj}</script>')
+
+def fill(tpl, F, full=False):
+    return tpl.replace(T_HEAD, firm_head(F, full)).replace(T_NAME, E(F['name'])).replace(T_SLUG, E(F['slug']))
 
 FOOT = lambda root: f'<footer class="ft"><span>© 2026 Know Your Group INC.</span><a href="{root}privacy/">Privacy</a><a href="{root}terms/">Terms</a></footer>'
 
@@ -172,10 +200,17 @@ def main():
     shutil.copytree(os.path.join(HERE, 'fav'), os.path.join(OUT, 'fav'))
     shutil.copy(os.path.join(HERE, 'CNAME'), OUT)  # GitHub Pages custom domain (regretamin.com)
     firms = []
+    T = {'name': T_NAME, 'slug': T_SLUG}
+    page(os.path.join(OUT, '_tpl', 'summary.html'), summary(T), '../../', T_NAME + S['title_suffix'], company=True, head=T_HEAD)
+    page(os.path.join(OUT, '_tpl', 'full.html'), result(T), '../../../', T_NAME + S['title_suffix'], company=True, head=T_HEAD)
+    nf = COPY.get('not_found', {'h1': 'We could not find that firm', 'p': 'It may not be checked yet. Search for it and we will start a check.'})
+    page(os.path.join(OUT, '_tpl', '404.html'), f'<main class="wrap"><div class="hero"><h1>{E(nf["h1"])}</h1><p>{E(nf["p"])}</p>{SB()}</div></main>', '/', 'Not found' + S['title_suffix'], head='<meta name="robots" content="noindex">')
+    tpl = {v: open(os.path.join(OUT, '_tpl', v + '.html')).read() for v in ('summary', 'full')}
     for p in sorted(glob.glob(os.path.join(ROOT, 'data', 'launch', '*.json'))):
         F = json.load(open(p))['firm']; firms.append(F['slug'])
-        page(os.path.join(OUT, 'vc', F['slug'], 'index.html'), summary(F), '../../', F['name'] + S['title_suffix'], company=True)
-        page(os.path.join(OUT, 'vc', F['slug'], 'full', 'index.html'), result(F), '../../../', F['name'] + S['title_suffix'], company=True)
+        for v, sub in (('summary', ''), ('full', 'full')):
+            d = os.path.join(OUT, 'vc', F['slug'], sub); os.makedirs(d, exist_ok=True)
+            open(os.path.join(d, 'index.html'), 'w').write(fill(tpl[v], F, v == 'full'))
     page(os.path.join(OUT, 'index.html'), landing(), '')
     page(os.path.join(OUT, 'pending', 'index.html'), pending(), '../')
     page(os.path.join(OUT, 'how-we-check', 'index.html'), how_we_check(), '../', S['how_we_check']['title'] + S['title_suffix'], active='hwc')
@@ -187,10 +222,10 @@ def main():
     page(os.path.join(OUT, 'terms', 'index.html'), terms(), '../', 'Terms of Service' + S['title_suffix'])
     os.makedirs(os.path.join(OUT, 'pricing'), exist_ok=True)  # /pricing/ has no page of its own: send it to the home page Pricing popup (no 404); kept out of the sitemap
     open(os.path.join(OUT, 'pricing', 'index.html'), 'w').write('<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex"><link rel="canonical" href="/"><meta http-equiv="refresh" content="0;url=../?pricing=1"><script>location.replace("../?pricing=1"+location.hash)</script><title>Pricing</title><a href="../?pricing=1">Pricing</a>')
-    site = 'https://regretamin.com/'  # sitemap + robots (account and my-checks are left out)
+    site = SITE  # sitemap + robots (account and my-checks are left out)
     urls = [site] + [site + p + '/' for p in ('how-we-check', 'privacy', 'terms') if os.path.exists(os.path.join(OUT, p, 'index.html'))] + [f'{site}vc/{f}/{x}' for f in firms for x in ('', 'full/')]
     open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join(f'<url><loc>{u}</loc></url>\n' for u in urls) + '</urlset>\n')
-    open(os.path.join(OUT, 'robots.txt'), 'w').write(f'User-agent: *\nAllow: /\n\nSitemap: {site}sitemap.xml\n')
+    open(os.path.join(OUT, 'robots.txt'), 'w').write(f'User-agent: *\nAllow: /\nDisallow: /_tpl/\n\nSitemap: {site}sitemap.xml\n')
     print('built', len(firms), 'firms ->', OUT)
 
 if __name__ == '__main__': main()

@@ -23,7 +23,7 @@ LOCKED = [
     "checks_from_upload_trg()",
 ]
 USER_ONLY = ["watch_fund(text)", "unwatch_fund(text)", "set_fund_alert(text,boolean)", "delete_my_account()"]
-PUBLIC = ["firm_page(text,uuid,boolean)", "search_funds(text)", "public_site_bundle()", "bump_firm_check(text,uuid)"]
+PUBLIC = ["firm_page(text,uuid,boolean)", "firm_meta(text)", "firm_sitemap(integer,integer)", "search_funds(text)", "public_site_bundle()", "bump_firm_check(text,uuid)"]
 
 
 def _can(cur, role, fn):
