@@ -20,7 +20,7 @@ def test_bump_progress_and_notify():
     import psycopg
 
     with psycopg.connect(DATABASE_URL) as conn, conn.cursor() as cur:
-        cur.execute("insert into firms (slug, name, published, launch_page, sec_crd) values ('zz-chk', 'Zz Check Capital', true, true, '999001') returning id")
+        cur.execute("insert into firms (slug, name, published, launch_page, data_status, sec_crd) values ('zz-chk', 'Zz Check Capital', true, true, 'real', '999001') returning id")
         fid = cur.fetchone()[0]
         cur.execute("insert into firm_check_rows (firm_id, n, title, descr, state) select %s, n, 'T' || n, 'D', 'nc' from generate_series(1, 10) n", (fid,))
         cur.execute("insert into research_queue (registry_id, name, sec_crd, priority, status) values "
