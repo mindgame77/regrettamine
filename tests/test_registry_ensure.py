@@ -37,7 +37,10 @@ def test_display_name_cleaning():
             cur.execute("select firm_display_name(%s)", (raw,))
             assert cur.fetchone()[0] == want, raw
         for args, want in [(("NEW YORK", "New York", "United States"), "New York, NY"), (("Austin", "TX", "US"), "Austin, TX"),
-                           (("London", None, "United Kingdom"), "London, United Kingdom")]:
+                           (("London", None, "United Kingdom"), "London, United Kingdom"),
+                           (("St. Louis", "MO", "US-SMALL"), "St. Louis, MO"), (("Denver", "CO", "US-CUR"), "Denver, CO"),
+                           (("Mumbai", "Maharashtra", "IN"), "Mumbai, India"),
+                           (("Hong Kong", None, "Hong Kong SAR"), "Hong Kong, Hong Kong SAR")]:
             cur.execute("select firm_hq_format(%s, %s, %s)", args)
             assert cur.fetchone()[0] == want, args
 
