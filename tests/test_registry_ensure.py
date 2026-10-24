@@ -28,9 +28,18 @@ def test_display_name_cleaning():
         for raw, want in [("ACCEL MANAGEMENT CO. L.L.C", "Accel"), ("THRIVE CAPITAL MANAGEMENT, LLC", "Thrive Capital"),
                           ("EJF CAPITAL LP", "EJF Capital"), ("BOXGROUP VENTURES LLC", "BoxGroup Ventures"),
                           ("LIGHTSPEED MANAGEMENT COMPANY, L.L.C.", "Lightspeed"), ("a16z crypto", "a16z Crypto"),
-                          ("GILDE HEALTHCARE PARTNERS B.V.", "Gilde Healthcare Partners")]:
+                          ("GILDE HEALTHCARE PARTNERS B.V.", "Gilde Healthcare Partners"),
+                          ("AT ONE VENTURES OPCO, LLC", "At One Ventures"), ("MERCATO MANAGEMENT LEGACY, LLC", "Mercato"),
+                          ("PEARL ENERGY INVESTMENT MANAGEMENT III, LLC", "Pearl Energy Investment"),
+                          ("ALPHA SQUARE GROUP S", "Alpha Square Group"), ("1sharpe Capital", "1Sharpe Capital"),
+                          ("A.capital Ventures", "A.Capital Ventures"), ("776 MANAGEMENT, LLC", "776"),
+                          ("CREANDUM V ADVISOR AB", "Creandum"), ("83NORTH 2017", "83North"), ("5Y CAPITAL", "5Y Capital")]:
             cur.execute("select firm_display_name(%s)", (raw,))
             assert cur.fetchone()[0] == want, raw
+        for args, want in [(("NEW YORK", "New York", "United States"), "New York, NY"), (("Austin", "TX", "US"), "Austin, TX"),
+                           (("London", None, "United Kingdom"), "London, United Kingdom")]:
+            cur.execute("select firm_hq_format(%s, %s, %s)", args)
+            assert cur.fetchone()[0] == want, args
 
 
 def test_report_creates_published_page_and_queue_dedupes():
