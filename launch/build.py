@@ -238,6 +238,10 @@ def main():
     nf = COPY.get('not_found', {'h1': 'We could not find that firm', 'p': 'It may not be checked yet. Search for it and we will start a check.'})
     page(os.path.join(OUT, '_tpl', '404.html'), f'<main class="wrap"><div class="hero"><h1>{E(nf["h1"])}</h1><p>{E(nf["p"])}</p>{SB()}</div></main>', '/', 'Not found' + S['title_suffix'], head='<meta name="robots" content="noindex">')
     tpl = {v: open(os.path.join(OUT, '_tpl', v + '.html')).read() for v in ('summary', 'full')}
+    # Edge cache key version: changes whenever the template or edge renderer changes, so a deploy never serves stale heads.
+    import hashlib
+    edge = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'edge', 'firm.mjs')).read()
+    open(os.path.join(OUT, '_tpl', 'version.txt'), 'w').write(hashlib.sha256((edge + tpl['summary'] + tpl['full']).encode()).hexdigest()[:12])
     for F in launch_firms():
         firms.append(F['slug'])
         for v, sub in (('summary', ''), ('full', 'full')):
