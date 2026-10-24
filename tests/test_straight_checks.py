@@ -39,7 +39,7 @@ def test_upload_fills_checks_and_never_downgrades():
     import psycopg
 
     with psycopg.connect(DATABASE_URL) as conn, conn.cursor() as cur:
-        cur.execute("insert into firms (slug, name, published, launch_page, sec_crd) values ('zz-st', 'Zz Straight Capital', true, true, '999002') returning id")
+        cur.execute("insert into firms (slug, name, published, launch_page, data_status, sec_crd) values ('zz-st', 'Zz Straight Capital', true, true, 'real', '999002') returning id")
         fid = cur.fetchone()[0]
         cur.execute("insert into firm_check_rows (firm_id, n, title, descr, state) select %s, n, 'T' || n, 'D', 'nc' from generate_series(1, 10) n", (fid,))
         cur.execute("update firm_check_rows set state = 'clear' where firm_id = %s and n = 5", (fid,))
@@ -80,7 +80,7 @@ def test_check_findings_itemize_exactly_the_counted_records():
     import psycopg
 
     with psycopg.connect(DATABASE_URL) as conn, conn.cursor() as cur:
-        cur.execute("insert into firms (slug, name, published, launch_page, sec_crd) values ('zz-ct', 'Zz Table Capital', true, true, '999003') returning id")
+        cur.execute("insert into firms (slug, name, published, launch_page, data_status, sec_crd) values ('zz-ct', 'Zz Table Capital', true, true, 'real', '999003') returning id")
         fid = cur.fetchone()[0]
         cur.execute("insert into research_queue (registry_id, name, sec_crd, priority, status) values ('zz-ct', 'ZZ TABLE CAPITAL LLC', '999003', 1, 'submitted')")
         cur.execute("insert into research_submissions (registry_id, payload, valid) values ('zz-ct', %s, true) returning id", (json.dumps(PAYLOAD),))
