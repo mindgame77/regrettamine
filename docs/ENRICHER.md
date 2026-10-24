@@ -28,4 +28,4 @@ latest enrichment replace earlier enricher entries; manual entries (e.g. Accel's
 Fixes never edit the friend's rows: they go to `firm_corrections` and override what the page shows. A people fix targets the named person's row (friend or enricher row); with no match it shows as its own "Correction" row. Resubmitting a firm replaces the previous enrichment.
 The reply lists accepted/rejected items with a reason, plus `bot_feedback`.
 
-Views (service role): `firm_section_status`, `firm_site_coverage`, `site_search_stats`, `feedback_pattern_stats`; RPC `next_firms_to_enrich(p_limit)`.
+Views (service role): `firm_section_status`, `firm_site_coverage`, `site_search_stats` (all read `search_log_current`: rows with no enrichment_id or from the latest valid enrichment per firm+bot; older rows stay in `search_log`), `feedback_pattern_stats`; RPC `next_firms_to_enrich(p_limit)`.
