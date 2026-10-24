@@ -300,6 +300,7 @@
     const b = e && e.currentTarget && e.currentTarget.classList.contains('gbx') ? e.currentTarget : null, was = b && b.innerHTML;
     if (b) { const since = b._pd ? performance.now() - b._pd : 0; b._pd = 0; b.classList.add('prs'); await new Promise(r => setTimeout(r, Math.max(0, 140 - since))); } // keep the pressed frame on screen >=120ms
     if (b) { b.classList.remove('prs'); b.disabled = true; b.classList.add('ld'); b.innerHTML = '<span class="spin" aria-hidden="true"></span><span class="gl">' + esc(T.google_loading) + '</span>'; }
+    try { if (/^\/vc\/[^/]+\/(full\/)?$/.test(location.pathname)) sessionStorage.setItem('rg_ret', JSON.stringify({ p: location.pathname, t: Date.now() })); } catch (x) {} // return to this firm page after Google sign-in
     const { error } = await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: back() } }).catch((x) => ({ error: x }));
     if (error && b) { b.disabled = false; b.classList.remove('ld'); b.innerHTML = was; }
   };
@@ -316,6 +317,7 @@
   });
   document.querySelectorAll('[data-magic]').forEach(f => f.onsubmit = (e) => { e.preventDefault(); magic(f.email.value.trim(), f.parentNode.parentNode.querySelector('[data-magicmsg]')); });
   if (sb) sb.auth.onAuthStateChange((ev, session) => {
+    if ((ev === 'SIGNED_IN' || ev === 'INITIAL_SESSION') && session) { try { const r = JSON.parse(sessionStorage.getItem('rg_ret') || 'null'); sessionStorage.removeItem('rg_ret'); if (r && Date.now() - r.t < 600000 && typeof r.p === 'string' && /^\/vc\/[^/]+\/(full\/)?$/.test(r.p) && r.p !== location.pathname) { location.replace(location.origin + r.p); return; } } catch (x) {} }
     if (ev === 'SIGNED_IN') setTimeout(async () => { await sb.rpc('claim_anon_checks', { p_anon: anonId() }); paint(); }, 0);
     if ((ev === 'SIGNED_IN' || ev === 'INITIAL_SESSION') && session) { const p = takePend(); if (p) setTimeout(async () => { if ($('#paycase')) open('paycase'); YEARLY = /^y/.test(p.k); drawPlans(); if (p.code) await applyCode(p.code); if (p.k !== 'code' || CODE) buy(p.k); }, 0); }
   });
