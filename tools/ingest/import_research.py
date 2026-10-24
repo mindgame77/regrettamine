@@ -229,6 +229,8 @@ def firm_sql(sub, brand, slug, rows, p):
                        + f"{q(fid)}, {q(t)}, v.fid::uuid, s.publisher, v.d, v.n, 'real' from (values " + ',\n'.join(
                            f"({q(uid(i, 'src', n))}, {q(i)}, {q(u)}, {q(str(d)[:10] if d else None)}, {n})" for i, u, d, n in fs)
                        + ") v(id, fid, url, d, n) join sources s on s.url = v.url;")
+    # Enricher results sit on top of the friend's rows: re-apply them (and their correction overrides) after the replace.
+    out.append(f"select promote_enrichment({q(fid)}) where to_regprocedure('public.promote_enrichment(uuid)') is not null;")
     return 'begin;\n' + '\n'.join(out) + '\ncommit;'
 
 def main():
