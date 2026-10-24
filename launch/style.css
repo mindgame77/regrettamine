@@ -340,3 +340,32 @@ nav .r a.on{color:var(--vio);font-weight:700}
 .rgt-see{display:flex;justify-content:center;margin:26px 0 8px}
 .rgt-see a{background:var(--vio);color:#fff;border-radius:12px;padding:15px 30px;font:700 16px 'DM Sans';text-decoration:none;box-shadow:0 6px 18px rgba(108,59,255,.25)}
 .sumpg.checking .rgt-see{display:none}
+
+/* My firms (/account/firms/, js/app.js drawFirms) */
+.ac.mf{max-width:1180px}.ftab{border:1.5px solid var(--line);border-radius:18px;overflow:hidden;background:#fff}
+.tabs{display:flex;gap:8px;align-items:center;margin:26px 0 16px}.tabs .tg{display:flex;gap:8px}.tabs .srch{margin:0 0 0 auto}
+.tabs button{border:1.5px solid var(--line);background:#fff;border-radius:99px;padding:8px 16px;font:600 14px 'DM Sans';color:var(--ink2);cursor:pointer}
+.tabs button em{font-style:normal;margin-left:6px;background:#F3F1F9;border-radius:99px;padding:1px 8px;font-size:12.5px;color:var(--mute)}
+.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}.tabs button.on em{background:rgba(255,255,255,.18);color:#fff}
+.mfr{display:grid;grid-template-columns:36px 1.6fr 140px 2fr 150px;align-items:center;gap:14px;padding:14px 22px;border-bottom:1px solid var(--line);font-size:15px}
+#frows .mfr:last-child{border:0}.mfr.h{background:#FAFAFC;font-size:12px;color:var(--mute);font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:10px 22px}
+.nm3{display:flex;flex-direction:column}.nm3 a{text-decoration:none}.nm3 b{color:var(--ink)}.nm3 a:hover b{color:var(--vio)}.nm3 small{color:var(--mute);font-size:13px;margin-top:2px}
+.mfr .dt{color:var(--ink2);font-size:14px}.mfr .btn{padding:9px 14px;font-size:14px;justify-self:end}
+.pls{display:flex;gap:6px;flex-wrap:wrap}.mp{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:3px 9px;font-size:12.5px;font-weight:700;white-space:nowrap}
+.mp i{width:6px;height:6px;border-radius:50%;background:currentColor}.mp.c{background:var(--mintbg);color:#0E8F5A}.mp.r{background:#FFF4CC;color:#8a6a00}.mp.w{background:var(--viobg);color:var(--vio)}
+.nc{color:var(--mute);font-size:14px}#fnone{margin:14px 4px}
+@media (max-width:760px){.tabs{flex-wrap:wrap}.tabs .srch{margin:0;width:100%}.mfr{grid-template-columns:30px 1fr auto}.mfr.h{display:none}.mfr .dt,.mfr .pls,.mfr .nc{grid-column:2/4}}
+/* Loading skeleton on /vc/<slug>/ and /full/ (build.py SK_*): grey shapes inside the real containers until js/app.js draw() removes main.ld */
+.sk{display:inline-block;vertical-align:middle;height:.9em;max-width:100%;border-radius:6px;background:linear-gradient(90deg,#ece9f4 25%,#f7f5fc 50%,#ece9f4 75%);background-size:200% 100%;animation:sk 1.4s linear infinite}
+.sk.s{height:12px}.sk.b{height:22px;margin:6px 0 4px}.sk.c{height:10px}.sk.p{height:26px;border-radius:99px}
+@keyframes sk{to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){.sk{animation:none}}
+.ld .fh h1,.ld .ph h1{color:transparent;width:max-content;border-radius:12px;background:linear-gradient(90deg,#ece9f4 25%,#f7f5fc 50%,#ece9f4 75%);background-size:200% 100%;animation:sk 1.4s linear infinite}
+.ld .sv,.ld .rgt-see,.ld .fine,.ld .cban{visibility:hidden}.ld #lockcard{display:none}
+.kf .skp{display:inline-flex;align-items:center}.kf .skp .sk{height:12px}
+.hf.skc{display:flex;flex-direction:column;gap:4px}.ck.skc{display:flex;flex-direction:column;gap:6px}.spp.skc{display:inline-flex;align-items:center}
+.ps.skc .sk{margin:4px 0}.toc .sk{display:block;margin:10px 0}
+.ctab.skt td{vertical-align:top}.ctab.skt .kct b,.ctab.skt .kcf b{line-height:1}.ctab.skt .kct span .sk{display:block;margin-top:6px}.ctab.skt .kct span .sk+.sk{margin-top:5px}
+.ld .rgt-tab em[hidden]{display:inline-block;visibility:hidden;width:30px}
+.ld .kf{min-height:60px}.ld .hfs{min-height:130px}.ld .hf.skc{min-height:118px;justify-content:center}.ld .csum{min-height:264px}.ld .ck.skc{min-height:84px;justify-content:center}.ld .spl{min-height:31px}.ctab.skt tbody tr{height:85px}
+.lfail{border:1px solid var(--line,#e6e3ef);border-radius:14px;padding:28px 24px;text-align:center;background:#fff;margin:8px 0}.lfail b{display:block;font-size:18px}.lfail p{color:var(--mute);margin:6px 0 16px}

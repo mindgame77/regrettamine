@@ -176,7 +176,7 @@
    "sign_in": "Sign in",
    "account_btn": "Account ▾",
    "account": "Account",
-   "my_checks": "My checks",
+   "my_checks": "My firms",
    "buy_more": "Buy more credits",
    "checks_left": "Credits left",
    "sign_out": "Sign out"
@@ -345,7 +345,7 @@
    "cancel": "Cancel subscription",
    "pick": "Pick a plan",
    "buy_more": "Buy more credits",
-   "my_checks_h2": "My checks",
+   "my_checks_h2": "My firms",
    "view_all": "View all →",
    "email_h2": "Email",
    "email_d": "Used to sign in. No password needed.",
@@ -565,6 +565,47 @@
    "corr_email": "malytskyyo@gmail.com",
    "corr_subject": "Correction%20request",
    "disclaimer": "Public-record information, not legal or investment advice. Records can be incomplete or out of date."
+  },
+  "my_firms": {
+   "_note": "My firms page (/account/firms/, js/app.js drawFirms). Results = firm_check_rows display labels: Clear (clear, nf), Review (review, red), Worth knowing (wk).",
+   "h1": "My firms",
+   "title": "My firms",
+   "sub": "Firms you’ve saved and firms you’ve checked. A check is 1 credit and opens the full report; reopening is free.",
+   "tabs": [
+    [
+     "all",
+     "All"
+    ],
+    [
+     "saved",
+     "★ Saved"
+    ],
+    [
+     "checked",
+     "Checked"
+    ]
+   ],
+   "tabs_aria": "Show",
+   "search": "Search your firms",
+   "cols": [
+    "",
+    "Firm",
+    "Checked",
+    "Results",
+    ""
+   ],
+   "clear": "Clear",
+   "review": "Review",
+   "wk": "Worth knowing",
+   "not_checked": "Not checked yet",
+   "open": "Open",
+   "check": "Check · 1 credit",
+   "none": "No firms match.",
+   "none_saved": "No saved firms yet. Tap Save on any firm page.",
+   "empty_h2": "No firms yet",
+   "empty_p": "Search a firm to check it, or save it for later.",
+   "signed_out_h2": "Sign in to see your firms",
+   "signed_out_p": "Firms you save or check are listed here once you sign in."
   }
  },
  "company": {
@@ -750,6 +791,9 @@
   "notify_ok": "Got it. We'll email you when it's ready.",
   "balance_fail": "Could not load your balance",
   "retry": "Try again",
+  "load_fail_h": "Couldn’t load this firm",
+  "load_fail_p": "The firm data didn’t arrive. Check your connection and try again.",
+  "load_retry": "Retry",
   "have": [
    "You have {n}{free} credit left",
    "You have {n}{free} credits left"
