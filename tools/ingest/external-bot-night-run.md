@@ -60,8 +60,8 @@ curl -s -X POST "$URL" -H "x-ingest-key: $KEY" -H 'content-type: application/jso
 
 ## Step 2. The loop
 
-1. Call `claim` with `count: 1`. If `firms` is empty (`none_left: true`), go to Step 4.
-2. Research that one firm following **Part B** below. Input for Part B: `firm_id` = `registry_id`, plus `name` and `website` from the claim (also use `sec_crd`, `lei`, `hq_city`, `state`, `country` to confirm identity). The registry website can be wrong (e.g. a social profile or an unrelated site); confirm the official site yourself.
+1. Call `claim` with a `count` of up to 300 (only as many firms as you can finish within 6 hours). If `firms` is empty (`none_left: true`), go to Step 4.
+2. Research each claimed firm following **Part B** below. Input for Part B: `firm_id` = `registry_id`, plus `name` and `website` from the claim (also use `sec_crd`, `lei`, `hq_city`, `state`, `country` to confirm identity). The registry website can be wrong (e.g. a social profile or an unrelated site); confirm the official site yourself.
 3. Build the dump-1.2 JSON and call `submit`.
 4. If the response is 422: read every error, fix them all (remove records you cannot source; never invent a source), and resubmit **once** with the same `registry_id` and `bot_id`. If it fails again, call `fail` with a short reason and move on.
 5. If you cannot research the firm at all (cannot identify it, everything blocked), call `fail` with the reason. Do not submit an empty or made-up dump.
@@ -69,13 +69,13 @@ curl -s -X POST "$URL" -H "x-ingest-key: $KEY" -H 'content-type: application/jso
 
 ## Step 3. Rules
 
-- One firm at a time. Always `count: 1`. (The API accepts `count` up to 300 per claim, it was 5; this run still claims one. Unfinished claims are released after 6 hours.) Never claim a new firm until the current one is submitted or failed.
+- You may claim up to 300 firms per request (`count` up to 300) and run parallel copies of this loop. Claim only what you can finish within 6 hours; unfinished claims are released after 6 hours.
 - Every fact needs a source URL, a verbatim quote from that page, and the date you retrieved it. No source → no record (put it in `leads` instead).
 - Never invent anything: names, numbers, dates, URLs or quotes. If unsure, leave it out or use `null`/`unknown`.
 - Only free, public pages. No paid, login-walled or gated sites; do not bypass paywalls.
 - Respect robots.txt and each site's terms of service. Go slowly; no bulk scraping.
 - Do not scrape commercial VC databases (Crunchbase, PitchBook, CB Insights, Tracxn, Dealroom, PrivCo, etc.). Primary sources (SEC, courts, regulators, company sites, news) are preferred.
-- Do not call the API faster than needed (limit: 30 requests per minute).
+- Rate limit: 300 requests per minute. On a 429, wait 60 seconds and retry.
 
 ### Errors from the API
 - **429** (rate limited): wait 60 seconds, retry the same request.
