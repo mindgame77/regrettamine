@@ -110,6 +110,12 @@ jobs:
         run: |
           rm -f ../site-launch/CNAME
           npx --yes wrangler@3 pages deploy ../site-launch --project-name regretamin --branch preview --commit-dirty=true
+      - name: Deploy to Cloudflare Pages (production, regretamin.pages.dev)
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        working-directory: launch
+        run: |
+          rm -f ../site-launch/CNAME
+          npx --yes wrangler@3 pages deploy ../site-launch --project-name regretamin --branch main --commit-dirty=true
 
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
