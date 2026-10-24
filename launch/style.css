@@ -374,3 +374,9 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 /* Phones: compact Pricing + Sign in in the header (How we check stays desktop-only) */
 @media (max-width:640px){nav{padding:14px 14px}nav .r{gap:10px;font-size:14px}nav .r a[data-open="paywall"],nav .r a#signin{display:inline}nav .r a#signin:not([hidden]){color:var(--vio);font-weight:700}nav .r a#signin[hidden]{display:none}nav .logo img{margin-right:0}.left{padding:4px 8px;font-size:12px}nav .navr .nm{display:none}nav .r .dd a{display:block}nav .logo{font-size:18px;gap:6px}nav .logo img{height:24px}nav .r a,.left{white-space:nowrap}}
 @media (max-width:360px){nav .r a[data-open="paywall"]{display:none}}
+/* Locked firm page (blur A): blurred generic placeholder in the real layout + one centered "Check with 1 credit" card */
+.gate{position:relative;min-height:420px}.gveil{filter:blur(10px);pointer-events:none;user-select:none;-webkit-user-select:none}
+.gveil .gb{display:block;height:12px;border-radius:6px;background:#E6E4EE;margin:6px 0}.gveil .pill.gp{display:inline-block;width:84px;height:24px;background:#E6E4EE;border-radius:12px}
+.gcard{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(420px,calc(100% - 48px));background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 50px rgba(26,21,48,.16);padding:28px;text-align:center;z-index:5}
+.gcard b{display:block;font:800 22px 'Bricolage Grotesque'}.gcard p{margin:8px 0 0;color:var(--ink2);line-height:1.45}.gcard .btn{margin-top:18px;width:100%;justify-content:center}.gcard .gmsg:empty{display:none}.gcard .gmsg{font-size:14px;color:var(--vio)}
+.prof .gcard{top:150px;transform:translateX(-50%)}.prof .gate .gveil{min-width:0}

@@ -1,5 +1,6 @@
 """Straight checks: a valid bot upload fills the 10 check rows (no review step)."""
 import json
+import uuid
 import os
 
 import pytest
@@ -88,8 +89,17 @@ def test_check_findings_itemize_exactly_the_counted_records():
         cur.execute("select k, title, status from check_findings(%s) order by k", (sid,))
         rows = cur.fetchall()
         assert rows == [(6, "A v. Zz", "open"), (7, "B v. Zz", "closed"), (10, None, None)]  # no_match screen not itemized
-        cur.execute("select firm_page('zz-ct', gen_random_uuid(), false)")
+        anon = str(uuid.uuid4())
+        cur.execute("select firm_page('zz-ct', %s, false)", (anon,))
+        P = cur.fetchone()[0]; P = P if isinstance(P, dict) else json.loads(P)
+        # locked (blur A): only the check names; no results, counts, dates, sections or outline
+        assert P["status"] == "ok" and not P["open"] and P["sections"] == [] and P["outline"] is None and P["details"] is None
+        assert [set(k for k, v in c.items() if v is not None) for c in P["checks"]] == [{"n", "title", "descr"}] * 10
+        cur.execute("select firm_check_status('zz-ct')")
+        S = cur.fetchone()[0]; S = S if isinstance(S, dict) else json.loads(S)
+        assert "checks" not in S and S["total"] == 10
+        cur.execute("select firm_page('zz-ct', %s, true)", (anon,))  # a free check opens it
         P = cur.fetchone()[0]; P = P if isinstance(P, dict) else json.loads(P)
         c6 = next(c for c in P["checks"] if c["n"] == 6)
-        assert c6["itemized"] == 1 and (P["open"] or c6["items"] is None)  # names only on an unlocked page
+        assert P["open"] and c6["itemized"] == 1 and c6["items"][0]["title"] == "A v. Zz" and c6["state"] == "review"
         conn.rollback()
