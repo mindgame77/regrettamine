@@ -159,7 +159,7 @@
       const fs = (det[r.n] || []).map((f, i) => [f, i]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map(x => x[0]);
       const nc = r.state === 'nc' || !PILL[r.state];
       const d = nc ? '' : P.open ? fs.map(sumItem).join('') : (out[r.n] || []).map(outItem).join('');
-      const right = !nc ? pill(r.state) + cnt : r.n === curN ? '<span class="pill p-cur"><span class="sp" aria-hidden="true"></span>' + esc(CK.current) + '</span>' : '<span class="wt">' + esc(CK.waiting) + '</span>';
+      const right = !nc ? pill(r.state) + cnt : !checking ? pill('nc') : r.n === curN ? '<span class="pill p-cur"><span class="sp" aria-hidden="true"></span>' + esc(CK.current) + '</span>' : '<span class="wt">' + esc(CK.waiting) + '</span>';
       return '<div class="row' + (r.n === 10 ? ' last' : '') + (d ? ' tog' : '') + (nc ? (r.n === curN ? ' cur' : ' up') : '') + '" id="check-' + r.n + '"' + (d ? ' role="button" tabindex="0" aria-expanded="false"' : '') + '><span class="n">' + String(r.n).padStart(2, '0') + '</span><div class="tx"><b>' + esc(r.title) + '</b><span>' + esc(r.descr) + '</span>' + (d ? '' : srch(r)) + sdt(r) + '</div>'
         + '<div class="pc">' + right + '</div>' + (d ? '<div class="det">' + d + '</div>' : '') + '</div>';
     }).join('');
