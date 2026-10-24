@@ -74,3 +74,22 @@ def test_upload_fills_checks_and_never_downgrades():
         s = cur.fetchone()[0]; s = s if isinstance(s, dict) else json.loads(s)
         assert s["queue"] == "submitted" and s["started_at"] is None
         conn.rollback()
+
+
+def test_check_findings_itemize_exactly_the_counted_records():
+    import psycopg
+
+    with psycopg.connect(DATABASE_URL) as conn, conn.cursor() as cur:
+        cur.execute("insert into firms (slug, name, published, launch_page, sec_crd) values ('zz-ct', 'Zz Table Capital', true, true, '999003') returning id")
+        fid = cur.fetchone()[0]
+        cur.execute("insert into research_queue (registry_id, name, sec_crd, priority, status) values ('zz-ct', 'ZZ TABLE CAPITAL LLC', '999003', 1, 'submitted')")
+        cur.execute("insert into research_submissions (registry_id, payload, valid) values ('zz-ct', %s, true) returning id", (json.dumps(PAYLOAD),))
+        sid = cur.fetchone()[0]
+        cur.execute("select k, title, status from check_findings(%s) order by k", (sid,))
+        rows = cur.fetchall()
+        assert rows == [(6, "A v. Zz", "open"), (7, "B v. Zz", "closed"), (10, None, None)]  # no_match screen not itemized
+        cur.execute("select firm_page('zz-ct', gen_random_uuid(), false)")
+        P = cur.fetchone()[0]; P = P if isinstance(P, dict) else json.loads(P)
+        c6 = next(c for c in P["checks"] if c["n"] == 6)
+        assert c6["itemized"] == 1 and (P["open"] or c6["items"] is None)  # names only on an unlocked page
+        conn.rollback()

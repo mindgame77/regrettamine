@@ -640,6 +640,23 @@
    "what_p": "We're reading public records: sanctions lists, regulator filings, court dockets and the firm's registration. Each result links to its source.",
    "complete": "✓ Check complete",
    "complete_sub": "· 10 of 10 checks · just now"
+  },
+  "table": {
+   "_note": "Checks table on /vc/<slug>/ and /full/ (js/company.js ctable). {count} is firm_check_rows.count_label, {n}/{m} are numbers.",
+   "h_check": "Check",
+   "h_result": "Result",
+   "h_found": "What was found",
+   "h_date": "Date searched",
+   "found": "{count} found",
+   "found_some": "Found on record",
+   "nothing": "Nothing found",
+   "more": "+{n} more",
+   "partial": "{n} on record; {m} itemized below.",
+   "none_itemized": "Not itemized in this table yet.",
+   "locked": "{m} itemized on the full record.",
+   "what": "What was searched:",
+   "untitled": "Untitled record",
+   "loading": "Loading the 10 checks…"
   }
  },
  "js": {
