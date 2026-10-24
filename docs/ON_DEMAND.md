@@ -9,7 +9,7 @@ visitor, and the firm goes to the front of the research queue in the **paid lane
 
 | Object | What it holds |
 | --- | --- |
-| `research_queue.lane` (`normal` / `paid`), `research_queue.paid_at` | Paid lane flag and when it was first paid for. |
+| `research_queue.lane` (`normal` / `paid` / `request`), `research_queue.paid_at` | Paid lane flag and when it was first paid for. |
 | `ondemand_jobs` | One open job per firm (`queued` / `in_progress`, then `done` / `refunded`), `missing_checks` = `[{n, title}]` still *Not checked yet*. |
 | `research_requests` | One row per requester per job: `user_id` or `anon_id`, optional `email` (signed in: account email; signed out: the page's email box), `status`, `spend_kind`. |
 | `check_events.kind = 'refund_ondemand'` | Credit given back (+1) when a job was not done within 24 h. A refund takes the unlock back. |
@@ -26,7 +26,9 @@ Several people paying for the same firm share one job; each gets their own reque
 
 ## Bot: `toxy-researcher-3` (Regretamin Researcher 3)
 
-Only `bot_id = "toxy-researcher-3"` claims paid jobs, and every other bot_id never gets a paid-lane firm. Use the same
+Researcher 3 handles **requested firms only**: paid checks (lane `paid`) and "Request this firm" requests for firms not
+on the site yet (lane `request`, see docs/FIRM_REQUESTS.md). Only `bot_id = "toxy-researcher-3"` claims those two lanes,
+every other bot_id only gets `normal`-lane firms, and Researcher 3 never gets normal-lane work. Use the same
 research-ingest endpoint and ingest key as the other researchers.
 
 Claim size: other bots can claim up to 300 normal-lane firms per `claim` call (`count` 1-300, default 1; it was 5). The paid lane still hands out one paid firm per call. Claims use skip-locked, so two bots never get the same firm, and unfinished claims go back to the queue after 6 hours.
@@ -34,14 +36,17 @@ Claim size: other bots can claim up to 300 normal-lane firms per `claim` call (`
 `POST https://sxxgvkdwgiouyqciztec.supabase.co/functions/v1/research-ingest`
 headers `x-ingest-key: <ingest key>`, `content-type: application/json`
 
-1. **Claim** (paid first: one paid firm per call, oldest paid first; when no paid job is waiting, the same call returns normal-lane firms like any other bot, up to `count`/300):
+1. **Claim** (one firm per call; `count` is ignored for this bot). Order: (1) paid checks (open job with a credit spend),
+   (2) other paid-lane jobs (firm requests linked to a firm already on the site), (3) new-firm requests (lane `request`); oldest first in each:
    ```json
    {"action": "claim", "bot_id": "toxy-researcher-3"}
    ```
    Response: `{"firms": [{registry_id, firm_id, name, website, country, state, hq_city, sec_crd, lei, attempts,
    "paid": true, "ondemand_job_id": 12, "missing_checks": [{"n": 8, "title": "..."}], "requesters": 2,
    "requested_at": "...", "refund_at": "..."}], "none_left": false}`.
-   Paid firms carry `"paid": true`; normal-lane firms come without the paid fields. `none_left: true` = nothing queued at all.
+   Paid firms carry `"paid": true`. A new-firm request has `registry_id` `req-<request id>` and no paid fields (no page yet;
+   the page is made when the research lands). `none_left: true` = no requested firm waiting; poll again later (e.g. every
+   minute). Do not claim normal-lane work with this bot_id.
 2. **Research** the firm. On a partial firm, focus on `missing_checks`, but submit the whole dump as usual.
 3. **Submit** exactly like the other researchers (same validation, same `research_submit`):
    ```json
