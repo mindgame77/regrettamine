@@ -68,7 +68,7 @@
   function card(x, logo) {
     const u = safeUrl(x.url), host = u ? new URL(u).hostname.replace(/^www\./, '') : '';
     const fav = logo && x.logo ? '<img class="fav" src="' + esc(ROOT + x.logo) + '" alt="" width="20" height="20">' : '<span class="fav lb">' + esc((x.outlet || '?')[0]) + '</span>';
-    return '<div class="pi"><div class="pio">' + fav + '<span>' + esc(x.outlet) + ' · ' + esc(host) + (x.date ? ' · ' + esc(fdate(x.date)) : '') + '</span></div>'
+    return '<div class="pi"><div class="pio">' + fav + '<span>' + esc(x.outlet) + (host && String(x.outlet || '').split(' · ')[0].trim().toLowerCase().replace(/^www\./, '') !== host ? ' · ' + esc(host) : '') + (x.date ? ' · ' + esc(fdate(x.date)) : '') + '</span></div>'
       + (u ? '<a class="pih" href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(x.head) + '</a>' : '<b class="pih">' + esc(x.head) + '</b>')
       + (x.snippet ? '<p class="pis">' + esc(x.snippet) + '</p>' : '') + chips(x.src) + '</div>';
   }

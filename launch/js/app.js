@@ -397,7 +397,7 @@
   document.querySelectorAll('[data-magic]').forEach(f => f.onsubmit = (e) => { e.preventDefault(); magic(f.email.value.trim(), f.parentNode.parentNode.querySelector('[data-magicmsg]')); });
   if (sb) sb.auth.onAuthStateChange((ev, session) => {
     if ((ev === 'SIGNED_IN' || ev === 'INITIAL_SESSION') && session) { try { const r = JSON.parse(sessionStorage.getItem('rg_ret') || 'null'); sessionStorage.removeItem('rg_ret'); if (r && Date.now() - r.t < 600000 && typeof r.p === 'string' && /^\/vc\/[^/]+\/(full\/)?$/.test(r.p) && r.p !== location.pathname) { location.replace(location.origin + r.p); return; } } catch (x) {} }
-    if (ev === 'SIGNED_IN') setTimeout(async () => { await sb.rpc('claim_anon_checks', { p_anon: anonId() }); paint(); }, 0);
+    if (ev === 'SIGNED_IN') setTimeout(() => { PAINT_TRY = 0; paint(); }, 0); // nothing transfers at sign-in: the account has its own 4
     else if ((ev === 'INITIAL_SESSION' || ev === 'TOKEN_REFRESHED') && session && !ACCT) setTimeout(() => { PAINT_TRY = 0; paint(); }, 0); // session became usable after the first paint
     if (ev === 'SIGNED_OUT') setTimeout(() => { PAINT_TRY = 0; ACCT = null; paint(); }, 0);
     if ((ev === 'SIGNED_IN' || ev === 'INITIAL_SESSION') && session) { const p = takePend(); if (p) setTimeout(async () => { if ($('#paycase')) open('paycase'); YEARLY = /^y/.test(p.k); drawPlans(); if (p.code) await applyCode(p.code); if (p.k !== 'code' || CODE) buy(p.k); }, 0); }
