@@ -453,7 +453,11 @@
   "summary": {
    "full_h": "See the full check on {firm} →",
    "full_p": "Every case, the firm and its funds, people, press and every source behind these 10 checks, on one page.",
-   "full_btn": "Open the full check →"
+   "full_btn": "Open the full check →",
+   "tabs_aria": "Firm pages",
+   "tab_checks": "Checks",
+   "tab_full": "Full report",
+   "see_full": "See the full report →"
   },
   "how_we_check": {
    "title": "How we check",

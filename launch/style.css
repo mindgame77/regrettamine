@@ -331,3 +331,12 @@ nav .r a.on{color:var(--vio);font-weight:700}
 .csk{border:1.5px solid var(--line);border-radius:18px;padding:8px 16px}.csk p{color:var(--mute);font-size:13.5px;margin:8px 0}.csk i{display:block;height:44px;border-radius:10px;margin:10px 0;background:linear-gradient(90deg,#F4F3F8 25%,#ECEAF3 50%,#F4F3F8 75%);background-size:200% 100%;animation:csk 1.2s linear infinite}
 @keyframes csk{to{background-position:-200% 0}}
 @media (max-width:700px){.ctab thead{display:none}.ctab,.ctab tbody{display:block}.ctab tr{display:grid;grid-template-columns:30px 1fr auto;border-bottom:1px solid var(--line)}.ctab td{border:0;padding:8px 10px}.ctab .kct{width:auto}.ctab .kcf,.ctab .kcd{grid-column:2/4;padding-top:0}.ctab tr.cdx{grid-template-columns:1fr}.ctab tr.cdx td:first-child{display:none}.ctab tr.cdx td{grid-column:1}.ctab tr.cdx[hidden]{display:none}}
+/* Checks / Full report switch on /vc/<slug>/ and /vc/<slug>/full/, and the centered "See the full report" button */
+.rgt-tabs{display:flex;gap:4px;background:#F4F2FA;border:1px solid var(--line);border-radius:14px;padding:5px;width:max-content;margin:22px 0}
+.rgt-tab{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:10px;font:700 15px 'DM Sans';color:var(--ink2);text-decoration:none}
+.rgt-tab.on{background:#fff;color:var(--vio);box-shadow:0 1px 3px rgba(20,17,43,.12)}
+.rgt-tab em{font-style:normal;font-size:12px;font-weight:700;background:var(--viobg);color:var(--vio);border-radius:99px;padding:2px 8px}
+.rgt-tab em[hidden]{display:none}
+.rgt-see{display:flex;justify-content:center;margin:26px 0 8px}
+.rgt-see a{background:var(--vio);color:#fff;border-radius:12px;padding:15px 30px;font:700 16px 'DM Sans';text-decoration:none;box-shadow:0 6px 18px rgba(108,59,255,.25)}
+.sumpg.checking .rgt-see{display:none}
