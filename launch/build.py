@@ -4,10 +4,13 @@ All copy, plans and section presentation come from launch/copy.json (also handed
 Output: site-launch/. Deploy to the preview with launch/deploy_preview.sh (see launch/HOW-TO-CHANGE.md).
 Refresh a snapshot (read-only): run launch/firm_snapshot.sql with :slug, save the JSON as data/launch/<slug>.json;
 then python3 launch/sync_checks.py data/launch/*.json > a new migration to update the 10 check rows."""
-import os, json, html, glob, shutil
+import os, json, html, glob, shutil, hashlib
 from legal import privacy, terms
 E = html.escape
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE); OUT = os.path.join(ROOT, 'site-launch')
+def _v(f):  # content hash so browsers never run a stale cached copy (assets are max-age=600)
+    return hashlib.sha1(open(os.path.join(HERE, f), 'rb').read()).hexdigest()[:10]
+V = {k: _v(f) for k, f in (('company', 'js/company.js'), ('app', 'js/app.js'), ('css', 'style.css'))}
 COPY = json.load(open(os.path.join(HERE, 'copy.json')))
 S = COPY['site']
 NOINDEX = os.environ.get('REGRET_NOINDEX') == '1'
@@ -31,7 +34,7 @@ def pricing_modal():  # nav "Pricing" popup
 def page(path, body, root, title=S['brand'], company=False, active=''):
     n, su = S['nav'], S['signup']
     hon = ' class="on" aria-current="page"' if active == 'hwc' else ''
-    scripts = (f'<script defer src="{root}company.js"></script>' if company else '') + f'<script defer src="{root}app.js"></script>'
+    scripts = (f'<script defer src="{root}company.js?v={V['company']}"></script>' if company else '') + f'<script defer src="{root}app.js?v={V['app']}"></script>'
     nav = (f'<nav><a class="logo" href="{root}"><img src="{root}logo.svg" alt="">{S["brand"]}</a><div class="r">'
            f'<a href="{root}how-we-check/"{hon}>{n["how_we_check"]}</a><a href="#" data-open="paywall">{n["pricing"]}</a><span class="left" id="left"></span><a href="#" data-open="signup" id="signin">{n["sign_in"]}</a>'
            f'<span class="navr" id="acct" hidden><button type="button" class="ab" id="acctbtn" aria-haspopup="true" aria-expanded="false"><span class="av" id="av"></span><span class="nm">{n["account_btn"]}</span></button>'
@@ -42,7 +45,7 @@ def page(path, body, root, title=S['brand'], company=False, active=''):
 {pricing_modal()}'''
     os.makedirs(os.path.dirname(path), exist_ok=True)
     open(path, 'w').write(f'''<!doctype html><html lang="en"><head>{'<meta name="robots" content="noindex">' if NOINDEX else ''}<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{E(title)}</title>
-<link rel="icon" href="{root}logo.svg"><link rel="stylesheet" href="{root}style.css"><script>window.REGRET={json.dumps(CFG)};window.REGRET_ROOT="{root}"</script>
+<link rel="icon" href="{root}logo.svg"><link rel="stylesheet" href="{root}style.css?v={V['css']}"><script>window.REGRET={json.dumps(CFG)};window.REGRET_ROOT="{root}"</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>{scripts}</head><body>{nav}{body}{FOOT(root)}{modals}</body></html>''')
 
 FOOT = lambda root: f'<footer class="ft"><span>© 2026 Know Your Group INC.</span><a href="{root}privacy/">Privacy</a><a href="{root}terms/">Terms</a></footer>'
