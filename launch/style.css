@@ -288,5 +288,5 @@ nav .r a.on{color:var(--vio);font-weight:700}
 .tx em.srch{color:var(--mute);font-weight:500;font-size:13.5px;margin-top:4px}
 
 /* legal pages + footer */
-.lg{max-width:760px}.lg h1{font-size:44px}.lg .eff{color:var(--mute);font-size:14px;margin:14px 0 0}.lg .toc{display:flex;flex-wrap:wrap;gap:8px 14px;margin:24px 0 8px;font-size:14px}.lg .toc a,.lg a{color:var(--vio)}.lg h2{font-size:22px;margin:40px 0 10px}.lg ul{line-height:1.55}.lg li{display:block;position:relative;padding-left:18px}.lg li:before{position:absolute;left:0;top:0}.lg p+p{margin-top:10px}
+.lg{max-width:760px}.lg h1{font-size:44px}.lg .eff{color:var(--mute);font-size:14px;margin:14px 0 0}.lg .toc{position:static;display:flex;flex-wrap:wrap;gap:8px 14px;margin:24px 0 8px;font-size:14px}.lg .toc a,.lg a{color:var(--vio)}.lg h2{font-size:22px;margin:40px 0 10px}.lg ul{line-height:1.55;margin-bottom:16px}.lg li{display:block;position:relative;padding-left:18px}.lg li:before{position:absolute;left:0;top:0}.lg p+p{margin-top:10px}
 .ft{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;padding:28px 16px 36px;border-top:1.5px solid var(--line);font-size:14px;color:var(--mute)}.ft a{color:var(--ink2);text-decoration:none}.ft a:hover{color:var(--vio)}
