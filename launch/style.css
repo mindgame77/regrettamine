@@ -290,3 +290,24 @@ nav .r a.on{color:var(--vio);font-weight:700}
 /* legal pages + footer */
 .lg{max-width:760px}.lg h1{font-size:44px}.lg .eff{color:var(--mute);font-size:14px;margin:14px 0 0}.lg .toc{position:static;display:flex;flex-wrap:wrap;gap:8px 14px;margin:24px 0 8px;font-size:14px}.lg .toc a,.lg a{color:var(--vio)}.lg h2{font-size:22px;margin:40px 0 10px}.lg ul{line-height:1.55;margin-bottom:16px}.lg li{display:block;position:relative;padding-left:18px}.lg li:before{position:absolute;left:0;top:0}.lg p+p{margin-top:10px}
 .ft{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;padding:28px 16px 36px;border-top:1.5px solid var(--line);font-size:14px;color:var(--mute)}.ft a{color:var(--ink2);text-decoration:none}.ft a:hover{color:var(--vio)}
+/* Checking view (/vc/<slug>/ while the 10 checks run) */
+.sumpg.checking{display:grid;grid-template-columns:minmax(0,1fr) 300px;column-gap:28px;align-items:start}
+.sumpg.checking>*{grid-column:1}.sumpg.checking>.cside{grid-column:2;grid-row:2/span 5}
+.sumpg.checking .full{display:none}
+.fh .dots{color:#6C3BFF}
+.cban{border:1.5px solid #E3DAFF;background:#FBF9FF;border-radius:16px;padding:14px 18px;margin-bottom:14px}
+.cban .ch{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}.cban .ch b{font-size:15px}.cban .ch span,.cban .cs2{font-size:13px;color:#6b6684}
+.cbar{height:8px;border-radius:99px;background:#ECE6FF;overflow:hidden;margin:10px 0 6px}.cbar i{display:block;height:100%;border-radius:99px;background:repeating-linear-gradient(45deg,#6C3BFF 0 10px,#5A2AF0 10px 20px);transition:width .6s}
+.cban.ok{background:#E3F8EE;border-color:#B8EBD3}.cban.ok b{color:#0d8a55}
+.row.cur{background:linear-gradient(90deg,#F1ECFF,#fff 60%,#F1ECFF)}.row.up .tx b{color:var(--mute)}
+.wt{color:#B0ACC2;font-size:14px;font-weight:500}.p-cur{background:#F1ECFF;color:#5A2AF0}
+.sp{display:inline-block;width:12px;height:12px;border:2px solid #CFC2FF;border-top-color:#6C3BFF;border-radius:50%;animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}@media (prefers-reduced-motion:reduce){.sp{animation-duration:3s}}
+.cside{position:sticky;top:20px}.cbox{border:1.5px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px;background:#fff}
+.cbox h3{font:800 17px 'Bricolage Grotesque';margin:0 0 4px}.cbox p{font-size:13px;color:#4D4868;line-height:1.45;margin:0}
+.cin{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:10px;padding:0 12px;margin:12px 0 10px}.cin input{flex:1;border:0;outline:0;padding:10px 0;font:inherit;font-size:14px;min-width:0;background:transparent}.cin em{font-style:normal;color:#19C37D;font-size:12px}
+.cbox .btn{width:100%}.cbox .cmsg{margin-top:8px;font-weight:600;color:#1a1530}.cbox .cmsg:empty{display:none}.cbox .cclose{margin-top:10px;color:#8C88A3}
+.cwhat{background:#FBF9FF;border-color:#E3DAFF}
+@media (max-width:860px){.sumpg.checking{display:block}.cside{position:static}}
+.sumpg.checking .row{grid-template-columns:36px 1fr auto;padding:11px 18px;gap:10px}.sumpg.checking .row:after{display:none}.sumpg.checking .row .pc{justify-self:end}.sumpg.checking .tx b{font-size:15px}.sumpg.checking .tx span{font-size:13px}
+.sumpg.checking .row .det{display:none}

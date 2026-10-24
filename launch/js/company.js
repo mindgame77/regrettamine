@@ -121,22 +121,48 @@
   const srch = (r) => { const S = COPY.searched || {}, st = PILL[r.state] ? r.state : 'nc';
     const t = st === 'nc' ? '' : S[r.n] ? S[r.n] + (st === 'clear' || st === 'nf' ? ' ' + COPY.searched_nf : '') : '';
     return t ? '<em class="srch">' + esc(t) + '</em>' : ''; };
-  function summary(main, P) {
-    main.querySelector('.kf').innerHTML = P.hero.map(h => '<span>' + esc(h.label) + ' <b>' + esc(h.value) + '</b>' + (h.src || []).slice(0, 1).map(c => '<i>' + esc(c.label) + (c.date ? ' · ' + esc(c.date) : '') + '</i>').join('') + '</span>').join('');
+  // Checking view: a firm whose 10 checks are not all done. Done rows (state != 'nc' in the data) show their real pill,
+  // the first not-done row shows the spinner, the rest "Waiting". No results are invented. js/app.js polls and re-renders.
+  const CK = COPY.checking;
+  const doneN = (P) => (P.checks || []).filter(r => r.state !== 'nc').length;
+  function checkingHead(main, P, st) {
+    const done = doneN(P), cur = (P.checks || []).find(r => r.state === 'nc'), firm = P.firm.name;
+    main.querySelector('.fh h1').innerHTML = esc(fmt(CK.title, { firm })) + '<span class="dots">…</span>';
+    const t = st && st.started_at ? new Date(st.started_at) : null;
+    const b = main.querySelector('.cban'); b.className = 'cban'; b.hidden = false;
+    b.innerHTML = '<div class="ch"><b>' + esc(fmt(CK.progress, { done, check: cur ? cur.title : '' })) + '</b><span>' + esc(CK.usually) + '</span></div>'
+      + '<div class="cbar" role="progressbar" aria-valuemin="0" aria-valuemax="10" aria-valuenow="' + done + '"><i style="width:' + Math.max(done * 10, 4) + '%"></i></div>'
+      + (t && !isNaN(t) ? '<div class="cs2">' + esc(fmt(CK.started, { time: t.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) })) + '</div>' : '');
+  }
+  function summary(main, P, st) {
+    const checking = !!(P.checks && P.checks.length) && doneN(P) < 10, justDone = !checking && !!(st && st.just_done);
+    main.classList.toggle('checking', checking);
+    main.querySelector('.cside').hidden = !checking;
+    if (checking) checkingHead(main, P, st);
+    else {
+      main.querySelector('.fh h1').textContent = P.firm.name;
+      const b = main.querySelector('.cban'); b.hidden = !justDone; b.className = 'cban ok';
+      b.innerHTML = justDone ? '<div class="ch"><div><b>' + esc(CK.complete) + '</b> <span>' + esc(CK.complete_sub) + '</span></div></div>' : '';
+    }
+    const curN = checking ? P.checks.find(r => r.state === 'nc').n : 0;
+    if (checking && !P.hero.length) main.querySelector('.kf').innerHTML = '<span>' + esc(CK.sources[0]) + ' <b>' + esc(CK.sources[1]) + '</b></span>';
+    else main.querySelector('.kf').innerHTML = P.hero.map(h => '<span>' + esc(h.label) + ' <b>' + esc(h.value) + '</b>' + (h.src || []).slice(0, 1).map(c => '<i>' + esc(c.label) + (c.date ? ' · ' + esc(c.date) : '') + '</i>').join('') + '</span>').join('');
     const det = {}, out = {}; (P.details || []).forEach(r => det[r.row] = r.facts || []); (P.outline || []).forEach(r => out[r.row] = r.items || []);
     const rank = (f) => caseStatus(f) === 'active' ? 0 : 1;
     main.querySelector('.list').innerHTML = P.checks.map(r => {
       const cnt = r.count ? '<span class="cnt ' + (r.state === 'clear' ? 'cg' : 'ca') + '">' + esc(r.count) + '</span>' : '';
       const fs = (det[r.n] || []).map((f, i) => [f, i]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map(x => x[0]);
-      const d = P.open ? fs.map(sumItem).join('') : (out[r.n] || []).map(outItem).join('');
-      return '<div class="row' + (r.n === 10 ? ' last' : '') + (d ? ' tog' : '') + '" id="check-' + r.n + '"' + (d ? ' role="button" tabindex="0" aria-expanded="false"' : '') + '><span class="n">' + String(r.n).padStart(2, '0') + '</span><div class="tx"><b>' + esc(r.title) + '</b><span>' + esc(r.descr) + '</span>' + (d ? '' : srch(r)) + '</div>'
-        + '<div class="pc">' + pill(r.state) + cnt + '</div>' + (d ? '<div class="det">' + d + '</div>' : '') + '</div>';
+      const nc = r.state === 'nc' || !PILL[r.state];
+      const d = nc ? '' : P.open ? fs.map(sumItem).join('') : (out[r.n] || []).map(outItem).join('');
+      const right = !nc ? pill(r.state) + cnt : r.n === curN ? '<span class="pill p-cur"><span class="sp" aria-hidden="true"></span>' + esc(CK.current) + '</span>' : '<span class="wt">' + esc(CK.waiting) + '</span>';
+      return '<div class="row' + (r.n === 10 ? ' last' : '') + (d ? ' tog' : '') + (nc ? (r.n === curN ? ' cur' : ' up') : '') + '" id="check-' + r.n + '"' + (d ? ' role="button" tabindex="0" aria-expanded="false"' : '') + '><span class="n">' + String(r.n).padStart(2, '0') + '</span><div class="tx"><b>' + esc(r.title) + '</b><span>' + esc(r.descr) + '</span>' + (d ? '' : srch(r)) + '</div>'
+        + '<div class="pc">' + right + '</div>' + (d ? '<div class="det">' + d + '</div>' : '') + '</div>';
     }).join('');
     main.querySelectorAll('.row.tog').forEach(row => {
       const t = () => row.setAttribute('aria-expanded', row.classList.toggle('open'));
       row.onclick = t; row.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t(); } };
     });
-    return { total: 0, head: () => '' };
+    return { total: 0, head: () => '', checking };
   }
   window.RegretCompany = { render, summary };
 })();
