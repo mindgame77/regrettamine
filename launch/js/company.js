@@ -85,10 +85,31 @@
     SPY = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) on(e.target.id); }), { rootMargin: '-30% 0px -60% 0px' });
     main.querySelectorAll('.ps').forEach(s => SPY.observe(s));
   }
+  // Locked page (blur A): firm_page() returns only the check names, so the results area is a generic placeholder in the same
+  // layout, blurred, with one "Check with 1 credit" card on top (js/app.js [data-gate]). Nothing in the placeholder is real data.
+  const GT = COPY.gate, gbar = (w) => '<i class="gb" style="width:' + w + '%"></i>';
+  function ghost(P) {
+    const rows = (P.checks && P.checks.length ? P.checks : Array.from({ length: 10 }, (_, i) => ({ n: i + 1, title: '', descr: '' }))).map((r, i) =>
+      '<tr class="crow"><td class="kcn">' + String(r.n).padStart(2, '0') + '</td><td class="kct"><b>' + esc(r.title) + '</b><span>' + esc(r.descr) + '</span></td>'
+      + '<td class="kcr"><span class="pill gp"></span></td><td class="kcf">' + gbar(40 + (i * 37) % 50) + '</td><td class="kcd">' + gbar(70) + '</td></tr>').join('');
+    return '<table class="ctab"><thead><tr><th>#</th><th>' + esc(T.h_check) + '</th><th>' + esc(T.h_result) + '</th><th>' + esc(T.h_found) + '</th><th>' + esc(T.h_date) + '</th></tr></thead><tbody>' + rows + '</tbody></table>';
+  }
+  const ghostSecs = () => [0, 1, 2].map(k => '<section class="ps"><h2>' + gbar(30 + k * 10) + '</h2>' + [0, 1, 2, 3].map(j => '<div class="fct">' + gbar(90 - ((j + k) * 13) % 40) + gbar(55) + '</div>').join('') + '</section>').join('');
+  const gate = (P, inner) => '<div class="gate"><div class="gveil" aria-hidden="true" inert>' + inner + '</div><div class="gcard" role="region" aria-label="' + esc(GT.title) + '"><b>' + esc(GT.title) + '</b><p>'
+    + esc(fmt(GT.sub, { firm: P.firm.name })) + '</p><button type="button" class="btn" data-gate>' + esc(GT.button) + '</button><p class="gmsg" role="status"></p></div></div>';
   function render(main, P) {
     const firm = P.firm.name, byKey = Object.fromEntries(P.sections.map(s => [s.key, s])),
       secs = CFG.sections.list.filter(c => byKey[c.key]).map(c => Object.assign({}, byKey[c.key], c)), total = secs.filter(s => s.key !== 'checks').reduce((a, s) => a + s.count, 0);
     main.classList.toggle('unlocked', P.open);
+    main.querySelector('.toc').style.display = ''; const lk = main.querySelector('#lockcard'); if (lk) lk.style.display = '';
+    if (!P.open) {
+      main.querySelector('.m').textContent = [P.firm.hq, P.firm.short_name].filter(Boolean).join(' · ');
+      main.querySelector('.hfs').innerHTML = P.hero.map(h => '<span class="hf"><span>' + esc(h.label) + '</span><b>' + esc(h.value) + '</b>' + h.src.map(c => '<span class="sc">' + esc(c.label) + (c.date ? ' · ' + esc(c.date) : '') + '</span>').join('') + '</span>').join('');
+      main.querySelector('.csum').hidden = true; main.querySelector('.spl').innerHTML = ''; main.querySelector('.toc').innerHTML = ''; main.querySelector('.toc').style.display = 'none';
+      main.querySelector('#lockcard').hidden = true; main.querySelector('#lockcard').style.display = 'none';
+      main.querySelector('.pmain').innerHTML = gate(P, '<section class="ps">' + ghost(P) + '</section>' + ghostSecs());
+      return { total: 0, head: () => GT.title };
+    }
     main.querySelector('.m').textContent = [P.firm.hq, P.firm.short_name].filter(Boolean).join(' · ');
     const has = new Set(secs.map(s => s.key));
     main.querySelector('.hfs').innerHTML = P.hero.map(h => '<a class="hf" href="#' + (has.has(h.anchor) ? esc(h.anchor) : '') + '"><span>' + esc(h.label) + '</span><b>' + esc(h.value) + '</b>' + h.src.map(c => '<span class="sc">' + esc(c.label) + (c.date ? ' · ' + esc(c.date) : '') + '</span>').join('') + '</a>').join('');
@@ -130,7 +151,7 @@
   const sdt = (r) => { const t = r.searched_at ? new Date(r.searched_at) : null;
     return t && !isNaN(t) ? '<em class="sdt">' + esc(fmt(COPY.searched_on, { date: t.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) })) + '</em>' : ''; };
   const CK = COPY.checking;
-  const doneN = (P) => (P.checks || []).filter(r => r.state !== 'nc').length;
+  const doneN = (P) => !P.open && P.done != null ? P.done : (P.checks || []).filter(r => r.state !== 'nc').length;
   function checkingHead(main, P, st) {
     const done = doneN(P), cur = (P.checks || []).find(r => r.state === 'nc'), firm = P.firm.name;
     main.querySelector('.fh h1').innerHTML = esc(fmt(CK.title, { firm })) + '<span class="dots">…</span>';
@@ -151,10 +172,10 @@
       const b = main.querySelector('.cban'); b.hidden = !justDone; b.className = 'cban ok';
       b.innerHTML = justDone ? '<div class="ch"><div><b>' + esc(CK.complete) + '</b> <span>' + esc(CK.complete_sub) + '</span></div></div>' : '';
     }
-    const curN = checking ? P.checks.find(r => r.state === 'nc').n : 0;
+    const curN = checking && P.open ? P.checks.find(r => r.state === 'nc').n : 0;
     if (checking && !P.hero.length) main.querySelector('.kf').innerHTML = '<span>' + esc(CK.sources[0]) + ' <b>' + esc(CK.sources[1]) + '</b></span>';
     else main.querySelector('.kf').innerHTML = P.hero.map(h => '<span>' + esc(h.label) + ' <b>' + esc(h.value) + '</b>' + (h.src || []).slice(0, 1).map(c => ' <i>· ' + esc(c.label) + (c.date ? ' · ' + esc(c.date) : '') + '</i>').join('') + '</span>').join('');
-    main.querySelector('.list').innerHTML = ctable(P, checking, curN);
+    main.querySelector('.list').innerHTML = P.open ? ctable(P, checking, curN) : gate(P, ghost(P));
     const fn = main.querySelector('.rgt-n'), ft = (P.sections || []).filter(s => s.key !== 'checks').reduce((a, s) => a + (s.count || 0), 0);
     if (fn && ft) { fn.textContent = ft; fn.hidden = false; }
     bindTable(main);

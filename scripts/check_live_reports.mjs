@@ -1,5 +1,5 @@
-/* After deploy, the live launch site (launch/ → site-launch/) must work: home + search, firm pages with
-   their sections and Check summary, sitemap.xml, and the signed-out account prompt. */
+/* After deploy, the live launch site (launch/ → site-launch/) must work: home + search, firm pages locked
+   (blur A) for a fresh visitor, sitemap.xml, and the signed-out account prompt. */
 import { chromium } from 'playwright';
 
 const BASE = (process.env.REGRET_BASE || 'https://regretamin.com/').replace(/\/?$/, '/');
@@ -24,39 +24,47 @@ try {
   try { await page.waitForFunction(() => /\d/.test((document.querySelector('#left') || {}).textContent || ''), null, { timeout: 20000 }); ok('home: check counter "' + (await page.textContent('#left')).trim() + '"'); }
   catch (_) { fail('home: check counter never loaded'); }
 
-  // Summary pages: 10 check rows and a link to the full report
-  for (const slug of FIRMS) {
-    const r = await page.goto(BASE + 'vc/' + slug + '/', { waitUntil: 'domcontentloaded', timeout: 45000 });
-    if (!r || r.status() !== 200) { fail(slug + ' summary: status ' + (r && r.status())); continue; }
-    try { await page.waitForFunction(() => document.querySelectorAll('.sumpg .list tr.crow').length === 10, null, { timeout: 30000 }); } catch (_) { fail(slug + ' summary: 10 check rows never rendered'); continue; }
-    const s = await page.evaluate(() => ({ tog: document.querySelectorAll('.sumpg tr.crow.tog').length, full: !!document.querySelector('.rgt-see a[href="full/"]') && !!document.querySelector('.rgt-tabs a[href="./full/"]'), src: document.querySelectorAll('.sumpg tr.cdx a').length }));
-    if (!s.full) fail(slug + ' summary: no See the full report link or tab switch');
-    if (s.src) fail(slug + ' summary: dropdowns contain source links');
-    ok(slug + ' summary: 10 rows, ' + s.tog + ' with a dropdown');
+  // A fresh visitor sees every firm locked (blur A): a blurred placeholder of the 10-check table, a "Check with 1 credit" card,
+  // and a firm_page() response that carries the check names only (no states, counts, dates, items, sections or outline).
+  const REAL = ['state', 'count', 'searched_at', 'items', 'itemized'];
+  async function lockedPage(slug, url, view) {
+    let body = null;
+    const on = async (res) => { if (/\/rpc\/firm_page/.test(res.url())) { try { body = await res.json(); } catch (_) {} } };
+    page.on('response', on);
+    try {
+      const r = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 });
+      if (!r || r.status() !== 200) return fail(slug + ' ' + view + ': status ' + (r && r.status()));
+      try { await page.waitForFunction(() => document.querySelectorAll('.gate .gveil tr.crow').length === 10, null, { timeout: 30000 }); }
+      catch (_) { return fail(slug + ' ' + view + ': locked placeholder (10 rows) never rendered'); }
+      const g = await page.evaluate(() => { const v = document.querySelector('.gate .gveil'), c = document.querySelector('.gate .gcard');
+        return { blur: getComputedStyle(v).filter, card: !!c && c.offsetHeight > 0, btn: !!(c && c.querySelector('[data-gate]')), real: document.querySelectorAll('.gveil .pill:not(.gp), .gveil .cti, .gveil .cdx').length,
+          full: !!document.querySelector('.rgt-tabs a[href$="full/"]') }; });
+      if (!/blur\(10px\)/.test(g.blur)) fail(slug + ' ' + view + ': placeholder not blurred (' + g.blur + ')');
+      if (!g.card || !g.btn) fail(slug + ' ' + view + ': no "Check with 1 credit" card');
+      if (g.real) fail(slug + ' ' + view + ': placeholder contains result elements');
+      if (!g.full) fail(slug + ' ' + view + ': no tab switch');
+      await page.waitForTimeout(500);
+      if (!body) fail(slug + ' ' + view + ': firm_page response not seen');
+      else {
+        const leak = (body.checks || []).flatMap(c => REAL.filter(k => c[k] != null).map(k => c.n + '.' + k));
+        if (body.open) fail(slug + ' ' + view + ': a fresh visitor got an open page');
+        if (leak.length || (body.sections || []).length || body.outline != null || body.details != null) fail(slug + ' ' + view + ': locked response leaks ' + (leak.slice(0, 5).join(',') || 'sections/outline/details'));
+        else ok(slug + ' ' + view + ': locked, blurred placeholder + card, response has check names only');
+      }
+    } finally { page.off('response', on); }
   }
+  for (const slug of FIRMS) await lockedPage(slug, BASE + 'vc/' + slug + '/', 'summary');
 
   // How we check
   { const r = await page.goto(BASE + 'how-we-check/', { waitUntil: 'domcontentloaded', timeout: 45000 });
     if (!r || r.status() !== 200) fail('how-we-check: status ' + (r && r.status()));
     else if (!(await page.locator('nav a.on[href$="how-we-check/"]').count())) fail('how-we-check: nav link not active'); else ok('how-we-check: page and active nav link'); }
 
-  // Full pages: sections, TOC and Check summary
+  // Full pages: same locked state, firm name and SEC hero facts stay public
   for (const slug of FIRMS) {
-    const r = await page.goto(BASE + 'vc/' + slug + '/full/', { waitUntil: 'domcontentloaded', timeout: 45000 });
-    if (!r || r.status() !== 200) { fail(slug + ': status ' + (r && r.status())); continue; }
-    try { await page.waitForSelector('.pmain section.ps', { timeout: 30000 }); } catch (_) { fail(slug + ': sections never rendered'); continue; }
-    const f = await page.evaluate(() => ({
-      h1: (document.querySelector('h1') || {}).textContent || '',
-      secs: Array.from(document.querySelectorAll('.pmain section.ps')).map(s => s.id),
-      toc: document.querySelectorAll('.toc a[href^="#"]').length,
-      checks: document.querySelectorAll('.csum:not([hidden]) .ck').length,
-    }));
-    if (!f.h1.trim()) fail(slug + ': no firm name');
-    if (!f.secs.includes('checks')) fail(slug + ': no checks section');
-    if (f.checks !== 10) fail(slug + ': Check summary has ' + f.checks + ' rows, want 10');
-    if (f.toc !== f.secs.length) fail(slug + ': TOC has ' + f.toc + ' links for ' + f.secs.length + ' sections');
+    await lockedPage(slug, BASE + 'vc/' + slug + '/full/', 'full');
     if (/Toxy/.test(await page.content())) fail(slug + ': Toxy is still in the page');
-    ok(slug + ': ' + f.h1.trim() + ' · sections ' + f.secs.join(',') + ' · ' + f.checks + ' checks');
+    const h1 = ((await page.textContent('h1').catch(() => '')) || '').trim(); if (!h1) fail(slug + ': no firm name');
   }
 
   // Sitemap

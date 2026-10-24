@@ -559,6 +559,18 @@
     var bindMain = () => { if ($('#unlock')) $('#unlock').onclick = () => openPay(''); };
     bindMain();
     main.addEventListener('click', (e) => { const s = !main.classList.contains('unlocked') && e.target.closest('[data-sec]'); if (s) openPay(s.dataset.sec); });
+    // "Check with 1 credit" on a locked page (summary and /full/): spend 1 (free checks first, signed out too) and reveal both pages.
+    // need_signup -> sign-in popup; out (signed in, 0 credits) -> Pricing.
+    main.addEventListener('click', async (e) => {
+      const b = e.target.closest('[data-gate]'); if (!b || !sb) return;
+      const G = C.copy.company.gate, m = b.parentNode.querySelector('.gmsg'); b.disabled = true; b.textContent = G.busy; m.textContent = '';
+      const { data, error } = await Promise.resolve(sb.rpc('firm_page', { p_slug: main.dataset.firm, p_anon: anonId(), p_spend: true })).catch(x => ({ error: x }));
+      b.disabled = false; b.textContent = G.button;
+      if (!error && data && data.status === 'ok' && data.open) { draw(data); paint(); return; }
+      if (data && data.status === 'need_signup') { m.textContent = G.signin; return open('signup'); }
+      if (data && data.status === 'out') { m.textContent = G.out; return open('paywall'); }
+      m.textContent = G.error;
+    });
     if ($('#usecheck')) $('#usecheck').onclick = () => { $('#usecheck').disabled = true; loadPage(true).then(paint).finally(async () => { BAL = await balance(); if (BAL && BAL.left > 0 && !(PAGE && PAGE.open)) $('#usecheck').disabled = false; }); };
     if (!sb) loadFail(); // no Supabase client (config or CDN script missing): never leave the skeleton up
     if (sb) {

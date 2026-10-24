@@ -610,6 +610,15 @@
  },
  "company": {
   "toc": "On this page",
+  "gate": {
+   "title": "Check with 1 credit",
+   "sub": "See all 10 check results and the full record for {firm}. One credit opens both pages.",
+   "button": "Check with 1 credit",
+   "busy": "Checking…",
+   "signin": "Your free checks are used up. Sign in to keep checking.",
+   "out": "You're out of credits. Pick a plan to keep checking.",
+   "error": "Something went wrong. Try again."
+  },
   "summary": "Check summary",
   "full_check": "See the full check →",
   "locked": "🔒 Open with 1 credit",
