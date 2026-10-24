@@ -24,13 +24,13 @@ try {
   try { await page.waitForFunction(() => /\d/.test((document.querySelector('#left') || {}).textContent || ''), null, { timeout: 20000 }); ok('home: check counter "' + (await page.textContent('#left')).trim() + '"'); }
   catch (_) { fail('home: check counter never loaded'); }
 
-  // Summary pages: 10 check rows and a link to the full check
+  // Summary pages: 10 check rows and a link to the full report
   for (const slug of FIRMS) {
     const r = await page.goto(BASE + 'vc/' + slug + '/', { waitUntil: 'domcontentloaded', timeout: 45000 });
     if (!r || r.status() !== 200) { fail(slug + ' summary: status ' + (r && r.status())); continue; }
     try { await page.waitForFunction(() => document.querySelectorAll('.sumpg .list tr.crow').length === 10, null, { timeout: 30000 }); } catch (_) { fail(slug + ' summary: 10 check rows never rendered'); continue; }
-    const s = await page.evaluate(() => ({ tog: document.querySelectorAll('.sumpg tr.crow.tog').length, full: !!document.querySelector('.full a[href="full/"]'), src: document.querySelectorAll('.sumpg tr.cdx a').length }));
-    if (!s.full) fail(slug + ' summary: no See the full check link');
+    const s = await page.evaluate(() => ({ tog: document.querySelectorAll('.sumpg tr.crow.tog').length, full: !!document.querySelector('.rgt-see a[href="full/"]') && !!document.querySelector('.rgt-tabs a[href="./full/"]'), src: document.querySelectorAll('.sumpg tr.cdx a').length }));
+    if (!s.full) fail(slug + ' summary: no See the full report link or tab switch');
     if (s.src) fail(slug + ' summary: dropdowns contain source links');
     ok(slug + ' summary: 10 rows, ' + s.tog + ' with a dropdown');
   }
