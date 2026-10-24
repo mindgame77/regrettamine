@@ -45,8 +45,9 @@
   const wordy = (w) => { const c = w.replace(/[^A-Z]/g, ''); return c.length >= 3 && /[AEIOUY]/.test(c) && !has(SEC_KEEP, w.replace(/[,;:)(]+$/, '')) && !has(SEC_KEEP, c); };
   const capsRuns = (t) => t.replace(/\b[A-Z][A-Z0-9.&'’\-\/]*(?:,?\s+[A-Z0-9][A-Z0-9.&'’\-\/]*)*/g, (m) => {
     const ws = m.split(/\s+/);
-    if (ws.length === 1) return STATUS_CAPS.has(m) ? m[0] + m.slice(1).toLowerCase() : m;
-    return ws.filter(wordy).length >= 2 ? secTitle(m) : m; });
+    if (ws.length >= 2 && ws.filter(wordy).length >= 2) return secTitle(m);
+    // A status word stays in normal case wherever it sits in the run ('… SEC 801-122957, ACTIVE' -> '… Active').
+    return m.replace(/\b[A-Z]+\b/g, (w) => STATUS_CAPS.has(w) ? w[0] + w.slice(1).toLowerCase() : w); });
   const nice = (t) => t ? capsRuns(secTitle(String(t))).replace(/(,\s*)([A-Z][a-z])(?=$|[\s,;)])/g, (m, a, b) => a + b.toUpperCase()) : t;
   const safeUrl = (u) => /^https?:\/\//i.test(u || '') ? u : null;
   const ROOT = window.REGRET_ROOT || '';
@@ -80,6 +81,10 @@
     const p = st === 'active' ? '<span class="cs cs-act">Active</span>' : st === 'closed' ? '<span class="cs cs-cl">Closed</span>' : '';
     return '<div class="fct' + (st === 'active' ? ' act' : '') + '">' + p + (f.needs_proof ? '<span class="np">Needs proof</span>' : '') + head + esc(who) + esc(f.text) + '<div class="src">' + src + '</div></div>';
   }
+  function itemHtml(x) {
+    const meta = [x.who, x.year, x.status && x.status[0].toUpperCase() + x.status.slice(1)].filter(Boolean).map(esc).join(' · ');
+    return '<div class="fct"><b>' + esc(x.title ? nice(x.title) : COPY.table.untitled) + '</b>' + (meta ? ' · ' + meta : '') + (x.note ? '<br>' + esc(nice(x.note)) : '') + '</div>';
+  }
   const spill = (st) => st === 'active' ? '<span class="cs cs-act">Active</span>' : st === 'closed' ? '<span class="cs cs-cl">Closed</span>' : '';
   // /full/ keeps the 906d82a design: the old 10-checks list with evidence rows (the checks table is only on /vc/<slug>/)
   function checkRows(P) {
@@ -91,7 +96,13 @@
         + spill(e.status) + '<span class="lkk">' + COPY.locked + '</span></button>').join('');
       const rank = (f) => caseStatus(f) === 'active' ? 0 : 1;
       const fs = (det[r.n] || []).map((f, i) => [f, i]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map(x => x[0]);
-      const d = P.open ? (fs.length ? fs.map(factHtml).join('') : '<div class="fct">' + COPY.no_facts + '</div>') : '';
+      // The row's count ('4 records') comes from the check's itemized findings (firm_page checks[].items, also used on the
+      // summary page). With no firm_details facts for the row, show those findings, so the expansion never says
+      // 'No sourced facts' under a count; when fewer rows than the count are shown, say how many are itemized.
+      const its = (Array.isArray(r.items) ? r.items : []).filter(x => x.title || x.note || x.who), n = cnum(r.count);
+      const useIts = !fs.length && its.length > 0, shown = useIts ? its.length : fs.length;
+      const part = n > shown && shown ? '<div class="fct">' + esc(fmt(COPY.table.partial, { n, count: r.count, m: shown })) + '</div>' : '';
+      const d = P.open ? (useIts ? part + its.map(itemHtml).join('') : fs.length ? part + fs.map(factHtml).join('') : '<div class="fct">' + COPY.no_facts + '</div>') : '';
       return '<div class="row' + (r.n === 10 ? ' last' : '') + (P.open ? ' tog' : '') + '" id="check-' + r.n + '"><span class="n">' + String(r.n).padStart(2, '0') + '</span><div class="tx"><b>' + esc(r.title) + '</b><span>' + esc(r.descr) + '</span></div>'
         + '<div class="pc">' + pill(r.state) + cnt + '</div><span class="lk"></span><div class="gl">' + gl + '</div><div class="det">' + d + '</div></div>';
     }).join('') + '</div>';
