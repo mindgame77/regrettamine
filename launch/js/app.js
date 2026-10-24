@@ -482,20 +482,31 @@
   }
   // Save button by the firm name, on every firm page (checked or not). Signed out: opens the sign-in popup (data-open, handled above).
   // Signed in: shows the saved state from my_firms() (my_checks() fallback) and toggles watch_fund / unwatch_fund.
+  // A click that lands before the session / saved state is known is queued and applied once they are (first click always counts).
+  // saveBtn() runs more than once per load: only the newest run wires the button, and a saved-state read that started before
+  // a click never overwrites what the click set.
+  let SAVE_GEN = 0, SAVE_Q = false, SAVE_N = 0;
   async function saveBtn() {
     const b = main.querySelector('[data-save]'); if (!b || !sb) return;
+    const g = ++SAVE_GEN;
     const set = (on) => { b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); b.querySelector('span').textContent = on ? T.saved : T.save_btn; };
+    if (!b.dataset.open) b.onclick = () => { SAVE_Q = true; };
     const ss = await session();
-    if (!ss) { set(false); b.dataset.open = 'signup'; b.onclick = null; return; }
+    if (g !== SAVE_GEN) return;
+    if (!ss) { set(false); b.dataset.open = 'signup'; b.onclick = null; if (SAVE_Q) { SAVE_Q = false; b.click(); } return; }
     delete b.dataset.open;
-    const r = (await myFirms().catch(() => [])).find(x => x.slug === main.dataset.firm);
-    set(!!(r && r.saved));
-    b.onclick = async () => {
+    const toggle = async () => {
       // Show 'Saved' right away; put it back only if the save fails.
-      const on = !b.classList.contains('on'); b.disabled = true; set(on);
+      SAVE_N++; const on = !b.classList.contains('on'); b.disabled = true; set(on);
       const { data: d, error } = await sb.rpc(on ? 'watch_fund' : 'unwatch_fund', { p_slug: main.dataset.firm });
       b.disabled = false; if (error || (on && !(d && d.saved))) set(!on);
     };
+    const n = SAVE_N;
+    const r = (await myFirms().catch(() => [])).find(x => x.slug === main.dataset.firm);
+    if (g !== SAVE_GEN) return;
+    if (n === SAVE_N) set(!!(r && r.saved));
+    b.onclick = () => { SAVE_Q = false; toggle(); };
+    if (SAVE_Q) { SAVE_Q = false; toggle(); }
   }
   // Summary page, 10 checks not all done (page views never move the firm in the queue). While it is queued or claimed, poll every 10 s,
   // re-render with the real rows when a check finishes or the claim changes (the Checking view shows only while claimed),
