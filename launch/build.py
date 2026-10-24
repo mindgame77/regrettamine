@@ -76,7 +76,8 @@ def firm_head(F, full=False):
     ld = {'@context': 'https://schema.org', '@type': 'WebPage', 'name': F['name'] + S['title_suffix'], 'url': url, 'about': org,
           'isAccessibleForFree': False, 'hasPart': {'@type': 'WebPageElement', 'isAccessibleForFree': False, 'cssSelector': '.gveil'}}
     ldj = json.dumps(ld, ensure_ascii=False, separators=(',', ':')).replace('<', '\\u003c').replace('>', '\\u003e').replace('&', '\\u0026')
-    return (('<meta name="robots" content="noindex, follow">' if full else '') + f'<meta name="description" content="{d}"><link rel="canonical" href="{url}">'
+    # /full/ and 'Not checked yet' pages (indexable false: no research yet) are noindex, follow
+    return (('<meta name="robots" content="noindex, follow">' if full or F.get('indexable') is False else '') + f'<meta name="description" content="{d}"><link rel="canonical" href="{url}">'
             f'<meta property="og:type" content="website"><meta property="og:site_name" content="{S["brand"]}"><meta property="og:title" content="{title}">'
             f'<meta property="og:description" content="{d}"><meta property="og:url" content="{url}"><meta name="twitter:card" content="summary">'
             f'<script type="application/ld+json">{ldj}</script>')

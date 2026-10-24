@@ -29,7 +29,8 @@ export function firmHead(F, full = false) {
     isAccessibleForFree: false, hasPart: { '@type': 'WebPageElement', isAccessibleForFree: false, cssSelector: '.gveil' } };
   const ldj = JSON.stringify(ld).replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026');
   // /full/ is noindex, follow (Alex, Oct 23) with a self canonical; it is also left out of the sitemaps.
-  return (full ? '<meta name="robots" content="noindex, follow">' : '') + `<meta name="description" content="${d}"><link rel="canonical" href="${url}">` +
+  // 'Not checked yet' pages (firm_meta.indexable false: no research yet) are noindex, follow too, and not in the sitemaps.
+  return (full || F.indexable === false ? '<meta name="robots" content="noindex, follow">' : '') + `<meta name="description" content="${d}"><link rel="canonical" href="${url}">` +
     `<meta property="og:type" content="website"><meta property="og:site_name" content="${BRAND}"><meta property="og:title" content="${title}">` +
     `<meta property="og:description" content="${d}"><meta property="og:url" content="${url}"><meta name="twitter:card" content="summary">` +
     `<script type="application/ld+json">${ldj}</script>`;

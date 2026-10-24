@@ -455,7 +455,11 @@
   }
   // Company page: one firm_page() call returns everything (locked: counts + one line per section only).
   let BAL = null, PAGE = null, VIEW = null, SEC = '';
+  // 'Not checked yet' page (no research yet): no credit is ever spent; send the visitor to the request-a-check form instead.
+  const unchecked = () => !!(PAGE && PAGE.unchecked && !PAGE.open);
+  const toRequest = () => { location.href = liveUrl((PAGE && PAGE.firm && PAGE.firm.name) || main.dataset.firm); };
   async function openPay(sec) {
+    if (unchecked()) return toRequest();
     SEC = sec || '';
     $('#pph').textContent = VIEW ? VIEW.head(SEC) : C.copy.site.pay.title;
     $('#pmsg2').textContent = '';
@@ -553,6 +557,7 @@
     if (error || !data) { if (spend) $('#pmsg2').textContent = T.error; else loadFail(); return; }
     if (!spend && !['ok', 'need_signup', 'out'].includes(data.status)) return loadFail();
     if (data.status === 'ok') { if (data.open) closeOv($('#paycase')); return draw(data); }
+    if (data.status === 'unchecked') return toRequest();
     if (data.status === 'need_signup') { $('#pmsg2').textContent = T.need_signup; const g = $('#panon'); g.hidden = false; g.classList.add('hi'); $('#usecheck').disabled = true; }
     if (data.status === 'out') { $('#pmsg2').textContent = T.out; $('#usecheck').disabled = true; }
   }
@@ -568,11 +573,14 @@
     // "Check with 1 credit" on a locked page (summary and /full/): spend 1 (free checks first, signed out too) and reveal both pages.
     // need_signup -> sign-in popup; out (signed in, 0 credits) -> Pricing.
     main.addEventListener('click', async (e) => {
-      const b = e.target.closest('[data-gate]'); if (!b || !sb) return;
+      const b = e.target.closest('[data-gate]'); if (!b) return;
+      if (unchecked()) return toRequest();
+      if (!sb) return;
       const G = C.copy.company.gate, m = b.parentNode.querySelector('.gmsg'); b.disabled = true; b.textContent = G.busy; m.textContent = '';
       const { data, error } = await Promise.resolve(sb.rpc('firm_page', { p_slug: main.dataset.firm, p_anon: anonId(), p_spend: true })).catch(x => ({ error: x }));
       b.disabled = false; b.textContent = G.button;
       if (!error && data && data.status === 'ok' && data.open) { draw(data); paint(); return; }
+      if (data && data.status === 'unchecked') return toRequest();
       if (data && data.status === 'need_signup') { m.textContent = G.signin; return open('signup'); }
       if (data && data.status === 'out') { m.textContent = G.out; return open('paywall'); }
       m.textContent = G.error;
