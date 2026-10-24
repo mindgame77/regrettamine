@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
-import { renderFirm, sitemapIndex, sitemapPart, parseFirmPath, fillFirm } from './firm.mjs';
+import { renderFirm, sitemapIndex, sitemapPart, parseFirmPath, fillFirm, firmHead } from './firm.mjs';
 
 const OUT = new URL('../../site-launch/', import.meta.url);
 const DATA = new URL('../../data/launch/', import.meta.url);
@@ -69,14 +69,23 @@ test('DB down -> 503, not cached as a 404', async () => {
   assert.equal(r.status, 503); assert.equal(r.headers.get('cache-control'), 'no-store');
 });
 
+test('full report is noindex, follow with self canonical; summary indexable; paywall JSON-LD', () => {
+  const F = { name: 'A', slug: 'a' };
+  const s = firmHead(F), f = firmHead(F, true);
+  assert.ok(!s.includes('noindex')); assert.ok(s.includes('<link rel="canonical" href="https://regretamin.com/vc/a/">'));
+  assert.ok(f.startsWith('<meta name="robots" content="noindex, follow">')); assert.ok(f.includes('<link rel="canonical" href="https://regretamin.com/vc/a/full/">'));
+  for (const h of [s, f]) assert.ok(h.includes('"isAccessibleForFree":false,"hasPart":{"@type":"WebPageElement","isAccessibleForFree":false,"cssSelector":".gveil"}'));
+});
+
 test('split sitemaps', async () => {
   const idx = await (await sitemapIndex({ env, fetchImpl: db() })).text();
   assert.equal((idx.match(/<sitemap>/g) || []).length, 3); // static + 2 firm files for 12,345 firms
   assert.ok(idx.includes('https://regretamin.com/sitemaps/firms-2.xml'));
   const p1 = await (await sitemapPart({ name: 'firms-1.xml', env, fetchImpl: db() })).text();
-  assert.equal((p1.match(/<url>/g) || []).length, 20000);
+  assert.equal((p1.match(/<url>/g) || []).length, 10000);
+  assert.ok(!p1.includes('/full/')); // /full/ is noindex, not in sitemaps
   const p2 = await (await sitemapPart({ name: 'firms-2.xml', env, fetchImpl: db() })).text();
-  assert.equal((p2.match(/<url>/g) || []).length, 4690);
+  assert.equal((p2.match(/<url>/g) || []).length, 2345);
   assert.ok(p2.includes('<lastmod>2026-10-01</lastmod>'));
   assert.equal((await sitemapPart({ name: 'firms-3.xml', env, fetchImpl: db() })).status, 404);
   assert.equal((await sitemapPart({ name: 'x.xml', env, fetchImpl: db() })).status, 404);

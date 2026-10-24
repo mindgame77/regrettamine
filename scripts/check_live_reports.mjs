@@ -68,10 +68,37 @@ try {
   }
 
   // Sitemap
+  // regretamin.com (GitHub Pages) serves one <urlset>; Cloudflare serves a <sitemapindex>
+  // whose child locs use the canonical host, so fetch each child from BASE.
   const sm = await page.request.get(BASE + 'sitemap.xml');
-  const xml = sm.ok() ? await sm.text() : '';
+  let xml = sm.ok() ? await sm.text() : '';
+  let kind = 'urlset';
+  if (/<sitemapindex/.test(xml)) {
+    kind = 'index';
+    const kids = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => new URL(m[1]).pathname.replace(/^\//, ''));
+    let all = '';
+    for (const k of kids) {
+      const r = await page.request.get(BASE + k); const t = r.ok() ? await r.text() : '';
+      if (!/<urlset/.test(t)) fail('sitemap child ' + k + ' missing or invalid (' + r.status() + ')'); else all += t;
+    }
+    xml = kids.length ? all : '';
+  }
   if (!/<urlset/.test(xml)) fail('sitemap.xml missing or invalid (' + sm.status() + ')');
-  else { const miss = FIRMS.filter(s => !xml.includes('/vc/' + s + '/')); miss.length ? fail('sitemap.xml lacks ' + miss.join(',')) : ok('sitemap.xml: ' + (xml.match(/<loc>/g) || []).length + ' urls'); }
+  else { const miss = FIRMS.filter(s => !xml.includes('/vc/' + s + '/')); miss.length ? fail('sitemap.xml lacks ' + miss.join(',')) : ok('sitemap.xml (' + kind + '): ' + (xml.match(/<loc>/g) || []).length + ' urls'); }
+  if (/\/full\/<\/loc>/.test(xml)) fail('sitemap lists /full/ pages (they are noindex)'); else ok('sitemap: no /full/ pages');
+
+  // SEO head: summary indexable + self canonical; /full/ noindex, follow + self canonical; paywall JSON-LD on both
+  for (const slug of FIRMS) for (const full of [false, true]) {
+    const path = 'vc/' + slug + '/' + (full ? 'full/' : ''), r = await page.request.get(BASE + path), h = r.ok() ? await r.text() : '';
+    const robots = (h.match(/<meta name="robots" content="([^"]*)"/) || [])[1] || '';
+    const canon = (h.match(/<link rel="canonical" href="([^"]*)"/) || [])[1] || '';
+    const ld = [...h.matchAll(/<script type="application\/ld\+json">([^<]*)<\/script>/g)].map(m => { try { return JSON.parse(m[1]); } catch (_) { return {}; } }).find(o => o['@type'] === 'WebPage') || {};
+    const errs = [];
+    if (full ? robots !== 'noindex, follow' : /noindex/.test(robots)) errs.push('robots=' + (robots || 'none'));
+    if (canon !== 'https://regretamin.com/' + path) errs.push('canonical=' + canon);
+    if (ld.isAccessibleForFree !== false || !ld.hasPart || ld.hasPart.isAccessibleForFree !== false || ld.hasPart.cssSelector !== '.gveil') errs.push('JSON-LD paywall markup missing');
+    errs.length ? fail(path + ': ' + errs.join('; ')) : ok(path + ': ' + (full ? 'noindex, follow' : 'indexable') + ', self canonical, paywall JSON-LD');
+  }
 
   // Signed-out account prompt
   await page.goto(BASE + 'account/', { waitUntil: 'domcontentloaded', timeout: 45000 });

@@ -3,7 +3,7 @@
 export const SITE = 'https://regretamin.com/';
 export const SUFFIX = ' · Regretamin';
 export const BRAND = 'Regretamin';
-export const SITEMAP_SIZE = 10000; // firms per sitemap file (2 URLs each => 20,000 URLs, under the 50,000 limit)
+export const SITEMAP_SIZE = 10000; // firms per sitemap file (1 URL each; /full/ is noindex and not listed)
 const SLUG_RE = /^[a-z0-9][a-z0-9-]{0,99}$/;
 
 // Same as Python html.escape(s, quote=True)
@@ -24,9 +24,12 @@ export function firmHead(F, full = false) {
   if (F.primary_domain) org.url = 'https://' + F.primary_domain;
   if (F.hq) org.address = F.hq;
   if (F.founded_year) org.foundingDate = String(F.founded_year);
-  const ld = { '@context': 'https://schema.org', '@type': 'WebPage', name: F.name + SUFFIX, url, about: org };
+  // Paywalled-content markup: the check table (.gveil, blurred until 1 credit is spent) is not free.
+  const ld = { '@context': 'https://schema.org', '@type': 'WebPage', name: F.name + SUFFIX, url, about: org,
+    isAccessibleForFree: false, hasPart: { '@type': 'WebPageElement', isAccessibleForFree: false, cssSelector: '.gveil' } };
   const ldj = JSON.stringify(ld).replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026');
-  return `<meta name="description" content="${d}"><link rel="canonical" href="${url}">` +
+  // /full/ is noindex, follow (Alex, Oct 23) with a self canonical; it is also left out of the sitemaps.
+  return (full ? '<meta name="robots" content="noindex, follow">' : '') + `<meta name="description" content="${d}"><link rel="canonical" href="${url}">` +
     `<meta property="og:type" content="website"><meta property="og:site_name" content="${BRAND}"><meta property="og:title" content="${title}">` +
     `<meta property="og:description" content="${d}"><meta property="og:url" content="${url}"><meta name="twitter:card" content="summary">` +
     `<script type="application/ld+json">${ldj}</script>`;
@@ -101,7 +104,7 @@ export async function sitemapPart({ name, env, fetchImpl = fetch }) {
     if (!rows.length) return new Response('Not found', { status: 404 });
     urls = rows.flatMap((r) => {
       const lm = r.updated_at ? String(r.updated_at).slice(0, 10) : null;
-      return ['', 'full/'].map((x) => ({ loc: `${SITE}vc/${r.slug}/${x}`, lastmod: lm }));
+      return [{ loc: `${SITE}vc/${r.slug}/`, lastmod: lm }]; // /full/ is noindex: not listed
     });
   }
   const body = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
