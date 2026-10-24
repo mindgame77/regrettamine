@@ -4,7 +4,7 @@ All copy, plans and section presentation come from launch/copy.json (also handed
 Output: site-launch/. Deploy to the preview with launch/deploy_preview.sh (see launch/HOW-TO-CHANGE.md).
 Refresh a snapshot (read-only): run launch/firm_snapshot.sql with :slug, save the JSON as data/launch/<slug>.json;
 then python3 launch/sync_checks.py data/launch/*.json > a new migration to update the 10 check rows."""
-import os, json, html, glob, shutil, hashlib
+import os, json, html, glob, shutil, hashlib, urllib.request
 from legal import privacy, terms
 E = html.escape
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE); OUT = os.path.join(ROOT, 'site-launch')
@@ -202,6 +202,30 @@ def how_we_check():
 <h2>{H["corr_h2"]}</h2><div class="card corr"><p>{H["corr_p"]}</p><a class="btn w" href="mailto:{H["corr_email"]}?subject={H["corr_subject"]}">{H["corr_button"]}</a></div>
 <p class="dis">{H["disclaimer"]}</p></main>'''
 
+def _rpc(fn, args):
+    req = urllib.request.Request(f"{CFG['url']}/rest/v1/rpc/{fn}", json.dumps(args).encode(),
+        {'apikey': CFG['key'], 'authorization': 'Bearer ' + CFG['key'], 'content-type': 'application/json'})
+    with urllib.request.urlopen(req, timeout=30) as r: return json.load(r)
+
+def launch_firms():
+    """Every firm that passes the publish rule (PR #78), from firm_sitemap + firm_meta, the same RPCs the Cloudflare
+    edge uses, so both hosts build the same pages. Without SUPABASE_URL/ANON_KEY (local tests) fall back to data/launch/*.json.
+    An RPC failure fails the build rather than shipping a partial site."""
+    if not (CFG['url'] and CFG['key']):
+        return [json.load(open(p))['firm'] for p in sorted(glob.glob(os.path.join(ROOT, 'data', 'launch', '*.json')))]
+    slugs, page_n = [], 1
+    while True:
+        rows = _rpc('firm_sitemap', {'p_page': page_n, 'p_size': 1000})
+        slugs += [r['slug'] for r in rows]
+        if len(rows) < 1000: break
+        page_n += 1
+    firms = []
+    for slug in slugs:
+        rows = _rpc('firm_meta', {'p_slug': slug})
+        if rows: firms.append(rows[0])
+    if not firms: raise SystemExit('launch build: firm_sitemap returned no published firms')
+    return firms
+
 def main():
     shutil.rmtree(OUT, ignore_errors=True); os.makedirs(OUT)
     for f in ('style.css', 'logo.svg', 'js/app.js', 'js/company.js'): shutil.copy(os.path.join(HERE, f), OUT)
@@ -214,8 +238,8 @@ def main():
     nf = COPY.get('not_found', {'h1': 'We could not find that firm', 'p': 'It may not be checked yet. Search for it and we will start a check.'})
     page(os.path.join(OUT, '_tpl', '404.html'), f'<main class="wrap"><div class="hero"><h1>{E(nf["h1"])}</h1><p>{E(nf["p"])}</p>{SB()}</div></main>', '/', 'Not found' + S['title_suffix'], head='<meta name="robots" content="noindex">')
     tpl = {v: open(os.path.join(OUT, '_tpl', v + '.html')).read() for v in ('summary', 'full')}
-    for p in sorted(glob.glob(os.path.join(ROOT, 'data', 'launch', '*.json'))):
-        F = json.load(open(p))['firm']; firms.append(F['slug'])
+    for F in launch_firms():
+        firms.append(F['slug'])
         for v, sub in (('summary', ''), ('full', 'full')):
             d = os.path.join(OUT, 'vc', F['slug'], sub); os.makedirs(d, exist_ok=True)
             open(os.path.join(d, 'index.html'), 'w').write(fill(tpl[v], F, v == 'full'))
