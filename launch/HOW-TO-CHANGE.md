@@ -68,3 +68,12 @@ Codes live only in Stripe (no repo or DB change). Make them in **Test mode** fir
 4. Customers who enter the code see a dashed "Unlocked with code" card; checks per month come from the price's `checks`.
 
 To stop a code: open the promotion code → **Archive** (or make it inactive). Live codes need the same steps in Live mode (price IDs differ).
+
+## Firm pages for every published firm (edge rendering)
+- One template per view: build.py writes `site-launch/_tpl/summary.html`, `_tpl/full.html`, `_tpl/404.html` (`{{HEAD}} {{NAME}} {{SLUG}}`).
+- The 30 static pages in `data/launch/` are filled from the same template (GitHub Pages, until the DNS move).
+- On Cloudflare Pages, `launch/functions/vc/[[path]].js` serves `/vc/<slug>/` and `/vc/<slug>/full/` for every firm that is
+  published, real, not test, not deleted (`firm_meta` RPC), 404 otherwise; cached 1h at the edge.
+- `/sitemap.xml` (Cloudflare) is an index: `sitemaps/static.xml` + `sitemaps/firms-N.xml` (10,000 firms each, `firm_sitemap` RPC).
+- `launch/edge/firm.mjs` mirrors build.py `firm_head`/`fill`; `node --test launch/edge/firm.test.mjs` checks they match.
+- Cloudflare env vars: SUPABASE_URL, SUPABASE_ANON_KEY (Pages project settings). Deploy secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID.
