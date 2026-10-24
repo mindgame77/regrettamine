@@ -65,7 +65,7 @@
     $('#ddplan').textContent = P ? fmt(T.plan_menu, { name: P.name, n: P.checks }) : T.plan_free;
     $('#ddleft').textContent = leftOf(ACCT);
     document.querySelectorAll('[data-in]').forEach(x => x.hidden = false);
-    if ($('#account')) paintAccount(); if ($('#mychecks')) paintMyChecks();
+    if ($('#account')) paintAccount(); if ($('#mychecks')) paintMyChecks(); if ($('#myfirms')) paintMyFirms();
   }
   // Account menu
   const dd = $('#acctdd'), ab = $('#acctbtn');
@@ -103,27 +103,10 @@
     const n = (rows || []).length;
     $('#mcn').textContent = n ? pl(n, T.checked_n, { n }) : T.no_checks;
     $('#mcl').textContent = n ? fmt(T.latest, { name: rows[0].name, date: fmtDate(rows[0].checked_at) }) : T.first_check;
-    SAVED = (rows || []).filter(r => r.saved).sort((x, y) => new Date(y.saved_at) - new Date(x.saved_at)); drawSaved();
-  }
-  let SAVED = [];
-  function drawSaved() {
-    $('#svn').textContent = SAVED.length ? String(SAVED.length) : '';
-    $('#svnone').hidden = !!SAVED.length;
-    $('#svrows').innerHTML = SAVED.map(r => {
-      const url = ROOT + 'vc/' + encodeURIComponent(r.slug) + '/', st = r.active ? pl(r.cases, T.mc_active, r) : r.cases ? pl(r.cases, T.mc_closed, r) : T.mc_none;
-      return '<div class="svr"><button type="button" class="sv on" data-unsave="' + esc(r.slug) + '" aria-label="' + fmt(T.unsave, { name: esc(r.name) }) + '">' + BM + '<span>' + esc(T.saved) + '</span></button>'
-        + '<span><b>' + esc(r.name) + '</b>' + (r.short_name && r.short_name !== r.name ? '<br><span class="m">' + esc(r.short_name) + '</span>' : '') + '</span>'
-        + '<span class="m">' + esc(fmt(T.saved_on, { date: fmtDate(r.saved_at) })) + '</span><span class="m">' + st + '</span><a class="btn o" href="' + esc(url) + '">' + T.open_result + '</a></div>';
-    }).join('');
   }
   const BM = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"/></svg>';
   if ($('#account')) {
     $('#manage').onclick = () => portal($('#amsg'));
-    $('#svrows').onclick = async (e) => {
-      const b = e.target.closest('[data-unsave]'); if (!b) return; b.disabled = true;
-      const { error } = await sb.rpc('unwatch_fund', { p_slug: b.dataset.unsave });
-      if (!error) SAVED = SAVED.filter(r => r.slug !== b.dataset.unsave); drawSaved();
-    };
     $('#emform').onsubmit = async (e) => {
       e.preventDefault(); const email = $('#nem').value.trim(); if (!email) return;
       const { error } = await sb.auth.updateUser({ email }, { emailRedirectTo: location.href.split('#')[0] });
@@ -152,6 +135,47 @@
         $('#delmsg').textContent = await failMsg(error, T.delete_fail); go.disabled = false; return;
       }
       await sb.auth.signOut(); location.href = ROOT;
+    };
+  }
+  // My firms page (/account/firms/): saved + checked firms from my_firms(); falls back to my_checks() until that rpc is live.
+  // Results = counts of firm_check_rows display labels: Clear (clear/nf), Review (review/red), Worth knowing (wk).
+  let MF = [], TAB = 'all';
+  async function myFirms() {
+    const r = await sb.rpc('my_firms'); if (!r.error) return r.data || [];
+    const { data } = await sb.rpc('my_checks'); return (data || []).map(x => Object.assign({ checked: true }, x));
+  }
+  async function paintMyFirms() {
+    MF = (await myFirms()).map(r => Object.assign(r, { checked: !!r.checked_at }));
+    $('#flist').hidden = !MF.length; $('#fempty').hidden = !!MF.length; drawFirms();
+  }
+  function drawFirms() {
+    const F = C.copy.site.my_firms, q = $('#fq').value.trim().toLowerCase();
+    const n = { all: MF.length, saved: MF.filter(r => r.saved).length, checked: MF.filter(r => r.checked).length };
+    Object.keys(n).forEach(k => { $('#fn-' + k).textContent = n[k]; });
+    document.querySelectorAll('#myfirms [data-tab]').forEach(t => { const on = t.dataset.tab === TAB; t.classList.toggle('on', on); t.setAttribute('aria-selected', on); });
+    const rows = MF.filter(r => (TAB === 'all' || r[TAB]) && (!q || (r.name + ' ' + (r.short_name || '') + ' ' + (r.hq || '')).toLowerCase().includes(q)));
+    $('#fnone').hidden = !!rows.length; $('#fnone').textContent = TAB === 'saved' && !q ? F.none_saved : F.none;
+    $('#frows').innerHTML = rows.map(r => {
+      const url = ROOT + 'vc/' + encodeURIComponent(r.slug) + '/';
+      const pill = (k, c) => r[k] ? '<span class="mp ' + c + '"><i></i>' + r[k] + ' ' + esc(F[k]) + '</span>' : '';
+      const res = !r.checked ? '<span class="nc">' + esc(F.not_checked) + '</span>' : r.clear == null ? '<span class="nc">—</span>'
+        : '<span class="pls">' + pill('clear', 'c') + pill('review', 'r') + pill('wk', 'w') + '</span>';
+      return '<div class="mfr"><button type="button" class="star' + (r.saved ? ' on' : '') + '" data-star="' + esc(r.slug) + '" aria-pressed="' + !!r.saved + '" aria-label="' + fmt(r.saved ? T.unsave : T.save, { name: esc(r.name) }) + '">★</button>'
+        + '<span class="nm3"><a href="' + esc(url) + '"><b>' + esc(r.name) + '</b></a>' + (r.hq ? '<small>' + esc(r.hq) + '</small>' : '') + '</span>'
+        + '<span class="dt">' + (r.checked ? esc(fmtDate(r.checked_at)) : '—') + '</span>' + res
+        + (r.checked ? '<a class="btn o" href="' + esc(url) + '">' + esc(F.open) + '</a>' : '<a class="btn" href="' + esc(url) + '">' + esc(F.check) + '</a>') + '</div>';
+    }).join('');
+  }
+  if ($('#myfirms')) {
+    $('#fq').oninput = drawFirms;
+    document.querySelectorAll('#myfirms [data-tab]').forEach(t => { t.onclick = () => { TAB = t.dataset.tab; drawFirms(); }; });
+    $('#frows').onclick = async (e) => {
+      const b = e.target.closest('[data-star]'); if (!b) return;
+      const r = MF.find(x => x.slug === b.dataset.star), on = !r.saved; b.disabled = true;
+      const { data, error } = await sb.rpc(on ? 'watch_fund' : 'unwatch_fund', { p_slug: r.slug });
+      if (!error && (!on || (data && data.saved))) r.saved = on;
+      if (!r.saved && !r.checked) MF = MF.filter(x => x !== r);
+      drawFirms();
     };
   }
   // My checks page
@@ -386,15 +410,16 @@
     if (n <= 0) $('#pmsg2').textContent = BAL.signed_in ? T.pick_more : T.sign_more;
     ub.disabled = n <= 0;
   }
-  // Save button by the firm name: only for signed-in users who have checked this firm (my_checks); no cap.
+  // Save button by the firm name, on every firm page (checked or not). Signed out: opens the sign-in popup (data-open, handled above).
+  // Signed in: shows the saved state from my_firms() (my_checks() fallback) and toggles watch_fund / unwatch_fund.
   async function saveBtn() {
     const b = main.querySelector('[data-save]'); if (!b || !sb) return;
-    const { data: ss } = await sb.auth.getSession().catch(() => ({ data: {} }));
-    if (!(ss && ss.session)) { b.hidden = true; return; }
-    const { data } = await sb.rpc('my_checks'); const r = (data || []).find(x => x.slug === main.dataset.firm);
-    if (!r) { b.hidden = true; return; }
     const set = (on) => { b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); b.querySelector('span').textContent = on ? T.saved : T.save_btn; };
-    set(!!r.saved); b.hidden = false;
+    const { data: ss } = await sb.auth.getSession().catch(() => ({ data: {} }));
+    if (!(ss && ss.session)) { set(false); b.dataset.open = 'signup'; b.onclick = null; return; }
+    delete b.dataset.open;
+    const r = (await myFirms()).find(x => x.slug === main.dataset.firm);
+    set(!!(r && r.saved));
     b.onclick = async () => {
       const on = !b.classList.contains('on'); b.disabled = true;
       const { data: d, error } = await sb.rpc(on ? 'watch_fund' : 'unwatch_fund', { p_slug: main.dataset.firm });
@@ -438,12 +463,12 @@
     };
   }
   function draw(P) {
-    PAGE = P; VIEW = window.RegretCompany[main.dataset.view === 'summary' ? 'summary' : 'render'](main, P, ST); saveBtn(); checking();
+    PAGE = P; VIEW = window.RegretCompany[main.dataset.view === 'summary' ? 'summary' : 'render'](main, P, ST); main.classList.remove('ld'); saveBtn(); checking();
     const id = decodeURIComponent(location.hash.slice(1)), t = id && document.getElementById(id);
     if (t) t.scrollIntoView();
   }
   async function loadPage(spend) {
-    if (!sb) return;
+    if (!sb) { main.classList.remove('ld'); return; }
     const { data, error } = await sb.rpc('firm_page', { p_slug: main.dataset.firm, p_anon: anonId(), p_spend: spend });
     if (error || !data) { if (spend) $('#pmsg2').textContent = T.error; return; }
     if (data.status === 'ok') { if (data.open) closeOv($('#paycase')); return draw(data); }
