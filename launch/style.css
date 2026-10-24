@@ -309,3 +309,5 @@ nav .r a.on{color:var(--vio);font-weight:700}
 .cbox .btn{width:100%}.cbox .cmsg{margin-top:8px;font-weight:600;color:#1a1530}.cbox .cmsg:empty{display:none}.cbox .cclose{margin-top:10px;color:#8C88A3}
 .cwhat{background:#FBF9FF;border-color:#E3DAFF}
 @media (max-width:860px){.sumpg.checking{display:block}.cside{position:static}}
+.sumpg.checking .row{grid-template-columns:36px 1fr auto;padding:11px 18px;gap:10px}.sumpg.checking .row:after{display:none}.sumpg.checking .row .pc{justify-self:end}.sumpg.checking .tx b{font-size:15px}.sumpg.checking .tx span{font-size:13px}
+.sumpg.checking .row .det{display:none}

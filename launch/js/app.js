@@ -411,7 +411,7 @@
   }
   async function pollChecks() {
     if (document.hidden) return;
-    const { data } = await sb.rpc('firm_check_status', { p_slug: main.dataset.firm }).catch(() => ({}));
+    const { data } = await Promise.resolve(sb.rpc('firm_check_status', { p_slug: main.dataset.firm })).catch(() => ({}));
     if (!data || data.status !== 'ok') return;
     const was = PAGE ? (PAGE.checks || []).filter(r => r.state !== 'nc').length : -1;
     ST = data;
