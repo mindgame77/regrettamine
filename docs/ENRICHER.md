@@ -14,13 +14,18 @@ Body:
    "confirm": [], "fix": [{"field": "people[Name].current", "bot_value": "...", "correct_value": "...", "source_url": "https://..."}],
    "add": [{"field": "...", "value": "...", "source_url": "https://..."}],
    "leads": [{"field": "...", "value": "...", "source_url": "https://..."}],
+   "owned_media": [{"url": "https://www.seedtoscale.com", "label": "SeedToScale (Accel podcast)"}, "https://www.youtube.com/@accel"],
    "notes": "...",
    "searches": [{"section": "board_seats", "site": "sec.gov", "query": "...", "searched_at": "2026-10-24T10:00:00-07:00", "result": "found|none|blocked|error", "item_count": 0}]}}
 ```
 
 Rules: every item needs a source URL; .gov/.mil are rejected except sec.gov and courts (courtlistener, uscourts, PACER);
 AUM must contain a number; leads/allegations are shown as "Lead" / Unverified; founder quotes from the firm's own accounts are labelled not independent.
-Fixes never edit the friend's rows: they go to `firm_corrections` and override what the page shows. Resubmitting a firm replaces the previous enrichment.
+Own media: a founder or press item is the firm's own media (`independent=false`, outlet text gets "· Own media") when its URL is on the
+firm's domain or social handles, or on an entry of the per-firm `firm_owned_media` list (a podcast, YouTube channel, newsletter or blog the
+firm runs). Send `owned_media` (URLs, or `{url, label}`; a path such as `/@handle` limits the match to that channel). Entries from the
+latest enrichment replace earlier enricher entries; manual entries (e.g. Accel's seedtoscale.com) stay.
+Fixes never edit the friend's rows: they go to `firm_corrections` and override what the page shows. A people fix targets the named person's row (friend or enricher row); with no match it shows as its own "Correction" row. Resubmitting a firm replaces the previous enrichment.
 The reply lists accepted/rejected items with a reason, plus `bot_feedback`.
 
 Views (service role): `firm_section_status`, `firm_site_coverage`, `site_search_stats`, `feedback_pattern_stats`; RPC `next_firms_to_enrich(p_limit)`.
