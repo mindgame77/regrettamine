@@ -29,7 +29,7 @@ Several people paying for the same firm share one job; each gets their own reque
 Only `bot_id = "toxy-researcher-3"` claims paid jobs, and every other bot_id never gets a paid-lane firm. Use the same
 research-ingest endpoint and ingest key as the other researchers.
 
-Claim size: other bots can claim up to 300 normal-lane firms per `claim` call (`count` 1-300, default 1; it was 5). The paid lane still hands out one paid firm per call. Claims use skip-locked, so two bots never get the same firm, and unfinished claims go back to the queue after 2 hours.
+Claim size: other bots can claim up to 300 normal-lane firms per `claim` call (`count` 1-300, default 1; it was 5). The paid lane still hands out one paid firm per call. Claims use skip-locked, so two bots never get the same firm, and unfinished claims go back to the queue after 6 hours.
 
 `POST https://sxxgvkdwgiouyqciztec.supabase.co/functions/v1/research-ingest`
 headers `x-ingest-key: <ingest key>`, `content-type: application/json`
@@ -50,7 +50,7 @@ headers `x-ingest-key: <ingest key>`, `content-type: application/json`
    A valid submission runs the usual `ensure_firm_for_registry` path (page created / upgraded), then trigger
    `zz_ondemand_done` marks the job and all its requests `done` and moves the firm back to the normal lane.
    Invalid (422): fix all errors and resubmit once, same registry_id and bot_id.
-4. **Can't finish**: `{"action": "fail", ...}` / `{"action": "skip", ...}` as usual. A claim older than 2 h is released back
+4. **Can't finish**: `{"action": "fail", ...}` / `{"action": "skip", ...}` as usual. A claim older than 6 h is released back
    to the paid lane. Anything not done 24 h after the first request is refunded automatically.
 
 Then claim the next one.
