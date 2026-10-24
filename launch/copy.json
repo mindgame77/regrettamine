@@ -297,7 +297,7 @@
    ],
    "nc": [
     "p-g",
-    "Not checked yet"
+    "Waiting"
    ]
   },
   "result": {
@@ -611,7 +611,35 @@
    "10": "Searched public records for government or political roles."
   },
   "searched_nf": "Nothing found.",
-  "searched_nc": "Not checked yet."
+  "searched_nc": "Not checked yet.",
+  "checking": {
+   "_note": "Checking view on /vc/<slug>/ while a firm's 10 checks are not all done (js/company.js summary + js/app.js). {firm}, {done}, {check}, {time}, {email} are filled in.",
+   "title": "Checking {firm}",
+   "progress": "{done} of 10 done · now checking: {check}",
+   "usually": "Usually 5–20 min",
+   "started": "Started {time}",
+   "current": "Checking…",
+   "waiting": "Waiting",
+   "sources": [
+    "Sources",
+    "being collected…"
+   ],
+   "email_h": "Email me when it's ready",
+   "email_p": "We'll send one email with the link when all 10 checks are done.",
+   "email_ph": "you@company.com",
+   "email_aria": "Email",
+   "signed_in": "signed in",
+   "email_btn": "Notify me",
+   "email_ok": "Done. We'll email {email} when the check is ready.",
+   "email_bad": "Please enter a valid email.",
+   "email_limit": "Too many requests. Try again in an hour.",
+   "email_err": "Something went wrong. Please try again.",
+   "close_line": "You can close this page. The check keeps running, and it'll be here when you come back.",
+   "what_h": "What's happening?",
+   "what_p": "We're reading public records: sanctions lists, regulator filings, court dockets and the firm's registration. Each result links to its source.",
+   "complete": "✓ Check complete",
+   "complete_sub": "· 10 of 10 checks · just now"
+  }
  },
  "js": {
   "_note": "Strings used by js/app.js. [one, many] pairs are picked by count. HTML allowed where the code uses innerHTML (values are escaped).",

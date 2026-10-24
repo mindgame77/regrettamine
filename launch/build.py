@@ -65,10 +65,17 @@ def bigsearch(F, cls=''):
 # Save button by the firm name (js/app.js saveBtn shows it only to signed-in users who checked the firm)
 SAVE = f'<button type="button" class="sv" data-save hidden aria-pressed="false"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"/></svg><span>{COPY["js"]["save_btn"]}</span></button>'
 
+def checking_box():  # "Email me when it's ready" + "What's happening?" (shown by js/company.js only while checks are running)
+    K = COPY['company']['checking']
+    return (f'<aside class="cside" hidden><form class="cbox" data-notify><h3>{K["email_h"]}</h3><p>{K["email_p"]}</p>'
+            f'<div class="cin"><input type="email" name="email" required placeholder="{K["email_ph"]}" aria-label="{K["email_aria"]}"><em hidden>{K["signed_in"]}</em></div>'
+            f'<button class="btn">{K["email_btn"]}</button><p class="cmsg" role="status"></p><p class="cclose">{K["close_line"]}</p></form>'
+            f'<div class="cbox cwhat"><p><b>{K["what_h"]}</b> {K["what_p"]}</p></div></aside>')
+
 def summary(F):  # /vc/<slug>/: name + Save, key facts, the 10 checks (closed), "See the full check" (js/company.js summary)
     Q = S['summary']
     return f'''<main class="wrap sumpg unlocked" data-firm="{E(F["slug"])}" data-view="summary"><div class="rh">{bigsearch(F)}</div>
-<div class="fh"><h1>{E(F["name"])}</h1><div>{SAVE}</div></div><div class="kf"></div><div class="list"></div>
+<div class="fh"><h1>{E(F["name"])}</h1><div>{SAVE}</div></div>{checking_box()}<div class="kf"></div><div class="cban" hidden></div><div class="list"></div>
 <div class="full"><div><b>{E(Q["full_h"].format(firm=F["name"]))}</b><p>{Q["full_p"]}</p></div><a href="full/">{Q["full_btn"]}</a></div><p class="fine">{S["result"]["fine"]}</p></main>'''
 
 def result(F):

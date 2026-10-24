@@ -399,8 +399,41 @@
       b.disabled = false; if (!error && (!on || (d && d.saved))) set(on);
     };
   }
+  // Checking view (summary page, 10 checks not all done): bump the firm in the research queue once, poll every 10 s,
+  // re-render with the real rows when a check finishes, and show "Check complete" when all 10 are done.
+  let ST = null, POLL = null, BUMPED = false, NOTIFY = false;
+  async function checking() {
+    if (!sb || !VIEW || !VIEW.checking) { if (POLL) { clearInterval(POLL); POLL = null; } return; }
+    if (!BUMPED) { BUMPED = true; sb.rpc('bump_firm_check', { p_slug: main.dataset.firm, p_anon: anonId() }).then(() => {}, () => {}); }
+    if (!NOTIFY) notifyBox();
+    if (!POLL) POLL = setInterval(pollChecks, 10000);
+    if (!ST) pollChecks();
+  }
+  async function pollChecks() {
+    if (document.hidden) return;
+    const { data } = await sb.rpc('firm_check_status', { p_slug: main.dataset.firm }).catch(() => ({}));
+    if (!data || data.status !== 'ok') return;
+    const was = PAGE ? (PAGE.checks || []).filter(r => r.state !== 'nc').length : -1;
+    ST = data;
+    if (data.done !== was) { if (data.complete) ST.just_done = true; return loadPage(false); }
+    if (VIEW && VIEW.checking) VIEW = window.RegretCompany.summary(main, PAGE, ST);
+  }
+  async function notifyBox() {
+    const f = main.querySelector('[data-notify]'); if (!f) return; NOTIFY = true;
+    const K = C.copy.company.checking, inp = f.email, msg = f.querySelector('.cmsg');
+    const { data: ss } = await sb.auth.getSession().catch(() => ({ data: {} }));
+    const em = ss && ss.session && ss.session.user.email;
+    if (em) { inp.value = em; inp.readOnly = true; f.querySelector('.cin em').hidden = false; }
+    f.onsubmit = async (e) => {
+      e.preventDefault(); const b = f.querySelector('button'); b.disabled = true;
+      const { data, error } = await sb.rpc('notify_when_checked', { p_slug: main.dataset.firm, p_email: inp.value, p_anon: anonId() });
+      b.disabled = false;
+      const st = error ? 'err' : data && data.status;
+      msg.textContent = st === 'ok' ? K.email_ok.replace('{email}', inp.value.trim()) : st === 'bad_email' ? K.email_bad : st === 'rate_limited' ? K.email_limit : K.email_err;
+    };
+  }
   function draw(P) {
-    PAGE = P; VIEW = window.RegretCompany[main.dataset.view === 'summary' ? 'summary' : 'render'](main, P); saveBtn();
+    PAGE = P; VIEW = window.RegretCompany[main.dataset.view === 'summary' ? 'summary' : 'render'](main, P, ST); saveBtn(); checking();
     const id = decodeURIComponent(location.hash.slice(1)), t = id && document.getElementById(id);
     if (t) t.scrollIntoView();
   }
