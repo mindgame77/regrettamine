@@ -62,30 +62,43 @@
     let to; const late = new Promise(r => { to = setTimeout(() => r({ data: {} }), ms); });
     try { const { data } = await Promise.race([sb.auth.getSession(), late]); return (data && data.session) || null; } catch (_) { return null; } finally { clearTimeout(to); }
   };
-  let PAINT_TRY = 0;
-  async function paint() {
-    const b = await balance();
-    if (!b) { // check_balance failed or timed out: keep the header right from the session and try again shortly
-      const s = await session();
-      if (s) hdr(true, s.user && s.user.email); else if (!window.REGRET_AU || !window.REGRET_AU.email || PAINT_TRY > 0) { hdr(false); document.querySelectorAll('[data-out]').forEach(x => x.hidden = false); }
-      if (PAINT_TRY++ < 4) setTimeout(paint, 1500 * PAINT_TRY);
-      return;
+  // paint() can run before the auth client is ready: a cold load with an expired access token waits on a token refresh, and a refresh
+  // or RPC can fail once. Never settle on "signed out" or an empty Account page while a session is still cached: retry with backoff,
+  // and repaint on every auth event that brings a session (INITIAL_SESSION, TOKEN_REFRESHED, SIGNED_IN) until the account is painted.
+  let PAINT_TRY = 0, PAINT_T = 0, PAINTING = null;
+  const cached = () => !!(window.REGRET_AU && window.REGRET_AU.email !== undefined);
+  const retry = () => { if (PAINT_TRY++ < 6) { clearTimeout(PAINT_T); PAINT_T = setTimeout(paint, Math.min(1000 * PAINT_TRY, 4000)); return true; } return false; };
+  function paint() { // one paint at a time; a call during a paint queues one more
+    if (PAINTING) { PAINTING.again = true; return PAINTING.p; }
+    const st = { again: false }; PAINTING = st;
+    st.p = paintOnce().catch(() => { retry(); }).finally(() => { PAINTING = null; if (st.again) paint(); });
+    return st.p;
+  }
+  async function paintOnce() {
+    const b = await balance(5000 + 3000 * PAINT_TRY); // slow network: give each retry longer
+    const s = (!b || !b.signed_in) ? await session() : null;
+    if (!b || (!b.signed_in && s)) { // check_balance failed, or ran before the refreshed token was ready: keep the header from the session
+      if (s) hdr(true, s.user && s.user.email);
+      else if (!cached() || PAINT_TRY > 0) { hdr(false); document.querySelectorAll('[data-out]').forEach(x => x.hidden = false); }
+      retry(); return;
     }
-    PAINT_TRY = 0;
+    if (!b.signed_in && cached() && PAINT_TRY < 2) { retry(); return; } // cached session still being restored: don't flash signed-out yet
     $('#left').textContent = pl(b.left, T.nav_left, { n: b.left, free: b.signed_in ? '' : T.free });
     hdr(b.signed_in);
     document.querySelectorAll('[data-out]').forEach(x => x.hidden = b.signed_in);
-    if (!b.signed_in) { document.querySelectorAll('[data-in]').forEach(x => x.hidden = true); return; }
-    const [{ data: u }, { data: a }] = await Promise.all([sb.auth.getUser(), sb.rpc('my_account')]);
-    if (!u.user || !a) return;
-    ACCT = Object.assign({ email: u.user.email || '' }, a);
+    if (!b.signed_in) { PAINT_TRY = 0; ACCT = null; document.querySelectorAll('[data-in]').forEach(x => x.hidden = true); return; }
+    const [ss, { data: a, error }] = await Promise.all([session(), sb.rpc('my_account')]);
+    const email = (ss && ss.user && ss.user.email) || (window.REGRET_AU && window.REGRET_AU.email) || '';
+    if (error || !a) { retry(); return; } // transient failure: try again instead of leaving the page as a bare heading
+    PAINT_TRY = 0;
+    ACCT = Object.assign({ email }, a);
     $('#av').textContent = (ACCT.email[0] || 'A').toUpperCase();
     $('#ddem').textContent = ACCT.email;
     const P = planOf(ACCT);
     $('#ddplan').textContent = P ? fmt(T.plan_menu, { name: P.name, n: P.checks }) : T.plan_free;
     $('#ddleft').textContent = leftOf(ACCT);
     document.querySelectorAll('[data-in]').forEach(x => x.hidden = false);
-    if ($('#account')) paintAccount(); if ($('#mychecks')) paintMyChecks(); if ($('#myfirms')) paintMyFirms();
+    if ($('#account')) await paintAccount(); if ($('#mychecks')) await paintMyChecks(); if ($('#myfirms')) await paintMyFirms();
   }
   // Account menu
   const dd = $('#acctdd'), ab = $('#acctbtn');
@@ -379,6 +392,8 @@
   if (sb) sb.auth.onAuthStateChange((ev, session) => {
     if ((ev === 'SIGNED_IN' || ev === 'INITIAL_SESSION') && session) { try { const r = JSON.parse(sessionStorage.getItem('rg_ret') || 'null'); sessionStorage.removeItem('rg_ret'); if (r && Date.now() - r.t < 600000 && typeof r.p === 'string' && /^\/vc\/[^/]+\/(full\/)?$/.test(r.p) && r.p !== location.pathname) { location.replace(location.origin + r.p); return; } } catch (x) {} }
     if (ev === 'SIGNED_IN') setTimeout(async () => { await sb.rpc('claim_anon_checks', { p_anon: anonId() }); paint(); }, 0);
+    else if ((ev === 'INITIAL_SESSION' || ev === 'TOKEN_REFRESHED') && session && !ACCT) setTimeout(() => { PAINT_TRY = 0; paint(); }, 0); // session became usable after the first paint
+    if (ev === 'SIGNED_OUT') setTimeout(() => { PAINT_TRY = 0; ACCT = null; paint(); }, 0);
     if ((ev === 'SIGNED_IN' || ev === 'INITIAL_SESSION') && session) { const p = takePend(); if (p) setTimeout(async () => { if ($('#paycase')) open('paycase'); YEARLY = /^y/.test(p.k); drawPlans(); if (p.code) await applyCode(p.code); if (p.k !== 'code' || CODE) buy(p.k); }, 0); }
   });
   const main = document.querySelector('main[data-firm]');
