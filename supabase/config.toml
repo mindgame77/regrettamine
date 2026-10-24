@@ -1,6 +1,8 @@
 project_id = "sxxgvkdwgiouyqciztec"
 [functions.notify-checks]
 verify_jwt = false
+[functions.ondemand-notify]
+verify_jwt = false
 [functions.regretamin-stripe-webhook]
 verify_jwt = false
 [functions.create-checkout]

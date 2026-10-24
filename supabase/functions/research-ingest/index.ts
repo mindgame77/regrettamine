@@ -181,6 +181,11 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       if (error) return json({ error: "server error" }, 500);
       const firms = (data ?? []).map((f: any) => ({ registry_id: f.registry_id, firm_id: f.registry_id, name: f.name, website: f.website,
         country: f.country, state: f.state, hq_city: f.hq_city, sec_crd: f.sec_crd, lei: f.lei, attempts: f.attempts }));
+      // paid on-demand jobs (only toxy-researcher-3 gets them): job id, missing checks, refund deadline (docs/ON_DEMAND.md)
+      if (firms.length && bot === "toxy-researcher-3") {
+        const { data: info } = await db.rpc("ondemand_job_info", { p_ids: firms.map((f: any) => f.registry_id) });
+        for (const f of firms as any[]) if (info?.[f.registry_id]) Object.assign(f, info[f.registry_id]);
+      }
       return json({ firms, none_left: firms.length === 0 });
     }
     case "submit": {

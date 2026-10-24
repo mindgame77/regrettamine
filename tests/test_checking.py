@@ -1,4 +1,4 @@
-"""'Checking this firm': queue bump, progress poll, and the email-me request."""
+"""'Checking this firm': no bump on page view, request-form bump, progress poll, and the email-me request."""
 import json
 import os
 import uuid
@@ -29,21 +29,19 @@ def test_bump_progress_and_notify():
         cur.execute("select min(priority) from research_queue where status = 'queued' and registry_id <> 'zz-1'")
         front = cur.fetchone()[0]
         a = str(uuid.uuid4())
-        r = _j(cur, "select bump_firm_check('zz-chk', %s)", (a,))
-        assert r.get("bumped") is True
+        # page views (people and crawlers) never reorder the queue
+        for _ in range(3):
+            r = _j(cur, "select bump_firm_check('zz-chk', %s)", (str(uuid.uuid4()),))
+            assert r["status"] == "queued" and not r.get("bumped")
+        cur.execute("select priority from research_queue where registry_id = 'zz-1'")
+        assert cur.fetchone()[0] == 900000
+        # the request-a-check form naming the firm moves it to the front
+        cur.execute("select request_check('zz check capital', null, %s)", (a,))
         cur.execute("select priority from research_queue where registry_id = 'zz-1'")
         assert cur.fetchone()[0] == front - 1
-        # same visitor again: rate limited, no change; another visitor: already at the front, no change (idempotent)
-        assert _j(cur, "select bump_firm_check('zz-chk', %s)", (a,))["status"] == "rate_limited"
-        r2 = _j(cur, "select bump_firm_check('zz-chk', %s)", (str(uuid.uuid4()),))
-        assert r2.get("front") and not r2.get("bumped")
+        cur.execute("select request_check('nobody we know', null, %s)", (a,))
         cur.execute("select priority from research_queue where registry_id = 'zz-1'")
         assert cur.fetchone()[0] == front - 1
-        # claimed: never touched
-        cur.execute("update research_queue set status = 'claimed', priority = 900000 where registry_id = 'zz-1'")
-        assert _j(cur, "select bump_firm_check('zz-chk', %s)", (str(uuid.uuid4()),))["status"] == "claimed"
-        cur.execute("select priority, status from research_queue where registry_id = 'zz-1'")
-        assert cur.fetchone() == (900000, "claimed")
         # claim takes the highest priority (lowest number) first
         cur.execute("update research_queue set status = 'queued', priority = -50 where registry_id = 'zz-1'")
         cur.execute("select registry_id from research_claim('t', 1)")
@@ -59,7 +57,7 @@ def test_bump_progress_and_notify():
         assert _j(cur, "select notify_when_checked('zz-chk', 'bad', %s)", (a,))["status"] == "bad_email"
         assert _j(cur, "select notify_when_checked('zz-chk', 'Me@Example.com', %s)", (a,))["status"] == "ok"
         assert _j(cur, "select notify_when_checked('zz-chk', 'me@example.com', %s)", (a,))["status"] == "ok"
-        cur.execute("select count(*) from check_requests where firm_id = %s", (fid,))
+        cur.execute("select count(*) from check_requests where firm_id = %s and email is not null", (fid,))
         assert cur.fetchone()[0] == 1
         cur.execute("select count(*) from ready_check_requests() where slug = 'zz-chk'")
         assert cur.fetchone()[0] == 0

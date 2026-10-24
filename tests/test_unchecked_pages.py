@@ -1,5 +1,5 @@
 """'Not checked yet' pages: every non-duplicate queue entry without research gets a published, noindex page with the same
-template; no credit is spent on it, it stays out of the sitemap, ranks below checked firms in suggestions, and upgrades in place."""
+template; 'Check with 1 credit' on it buys on-demand research (tests/test_ondemand.py), it stays out of the sitemap, ranks below checked firms in suggestions, and upgrades in place."""
 import json
 import os
 import uuid
@@ -36,9 +36,10 @@ def test_unchecked_page_lifecycle():
         P = _j(cur.execute("select firm_page(%s, %s, false)", (slug, anon)).fetchone()[0])
         assert P["status"] == "ok" and P["open"] is False and P["unchecked"] is True and P["done"] == 0
         assert [(h["label"], h["value"]) for h in P["hero"]] == [("HQ", "Austin, TX"), ("SEC CRD", "998301"), ("LEI", "LEI998301")]
-        # 'Check with 1 credit' never spends on an unchecked page
-        assert _j(cur.execute("select firm_page(%s, %s, true)", (slug, anon)).fetchone()[0])["status"] == "unchecked"
-        assert cur.execute("select count(*) from check_events e join firms f on f.id = e.firm_id where f.slug = %s", (slug,)).fetchone()[0] == 0
+        # 'Check with 1 credit' on an unchecked page spends 1 credit and files on-demand research
+        P = _j(cur.execute("select firm_page(%s, %s, true)", (slug, anon)).fetchone()[0])
+        assert P["status"] == "ok" and P["ondemand"]["status"] == "queued"
+        assert cur.execute("select count(*) from check_events e join firms f on f.id = e.firm_id where f.slug = %s", (slug,)).fetchone()[0] == 1
         assert cur.execute("select indexable from firm_meta(%s)", (slug,)).fetchone()[0] is False
         assert cur.execute("select count(*) from firm_sitemap(1, 10000) where slug = %s", (slug,)).fetchone()[0] == 0
         sug = [r["slug"] for r in _j(cur.execute("select firm_suggest('zz quokka')").fetchone()[0])]
@@ -48,6 +49,6 @@ def test_unchecked_page_lifecycle():
         assert cur.execute("select id, slug, indexable from firms where registry_id = 'zz-u1'").fetchone() == (fid, slug, True)
         assert cur.execute("select count(*) from firm_sitemap(1, 10000) where slug = %s", (slug,)).fetchone()[0] == 1
         P = _j(cur.execute("select firm_page(%s, %s, false)", (slug, anon)).fetchone()[0])
-        assert P["unchecked"] is False
+        assert P["unchecked"] is False and P["open"] is True and P["ondemand"]["status"] == "done"
         conn.rollback()
 
