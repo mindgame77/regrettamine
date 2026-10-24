@@ -535,3 +535,10 @@ def test_promote_bot_facts_rules():
     assert "where firm_profile_facts.origin like 'promoted from submission %'" in sql  # never overwrite loader rows
     assert "exception when others" in sql                             # never blocks ingest
     assert "update research_submissions" not in sql and "delete from research_submissions" not in sql
+
+
+def test_source_dates_one_format_and_promo_source_rules():
+    js = (ROOT / "launch" / "js" / "company.js").read_text(encoding="utf-8")
+    assert "const fdate" in js and "esc(c.date)" not in js and "esc(s.date)" not in js and "esc(f.date)" not in js
+    sql = (ROOT / "supabase" / "migrations" / "20261024100000_promote_src_rules.sql").read_text(encoding="utf-8")
+    assert "embassy" in sql and "sec\\.gov" in sql and "update research_submissions" not in sql
