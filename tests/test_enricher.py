@@ -80,3 +80,21 @@ def test_enrichment_promotes_without_touching_friend_rows():
         assert c.execute("select count(*) from next_firms_to_enrich(500) where slug = %s", (slug,)).fetchone()[0] == 1
         assert c.execute("select count(*) from site_search_stats where source_site = 'sec.gov'").fetchone()[0] == 1
         c.rollback()
+
+
+def test_superseded_enrichment_search_log_is_not_counted():
+    slug = "enrs-" + uuid.uuid4().hex[:8]
+    with _db() as c:
+        fid = c.execute("insert into firms(slug, name, short_name, published, data_status, primary_domain) values (%s, 'Enrs Test', 'Enrs', true, 'real', 'enrs.com') returning id", (slug,)).fetchone()[0]
+        old = {"slug": slug, "sections": {"Timeline": [{"date": "1990", "item": "Founded", "source": "https://www.reuters.com/enrs"}]},
+               "searches": [{"section": "board_seats", "site": "sec.gov", "query": "Enrs board", "searched_at": "2026-10-23", "result": "none", "item_count": 0}]}
+        new = dict(old, searches=[{"section": "board_seats", "site": "sec.gov", "query": "Enrs board v2", "searched_at": "2026-10-24", "result": "error", "item_count": 0}])
+        c.execute("select research_enrich('toxy-enricher', %s::jsonb)", (json.dumps(old),))
+        c.execute("select research_enrich('toxy-enricher', %s::jsonb)", (json.dumps(new),))
+        # nothing is deleted: both versions stay in search_log
+        assert c.execute("select count(*) from search_log where firm_id = %s and section = 'board_seats'", (fid,)).fetchone()[0] == 2
+        # only the latest enrichment counts
+        assert c.execute("select count(*) from search_log_current where firm_id = %s and section = 'board_seats'", (fid,)).fetchone()[0] == 1
+        assert c.execute("select searches, none from firm_site_coverage where firm_id = %s and section = 'board_seats' and source_site = 'sec.gov'", (fid,)).fetchone() == (1, 0)
+        st = dict(c.execute("select item, status from firm_section_status where slug = %s", (slug,)).fetchall())
+        assert st["board_seats"] == "missing"
