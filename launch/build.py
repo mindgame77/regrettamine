@@ -81,8 +81,8 @@ def firm_head(F, full=False):
             f'<meta property="og:description" content="{d}"><meta property="og:url" content="{url}"><meta name="twitter:card" content="summary">'
             f'<script type="application/ld+json">{ldj}</script>')
 
-def fill(tpl, F, full=False):
-    return tpl.replace(T_HEAD, firm_head(F, full)).replace(T_NAME, E(F['name'])).replace(T_SLUG, E(F['slug']))
+def fill(tpl, F, full=False):  # /full/ shows the official SEC name; everything else the display name
+    return tpl.replace(T_HEAD, firm_head(F, full)).replace(T_NAME, E((F.get('legal_name') or F['name']) if full else F['name'])).replace(T_SLUG, E(F['slug']))
 
 FOOT = lambda root: f'<footer class="ft"><span>© 2026 Know Your Group INC.</span><a href="{root}privacy/">Privacy</a><a href="{root}terms/">Terms</a></footer>'
 

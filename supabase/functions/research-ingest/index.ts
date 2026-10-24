@@ -111,7 +111,10 @@ async function feedbackFor(bot: string) {
     .slice(0, 20).map((f: any) => ({ message: f.message, created_at: f.created_at }));
   return { rule: "read and follow these messages and the feedback doc", doc_url: FEEDBACK_DOC, messages };
 }
+// The friend-bot feedback field/doc is only for portal-night-bot (never for toxy-enricher or other bots).
+const FEEDBACK_BOT = "portal-night-bot";
 async function withFeedback(res: Response, bot: string): Promise<Response> {
+  if (!bot || !bot.startsWith(FEEDBACK_BOT)) return res;
   if (!(res.headers.get("content-type") ?? "").includes("application/json")) return res;
   try {
     const body = await res.clone().json();
@@ -220,7 +223,8 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       const { data, error } = await db.rpc("research_enrich", { p_bot: bot, p_payload: en });
       if (error) return json({ error: "server error" }, 500);
       if (data.error) return json({ error: data.error }, 409);
-      return json({ ok: data.valid, ...data, hint: data.valid ? "stored and promoted; rejected items (if any) list the reason, fix their source and resubmit the whole file"
+      return json({ ok: data.valid, ...data, hint: data.valid ? (data.on_page ? "stored and promoted to the firm page; rejected items (if any) list the reason, fix their source and resubmit the whole file"
+          : "stored, not on a page yet: no published firm page for this slug/registry_id (it is created when the firm's research report is accepted, then these items are promoted); rejected items (if any) list the reason")
         : "nothing accepted: every item needs an allowed source URL (no .gov/.mil except SEC and courts)" }, data.valid ? 200 : 422);
     }
     case "fail": {
