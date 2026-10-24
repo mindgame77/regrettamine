@@ -69,7 +69,7 @@ curl -s -X POST "$URL" -H "x-ingest-key: $KEY" -H 'content-type: application/jso
 
 ## Step 3. Rules
 
-- One firm at a time. Always `count: 1`. Never claim a new firm until the current one is submitted or failed.
+- One firm at a time. Always `count: 1`. (The API accepts `count` up to 300 per claim, it was 5; this run still claims one. Unfinished claims are released after 2 hours.) Never claim a new firm until the current one is submitted or failed.
 - Every fact needs a source URL, a verbatim quote from that page, and the date you retrieved it. No source → no record (put it in `leads` instead).
 - Never invent anything: names, numbers, dates, URLs or quotes. If unsure, leave it out or use `null`/`unknown`.
 - Only free, public pages. No paid, login-walled or gated sites; do not bypass paywalls.

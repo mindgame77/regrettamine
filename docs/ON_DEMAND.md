@@ -29,6 +29,8 @@ Several people paying for the same firm share one job; each gets their own reque
 Only `bot_id = "toxy-researcher-3"` claims paid jobs, and every other bot_id never gets a paid-lane firm. Use the same
 research-ingest endpoint and ingest key as the other researchers.
 
+Claim size: other bots can claim up to 300 normal-lane firms per `claim` call (`count` 1-300, default 1; it was 5). The paid lane still hands out one paid firm per call. Claims use skip-locked, so two bots never get the same firm, and unfinished claims go back to the queue after 2 hours.
+
 `POST https://sxxgvkdwgiouyqciztec.supabase.co/functions/v1/research-ingest`
 headers `x-ingest-key: <ingest key>`, `content-type: application/json`
 

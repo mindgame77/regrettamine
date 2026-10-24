@@ -176,7 +176,7 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
     case "claim": {
       if (!bot) return bad("bot_id required", "add a stable \"bot_id\" string (the same on every call)", "claim");
       const n = Number(body.count ?? 1);
-      if (!Number.isInteger(n) || n < 1 || n > 5) return bad("count must be 1-5", "omit count (defaults to 1) or send an integer 1-5", "claim");
+      if (!Number.isInteger(n) || n < 1 || n > 300) return bad("count must be 1-300", "omit count (defaults to 1) or send an integer 1-300", "claim");
       const { data, error } = await db.rpc("research_claim", { p_bot: bot, p_count: n });
       if (error) return json({ error: "server error" }, 500);
       const firms = (data ?? []).map((f: any) => ({ registry_id: f.registry_id, firm_id: f.registry_id, name: f.name, website: f.website,
