@@ -81,6 +81,7 @@
     main.querySelector('.csum').innerHTML = has.has('checks') ? '<div class="csh"><b>' + COPY.summary + '</b><a href="#checks">' + COPY.full_check + '</a></div><div class="cks">'
       + P.checks.map(r => '<a class="ck" href="#checks"><span class="ckn">' + String(r.n).padStart(2, '0') + '</span>' + esc(r.title) + pill(r.state) + '</a>').join('') + '</div>' : '';
     main.querySelector('.csum').hidden = !has.has('checks');
+    const fn = main.querySelector('.rgt-n'); if (fn && total) { fn.textContent = total; fn.hidden = false; }
     main.querySelector('.spl').innerHTML = secs.map(s => '<a class="spp" href="#' + esc(s.key) + '">' + esc(s.title) + ' <em>' + s.count + '</em></a>').join('');
     main.querySelector('.toc').innerHTML = '<b>' + COPY.toc + '</b>' + secs.map(s => '<a href="#' + esc(s.key) + '">' + esc(s.title) + '</a>').join('');
     main.querySelector('.pmain').innerHTML = secs.map(s => '<section id="' + esc(s.key) + '" class="ps"><h2>' + esc(s.title) + ' <em class="pc2">' + esc(label(s)) + '</em></h2><p class="psub">' + esc(s.subtitle || '') + '</p>'
@@ -140,6 +141,8 @@
     if (checking && !P.hero.length) main.querySelector('.kf').innerHTML = '<span>' + esc(CK.sources[0]) + ' <b>' + esc(CK.sources[1]) + '</b></span>';
     else main.querySelector('.kf').innerHTML = P.hero.map(h => '<span>' + esc(h.label) + ' <b>' + esc(h.value) + '</b>' + (h.src || []).slice(0, 1).map(c => ' <i>· ' + esc(c.label) + (c.date ? ' · ' + esc(c.date) : '') + '</i>').join('') + '</span>').join('');
     main.querySelector('.list').innerHTML = ctable(P, checking, curN);
+    const fn = main.querySelector('.rgt-n'), ft = (P.sections || []).filter(s => s.key !== 'checks').reduce((a, s) => a + (s.count || 0), 0);
+    if (fn && ft) { fn.textContent = ft; fn.hidden = false; }
     bindTable(main);
     return { total: 0, head: () => '', checking, pending, queue };
   }
