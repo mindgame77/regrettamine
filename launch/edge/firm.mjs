@@ -35,8 +35,9 @@ export function firmHead(F, full = false) {
     `<script type="application/ld+json">${ldj}</script>`;
 }
 
+// /full/ shows the official SEC name; everything else the display name
 export const fillFirm = (tpl, F, full = false) =>
-  tpl.split('{{HEAD}}').join(firmHead(F, full)).split('{{NAME}}').join(esc(F.name)).split('{{SLUG}}').join(esc(F.slug));
+  tpl.split('{{HEAD}}').join(firmHead(F, full)).split('{{NAME}}').join(esc(full ? (F.legal_name || F.name) : F.name)).split('{{SLUG}}').join(esc(F.slug));
 
 // /vc/<slug>/ or /vc/<slug>/full/ -> {slug, full} | {redirect} | null
 export function parseFirmPath(pathname) {
