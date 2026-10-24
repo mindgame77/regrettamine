@@ -381,3 +381,7 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 .gcard{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(420px,calc(100% - 48px));background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 50px rgba(26,21,48,.16);padding:28px;text-align:center;z-index:5}
 .gcard b{display:block;font:800 22px 'Bricolage Grotesque'}.gcard p{margin:8px 0 0;color:var(--ink2);line-height:1.45}.gcard .btn{margin-top:18px;width:100%;justify-content:center}.gcard .gmsg:empty{display:none}.gcard .gmsg{font-size:14px;color:var(--vio)}
 .prof .gcard{top:150px;transform:translateX(-50%)}.prof .gate .gveil{min-width:0}
+/* 390px fixes (layout only, same look): long unbroken text (URLs in facts) no longer widens /full/; the section count stays on one line
+   with its title; check-summary tiles can shrink; My firms rows keep 'Open' / 'Check' on the first row next to the name. */
+.prof .ps,.prof .kv>span,.prof .fct,.prof .it{overflow-wrap:anywhere;min-width:0}.cks>.ck{min-width:0}.ps h2 .pc2{white-space:nowrap}
+@media (max-width:760px){.mfr{grid-template-columns:30px minmax(0,1fr) auto}.mfr>.star{grid-row:1}.mfr .nm3{grid-column:2;grid-row:1;min-width:0;overflow-wrap:anywhere}.mfr .btn{grid-column:3;grid-row:1}}
