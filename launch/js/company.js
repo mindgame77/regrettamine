@@ -32,20 +32,7 @@
     return '<div class="fct' + (st === 'active' ? ' act' : '') + '">' + p + (f.needs_proof ? '<span class="np">Needs proof</span>' : '') + head + esc(who) + esc(f.text) + '<div class="src">' + src + '</div></div>';
   }
   const spill = (st) => st === 'active' ? '<span class="cs cs-act">Active</span>' : st === 'closed' ? '<span class="cs cs-cl">Closed</span>' : '';
-  function checkRows(P) {
-    const det = {}, out = {}; (P.details || []).forEach(r => det[r.row] = r.facts || []); (P.outline || []).forEach(r => out[r.row] = r.items || []);
-    return '<div class="list">' + P.checks.map(r => {
-      const cnt = r.count ? '<span class="cnt ' + (r.state === 'clear' ? 'cg' : 'ca') + '">' + esc(r.count) + '</span>' : '';
-      const gl = P.open ? '' : (out[r.n] || []).map((e, i) => '<button type="button" class="gc' + (e.status === 'active' ? ' act' : '') + '" data-sec="checks" data-kind="' + esc(e.kind) + '" data-year="' + esc(e.year || '') + '">'
-        + '<span class="y">' + esc(e.year || '—') + '</span><span class="k">' + esc(e.kind) + '</span><span class="bl"><span class="bar" style="width:' + (20 + ((e.kind || '').length * 7 + i * 13) % 45) + '%"></span><span class="bar" style="width:22%"></span></span>'
-        + spill(e.status) + '<span class="lkk">' + COPY.locked + '</span></button>').join('');
-      const rank = (f) => caseStatus(f) === 'active' ? 0 : 1;
-      const fs = (det[r.n] || []).map((f, i) => [f, i]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map(x => x[0]);
-      const d = P.open ? (fs.length ? fs.map(factHtml).join('') : '<div class="fct">' + COPY.no_facts + '</div>') : '';
-      return '<div class="row' + (r.n === 10 ? ' last' : '') + (P.open ? ' tog' : '') + '" id="check-' + r.n + '"><span class="n">' + String(r.n).padStart(2, '0') + '</span><div class="tx"><b>' + esc(r.title) + '</b><span>' + esc(r.descr) + '</span>' + sdt(r) + '</div>'
-        + '<div class="pc">' + pill(r.state) + cnt + '</div><span class="lk"></span><div class="gl">' + gl + '</div><div class="det">' + d + '</div></div>';
-    }).join('') + '</div>';
-  }
+  function checkRows(P) { return '<div class="list">' + ctable(P, false, 0) + '</div>'; }
 
   // Open-state renderers, keyed by copy.json sections[].renderer
   const R = {
@@ -102,7 +89,7 @@
     const lc = main.querySelector('#lockcard'); lc.hidden = P.open;
     lc.querySelector('b').textContent = fmt(COPY.lockcard, { n: total, firm }); lc.querySelector('p').textContent = COPY.lockcard_sub;
     document.getElementById('puse').textContent = fmt(COPY.use_line, { n: total, firm });
-    main.querySelectorAll('.row.tog').forEach(row => row.onclick = (e) => { if (!e.target.closest('a')) row.classList.toggle('open'); });
+    bindTable(main);
     return { total, head: (key) => { const s = secs.find(x => x.key === key); return s ? fmt(COPY.pay_head, { title: s.title, firm, count: label(s) }) : fmt(COPY.pay_all, { n: total, firm }); } };
   }
 
@@ -152,22 +139,53 @@
     const curN = checking ? P.checks.find(r => r.state === 'nc').n : 0;
     if (checking && !P.hero.length) main.querySelector('.kf').innerHTML = '<span>' + esc(CK.sources[0]) + ' <b>' + esc(CK.sources[1]) + '</b></span>';
     else main.querySelector('.kf').innerHTML = P.hero.map(h => '<span>' + esc(h.label) + ' <b>' + esc(h.value) + '</b>' + (h.src || []).slice(0, 1).map(c => ' <i>· ' + esc(c.label) + (c.date ? ' · ' + esc(c.date) : '') + '</i>').join('') + '</span>').join('');
-    const det = {}, out = {}; (P.details || []).forEach(r => det[r.row] = r.facts || []); (P.outline || []).forEach(r => out[r.row] = r.items || []);
-    const rank = (f) => caseStatus(f) === 'active' ? 0 : 1;
-    main.querySelector('.list').innerHTML = P.checks.map(r => {
-      const cnt = r.count ? '<span class="cnt ' + (r.state === 'clear' ? 'cg' : 'ca') + '">' + esc(r.count) + '</span>' : '';
-      const fs = (det[r.n] || []).map((f, i) => [f, i]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map(x => x[0]);
-      const nc = r.state === 'nc' || !PILL[r.state];
-      const d = nc ? '' : P.open ? fs.map(sumItem).join('') : (out[r.n] || []).map(outItem).join('');
-      const right = !nc ? pill(r.state) + cnt : !checking ? pill('nc') : r.n === curN ? '<span class="pill p-cur"><span class="sp" aria-hidden="true"></span>' + esc(CK.current) + '</span>' : '<span class="wt">' + esc(CK.waiting) + '</span>';
-      return '<div class="row' + (r.n === 10 ? ' last' : '') + (d ? ' tog' : '') + (nc ? (r.n === curN ? ' cur' : ' up') : '') + '" id="check-' + r.n + '"' + (d ? ' role="button" tabindex="0" aria-expanded="false"' : '') + '><span class="n">' + String(r.n).padStart(2, '0') + '</span><div class="tx"><b>' + esc(r.title) + '</b><span>' + esc(r.descr) + '</span>' + (d ? '' : srch(r)) + sdt(r) + '</div>'
-        + '<div class="pc">' + right + '</div>' + (d ? '<div class="det">' + d + '</div>' : '') + '</div>';
-    }).join('');
-    main.querySelectorAll('.row.tog').forEach(row => {
-      const t = () => row.setAttribute('aria-expanded', row.classList.toggle('open'));
-      row.onclick = t; row.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t(); } };
-    });
+    main.querySelector('.list').innerHTML = ctable(P, checking, curN);
+    bindTable(main);
     return { total: 0, head: () => '', checking, pending, queue };
+  }
+
+  // Checks table (approved layout 3): #, check, result pill, what was found, date searched. A row with something to show
+  // opens a details row underneath: the itemized findings (firm_page checks[].items: only on an unlocked page) and what was
+  // searched. Everything shown comes from the data; when the count is higher than the itemized rows the table says so.
+  // Pills are only Clear / Review / Worth knowing / Not checked yet; while a bot holds the claim, not-done rows read
+  // "Checking…" (the first) and "Waiting".
+  const T = COPY.table;
+  const tpill = (st) => pill(st === 'red' ? 'review' : st);
+  const cnum = (c) => { const m = /^(\d+)\s/.exec(c || ''); return m ? +m[1] : 0; };
+  const sdate = (r) => { const t = r.searched_at ? new Date(r.searched_at) : null; return t && !isNaN(t) ? t.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) : ''; };
+  function ctable(P, checking, curN) {
+    const rows = (P.checks || []).map(r => {
+      const nc = r.state === 'nc' || !PILL[r.state], fnd = !nc && r.state !== 'clear' && r.state !== 'nf';
+      const items = Array.isArray(r.items) ? r.items : null, n = cnum(r.count), it = r.itemized || 0;
+      const res = !nc ? tpill(r.state) : !checking ? pill('nc') : r.n === curN ? '<span class="pill p-cur"><span class="sp" aria-hidden="true"></span>' + esc(CK.current) + '</span>' : '<span class="wt">' + esc(CK.waiting) + '</span>';
+      let found = '';
+      if (fnd) found = '<b>' + esc(!r.count ? T.found_some : /^\d+ (finding|action|case|record)s?$/.test(r.count) ? fmt(T.found, { count: r.count }) : r.count) + '</b>'
+        + (items && items.length ? '<span class="cts">' + items.slice(0, 2).map(x => esc(x.title || '')).filter(Boolean).join(', ') + (items.length > 2 ? ' ' + esc(fmt(T.more, { n: items.length - 2 })) : '') + '</span>' : '');
+      else if (!nc) found = '<b>' + esc(T.nothing) + '</b>';
+      else found = '<span class="ctm">—</span>';
+      const S = (COPY.searched || {})[r.n] || '';
+      let d = '';
+      if (!nc) {
+        if (fnd && n > it) d += '<p class="ctn">' + esc(it ? fmt(T.partial, { n, count: r.count, m: it }) : T.none_itemized) + '</p>';
+        if (fnd && items) d += items.map(x => { const meta = [x.who, x.year, x.status && x.status[0].toUpperCase() + x.status.slice(1)].filter(Boolean).map(esc).join(' · ');
+          return '<div class="cti"><b>' + esc(x.title || T.untitled) + '</b>' + (meta ? '<span class="ctmeta">' + meta + '</span>' : '') + (x.note ? '<p>' + esc(x.note) + '</p>' : '') + '</div>'; }).join('');
+        else if (fnd && it) d += '<button type="button" class="ctl" data-sec="checks">' + esc(fmt(T.locked, { m: it })) + ' <span>' + COPY.locked + '</span></button>';
+        d += '<p class="ctw"><b>' + esc(T.what) + '</b> ' + esc(S) + (sdate(r) ? ' · ' + esc(fmt(COPY.searched_on, { date: sdate(r) })) : '') + (r.state === 'clear' || r.state === 'nf' ? ' ' + esc(COPY.searched_nf) : '') + '</p>';
+      }
+      const tog = !!d && !checking;
+      return '<tr class="crow' + (tog ? ' tog' : '') + (nc ? (checking && r.n === curN ? ' cur' : ' up') : '') + '" id="check-' + r.n + '"' + (tog ? ' tabindex="0" aria-expanded="false" aria-controls="cdx-' + r.n + '"' : '') + '>'
+        + '<td class="kcn">' + String(r.n).padStart(2, '0') + '</td><td class="kct"><b>' + esc(r.title) + '</b><span>' + esc(r.descr) + '</span></td>'
+        + '<td class="kcr">' + res + '</td><td class="kcf">' + found + '</td><td class="kcd">' + (sdate(r) ? esc(sdate(r)) : '<span class="ctm">—</span>') + '</td></tr>'
+        + (tog ? '<tr class="cdx" id="cdx-' + r.n + '" hidden><td></td><td colspan="4">' + d + '</td></tr>' : '');
+    }).join('');
+    return '<table class="ctab"><thead><tr><th>#</th><th>' + esc(T.h_check) + '</th><th>' + esc(T.h_result) + '</th><th>' + esc(T.h_found) + '</th><th>' + esc(T.h_date) + '</th></tr></thead><tbody>' + rows + '</tbody></table>';
+  }
+  function bindTable(main) {
+    main.querySelectorAll('tr.crow.tog').forEach(tr => {
+      const dx = tr.nextElementSibling;
+      const t = (e) => { if (e && e.target.closest('a,button')) return; const o = tr.classList.toggle('open'); dx.hidden = !o; tr.setAttribute('aria-expanded', o); };
+      tr.onclick = t; tr.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t(); } };
+    });
   }
   window.RegretCompany = { render, summary };
 })();
