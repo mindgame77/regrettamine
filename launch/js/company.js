@@ -6,7 +6,12 @@
   const esc = (x) => String(x == null ? '' : x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const safeUrl = (u) => /^https?:\/\//i.test(u || '') ? u : null;
   const ROOT = window.REGRET_ROOT || '';
-  const chips = (src) => '<div class="scs">' + (src || []).map(s => { const u = safeUrl(s.url); const t = esc(s.label) + (s.date ? ' · ' + esc(s.date) : '') + ' ↗';
+  // One display format for every source/fact date ('Oct 23, 2026'); stored labels stay as they are.
+  const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const fdate = (d) => { if (!d) return ''; let t = String(d).trim().replace(/^retrieved\s+/i, '').replace(/\s*\(retrieved\)$/i, '');
+    const m = t.match(/^(\d{4})-(\d{2})-(\d{2})/); if (m && +m[2] >= 1 && +m[2] <= 12) t = MON[+m[2] - 1] + ' ' + (+m[3]) + ', ' + m[1];
+    return t; };
+  const chips = (src) => '<div class="scs">' + (src || []).map(s => { const u = safeUrl(s.url); const t = esc(s.label) + (s.date ? ' · ' + esc(fdate(s.date)) : '') + ' ↗';
     return u ? '<a class="sc" href="' + esc(u) + '" target="_blank" rel="noopener">' + t + '</a>' : ''; }).join('') + '</div>';
   const pill = (st) => { const p = PILL[st] || PILL.nc; return '<span class="pill ' + p[0] + '"><i></i>' + p[1] + '</span>'; };
   const group = (items, key, labels, body) => Object.keys(labels).map(g => { const xs = items.filter(i => i[key] === g);
@@ -27,7 +32,7 @@
     const who = f.who && f.who.startsWith('partner:') ? f.who.slice(8) + ' · ' : '';
     const head = f.case ? '<b>' + esc(f.case) + '</b>' + (f.year ? ' · ' + esc(f.year) : '') + '<br>' : '';
     const u = safeUrl(f.url), st = caseStatus(f);
-    const src = (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(f.label || COPY.source) + ' ↗</a>' : esc(f.label || '')) + (f.date ? ' · ' + COPY.retrieved + esc(f.date) : '');
+    const src = (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(f.label || COPY.source) + ' ↗</a>' : esc(f.label || '')) + (f.date ? ' · ' + COPY.retrieved + esc(fdate(f.date)) : '');
     const p = st === 'active' ? '<span class="cs cs-act">Active</span>' : st === 'closed' ? '<span class="cs cs-cl">Closed</span>' : '';
     return '<div class="fct' + (st === 'active' ? ' act' : '') + '">' + p + (f.needs_proof ? '<span class="np">Needs proof</span>' : '') + head + esc(who) + esc(f.text) + '<div class="src">' + src + '</div></div>';
   }
@@ -63,7 +68,7 @@
   function card(x, logo) {
     const u = safeUrl(x.url), host = u ? new URL(u).hostname.replace(/^www\./, '') : '';
     const fav = logo && x.logo ? '<img class="fav" src="' + esc(ROOT + x.logo) + '" alt="" width="20" height="20">' : '<span class="fav lb">' + esc((x.outlet || '?')[0]) + '</span>';
-    return '<div class="pi"><div class="pio">' + fav + '<span>' + esc(x.outlet) + ' · ' + esc(host) + (x.date ? ' · ' + esc(x.date) : '') + '</span></div>'
+    return '<div class="pi"><div class="pio">' + fav + '<span>' + esc(x.outlet) + ' · ' + esc(host) + (x.date ? ' · ' + esc(fdate(x.date)) : '') + '</span></div>'
       + (u ? '<a class="pih" href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(x.head) + '</a>' : '<b class="pih">' + esc(x.head) + '</b>')
       + (x.snippet ? '<p class="pis">' + esc(x.snippet) + '</p>' : '') + chips(x.src) + '</div>';
   }
@@ -104,7 +109,7 @@
     main.querySelector('.toc').style.display = ''; const lk = main.querySelector('#lockcard'); if (lk) lk.style.display = '';
     if (!P.open) {
       main.querySelector('.m').textContent = [P.firm.hq, P.firm.short_name].filter(Boolean).join(' · ');
-      main.querySelector('.hfs').innerHTML = P.hero.map(h => '<span class="hf"><span>' + esc(h.label) + '</span><b>' + esc(h.value) + '</b>' + h.src.map(c => '<span class="sc">' + esc(c.label) + (c.date ? ' · ' + esc(c.date) : '') + '</span>').join('') + '</span>').join('');
+      main.querySelector('.hfs').innerHTML = P.hero.map(h => '<span class="hf"><span>' + esc(h.label) + '</span><b>' + esc(h.value) + '</b>' + h.src.map(c => '<span class="sc">' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</span>').join('') + '</span>').join('');
       main.querySelector('.csum').hidden = true; main.querySelector('.spl').innerHTML = ''; main.querySelector('.toc').innerHTML = ''; main.querySelector('.toc').style.display = 'none';
       main.querySelector('#lockcard').hidden = true; main.querySelector('#lockcard').style.display = 'none';
       main.querySelector('.pmain').innerHTML = gate(P, '<section class="ps">' + ghost(P) + '</section>' + ghostSecs());
@@ -112,7 +117,7 @@
     }
     main.querySelector('.m').textContent = [P.firm.hq, P.firm.short_name].filter(Boolean).join(' · ');
     const has = new Set(secs.map(s => s.key));
-    main.querySelector('.hfs').innerHTML = P.hero.map(h => '<a class="hf" href="#' + (has.has(h.anchor) ? esc(h.anchor) : '') + '"><span>' + esc(h.label) + '</span><b>' + esc(h.value) + '</b>' + h.src.map(c => '<span class="sc">' + esc(c.label) + (c.date ? ' · ' + esc(c.date) : '') + '</span>').join('') + '</a>').join('');
+    main.querySelector('.hfs').innerHTML = P.hero.map(h => '<a class="hf" href="#' + (has.has(h.anchor) ? esc(h.anchor) : '') + '"><span>' + esc(h.label) + '</span><b>' + esc(h.value) + '</b>' + h.src.map(c => '<span class="sc">' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</span>').join('') + '</a>').join('');
     main.querySelector('.csum').innerHTML = has.has('checks') ? '<div class="csh"><b>' + COPY.summary + '</b><a href="#checks">' + COPY.full_check + '</a></div><div class="cks">'
       + P.checks.map(r => '<a class="ck" href="#checks"><span class="ckn">' + String(r.n).padStart(2, '0') + '</span>' + esc(r.title) + pill(r.state) + '</a>').join('') + '</div>' : '';
     main.querySelector('.csum').hidden = !has.has('checks');
@@ -174,7 +179,7 @@
     }
     const curN = checking && P.open ? P.checks.find(r => r.state === 'nc').n : 0;
     if (checking && !P.hero.length) main.querySelector('.kf').innerHTML = '<span>' + esc(CK.sources[0]) + ' <b>' + esc(CK.sources[1]) + '</b></span>';
-    else main.querySelector('.kf').innerHTML = P.hero.map(h => '<span>' + esc(h.label) + ' <b>' + esc(h.value) + '</b>' + (h.src || []).slice(0, 1).map(c => ' <i>· ' + esc(c.label) + (c.date ? ' · ' + esc(c.date) : '') + '</i>').join('') + '</span>').join('');
+    else main.querySelector('.kf').innerHTML = P.hero.map(h => '<span>' + esc(h.label) + ' <b>' + esc(h.value) + '</b>' + (h.src || []).slice(0, 1).map(c => ' <i>· ' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</i>').join('') + '</span>').join('');
     main.querySelector('.list').innerHTML = P.open ? ctable(P, checking, curN) : gate(P, ghost(P));
     const fn = main.querySelector('.rgt-n'), ft = (P.sections || []).filter(s => s.key !== 'checks').reduce((a, s) => a + (s.count || 0), 0);
     if (fn && ft) { fn.textContent = ft; fn.hidden = false; }
