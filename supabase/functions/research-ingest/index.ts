@@ -100,15 +100,36 @@ function validateLps(lps: unknown): string[] {
   return e;
 }
 
+// feedback channel: active public.bot_feedback rows ('*' or a bot_id prefix) are added as a `feedback` field to every
+// authenticated JSON reply (success and error). Existing fields are never changed. Read failures never break the reply.
+const FEEDBACK_DOC = "https://docs.google.com/document/d/1GFdHpQzV8olMb9dhek5zK_xs_7Env0Pu-1uf6TDdfH4/edit";
+async function feedbackFor(bot: string) {
+  const { data, error } = await db.from("bot_feedback").select("bot_id, message, created_at").eq("active", true)
+    .order("created_at", { ascending: false }).limit(200);
+  const messages = error ? [] : (data ?? []).filter((f: any) => f.bot_id === "*" || (bot && bot.startsWith(f.bot_id)))
+    .slice(0, 20).map((f: any) => ({ message: f.message, created_at: f.created_at }));
+  return { rule: "read and follow these messages and the feedback doc", doc_url: FEEDBACK_DOC, messages };
+}
+async function withFeedback(res: Response, bot: string): Promise<Response> {
+  if (!(res.headers.get("content-type") ?? "").includes("application/json")) return res;
+  try {
+    const body = await res.clone().json();
+    if (!isObj(body) || "feedback" in body) return res;
+    const headers = new Headers(res.headers);
+    return new Response(JSON.stringify({ ...body, feedback: await feedbackFor(bot) }), { status: res.status, headers });
+  } catch { return res; }
+}
+
 Deno.serve(async (req) => {
   // one log line per request: action, bot_id, status (never the key)
-  const meta = { action: "", bot: "" };
-  const res = await handle(req, meta);
+  const meta = { action: "", bot: "", authed: false };
+  let res = await handle(req, meta);
+  if (meta.authed) res = await withFeedback(res, meta.bot);
   console.log(JSON.stringify({ evt: "ingest_request", method: req.method, action: meta.action || null, bot_id: meta.bot || null, status: res.status }));
   return res;
 });
 
-async function handle(req: Request, meta: { action: string; bot: string }): Promise<Response> {
+async function handle(req: Request, meta: { action: string; bot: string; authed: boolean }): Promise<Response> {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
   if (req.method !== "POST" && req.method !== "GET") return json({ error: "method not allowed",
     hint: "use POST with header x-ingest-key and a JSON body {action, bot_id, ...}; read-only GET ?action=status|gaps also works (key in header, never in the URL)" }, 405);
@@ -122,6 +143,7 @@ async function handle(req: Request, meta: { action: string; bot: string }): Prom
     if (auth.error === "rate_limited") return json({ error: "rate limited - wait 60s" }, 429, { "retry-after": "60" });
     return json({ error: "unauthorized" }, 401);
   }
+  meta.authed = true;
   let body: any;
   if (req.method === "GET") {
     // read-only GET: ?action=status | gaps (&registry_id=&limit=&bot_id=). Never accepts the key in the query string.
