@@ -112,7 +112,8 @@
       main.querySelector('.hfs').innerHTML = P.hero.map(h => '<span class="hf"><span>' + esc(h.label) + '</span><b>' + esc(h.value) + '</b>' + h.src.map(c => '<span class="sc">' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</span>').join('') + '</span>').join('');
       main.querySelector('.csum').hidden = true; main.querySelector('.spl').innerHTML = ''; main.querySelector('.toc').innerHTML = ''; main.querySelector('.toc').style.display = 'none';
       main.querySelector('#lockcard').hidden = true; main.querySelector('#lockcard').style.display = 'none';
-      main.querySelector('.pmain').innerHTML = gate(P, '<section class="ps">' + ghost(P) + '</section>' + ghostSecs());
+      // 'Not checked yet' page (no research yet): the 10 checks as 'Not checked yet' and the same card (it leads to the request-a-check form)
+      main.querySelector('.pmain').innerHTML = P.unchecked ? '<section class="ps">' + ctable(P, false, 0) + '</section>' + gate(P, '') : gate(P, '<section class="ps">' + ghost(P) + '</section>' + ghostSecs());
       return { total: 0, head: () => GT.title };
     }
     main.querySelector('.m').textContent = [P.firm.hq, P.firm.short_name].filter(Boolean).join(' · ');
@@ -180,7 +181,7 @@
     const curN = checking && P.open ? P.checks.find(r => r.state === 'nc').n : 0;
     if (checking && !P.hero.length) main.querySelector('.kf').innerHTML = '<span>' + esc(CK.sources[0]) + ' <b>' + esc(CK.sources[1]) + '</b></span>';
     else main.querySelector('.kf').innerHTML = P.hero.map(h => '<span>' + esc(h.label) + ' <b>' + esc(h.value) + '</b>' + (h.src || []).slice(0, 1).map(c => ' <i>· ' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</i>').join('') + '</span>').join('');
-    main.querySelector('.list').innerHTML = P.open ? ctable(P, checking, curN) : gate(P, ghost(P));
+    main.querySelector('.list').innerHTML = P.open ? ctable(P, checking, curN) : P.unchecked ? ctable(P, false, 0) + gate(P, '') : gate(P, ghost(P));
     const fn = main.querySelector('.rgt-n'), ft = (P.sections || []).filter(s => s.key !== 'checks').reduce((a, s) => a + (s.count || 0), 0);
     if (fn && ft) { fn.textContent = ft; fn.hidden = false; }
     bindTable(main);

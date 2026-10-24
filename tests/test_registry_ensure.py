@@ -56,14 +56,16 @@ def test_report_creates_published_page_and_queue_dedupes():
         cur.execute("insert into research_enrichments (bot_id, registry_id, payload, valid, accepted, rejected) values ('b', 'zz-r1', '{}', false, 0, 0) returning id")
         eid = cur.fetchone()[0]
         cur.execute("insert into research_submissions (registry_id, payload, valid) values ('zz-r1', %s, false)", (json.dumps({"coverage": []}),))
-        cur.execute("select count(*) from firms where registry_id = 'zz-r1'")
-        assert cur.fetchone()[0] == 0                           # invalid report: no page
+        cur.execute("select published, indexable from firms where registry_id = 'zz-r1'")
+        assert cur.fetchall() == [(True, False)]                # queued / invalid report: only the 'Not checked yet' page (noindex)
+        assert cur.execute("select count(*) from firms where registry_id = 'zz-r2'").fetchone()[0] == 0   # flagged duplicate: no page
         cur.execute("insert into research_submissions (registry_id, payload, valid) values ('zz-r1', %s, true)", (json.dumps(PAYLOAD),))
         cur.execute("select id, slug, name, display_name, legal_name, sec_crd, primary_domain, hq, published, data_status, source_system "
                     "from firms where registry_id = 'zz-r1'")
         fid, slug, name, dn, legal, crd, dom, hq, pub, ds, src = cur.fetchone()
         assert (slug, name, dn, legal) == ("zz-rocket-ventures", "ZZ Rocket Ventures", "ZZ Rocket Ventures", "ZZ ROCKET VENTURES MANAGEMENT, LLC")
         assert (crd, dom, hq, pub, ds, src) == ("998101", "zzrocket.vc", "Palo Alto, CA", True, "real", "research")
+        assert cur.execute("select indexable from firms where id = %s", (fid,)).fetchone()[0] is True   # upgraded in place
         cur.execute("select firm_id from research_enrichments where id = %s", (eid,))
         assert cur.fetchone()[0] == fid                         # orphan enrichment linked
         cur.execute("select n, state from firm_check_rows where firm_id = %s order by n", (fid,))
