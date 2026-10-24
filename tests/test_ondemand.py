@@ -50,7 +50,9 @@ def test_paid_research_lifecycle():
         # other bots never see the paid lane; toxy-researcher-3 gets it, one at a time
         assert "zz-od1" not in [r[0] for r in cur.execute("select registry_id from research_claim('toxy-researcher-1', 5)").fetchall()]
         assert [r[0] for r in cur.execute("select registry_id from research_claim('toxy-researcher-3', 5)").fetchall()] == ["zz-od1"]
-        assert cur.execute("select count(*) from research_claim('toxy-researcher-3', 5)").fetchone()[0] == 0
+        # paid lane empty: toxy-researcher-3 falls through to normal (non-paid) work
+        nxt = [r[0] for r in cur.execute("select registry_id from research_claim('toxy-researcher-3', 5)").fetchall()]
+        assert "zz-od1" not in nxt
         info = _j(cur.execute("select ondemand_job_info(array['zz-od1'])").fetchone()[0])["zz-od1"]
         assert info["paid"] and info["requesters"] == 2 and len(info["missing_checks"]) == 10
         assert _j(cur.execute("select firm_page(%s, %s, false)", (slug, a2)).fetchone()[0])["ondemand"]["status"] == "in_progress"
