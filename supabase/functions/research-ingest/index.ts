@@ -20,7 +20,8 @@ const json = (b: unknown, status = 200, extra: Record<string, string> = {}) =>
   new Response(JSON.stringify(b), { status, headers: { ...CORS, "content-type": "application/json", ...extra } });
 // every 400 says what was wrong, how to fix it, and which fields the action needs
 const REQUIRED: Record<string, string[]> = { status: ["action"], gaps: ["action"], claim: ["action", "bot_id"], claim_gap: ["action", "bot_id"],
-  submit: ["action", "bot_id", "registry_id", "dump", "(optional) lps", "(optional) lps_over_100"], fail: ["action", "bot_id", "registry_id", "reason"], skip: ["action", "bot_id", "registry_id", "reason"] };
+  submit: ["action", "bot_id", "registry_id", "dump", "(optional) lps", "(optional) lps_over_100"],
+  enrich: ["action", "bot_id", "enrichment {slug or registry_id, sections, confirm, fix, add, leads, notes, (optional) searches}"], fail: ["action", "bot_id", "registry_id", "reason"], skip: ["action", "bot_id", "registry_id", "reason"] };
 const bad = (error: string, hint: string, action?: string) =>
   json({ error, hint, required_fields: action && REQUIRED[action] ? REQUIRED[action] : REQUIRED }, 400);
 const sha256 = async (s: string) => [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)))]
@@ -206,6 +207,22 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
         rejected_records: v.bad, errors: v.errors.slice(0, 200),
         hint: valid ? "stored; claim the next firm" : "not accepted (kept for audit only); fix ALL errors and resubmit the whole dump once (same registry_id, same bot_id)" }, valid ? 200 : 422);
     }
+    case "enrich": {
+      // Enricher results for one firm (sections + confirm/fix/add/leads, each item with a source URL; optional searches log).
+      // Stored raw in research_enrichments; the AFTER INSERT trigger promotes accepted items onto the page tables on top of
+      // the friend's data (fixes go to the firm_corrections override layer). Never touches research_submissions.
+      if (!bot) return bad("bot_id required", "add a stable \"bot_id\" string (the same on every call)", "enrich");
+      const en = body.enrichment;
+      if (!isObj(en)) return bad("enrichment must be a JSON object", "send {\"action\":\"enrich\",\"bot_id\":\"toxy-enricher\",\"enrichment\":{...your <slug>.json...}}", "enrich");
+      if (typeof en.slug !== "string" && typeof en.registry_id !== "string") return bad("enrichment.slug or enrichment.registry_id required", "send the firm page slug (e.g. \"accel\") and/or its registry_id", "enrich");
+      for (const k of ["fix", "add", "leads", "confirm", "searches"]) if (k in en && !Array.isArray(en[k])) return bad(`enrichment.${k} must be an array`, "send an array (or omit it)", "enrich");
+      if ("sections" in en && !isObj(en.sections)) return bad("enrichment.sections must be an object of arrays", "e.g. {\"Press coverage\":[{outlet,date,headline,url,snippet}]}", "enrich");
+      const { data, error } = await db.rpc("research_enrich", { p_bot: bot, p_payload: en });
+      if (error) return json({ error: "server error" }, 500);
+      if (data.error) return json({ error: data.error }, 409);
+      return json({ ok: data.valid, ...data, hint: data.valid ? "stored and promoted; rejected items (if any) list the reason, fix their source and resubmit the whole file"
+        : "nothing accepted: every item needs an allowed source URL (no .gov/.mil except SEC and courts)" }, data.valid ? 200 : 422);
+    }
     case "fail": {
       if (!bot || typeof body.registry_id !== "string") return bad("bot_id and registry_id required", "send the registry_id you claimed, the same bot_id, and a short reason", "fail");
       const { data, error } = await db.rpc("research_fail", { p_id: body.registry_id, p_bot: bot, p_reason: String(body.reason ?? "").slice(0, 2000) });
@@ -235,7 +252,7 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       if (error) return json({ error: "server error" }, 500);
       return data.error ? json({ error: data.error }, 409) : json(data);
     }
-    default: return bad("action must be claim | submit | fail | skip | status | gaps | claim_gap",
+    default: return bad("action must be claim | submit | enrich | fail | skip | status | gaps | claim_gap",
       'set "action" to one of the listed values; start with {"action":"status","bot_id":"your-bot"}');
   }
 }
