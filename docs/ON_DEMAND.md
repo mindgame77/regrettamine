@@ -34,14 +34,14 @@ Claim size: other bots can claim up to 300 normal-lane firms per `claim` call (`
 `POST https://sxxgvkdwgiouyqciztec.supabase.co/functions/v1/research-ingest`
 headers `x-ingest-key: <ingest key>`, `content-type: application/json`
 
-1. **Claim** (one firm at a time, oldest paid first; `count` is ignored for this bot):
+1. **Claim** (paid first: one paid firm per call, oldest paid first; when no paid job is waiting, the same call returns normal-lane firms like any other bot, up to `count`/300):
    ```json
    {"action": "claim", "bot_id": "toxy-researcher-3"}
    ```
    Response: `{"firms": [{registry_id, firm_id, name, website, country, state, hq_city, sec_crd, lei, attempts,
    "paid": true, "ondemand_job_id": 12, "missing_checks": [{"n": 8, "title": "..."}], "requesters": 2,
    "requested_at": "...", "refund_at": "..."}], "none_left": false}`.
-   `none_left: true` = no paid job waiting; poll again later (e.g. every minute). Do not claim normal-lane work with this bot_id.
+   Paid firms carry `"paid": true`; normal-lane firms come without the paid fields. `none_left: true` = nothing queued at all.
 2. **Research** the firm. On a partial firm, focus on `missing_checks`, but submit the whole dump as usual.
 3. **Submit** exactly like the other researchers (same validation, same `research_submit`):
    ```json
