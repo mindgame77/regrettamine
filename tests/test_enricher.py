@@ -41,9 +41,10 @@ def test_enrichment_promotes_without_touching_friend_rows():
         r = c.execute("select research_enrich('toxy-enricher', %s::jsonb)", (json.dumps(p),)).fetchone()[0]
         assert r["valid"] and r["on_page"]
         reasons = {x["reason"] for x in r["rejected"]}
-        assert any("not allowed" in x for x in reasons) and "no source URL" in reasons and "AUM needs a numeric figure" in reasons
+        # source tiers (docs/SOURCE_TIERS.md): any real page is accepted (the embassy .gov bio is tier 'other'); no URL stays unshown
+        assert not any("not allowed" in x for x in reasons) and "no source URL" in reasons and "AUM needs a numeric figure" in reasons
         n = lambda k: len(c.execute("select _sec_items(%s, %s)", (k, fid)).fetchone()[0])
-        assert n("press") == 2 and n("founders") == 3 and n("timeline") == 1 and n("legal") == 2 and n("funds") == 1
+        assert n("press") == 2 and n("founders") == 3 and n("timeline") == 1 and n("legal") == 3 and n("funds") == 1
         # firm-owned founder source is labelled as not independent
         assert c.execute("select count(*) from founder_accounts where firm_id = %s and not independent", (fid,)).fetchone()[0] == 2
         fnd = c.execute("select _sec_items('founders', %s)", (fid,)).fetchone()[0]

@@ -21,16 +21,35 @@ const json = (b: unknown, status = 200, extra: Record<string, string> = {}) =>
 // every 400 says what was wrong, how to fix it, and which fields the action needs
 const REQUIRED: Record<string, string[]> = { status: ["action"], gaps: ["action"], claim: ["action", "bot_id"], claim_gap: ["action", "bot_id"],
   submit: ["action", "bot_id", "registry_id", "dump", "(optional) lps", "(optional) lps_over_100"],
-  enrich: ["action", "bot_id", "enrichment {slug or registry_id, sections, confirm, fix, add, leads, notes, (optional) searches}"], fail: ["action", "bot_id", "registry_id", "reason"], skip: ["action", "bot_id", "registry_id", "reason"] };
+  enrich: ["action", "bot_id", "enrichment {slug or registry_id, sections, confirm, fix, add, leads, notes, (optional) searches}"], fail: ["action", "bot_id", "registry_id", "reason"], sources: ["action"], needs_source: ["action", "(optional) registry_id, slug, limit"],
+  add_source: ["action", "bot_id", "submission_id", "record_id", "url", "(optional) quote"], skip: ["action", "bot_id", "registry_id", "reason"] };
 const bad = (error: string, hint: string, action?: string) =>
   json({ error, hint, required_fields: action && REQUIRED[action] ? REQUIRED[action] : REQUIRED }, 400);
 const sha256 = async (s: string) => [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)))]
   .map((b) => b.toString(16).padStart(2, "0")).join("");
 const isObj = (v: unknown): v is Record<string, unknown> => !!v && typeof v === "object" && !Array.isArray(v);
 
-function validate(d: unknown, registryId: string) {
-  const errors: string[] = []; let good = 0, bad = 0;
-  if (!isObj(d)) return { errors: ["dump must be a JSON object"], good, bad };
+// tier of one source URL: 'trusted' when the host is an allowlisted domain (public.trusted_source_domains) or a subdomain,
+// or an official government / court host; otherwise 'other'. Mirrors public.source_tier().
+const GOV = /(\.gov|\.gov\.[a-z]{2}|\.gouv\.[a-z]{2}|\.mil|\.europa\.eu|\.gc\.ca|\.admin\.ch)$/;
+function tierOf(url: string, allow: string[]): "trusted" | "other" {
+  const h = (url.toLowerCase().match(/^https?:\/\/(?:www\.)?([^/:?#\s]+)/) ?? [])[1] ?? "";
+  if (allow.some((d) => h === d || h.endsWith("." + d))) return "trusted";
+  if ((GOV.test(h) && !/embass/.test(h)) || /(^|\.)courts?\./.test(h) || /\.courts?\.[a-z.]+$/.test(h)) return "trusted";
+  return "other";
+}
+let allowCache: { at: number; list: string[] } = { at: 0, list: [] };
+async function allowlist(): Promise<string[]> {
+  if (Date.now() - allowCache.at < 300_000 && allowCache.list.length) return allowCache.list;
+  const { data } = await db.from("trusted_source_domains").select("domain");
+  if (data?.length) allowCache = { at: Date.now(), list: data.map((r: any) => r.domain) };
+  return allowCache.list;
+}
+
+function validate(d: unknown, registryId: string, allow: string[] = []) {
+  const errors: string[] = [], w: string[] = []; let good = 0, bad = 0;
+  const tiers = { trusted: 0, other: 0, needs_source: 0 };
+  if (!isObj(d)) return { errors: ["dump must be a JSON object"], good, bad, warnings: w, tiers };
   for (const k of TOP_KEYS) if (!(k in d)) errors.push(`missing top-level key: ${k}`);
   if (d.schema_version !== "dump-1.2") errors.push(`schema_version must be "dump-1.2"`);
   if (!isObj(d.firm)) errors.push("firm must be an object");
@@ -53,20 +72,24 @@ function validate(d: unknown, registryId: string) {
     if (!CERTAINTY.includes(r.certainty)) e.push("certainty invalid");
     if (!Array.isArray(r.query_ids)) e.push("query_ids must be an array");
     else for (const q of r.query_ids) if (!qids.has(q)) { e.push(`query_id ${q} not in search_log`); break; }
-    if (!Array.isArray(r.sources) || r.sources.length === 0) e.push("no sources (every record needs >=1 source)");
-    else r.sources.forEach((s: any, j: number) => {
-      if (!isObj(s)) { e.push(`sources[${j}] not an object`); return; }
-      if (typeof s.url !== "string" || !URL_OK.test(s.url)) e.push(`sources[${j}].url missing/invalid`);
-      else if (BAD_URL.test(s.url)) e.push(`sources[${j}].url is a search/chat page, not a source page`);
-      if (typeof s.quote !== "string" || s.quote.trim().length < 5) e.push(`sources[${j}].quote missing`);
-      else if (s.quote.length > 300) e.push(`sources[${j}].quote > 300 chars`);
-      if (typeof s.retrieved_at !== "string" || !DATE.test(s.retrieved_at)) e.push(`sources[${j}].retrieved_at missing/not ISO`);
-      if (!["T1", "T2", "T3"].includes(s.tier)) e.push(`sources[${j}].tier invalid`);
-      if (typeof s.body_read !== "boolean" || typeof s.firm_controlled !== "boolean") e.push(`sources[${j}].body_read/firm_controlled must be boolean`);
+    // Source tiers (docs/SOURCE_TIERS.md): sources never reject a record. Each usable source URL is tagged 'trusted'
+    // (allowlist / government / courts) or 'other'; a record with no usable source is kept and flagged needs_source.
+    let usable = 0, trusted = false;
+    (Array.isArray(r.sources) ? r.sources : []).forEach((s: any, j: number) => {
+      if (!isObj(s)) { w.push(`${p}: sources[${j}] not an object (ignored)`); return; }
+      if (typeof s.url !== "string" || !URL_OK.test(s.url)) { w.push(`${p}: sources[${j}].url missing/invalid (ignored)`); return; }
+      if (BAD_URL.test(s.url)) { w.push(`${p}: sources[${j}].url is a search/chat page (ignored); cite the page itself`); return; }
+      usable++; if (tierOf(s.url, allow) === "trusted") trusted = true;
+      if (typeof s.quote !== "string" || s.quote.trim().length < 5) w.push(`${p}: sources[${j}].quote missing`);
+      else if (s.quote.length > 300) w.push(`${p}: sources[${j}].quote > 300 chars`);
+      if (typeof s.retrieved_at !== "string" || !DATE.test(s.retrieved_at)) w.push(`${p}: sources[${j}].retrieved_at missing/not ISO`);
+      if (s.tier != null && !["T1", "T2", "T3"].includes(s.tier)) w.push(`${p}: sources[${j}].tier should be T1|T2|T3`);
+      if (s.body_read != null && typeof s.body_read !== "boolean" || s.firm_controlled != null && typeof s.firm_controlled !== "boolean") w.push(`${p}: sources[${j}].body_read/firm_controlled should be boolean`);
     });
+    if (!e.length) tiers[usable === 0 ? "needs_source" : trusted ? "trusted" : "other"]++;
     if (e.length) { bad++; errors.push(`${p}: ${e.join("; ")}`); } else good++;
   });
-  return { errors, good, bad };
+  return { errors, good, bad, warnings: w, tiers };
 }
 
 // optional submit.lps: [{lp_name, lp_type, status, source_url, ...}] -> public.firm_lps (only if the dump is accepted)
@@ -199,7 +222,7 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
           `(fields: ${LP_FIELDS.join(", ")}; required: lp_name, status confirmed|lead, source_url) or omit lps, then resubmit`,
           required_fields: REQUIRED.submit }, 400);
       }
-      const v = validate(body.dump, body.registry_id);
+      const v = validate(body.dump, body.registry_id, await allowlist());
       const valid = v.errors.length === 0;
       const { data, error } = await db.rpc("research_submit", { p_id: body.registry_id, p_bot: bot,
         p_payload: body.dump ?? null, p_count: v.good + v.bad, p_valid: valid, p_errors: valid ? null : v.errors.slice(0, 200) });
@@ -212,8 +235,8 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
         lpRes = r.error ? { ok: false, error: "lps not stored (server error); dump was stored" } : r.data;
       }
       return json({ ok: valid, ...(lpRes !== undefined ? { lps: lpRes } : {}), status: data.status, attempts: data.attempts ?? null, accepted_records: valid ? v.good : 0,
-        rejected_records: v.bad, errors: v.errors.slice(0, 200),
-        hint: valid ? "stored; claim the next firm" : "not accepted (kept for audit only); fix ALL errors and resubmit the whole dump once (same registry_id, same bot_id)" }, valid ? 200 : 422);
+        rejected_records: v.bad, errors: v.errors.slice(0, 200), source_tiers: v.tiers, warnings: v.warnings.slice(0, 200),
+        hint: valid ? (v.tiers.needs_source ? `stored; ${v.tiers.needs_source} record(s) have no usable source: kept as needs_source (hidden until a source is added). Claim the next firm` : "stored; claim the next firm") : "not accepted (kept for audit only); fix ALL errors and resubmit the whole dump once (same registry_id, same bot_id)" }, valid ? 200 : 422);
     }
     case "enrich": {
       // Enricher results for one firm (sections + confirm/fix/add/leads, each item with a source URL; optional searches log).
@@ -230,7 +253,31 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       if (data.error) return json({ error: data.error }, 409);
       return json({ ok: data.valid, ...data, hint: data.valid ? (data.on_page ? "stored and promoted to the firm page; rejected items (if any) list the reason, fix their source and resubmit the whole file"
           : "stored, not on a page yet: no published firm page for this slug/registry_id (it is created when the firm's research report is accepted, then these items are promoted); rejected items (if any) list the reason")
-        : "nothing accepted: every item needs an allowed source URL (no .gov/.mil except SEC and courts)" }, data.valid ? 200 : 422);
+        : "nothing accepted: every item needs a source URL of the page itself (any site; search/chat result pages are not sources)" }, data.valid ? 200 : 422);
+    }
+    case "sources": {
+      // the trusted-source allowlist (tier 'trusted'); any other http(s) page is accepted as tier 'other'
+      const { data, error } = await db.from("trusted_source_domains").select("domain, label, kind, path_like").order("domain");
+      return error ? json({ error: "server error" }, 500) : json({ trusted: data, other: "any other http(s) page is accepted and shown as an other source",
+        never: "search or chat result pages (google/bing/duckduckgo search, grok, chatgpt, perplexity search)" });
+    }
+    case "needs_source": {
+      // Enricher queue: bot records with no usable source (hidden publicly until a source is added via add_source)
+      const n = Number(body.limit ?? 100);
+      let q = db.from("facts_needing_source").select("submission_id, registry_id, slug, firm_name, record_id, field_path, checklist_item, value, received_at")
+        .order("received_at", { ascending: false }).limit(Number.isInteger(n) && n > 0 && n <= 500 ? n : 100);
+      if (typeof body.registry_id === "string") q = q.eq("registry_id", body.registry_id);
+      if (typeof body.slug === "string") q = q.eq("slug", body.slug);
+      const { data, error } = await q;
+      return error ? json({ error: "server error" }, 500) : json({ facts: data, count: (data ?? []).length });
+    }
+    case "add_source": {
+      if (!bot || !Number.isInteger(body.submission_id) || typeof body.record_id !== "string" || typeof body.url !== "string")
+        return bad("bot_id, submission_id (integer), record_id and url required", "take submission_id + record_id from action needs_source; url = the page that states the fact", "add_source");
+      const { data, error } = await db.rpc("fact_add_source", { p_sub: body.submission_id, p_record: body.record_id, p_url: body.url,
+        p_quote: typeof body.quote === "string" ? body.quote : null, p_by: bot });
+      if (error) return json({ error: "server error" }, 500);
+      return json(data, data.status === "ok" ? 200 : 400);
     }
     case "fail": {
       if (!bot || typeof body.registry_id !== "string") return bad("bot_id and registry_id required", "send the registry_id you claimed, the same bot_id, and a short reason", "fail");
@@ -261,7 +308,7 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       if (error) return json({ error: "server error" }, 500);
       return data.error ? json({ error: data.error }, 409) : json(data);
     }
-    default: return bad("action must be claim | submit | enrich | fail | skip | status | gaps | claim_gap",
+    default: return bad("action must be claim | submit | enrich | fail | skip | status | gaps | claim_gap | sources | needs_source | add_source",
       'set "action" to one of the listed values; start with {"action":"status","bot_id":"your-bot"}');
   }
 }

@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
-import { renderFirm, sitemapIndex, sitemapPart, parseFirmPath, fillFirm, firmHead } from './firm.mjs';
+import { renderFirm, sitemapIndex, sitemapPart, parseFirmPath, fillFirm, firmHead, secTitle } from './firm.mjs';
 
 const OUT = new URL('../../site-launch/', import.meta.url);
 const DATA = new URL('../../data/launch/', import.meta.url);
@@ -15,6 +15,7 @@ const db = (calls = []) => async (url, init) => {
   const fn = url.split('/rpc/')[1]; const a = JSON.parse(init.body); calls.push(fn);
   assert.equal(init.headers.apikey, 'anon');
   if (fn === 'firm_meta') return Response.json(FIRMS[a.p_slug] ? [FIRMS[a.p_slug]] : []);
+  if (fn === 'firm_redirect') return Response.json(a.p_slug === 'sequoia-capital-2' ? 'sequoia' : null);
   if (fn === 'firm_sitemap') {
     const all = Array.from({ length: 12345 }, (_, i) => ({ slug: `f${i}`, updated_at: '2026-10-01T00:00:00Z', total: 12345 }));
     return Response.json(all.slice((a.p_page - 1) * a.p_size, a.p_page * a.p_size));
@@ -90,4 +91,25 @@ test('split sitemaps', async () => {
   assert.equal((await sitemapPart({ name: 'firms-3.xml', env, fetchImpl: db() })).status, 404);
   assert.equal((await sitemapPart({ name: 'x.xml', env, fetchImpl: db() })).status, 404);
   assert.match(await (await sitemapPart({ name: 'static.xml', env, fetchImpl: db() })).text(), /how-we-check/);
+});
+
+test('merged duplicate slug 301s to the surviving page (summary and full, query kept)', async () => {
+  let r = await get('/vc/sequoia-capital-2/');
+  assert.equal(r.status, 301); assert.equal(r.headers.get('location'), 'https://regretamin.com/vc/sequoia/');
+  r = await get('/vc/sequoia-capital-2/full/?x=1');
+  assert.equal(r.status, 301); assert.equal(r.headers.get('location'), 'https://regretamin.com/vc/sequoia/full/?x=1');
+  assert.equal((await get('/vc/not-a-firm/')).status, 404);
+});
+
+test('SEC legal names shown in title case on the full check (display only)', () => {
+  const cases = {
+    'IVP MANAGEMENT, L.L.C.': 'IVP Management, L.L.C.',
+    'INSTITUTIONAL VENTURE PARTNERS XVII, L.P.': 'Institutional Venture Partners XVII, L.P.',
+    'BRV GP, INC.': 'BRV GP, Inc.',
+    'H.I.G. CAPITAL, LLC': 'H.I.G. Capital, LLC',
+    'SEQUOIA CAPITAL OPERATIONS LLC': 'Sequoia Capital Operations LLC',
+    'BAIN CAPITAL VENTURE INVESTORS, LP': 'Bain Capital Venture Investors, LP',
+    'Already Mixed Case LLC': 'Already Mixed Case LLC',
+  };
+  for (const [a, b] of Object.entries(cases)) assert.equal(secTitle(a), b, a);
 });
