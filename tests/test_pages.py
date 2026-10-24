@@ -542,3 +542,10 @@ def test_source_dates_one_format_and_promo_source_rules():
     assert "const fdate" in js and "esc(c.date)" not in js and "esc(s.date)" not in js and "esc(f.date)" not in js
     sql = (ROOT / "supabase" / "migrations" / "20261024100000_promote_src_rules.sql").read_text(encoding="utf-8")
     assert "embassy" in sql and "sec\\.gov" in sql and "update research_submissions" not in sql
+
+
+def test_promote_raum_usd():
+    # Form ADV raum_usd becomes a 'Regulatory AUM' card (as on a16z); amount_usd stays 'Assets'.
+    sql = (ROOT / "supabase" / "migrations" / "20261024110000_promote_raum.sql").read_text(encoding="utf-8")
+    assert "raum_usd" in sql and "'Regulatory AUM'" in sql and "_promo_src_ok" in sql
+    assert "grant execute on function public.promote_bot_facts(uuid) to service_role" in sql
