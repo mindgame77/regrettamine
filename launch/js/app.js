@@ -399,13 +399,16 @@
       b.disabled = false; if (!error && (!on || (d && d.saved))) set(on);
     };
   }
-  // Checking view (summary page, 10 checks not all done): bump the firm in the research queue once, poll every 10 s,
-  // re-render with the real rows when a check finishes, and show "Check complete" when all 10 are done.
+  // Summary page, 10 checks not all done: bump the firm in the research queue once. While it is queued or claimed, poll every 10 s,
+  // re-render with the real rows when a check finishes or the claim changes (the Checking view shows only while claimed),
+  // and show "Check complete" when all 10 are done.
   let ST = null, POLL = null, BUMPED = false, NOTIFY = false;
   async function checking() {
-    if (!sb || !VIEW || !VIEW.checking) { if (POLL) { clearInterval(POLL); POLL = null; } return; }
+    const live = VIEW && VIEW.pending && (VIEW.queue === 'queued' || VIEW.queue === 'claimed');
+    if (!sb || !VIEW || !VIEW.pending) { if (POLL) { clearInterval(POLL); POLL = null; } return; }
     if (!BUMPED) { BUMPED = true; sb.rpc('bump_firm_check', { p_slug: main.dataset.firm, p_anon: anonId() }).then(() => {}, () => {}); }
-    if (!NOTIFY) notifyBox();
+    if (!live) { if (POLL) { clearInterval(POLL); POLL = null; } return; }
+    if (VIEW.checking && !NOTIFY) notifyBox();
     if (!POLL) POLL = setInterval(pollChecks, 10000);
     if (!ST) pollChecks();
   }
@@ -413,10 +416,10 @@
     if (document.hidden) return;
     const { data } = await Promise.resolve(sb.rpc('firm_check_status', { p_slug: main.dataset.firm })).catch(() => ({}));
     if (!data || data.status !== 'ok') return;
-    const was = PAGE ? (PAGE.checks || []).filter(r => r.state !== 'nc').length : -1;
+    const was = PAGE ? (PAGE.checks || []).filter(r => r.state !== 'nc').length : -1, wasQ = VIEW ? VIEW.queue : undefined;
     ST = data;
     if (data.done !== was) { if (data.complete) ST.just_done = true; return loadPage(false); }
-    if (VIEW && VIEW.checking) VIEW = window.RegretCompany.summary(main, PAGE, ST);
+    if (VIEW && (VIEW.checking || data.queue !== wasQ) && main.dataset.view === 'summary') { VIEW = window.RegretCompany.summary(main, PAGE, ST); checking(); }
   }
   async function notifyBox() {
     const f = main.querySelector('[data-notify]'); if (!f) return; NOTIFY = true;

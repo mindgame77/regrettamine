@@ -286,6 +286,7 @@ nav .r a.on{color:var(--vio);font-weight:700}
 .sgm .msg{color:#7EE2B0}
 @media (max-width:640px){.sgi{padding:36px 22px 28px}.sg4 b{font-size:72px}.sgm h2{font-size:28px}}
 .tx em.srch{color:var(--mute);font-weight:500;font-size:13.5px;margin-top:4px}
+.tx em.sdt{display:block;color:var(--mute);font-style:normal;font-weight:500;font-size:12.5px;margin-top:3px}
 
 /* legal pages + footer */
 .lg{max-width:760px}.lg h1{font-size:44px}.lg .eff{color:var(--mute);font-size:14px;margin:14px 0 0}.lg .toc{position:static;display:flex;flex-wrap:wrap;gap:8px 14px;margin:24px 0 8px;font-size:14px}.lg .toc a,.lg a{color:var(--vio)}.lg h2{font-size:22px;margin:40px 0 10px}.lg ul{line-height:1.55;margin-bottom:16px}.lg li{display:block;position:relative;padding-left:18px}.lg li:before{position:absolute;left:0;top:0}.lg p+p{margin-top:10px}
