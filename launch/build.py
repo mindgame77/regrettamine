@@ -45,8 +45,15 @@ def page(path, body, root, title=S['brand'], company=False, active='', head=''):
 {pricing_modal()}'''
     os.makedirs(os.path.dirname(path), exist_ok=True)
     open(path, 'w').write(f'''<!doctype html><html lang="en"><head>{'<meta name="robots" content="noindex">' if NOINDEX else ''}<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{E(title)}</title>{head}
-<link rel="icon" href="{root}logo.svg"><link rel="stylesheet" href="{root}style.css?v={V['css']}"><script>window.REGRET={json.dumps(CFG)};window.REGRET_ROOT="{root}"</script>
+<link rel="icon" href="{root}logo.svg"><link rel="stylesheet" href="{root}style.css?v={V['css']}"><script>window.REGRET={json.dumps(CFG)};window.REGRET_ROOT="{root}";{AUTH_HINT}</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>{scripts}</head><body>{nav}{body}{FOOT(root)}{modals}</body></html>''')
+
+# Runs before first paint: read the cached Supabase session (sb-<ref>-auth-token in localStorage) so the header starts in the right state
+# (html.au-in: account button, html.au-out: Sign in). No cache read possible -> html.au-wait hides both until js/app.js resolves auth.
+AUTH_HINT = ('(function(){var d=document.documentElement,c="au-out";try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);'
+             'if(/^sb-.*-auth-token$/.test(k)){var v=JSON.parse(localStorage.getItem(k)||"null");if(v&&(v.refresh_token||(v.currentSession&&v.currentSession.refresh_token))){c="au-in";'
+             'window.REGRET_AU={email:(v.user&&v.user.email)||""}}}}}catch(e){c="au-wait"}d.classList.add(c)})()')
+
 
 SITE = 'https://regretamin.com/'
 # Firm pages: ONE template per view (summary, full) with {{...}} placeholders. Static pages (GitHub Pages) and the

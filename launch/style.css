@@ -369,3 +369,8 @@ nav .r a.on{color:var(--vio);font-weight:700}
 .ld .rgt-tab em[hidden]{display:inline-block;visibility:hidden;width:30px}
 .ld .kf{min-height:60px}.ld .hfs{min-height:130px}.ld .hf.skc{min-height:118px;justify-content:center}.ld .csum{min-height:264px}.ld .ck.skc{min-height:84px;justify-content:center}.ld .spl{min-height:31px}.ctab.skt tbody tr{height:85px}
 .lfail{border:1px solid var(--line,#e6e3ef);border-radius:14px;padding:28px 24px;text-align:center;background:#fff;margin:8px 0}.lfail b{display:block;font-size:18px}.lfail p{color:var(--mute);margin:6px 0 16px}
+/* Header auth state before js/app.js resolves the session (set by the inline head script in build.py page()) */
+html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inline-block!important}html.au-wait #signin,html.au-wait #acct{visibility:hidden}
+/* Phones: compact Pricing + Sign in in the header (How we check stays desktop-only) */
+@media (max-width:640px){nav{padding:14px 14px}nav .r{gap:10px;font-size:14px}nav .r a[data-open="paywall"],nav .r a#signin{display:inline}nav .r a#signin:not([hidden]){color:var(--vio);font-weight:700}nav .r a#signin[hidden]{display:none}nav .logo img{margin-right:0}.left{padding:4px 8px;font-size:12px}nav .navr .nm{display:none}nav .r .dd a{display:block}nav .logo{font-size:18px;gap:6px}nav .logo img{height:24px}nav .r a,.left{white-space:nowrap}}
+@media (max-width:360px){nav .r a[data-open="paywall"]{display:none}}
