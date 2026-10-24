@@ -526,3 +526,12 @@ def test_landing_stats_agree_with_the_tabs():
     assert stats["legal matters on file"] == tabs
     assert stats["funds"] == len(funds)
     assert stats["sources cited"] > 63
+
+
+def test_promote_bot_facts_rules():
+    sql = (ROOT / "supabase" / "migrations" / "20261024090000_promote_bot_facts.sql").read_text(encoding="utf-8")
+    assert "'promoted from submission ' || rec.sub" in sql            # origin on every promoted fact
+    assert "origin is null);" in sql                                  # never compete with curated loader cards
+    assert "where firm_profile_facts.origin like 'promoted from submission %'" in sql  # never overwrite loader rows
+    assert "exception when others" in sql                             # never blocks ingest
+    assert "update research_submissions" not in sql and "delete from research_submissions" not in sql
