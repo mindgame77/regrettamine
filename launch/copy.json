@@ -322,11 +322,12 @@
    "fine": "Monthly plans renew each month. 1 firm = 1 credit."
   },
   "pending": {
-   "h1": "We're checking this firm now",
-   "body": "isn't in our database yet. We're running all 10 checks — we'll let you know in 5 minutes.",
+   "h1": "Request this firm",
+   "body": "isn't on Regretamin yet. Leave your email and we'll add it, then email you when its page is ready.",
    "email_placeholder": "you@startup.com",
-   "button": "Email me",
-   "note": "This uses 1 credit only when the result is ready."
+   "website_placeholder": "Firm website (optional)",
+   "button": "Request this firm",
+   "note": "Free. We only email you about this firm."
   },
   "signed_out": {
    "account_h2": "Sign in to see your account",
@@ -797,10 +798,16 @@
   "has_plan": "You already have a plan —",
   "has_plan_link": "manage it",
   "magic_sent": "Check your inbox for the sign-in link.",
-  "suggest_none": "Not in our database yet, run a live check →",
+  "suggest_none": "No results. Request this firm →",
   "this_firm": "This firm",
   "error": "Something went wrong, try again.",
   "notify_ok": "Got it. We'll email you when it's ready.",
+  "req_dup": "You already asked for this firm. We'll email you when it's ready.",
+  "req_exists": "This firm is already on Regretamin: ",
+  "req_bad_email": "Please enter a valid email.",
+  "req_bad_name": "Please search for the firm name first.",
+  "req_bad_website": "That website doesn't look right. Leave it empty or check it.",
+  "req_rate": "Too many requests. Please try again later.",
   "balance_fail": "Could not load your balance",
   "retry": "Try again",
   "load_fail_h": "Couldn’t load this firm",

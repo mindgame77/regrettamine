@@ -44,6 +44,13 @@ async function hasPlan(uid: string, customer: string | null): Promise<boolean> {
   const { data: s } = await admin.from("subscriptions").select("status, current_period_end").eq("profile_id", uid).maybeSingle();
   return !!s && LIVE.includes(s.status) && Date.parse(s.current_period_end) > Date.now();
 }
+// Cancel / back from Stripe returns to the page the user came from (same site, path only), else /account/.
+function cancelUrl(site: string, p: unknown): string {
+  const base = site.replace(/\/?$/, "/");
+  if (typeof p !== "string" || !/^\/[^/\\]/.test(p) || p.length > 300 || /[\s<>"]/.test(p)) return base + "account/";
+  try { const u = new URL(p, base); return u.origin === new URL(base).origin ? u.toString() : base + "account/"; } catch { return base + "account/"; }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   try { return await handle(req); } catch (e) {
@@ -55,7 +62,7 @@ async function handle(req: Request): Promise<Response> {
   const sb = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!, { global: { headers: { Authorization: req.headers.get("Authorization") ?? "" } } });
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return err("sign in", 401);
-  const { kind, code } = await req.json();
+  const { kind, code, return_path } = await req.json();
   const c = code ? await lookupCode(stripe, code).catch(() => null) : null;
   if (code && !c) return err("bad code", 400);
   let price: string, checks: number, name = "", discount: boolean;
@@ -75,7 +82,7 @@ async function handle(req: Request): Promise<Response> {
     mode: sub ? "subscription" : "payment", line_items: [{ price, quantity: 1 }], ...who,
     client_reference_id: user.id, metadata: meta, ...(discount ? { discounts: [{ promotion_code: c!.promo.id }] } : {}),
     ...(sub ? { subscription_data: { metadata: meta } } : {}),
-    success_url: site + "?paid=1", cancel_url: site,
+    success_url: site + "?paid=1", cancel_url: cancelUrl(site, return_path),
     ...(discount ? {} : { allow_promotion_codes: true }), // Stripe rejects allow_promotion_codes together with discounts
   });
   return new Response(JSON.stringify({ url: s.url }), { headers: { ...cors, "Content-Type": "application/json" } });

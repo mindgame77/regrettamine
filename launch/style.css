@@ -31,6 +31,7 @@ nav .r{display:flex;gap:22px;align-items:center;font-weight:500;color:var(--ink2
 .md .btn{width:100%}.md .price{margin:24px 0 0;grid-template-columns:repeat(3,1fr)}.md .pr .btn{margin-top:16px}
 .pend{max-width:640px;margin:80px auto 120px;text-align:center}.pend h1{font:800 46px/1.05 'Bricolage Grotesque';margin:20px 0 12px}.pend .sp{width:64px;height:64px;margin:0 auto;border-radius:50%;border:6px solid var(--viobg);border-top-color:var(--vio)}
 .pend form{display:flex;gap:10px;margin:28px auto 0;max-width:480px}.pend .in{margin:0}
+.pend form{flex-wrap:wrap}.pend .in[name=email]{flex:1}.pend .in[name=website]{order:3;flex-basis:100%}
 .mob nav{padding:14px 18px}.mob nav .r a{display:none}.mob .wrap{padding:0 16px}.mob .hd{flex-direction:column;align-items:stretch;padding:24px 0 16px}.mob .hd h1{font-size:32px}.mob .sb.sm{max-width:none}
 .mob .row{grid-template-columns:28px 1fr;padding:14px 16px}.mob .row .pc{grid-column:2}.mob .row .lk{display:none}.mob .unlock{flex-direction:column;align-items:stretch;gap:12px}
 

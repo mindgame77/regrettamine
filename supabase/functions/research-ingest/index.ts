@@ -21,7 +21,7 @@ const json = (b: unknown, status = 200, extra: Record<string, string> = {}) =>
 // every 400 says what was wrong, how to fix it, and which fields the action needs
 const REQUIRED: Record<string, string[]> = { status: ["action"], gaps: ["action"], claim: ["action", "bot_id"], claim_gap: ["action", "bot_id"],
   submit: ["action", "bot_id", "registry_id", "dump", "(optional) lps", "(optional) lps_over_100"],
-  enrich: ["action", "bot_id", "enrichment {slug or registry_id, sections, confirm, fix, add, leads, notes, (optional) searches}"], fail: ["action", "bot_id", "registry_id", "reason"], sources: ["action"], needs_source: ["action", "(optional) registry_id, slug, limit"],
+  enrich: ["action", "bot_id", "enrichment {slug or registry_id, sections, confirm, fix, add, leads, notes, (optional) searches}"], fail: ["action", "bot_id", "registry_id", "reason"], sources: ["action"], firm_requests: ["action", "(optional) limit"], needs_source: ["action", "(optional) registry_id, slug, limit"],
   add_source: ["action", "bot_id", "submission_id", "record_id", "url", "(optional) quote"], skip: ["action", "bot_id", "registry_id", "reason"] };
 const bad = (error: string, hint: string, action?: string) =>
   json({ error, hint, required_fields: action && REQUIRED[action] ? REQUIRED[action] : REQUIRED }, 400);
@@ -271,6 +271,12 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       const { data, error } = await q;
       return error ? json({ error: "server error" }, 500) : json({ facts: data, count: (data ?? []).length });
     }
+    case "firm_requests": {
+      // List builders: firms visitors asked for (search had no results), most wanted first; no emails. docs/FIRM_REQUESTS.md
+      const { data, error } = await db.rpc("firm_requests_list", { p_limit: Number.isInteger(body.limit) ? body.limit : 100 });
+      return error ? json({ error: "server error" }, 500) : json({ requests: data, count: (data ?? []).length,
+        hint: "add the firm to research_queue with the same name (or website) and it links automatically; requesters are emailed when its research lands" });
+    }
     case "add_source": {
       if (!bot || !Number.isInteger(body.submission_id) || typeof body.record_id !== "string" || typeof body.url !== "string")
         return bad("bot_id, submission_id (integer), record_id and url required", "take submission_id + record_id from action needs_source; url = the page that states the fact", "add_source");
@@ -308,7 +314,7 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       if (error) return json({ error: "server error" }, 500);
       return data.error ? json({ error: data.error }, 409) : json(data);
     }
-    default: return bad("action must be claim | submit | enrich | fail | skip | status | gaps | claim_gap | sources | needs_source | add_source",
+    default: return bad("action must be claim | submit | enrich | fail | skip | status | gaps | claim_gap | sources | needs_source | add_source | firm_requests",
       'set "action" to one of the listed values; start with {"action":"status","bot_id":"your-bot"}');
   }
 }

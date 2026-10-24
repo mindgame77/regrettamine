@@ -22,15 +22,24 @@ revoke all on public.firm_slug_redirects from anon, authenticated;
 -- Where an old slug lives now (follows chains, only to a live page). Used by the /vc/ edge for the 301.
 create or replace function public.firm_redirect(p_slug text) returns text
 language plpgsql stable security definer set search_path = public as $$
-declare s text := lower(btrim(coalesce(p_slug, ''))); n text; i int := 0;
+declare s text := lower(btrim(coalesce(p_slug, ''))); n text; i int := 0; k text;
 begin
   loop
     select new_slug into n from firm_slug_redirects where old_slug = s;
     exit when n is null or i > 5;
     s := n; n := null; i := i + 1;
   end loop;
-  if i = 0 then return null; end if;
-  if exists (select 1 from firms f where f.slug = s and f.published and f.deleted_at is null and not coalesce(f.is_test, false)) then return s; end if;
+  if i > 0 and exists (select 1 from firms f where f.slug = s and f.published and f.deleted_at is null and not coalesce(f.is_test, false)) then return s; end if;
+  -- No redirect row: a common slug ('sequoia-capital', 'andreessen-horowitz', 'benchmark') is matched by name against the
+  -- live firms' name / display name / short name / aliases (same key as search dedupe). Only an unambiguous match redirects.
+  if s !~ '^[a-z0-9][a-z0-9-]{1,80}$' then return null; end if;
+  k := _queue_name_key(replace(lower(btrim(coalesce(p_slug, ''))), '-', ' '));
+  if length(coalesce(k, '')) < 2 then return null; end if;
+  select min(f.slug), count(distinct f.id) into n, i from firms f
+   where f.deleted_at is null and f.published and not coalesce(f.is_test, false) and f.data_status = 'real'
+     and (_queue_name_key(f.name) = k or _queue_name_key(f.display_name) = k or _queue_name_key(f.short_name) = k
+          or exists (select 1 from firm_aliases a where a.firm_id = f.id and _queue_name_key(a.alias) = k));
+  if i = 1 and n <> lower(btrim(p_slug)) then return n; end if;
   return null;
 end $$;
 revoke all on function public.firm_redirect(text) from public;
