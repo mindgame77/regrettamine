@@ -238,6 +238,8 @@ def main():
     page(os.path.join(OUT, '_tpl', 'full.html'), result(T), '../../../', T_NAME + S['title_suffix'], company=True, head=T_HEAD)
     nf = COPY.get('not_found', {'h1': 'We could not find that firm', 'p': 'It may not be checked yet. Search for it and we will start a check.'})
     page(os.path.join(OUT, '_tpl', '404.html'), f'<main class="wrap"><div class="hero"><h1>{E(nf["h1"])}</h1><p>{E(nf["p"])}</p>{SB()}</div></main>', '/', 'Not found' + S['title_suffix'], head='<meta name="robots" content="noindex">')
+    # Site-wide 404: Cloudflare Pages serves /404.html with status 404 for unknown paths (no soft-404 SPA fallback).
+    page(os.path.join(OUT, '404.html'), f'<main class="wrap"><div class="hero"><h1>Page not found</h1><p>This page does not exist. Search for a firm instead.</p>{SB()}</div></main>', '/', 'Not found' + S['title_suffix'], head='<meta name="robots" content="noindex">')
     tpl = {v: open(os.path.join(OUT, '_tpl', v + '.html')).read() for v in ('summary', 'full')}
     # Edge cache key version: changes whenever the template or edge renderer changes, so a deploy never serves stale heads.
     import hashlib
