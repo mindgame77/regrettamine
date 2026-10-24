@@ -50,9 +50,8 @@ def test_paid_research_lifecycle():
         # other bots never see the paid lane; toxy-researcher-3 gets it, one at a time
         assert "zz-od1" not in [r[0] for r in cur.execute("select registry_id from research_claim('toxy-researcher-1', 5)").fetchall()]
         assert [r[0] for r in cur.execute("select registry_id from research_claim('toxy-researcher-3', 5)").fetchall()] == ["zz-od1"]
-        # paid lane empty: toxy-researcher-3 falls through to normal (non-paid) work
-        nxt = [r[0] for r in cur.execute("select registry_id from research_claim('toxy-researcher-3', 5)").fetchall()]
-        assert "zz-od1" not in nxt
+        # nothing requested is waiting: toxy-researcher-3 gets nothing (never normal-lane work)
+        assert cur.execute("select count(*) from research_claim('toxy-researcher-3', 5)").fetchone()[0] == 0
         info = _j(cur.execute("select ondemand_job_info(array['zz-od1'])").fetchone()[0])["zz-od1"]
         assert info["paid"] and info["requesters"] == 2 and len(info["missing_checks"]) == 10
         assert _j(cur.execute("select firm_page(%s, %s, false)", (slug, a2)).fetchone()[0])["ondemand"]["status"] == "in_progress"
@@ -95,4 +94,26 @@ def test_partial_firm_and_refund():
         cur.execute("update firm_check_rows set state = 'clear' where firm_id = %s", (fid,))
         cur.execute("select firm_page('zz-partial', %s, true)", (str(uuid.uuid4()),))
         assert cur.execute("select count(*) from research_requests where firm_id = %s", (fid,)).fetchone()[0] == 1
+        conn.rollback()
+
+
+def test_firm_request_lane():
+    """'Request this firm' files a request-lane row right away; only toxy-researcher-3 claims it, after paid checks."""
+    import psycopg
+
+    with psycopg.connect(DATABASE_URL) as conn, conn.cursor() as cur:
+        a = str(uuid.uuid4())
+        assert _j(cur.execute("select request_firm('Zz Wombatish Requested Capital', 'zz-req@example.com', null, %s)", (a,)).fetchone()[0])["status"] == "ok"
+        rid = cur.execute("select 'req-' || id from firm_requests where name_key = _queue_name_key('Zz Wombatish Requested Capital')").fetchone()[0]
+        assert cur.execute("select lane, status from research_queue where registry_id = %s", (rid,)).fetchone() == ("request", "queued")
+        assert cur.execute("select count(*) from firms where registry_id = %s", (rid,)).fetchone()[0] == 0
+        cur.execute("insert into research_queue (registry_id, name, priority, status) values ('zz-rp1', 'Zz Paidcheck Partners', 900000, 'queued')")
+        fid = cur.execute("select id from firms where registry_id = 'zz-rp1'").fetchone()[0]
+        cur.execute("select _ondemand_enqueue(%s, 'zz-rp1', null, 'spend_free', null, %s)", (fid, a))
+        assert rid not in [r[0] for r in cur.execute("select registry_id from research_claim('toxy-researcher-1', 300)").fetchall()]
+        claims = [[r[0] for r in cur.execute("select registry_id from research_claim('toxy-researcher-3', 5)").fetchall()] for _ in range(3)]
+        assert claims == [["zz-rp1"], [rid], []]
+        cur.execute("select research_submit(%s, 'toxy-researcher-3', %s, 1, true, '[]'::jsonb)", (rid, json.dumps(PAYLOAD)))
+        assert cur.execute("select status from firm_requests where 'req-' || id = %s", (rid,)).fetchone()[0] == "linked"
+        assert cur.execute("select lane from research_queue where registry_id = %s", (rid,)).fetchone()[0] == "normal"
         conn.rollback()
