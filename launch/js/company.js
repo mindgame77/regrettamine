@@ -170,10 +170,17 @@
   function summary(main, P, st) {
     const queue = st && st.queue !== undefined ? st.queue : P.queue;
     const pending = !!(P.checks && P.checks.length) && doneN(P) < 10, checking = pending && queue === 'claimed', justDone = !checking && !!(st && st.just_done);
+    // On-demand research this visitor paid for (firm_page ondemand.mine): 'Research in progress' until a bot holds the claim.
+    const od = P.ondemand, research = !checking && !!(od && od.mine && (od.status === 'queued' || od.status === 'in_progress'));
     main.classList.toggle('checking', checking);
-    main.querySelector('.cside').hidden = !checking;
+    main.querySelector('.cside').hidden = !(checking || research);
+    if (research) { const ep = main.querySelector('[data-notify] p'); if (ep) ep.textContent = CK.research_email; }
     if (checking) checkingHead(main, P, st);
-    else {
+    else if (research) {
+      main.querySelector('.fh h1').textContent = P.firm.name;
+      const b = main.querySelector('.cban'); b.className = 'cban'; b.hidden = false;
+      b.innerHTML = '<div class="ch"><b>' + esc(CK.research) + '</b><span>' + esc(CK.research_sub) + '</span></div>';
+    } else {
       main.querySelector('.fh h1').textContent = P.firm.name;
       const b = main.querySelector('.cban'); b.hidden = !justDone; b.className = 'cban ok';
       b.innerHTML = justDone ? '<div class="ch"><div><b>' + esc(CK.complete) + '</b> <span>' + esc(CK.complete_sub) + '</span></div></div>' : '';
@@ -185,7 +192,7 @@
     const fn = main.querySelector('.rgt-n'), ft = (P.sections || []).filter(s => s.key !== 'checks').reduce((a, s) => a + (s.count || 0), 0);
     if (fn && ft) { fn.textContent = ft; fn.hidden = false; }
     bindTable(main);
-    return { total: 0, head: () => '', checking, pending, queue };
+    return { total: 0, head: () => '', checking, research, pending, queue };
   }
 
   // Checks table (approved layout 3): #, check, result pill, what was found, date searched. A row with something to show

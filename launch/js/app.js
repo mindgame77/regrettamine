@@ -455,11 +455,10 @@
   }
   // Company page: one firm_page() call returns everything (locked: counts + one line per section only).
   let BAL = null, PAGE = null, VIEW = null, SEC = '';
-  // 'Not checked yet' page (no research yet): no credit is ever spent; send the visitor to the request-a-check form instead.
-  const unchecked = () => !!(PAGE && PAGE.unchecked && !PAGE.open);
+  // 'Not checked yet' / partial page: 'Check with 1 credit' buys on-demand research (docs/ON_DEMAND.md). Only when the firm has
+  // nothing to research from (firm_page answers 'unchecked') is the visitor sent to the request-a-check form instead.
   const toRequest = () => { location.href = liveUrl((PAGE && PAGE.firm && PAGE.firm.name) || main.dataset.firm); };
   async function openPay(sec) {
-    if (unchecked()) return toRequest();
     SEC = sec || '';
     $('#pph').textContent = VIEW ? VIEW.head(SEC) : C.copy.site.pay.title;
     $('#pmsg2').textContent = '';
@@ -493,16 +492,15 @@
       b.disabled = false; if (!error && (!on || (d && d.saved))) set(on);
     };
   }
-  // Summary page, 10 checks not all done: bump the firm in the research queue once. While it is queued or claimed, poll every 10 s,
+  // Summary page, 10 checks not all done (page views never move the firm in the queue). While it is queued or claimed, poll every 10 s,
   // re-render with the real rows when a check finishes or the claim changes (the Checking view shows only while claimed),
   // and show "Check complete" when all 10 are done.
-  let ST = null, POLL = null, BUMPED = false, NOTIFY = false;
+  let ST = null, POLL = null, NOTIFY = false;
   async function checking() {
     const live = VIEW && VIEW.pending && (VIEW.queue === 'queued' || VIEW.queue === 'claimed');
     if (!sb || !VIEW || !VIEW.pending) { if (POLL) { clearInterval(POLL); POLL = null; } return; }
-    if (!BUMPED) { BUMPED = true; sb.rpc('bump_firm_check', { p_slug: main.dataset.firm, p_anon: anonId() }).then(() => {}, () => {}); }
     if (!live) { if (POLL) { clearInterval(POLL); POLL = null; } return; }
-    if (VIEW.checking && !NOTIFY) notifyBox();
+    if ((VIEW.checking || VIEW.research) && !NOTIFY) notifyBox();
     if (!POLL) POLL = setInterval(pollChecks, 10000);
     if (!ST) pollChecks();
   }
@@ -513,7 +511,7 @@
     const was = PAGE ? (PAGE.checks || []).filter(r => r.state !== 'nc').length : -1, wasQ = VIEW ? VIEW.queue : undefined;
     ST = data;
     if (data.done !== was) { if (data.complete) ST.just_done = true; return loadPage(false); }
-    if (VIEW && (VIEW.checking || data.queue !== wasQ) && main.dataset.view === 'summary') { VIEW = window.RegretCompany.summary(main, PAGE, ST); checking(); }
+    if (VIEW && (VIEW.checking || VIEW.research || data.queue !== wasQ) && main.dataset.view === 'summary') { VIEW = window.RegretCompany.summary(main, PAGE, ST); checking(); }
   }
   async function notifyBox() {
     const f = main.querySelector('[data-notify]'); if (!f) return; NOTIFY = true;
@@ -574,7 +572,6 @@
     // need_signup -> sign-in popup; out (signed in, 0 credits) -> Pricing.
     main.addEventListener('click', async (e) => {
       const b = e.target.closest('[data-gate]'); if (!b) return;
-      if (unchecked()) return toRequest();
       if (!sb) return;
       const G = C.copy.company.gate, m = b.parentNode.querySelector('.gmsg'); b.disabled = true; b.textContent = G.busy; m.textContent = '';
       const { data, error } = await Promise.resolve(sb.rpc('firm_page', { p_slug: main.dataset.firm, p_anon: anonId(), p_spend: true })).catch(x => ({ error: x }));

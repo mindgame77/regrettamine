@@ -679,6 +679,9 @@
     "Sources",
     "being collected…"
    ],
+   "research": "Research in progress",
+   "research_sub": "You used 1 credit. We'll research this firm within 24 hours, or your credit comes back.",
+   "research_email": "We'll send one email with the link when the research is done.",
    "email_h": "Email me when it's ready",
    "email_p": "We'll send one email with the link when all 10 checks are done.",
    "email_ph": "you@company.com",
