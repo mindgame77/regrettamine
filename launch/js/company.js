@@ -32,7 +32,21 @@
     return '<div class="fct' + (st === 'active' ? ' act' : '') + '">' + p + (f.needs_proof ? '<span class="np">Needs proof</span>' : '') + head + esc(who) + esc(f.text) + '<div class="src">' + src + '</div></div>';
   }
   const spill = (st) => st === 'active' ? '<span class="cs cs-act">Active</span>' : st === 'closed' ? '<span class="cs cs-cl">Closed</span>' : '';
-  function checkRows(P) { return '<div class="list">' + ctable(P, false, 0) + '</div>'; }
+  // /full/ keeps the 906d82a design: the old 10-checks list with evidence rows (the checks table is only on /vc/<slug>/)
+  function checkRows(P) {
+    const det = {}, out = {}; (P.details || []).forEach(r => det[r.row] = r.facts || []); (P.outline || []).forEach(r => out[r.row] = r.items || []);
+    return '<div class="list">' + P.checks.map(r => {
+      const cnt = r.count ? '<span class="cnt ' + (r.state === 'clear' ? 'cg' : 'ca') + '">' + esc(r.count) + '</span>' : '';
+      const gl = P.open ? '' : (out[r.n] || []).map((e, i) => '<button type="button" class="gc' + (e.status === 'active' ? ' act' : '') + '" data-sec="checks" data-kind="' + esc(e.kind) + '" data-year="' + esc(e.year || '') + '">'
+        + '<span class="y">' + esc(e.year || '—') + '</span><span class="k">' + esc(e.kind) + '</span><span class="bl"><span class="bar" style="width:' + (20 + ((e.kind || '').length * 7 + i * 13) % 45) + '%"></span><span class="bar" style="width:22%"></span></span>'
+        + spill(e.status) + '<span class="lkk">' + COPY.locked + '</span></button>').join('');
+      const rank = (f) => caseStatus(f) === 'active' ? 0 : 1;
+      const fs = (det[r.n] || []).map((f, i) => [f, i]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map(x => x[0]);
+      const d = P.open ? (fs.length ? fs.map(factHtml).join('') : '<div class="fct">' + COPY.no_facts + '</div>') : '';
+      return '<div class="row' + (r.n === 10 ? ' last' : '') + (P.open ? ' tog' : '') + '" id="check-' + r.n + '"><span class="n">' + String(r.n).padStart(2, '0') + '</span><div class="tx"><b>' + esc(r.title) + '</b><span>' + esc(r.descr) + '</span></div>'
+        + '<div class="pc">' + pill(r.state) + cnt + '</div><span class="lk"></span><div class="gl">' + gl + '</div><div class="det">' + d + '</div></div>';
+    }).join('') + '</div>';
+  }
 
   // Open-state renderers, keyed by copy.json sections[].renderer
   const R = {
@@ -90,7 +104,7 @@
     const lc = main.querySelector('#lockcard'); lc.hidden = P.open;
     lc.querySelector('b').textContent = fmt(COPY.lockcard, { n: total, firm }); lc.querySelector('p').textContent = COPY.lockcard_sub;
     document.getElementById('puse').textContent = fmt(COPY.use_line, { n: total, firm });
-    bindTable(main);
+    main.querySelectorAll('.row.tog').forEach(row => row.onclick = (e) => { if (!e.target.closest('a')) row.classList.toggle('open'); });
     return { total, head: (key) => { const s = secs.find(x => x.key === key); return s ? fmt(COPY.pay_head, { title: s.title, firm, count: label(s) }) : fmt(COPY.pay_all, { n: total, firm }); } };
   }
 
