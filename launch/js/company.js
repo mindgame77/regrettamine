@@ -15,7 +15,7 @@
     'GGV': 'GGV', 'USV': 'USV', 'TCV': 'TCV', 'IDG': 'IDG', 'NFX': 'NFX', 'DST': 'DST', 'EQT': 'EQT', 'QED': 'QED', 'SOSV': 'SOSV',
     'HV': 'HV', 'GV': 'GV', 'DCM': 'DCM', 'JMI': 'JMI', 'TA': 'TA', 'RRE': 'RRE', 'FPV': 'FPV', 'AVF': 'AVF', 'ESP': 'ESP', 'HIG': 'HIG',
     'H.I.G.': 'H.I.G.', 'UBS': 'UBS', 'LGT': 'LGT', 'GCM': 'GCM', 'HGGC': 'HGGC', 'BVP': 'BVP',
-  'SEC': 'SEC', 'FEC': 'FEC', 'PAC': 'PAC', 'CRD': 'CRD', 'LEI': 'LEI', 'FINRA': 'FINRA', 'OFAC': 'OFAC', 'FCA': 'FCA', 'EU': 'EU', 'UN': 'UN', 'SBIC': 'SBIC', 'ERISA': 'ERISA', 'NYC': 'NYC'};
+  'SEC': 'SEC', 'FEC': 'FEC', 'PAC': 'PAC', 'CRD': 'CRD', 'LEI': 'LEI', 'FINRA': 'FINRA', 'OFAC': 'OFAC', 'FCA': 'FCA', 'EU': 'EU', 'UN': 'UN', 'SBIC': 'SBIC', 'ERISA': 'ERISA', 'NYC': 'NYC', 'IAPD': 'IAPD', 'ADV': 'ADV', 'RIA': 'RIA', 'AUM': 'AUM', 'LDA': 'LDA', 'FTX': 'FTX', 'RD': 'Rd', 'RD.': 'Rd.', 'ST.': 'St.', 'AVE': 'Ave', 'AVE.': 'Ave.', 'STE': 'Ste', 'STE.': 'Ste.', 'BLVD': 'Blvd', 'BLVD.': 'Blvd.'};
   const SEC_SMALL = new Set(['A', 'AN', 'AND', 'AT', 'DE', 'DER', 'DES', 'DU', 'ET', 'FOR', 'IN', 'LA', 'LE', 'OF', 'ON', 'THE', 'VAN', 'VON']);
   const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
   function secPart(w) {
@@ -39,7 +39,15 @@
     }).join(' ');
   }
   // Body text: also keep a 2-letter state/country code after a comma ('MENLO PARK, CA' -> 'Menlo Park, CA').
-  const nice = (t) => t ? secTitle(String(t)).replace(/(,\s*)([A-Z][a-z])(?=$|[\s,;)])/g, (m, a, b) => a + b.toUpperCase()) : t;
+  // Mixed text ('… adviser SEQUOIA CAPITAL OPERATIONS, LLC, … status ACTIVE, office 2800 SAND HILL RD., …'): a run of 2+ capitalised
+  // words with at least two real words (3+ letters with a vowel, not a kept code like SEC/IAPD/CRD), or a status word, gets the same treatment.
+  const STATUS_CAPS = new Set(['ACTIVE', 'INACTIVE', 'TERMINATED', 'PENDING', 'APPROVED', 'REGISTERED', 'WITHDRAWN', 'DISMISSED', 'CLOSED', 'OPEN', 'SETTLED']);
+  const wordy = (w) => { const c = w.replace(/[^A-Z]/g, ''); return c.length >= 3 && /[AEIOUY]/.test(c) && !has(SEC_KEEP, w.replace(/[,;:)(]+$/, '')) && !has(SEC_KEEP, c); };
+  const capsRuns = (t) => t.replace(/\b[A-Z][A-Z0-9.&'’\-\/]*(?:,?\s+[A-Z0-9][A-Z0-9.&'’\-\/]*)*/g, (m) => {
+    const ws = m.split(/\s+/);
+    if (ws.length === 1) return STATUS_CAPS.has(m) ? m[0] + m.slice(1).toLowerCase() : m;
+    return ws.filter(wordy).length >= 2 ? secTitle(m) : m; });
+  const nice = (t) => t ? capsRuns(secTitle(String(t))).replace(/(,\s*)([A-Z][a-z])(?=$|[\s,;)])/g, (m, a, b) => a + b.toUpperCase()) : t;
   const safeUrl = (u) => /^https?:\/\//i.test(u || '') ? u : null;
   const ROOT = window.REGRET_ROOT || '';
   // One display format for every source/fact date ('Oct 23, 2026'); stored labels stay as they are.
@@ -254,7 +262,7 @@
       let d = '';
       if (!nc) {
         if (fnd && n > it) d += '<p class="ctn">' + esc(it ? fmt(T.partial, { n, count: r.count, m: it }) : T.none_itemized) + '</p>';
-        if (fnd && items) d += items.map(x => { const meta = [x.who, x.year, x.status && x.status[0].toUpperCase() + x.status.slice(1)].filter(Boolean).map(esc).join(' · ');
+        if (fnd && items) d += items.filter(x => x.title || x.note || x.who).map(x => { const meta = [x.who, x.year, x.status && x.status[0].toUpperCase() + x.status.slice(1)].filter(Boolean).map(esc).join(' · ');
           return '<div class="cti"><b>' + esc(x.title ? nice(x.title) : T.untitled) + '</b>' + (meta ? '<span class="ctmeta">' + meta + '</span>' : '') + (x.note ? '<p>' + esc(nice(x.note)) + '</p>' : '') + '</div>'; }).join('');
         else if (fnd && it) d += '<button type="button" class="ctl" data-sec="checks">' + esc(fmt(T.locked, { m: it })) + ' <span>' + COPY.locked + '</span></button>';
         d += '<p class="ctw"><b>' + esc(T.what) + '</b> ' + esc(S) + (sdate(r) ? ' · ' + esc(fmt(COPY.searched_on, { date: sdate(r) })) : '') + (r.state === 'clear' || r.state === 'nf' ? ' · ' + esc(COPY.searched_nf) : '') + '</p>';
