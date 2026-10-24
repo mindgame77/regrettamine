@@ -297,7 +297,7 @@
    ],
    "nc": [
     "p-g",
-    "Waiting"
+    "Not checked yet"
    ]
   },
   "result": {
@@ -611,6 +611,7 @@
    "10": "Searched public records for government or political roles."
   },
   "searched_nf": "Nothing found.",
+  "searched_on": "Searched {date}",
   "searched_nc": "Not checked yet.",
   "checking": {
    "_note": "Checking view on /vc/<slug>/ while a firm's 10 checks are not all done (js/company.js summary + js/app.js). {firm}, {done}, {check}, {time}, {email} are filled in.",
