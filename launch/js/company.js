@@ -159,7 +159,7 @@
       const items = Array.isArray(r.items) ? r.items : null, n = cnum(r.count), it = r.itemized || 0;
       const res = !nc ? tpill(r.state) : !checking ? pill('nc') : r.n === curN ? '<span class="pill p-cur"><span class="sp" aria-hidden="true"></span>' + esc(CK.current) + '</span>' : '<span class="wt">' + esc(CK.waiting) + '</span>';
       let found = '';
-      if (fnd) found = '<b>' + esc(!r.count ? T.found_some : /^\d+ (finding|action|case|record)s?$/.test(r.count) ? fmt(T.found, { count: r.count }) : r.count) + '</b>'
+      if (fnd) found = '<b>' + esc(!r.count ? T.found_some : /^\d+ (case|record)s?$/.test(r.count) ? fmt(T.found, { count: r.count }) : r.count) + '</b>'
         + (items && items.length ? '<span class="cts">' + items.slice(0, 2).map(x => esc(x.title || '')).filter(Boolean).join(', ') + (items.length > 2 ? ' ' + esc(fmt(T.more, { n: items.length - 2 })) : '') + '</span>' : '');
       else if (!nc) found = '<b>' + esc(T.nothing) + '</b>';
       else found = '<span class="ctm">—</span>';
@@ -170,7 +170,7 @@
         if (fnd && items) d += items.map(x => { const meta = [x.who, x.year, x.status && x.status[0].toUpperCase() + x.status.slice(1)].filter(Boolean).map(esc).join(' · ');
           return '<div class="cti"><b>' + esc(x.title || T.untitled) + '</b>' + (meta ? '<span class="ctmeta">' + meta + '</span>' : '') + (x.note ? '<p>' + esc(x.note) + '</p>' : '') + '</div>'; }).join('');
         else if (fnd && it) d += '<button type="button" class="ctl" data-sec="checks">' + esc(fmt(T.locked, { m: it })) + ' <span>' + COPY.locked + '</span></button>';
-        d += '<p class="ctw"><b>' + esc(T.what) + '</b> ' + esc(S) + (sdate(r) ? ' · ' + esc(fmt(COPY.searched_on, { date: sdate(r) })) : '') + (r.state === 'clear' || r.state === 'nf' ? ' ' + esc(COPY.searched_nf) : '') + '</p>';
+        d += '<p class="ctw"><b>' + esc(T.what) + '</b> ' + esc(S) + (sdate(r) ? ' · ' + esc(fmt(COPY.searched_on, { date: sdate(r) })) : '') + (r.state === 'clear' || r.state === 'nf' ? ' · ' + esc(COPY.searched_nf) : '') + '</p>';
       }
       const tog = !!d && !checking;
       return '<tr class="crow' + (tog ? ' tog' : '') + (nc ? (checking && r.n === curN ? ' cur' : ' up') : '') + '" id="check-' + r.n + '"' + (tog ? ' tabindex="0" aria-expanded="false" aria-controls="cdx-' + r.n + '"' : '') + '>'
