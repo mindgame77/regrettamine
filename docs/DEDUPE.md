@@ -66,3 +66,54 @@ Not changed (no reliable source for the firm name yet, or a false match like Ato
 | `atlantic-bridge` | `atlantic-bridge-4`, `atlantic-bridge-3` | Central Bank of Ireland register (Atlantic Bridge III/IV GP Ltd, 22 Fitzwilliam Sq) + abven.com "Atlantic Bridge" |
 | `glilot-capital-partners` | `gcp-management-2015` | IAPD 298148 + glilotcapital.com "Glilot Capital" |
 | `fairview-capital-partners` | `fairview-constitution` | IAPD 159304 (Fairview Constitution Management IV, West Hartford CT; affiliate Fairview Capital Partners) + fairviewcapital.com |
+
+
+### Second pass on skipped rows (2026-10-24)
+
+All 47 rows skipped in the first pass now have a confirmed firm name (SEC IAPD/ADV, Form D, national registries, firm websites, PitchBook, press). Same method: merge_firms + rename_firm_slug, old slugs 301, legal names kept as aliases and fund entities. Related fund-named pages of the same firm (same ADV website or registry link) were merged in too. Migration `20261024310000_fund_named_firms_pass2.sql`; backup `/workspace/backups/pre-fundname2-2026-10-24/`. `sorenson-capital` primary domain set to sorensoncapital.com (sorensonventures.com 301s there). No rows remain skipped.
+
+| Page | Merged / renamed from | Name source |
+|---|---|---|
+| `sorenson-capital` | `west-rim-capital-associates-ii`, `west-rim-ii-ugp` | IAPD 145085/339904 ADV website sorensoncapital.com, LinkedIn sorenson-capital, funds Sorenson Capital Partners, affiliates Sorenson Ventures; PR Newswire 2017: Sorenson Ventures is a group within Sorenson Capital; sorensonventures.com 301s to sorensoncapital.com |
+| `healthcare-ventures` | `hcv` | IAPD 163510 ADV website hcven.com, funds HealthCare Ventures VIII/IX |
+| `cnl-financial-group` | `cnl` | IAPD 174178 affiliates CNL Financial Group / CNL Strategic Capital; Form D CNL Strategic Venture Partners (indirectly controlled by CNL Financial Group) |
+| `allegis-capital` | `cip-ii-administrative`, `mediatech-administrative` | IAPD 301595/301637 ADV websites allegiscapital.com / allegiscyber.com, affiliate Allegis Capital Management Company |
+| `stratus-group` | `stratus-gestao-de-carteiras-ltda`, `stratus-capital-partners-iii-s`, `scp-s` | IAPD 302079/281361/281371 ADV website stratusbr.com, LinkedIn stratus-group; PEI profile "Stratus Group"; IDB Invest Stratus Capital Partners III |
+| `bluebird-ventures` | `bluebird-ventures-gp` | IAPD 304804 ADV website bluebirdvc.com, fund Bluebird Ventures I |
+| `biotrack-capital` | `biotrack` | IAPD 305488 affiliates BioTrack Capital Management Ltd; PitchBook/Form D BioTrack Capital Fund I/II; Tracxn BioTrack Capital |
+| `aegis-group-partners` | `agp`, `agp-3` | IAPD 310477/310478 (NYC) funds IP Successor Fund 21 / Celestial Successor Fund; PitchBook: IP Successor Fund 21 managed by Aegis Group Partners, New York |
+| `north-coast-ventures` | `ncaf` | IAPD 311015 ADV website northcoast.vc, funds North Coast Angel Fund II-IV, affiliate North Coast Ventures Management |
+| `sbva` | `sv-investment` | IAPD 312011 affiliates SBVA Corp / SBVA Capital Holdings; SEC 13G/Form D China Ventures Fund (GP SV GP I, ultimate parent SoftBank Ventures Asia = SBVA) |
+| `eminence-ventures` | `eminence-marvelous-gp` | IAPD 313468 ADV website emventures.cn, LinkedIn "Eminence Ventures 靖亚资本", fund Eminence China Enterprise Fund II |
+| `yu-galaxy` | `yu-star` | IAPD 318251 (Palo Alto) fund Yu Star Fund I; PitchBook: Yu Star Fund I managed by Yu Galaxy (yugalaxy.com); Form D related person Pingrong Yu |
+| `mountain-group-partners` | `mgc-venture-partners`, `mgp-venture` | IAPD 318455/298455 ADV website mtngp.com, LinkedIn mountain-group-partners |
+| `viola-ventures` | `viola-opportunity-management-fund-1-limited-partnership` | IAPD 319245 ADV website viola-group.com, related advisers are Viola Ventures entities; Radient/AUM13F Viola Opportunity I |
+| `runtide-capital` | `runtide-capital-spv` | IAPD 320744 ADV website runtidecapital.com; same firm as IAPD 307164 Runtide Capital |
+| `nashville-capital-network` | `ncn-management-company`, `ncn-management-company-pf` | IAPD 321890/289601 ADV website nashvillecapital.com "Nashville Capital Network" |
+| `trium-group` | `trium-ventures-gp` | IAPD 322206 (909 Montgomery St SF); PitchBook: Trium Venture Partners I managed by The Trium Group (triumgroup.com, same address); Form D related persons Darren Gold, Andrew Blum |
+| `highlight-capital` | `hlc-vgc-management-iv` | IAPD 323435 ADV website hlcfund.com; hlcfund.com "HighLight Capital" (弘晖资本); LinkedIn highlight-capital |
+| `grove-ventures` | `grove`, `mata-technologies-ventures-iii-2021` | IAPD 324050 ADV website grovevc.com, funds Grove Ventures; grovevc.com "Grove Ventures" |
+| `sabi-fund` | `sabi` | IAPD 326511 fund SABI Fund I; SEC Form D "SABI Fund I - SABI Fund LP"; Startup Intros profile "Sabi Fund" |
+| `greenfield-partners` | `greenfield-cities-2`, `greenfield-cities` | IAPD 328032/309322 ADV website greenfield-growth.com, funds Greenfield Partners, affiliate Greenfield Cities LLC |
+| `razor-capital` | `razor-gp-2`, `razor-aptos` | IAPD 332108/332107 (Dubai, managing member Abhinav Munshi); razorcapital.net About Us: Abhinav Munshi co-founder of Razor Capital |
+| `msa-capital` | `magic-stone-alternative-private-equity`, `msa-china` | IAPD 332202/335450 ADV website msacap.com "MSA Capital" |
+| `igah-ventures` | `igah-gestora-ltda`, `pevc-i-general-partner` | IAPD 332786/317507 fund Igah Ventures IV, affiliate IGAH Gestora; SEC Form D Igah Ventures IV LP; Startup Intros "Igah Ventures" |
+| `second-century-ventures` | `second-century-ventures-gp` | IAPD 333148 (430 N Michigan Ave Chicago); nar.realtor and scv.vc "Second Century Ventures" (NAR) |
+| `flywheel-fund` | `flywheel` | IAPD 338946 (Bloomington IN) fund Flywheel Fund VI; SEC Form D related person Eric Steele; flywheelfund.vc "Flywheel Fund"; Inside Indiana Business |
+| `startup-capital-ventures` | `startup-capital-ventures-management-co` | IAPD 341911 ADV websites startupcv.com / scv-sbi.com; startupcv.com "Startup Capital Ventures" |
+| `capstar-ventures` | `wxyz` | IAPD 342237 ADV websites capstar.vc / capstarventures.com, affiliates Capstar Ventures GP |
+| `alder` | `alder-iii-d` | Finansinspektionen EuVECA register (Alder III (D) AB); alder.se "Alder completes closing of Alder III" |
+| `atlantic-bridge` | `atlantic-bridge-innovation`, `atlantic-bridge-early-stage` | Irish CRO 774502 / CBI EuVECA register: Atlantic Bridge Innovation III GP Ltd at 22 Fitzwilliam Sq (Atlantic Bridge); EuVECA register Atlantic Bridge Early Stage GP Ltd |
+| `ballista-capital` | `ballista-capital-spv`, `ballista-capital-spv-3` | Bolagsverket via allabolag/Syna (Ballista Capital SPV AB, Stockholm) + ballistacapital.se "Om Ballista" |
+| `consolid-equity` | `consolid-equity-iii-d`, `consolid-equity-iii-e` | Bolagsverket via merinfo (Consolid Equity III (E) AB) + consolid.se + PEI profile "Consolid Equity"; Vinge press release |
+| `forbion` | `fcpm-iii-services` | Dutch KvK 56419899 via GLEIF/Bloomberg LEI + CNMV register: FCPM III Services B.V. (Naarden) manages Forbion funds |
+| `gen-ii-fund-services` | `gen-ii-management-company-luxembourg` | FSMA register + gen2fund.com group entities: Gen II Management Company (Luxembourg) is Gen II Fund Services (fund administrator / AIFM) |
+| `northcap-partners` | `ncp-ivs-iii-gp-aps` | Danish CVR 33373104 (directors Kim Wiencken, Thomas Weilby Knudsen) + northcap.vc team page + PEI profile "NorthCap Partners" |
+| `nea-partners` | `never-eat-alone-general-partners` | Bolagsverket via Bolagsradar (Never Eat Alone General Partners III AB) + FI EuVECA register + neapartners.se "NEA Partners" |
+| `odewald-kmu` | `odewald-kmu-iii-gesellschaft-fur-beteiligungen-mbh` | Handelsregister Berlin via OpenRegister + EuVECA register + odewaldkmu.com "Odewald KMU" |
+| `oltre-impact` | `oltre-impact-societa-di-gestione-del-risparmio-spa-gestore-euveca`, `oltre-ii-sicaf-euveca-spa` | oltreimpact.com: Oltre II SICAF EuVECA is managed by Oltre Impact SGR (formerly Oltre Venture); EIF/Fondo Italiano press release |
+| `procuritas` | `procuritas-capital-investors-vii-d` | FI EuVECA register (Procuritas Capital Investors VII (D) AB) + procuritas.com "PCI VII" |
+| `stoaf` | `stoaf-iii-venture-partners` | Bolagsverket via allabolag/Syna (STOAF III Venture Partners AB, Stockholm) + stoaf.se |
+| `3ts-capital-partners` | `tcee` | Luxembourg RCS B240552 via North Data: TCEE Fund IV GP Sàrl shareholder/adviser 3TS Capital Partners; 3tscapital.com SFDR disclosure |
+| `v-bio-ventures` | `v-bio-management-2` | Belgian KBO 0758.543.760 (V-Bio Management 2, Gent) manages V-Bio Fund 2; v-bio.ventures press release |
+| `yield-lab-europe` | `yield-lab-europe-fund-1` | gov.ie / Enterprise Ireland press release + theyieldlab.eu SFDR (Yield Lab Europe Fund 1) |
