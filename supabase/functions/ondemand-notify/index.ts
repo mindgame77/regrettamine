@@ -1,7 +1,9 @@
 // On-demand research emails (docs/ON_DEMAND.md). Called by pg_cron (public.ondemand_tick via pg_net) when the outbox has mail.
 // Auth: header x-ondemand-key must match the Vault secret 'ondemand_cron_key' (checked in the database; never leaves it).
 // Sends 'ready' (research done, link to the page) and 'refund' (not done within 24 h, credit returned) emails via Resend.
-// Secrets: RESEND_API_KEY, EMAIL_FROM (verified Resend sender), SITE_URL. Optional TEST_ONLY_TO: only this address gets mail.
+// Secrets: RESEND_API_KEY, EMAIL_FROM (verified Resend sender). Optional TEST_ONLY_TO: only this address gets mail.
+// Email links: the ONE setting below. Flip to "https://regretamin.com/" after the DNS switch, then redeploy this function.
+const SITE_URL = "https://regretamin.pages.dev/";
 import { createClient } from "npm:@supabase/supabase-js@2";
 const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]!));
@@ -13,7 +15,7 @@ Deno.serve(async (req) => {
   const key = Deno.env.get("RESEND_API_KEY");
   if (!key) return json({ error: "RESEND_API_KEY not set" }, 500);
   const only = Deno.env.get("TEST_ONLY_TO")?.toLowerCase();
-  const site = (Deno.env.get("SITE_URL") ?? "https://regretamin.com/").replace(/\/?$/, "/");
+  const site = SITE_URL.replace(/\/?$/, "/");
   const from = Deno.env.get("EMAIL_FROM") ?? "Regretamin <checks@regretamin.com>";
   const { data: box, error } = await admin.rpc("ondemand_outbox", { p_limit: 50 });
   if (error) return json({ error: "outbox failed" }, 500);
