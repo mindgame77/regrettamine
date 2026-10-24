@@ -11,7 +11,7 @@ import { stripeKey } from "../_shared/stripe_env.ts";
 const stripe = new Stripe(stripeKey()); // STRIPE_MODE picks the live or test key
 const CHECKS: Record<Kind, number> = { single: 1, m10: 10, m30: 30, y10: 10, y30: 30 };
 const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, content-type, apikey, x-client-info" };
-const err = (error: string, status: number, extra = {}) => new Response(JSON.stringify({ error, ...extra }), { status, headers: cors });
+const err = (error: string, status: number, extra = {}) => new Response(JSON.stringify({ error, ...extra }), { status, headers: { ...cors, "Content-Type": "application/json" } });
 const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 const LIVE = ["active", "trialing"];
 // The user's Stripe customer ID, if they ever paid: launch balance first, then the older subscriptions table.
@@ -20,6 +20,18 @@ async function customerOf(uid: string): Promise<string | null> {
   if (b?.stripe_customer_id) return b.stripe_customer_id;
   const { data: s } = await admin.from("subscriptions").select("stripe_customer_id").eq("profile_id", uid).not("stripe_customer_id", "is", null).maybeSingle();
   return s?.stripe_customer_id ?? null;
+}
+// A stored customer from the other Stripe mode (e.g. a test customer after STRIPE_MODE=live) does not exist for this key:
+// treat it as no customer so checkout falls back to customer_email instead of crashing.
+async function usable(customer: string | null): Promise<string | null> {
+  if (!customer) return null;
+  try {
+    const c = await stripe.customers.retrieve(customer);
+    return (c as { deleted?: boolean }).deleted ? null : customer;
+  } catch (e) {
+    if ((e as { code?: string }).code === "resource_missing") return null;
+    throw e;
+  }
 }
 // True if Stripe has an active/trialing subscription for this customer, or the DB still shows a running plan.
 async function hasPlan(uid: string, customer: string | null): Promise<boolean> {
@@ -34,6 +46,12 @@ async function hasPlan(uid: string, customer: string | null): Promise<boolean> {
 }
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
+  try { return await handle(req); } catch (e) {
+    console.error(e);
+    return err("checkout failed", 500); // keep CORS headers so the site can show the error
+  }
+});
+async function handle(req: Request): Promise<Response> {
   const sb = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!, { global: { headers: { Authorization: req.headers.get("Authorization") ?? "" } } });
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return err("sign in", 401);
@@ -49,7 +67,7 @@ Deno.serve(async (req) => {
   } else return err("bad kind", 400);
   const plan = kind === "code" ? "custom" : kind, sub = kind !== "single";
   const meta = { user_id: user.id, kind: plan, checks: String(checks), ...(name ? { name } : {}) };
-  const customer = await customerOf(user.id);
+  const customer = await usable(await customerOf(user.id));
   if (sub && await hasPlan(user.id, customer)) return err("has_plan", 409, { has_plan: true });
   const site = Deno.env.get("SITE_URL")!;
   const who = customer ? { customer } : { customer_email: user.email ?? undefined, ...(sub ? {} : { customer_creation: "always" as const }) };
@@ -61,4 +79,4 @@ Deno.serve(async (req) => {
     ...(discount ? {} : { allow_promotion_codes: true }), // Stripe rejects allow_promotion_codes together with discounts
   });
   return new Response(JSON.stringify({ url: s.url }), { headers: { ...cors, "Content-Type": "application/json" } });
-});
+}
