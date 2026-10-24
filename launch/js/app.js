@@ -369,8 +369,10 @@
   const back = () => location.href.split('#')[0];
   const google = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
-    if (!sb) return;
-    const b = e && e.currentTarget && e.currentTarget.classList.contains('gbx') ? e.currentTarget : null, was = b && b.innerHTML;
+    if (!sb) return alert(T.error); // no Supabase client (config or CDN script missing): say so instead of a dead button
+    const b = e && e.currentTarget && e.currentTarget.classList.contains('gbx') ? e.currentTarget : null;
+    if (b && b._html == null) b._html = b.innerHTML; // original label, restored on error or Back (bfcache)
+    const was = b && b._html;
     if (b) { const since = b._pd ? performance.now() - b._pd : 0; b._pd = 0; b.classList.add('prs'); await new Promise(r => setTimeout(r, Math.max(0, 140 - since))); } // keep the pressed frame on screen >=120ms
     if (b) { b.classList.remove('prs'); b.disabled = true; b.classList.add('ld'); b.innerHTML = '<span class="spin" aria-hidden="true"></span><span class="gl">' + esc(T.google_loading) + '</span>'; }
     try { if (/^\/vc\/[^/]+\/(full\/)?$/.test(location.pathname)) sessionStorage.setItem('rg_ret', JSON.stringify({ p: location.pathname, t: Date.now() })); } catch (x) {} // return to this firm page after Google sign-in
@@ -387,6 +389,10 @@
   document.querySelectorAll('.gbx').forEach(b => { // touch: :active is unreliable, so mirror it with a class
     b.addEventListener('pointerdown', () => { b._pd = performance.now(); b.classList.add('prs'); });
     ['pointerup', 'pointercancel', 'pointerleave'].forEach(t => b.addEventListener(t, () => setTimeout(() => b.classList.remove('prs'), Math.max(0, 120 - (performance.now() - (b._pd || 0))))));
+  });
+  window.addEventListener('pageshow', (ev) => { // Back from Google restores the page from bfcache with the spinner still on
+    if (!ev.persisted) return;
+    document.querySelectorAll('.gbx.ld').forEach(b => { b.disabled = false; b.classList.remove('ld', 'prs'); if (b._html != null) b.innerHTML = b._html; });
   });
   document.querySelectorAll('[data-magic]').forEach(f => f.onsubmit = (e) => { e.preventDefault(); magic(f.email.value.trim(), f.parentNode.parentNode.querySelector('[data-magicmsg]')); });
   if (sb) sb.auth.onAuthStateChange((ev, session) => {
