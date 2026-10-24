@@ -57,6 +57,7 @@ begin
   return n;
 end $$;
 revoke all on function public.promote_bot_facts(uuid) from public, anon, authenticated;
+grant execute on function public.promote_bot_facts(uuid) to service_role;
 
 create or replace function public.promote_bot_facts_trg() returns trigger
 language plpgsql security definer set search_path = public as $$
@@ -74,6 +75,7 @@ begin
 end $$;
 
 revoke all on function public.promote_bot_facts_trg() from public, anon, authenticated;
+grant execute on function public.promote_bot_facts_trg() to service_role;
 
 drop trigger if exists promote_bot_facts on public.research_submissions;
 create trigger promote_bot_facts after insert on public.research_submissions
