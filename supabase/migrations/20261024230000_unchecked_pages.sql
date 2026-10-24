@@ -60,6 +60,12 @@ begin
       (10, 'Political ties', 'People at the firm who held government or political roles.')) x(n, title, descr)
     on conflict (firm_id, n) do nothing;
   end if;
+  -- keep the legal / queue name searchable as an alias (firm_suggest)
+  insert into firm_aliases (firm_id, alias, source)
+  select fid, a.alias, a.source from (values (btrim(q.name), 'queue_name'),
+    (btrim((select legal_name from firms where id = fid)), 'sec_legal')) a(alias, source)
+  where coalesce(a.alias, '') <> ''
+  on conflict do nothing;
   -- link enrichments / search log rows that arrived before the page existed (rows are not copied, so re-sends never duplicate)
   update research_enrichments set firm_id = fid where firm_id is null and registry_id in (t, p_registry);
   get diagnostics linked = row_count;
@@ -186,15 +192,23 @@ CREATE OR REPLACE FUNCTION public.firm_suggest(q text)
  STABLE SECURITY DEFINER
  SET search_path TO 'public'
 AS $function$
-  with t as (select lower(trim(q)) t), m as (
+  with t as (select lower(trim(q)) t), pub as (
+    select f.* from firms f where f.published and not coalesce(f.is_test, false) and f.data_status = 'real' and f.deleted_at is null
+  ), m as (
     select f.slug, coalesce(f.display_name, f.name) as name, f.short_name, f.hq, f.indexable,
       case when lower(coalesce(f.display_name, f.name)) like t || '%' or lower(coalesce(f.short_name, '')) like t || '%' or f.slug like t || '%' then 0
            when lower(coalesce(f.display_name, f.name)) ~ ('\m' || regexp_replace(t, '([^a-z0-9 ])', '\\\1', 'g')) then 1 else 2 end r
-    from firms f, t
-    where f.published and not coalesce(f.is_test, false) and f.data_status = 'real' and f.deleted_at is null and length(t) > 0
-      and (lower(coalesce(f.display_name, f.name)) like '%' || t || '%' or lower(coalesce(f.short_name, '')) like '%' || t || '%' or f.slug like '%' || t || '%'))
+    from pub f, t
+    where length(t) > 0
+      and (lower(coalesce(f.display_name, f.name)) like '%' || t || '%' or lower(coalesce(f.short_name, '')) like '%' || t || '%' or f.slug like '%' || t || '%')
+    union all
+    select f.slug, coalesce(f.display_name, f.name), f.short_name, f.hq, f.indexable,
+      case when lower(a.alias) like t || '%' then 0 when lower(a.alias) ~ ('\m' || regexp_replace(t, '([^a-z0-9 ])', '\\\1', 'g')) then 1 else 2 end
+    from firm_aliases a join pub f on f.id = a.firm_id, t
+    where length(t) > 0 and lower(a.alias) like '%' || t || '%'
+  ), d as (select slug, name, short_name, hq, indexable, min(r) r from m group by slug, name, short_name, hq, indexable)
   select coalesce(json_agg(json_build_object('slug', slug, 'name', name, 'short_name', short_name, 'hq', hq) order by not indexable, r, name), '[]')
-  from (select * from m order by not indexable, r, name limit 8) x
+  from (select * from d order by not indexable, r, name limit 8) x
 $function$
 ;
 
@@ -520,3 +534,9 @@ on conflict (firm_id, n) do nothing;
 -- 3) link earlier search log rows to the new pages (exact registry_id; no research data touched)
 update search_log l set firm_id = f.id from firms f
 where l.firm_id is null and not f.indexable and l.registry_id = f.registry_id;
+
+-- 4) keep the queue / SEC legal name searchable as an alias, like ensure_firm_for_registry does
+insert into firm_aliases (firm_id, alias, source)
+select f.id, btrim(f.legal_name), x.source from firms f, (values ('queue_name'), ('sec_legal')) x(source)
+where not f.indexable and coalesce(btrim(f.legal_name), '') <> ''
+on conflict do nothing;
