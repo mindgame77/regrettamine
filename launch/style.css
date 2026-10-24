@@ -368,3 +368,4 @@ nav .r a.on{color:var(--vio);font-weight:700}
 .ctab.skt td{vertical-align:top}.ctab.skt .kct b,.ctab.skt .kcf b{line-height:1}.ctab.skt .kct span .sk{display:block;margin-top:6px}.ctab.skt .kct span .sk+.sk{margin-top:5px}
 .ld .rgt-tab em[hidden]{display:inline-block;visibility:hidden;width:30px}
 .ld .kf{min-height:60px}.ld .hfs{min-height:130px}.ld .hf.skc{min-height:118px;justify-content:center}.ld .csum{min-height:264px}.ld .ck.skc{min-height:84px;justify-content:center}.ld .spl{min-height:31px}.ctab.skt tbody tr{height:85px}
+.lfail{border:1px solid var(--line,#e6e3ef);border-radius:14px;padding:28px 24px;text-align:center;background:#fff;margin:8px 0}.lfail b{display:block;font-size:18px}.lfail p{color:var(--mute);margin:6px 0 16px}

@@ -345,7 +345,7 @@
    "cancel": "Cancel subscription",
    "pick": "Pick a plan",
    "buy_more": "Buy more credits",
-   "my_checks_h2": "My checks",
+   "my_checks_h2": "My firms",
    "view_all": "View all →",
    "email_h2": "Email",
    "email_d": "Used to sign in. No password needed.",
@@ -791,6 +791,9 @@
   "notify_ok": "Got it. We'll email you when it's ready.",
   "balance_fail": "Could not load your balance",
   "retry": "Try again",
+  "load_fail_h": "Couldn’t load this firm",
+  "load_fail_p": "The firm data didn’t arrive. Check your connection and try again.",
+  "load_retry": "Retry",
   "have": [
    "You have {n}{free} credit left",
    "You have {n}{free} credits left"

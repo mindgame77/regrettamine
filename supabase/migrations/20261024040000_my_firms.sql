@@ -1,11 +1,10 @@
 -- My firms page + Save on every firm page. NOT YET APPLIED: waiting for Alex's approval.
--- Before applying: run the backup block, verify counts + md5 match, then apply the rest.
--- 1) Backup (never drop). Live watchlist was 0 rows, md5 d41d8cd98f00b204e9800998ecf8427e on 2026-10-23.
-create table if not exists public._bak_watchlist_20261024 as table public.watchlist;
-select (select count(*) from public.watchlist) live_rows, (select count(*) from public._bak_watchlist_20261024) bak_rows,
-  (select md5(coalesce(string_agg(w::text, '|' order by profile_id, firm_id), '')) from public.watchlist w) live_md5,
-  (select md5(coalesce(string_agg(w::text, '|' order by profile_id, firm_id), '')) from public._bak_watchlist_20261024 w) bak_md5;
-revoke all on public._bak_watchlist_20261024 from public, anon, authenticated;
+-- 1) Guard (no backup table): watchlist was 0 rows on 2026-10-23. Abort if that is no longer true.
+do $$ begin
+  if (select count(*) from public.watchlist) > 0 then
+    raise exception 'my_firms migration aborted: public.watchlist has % rows (expected 0)', (select count(*) from public.watchlist);
+  end if;
+end $$;
 
 -- 2) watch_fund: any published / launch firm can be saved, checked or not (was: only firms in my_checks).
 create or replace function public.watch_fund(p_slug text)
