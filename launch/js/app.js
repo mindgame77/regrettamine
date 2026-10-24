@@ -49,11 +49,31 @@
   const fmtDate = (d) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   const leftOf = (a) => { const P = planOf(a); return P && a.left <= P.checks ? fmt(T.left_of, { left: a.left, n: P.checks }) : String(a.left); };
   let ACCT = null; // { email, plan, left, period_end, cancel_at_period_end, has_customer } once signed in
+  // Header auth state: the inline <head> script set html.au-in / html.au-out / html.au-wait from the cached Supabase session in
+  // localStorage, so the first frame already shows the account button (or Sign in), never a Sign in flash. hdr() sets the real state.
+  const hdr = (signedIn, email) => {
+    $('#signin').hidden = signedIn; $('#acct').hidden = !signedIn;
+    if (signedIn && email && !$('#av').textContent) $('#av').textContent = email[0].toUpperCase();
+    document.documentElement.classList.remove('au-in', 'au-out', 'au-wait');
+  };
+  if (window.REGRET_AU && window.REGRET_AU.email) { $('#av').textContent = window.REGRET_AU.email[0].toUpperCase(); $('#ddem').textContent = window.REGRET_AU.email; }
+  const session = async (ms = 8000) => { // null when signed out or when the auth client stalls past ms
+    if (!sb) return null;
+    let to; const late = new Promise(r => { to = setTimeout(() => r({ data: {} }), ms); });
+    try { const { data } = await Promise.race([sb.auth.getSession(), late]); return (data && data.session) || null; } catch (_) { return null; } finally { clearTimeout(to); }
+  };
+  let PAINT_TRY = 0;
   async function paint() {
     const b = await balance();
-    if (!b) { const s = sb && (await sb.auth.getSession()).data.session; if (!s) document.querySelectorAll('[data-out]').forEach(x => x.hidden = false); return; }
+    if (!b) { // check_balance failed or timed out: keep the header right from the session and try again shortly
+      const s = await session();
+      if (s) hdr(true, s.user && s.user.email); else if (!window.REGRET_AU || !window.REGRET_AU.email || PAINT_TRY > 0) { hdr(false); document.querySelectorAll('[data-out]').forEach(x => x.hidden = false); }
+      if (PAINT_TRY++ < 4) setTimeout(paint, 1500 * PAINT_TRY);
+      return;
+    }
+    PAINT_TRY = 0;
     $('#left').textContent = pl(b.left, T.nav_left, { n: b.left, free: b.signed_in ? '' : T.free });
-    $('#signin').hidden = b.signed_in; $('#acct').hidden = !b.signed_in;
+    hdr(b.signed_in);
     document.querySelectorAll('[data-out]').forEach(x => x.hidden = b.signed_in);
     if (!b.signed_in) { document.querySelectorAll('[data-in]').forEach(x => x.hidden = true); return; }
     const [{ data: u }, { data: a }] = await Promise.all([sb.auth.getUser(), sb.rpc('my_account')]);
@@ -389,10 +409,16 @@
       if (e.key === 'Escape') show(false);
     });
     inp.addEventListener('blur', () => setTimeout(() => show(false), 150));
-    f.onsubmit = (e) => {
+    // Check: the highlighted suggestion, else an exact name / short name / slug match. On a firm page the box is prefilled with the
+    // firm's own name and no suggestions were ever fetched (hits = []), so that name maps straight to this firm; any other query with no
+    // fetched hits asks firm_suggest() first, and only a query with no exact match goes to /pending/.
+    const same = (x, q) => [x.name, x.short_name, x.slug].some(v => v && v.toLowerCase() === q.toLowerCase());
+    f.onsubmit = async (e) => {
       e.preventDefault(); const q = inp.value.trim(); if (!q) return;
-      const h = !box.hidden && hits[act] || hits.find(x => [x.name, x.short_name, x.slug].some(v => v && v.toLowerCase() === q.toLowerCase()));
-      if (main && h && h.slug === main.dataset.firm) return show(false);
+      let h = !box.hidden && hits[act] || hits.find(x => same(x, q));
+      if (!h && main && q.toLowerCase() === inp.defaultValue.trim().toLowerCase()) h = { slug: main.dataset.firm };
+      if (!h && sb) { const n = ++seq; const { data } = await Promise.resolve(sb.rpc('firm_suggest', { q })).catch(() => ({})); if (n === seq) h = (data || []).find(x => same(x, q)); }
+      if (main && h && h.slug === main.dataset.firm) { show(false); if (main.dataset.view !== 'summary') location.href = firmUrl(h.slug); return; }
       location.href = h ? firmUrl(h.slug) : liveUrl(q);
     };
   });
@@ -431,10 +457,10 @@
   async function saveBtn() {
     const b = main.querySelector('[data-save]'); if (!b || !sb) return;
     const set = (on) => { b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); b.querySelector('span').textContent = on ? T.saved : T.save_btn; };
-    const { data: ss } = await sb.auth.getSession().catch(() => ({ data: {} }));
-    if (!(ss && ss.session)) { set(false); b.dataset.open = 'signup'; b.onclick = null; return; }
+    const ss = await session();
+    if (!ss) { set(false); b.dataset.open = 'signup'; b.onclick = null; return; }
     delete b.dataset.open;
-    const r = (await myFirms()).find(x => x.slug === main.dataset.firm);
+    const r = (await myFirms().catch(() => [])).find(x => x.slug === main.dataset.firm);
     set(!!(r && r.saved));
     b.onclick = async () => {
       const on = !b.classList.contains('on'); b.disabled = true;
@@ -498,10 +524,11 @@
     main.querySelector('[data-reload]').onclick = () => { main.innerHTML = SKEL; main.classList.remove('lderr'); main.classList.add('ld'); bindMain(); loadPage(false).then(paint); };
     saveBtn();
   }
-  async function loadPage(spend) {
+  async function loadPage(spend, retry) {
     if (!sb) return loadFail();
     const to = new Promise(r => setTimeout(() => r({ error: 'timeout' }), spend ? 20000 : 10000));
     const { data, error } = await Promise.race([Promise.resolve(sb.rpc('firm_page', { p_slug: main.dataset.firm, p_anon: anonId(), p_spend: spend })), to]).catch(e => ({ error: e }));
+    if ((error || !data) && !spend && !retry && !PAGE) return loadPage(false, true); // one quiet retry (slow session refresh / expired token)
     if (error || !data) { if (spend) $('#pmsg2').textContent = T.error; else loadFail(); return; }
     if (!spend && !['ok', 'need_signup', 'out'].includes(data.status)) return loadFail();
     if (data.status === 'ok') { if (data.open) closeOv($('#paycase')); return draw(data); }
@@ -527,7 +554,12 @@
         history.replaceState(null, '', location.pathname + location.hash);
         first.then(() => { if (PAGE && !PAGE.open && $('#paycase')) openPay(''); });
       }
-      sb.auth.onAuthStateChange((ev, session) => { if (ev === 'SIGNED_IN') first.then((uid) => { if (session && session.user.id !== uid && !(PAGE && PAGE.open)) setTimeout(() => loadPage(false).then(paint), 500); }); });
+      // The session can resolve after the 3 s cutoff (INITIAL_SESSION / TOKEN_REFRESHED late): if the page was loaded without it, load it again with it.
+      let LOADED_AS = null; first.then((uid) => { LOADED_AS = uid || null; });
+      sb.auth.onAuthStateChange((ev, s) => {
+        if (!['SIGNED_IN', 'INITIAL_SESSION', 'TOKEN_REFRESHED'].includes(ev) || !s) return;
+        first.then(() => { if (s.user.id !== LOADED_AS && !(PAGE && PAGE.open)) { LOADED_AS = s.user.id; setTimeout(() => loadPage(false).then(paint).then(saveBtn), 300); } });
+      });
     }
   }
   if (!main) paint();
