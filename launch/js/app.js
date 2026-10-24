@@ -193,7 +193,7 @@
       const pill = (k, c) => r[k] ? '<span class="mp ' + c + '"><i></i>' + r[k] + ' ' + esc(F[k]) + '</span>' : '';
       const res = !r.checked ? '<span class="nc">' + esc(F.not_checked) + '</span>' : r.clear == null ? '<span class="nc">—</span>'
         : '<span class="pls">' + pill('clear', 'c') + pill('review', 'r') + pill('wk', 'w') + '</span>';
-      return '<div class="mfr"><button type="button" class="star' + (r.saved ? ' on' : '') + '" data-star="' + esc(r.slug) + '" aria-pressed="' + !!r.saved + '" aria-label="' + fmt(r.saved ? T.unsave : T.save, { name: esc(r.name) }) + '">★</button>'
+      return '<div class="mfr"><button type="button" class="star' + (r.saved ? ' on' : '') + '" data-star="' + esc(r.slug) + '" aria-pressed="' + !!r.saved + '" aria-label="' + fmt(r.saved ? T.unsave : T.save, { name: esc(r.name) }) + '">' + (r.saved ? '★' : '☆') + '</button>'
         + '<span class="nm3"><a href="' + esc(url) + '"><b>' + esc(r.name) + '</b></a>' + (r.hq ? '<small>' + esc(r.hq) + '</small>' : '') + '</span>'
         + '<span class="dt">' + (r.checked ? esc(fmtDate(r.checked_at)) : '—') + '</span>' + res
         + (r.checked ? '<a class="btn o" href="' + esc(url) + '">' + esc(F.open) + '</a>' : '<button type="button" class="btn" data-check="' + esc(r.slug) + '">' + esc(F.check) + '</button>') + '</div>';
@@ -356,7 +356,7 @@
       $('#suh').textContent = T.sign_buy; $('#signup').classList.add('buy'); return open('signup');
     }
     document.querySelectorAll('[data-buy]').forEach(b => b.disabled = true); msg(T.opening);
-    const { data, error } = await sb.functions.invoke('create-checkout', { body: CODE ? { kind, code: CODE.code } : { kind } });
+    const { data, error } = await sb.functions.invoke('create-checkout', { body: Object.assign({ kind, return_path: location.pathname }, CODE ? { code: CODE.code } : {}) });
     if (error || !data || !data.url) {
       document.querySelectorAll('[data-buy]').forEach(b => b.disabled = false);
       const j = error && error.context ? await error.context.json().catch(() => null) : null;
@@ -449,8 +449,12 @@
     const q = new URLSearchParams(location.search).get('q') || T.this_firm; pq.textContent = q;
     $('#notify').onsubmit = async (e) => {
       e.preventDefault(); if (!sb) return;
-      const { error } = await sb.rpc('request_check', { p_query: q, p_email: e.target.email.value, p_anon: anonId() });
-      $('#pmsg').textContent = error ? T.error : T.notify_ok;
+      // "Request this firm" (docs/FIRM_REQUESTS.md): deduped by name, rate-limited and email-checked in request_firm().
+      const { data, error } = await sb.rpc('request_firm', { p_name: q, p_email: e.target.email.value.trim(), p_website: e.target.website.value.trim() || null, p_anon: anonId() });
+      const st = data && data.status, m = $('#pmsg');
+      if (st === 'exists') { m.innerHTML = esc(T.req_exists) + '<a href="' + esc(firmUrl(data.slug)) + '">' + esc(q) + '</a>'; return; }
+      m.textContent = error || !st ? T.error : st === 'ok' ? (data.already_requested ? T.req_dup : T.notify_ok) : st === 'bad_email' ? T.req_bad_email
+        : st === 'bad_website' ? T.req_bad_website : st === 'bad_name' ? T.req_bad_name : st === 'rate_limited' ? T.req_rate : T.error;
     };
   }
   // Company page: one firm_page() call returns everything (locked: counts + one line per section only).
@@ -487,9 +491,10 @@
     const r = (await myFirms().catch(() => [])).find(x => x.slug === main.dataset.firm);
     set(!!(r && r.saved));
     b.onclick = async () => {
-      const on = !b.classList.contains('on'); b.disabled = true;
+      // Show 'Saved' right away; put it back only if the save fails.
+      const on = !b.classList.contains('on'); b.disabled = true; set(on);
       const { data: d, error } = await sb.rpc(on ? 'watch_fund' : 'unwatch_fund', { p_slug: main.dataset.firm });
-      b.disabled = false; if (!error && (!on || (d && d.saved))) set(on);
+      b.disabled = false; if (error || (on && !(d && d.saved))) set(!on);
     };
   }
   // Summary page, 10 checks not all done (page views never move the firm in the queue). While it is queued or claimed, poll every 10 s,

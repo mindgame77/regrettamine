@@ -34,6 +34,9 @@ PAYLOAD = {
         {"record_id": "r5", "field_path": "politicalContext", "value": {"kind": "donation", "severity": "low"}},
     ],
 }
+# every bot record cites its page (records without a usable source are hidden as needs_source, docs/SOURCE_TIERS.md)
+for _r in PAYLOAD["records"]:
+    _r["sources"] = [{"url": "https://www.courtlistener.com/docket/" + _r["record_id"] + "/"}]
 
 
 def test_upload_fills_checks_and_never_downgrades():

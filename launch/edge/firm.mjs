@@ -36,9 +36,43 @@ export function firmHead(F, full = false) {
     `<script type="application/ld+json">${ldj}</script>`;
 }
 
+// Official SEC names arrive in ALL CAPS; /full/ shows them in normal (title) case, display only. Keep identical to sec_title() in launch/build.py.
+const SEC_KEEP = {'LLC': 'LLC', 'L.L.C.': 'L.L.C.', 'L.L.C': 'L.L.C', 'LP': 'LP', 'L.P.': 'L.P.', 'L.P': 'L.P', 'LLP': 'LLP', 'L.L.P.': 'L.L.P.',
+  'INC': 'Inc', 'INC.': 'Inc.', 'LTD': 'Ltd', 'LTD.': 'Ltd.', 'CO': 'Co', 'CO.': 'Co.', 'CORP': 'Corp', 'CORP.': 'Corp.',
+  'PLC': 'PLC', 'GP': 'GP', 'SA': 'SA', 'S.A.': 'S.A.', 'AG': 'AG', 'GMBH': 'GmbH', 'SARL': 'SARL', 'S.A.R.L.': 'S.à r.l.',
+  'BV': 'BV', 'B.V.': 'B.V.', 'NV': 'NV', 'AB': 'AB', 'AS': 'AS', 'SPA': 'SpA', 'PTE': 'Pte', 'PTY': 'Pty', 'LLLP': 'LLLP',
+  'A16Z': 'a16z', 'US': 'US', 'USA': 'USA', 'UK': 'UK', 'VC': 'VC', 'AI': 'AI', 'II': 'II', 'III': 'III', 'IV': 'IV', 'VI': 'VI',
+  'VII': 'VII', 'VIII': 'VIII', 'IX': 'IX', 'XI': 'XI', 'XII': 'XII', 'NEA': 'NEA', 'IVP': 'IVP', 'KKR': 'KKR', 'TPG': 'TPG',
+  'GGV': 'GGV', 'USV': 'USV', 'TCV': 'TCV', 'IDG': 'IDG', 'NFX': 'NFX', 'DST': 'DST', 'EQT': 'EQT', 'QED': 'QED', 'SOSV': 'SOSV',
+  'HV': 'HV', 'GV': 'GV', 'DCM': 'DCM', 'JMI': 'JMI', 'TA': 'TA', 'RRE': 'RRE', 'FPV': 'FPV', 'AVF': 'AVF', 'ESP': 'ESP', 'HIG': 'HIG',
+  'H.I.G.': 'H.I.G.', 'UBS': 'UBS', 'LGT': 'LGT', 'GCM': 'GCM', 'HGGC': 'HGGC', 'BVP': 'BVP',
+  'SEC': 'SEC', 'FEC': 'FEC', 'PAC': 'PAC', 'CRD': 'CRD', 'LEI': 'LEI', 'FINRA': 'FINRA', 'OFAC': 'OFAC', 'FCA': 'FCA', 'EU': 'EU', 'UN': 'UN', 'SBIC': 'SBIC', 'ERISA': 'ERISA', 'NYC': 'NYC'};
+const SEC_SMALL = new Set(['A', 'AN', 'AND', 'AT', 'DE', 'DER', 'DES', 'DU', 'ET', 'FOR', 'IN', 'LA', 'LE', 'OF', 'ON', 'THE', 'VAN', 'VON']);
+const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+function secPart(w) {
+  if (!/[A-Z]/.test(w)) return w;
+  if (has(SEC_KEEP, w)) return SEC_KEEP[w];
+  const core = w.replace(/[^A-Z]/g, '');
+  if (/^[IVX]{2,5}$/.test(core)) return w;
+  if (core.length <= 4 && !/[AEIOUY]/.test(core)) return w;
+  const lo = w.toLowerCase(), i = lo.search(/[a-z]/);
+  return lo.slice(0, i) + lo[i].toUpperCase() + lo.slice(i + 1);
+}
+export function secTitle(s) {
+  s = s || '';
+  if (!s || /[a-z]/.test(s)) return s;
+  return s.split(' ').map((w, i) => {
+    const bare = w.replace(/^[,;()]+|[,;()]+$/g, '');
+    if (i && SEC_SMALL.has(bare)) return w.toLowerCase();
+    const k = has(SEC_KEEP, bare) ? bare : bare.replace(/[.,]+$/, '');
+    if (has(SEC_KEEP, k)) return w.replace(k, SEC_KEEP[k]);
+    return w.replace(/[^\s\-/'’&]+/g, secPart);
+  }).join(' ');
+}
+
 // /full/ shows the official SEC name; everything else the display name
 export const fillFirm = (tpl, F, full = false) =>
-  tpl.split('{{HEAD}}').join(firmHead(F, full)).split('{{NAME}}').join(esc(full ? (F.legal_name || F.name) : F.name)).split('{{SLUG}}').join(esc(F.slug));
+  tpl.split('{{HEAD}}').join(firmHead(F, full)).split('{{NAME}}').join(esc(full ? secTitle(F.legal_name || F.name) : F.name)).split('{{SLUG}}').join(esc(F.slug));
 
 // /vc/<slug>/ or /vc/<slug>/full/ -> {slug, full} | {redirect} | null
 export function parseFirmPath(pathname) {
@@ -75,7 +109,15 @@ export async function renderFirm({ request, env, assets, fetchImpl = fetch }) {
   try { rows = await rpc(env, fetchImpl, 'firm_meta', { p_slug: p.slug }); }
   catch (e) { return new Response('Temporary error, please retry.', { status: 503, headers: { 'cache-control': 'no-store', 'retry-after': '30' } }); }
   const F = Array.isArray(rows) ? rows[0] : null;
-  if (!F) return notFound();
+  if (!F) {
+    // merged duplicate pages: old slug 301s to the surviving page (firm_slug_redirects, docs/DEDUPE.md)
+    let to = null;
+    try { to = await rpc(env, fetchImpl, 'firm_redirect', { p_slug: p.slug }); } catch (e) { to = null; }
+    if (typeof to === 'string' && /^[a-z0-9-]+$/.test(to) && to !== p.slug) {
+      return new Response(null, { status: 301, headers: { location: new URL(`/vc/${to}/${p.full ? "full/" : ""}${url.search}`, url.origin).toString(), 'cache-control': cacheHdr(3600) } });
+    }
+    return notFound();
+  }
   const tpl = await asset(p.full ? '/_tpl/full' : '/_tpl/summary');
   const headers = { 'content-type': HTML, 'cache-control': cacheHdr(3600) };
   if (env.NOINDEX === '1') headers['x-robots-tag'] = 'noindex';

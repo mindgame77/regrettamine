@@ -62,8 +62,8 @@ Then claim the next one.
 * `ondemand_tick()` runs every 2 minutes (pg_cron job `regretamin-ondemand-tick`): `ondemand_refund_expired()` refunds
   requests older than 24 h (credit back to the same bucket, `refund_ondemand` event), then, when `ondemand_outbox()` has mail,
   calls Edge Function `ondemand-notify` (pg_net). The call is authenticated with the Vault secret `ondemand_cron_key`.
-* `ondemand-notify` sends via Resend (`RESEND_API_KEY`, `EMAIL_FROM`; optional `TEST_ONLY_TO`). Link base = the `SITE_URL`
-  constant at the top of `supabase/functions/ondemand-notify/index.ts` (now `https://regretamin.pages.dev/`; flip to
-  `https://regretamin.com/` after the DNS switch and redeploy). Only live firm pages (published, real, not test, not deleted) get an email:
-  *Your Regretamin check for &lt;firm&gt; is ready* + link, or a refund note. Each request is emailed once
-  (`notified_at`; a failed send is kept in `notify_error` and not retried automatically). Email only.
+* `ondemand-notify` sends via Resend (`RESEND_API_KEY`; optional `TEST_ONLY_TO`), **plain text, from
+  `Regretamin <support@regretamin.com>`** (all transactional mail, also `notify-checks`). Links use `https://regretamin.com/`
+  (`SITE_URL` constant). Kinds: `ready`, `ready_request` (firm requests, docs/FIRM_REQUESTS.md), `refund`, `received`.
+  Only live firm pages (published, real, not test, not deleted) get a ready/refund email. Each is emailed once
+  (`notified_at`; a failed send is kept in `notify_error` and not retried automatically). Email only, never SMS.

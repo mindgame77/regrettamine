@@ -4,7 +4,7 @@ All copy, plans and section presentation come from launch/copy.json (also handed
 Output: site-launch/. Deploy to the preview with launch/deploy_preview.sh (see launch/HOW-TO-CHANGE.md).
 Refresh a snapshot (read-only): run launch/firm_snapshot.sql with :slug, save the JSON as data/launch/<slug>.json;
 then python3 launch/sync_checks.py data/launch/*.json > a new migration to update the 10 check rows."""
-import os, json, html, glob, shutil, hashlib, urllib.request
+import os, re, json, html, glob, shutil, hashlib, urllib.request
 from legal import privacy, terms
 E = html.escape
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE); OUT = os.path.join(ROOT, 'site-launch')
@@ -82,8 +82,43 @@ def firm_head(F, full=False):
             f'<meta property="og:description" content="{d}"><meta property="og:url" content="{url}"><meta name="twitter:card" content="summary">'
             f'<script type="application/ld+json">{ldj}</script>')
 
+# Official SEC names arrive in ALL CAPS ("IVP MANAGEMENT, L.L.C."). /full/ shows them in normal (title) case, display only
+# (the stored name and the JSON-LD legalName stay as filed). Keep identical to secTitle() in launch/edge/firm.mjs.
+SEC_KEEP = {'LLC': 'LLC', 'L.L.C.': 'L.L.C.', 'L.L.C': 'L.L.C', 'LP': 'LP', 'L.P.': 'L.P.', 'L.P': 'L.P', 'LLP': 'LLP', 'L.L.P.': 'L.L.P.',
+            'INC': 'Inc', 'INC.': 'Inc.', 'LTD': 'Ltd', 'LTD.': 'Ltd.', 'CO': 'Co', 'CO.': 'Co.', 'CORP': 'Corp', 'CORP.': 'Corp.',
+            'PLC': 'PLC', 'GP': 'GP', 'SA': 'SA', 'S.A.': 'S.A.', 'AG': 'AG', 'GMBH': 'GmbH', 'SARL': 'SARL', 'S.A.R.L.': 'S.à r.l.',
+            'BV': 'BV', 'B.V.': 'B.V.', 'NV': 'NV', 'AB': 'AB', 'AS': 'AS', 'SPA': 'SpA', 'PTE': 'Pte', 'PTY': 'Pty', 'LLLP': 'LLLP',
+            'A16Z': 'a16z', 'US': 'US', 'USA': 'USA', 'UK': 'UK', 'VC': 'VC', 'AI': 'AI', 'II': 'II', 'III': 'III', 'IV': 'IV', 'VI': 'VI',
+            'VII': 'VII', 'VIII': 'VIII', 'IX': 'IX', 'XI': 'XI', 'XII': 'XII', 'NEA': 'NEA', 'IVP': 'IVP', 'KKR': 'KKR', 'TPG': 'TPG',
+            'GGV': 'GGV', 'USV': 'USV', 'TCV': 'TCV', 'IDG': 'IDG', 'NFX': 'NFX', 'DST': 'DST', 'EQT': 'EQT', 'QED': 'QED', 'SOSV': 'SOSV',
+            'HV': 'HV', 'GV': 'GV', 'DCM': 'DCM', 'JMI': 'JMI', 'TA': 'TA', 'RRE': 'RRE', 'FPV': 'FPV', 'AVF': 'AVF', 'ESP': 'ESP', 'HIG': 'HIG',
+            'H.I.G.': 'H.I.G.', 'UBS': 'UBS', 'LGT': 'LGT', 'GCM': 'GCM', 'HGGC': 'HGGC', 'BVP': 'BVP',
+  'SEC': 'SEC', 'FEC': 'FEC', 'PAC': 'PAC', 'CRD': 'CRD', 'LEI': 'LEI', 'FINRA': 'FINRA', 'OFAC': 'OFAC', 'FCA': 'FCA', 'EU': 'EU', 'UN': 'UN', 'SBIC': 'SBIC', 'ERISA': 'ERISA', 'NYC': 'NYC'}
+SEC_SMALL = {'OF', 'AND', 'THE', 'FOR', 'DE', 'DU', 'LA', 'LE', 'VON', 'VAN', 'DER', 'DES', 'ET', 'AN', 'AT', 'ON', 'IN', 'A'}
+
+def _sec_part(w):  # one hyphen / slash / apostrophe part, already upper
+    if not re.search('[A-Z]', w): return w
+    if w in SEC_KEEP: return SEC_KEEP[w]
+    core = re.sub('[^A-Z]', '', w)
+    if re.fullmatch('[IVX]{2,5}', core): return w  # fund number: XVII
+    if len(core) <= 4 and not re.search('[AEIOUY]', core): return w  # short acronym: GP, BRV, SVB
+    lw = w.lower(); m = re.search('[a-z]', lw)
+    return lw[:m.start()] + lw[m.start()].upper() + lw[m.start() + 1:]  # first letter up: 83NORTH -> 83North
+
+def sec_title(s):
+    s = s or ''
+    if not s or re.search('[a-z]', s): return s  # already in mixed case: as filed
+    out = []
+    for i, w in enumerate(s.split(' ')):
+        bare = w.strip(',;()')
+        if i and bare in SEC_SMALL: out.append(w.lower()); continue
+        if bare.rstrip('.,') in SEC_KEEP or bare in SEC_KEEP:
+            k = bare if bare in SEC_KEEP else bare.rstrip('.,'); out.append(w.replace(k, SEC_KEEP[k], 1)); continue
+        out.append(re.sub("[^\\s\\-/'’&]+", lambda m: _sec_part(m.group(0)), w))
+    return ' '.join(out)
+
 def fill(tpl, F, full=False):  # /full/ shows the official SEC name; everything else the display name
-    return tpl.replace(T_HEAD, firm_head(F, full)).replace(T_NAME, E((F.get('legal_name') or F['name']) if full else F['name'])).replace(T_SLUG, E(F['slug']))
+    return tpl.replace(T_HEAD, firm_head(F, full)).replace(T_NAME, E(sec_title(F.get('legal_name') or F['name']) if full else F['name'])).replace(T_SLUG, E(F['slug']))
 
 FOOT = lambda root: f'<footer class="ft"><span>© 2026 Know Your Group INC.</span><a href="{root}privacy/">Privacy</a><a href="{root}terms/">Terms</a></footer>'
 
@@ -188,7 +223,7 @@ def landing():
 def pending():
     P = S['pending']
     return f'''<main class="wrap"><div class="pend"><div class="sp"></div><h1>{P["h1"]}</h1><p style="color:var(--ink2);font-size:18px"><b id="pq"></b> {P["body"]}</p>
-<form id="notify"><input class="in" type="email" name="email" required placeholder="{P["email_placeholder"]}"><button class="btn">{P["button"]}</button></form><p class="msg" id="pmsg"></p><p class="note">{P["note"]}</p></div></main>'''
+<form id="notify"><input class="in" type="email" name="email" required maxlength="200" placeholder="{P["email_placeholder"]}"><input class="in" type="text" name="website" maxlength="300" placeholder="{P["website_placeholder"]}"><button class="btn">{P["button"]}</button></form><p class="msg" id="pmsg"></p><p class="note">{P["note"]}</p></div></main>'''
 
 def how_we_check():
     H = S['how_we_check']

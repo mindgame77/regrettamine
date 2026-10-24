@@ -4,6 +4,42 @@
   const CFG = window.REGRET.copy, COPY = CFG.company, PILL = CFG.site.pills;
   const fmt = (t, o) => t.replace(/\{(\w+)\}/g, (_, k) => o[k]);
   const esc = (x) => String(x == null ? '' : x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  // ALL-CAPS names from filings (SEC, FEC: "KUSHNER, JOSHUA → GROWTH DEMOCRATS") shown in title case, display only.
+  // Same rules as secTitle() in launch/edge/firm.mjs and sec_title() in launch/build.py; the stored data is unchanged.
+  const SEC_KEEP = {'LLC': 'LLC', 'L.L.C.': 'L.L.C.', 'L.L.C': 'L.L.C', 'LP': 'LP', 'L.P.': 'L.P.', 'L.P': 'L.P', 'LLP': 'LLP', 'L.L.P.': 'L.L.P.',
+    'INC': 'Inc', 'INC.': 'Inc.', 'LTD': 'Ltd', 'LTD.': 'Ltd.', 'CO': 'Co', 'CO.': 'Co.', 'CORP': 'Corp', 'CORP.': 'Corp.',
+    'PLC': 'PLC', 'GP': 'GP', 'SA': 'SA', 'S.A.': 'S.A.', 'AG': 'AG', 'GMBH': 'GmbH', 'SARL': 'SARL', 'S.A.R.L.': 'S.à r.l.',
+    'BV': 'BV', 'B.V.': 'B.V.', 'NV': 'NV', 'AB': 'AB', 'AS': 'AS', 'SPA': 'SpA', 'PTE': 'Pte', 'PTY': 'Pty', 'LLLP': 'LLLP',
+    'A16Z': 'a16z', 'US': 'US', 'USA': 'USA', 'UK': 'UK', 'VC': 'VC', 'AI': 'AI', 'II': 'II', 'III': 'III', 'IV': 'IV', 'VI': 'VI',
+    'VII': 'VII', 'VIII': 'VIII', 'IX': 'IX', 'XI': 'XI', 'XII': 'XII', 'NEA': 'NEA', 'IVP': 'IVP', 'KKR': 'KKR', 'TPG': 'TPG',
+    'GGV': 'GGV', 'USV': 'USV', 'TCV': 'TCV', 'IDG': 'IDG', 'NFX': 'NFX', 'DST': 'DST', 'EQT': 'EQT', 'QED': 'QED', 'SOSV': 'SOSV',
+    'HV': 'HV', 'GV': 'GV', 'DCM': 'DCM', 'JMI': 'JMI', 'TA': 'TA', 'RRE': 'RRE', 'FPV': 'FPV', 'AVF': 'AVF', 'ESP': 'ESP', 'HIG': 'HIG',
+    'H.I.G.': 'H.I.G.', 'UBS': 'UBS', 'LGT': 'LGT', 'GCM': 'GCM', 'HGGC': 'HGGC', 'BVP': 'BVP',
+  'SEC': 'SEC', 'FEC': 'FEC', 'PAC': 'PAC', 'CRD': 'CRD', 'LEI': 'LEI', 'FINRA': 'FINRA', 'OFAC': 'OFAC', 'FCA': 'FCA', 'EU': 'EU', 'UN': 'UN', 'SBIC': 'SBIC', 'ERISA': 'ERISA', 'NYC': 'NYC'};
+  const SEC_SMALL = new Set(['A', 'AN', 'AND', 'AT', 'DE', 'DER', 'DES', 'DU', 'ET', 'FOR', 'IN', 'LA', 'LE', 'OF', 'ON', 'THE', 'VAN', 'VON']);
+  const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+  function secPart(w) {
+    if (!/[A-Z]/.test(w)) return w;
+    if (has(SEC_KEEP, w)) return SEC_KEEP[w];
+    const core = w.replace(/[^A-Z]/g, '');
+    if (/^[IVX]{2,5}$/.test(core)) return w;
+    if (core.length <= 4 && !/[AEIOUY]/.test(core)) return w;
+    const lo = w.toLowerCase(), i = lo.search(/[a-z]/);
+    return lo.slice(0, i) + lo[i].toUpperCase() + lo.slice(i + 1);
+  }
+  function secTitle(s) {
+    s = s || '';
+    if (!s || /[a-z]/.test(s)) return s;
+    return s.split(' ').map((w, i) => {
+      const bare = w.replace(/^[,;()]+|[,;()]+$/g, '');
+      if (i && SEC_SMALL.has(bare)) return w.toLowerCase();
+      const k = has(SEC_KEEP, bare) ? bare : bare.replace(/[.,]+$/, '');
+      if (has(SEC_KEEP, k)) return w.replace(k, SEC_KEEP[k]);
+      return w.replace(/[^\s\-/'’&]+/g, secPart);
+    }).join(' ');
+  }
+  // Body text: also keep a 2-letter state/country code after a comma ('MENLO PARK, CA' -> 'Menlo Park, CA').
+  const nice = (t) => t ? secTitle(String(t)).replace(/(,\s*)([A-Z][a-z])(?=$|[\s,;)])/g, (m, a, b) => a + b.toUpperCase()) : t;
   const safeUrl = (u) => /^https?:\/\//i.test(u || '') ? u : null;
   const ROOT = window.REGRET_ROOT || '';
   // One display format for every source/fact date ('Oct 23, 2026'); stored labels stay as they are.
@@ -55,15 +91,15 @@
 
   // Open-state renderers, keyed by copy.json sections[].renderer
   const R = {
-    facts: (it) => '<div class="kvs">' + it.map(x => '<div class="kv"><span class="k">' + esc(x.label) + '</span><span>' + esc(x.value) + chips(x.src) + '</span></div>').join('') + '</div>',
+    facts: (it) => '<div class="kvs">' + it.map(x => '<div class="kv"><span class="k">' + esc(x.label) + '</span><span>' + esc(nice(x.value)) + chips(x.src) + '</span></div>').join('') + '</div>',
     checks: (it, P) => checkRows(P),
-    legal: (it) => group(it, 'grp', COPY.legal, xs => xs.map(x => '<div class="it' + (x.state === 'Active' ? ' act' : '') + '">'
+    legal: (it) => group(it, 'grp', COPY.legal, xs => xs.filter(x => x.title || x.head || x.note).map(x => '<div class="it' + (x.state === 'Active' ? ' act' : '') + '">'
       + (x.state ? '<span class="cs ' + COPY.state[x.state] + '">' + esc(x.state) + '</span> ' : '') + (x.status ? '<span class="pill ' + (COPY.tone[x.tone] || 'p-g') + '"><i></i>' + esc(x.status) + '</span> ' : '')
-      + (x.role ? '<span class="cs cs-cl">' + esc(x.role) + '</span> ' : '') + '<b>' + esc(x.title) + (x.year ? ' · ' + esc(x.year) : '') + '</b>' + (x.note ? ' · ' + esc(x.note) : '') + chips(x.src) + '</div>').join('')),
+      + (x.role ? '<span class="cs cs-cl">' + esc(x.role) + '</span> ' : '') + '<b>' + esc(nice(x.title || x.head || '')) + (x.year ? ' · ' + esc(x.year) : '') + '</b>' + (x.note ? ' · ' + esc(nice(x.note)) : '') + chips(x.src) + '</div>').join('')),
     press: (it) => '<div class="pgr">' + it.map(x => card(x, true)).join('') + '</div>',
     founders: (it) => '<div class="pgr">' + it.map(x => card(x, false)).join('') + '</div>',
-    people: (it) => group(it, 'kind', COPY.people, xs => '<div class="pcards">' + xs.map(x => '<div class="pcard"><b>' + esc(x.head) + '</b>' + (x.badge ? '<span class="cs cs-act">' + esc(x.badge) + '</span>' : '') + '<span>' + esc(x.role) + '</span>' + chips(x.src) + '</div>').join('') + '</div>'),
-    timeline: (it) => '<div class="tls">' + it.map(x => '<div class="tl"><span class="tld">' + esc(x.date) + '</span><span><span class="cs cs-cl">' + esc(x.kind) + '</span> ' + esc(x.body) + chips(x.src) + '</span></div>').join('') + '</div>',
+    people: (it) => group(it, 'kind', COPY.people, xs => '<div class="pcards">' + xs.map(x => '<div class="pcard"><b>' + esc(nice(x.head)) + '</b>' + (x.badge ? '<span class="cs cs-act">' + esc(x.badge) + '</span>' : '') + '<span>' + esc(x.role) + '</span>' + chips(x.src) + '</div>').join('') + '</div>'),
+    timeline: (it) => '<div class="tls">' + it.map(x => '<div class="tl"><span class="tld">' + esc(x.date) + '</span><span><span class="cs cs-cl">' + esc(x.kind) + '</span> ' + esc(nice(x.body)) + chips(x.src) + '</span></div>').join('') + '</div>',
   };
   function card(x, logo) {
     const u = safeUrl(x.url), host = u ? new URL(u).hostname.replace(/^www\./, '') : '';
@@ -109,7 +145,7 @@
     main.querySelector('.toc').style.display = ''; const lk = main.querySelector('#lockcard'); if (lk) lk.style.display = '';
     if (!P.open) {
       main.querySelector('.m').textContent = [P.firm.hq, P.firm.short_name].filter(Boolean).join(' · ');
-      main.querySelector('.hfs').innerHTML = P.hero.map(h => '<span class="hf"><span>' + esc(h.label) + '</span><b>' + esc(h.value) + '</b>' + h.src.map(c => '<span class="sc">' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</span>').join('') + '</span>').join('');
+      main.querySelector('.hfs').innerHTML = P.hero.map(h => '<span class="hf"><span>' + esc(h.label) + '</span><b>' + esc(nice(h.value)) + '</b>' + h.src.map(c => '<span class="sc">' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</span>').join('') + '</span>').join('');
       main.querySelector('.csum').hidden = true; main.querySelector('.spl').innerHTML = ''; main.querySelector('.toc').innerHTML = ''; main.querySelector('.toc').style.display = 'none';
       main.querySelector('#lockcard').hidden = true; main.querySelector('#lockcard').style.display = 'none';
       // 'Not checked yet' page (no research yet): the 10 checks as 'Not checked yet' and the same card (it leads to the request-a-check form)
@@ -118,7 +154,7 @@
     }
     main.querySelector('.m').textContent = [P.firm.hq, P.firm.short_name].filter(Boolean).join(' · ');
     const has = new Set(secs.map(s => s.key));
-    main.querySelector('.hfs').innerHTML = P.hero.map(h => '<a class="hf" href="#' + (has.has(h.anchor) ? esc(h.anchor) : '') + '"><span>' + esc(h.label) + '</span><b>' + esc(h.value) + '</b>' + h.src.map(c => '<span class="sc">' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</span>').join('') + '</a>').join('');
+    main.querySelector('.hfs').innerHTML = P.hero.map(h => '<a class="hf" href="#' + (has.has(h.anchor) ? esc(h.anchor) : '') + '"><span>' + esc(h.label) + '</span><b>' + esc(nice(h.value)) + '</b>' + h.src.map(c => '<span class="sc">' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</span>').join('') + '</a>').join('');
     main.querySelector('.csum').innerHTML = has.has('checks') ? '<div class="csh"><b>' + COPY.summary + '</b><a href="#checks">' + COPY.full_check + '</a></div><div class="cks">'
       + P.checks.map(r => '<a class="ck" href="#checks"><span class="ckn">' + String(r.n).padStart(2, '0') + '</span>' + esc(r.title) + pill(r.state) + '</a>').join('') + '</div>' : '';
     main.querySelector('.csum').hidden = !has.has('checks');
@@ -187,7 +223,7 @@
     }
     const curN = checking && P.open ? P.checks.find(r => r.state === 'nc').n : 0;
     if (checking && !P.hero.length) main.querySelector('.kf').innerHTML = '<span>' + esc(CK.sources[0]) + ' <b>' + esc(CK.sources[1]) + '</b></span>';
-    else main.querySelector('.kf').innerHTML = P.hero.map(h => '<span>' + esc(h.label) + ' <b>' + esc(h.value) + '</b>' + (h.src || []).slice(0, 1).map(c => ' <i>· ' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</i>').join('') + '</span>').join('');
+    else main.querySelector('.kf').innerHTML = P.hero.map(h => '<span>' + esc(h.label) + ' <b>' + esc(nice(h.value)) + '</b>' + (h.src || []).slice(0, 1).map(c => ' <i>· ' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</i>').join('') + '</span>').join('');
     main.querySelector('.list').innerHTML = P.open ? ctable(P, checking, curN) : P.unchecked ? ctable(P, false, 0) + gate(P, '') : gate(P, ghost(P));
     const fn = main.querySelector('.rgt-n'), ft = (P.sections || []).filter(s => s.key !== 'checks').reduce((a, s) => a + (s.count || 0), 0);
     if (fn && ft) { fn.textContent = ft; fn.hidden = false; }
@@ -211,7 +247,7 @@
       const res = !nc ? tpill(r.state) : !checking ? pill('nc') : r.n === curN ? '<span class="pill p-cur"><span class="sp" aria-hidden="true"></span>' + esc(CK.current) + '</span>' : '<span class="wt">' + esc(CK.waiting) + '</span>';
       let found = '';
       if (fnd) found = '<b>' + esc(!r.count ? T.found_some : /^\d+ (case|record)s?$/.test(r.count) ? fmt(T.found, { count: r.count }) : r.count) + '</b>'
-        + (items && items.length ? '<span class="cts">' + items.slice(0, 2).map(x => esc(x.title || '')).filter(Boolean).join(', ') + (items.length > 2 ? ' ' + esc(fmt(T.more, { n: items.length - 2 })) : '') + '</span>' : '');
+        + (items && items.length ? '<span class="cts">' + items.slice(0, 2).map(x => esc(nice(x.title || ''))).filter(Boolean).join(', ') + (items.length > 2 ? ' ' + esc(fmt(T.more, { n: items.length - 2 })) : '') + '</span>' : '');
       else if (!nc) found = '<b>' + esc(T.nothing) + '</b>';
       else found = '<span class="ctm">—</span>';
       const S = (COPY.searched || {})[r.n] || '';
@@ -219,7 +255,7 @@
       if (!nc) {
         if (fnd && n > it) d += '<p class="ctn">' + esc(it ? fmt(T.partial, { n, count: r.count, m: it }) : T.none_itemized) + '</p>';
         if (fnd && items) d += items.map(x => { const meta = [x.who, x.year, x.status && x.status[0].toUpperCase() + x.status.slice(1)].filter(Boolean).map(esc).join(' · ');
-          return '<div class="cti"><b>' + esc(x.title || T.untitled) + '</b>' + (meta ? '<span class="ctmeta">' + meta + '</span>' : '') + (x.note ? '<p>' + esc(x.note) + '</p>' : '') + '</div>'; }).join('');
+          return '<div class="cti"><b>' + esc(x.title ? nice(x.title) : T.untitled) + '</b>' + (meta ? '<span class="ctmeta">' + meta + '</span>' : '') + (x.note ? '<p>' + esc(nice(x.note)) + '</p>' : '') + '</div>'; }).join('');
         else if (fnd && it) d += '<button type="button" class="ctl" data-sec="checks">' + esc(fmt(T.locked, { m: it })) + ' <span>' + COPY.locked + '</span></button>';
         d += '<p class="ctw"><b>' + esc(T.what) + '</b> ' + esc(S) + (sdate(r) ? ' · ' + esc(fmt(COPY.searched_on, { date: sdate(r) })) : '') + (r.state === 'clear' || r.state === 'nf' ? ' · ' + esc(COPY.searched_nf) : '') + '</p>';
       }

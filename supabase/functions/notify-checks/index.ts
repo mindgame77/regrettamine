@@ -1,7 +1,7 @@
 // Unknown-firm worker. Research is done elsewhere (Regretamin Checker bot via TOXY dev), which publishes the firm row.
 // This function only emails people whose requested firm is now published, via Resend.
 // Run every minute (pg_cron + pg_net, or an external scheduler). Requires header x-cron-secret = CRON_SECRET.
-// Secrets: RESEND_API_KEY, CRON_SECRET, SITE_URL, EMAIL_FROM (verified Resend sender), SEND_EMAILS ("true" to really send).
+// Secrets: RESEND_API_KEY, CRON_SECRET, SITE_URL, SEND_EMAILS ("true" to really send).
 // Optional: TEST_ONLY_TO = only this address may receive mail (safety while testing).
 import { createClient } from "npm:@supabase/supabase-js@2";
 const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
@@ -22,11 +22,11 @@ Deno.serve(async (req) => {
       method: "POST",
       headers: { Authorization: `Bearer ${Deno.env.get("RESEND_API_KEY")}`, "Content-Type": "application/json", "Idempotency-Key": `check-request-${r.id}` },
       body: JSON.stringify({
-        from: Deno.env.get("EMAIL_FROM") ?? "Regretamin <checks@regrettamine.com>",
+        from: "Regretamin <support@regretamin.com>",
+        reply_to: "support@regretamin.com",
         to: [r.email],
         subject: `Your Regretamin check on ${r.name} is ready`,
-        html: `<p>The 10 checks on <b>${esc(r.name)}</b> are ready.</p><p><a href="${link}">See the results</a></p><p style="color:#8C88A3;font-size:12px">You asked us to check this firm on Regretamin. Facts from public records; not legal advice.</p>`,
-        text: `The 10 checks on ${r.name} are ready: ${link}`,
+        text: `Hi,\n\nThe 10 checks on ${r.name} are ready. See the results here:\n${link}\n\nFacts come from public records. This is not legal advice.\nRegretamin, support@regretamin.com`,
       }),
     });
     if (res.ok) {
