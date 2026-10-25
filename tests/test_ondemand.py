@@ -11,6 +11,7 @@ DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
 pytestmark = pytest.mark.skipif(not DATABASE_URL, reason="DATABASE_URL is not set")
 
 PAYLOAD = {
+    "firm": {"generated_at": "2026-10-25T00:38:26Z"},
     "coverage": [{"checklist_item": "registration x firm", "status": "records", "query_ids": ["q1"], "record_ids": ["r1"]}],
     "search_log": [{"query_id": "q1", "tool": "form_adv", "query": "x", "executed_at": "2026-10-20T15:00:00Z"}],
     "records": [{"record_id": "r1", "field_path": "legal_entities",
@@ -57,6 +58,9 @@ def test_paid_research_lifecycle():
         assert _j(cur.execute("select firm_page(%s, %s, false)", (slug, a2)).fetchone()[0])["ondemand"]["status"] == "in_progress"
         # valid research -> done, back to normal lane, both keep the page, email queued for the one with an email
         cur.execute("insert into research_submissions (registry_id, bot_id, payload, valid) values ('zz-od1', 'toxy-researcher-3', %s, true)", (json.dumps(PAYLOAD),))
+        stored = _j(cur.execute("select payload from research_submissions where registry_id = 'zz-od1'").fetchone()[0])
+        assert stored["firm"]["generated_at"] == "2026-10-25T00:38:26Z"
+        assert str(cur.execute("select report_date from firms where id = %s", (fid,)).fetchone()[0]) == "2026-10-25"
         assert cur.execute("select status from ondemand_jobs where firm_id = %s", (fid,)).fetchone()[0] == "done"
         assert cur.execute("select lane from research_queue where registry_id = 'zz-od1'").fetchone()[0] == "normal"
         for a in (a1, a2):
@@ -90,10 +94,15 @@ def test_partial_firm_and_refund():
         P = _j(cur.execute("select firm_page('zz-partial', %s, false)", (a,)).fetchone()[0])
         assert P["open"] is False and P["ondemand"]["status"] == "refunded"
         assert cur.execute("select o.kind from ondemand_outbox(50) o join research_requests r on r.id = o.id where r.firm_id = %s", (fid,)).fetchall() == [("refund",)]
-        # a fully checked firm: a normal unlock, no research request
+        # a fully checked firm: a normal unlock with no email creates no research request
         cur.execute("update firm_check_rows set state = 'clear' where firm_id = %s", (fid,))
         cur.execute("select firm_page('zz-partial', %s, true)", (str(uuid.uuid4()),))
         assert cur.execute("select count(*) from research_requests where firm_id = %s", (fid,)).fetchone()[0] == 1
+        # the same unlock with an email still saves it and queues the ready mail, even though research is done
+        a2 = str(uuid.uuid4())
+        P = _j(cur.execute("select firm_page('zz-partial', %s, true, 'Done@Example.com')", (a2,)).fetchone()[0])
+        assert P["open"] is True
+        assert cur.execute("select o.kind, o.email from ondemand_outbox(50) o join research_requests r on r.id = o.id where r.firm_id = %s and r.anon_id = %s", (fid, a2)).fetchone() == ("ready", "done@example.com")
         conn.rollback()
 
 
@@ -116,4 +125,36 @@ def test_firm_request_lane():
         cur.execute("select research_submit(%s, 'toxy-researcher-3', %s, 1, true, '[]'::jsonb)", (rid, json.dumps(PAYLOAD)))
         assert cur.execute("select status from firm_requests where 'req-' || id = %s", (rid,)).fetchone()[0] == "linked"
         assert cur.execute("select lane from research_queue where registry_id = %s", (rid,)).fetchone()[0] == "normal"
+        conn.rollback()
+
+
+def test_notify_signup_job_and_single_ready_mail():
+    """Notify-me on a known firm files a paid job; an unknown name files req-<id> in lane request.
+    The ready email is the research_requests row, once, and not the ready_request template."""
+    import psycopg
+
+    with psycopg.connect(DATABASE_URL) as conn, conn.cursor() as cur:
+        cur.execute("insert into research_queue (registry_id, name, priority, status) values ('zz-nf1', 'Zz Notify Partners', 900000, 'queued')")
+        fid, slug = cur.execute("select id, slug from firms where registry_id = 'zz-nf1'").fetchone()
+        a = str(uuid.uuid4())
+        assert _j(cur.execute("select notify_when_checked(%s, 'Notify@Example.com', %s)", (slug, a)).fetchone()[0])["status"] == "ok"
+        assert cur.execute("select lane from research_queue where registry_id = 'zz-nf1'").fetchone()[0] == "paid"
+        kind, fr = cur.execute("select spend_kind, firm_request_id from research_requests where firm_id = %s", (fid,)).fetchone()
+        assert kind == "request" and fr is None
+        linked, notified = cur.execute(
+            "select research_request_id is not null, notified_at is not null from check_requests where firm_id = %s", (fid,)).fetchone()
+        assert linked and notified
+        assert cur.execute("select count(*) from ondemand_outbox(50) o join research_requests r on r.id = o.id where r.firm_id = %s", (fid,)).fetchone()[0] == 0
+        cur.execute("update ondemand_jobs set status = 'done', done_at = now() where firm_id = %s", (fid,))
+        cur.execute("update research_requests set status = 'done', done_at = now() where firm_id = %s", (fid,))
+        assert cur.execute(
+            "select o.kind, o.email from ondemand_outbox(50) o join research_requests r on r.id = o.id where r.firm_id = %s", (fid,)
+        ).fetchone() == ("ready", "notify@example.com")
+        assert cur.execute("select count(*) from ready_check_requests() where slug = %s", (slug,)).fetchone()[0] == 0
+        b = str(uuid.uuid4())
+        cur.execute("select request_check('zz brand new capital', 'new@example.com', %s)", (b,))
+        reg, lane, src = cur.execute(
+            "select registry_id, lane, list_source from research_queue where list_source = 'check_request' and lower(name) = 'zz brand new capital'"
+        ).fetchone()
+        assert reg.startswith("req-") and lane == "request" and src == "check_request"
         conn.rollback()

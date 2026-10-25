@@ -19,9 +19,14 @@ Several people paying for the same firm share one job; each gets their own reque
 
 ## Who moves the queue
 
-* Paid request (`unlock_firm` -> `_ondemand_enqueue`): paid lane, front of the queue.
-* Request-a-check form (`request_check`): when the text names a known firm exactly (name, display name, short name, slug or
-  alias), the firm moves to the front of the **normal** lane.
+* Paid request (`unlock_firm` -> `_ondemand_enqueue`): paid lane, front of the queue. The email is saved whenever one
+  is available (the account email, or the address typed in the pay popup / notify box), including when the firm is
+  already fully checked. A finished firm does not go back on the paid lane; the address is stored on a done request so
+  the ready email can go out.
+* Notify me (`notify_when_checked`) and the request-a-check form (`request_check`): a firm already on the site gets a
+  paid-lane job (`spend_kind = 'request'`, no credit, never refunded), the same shape as a hand-routed notify. A name
+  that is not on the site gets `research_queue.registry_id = 'req-<check_requests id>'` (or `req-c<id>` when `req-<id>`
+  is already a firm request) in lane `request`. See docs/FIRM_REQUESTS.md for that lane.
 * Page views (people or crawlers) never reorder anything (`bump_firm_check` no longer changes priority; the page no longer calls it).
 
 ## Bot: `toxy-researcher-3` (Regretamin Researcher 3)
@@ -54,6 +59,9 @@ headers `x-ingest-key: <ingest key>`, `content-type: application/json`
    ```
    A valid submission runs the usual `ensure_firm_for_registry` path (page created / upgraded), then trigger
    `zz_ondemand_done` marks the job and all its requests `done` and moves the firm back to the normal lane.
+   `zz_stamp_firm_report` copies `payload.firm.generated_at` onto `firms.report_date` (when that date is empty or
+   older) and sets `firms.updated_at`, which is the sitemap lastmod. The submission payload is not modified.
+   The dump has no list score, and nothing on the page computes `firms.list_score` from the checks.
    Invalid (422): fix all errors and resubmit once, same registry_id and bot_id.
 4. **Can't finish**: `{"action": "fail", ...}` / `{"action": "skip", ...}` as usual. A claim older than 6 h is released back
    to the paid lane. Anything not done 24 h after the first request is refunded automatically.
@@ -67,8 +75,13 @@ Then claim the next one.
 * `ondemand_tick()` runs every 2 minutes (pg_cron job `regretamin-ondemand-tick`): `ondemand_refund_expired()` refunds
   requests older than 24 h (credit back to the same bucket, `refund_ondemand` event), then, when `ondemand_outbox()` has mail,
   calls Edge Function `ondemand-notify` (pg_net). The call is authenticated with the Vault secret `ondemand_cron_key`.
-* `ondemand-notify` sends via Resend (`RESEND_API_KEY`; optional `TEST_ONLY_TO`), **plain text, from
+* `ondemand-notify` sends via Resend (`RESEND_API_KEY`), **plain text, from
   `Regretamin <support@regretamin.com>`** (all transactional mail, also `notify-checks`). Links use `https://regretamin.com/`
-  (`SITE_URL` constant). Kinds: `ready`, `ready_request` (firm requests, docs/FIRM_REQUESTS.md), `refund`, `received`.
+  (`SITE_URL` constant). Kinds: `ready` (a check is done, including a notify-me signup on a firm already on the site),
+  `ready_request` (only a "Request this firm" row, `firm_request_id` set; docs/FIRM_REQUESTS.md), `refund`, `received`.
   Only live firm pages (published, real, not test, not deleted) get a ready/refund email. Each is emailed once
-  (`notified_at`; a failed send is kept in `notify_error` and not retried automatically). Email only, never SMS.
+  (`notified_at`; a failed send is kept in `notify_error` and not retried automatically). `TEST_ONLY_TO` is not a send
+  gate: a leftover value used to skip every other address without setting `notified_at` or `notify_error`, so the tick
+  retried the skip forever. Email only, never SMS.
+* A notify-me signup that is already linked to a job (`check_requests.research_request_id`) is not mailed again. The
+  research request is the only ready email. `ready_check_requests` (the older worker) skips linked signups.

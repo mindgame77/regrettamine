@@ -2,7 +2,9 @@
 // Auth: header x-ondemand-key must match the Vault secret 'ondemand_cron_key' (checked in the database; never leaves it).
 // Kinds: 'ready' (paid research done), 'ready_request' (a requested firm is now on the site), 'refund' (not done within 24 h,
 // credit returned), 'received' (firm request stored). All mail is plain text from support@regretamin.com via Resend.
-// Secrets: RESEND_API_KEY. Optional TEST_ONLY_TO: only this address gets mail.
+// Secrets: RESEND_API_KEY. TEST_ONLY_TO is not a send gate: a leftover test address
+// used to skip every other recipient without ondemand_mark_notified, so notified_at
+// and notify_error stayed empty and every tick retried the skip.
 const SITE_URL = "https://regretamin.com/";
 const FROM = "Regretamin <support@regretamin.com>";
 import { createClient } from "npm:@supabase/supabase-js@2";
@@ -28,12 +30,10 @@ Deno.serve(async (req) => {
   if (ok !== true) return new Response("forbidden", { status: 403 });
   const key = Deno.env.get("RESEND_API_KEY");
   if (!key) return json({ error: "RESEND_API_KEY not set" }, 500);
-  const only = Deno.env.get("TEST_ONLY_TO")?.toLowerCase();
   const { data: box, error } = await admin.rpc("ondemand_outbox", { p_limit: 50 });
   if (error) return json({ error: "outbox failed" }, 500);
   const out: unknown[] = [];
   for (const r of box ?? []) {
-    if (only && r.email.toLowerCase() !== only) { out.push({ id: r.id, kind: r.kind, skipped: "TEST_ONLY_TO" }); continue; }
     const link = r.slug ? `${SITE_URL}vc/${encodeURIComponent(r.slug)}/` : SITE_URL;
     const { subject, text } = mail(r.kind, r.name, link);
     const res = await fetch("https://api.resend.com/emails", {
