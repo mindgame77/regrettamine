@@ -194,6 +194,25 @@
     "No card needed"
    ]
   },
+  "outcredits": {
+   "title": "You've used your free checks",
+   "sub": "Pick a plan to check this firm.",
+   "plans_aria": "Plans",
+   "google": "Continue with Google",
+   "or": "or",
+   "email_placeholder": "you@startup.com",
+   "email_aria": "Email",
+   "checkout": "Continue to checkout",
+   "fine": "Your account is created from this email after payment.",
+   "line_once": [
+    "{n} credit, once",
+    "{n} credits, once"
+   ],
+   "line_month": [
+    "{n} credit a month",
+    "{n} credits a month"
+   ]
+  },
   "pricing": {
    "title": "Pricing",
    "sub": "Counting is in credits: 1 firm = 1 credit. Monthly plans renew; if you run out, buy more credits any time."

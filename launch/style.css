@@ -292,6 +292,25 @@ nav .r a.on{color:var(--vio);font-weight:700}
 .sgm .emr .btn{background:#FFD84D;color:#1a1530;border:0;border-radius:12px;height:50px;padding:0 20px;font-weight:700;width:auto}
 .sgt{display:flex;gap:18px;justify-content:center;margin-top:18px;font-size:13px;color:#B9B4D0}.sgt span:before{content:"✓ ";color:#FFD84D;font-weight:700}
 .sgm .msg{color:#7EE2B0}
+#outcredits.ov{overflow:auto;align-items:safe center;padding:24px 0}
+.sgi .firm{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#B9B4D0;margin:0}
+.sgi .firm[hidden]{display:none}
+.sgi h2#outh{margin-top:8px}
+.sgi .orows{display:grid;gap:8px;margin:0 0 16px}
+.sgi .orow{display:flex;align-items:center;gap:12px;border:1.5px solid #3A3260;background:#262040;border-radius:14px;padding:12px 14px;cursor:pointer;color:#fff}
+.sgi .orow:has(input:checked){border:2px solid #FFD84D}
+.sgi .orow input{appearance:none;width:18px;height:18px;border-radius:50%;border:2px solid #8E88A8;margin:0;flex:none;display:grid;place-items:center;background:transparent}
+.sgi .orow input:checked{border-color:#FFD84D}
+.sgi .orow input:checked:before{content:"";width:8px;height:8px;border-radius:50%;background:#FFD84D}
+.sgi .orow b{display:block;font-size:16px;font-weight:700}
+.sgi .orow small{display:block;color:#B9B4D0;font-size:13px;font-weight:500;margin-top:2px}
+.sgi .orow em{margin-left:auto;font:800 18px 'Bricolage Grotesque';font-style:normal;white-space:nowrap}
+.sgi .orow span.tx{flex:1;min-width:0}
+.sgi > .in{display:block;width:100%;background:#262040;border:1.5px solid #3A3260;color:#fff;border-radius:12px;height:50px;margin:0 0 12px;padding:0 14px}
+.sgi > .in::placeholder{color:#8E88A8}
+.sgi .btn.y{width:100%;background:#FFD84D;color:#1a1530;border:0;border-radius:12px;height:52px}
+.sgi .btn.y:disabled{opacity:.6}
+.sgi .fine2{text-align:center;color:#B9B4D0;font-size:13px;margin:12px 0 0}
 @media (max-width:640px){.sgi{padding:36px 22px 28px}.sg4 b{font-size:72px}.sgm h2{font-size:28px}}
 .tx em.srch{color:var(--mute);font-weight:500;font-size:13.5px;margin-top:4px}
 .tx em.sdt{display:block;color:var(--mute);font-style:normal;font-weight:500;font-size:12.5px;margin-top:3px}

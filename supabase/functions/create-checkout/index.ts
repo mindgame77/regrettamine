@@ -1,18 +1,20 @@
-// Creates a Stripe Checkout session for the signed-in user. Body { kind, code? }; kind is single|m10|m30|y10|y30, or "code"
+// Creates a Stripe Checkout session. Body { kind, code?, email? }; kind is single|m10|m30|y10|y30, or "code"
 // for the hidden plan a valid code unlocks. Discounts come only from a code re-checked here (never from the browser).
-// Reuses the user's Stripe customer (check_balances, then the older subscriptions table). A user whose subscription is active or
-// trialing cannot start another one: 409 { error: "has_plan", has_plan: true } and the site points them to the billing portal
-// (plan changes go through the portal). Single one-time checks stay open to subscribers.
+// Signed-in: reuses the user's Stripe customer (check_balances, then the older subscriptions table) and metadata.user_id.
+// Signed-out: email is required and sent as customer_email (prefilled, not a user id). The account is created after payment
+// by the webhook, not here. A user whose subscription is active or trialing cannot start another one: 409 { error: "has_plan" }.
+// Single one-time checks stay open to subscribers.
 // Secrets: STRIPE_MODE + STRIPE_<LIVE|TEST>_SECRET_KEY, price IDs (see _shared/stripe_plans.ts), SITE_URL, SUPABASE_SERVICE_ROLE_KEY.
 import Stripe from "npm:stripe@16";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { type Kind, lookupCode, PRICES } from "../_shared/stripe_plans.ts";
 import { stripeKey } from "../_shared/stripe_env.ts";
+import { normalizeEmail, paidAdmin, userIdForEmail } from "../_shared/paid_user.ts";
 const stripe = new Stripe(stripeKey()); // STRIPE_MODE picks the live or test key
 const CHECKS: Record<Kind, number> = { single: 1, m10: 10, m30: 30, y10: 10, y30: 30 };
 const cors = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, content-type, apikey, x-client-info" };
 const err = (error: string, status: number, extra = {}) => new Response(JSON.stringify({ error, ...extra }), { status, headers: { ...cors, "Content-Type": "application/json" } });
-const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+const admin = paidAdmin();
 const LIVE = ["active", "trialing"];
 // The user's Stripe customer ID, if they ever paid: launch balance first, then the older subscriptions table.
 async function customerOf(uid: string): Promise<string | null> {
@@ -61,8 +63,10 @@ Deno.serve(async (req) => {
 async function handle(req: Request): Promise<Response> {
   const sb = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!, { global: { headers: { Authorization: req.headers.get("Authorization") ?? "" } } });
   const { data: { user } } = await sb.auth.getUser();
-  if (!user) return err("sign in", 401);
-  const { kind, code, return_path } = await req.json();
+  const body = await req.json().catch(() => ({}));
+  const { kind, code, return_path } = body;
+  const guest = user ? null : normalizeEmail(body.email);
+  if (!user && !guest) return err(body.email ? "bad email" : "sign in", body.email ? 400 : 401);
   const c = code ? await lookupCode(stripe, code).catch(() => null) : null;
   if (code && !c) return err("bad code", 400);
   let price: string, checks: number, name = "", discount: boolean;
@@ -73,16 +77,29 @@ async function handle(req: Request): Promise<Response> {
     price = PRICES[kind as Kind]; checks = CHECKS[kind as Kind]; discount = !!c?.kinds.includes(kind);
   } else return err("bad kind", 400);
   const plan = kind === "code" ? "custom" : kind, sub = kind !== "single";
-  const meta = { user_id: user.id, kind: plan, checks: String(checks), ...(name ? { name } : {}) };
-  const customer = await usable(await customerOf(user.id));
-  if (sub && await hasPlan(user.id, customer)) return err("has_plan", 409, { has_plan: true });
   const site = Deno.env.get("SITE_URL")!;
-  const who = customer ? { customer } : { customer_email: user.email ?? undefined, ...(sub ? {} : { customer_creation: "always" as const }) };
+  // Signed-in purchases keep metadata.user_id. A guest email is prefilled only; the webhook creates the account after payment.
+  let meta: Record<string, string>, who: { customer: string } | { customer_email?: string; customer_creation?: "always" }, ref: string | undefined, success: string;
+  if (user) {
+    const customer = await usable(await customerOf(user.id));
+    if (sub && await hasPlan(user.id, customer)) return err("has_plan", 409, { has_plan: true });
+    meta = { user_id: user.id, kind: plan, checks: String(checks), ...(name ? { name } : {}) };
+    who = customer ? { customer } : { customer_email: user.email ?? undefined, ...(sub ? {} : { customer_creation: "always" as const }) };
+    ref = user.id; success = site + "?paid=1";
+  } else {
+    if (sub) {
+      const existing = await userIdForEmail(admin, guest!);
+      if (existing && await hasPlan(existing, await usable(await customerOf(existing)))) return err("has_plan", 409, { has_plan: true });
+    }
+    meta = { email: guest!, kind: plan, checks: String(checks), ...(name ? { name } : {}) };
+    who = { customer_email: guest!, ...(sub ? {} : { customer_creation: "always" as const }) };
+    ref = undefined; success = site + "?paid=1&session_id={CHECKOUT_SESSION_ID}";
+  }
   const s = await stripe.checkout.sessions.create({
     mode: sub ? "subscription" : "payment", line_items: [{ price, quantity: 1 }], ...who,
-    client_reference_id: user.id, metadata: meta, ...(discount ? { discounts: [{ promotion_code: c!.promo.id }] } : {}),
+    ...(ref ? { client_reference_id: ref } : {}), metadata: meta, ...(discount ? { discounts: [{ promotion_code: c!.promo.id }] } : {}),
     ...(sub ? { subscription_data: { metadata: meta } } : {}),
-    success_url: site + "?paid=1", cancel_url: cancelUrl(site, return_path),
+    success_url: success, cancel_url: cancelUrl(site, return_path),
     ...(discount ? {} : { allow_promotion_codes: true }), // Stripe rejects allow_promotion_codes together with discounts
   });
   return new Response(JSON.stringify({ url: s.url }), { headers: { ...cors, "Content-Type": "application/json" } });

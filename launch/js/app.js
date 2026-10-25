@@ -14,7 +14,15 @@
   document.addEventListener('mousedown', (e) => { if (e.target.classList && e.target.classList.contains('ov')) closeOv(e.target); });
   const PEND = 'regretamin.pendingBuy';
   const setPend = (k, code) => localStorage.setItem(PEND, JSON.stringify({ k, code, t: Date.now() }));
+  const clearPend = () => localStorage.removeItem(PEND);
   const takePend = () => { try { const p = JSON.parse(localStorage.getItem(PEND) || 'null'); localStorage.removeItem(PEND); return p && Date.now() - p.t < 30 * 60e3 ? p : null; } catch (_) { return null; } };
+  const PAID_SID = (() => { // Stripe return: drop the session id from the address bar before anything else reads it
+    const q = new URLSearchParams(location.search);
+    if (q.get('paid') !== '1') return '';
+    const sid = q.get('session_id') || '';
+    history.replaceState(null, '', location.pathname + location.hash);
+    return sid;
+  })();
   document.addEventListener('click', (e) => {
     const t = e.target.closest('[data-open],[data-close],[data-buy]'); if (!t) return;
     if (t.dataset.open && !document.getElementById(t.dataset.open)) return; // real /plans/ or /login/ link when that popup is not on this page
@@ -347,27 +355,52 @@
   });
   document.addEventListener('click', (e) => { const a = e.target.closest('[data-portal]'); if (a) { e.preventDefault(); portal(a.parentNode); } });
   document.addEventListener('submit', (e) => { const f = e.target.closest('[data-code]'); if (!f) return; e.preventDefault(); if (!f.code.readOnly) applyCode(f.code.value); });
-  async function buy(kind) {
-    if (!sb) return alert(T.no_checkout);
-    const { data: s } = await sb.auth.getSession();
-    const pay = $('#paycase'), inPay = pay && !pay.hidden, out = inPay ? $('#pmsg2') : $('#pwmsg'), msg = (t) => { if (out) out.textContent = t; else if (t && !/…$/.test(t)) alert(t); };
-    if (!s.session) {
-      setPend(kind, CODE && CODE.code); // after sign-in (Google redirect or magic link) we come back here and continue to checkout
-      const suh = $('#suh'), sg = $('#signup');
-      if (suh) suh.textContent = T.sign_buy;
-      if (sg) { sg.classList.add('buy'); return open('signup'); }
-      location.href = ROOT + 'login/';
-      return;
-    }
-    document.querySelectorAll('[data-buy]').forEach(b => b.disabled = true); msg(T.opening);
-    const { data, error } = await sb.functions.invoke('create-checkout', { body: Object.assign({ kind, return_path: location.pathname }, CODE ? { code: CODE.code } : {}) });
+  const O = C.copy.site.outcredits;
+  let OUT_KIND = '';
+  const highlighted = () => { const hit = Object.entries(C.copy.plans).find(([k, p]) => k[0] !== '_' && p.highlight); return hit ? hit[0] : 'm10'; };
+  function outKind() { const r = document.querySelector('#outplans input:checked'); return (r && r.value) || OUT_KIND || highlighted(); }
+  function drawOut() {
+    const box = $('#outplans'); if (!box || !O) return;
+    box.innerHTML = ['single', 'm10', 'm30'].map((k) => {
+      const p = C.copy.plans[k]; if (!p) return '';
+      const y = p.yearly && OUT_KIND === p.yearly.kind ? p.yearly : null;
+      const kind = y ? y.kind : k, on = kind === (OUT_KIND || highlighted());
+      const price = y ? y.price + B.per_year_short : (p.monthly ? p.price + B.per_month_short : p.price);
+      const line = (y ? y.bill : (p.monthly ? pl(p.checks, O.line_month, { n: p.checks }) : pl(p.checks, O.line_once, { n: p.checks }))) + (!y && p.tag ? ' · ' + p.tag : '');
+      return '<label class="orow"><input type="radio" name="outplan" value="' + kind + '"' + (on ? ' checked' : '') + '><span class="tx"><b>' + esc(p.name) + '</b><small>' + esc(line) + '</small></span><em>' + esc(price) + '</em></label>';
+    }).join('');
+    box.querySelectorAll('input').forEach((r) => { r.onchange = () => { OUT_KIND = r.value; }; });
+  }
+  function openOut(kind) {
+    OUT_KIND = kind || highlighted();
+    const firm = PAGE && PAGE.firm && PAGE.firm.name, lab = $('#outfirm');
+    if (lab) { lab.hidden = !firm; lab.textContent = firm || ''; }
+    const msg = $('#outmsg'); if (msg) msg.textContent = '';
+    drawOut(); open('outcredits');
+  }
+  async function checkout(kind, extra, out) {
+    const msg = (t) => { if (out) out.textContent = t; else if (t && !/…$/.test(t)) alert(t); };
+    document.querySelectorAll('[data-buy],#outgo').forEach(b => b.disabled = true); msg(T.opening);
+    const { data, error } = await sb.functions.invoke('create-checkout', { body: Object.assign({ kind, return_path: location.pathname }, extra || {}, CODE ? { code: CODE.code } : {}) });
     if (error || !data || !data.url) {
-      document.querySelectorAll('[data-buy]').forEach(b => b.disabled = false);
+      document.querySelectorAll('[data-buy],#outgo').forEach(b => b.disabled = false);
       const j = error && error.context ? await error.context.json().catch(() => null) : null;
       if (j && j.has_plan && out) return (out.innerHTML = esc(T.has_plan) + ' <a href="#" data-portal>' + esc(T.has_plan_link) + '</a>'); // plan changes go through the billing portal
       return msg(T.checkout_fail);
     }
     location.href = data.url;
+  }
+  async function buy(kind) {
+    if (!sb) return alert(T.no_checkout);
+    const { data: s } = await sb.auth.getSession();
+    const pay = $('#paycase'), inPay = pay && !pay.hidden, oc = $('#outcredits'), inOut = oc && !oc.hidden;
+    const out = inPay ? $('#pmsg2') : inOut ? $('#outmsg') : $('#pwmsg');
+    if (!s.session) { // a purchase does not rewrite the Sign in popup ("Sign in to buy" / "No card needed")
+      if (oc) return openOut(kind);
+      location.href = ROOT + 'login/';
+      return;
+    }
+    return checkout(kind, null, out);
   }
   // Auth
   const back = () => location.href.split('#')[0];
@@ -389,7 +422,24 @@
     out.textContent = error ? error.message : T.magic_sent;
   };
   const m = $('#magic'); if (m) m.onclick = () => magic($('#em').value.trim(), $('#sumsg'));
-  document.querySelectorAll('[data-google],#google').forEach(b => b.onclick = google);
+  document.querySelectorAll('[data-google],#google').forEach(b => b.onclick = (e) => {
+    if (b.closest('#outcredits')) setPend(outKind(), CODE && CODE.code); // Google creates the account, then the return continues to checkout
+    return google(e);
+  });
+  const og = $('#outgo'); if (og) og.onclick = () => {
+    if (!sb) return alert(T.no_checkout);
+    clearPend(); // email checkout must not resume a second purchase after the return signs them in
+    const em = $('#outem'); em.value = em.value.trim();
+    if (!em.value || !em.checkValidity()) { $('#outmsg').textContent = T.req_bad_email; return; }
+    checkout(outKind(), { email: em.value }, $('#outmsg'));
+  };
+  async function claimPaid(sid) { // paid guest return: sign in from the Checkout session, then ask Supabase to email a magic link
+    const { data, error } = await sb.functions.invoke('claim-checkout', { body: { session_id: sid } });
+    if (error || !data || data.already || !data.token_hash) return;
+    await sb.auth.verifyOtp({ token_hash: data.token_hash, type: data.type || 'magiclink' }).catch(() => ({}));
+    if (data.email) await sb.auth.signInWithOtp({ email: data.email, options: { emailRedirectTo: back(), shouldCreateUser: false } }).catch(() => {});
+  }
+  if (PAID_SID && sb) claimPaid(PAID_SID);
   document.querySelectorAll('.gbx').forEach(b => { // touch: :active is unreliable, so mirror it with a class
     b.addEventListener('pointerdown', () => { b._pd = performance.now(); b.classList.add('prs'); });
     ['pointerup', 'pointercancel', 'pointerleave'].forEach(t => b.addEventListener(t, () => setTimeout(() => b.classList.remove('prs'), Math.max(0, 120 - (performance.now() - (b._pd || 0))))));
@@ -605,7 +655,11 @@
     }
     if (data.status === 'unchecked') return toRequest();
     if (data.status === 'need_signup') { $('#pmsg2').textContent = T.need_signup; const ub = $('#usecheck'); if (ub) ub.disabled = false; }
-    if (data.status === 'out') { const ub = $('#usecheck'); if (ub) ub.disabled = false; buy('single'); }
+    if (data.status === 'out') {
+      const ub = $('#usecheck'); if (ub) ub.disabled = false;
+      const { data: ss } = await sb.auth.getSession().catch(() => ({ data: {} }));
+      if (ss && ss.session) buy('single'); else openOut();
+    }
   }
   if (main) {
     // In-page anchors: smooth scroll and update the hash
@@ -640,7 +694,8 @@
         return;
       }
       showReady();
-      buy('single');
+      const { data: ss } = await sb.auth.getSession().catch(() => ({ data: {} }));
+      if (ss && ss.session) buy('single'); else openOut();
     };
     if (!sb) loadFail(); // no Supabase client (config or CDN script missing): never leave the skeleton up
     if (sb) {

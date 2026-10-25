@@ -41,6 +41,7 @@ It never touches the live site (mindgame77.github.io/regrettamine).
 | Stripe price IDs | Supabase function secrets `STRIPE_PRICE_SINGLE`, `STRIPE_PRICE_M10`, `STRIPE_PRICE_M30`, `STRIPE_PRICE_Y10`, `STRIPE_PRICE_Y30` |
 | Webhook signing secret | Supabase function secret `REGRETAMIN_STRIPE_WEBHOOK_SECRET` |
 | Checkout return URL | Supabase function secret `SITE_URL` |
+| Signed-out purchase (out-of-credits popup) | `launch/copy.json` → `site.outcredits` for the words. Prices still come from `plans`. `create-checkout` prefills `customer_email` and does not create the account. The webhook (`regretamin-stripe-webhook`) creates or links the user and calls `grant_checks`. `claim-checkout` signs the visitor in on the return; the browser then asks Supabase Auth to email a magic link. No password. | deploy `create-checkout`, `claim-checkout`, and the webhook, and apply migration `user_id_for_email` |
 | Email sender | Supabase Auth → SMTP settings (dashboard) |
 
 Check a change locally before deploying: `python3 launch/build.py && python3 -m http.server -d site-launch` → http://localhost:8000/
