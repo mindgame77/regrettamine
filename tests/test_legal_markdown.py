@@ -25,6 +25,9 @@ def test_terms_and_privacy_render_the_approved_pages():
     assert "Privacy Policy" in privacy and 'href="../terms/"' in privacy
     assert "not a consumer reporting agency" in terms
     assert "<code>regretamin.anon</code>" in privacy
+    assert "2 free credits on your device" in privacy
+    assert "its own 4 credits" in privacy and "Device credits are not transferred" in privacy
+    assert "those searches move to your account" not in privacy
     assert "Starter" in terms and "$19" in terms and "$190" in terms
     assert "Pro" in terms and "$49" in terms and "$490" in terms and "$10" in terms
     assert 'id="8-credits"' in terms and 'id="10-subscriptions-and-promo-codes"' in terms
