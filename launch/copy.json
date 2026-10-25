@@ -182,7 +182,7 @@
    "sign_out": "Sign out"
   },
   "signup": {
-   "title": "Get 4 more free credits",
+   "title": "New here? Get 4 free credits",
    "sub": "Create a free account. No card needed.",
    "google": "Continue with Google",
    "or": "or use email",
@@ -192,7 +192,11 @@
    "trust": [
     "Free account",
     "No card needed"
-   ]
+   ],
+   "have": "Already have an account?",
+   "sign_in": "Sign in",
+   "sign_title": "Sign in",
+   "sign_sub": "Sign in to your account. No card needed."
   },
   "outcredits": {
    "title": "You've used your free checks",

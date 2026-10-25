@@ -27,7 +27,7 @@
     const t = e.target.closest('[data-open],[data-close],[data-buy]'); if (!t) return;
     if (t.dataset.open && !document.getElementById(t.dataset.open)) return; // real /plans/ or /login/ link when that popup is not on this page
     e.preventDefault();
-    if (t.dataset.open === 'signup') { const suh = $('#suh'), sg = $('#signup'); if (suh) suh.textContent = T.signup_title || suh.dataset.t; if (sg) sg.classList.remove('buy'); }
+    if (t.dataset.open === 'signup') signupMode('new');
     if (t.dataset.open) open(t.dataset.open);
     if (t.dataset.close !== undefined) closeOv(t.closest('.ov'));
     if (t.dataset.buy) buy(t.dataset.buy);
@@ -39,7 +39,20 @@
     catch (_) { return null; } finally { clearTimeout(to); }
   }
   // Copy and plans come from launch/copy.json (window.REGRET.copy). fmt fills {name}; pl picks [one, many] by count.
-  const T = C.copy.js, B = C.copy.site.billing;
+  const T = C.copy.js, B = C.copy.site.billing, SU = C.copy.site.signup;
+  // New-account card vs existing-account sign-in. Same Google button and email link either way.
+  // The +4 shows only on the new-account card. Signing in does not grant credits.
+  function signupMode(mode) {
+    const card = document.querySelector('.sgcard'); if (!card || !SU) return;
+    const inn = mode === 'in';
+    card.classList.toggle('signin', inn);
+    const h = $('#suh'); if (h) h.textContent = inn ? SU.sign_title : SU.title;
+    const s = $('#sus'); if (s) s.textContent = inn ? SU.sign_sub : SU.sub;
+    const a = $('#sufootnew'), b = $('#sufootin'); if (a) a.hidden = inn; if (b) b.hidden = !inn;
+    const sg = $('#signup'); if (sg) sg.classList.remove('buy');
+  }
+  const sul = (id, mode) => { const b = document.getElementById(id); if (b) b.onclick = (e) => { e.preventDefault(); signupMode(mode); }; };
+  sul('sulinkin', 'in'); sul('sulinknew', 'new');
   // Stripe billing portal (Account "Manage" and the "You already have a plan" link); out = element for the failure message
   async function portal(out) {
     out.textContent = '';

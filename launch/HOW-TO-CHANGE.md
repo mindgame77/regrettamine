@@ -42,6 +42,7 @@ It never touches the live site (mindgame77.github.io/regrettamine).
 | Webhook signing secret | Supabase function secret `REGRETAMIN_STRIPE_WEBHOOK_SECRET` |
 | Checkout return URL | Supabase function secret `SITE_URL` |
 | Signed-out purchase (out-of-credits popup) | `launch/copy.json` → `site.outcredits` for the words. Prices still come from `plans`. `create-checkout` prefills `customer_email` and does not create the account. The webhook (`regretamin-stripe-webhook`) creates or links the user and calls `grant_checks`. `claim-checkout` signs the visitor in on the return; the browser then asks Supabase Auth to email a magic link. No password. | deploy `create-checkout`, `claim-checkout`, and the webhook, and apply migration `user_id_for_email` |
+| Sign-in popup, new account vs existing | `launch/copy.json` → `site.signup`. The card opens as "New here? Get 4 free credits". "Already have an account? Sign in" switches the same Google button and email link to the sign-in lines and hides the +4. The 4 credits are still the one-time `grant_signup` on a new balance (`signup_bonus_given`). Signing in does not grant another 4. | `launch/deploy_preview.sh` |
 | Email sender | Supabase Auth → SMTP settings (dashboard) |
 
 Check a change locally before deploying: `python3 launch/build.py && python3 -m http.server -d site-launch` → http://localhost:8000/
