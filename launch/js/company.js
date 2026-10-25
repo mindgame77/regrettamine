@@ -215,7 +215,9 @@
   const srch = (r) => { const S = COPY.searched || {}, st = PILL[r.state] ? r.state : 'nc';
     const t = st === 'nc' ? '' : S[r.n] ? S[r.n] + (st === 'clear' || st === 'nf' ? ' ' + COPY.searched_nf : '') : '';
     return t ? '<em class="srch">' + esc(t) + '</em>' : ''; };
-  // Checking view: ONLY while a bot holds the firm's queue claim (queue = 'claimed'); otherwise not-done rows read "Not checked yet"
+  // Checking view: only while firm_page / firm_check_status report queue = 'claimed'. An expired normal claim
+  // (older than 6 hours, no open paid or request job) is reported as queued, so it does not show Checking.
+  // Otherwise not-done rows read "Not checked yet"
   // (no spinner, no Started time). Done rows (state != 'nc' in the data) show their real pill,
   // the first not-done row shows the spinner, the rest "Waiting". No results are invented. js/app.js polls and re-renders.
   // The date this check was searched (firm_check_rows.searched_at), shown next to every check that has one.
@@ -229,6 +231,18 @@
     b.innerHTML = on ? '<div class="ch"><b>' + esc(CK.research) + '</b><span>' + esc(CK.research_sub) + '</span></div>' : '';
   }
   const doneN = (P) => !P.open && P.done != null ? P.done : (P.checks || []).filter(r => r.state !== 'nc').length;
+  // Pacific clock. Today is time only ("Started 3:58 PM PT"). An earlier Pacific day includes the date
+  // ("Started Oct 24, 3:58 PM PT").
+  function startedLine(t) {
+    if (!t || isNaN(t)) return '';
+    const tz = 'America/Los_Angeles';
+    const time = t.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: tz });
+    const today = new Date().toLocaleDateString('en-US', { timeZone: tz });
+    const day = t.toLocaleDateString('en-US', { timeZone: tz });
+    const label = day === today ? fmt(CK.started, { time })
+      : fmt(CK.started_on, { date: t.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: tz }), time });
+    return '<div class="cs2">' + esc(label) + '</div>';
+  }
   function checkingHead(main, P, st) {
     const done = doneN(P), cur = (P.checks || []).find(r => r.state === 'nc'), firm = P.firm.name;
     main.querySelector('.fh h1').innerHTML = esc(fmt(CK.title, { firm })) + '<span class="dots">…</span>';
@@ -236,7 +250,7 @@
     const b = main.querySelector('.cban'); b.className = 'cban'; b.hidden = false;
     b.innerHTML = '<div class="ch"><b>' + esc(fmt(CK.progress, { done, check: cur ? cur.title : '' })) + '</b><span>' + esc(CK.usually) + '</span></div>'
       + '<div class="cbar" role="progressbar" aria-valuemin="0" aria-valuemax="10" aria-valuenow="' + done + '"><i style="width:' + Math.max(done * 10, 4) + '%"></i></div>'
-      + (t && !isNaN(t) ? '<div class="cs2">' + esc(fmt(CK.started, { time: t.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', timeZone: 'America/Los_Angeles' }) })) + '</div>' : '');
+      + startedLine(t);
   }
   function summary(main, P, st) {
     const queue = st && st.queue !== undefined ? st.queue : P.queue;
