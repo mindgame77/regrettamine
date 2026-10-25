@@ -673,15 +673,20 @@
   },
   "searched_nf": "Nothing found.",
   "name_only": "A person with the same name appears on {list}; we couldn't confirm it's the same person.",
+  "header": {
+   "_note": "Firm header under the search box when the page has no hero cards (js/company.js). missing is the value for a blank HQ or assets field.",
+   "hq": "HQ",
+   "assets": "Assets",
+   "missing": "Not found in public records"
+  },
   "searched_on": "Searched {date}",
   "searched_nc": "Not checked yet.",
   "checking": {
-   "_note": "Checking view on /vc/<slug>/ while a firm's 10 checks are not all done (js/company.js summary + js/app.js). {firm}, {done}, {check}, {time}, {date}, {email} are filled in. started_on is used when the claim did not begin today in Pacific time.",
+   "_note": "Checking view on /vc/<slug>/ while a firm's 10 checks are not all done (js/company.js summary + js/app.js). {firm}, {done}, {check}, {when}, {email} are filled in. started is the Pacific date and time from RegretDate.",
    "title": "Checking {firm}",
    "progress": "{done} of 10 done · now checking: {check}",
    "usually": "Usually 5–20 min",
-   "started": "Started {time} PT",
-   "started_on": "Started {date}, {time} PT",
+   "started": "Started {when}",
    "current": "Checking…",
    "waiting": "Waiting",
    "sources": [

@@ -6,7 +6,7 @@
   const ANON = 'regretamin.anon';
   function anonId() { let a = localStorage.getItem(ANON); if (!a) { a = crypto.randomUUID(); localStorage.setItem(ANON, a); } return a; }
   const syncBody = () => document.body.classList.toggle('ppopen', !!document.querySelector('.ov:not([hidden])'));
-  const open = (id) => { document.querySelectorAll('.ov').forEach(o => o.hidden = true); $('#' + id).hidden = false; const pw = $('#pwmsg'); if (pw) pw.textContent = ''; syncBody(); };
+  const open = (id) => { const ov = document.getElementById(id); if (!ov) return; document.querySelectorAll('.ov').forEach(o => o.hidden = true); ov.hidden = false; const pw = $('#pwmsg'); if (pw) pw.textContent = ''; syncBody(); };
   if (new URLSearchParams(location.search).get('pricing') === '1') { history.replaceState(null, '', location.pathname + location.hash); setTimeout(() => open('paywall')); } // from /pricing/
   const closeOv = (o) => { if (o) { o.hidden = true; syncBody(); } };
   // Close any popup with x, Esc or a click on the backdrop
@@ -17,8 +17,9 @@
   const takePend = () => { try { const p = JSON.parse(localStorage.getItem(PEND) || 'null'); localStorage.removeItem(PEND); return p && Date.now() - p.t < 30 * 60e3 ? p : null; } catch (_) { return null; } };
   document.addEventListener('click', (e) => {
     const t = e.target.closest('[data-open],[data-close],[data-buy]'); if (!t) return;
+    if (t.dataset.open && !document.getElementById(t.dataset.open)) return; // real /plans/ or /login/ link when that popup is not on this page
     e.preventDefault();
-    if (t.dataset.open === 'signup') { $('#suh').textContent = T.signup_title || $('#suh').dataset.t; $('#signup').classList.remove('buy'); }
+    if (t.dataset.open === 'signup') { const suh = $('#suh'), sg = $('#signup'); if (suh) suh.textContent = T.signup_title || suh.dataset.t; if (sg) sg.classList.remove('buy'); }
     if (t.dataset.open) open(t.dataset.open);
     if (t.dataset.close !== undefined) closeOv(t.closest('.ov'));
     if (t.dataset.buy) buy(t.dataset.buy);
@@ -46,7 +47,7 @@
   });
   const planOf = (a) => a.plan === 'custom' ? { name: a.plan_name || '', checks: a.monthly_checks || 0, price: '', yearly: !!a.next_refill } : a.plan && PLANS[a.plan];
   const fmt = (t, o) => t.replace(/\{(\w+)\}/g, (_, k) => o[k]), pl = (n, t, o) => fmt(t[n === 1 ? 0 : 1], o);
-  const fmtDate = (d) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const fmtDate = (d) => window.RegretDate ? window.RegretDate.format(d) : '';
   const leftOf = (a) => { const P = planOf(a); return P && a.left <= P.checks ? fmt(T.left_of, { left: a.left, n: P.checks }) : String(a.left); };
   let ACCT = null; // { email, plan, left, period_end, cancel_at_period_end, has_customer } once signed in
   // Header auth state: the inline <head> script set html.au-in / html.au-out / html.au-wait from the cached Supabase session in
@@ -233,8 +234,8 @@
       .sort((x, y) => so === 'az' ? x.name.localeCompare(y.name) : (so === 'old' ? 1 : -1) * (new Date(x.checked_at) - new Date(y.checked_at)));
     $('#mnone').hidden = !!rows.length || !MC.length;
     $('#mrows').innerHTML = rows.map(r => {
-      const d = new Date(r.checked_at), url = ROOT + 'vc/' + encodeURIComponent(r.slug) + '/';
-      const when = fmtDate(d) + ' · ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      const d = r.checked_at, url = ROOT + 'vc/' + encodeURIComponent(r.slug) + '/';
+      const when = window.RegretDate ? window.RegretDate.formatWhen(d) : '';
       const st = r.active ? pl(r.cases, T.mc_active, r) : r.cases ? pl(r.cases, T.mc_closed, r) : T.mc_none;
       const nm = r.name + (r.short_name && r.short_name !== r.name ? ' (' + r.short_name + ')' : '');
       return '<div class="mr"><button type="button" class="star' + (r.saved ? ' on' : '') + '" data-star="' + esc(r.slug) + '" aria-pressed="' + !!r.saved + '" aria-label="' + fmt(r.saved ? T.unsave : T.save, { name: esc(r.name) }) + '">' + (r.saved ? '★' : '☆') + '</button>'
@@ -352,7 +353,11 @@
     const pay = $('#paycase'), inPay = pay && !pay.hidden, out = inPay ? $('#pmsg2') : $('#pwmsg'), msg = (t) => { if (out) out.textContent = t; else if (t && !/…$/.test(t)) alert(t); };
     if (!s.session) {
       setPend(kind, CODE && CODE.code); // after sign-in (Google redirect or magic link) we come back here and continue to checkout
-      $('#suh').textContent = T.sign_buy; $('#signup').classList.add('buy'); return open('signup');
+      const suh = $('#suh'), sg = $('#signup');
+      if (suh) suh.textContent = T.sign_buy;
+      if (sg) { sg.classList.add('buy'); return open('signup'); }
+      location.href = ROOT + 'login/';
+      return;
     }
     document.querySelectorAll('[data-buy]').forEach(b => b.disabled = true); msg(T.opening);
     const { data, error } = await sb.functions.invoke('create-checkout', { body: Object.assign({ kind, return_path: location.pathname }, CODE ? { code: CODE.code } : {}) });
@@ -619,18 +624,22 @@
       openPay('');
     });
     if ($('#usecheck')) $('#usecheck').onclick = async () => {
+      const ub = $('#usecheck'), label = C.copy.site.pay.check;
+      const showBusy = () => { ub.disabled = true; ub.innerHTML = '<span class="sp" aria-hidden="true"></span> ' + esc(C.copy.company.checking.current); };
+      const showReady = () => { ub.disabled = false; ub.textContent = label; };
+      showBusy();
       const ready = $('#pready'), em = ready && !ready.hidden && ready.querySelector('input[type=email]');
       if (em && em.value.trim()) {
         em.value = em.value.trim();
-        if (!em.checkValidity()) { $('#pmsg2').textContent = C.copy.company.checking.email_bad; return; }
+        if (!em.checkValidity()) { $('#pmsg2').textContent = C.copy.company.checking.email_bad; showReady(); return; }
       } else if (em) em.value = '';
       if (!BAL) BAL = await balance();
-      if (!BAL) return openPay(SEC);
+      if (!BAL) { showReady(); return openPay(SEC); }
       if (BAL.left > 0) {
-        $('#usecheck').disabled = true;
-        loadPage(true).then(paint).finally(async () => { BAL = await balance(); if (!(PAGE && PAGE.open)) { const ub = $('#usecheck'); if (ub) ub.disabled = false; } });
+        loadPage(true).then(paint).finally(async () => { BAL = await balance(); if (!(PAGE && PAGE.open)) showReady(); });
         return;
       }
+      showReady();
       buy('single');
     };
     if (!sb) loadFail(); // no Supabase client (config or CDN script missing): never leave the skeleton up

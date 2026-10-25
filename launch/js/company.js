@@ -51,11 +51,50 @@
   const nice = (t) => t ? capsRuns(secTitle(String(t))).replace(/(,\s*)([A-Z][a-z])(?=$|[\s,;)])/g, (m, a, b) => a + b.toUpperCase()) : t;
   const safeUrl = (u) => /^https?:\/\//i.test(u || '') ? u : null;
   const ROOT = window.REGRET_ROOT || '';
-  // One display format for every source/fact date ('Oct 23, 2026'); stored labels stay as they are.
-  const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const fdate = (d) => { if (!d) return ''; let t = String(d).trim().replace(/^retrieved\s+/i, '').replace(/\s*\(retrieved\)$/i, '');
-    const m = t.match(/^(\d{4})-(\d{2})-(\d{2})/); if (m && +m[2] >= 1 && +m[2] <= 12) t = MON[+m[2] - 1] + ' ' + (+m[3]) + ', ' + m[1];
-    return t; };
+  // Dates: launch/js/dates.js (RegretDate). Date only "Mar 15, 2024"; a time is Pacific.
+  const fdate = (d) => window.RegretDate ? window.RegretDate.format(d) : '';
+  const shownYear = (x) => {
+    if (!window.RegretDate || !x) return '';
+    return window.RegretDate.caseYear(x.title || x.head || x.case || x.kind || '', x.note || x.text || '', x.year);
+  };
+  const MISS = (COPY.header && COPY.header.missing) || 'Not found in public records';
+  function headerCards(P) {
+    const hero = (Array.isArray(P.hero) ? P.hero : []).filter(h => h && (h.label || h.value));
+    if (hero.length) return hero.map(h => Object.assign({}, h, { src: h.src || [] }));
+    const H = COPY.header || {};
+    const firm = P.firm || {};
+    return [
+      { label: H.hq || 'HQ', value: firm.hq || MISS, anchor: '', src: [] },
+      { label: H.assets || 'Assets', value: firm.assets || MISS, anchor: '', src: [] },
+    ];
+  }
+  function siteLink(P) {
+    const u = safeUrl(P.firm && P.firm.website);
+    if (!u) return '';
+    let host = '';
+    try { host = new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return ''; }
+    return host ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(host) + '</a>' : '';
+  }
+  function metaLine(P) {
+    const firm = P.firm || {};
+    const bits = [firm.hq, firm.short_name].filter(Boolean).map(x => esc(nice(x)));
+    const link = siteLink(P);
+    return bits.join(' · ') + (link ? (bits.length ? ' · ' : '') + link : '');
+  }
+  function setFirmName(main, name) {
+    if (!name) return;
+    const h1 = main.querySelector('.ph h1');
+    if (h1) {
+      const save = h1.querySelector('[data-save]');
+      h1.textContent = name;
+      if (save) h1.appendChild(save);
+    }
+    const inp = main.querySelector('form[data-search] input[name=q]');
+    if (inp) { inp.value = name; inp.defaultValue = name; }
+  }
+  function heroBits(h) {
+    return '<span>' + esc(h.label) + '</span><b>' + esc(nice(h.value)) + '</b>' + (h.src || []).map(c => '<span class="sc">' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</span>').join('');
+  }
   const chips = (src) => '<div class="scs">' + (src || []).map(s => { const u = safeUrl(s.url); const t = esc(s.label) + (s.date ? ' · ' + esc(fdate(s.date)) : '') + ' ↗';
     return u ? '<a class="sc" href="' + esc(u) + '" target="_blank" rel="noopener">' + t + '</a>' : ''; }).join('') + '</div>';
   const pill = (st) => { const p = PILL[st] || PILL.nc; return '<span class="pill ' + p[0] + '"><i></i>' + p[1] + '</span>'; };
@@ -75,14 +114,15 @@
   }
   function factHtml(f) {
     const who = f.who && f.who.startsWith('partner:') ? f.who.slice(8) + ' · ' : '';
-    const head = f.case ? '<b>' + esc(f.case) + '</b>' + (f.year ? ' · ' + esc(f.year) : '') + '<br>' : '';
+    const y = shownYear(f);
+    const head = f.case ? '<b>' + esc(f.case) + '</b>' + (y ? ' · ' + esc(y) : '') + '<br>' : '';
     const u = safeUrl(f.url), st = caseStatus(f);
     const src = (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(f.label || COPY.source) + ' ↗</a>' : esc(f.label || '')) + (f.date ? ' · ' + COPY.retrieved + esc(fdate(f.date)) : '');
     const p = st === 'active' ? '<span class="cs cs-act">Active</span>' : st === 'closed' ? '<span class="cs cs-cl">Closed</span>' : '';
     return '<div class="fct' + (st === 'active' ? ' act' : '') + '">' + p + (f.needs_proof ? '<span class="np">Needs proof</span>' : '') + head + esc(who) + esc(f.text) + '<div class="src">' + src + '</div></div>';
   }
   function itemHtml(x) {
-    const meta = [x.who, x.year, x.status && x.status[0].toUpperCase() + x.status.slice(1)].filter(Boolean).map(esc).join(' · ');
+    const meta = [x.who, shownYear(x), x.status && x.status[0].toUpperCase() + x.status.slice(1)].filter(Boolean).map(esc).join(' · ');
     return '<div class="fct"><b>' + esc(x.title ? nice(x.title) : COPY.table.untitled) + '</b>' + (meta ? ' · ' + meta : '') + (x.note ? '<br>' + esc(nice(x.note)) : '') + '</div>';
   }
   const spill = (st) => st === 'active' ? '<span class="cs cs-act">Active</span>' : st === 'closed' ? '<span class="cs cs-cl">Closed</span>' : '';
@@ -98,8 +138,8 @@
     const det = {}, out = {}; (P.details || []).forEach(r => det[r.row] = r.facts || []); (P.outline || []).forEach(r => out[r.row] = r.items || []);
     return '<div class="list">' + P.checks.map(r => {
       const cnt = r.count ? '<span class="cnt ' + (r.state === 'clear' ? 'cg' : 'ca') + '">' + esc(r.count) + '</span>' : '';
-      const gl = P.open ? '' : (out[r.n] || []).map((e, i) => '<button type="button" class="gc' + (e.status === 'active' ? ' act' : '') + '" data-sec="checks" data-kind="' + esc(e.kind) + '" data-year="' + esc(e.year || '') + '">'
-        + '<span class="y">' + esc(e.year || '—') + '</span><span class="k">' + esc(e.kind) + '</span><span class="bl"><span class="bar" style="width:' + (20 + ((e.kind || '').length * 7 + i * 13) % 45) + '%"></span><span class="bar" style="width:22%"></span></span>'
+      const gl = P.open ? '' : (out[r.n] || []).map((e, i) => '<button type="button" class="gc' + (e.status === 'active' ? ' act' : '') + '" data-sec="checks" data-kind="' + esc(e.kind) + '" data-year="' + esc(shownYear(e)) + '">'
+        + '<span class="y">' + esc(shownYear(e) || '—') + '</span><span class="k">' + esc(e.kind) + '</span><span class="bl"><span class="bar" style="width:' + (20 + ((e.kind || '').length * 7 + i * 13) % 45) + '%"></span><span class="bar" style="width:22%"></span></span>'
         + spill(e.status) + '<span class="lkk">' + COPY.locked + '</span></button>').join('');
       const rank = (f) => caseStatus(f) === 'active' ? 0 : 1;
       const fs = (det[r.n] || []).map((f, i) => [f, i]).sort((a, b) => rank(a[0]) - rank(b[0]) || a[1] - b[1]).map(x => x[0]);
@@ -121,11 +161,20 @@
     checks: (it, P) => checkRows(P),
     legal: (it) => group(it, 'grp', COPY.legal, xs => xs.filter(x => x.title || x.head || x.note).map(x => '<div class="it' + (x.state === 'Active' ? ' act' : '') + '">'
       + (x.state ? '<span class="cs ' + COPY.state[x.state] + '">' + esc(x.state) + '</span> ' : '') + (x.status ? '<span class="pill ' + (COPY.tone[x.tone] || 'p-g') + '"><i></i>' + esc(x.status) + '</span> ' : '')
-      + (x.role ? '<span class="cs cs-cl">' + esc(x.role) + '</span> ' : '') + '<b>' + esc(nice(x.title || x.head || '')) + (x.year ? ' · ' + esc(x.year) : '') + '</b>' + (x.note ? ' · ' + esc(nice(x.note)) : '') + chips(x.src) + '</div>').join('')),
+      + (x.role ? '<span class="cs cs-cl">' + esc(x.role) + '</span> ' : '') + '<b>' + esc(nice(x.title || x.head || '')) + (shownYear(x) ? ' · ' + esc(shownYear(x)) : '') + '</b>' + (x.note ? ' · ' + esc(nice(x.note)) : '') + chips(x.src) + '</div>').join('')),
     press: (it) => '<div class="pgr">' + it.map(x => card(x, true)).join('') + '</div>',
     founders: (it) => '<div class="pgr">' + it.map(x => card(x, false)).join('') + '</div>',
     people: (it) => group(it, 'kind', COPY.people, xs => '<div class="pcards">' + xs.map(x => '<div class="pcard"><b>' + esc(nice(x.head)) + '</b>' + (x.badge ? '<span class="cs cs-act">' + esc(x.badge) + '</span>' : '') + '<span>' + esc(x.role) + '</span>' + chips(x.src) + '</div>').join('') + '</div>'),
-    timeline: (it) => '<div class="tls">' + it.map(x => '<div class="tl"><span class="tld">' + esc(x.date) + '</span><span><span class="cs cs-cl">' + esc(x.kind) + '</span> ' + esc(nice(x.body)) + chips(x.src) + '</span></div>').join('') + '</div>',
+    timeline: (it) => {
+      const rows = it.map((x, i) => ({ x, i })).sort((a, b) => {
+        const sa = window.RegretDate ? window.RegretDate.stamp(a.x.date) : null, sb = window.RegretDate ? window.RegretDate.stamp(b.x.date) : null;
+        if (sa == null && sb == null) return a.i - b.i;
+        if (sa == null) return 1;
+        if (sb == null) return -1;
+        return sb - sa || a.i - b.i;
+      });
+      return '<div class="tls">' + rows.map(({ x }) => '<div class="tl"><span class="tld">' + esc(fdate(x.date) || x.date || '') + '</span><span><span class="cs cs-cl">' + esc(x.kind) + '</span> ' + esc(nice(x.body)) + chips(x.src) + '</span></div>').join('') + '</div>';
+    },
   };
   function card(x, logo) {
     const u = safeUrl(x.url), host = u ? new URL(u).hostname.replace(/^www\./, '') : '';
@@ -167,11 +216,13 @@
   function render(main, P) {
     const firm = P.firm.name, byKey = Object.fromEntries(P.sections.map(s => [s.key, s])),
       secs = CFG.sections.list.filter(c => byKey[c.key]).map(c => Object.assign({}, byKey[c.key], c)), total = secs.filter(s => s.key !== 'checks').reduce((a, s) => a + s.count, 0);
+    setFirmName(main, firm);
     main.classList.toggle('unlocked', P.open);
     main.querySelector('.toc').style.display = ''; const lk = main.querySelector('#lockcard'); if (lk) lk.style.display = '';
+    const cards = headerCards(P);
     if (!P.open) {
-      main.querySelector('.m').textContent = [P.firm.hq, P.firm.short_name].filter(Boolean).join(' · ');
-      main.querySelector('.hfs').innerHTML = P.hero.map(h => '<span class="hf"><span>' + esc(h.label) + '</span><b>' + esc(nice(h.value)) + '</b>' + h.src.map(c => '<span class="sc">' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</span>').join('') + '</span>').join('');
+      main.querySelector('.m').innerHTML = metaLine(P);
+      main.querySelector('.hfs').innerHTML = cards.map(h => '<span class="hf">' + heroBits(h) + '</span>').join('');
       main.querySelector('.csum').hidden = true; main.querySelector('.spl').innerHTML = ''; main.querySelector('.toc').innerHTML = ''; main.querySelector('.toc').style.display = 'none';
       main.querySelector('#lockcard').hidden = true; main.querySelector('#lockcard').style.display = 'none';
       researchBan(main, false);
@@ -179,9 +230,12 @@
       main.querySelector('.pmain').innerHTML = P.unchecked ? '<section class="ps">' + ctable(P, false, 0) + '</section>' + gate(P, '') : gate(P, '<section class="ps">' + ghost(P) + '</section>' + ghostSecs());
       return { total: 0, head: () => GT.title };
     }
-    main.querySelector('.m').textContent = [P.firm.hq, P.firm.short_name].filter(Boolean).join(' · ');
+    main.querySelector('.m').innerHTML = metaLine(P);
     const has = new Set(secs.map(s => s.key));
-    main.querySelector('.hfs').innerHTML = P.hero.map(h => '<a class="hf" href="#' + (has.has(h.anchor) ? esc(h.anchor) : '') + '"><span>' + esc(h.label) + '</span><b>' + esc(nice(h.value)) + '</b>' + h.src.map(c => '<span class="sc">' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</span>').join('') + '</a>').join('');
+    main.querySelector('.hfs').innerHTML = cards.map(h => {
+      const inner = heroBits(h);
+      return h.anchor && has.has(h.anchor) ? '<a class="hf" href="#' + esc(h.anchor) + '">' + inner + '</a>' : '<span class="hf">' + inner + '</span>';
+    }).join('');
     main.querySelector('.csum').innerHTML = has.has('checks') ? '<div class="csh"><b>' + COPY.summary + '</b><a href="#checks">' + COPY.full_check + '</a></div><div class="cks">'
       + P.checks.map(r => '<a class="ck" href="#checks"><span class="ckn">' + String(r.n).padStart(2, '0') + '</span>' + esc(r.title) + pill(r.state) + '</a>').join('') + '</div>' : '';
     main.querySelector('.csum').hidden = !has.has('checks');
@@ -193,7 +247,7 @@
     spy(main);
     const lc = main.querySelector('#lockcard'); lc.hidden = P.open;
     lc.querySelector('b').textContent = fmt(COPY.lockcard, { n: total, firm }); lc.querySelector('p').textContent = COPY.lockcard_sub;
-    document.getElementById('puse').textContent = fmt(COPY.use_line, { n: total, firm });
+    const pu = document.getElementById('puse'); if (pu) pu.textContent = fmt(COPY.use_line, { n: total, firm });
     const od = P.ondemand;
     researchBan(main, !!(od && od.mine && (od.status === 'queued' || od.status === 'in_progress')));
     main.querySelectorAll('.row.tog').forEach(row => row.onclick = (e) => { if (!e.target.closest('a')) row.classList.toggle('open'); });
@@ -204,13 +258,14 @@
   // Dropdowns show info only (status pill + case or summary text, no sources); a row with nothing to show has no dropdown.
   function sumItem(f) {
     const who = f.who && f.who.startsWith('partner:') ? f.who.slice(8) + ' · ' : '';
-    const head = f.case ? '<b>' + esc(f.case) + '</b>' + (f.year ? ' · ' + esc(f.year) : '') + '<br>' : '';
+    const y = shownYear(f);
+    const head = f.case ? '<b>' + esc(f.case) + '</b>' + (y ? ' · ' + esc(y) : '') + '<br>' : '';
     const st = caseStatus(f);
     if (!f.case && !f.text && !f.needs_proof && !st) return ''; // nothing to show for this fact
     return '<div class="fct' + (st === 'active' ? ' act' : '') + '">' + spill(st) + (f.needs_proof ? '<span class="np">Needs proof</span>' : '') + head + esc(who) + esc(f.text) + '</div>';
   }
   // Signed-out outline: a bare method label (no status, no year) tells the viewer nothing, so it is not shown.
-  const outItem = (e) => !e.status && !e.year ? '' : '<div class="fct' + (e.status === 'active' ? ' act' : '') + '">' + spill(e.status) + '<b>' + esc(e.kind) + '</b>' + (e.year ? ' · ' + esc(e.year) : '') + '</div>';
+  const outItem = (e) => { const y = shownYear(e); return !e.status && !y ? '' : '<div class="fct' + (e.status === 'active' ? ' act' : '') + '">' + spill(e.status) + '<b>' + esc(e.kind) + '</b>' + (y ? ' · ' + esc(y) : '') + '</div>'; };
   // Rows with no dropdown: one muted line saying what was searched. "Nothing found" only when the row really is clear / none found; Not checked yet rows get no line (the pill says it).
   const srch = (r) => { const S = COPY.searched || {}, st = PILL[r.state] ? r.state : 'nc';
     const t = st === 'nc' ? '' : S[r.n] ? S[r.n] + (st === 'clear' || st === 'nf' ? ' ' + COPY.searched_nf : '') : '';
@@ -221,8 +276,8 @@
   // (no spinner, no Started time). Done rows (state != 'nc' in the data) show their real pill,
   // the first not-done row shows the spinner, the rest "Waiting". No results are invented. js/app.js polls and re-renders.
   // The date this check was searched (firm_check_rows.searched_at), shown next to every check that has one.
-  const sdt = (r) => { const t = r.searched_at ? new Date(r.searched_at) : null;
-    return t && !isNaN(t) ? '<em class="sdt">' + esc(fmt(COPY.searched_on, { date: t.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) })) + '</em>' : ''; };
+  const sdt = (r) => { const d = window.RegretDate && r.searched_at ? window.RegretDate.format(r.searched_at) : '';
+    return d ? '<em class="sdt">' + esc(fmt(COPY.searched_on, { date: d })) + '</em>' : ''; };
   const CK = COPY.checking;
   // Same banner the summary page uses after a credit buys research. /full/ shows it too (the confirmation).
   function researchBan(main, on) {
@@ -231,17 +286,12 @@
     b.innerHTML = on ? '<div class="ch"><b>' + esc(CK.research) + '</b><span>' + esc(CK.research_sub) + '</span></div>' : '';
   }
   const doneN = (P) => !P.open && P.done != null ? P.done : (P.checks || []).filter(r => r.state !== 'nc').length;
-  // Pacific clock. Today is time only ("Started 3:58 PM PT"). An earlier Pacific day includes the date
-  // ("Started Oct 24, 3:58 PM PT").
+  // Pacific time, same shape as every other dated line: "Started Mar 15, 2024, 3:58 PM PT".
   function startedLine(t) {
-    if (!t || isNaN(t)) return '';
-    const tz = 'America/Los_Angeles';
-    const time = t.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: tz });
-    const today = new Date().toLocaleDateString('en-US', { timeZone: tz });
-    const day = t.toLocaleDateString('en-US', { timeZone: tz });
-    const label = day === today ? fmt(CK.started, { time })
-      : fmt(CK.started_on, { date: t.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: tz }), time });
-    return '<div class="cs2">' + esc(label) + '</div>';
+    if (!t || isNaN(t) || !window.RegretDate) return '';
+    const when = window.RegretDate.formatWhen(t);
+    if (!when) return '';
+    return '<div class="cs2">' + esc(fmt(CK.started, { when })) + '</div>';
   }
   function checkingHead(main, P, st) {
     const done = doneN(P), cur = (P.checks || []).find(r => r.state === 'nc'), firm = P.firm.name;
@@ -258,6 +308,7 @@
     // On-demand research this visitor paid for (firm_page ondemand.mine): 'Research in progress' until a bot holds the claim.
     const od = P.ondemand, research = !checking && !!(od && od.mine && (od.status === 'queued' || od.status === 'in_progress'));
     main.classList.toggle('checking', checking);
+    setFirmName(main, P.firm.name);
     main.querySelector('.cside').hidden = !(checking || research);
     if (research) { const ep = main.querySelector('[data-notify] p'); if (ep) ep.textContent = CK.research_email; }
     if (checking) checkingHead(main, P, st);
@@ -270,8 +321,9 @@
       b.innerHTML = justDone ? '<div class="ch"><div><b>' + esc(CK.complete) + '</b> <span>' + esc(CK.complete_sub) + '</span></div></div>' : '';
     }
     const curN = checking && P.open ? P.checks.find(r => r.state === 'nc').n : 0;
-    if (checking && !P.hero.length) main.querySelector('.kf').innerHTML = '<span>' + esc(CK.sources[0]) + ' <b>' + esc(CK.sources[1]) + '</b></span>';
-    else main.querySelector('.kf').innerHTML = P.hero.map(h => '<span>' + esc(h.label) + ' <b>' + esc(nice(h.value)) + '</b>' + (h.src || []).slice(0, 1).map(c => ' <i>· ' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</i>').join('') + '</span>').join('');
+    const link = siteLink(P);
+    if (checking && !(P.hero && P.hero.length)) main.querySelector('.kf').innerHTML = '<span>' + esc(CK.sources[0]) + ' <b>' + esc(CK.sources[1]) + '</b></span>' + (link ? '<span>' + link + '</span>' : '');
+    else main.querySelector('.kf').innerHTML = headerCards(P).map(h => '<span>' + esc(h.label) + ' <b>' + esc(nice(h.value)) + '</b>' + (h.src || []).slice(0, 1).map(c => ' <i>· ' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</i>').join('') + '</span>').join('') + (link ? '<span>' + link + '</span>' : '');
     main.querySelector('.list').innerHTML = P.open ? ctable(P, checking, curN) : P.unchecked ? ctable(P, false, 0) + gate(P, '') : gate(P, ghost(P));
     const fn = main.querySelector('.rgt-n'), ft = (P.sections || []).filter(s => s.key !== 'checks').reduce((a, s) => a + (s.count || 0), 0);
     if (fn && ft) { fn.textContent = ft; fn.hidden = false; }
@@ -287,7 +339,7 @@
   const T = COPY.table;
   const tpill = (st) => pill(st === 'red' ? 'review' : st);
   const cnum = (c) => { const m = /^(\d+)\s/.exec(c || ''); return m ? +m[1] : 0; };
-  const sdate = (r) => { const t = r.searched_at ? new Date(r.searched_at) : null; return t && !isNaN(t) ? t.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) : ''; };
+  const sdate = (r) => window.RegretDate && r.searched_at ? window.RegretDate.format(r.searched_at) : '';
   function ctable(P, checking, curN) {
     const rows = (P.checks || []).map(r => {
       const nc = r.state === 'nc' || !PILL[r.state], fnd = !nc && r.state !== 'clear' && r.state !== 'nf';
@@ -302,7 +354,7 @@
       let d = '';
       if (!nc) {
         if (fnd && n > it) d += '<p class="ctn">' + esc(it ? fmt(T.partial, { n, count: r.count, m: it }) : T.none_itemized) + '</p>';
-        if (fnd && items) d += items.filter(x => x.title || x.note || x.who).map(x => { const meta = [x.who, x.year, x.status && x.status[0].toUpperCase() + x.status.slice(1)].filter(Boolean).map(esc).join(' · ');
+        if (fnd && items) d += items.filter(x => x.title || x.note || x.who).map(x => { const y = shownYear(x); const meta = [x.who, y, x.status && x.status[0].toUpperCase() + x.status.slice(1)].filter(Boolean).map(esc).join(' · ');
           return '<div class="cti"><b>' + esc(x.title ? nice(x.title) : T.untitled) + '</b>' + (meta ? '<span class="ctmeta">' + meta + '</span>' : '') + (x.note ? '<p>' + esc(nice(x.note)) + '</p>' : '') + '</div>'; }).join('');
         else if (fnd && it) d += '<button type="button" class="ctl" data-sec="checks">' + esc(fmt(T.locked, { m: it })) + ' <span>' + COPY.locked + '</span></button>';
         d += '<p class="ctw"><b>' + esc(T.what) + '</b> ' + esc(S) + (sdate(r) ? ' · ' + esc(fmt(COPY.searched_on, { date: sdate(r) })) : '') + (r.state === 'clear' || r.state === 'nf' ? ' · ' + esc(COPY.searched_nf) : '') + '</p>';

@@ -10,7 +10,7 @@ E = html.escape
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE); OUT = os.path.join(ROOT, 'site-launch')
 def _v(f):  # content hash so browsers never run a stale cached copy (assets are max-age=600)
     return hashlib.sha1(open(os.path.join(HERE, f), 'rb').read()).hexdigest()[:10]
-V = {k: _v(f) for k, f in (('company', 'js/company.js'), ('app', 'js/app.js'), ('css', 'style.css'))}
+V = {k: _v(f) for k, f in (('company', 'js/company.js'), ('app', 'js/app.js'), ('dates', 'js/dates.js'), ('css', 'style.css'))}
 COPY = json.load(open(os.path.join(HERE, 'copy.json')))
 S = COPY['site']
 NOINDEX = os.environ.get('REGRET_NOINDEX') == '1'
@@ -27,22 +27,40 @@ def code_field():  # "Have a code?" field for both pricing popups (checked by th
     return (f'<div class="code"><a href="#" data-codeopen>{K["link"]}</a><form class="cf" data-code hidden><input name="code" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="{K["placeholder"]}" aria-label="{K["aria"]}">'
             f'<button class="pb v" data-apply>{K["apply"]}</button><button type="button" class="pb v" data-remove hidden>{K["remove"]}</button></form><p class="cn" data-codemsg></p></div>')
 
-def pricing_modal():  # nav "Pricing" popup
+def pricing_inner(close=True):  # shared by the Pricing popup and /plans/
     p = S['pricing']
-    return f'<div class="ov" id="paywall" hidden><div class="md w"><button class="x" data-close>×</button><h2 id="pwh">{p["title"]}</h2><p class="s">{p["sub"]}</p>{billing()}<div class="price" data-plans="nav"></div><p class="msg" id="pwmsg"></p>{code_field()}</div></div>'
+    x = '<button class="x" data-close>×</button>' if close else ''
+    return f'{x}<h2 id="pwh">{p["title"]}</h2><p class="s">{p["sub"]}</p>{billing()}<div class="price" data-plans="nav"></div><p class="msg" id="pwmsg"></p>{code_field()}'
 
-def page(path, body, root, title=S['brand'], company=False, active='', head=''):
-    n, su = S['nav'], S['signup']
+def pricing_modal():  # nav "Pricing" popup
+    return f'<div class="ov" id="paywall" hidden><div class="md w">{pricing_inner()}</div></div>'
+
+def signup_inner(close=True):  # shared by the sign-in popup and /login/
+    su = S['signup']
+    x = '<button class="x" data-close aria-label="Close">×</button>' if close else ''
+    return f'''<div class="sgi">{x}<div class="sg4" aria-hidden="true"><b>+4</b><span>free<br>credits</span></div><h2 id="suh" data-t="{su["title"]}">{su["title"]}</h2><p class="s">{su["sub"]}</p>
+<button type="button" class="gbx" id="google"><span class="gi">{GLOGO}</span><span class="gl">{su["google"]}</span></button><div class="orx">{su["or"]}</div><div class="emr"><input class="in" id="em" type="email" placeholder="{su["email_placeholder"]}" aria-label="{su["email_aria"]}"><button type="button" class="btn o" id="magic">{su["magic"]}</button></div><p class="sgt">{"".join(f"<span>{t}</span>" for t in su["trust"])}</p><p class="msg" id="sumsg"></p></div>'''
+
+def signup_modal():
+    su = S['signup']
+    return f'<div class="ov sgo" id="signup" hidden><div class="md sgm" role="dialog" aria-modal="true" aria-labelledby="suh">{signup_inner()}</div></div>'
+
+def plans_page():
+    return f'<main class="wrap" style="display:flex;justify-content:center;padding:48px 16px 80px"><div class="md w">{pricing_inner(False)}</div></main>'
+
+def login_page():
+    return f'<main class="wrap" style="display:flex;justify-content:center;padding:48px 16px 80px"><div class="md sgm">{signup_inner(False)}</div></main>'
+
+def page(path, body, root, title=S['brand'], company=False, active='', head='', modals='both'):
+    n = S['nav']
     hon = ' class="on" aria-current="page"' if active == 'hwc' else ''
-    scripts = (f'<script defer src="{root}company.js?v={V['company']}"></script>' if company else '') + f'<script defer src="{root}app.js?v={V['app']}"></script>'
+    scripts = f'<script defer src="{root}dates.js?v={V["dates"]}"></script>' + (f'<script defer src="{root}company.js?v={V["company"]}"></script>' if company else '') + f'<script defer src="{root}app.js?v={V["app"]}"></script>'
     nav = (f'<nav><a class="logo" href="{root}"><img src="{root}logo.svg" alt="">{S["brand"]}</a><div class="r">'
-           f'<a href="{root}how-we-check/"{hon}>{n["how_we_check"]}</a><a href="#" data-open="paywall">{n["pricing"]}</a><span class="left" id="left"></span><a href="#" data-open="signup" id="signin">{n["sign_in"]}</a>'
+           f'<a href="{root}how-we-check/"{hon}>{n["how_we_check"]}</a><a href="{root}plans/" data-open="paywall">{n["pricing"]}</a><span class="left" id="left"></span><a href="{root}login/" data-open="signup" id="signin">{n["sign_in"]}</a>'
            f'<span class="navr" id="acct" hidden><button type="button" class="ab" id="acctbtn" aria-haspopup="true" aria-expanded="false"><span class="av" id="av"></span><span class="nm">{n["account_btn"]}</span></button>'
            f'<div class="dd" id="acctdd" hidden><div class="hd2"><div class="em" id="ddem"></div><div class="pl2" id="ddplan"></div><div class="bal"><span>{n["checks_left"]}</span><b id="ddleft"></b></div></div>'
            f'<a href="{root}account/">{n["account"]}</a><a href="{root}account/firms/">{n["my_checks"]}</a><a href="#" data-open="paywall">{n["buy_more"]}</a><div class="sep"></div><a class="so" href="#" id="signout">{n["sign_out"]}</a></div></span></div></nav>')
-    modals = f'''<div class="ov sgo" id="signup" hidden><div class="md sgm" role="dialog" aria-modal="true" aria-labelledby="suh"><div class="sgi"><button class="x" data-close aria-label="Close">×</button><div class="sg4" aria-hidden="true"><b>+4</b><span>free<br>credits</span></div><h2 id="suh" data-t="{su["title"]}">{su["title"]}</h2><p class="s">{su["sub"]}</p>
-<button type="button" class="gbx" id="google"><span class="gi">{GLOGO}</span><span class="gl">{su["google"]}</span></button><div class="orx">{su["or"]}</div><div class="emr"><input class="in" id="em" type="email" placeholder="{su["email_placeholder"]}" aria-label="{su["email_aria"]}"><button type="button" class="btn o" id="magic">{su["magic"]}</button></div><p class="sgt">{"".join(f"<span>{t}</span>" for t in su["trust"])}</p><p class="msg" id="sumsg"></p></div></div></div>
-{pricing_modal()}'''
+    modals = (signup_modal() if modals in ('both', 'signup') else '') + (pricing_modal() if modals in ('both', 'pricing') else '')
     os.makedirs(os.path.dirname(path), exist_ok=True)
     open(path, 'w').write(f'''<!doctype html><html lang="en"><head>{'<meta name="robots" content="noindex">' if NOINDEX else ''}<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{E(title)}</title>{head}
 <link rel="icon" href="{root}logo.svg"><link rel="stylesheet" href="{root}style.css?v={V['css']}"><script>window.REGRET={json.dumps(CFG)};window.REGRET_ROOT="{root}";{AUTH_HINT}</script>
@@ -117,8 +135,8 @@ def sec_title(s):
         out.append(re.sub("[^\\s\\-/'’&]+", lambda m: _sec_part(m.group(0)), w))
     return ' '.join(out)
 
-def fill(tpl, F, full=False):  # /full/ shows the official SEC name; everything else the display name
-    return tpl.replace(T_HEAD, firm_head(F, full)).replace(T_NAME, E(sec_title(F.get('legal_name') or F['name']) if full else F['name'])).replace(T_SLUG, E(F['slug']))
+def fill(tpl, F, full=False):  # header and search use the common name; legalName in the page head stays the SEC name
+    return tpl.replace(T_HEAD, firm_head(F, full)).replace(T_NAME, E(F['name'])).replace(T_SLUG, E(F['slug']))
 
 FOOT = lambda root: f'<footer class="ft"><span>© 2026 Know Your Group INC.</span><a href="{root}privacy/">Privacy</a><a href="{root}terms/">Terms</a></footer>'
 
@@ -165,7 +183,7 @@ def ftabs(on, base):  # two-tab switch between /vc/<slug>/ (Checks) and /vc/<slu
     a = lambda k, href, t, n: f'<a class="rgt-tab{" on" if on == k else ""}" href="{href}"{' aria-current="page"' if on == k else ""}>{t}{n}</a>'
     return f'<nav class="rgt-tabs" aria-label="{Q["tabs_aria"]}">' + a('c', base, Q['tab_checks'], ' <em>10</em>') + a('f', base + 'full/', Q['tab_full'], ' <em class="rgt-n" hidden></em>') + '</nav>'
 
-def pay_case():  # simpler unlock popup (approved mockup). Summary and /full/ both include it.
+def pay_case(root=''):  # simpler unlock popup (approved mockup). Summary and /full/ both include it.
     p = S['pay']
     return (f'<div class="ov pp-ov" id="paycase" hidden><div class="pp s" role="dialog" aria-modal="true" aria-labelledby="pph">'
             f'<button class="pp-x" data-close aria-label="{p["close"]}">×</button><header class="pp-hero"><h1 id="pph"></h1></header>'
@@ -173,23 +191,23 @@ def pay_case():  # simpler unlock popup (approved mockup). Summary and /full/ bo
             f'<input type="email" name="email" placeholder="{p["email_placeholder"]}" aria-label="{p["ready_label"]}" autocomplete="email"></label>'
             f'<button class="pb v big" id="usecheck" type="button" disabled>{p["check"]}</button>'
             f'<p class="helper" id="preadyh" hidden>{p["ready_help"]}</p><p class="msg" id="pmsg2"></p>'
-            f'<div class="lks"><a href="#" data-open="paywall">{p["see_plans"]}</a>'
-            f'<span id="psign">{p["have_account"]} <a href="#" data-open="signup">{p["sign_in"]}</a></span></div></div></div>')
+            f'<div class="lks"><a href="{root}plans/" data-open="paywall">{p["see_plans"]}</a>'
+            f'<span id="psign">{p["have_account"]} <a href="{root}login/" data-open="signup">{p["sign_in"]}</a></span></div></div></div>')
 
-def summary(F):  # /vc/<slug>/: name + Save, key facts, the 10 checks (closed), "See the full check" (js/company.js summary)
+def summary(F, root='./'):  # /vc/<slug>/: name + Save, key facts, the 10 checks (closed), "See the full check" (js/company.js summary)
     Q = S['summary']
     return f'''<main class="wrap sumpg unlocked ld" data-firm="{E(F["slug"])}" data-view="summary"><div class="rh">{bigsearch(F)}</div>
 <div class="fh"><h1>{E(F["name"])}</h1><div>{SAVE}</div></div>{checking_box()}<div class="kf">{SK_KF}</div>{ftabs("c", "./")}<div class="cban" hidden></div><div class="list">{skel()}</div>
 <div class="rgt-see"><a href="full/">{Q["see_full"]}</a></div><p class="fine">{S["result"]["fine"]}</p></main>
-{pay_case()}'''
+{pay_case(root)}'''
 
-def result(F):
+def result(F, root='../'):
     r = S['result']
     return f'''<main class="wrap prof ld" data-firm="{E(F["slug"])}">{bigsearch(F, "ps0")}
 <div class="ph"><h1>{E(F["name"])}{SAVE}</h1><p class="m"><i class="sk" style="width:300px"></i></p><div class="hfs">{SK_HFS}</div></div>{ftabs("f", "../")}<div class="cban" hidden></div><div class="csum">{SK_CSUM}</div><div class="spl">{SK_SPL}</div>
 <div class="unlock" id="lockcard" hidden><div><b></b><p></p></div><button class="btn" id="unlock">{r["lock_button"]}</button></div>
 <div class="pgrid"><div class="pmain">{SK_PMAIN}</div><nav class="toc" aria-label="{r["toc_aria"]}">{SK_TOC}</nav></div><p class="fine">{r["fine"]}</p></main>
-{pay_case()}'''
+{pay_case(root)}'''
 
 A, M, SO = S['account'], S['my_checks'], S['signed_out']
 def why(k, q):  # optional exit question; values match exit_reasons.reason
@@ -273,13 +291,13 @@ def launch_firms():
 
 def main():
     shutil.rmtree(OUT, ignore_errors=True); os.makedirs(OUT)
-    for f in ('style.css', 'logo.svg', 'js/app.js', 'js/company.js'): shutil.copy(os.path.join(HERE, f), OUT)
+    for f in ('style.css', 'logo.svg', 'js/app.js', 'js/company.js', 'js/dates.js'): shutil.copy(os.path.join(HERE, f), OUT)
     shutil.copytree(os.path.join(HERE, 'fav'), os.path.join(OUT, 'fav'))
     shutil.copy(os.path.join(HERE, 'CNAME'), OUT)  # GitHub Pages custom domain (regretamin.com)
     firms = []
     T = {'name': T_NAME, 'slug': T_SLUG}
-    page(os.path.join(OUT, '_tpl', 'summary.html'), summary(T), '../../', T_NAME + S['title_suffix'], company=True, head=T_HEAD)
-    page(os.path.join(OUT, '_tpl', 'full.html'), result(T), '../../../', T_NAME + S['title_suffix'], company=True, head=T_HEAD)
+    page(os.path.join(OUT, '_tpl', 'summary.html'), summary(T, '../../'), '../../', T_NAME + S['title_suffix'], company=True, head=T_HEAD)
+    page(os.path.join(OUT, '_tpl', 'full.html'), result(T, '../../../'), '../../../', T_NAME + S['title_suffix'], company=True, head=T_HEAD)
     nf = COPY.get('not_found', {'h1': 'We could not find that firm', 'p': 'It may not be checked yet. Search for it and we will start a check.'})
     page(os.path.join(OUT, '_tpl', '404.html'), f'<main class="wrap"><div class="hero"><h1>{E(nf["h1"])}</h1><p>{E(nf["p"])}</p>{SB()}</div></main>', '/', 'Not found' + S['title_suffix'], head='<meta name="robots" content="noindex">')
     # Site-wide 404: Cloudflare Pages serves /404.html with status 404 for unknown paths (no soft-404 SPA fallback).
@@ -303,6 +321,8 @@ def main():
     open(os.path.join(OUT, 'my-checks', 'index.html'), 'w').write(REDIRECT('../account/firms/', F_['title']))
     page(os.path.join(OUT, 'privacy', 'index.html'), privacy(), '../', 'Privacy Policy' + S['title_suffix'])
     page(os.path.join(OUT, 'terms', 'index.html'), terms(), '../', 'Terms of Service' + S['title_suffix'])
+    page(os.path.join(OUT, 'plans', 'index.html'), plans_page(), '../', S['pricing']['title'] + S['title_suffix'], head='<meta name="robots" content="noindex">', modals='signup')
+    page(os.path.join(OUT, 'login', 'index.html'), login_page(), '../', S['signup']['title'] + S['title_suffix'], head='<meta name="robots" content="noindex">', modals='pricing')
     os.makedirs(os.path.join(OUT, 'pricing'), exist_ok=True)  # /pricing/ has no page of its own: send it to the home page Pricing popup (no 404); kept out of the sitemap
     open(os.path.join(OUT, 'pricing', 'index.html'), 'w').write('<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex"><link rel="canonical" href="/"><meta http-equiv="refresh" content="0;url=../?pricing=1"><script>location.replace("../?pricing=1"+location.hash)</script><title>Pricing</title><a href="../?pricing=1">Pricing</a>')
     site = SITE  # sitemap + robots (account and my-checks are left out)

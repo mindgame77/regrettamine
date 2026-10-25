@@ -70,9 +70,9 @@ export function secTitle(s) {
   }).join(' ');
 }
 
-// /full/ shows the official SEC name; everything else the display name
+// Header title and search use the common name on every view. legalName in the page head stays the SEC name.
 export const fillFirm = (tpl, F, full = false) =>
-  tpl.split('{{HEAD}}').join(firmHead(F, full)).split('{{NAME}}').join(esc(full ? secTitle(F.legal_name || F.name) : F.name)).split('{{SLUG}}').join(esc(F.slug));
+  tpl.split('{{HEAD}}').join(firmHead(F, full)).split('{{NAME}}').join(esc(F.name)).split('{{SLUG}}').join(esc(F.slug));
 
 // /vc/<slug>/ or /vc/<slug>/full/ -> {slug, full} | {redirect} | null
 export function parseFirmPath(pathname) {
