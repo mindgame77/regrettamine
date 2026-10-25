@@ -563,10 +563,15 @@
     main.querySelector('[data-reload]').onclick = () => { main.innerHTML = SKEL; main.classList.remove('lderr'); main.classList.add('ld'); bindMain(); loadPage(false).then(paint); };
     saveBtn();
   }
+  // Email typed in the pay popup or the notify box. Saved on every credit spend, including a firm whose research is already done.
+  function typedEmail() {
+    const vals = ['#panon input[type=email]', '[data-notify] input[type=email]'].map(s => { const el = document.querySelector(s); return el && el.value ? el.value.trim() : ''; }).filter(Boolean);
+    return vals[0] || null;
+  }
   async function loadPage(spend, retry) {
     if (!sb) return loadFail();
     const to = new Promise(r => setTimeout(() => r({ error: 'timeout' }), spend ? 20000 : 10000));
-    const { data, error } = await Promise.race([Promise.resolve(sb.rpc('firm_page', { p_slug: main.dataset.firm, p_anon: anonId(), p_spend: spend })), to]).catch(e => ({ error: e }));
+    const { data, error } = await Promise.race([Promise.resolve(sb.rpc('firm_page', { p_slug: main.dataset.firm, p_anon: anonId(), p_spend: spend, p_email: spend ? typedEmail() : null })), to]).catch(e => ({ error: e }));
     if ((error || !data) && !spend && !retry && !PAGE) return loadPage(false, true); // one quiet retry (slow session refresh / expired token)
     if (error || !data) { if (spend) $('#pmsg2').textContent = T.error; else loadFail(); return; }
     if (!spend && !['ok', 'need_signup', 'out'].includes(data.status)) return loadFail();
@@ -590,7 +595,7 @@
       const b = e.target.closest('[data-gate]'); if (!b) return;
       if (!sb) return;
       const G = C.copy.company.gate, m = b.parentNode.querySelector('.gmsg'); b.disabled = true; b.textContent = G.busy; m.textContent = '';
-      const { data, error } = await Promise.resolve(sb.rpc('firm_page', { p_slug: main.dataset.firm, p_anon: anonId(), p_spend: true })).catch(x => ({ error: x }));
+      const { data, error } = await Promise.resolve(sb.rpc('firm_page', { p_slug: main.dataset.firm, p_anon: anonId(), p_spend: true, p_email: typedEmail() })).catch(x => ({ error: x }));
       b.disabled = false; b.textContent = G.button;
       if (!error && data && data.status === 'ok' && data.open) { draw(data); paint(); return; }
       if (data && data.status === 'unchecked') return toRequest();

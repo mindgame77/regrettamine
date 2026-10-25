@@ -35,4 +35,14 @@ lands and the page is live, each requester gets the "ready" email (`ready_reques
 
 ## Emails (plain text, from support@regretamin.com via Resend, `ondemand-notify`)
 * `received`: "We got your request for <firm>" (only within 2 days, only while not yet linked).
-* `ready_request`: "<firm> is now on Regretamin" + link.
+* `ready_request`: "<firm> is now on Regretamin" + link. Only when `research_requests.firm_request_id` is set.
+  A notify-me signup on a firm that is already on the site (`check_requests`, `spend_kind = 'request'`, no
+  `firm_request_id`) gets the `ready` email instead ("Your Regretamin check for <firm> is ready").
+
+## Notify me vs Request this firm
+`check_requests` (the "Email me when it's ready" box and the request-a-check form) is not a `firm_requests` row.
+A firm already in the database is filed as a paid-lane on-demand job (docs/ON_DEMAND.md). A name that is not on the
+site is filed as `registry_id = 'req-<check_requests id>'`, `lane = 'request'`, `list_source = 'check_request'`.
+`firm_requests` uses the same `req-<id>` shape with `list_source = 'firm_request'`. If that registry id is already
+taken, the check signup uses `req-c<id>` so the two lists cannot overwrite each other. A signup linked to a job
+is marked notified and is not emailed a second time.

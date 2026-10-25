@@ -15,7 +15,7 @@ LOCKED = [
     "stripe_note_card(jsonb)",
     "store_report_page(text,text)",
     "sync_watch_alerts(uuid)",
-    "unlock_firm(text,uuid,boolean)",
+    "unlock_firm(text,uuid,boolean,text)",
     "handle_new_user()",
     "record_fact_event()",
     "record_published_review()",
@@ -25,7 +25,7 @@ LOCKED = [
     "promote_bot_facts_trg()",
 ]
 USER_ONLY = ["watch_fund(text)", "unwatch_fund(text)", "set_fund_alert(text,boolean)", "delete_my_account()"]
-PUBLIC = ["firm_page(text,uuid,boolean)", "firm_meta(text)", "firm_sitemap(integer,integer)", "search_funds(text)", "public_site_bundle()", "bump_firm_check(text,uuid)"]
+PUBLIC = ["firm_page(text,uuid,boolean,text)", "firm_meta(text)", "firm_sitemap(integer,integer)", "search_funds(text)", "public_site_bundle()", "bump_firm_check(text,uuid)"]
 
 
 def _can(cur, role, fn):
