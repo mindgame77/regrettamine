@@ -16,7 +16,8 @@ Body:
    "leads": [{"field": "...", "value": "...", "source_url": "https://..."}],
    "owned_media": [{"url": "https://www.seedtoscale.com", "label": "SeedToScale (Accel podcast)"}, "https://www.youtube.com/@accel"],
    "notes": "...",
-   "searches": [{"section": "board_seats", "site": "sec.gov", "query": "...", "searched_at": "2026-10-24T10:00:00-07:00", "result": "found|none|blocked|error", "item_count": 0}]}}
+   "searches": [{"section": "board_seats", "site": "sec.gov", "query": "...", "searched_at": "2026-10-24T10:00:00-07:00", "result": "found|none|blocked|error", "item_count": 0},
+                {"section": "checks", "site": "trade.gov", "query": "Kevin Zhang", "searched_at": "2026-10-24T17:13:00-07:00", "result": "none", "item_count": 0, "name_only": true, "list": "ITAR Debarred (DTC)", "check": 3}]}}
 ```
 
 Rules: every item needs a source URL; .gov/.mil are rejected except sec.gov and courts (courtlistener, uscourts, PACER);
@@ -26,6 +27,8 @@ firm's domain or social handles, or on an entry of the per-firm `firm_owned_medi
 firm runs). Send `owned_media` (URLs, or `{url, label}`; a path such as `/@handle` limits the match to that channel). Entries from the
 latest enrichment replace earlier enricher entries; manual entries (e.g. Accel's seedtoscale.com) stay.
 Fixes never edit the friend's rows: they go to `firm_corrections` and override what the page shows. A people fix targets the named person's row (friend or enricher row); with no match it shows as its own "Correction" row. Resubmitting a firm replaces the previous enrichment.
+Name-only sanctions: a same-name hit that is not a confirmed identity is not a finding. Keep `result` as `none` (searches still allow only `found`, `none`, `blocked`, `error`) and set `name_only` true, `list` to the list name, and `check` to 1–10 (`3` for ITAR / export / debarment). The check shows as Clear with the line "A person with the same name appears on {list}; we couldn't confirm it's the same person." Do not put that hit in a section as a legal item. A surname-only line, or a "name-only near match" with no list, is not this flag. Older notes that say `name-only match:` and name the list are still read. The stored payload is not rewritten.
+
 The reply lists accepted/rejected items with a reason, plus `bot_feedback`.
 
 Views (service role): `firm_section_status`, `firm_site_coverage`, `site_search_stats` (all read `search_log_current`: rows with no enrichment_id or from the latest valid enrichment per firm+bot; older rows stay in `search_log`), `feedback_pattern_stats`; RPC `next_firms_to_enrich(p_limit)`.

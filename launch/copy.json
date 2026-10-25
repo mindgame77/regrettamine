@@ -666,6 +666,7 @@
    "10": "Searched public records for government or political roles."
   },
   "searched_nf": "Nothing found.",
+  "name_only": "A person with the same name appears on {list}; we couldn't confirm it's the same person.",
   "searched_on": "Searched {date}",
   "searched_nc": "Not checked yet.",
   "checking": {
