@@ -45,6 +45,15 @@ def signup_modal():
     su = S['signup']
     return f'<div class="ov sgo" id="signup" hidden><div class="md sgm" role="dialog" aria-modal="true" aria-labelledby="suh">{signup_inner()}</div></div>'
 
+def outcredits_modal():  # signed-out purchase (approved out-of-credits popup). Not the Sign in popup.
+    o = S['outcredits']
+    return f'''<div class="ov sgo" id="outcredits" hidden><div class="md sgm" role="dialog" aria-modal="true" aria-labelledby="outh"><div class="sgi">
+<button class="x" data-close aria-label="Close">×</button><p class="firm" id="outfirm" hidden></p><h2 id="outh">{o["title"]}</h2><p class="s">{o["sub"]}</p>
+<div class="orows" id="outplans" role="radiogroup" aria-label="{o["plans_aria"]}"></div>
+<button type="button" class="gbx" data-google><span class="gi">{GLOGO}</span><span class="gl">{o["google"]}</span></button><div class="orx">{o["or"]}</div>
+<input class="in" id="outem" type="email" placeholder="{o["email_placeholder"]}" aria-label="{o["email_aria"]}" autocomplete="email">
+<button type="button" class="btn y" id="outgo">{o["checkout"]}</button><p class="fine2">{o["fine"]}</p><p class="msg" id="outmsg"></p></div></div></div>'''
+
 def plans_page():
     return f'<main class="wrap" style="display:flex;justify-content:center;padding:48px 16px 80px"><div class="md w">{pricing_inner(False)}</div></main>'
 
@@ -60,7 +69,7 @@ def page(path, body, root, title=S['brand'], company=False, active='', head='', 
            f'<span class="navr" id="acct" hidden><button type="button" class="ab" id="acctbtn" aria-haspopup="true" aria-expanded="false"><span class="av" id="av"></span><span class="nm">{n["account_btn"]}</span></button>'
            f'<div class="dd" id="acctdd" hidden><div class="hd2"><div class="em" id="ddem"></div><div class="pl2" id="ddplan"></div><div class="bal"><span>{n["checks_left"]}</span><b id="ddleft"></b></div></div>'
            f'<a href="{root}account/">{n["account"]}</a><a href="{root}account/firms/">{n["my_checks"]}</a><a href="#" data-open="paywall">{n["buy_more"]}</a><div class="sep"></div><a class="so" href="#" id="signout">{n["sign_out"]}</a></div></span></div></nav>')
-    modals = (signup_modal() if modals in ('both', 'signup') else '') + (pricing_modal() if modals in ('both', 'pricing') else '')
+    modals = (signup_modal() if modals in ('both', 'signup') else '') + (pricing_modal() if modals in ('both', 'pricing') else '') + outcredits_modal()
     os.makedirs(os.path.dirname(path), exist_ok=True)
     open(path, 'w').write(f'''<!doctype html><html lang="en"><head>{'<meta name="robots" content="noindex">' if NOINDEX else ''}<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{E(title)}</title>{head}
 <link rel="icon" href="{root}logo.svg"><link rel="stylesheet" href="{root}style.css?v={V['css']}"><script>window.REGRET={json.dumps(CFG)};window.REGRET_ROOT="{root}";{AUTH_HINT}</script>
