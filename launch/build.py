@@ -38,8 +38,9 @@ def pricing_modal():  # nav "Pricing" popup
 def signup_inner(close=True):  # shared by the sign-in popup and /login/
     su = S['signup']
     x = '<button class="x" data-close aria-label="Close">×</button>' if close else ''
-    return f'''<div class="sgi">{x}<div class="sg4" aria-hidden="true"><b>+4</b><span>free<br>credits</span></div><h2 id="suh" data-t="{su["title"]}">{su["title"]}</h2><p class="s">{su["sub"]}</p>
-<button type="button" class="gbx" id="google"><span class="gi">{GLOGO}</span><span class="gl">{su["google"]}</span></button><div class="orx">{su["or"]}</div><div class="emr"><input class="in" id="em" type="email" placeholder="{su["email_placeholder"]}" aria-label="{su["email_aria"]}"><button type="button" class="btn o" id="magic">{su["magic"]}</button></div><p class="sgt">{"".join(f"<span>{t}</span>" for t in su["trust"])}</p><p class="msg" id="sumsg"></p></div>'''
+    return f'''<div class="sgi sgcard">{x}<div class="sg4" aria-hidden="true"><b>+4</b><span>free<br>credits</span></div><h2 id="suh" data-t="{su["title"]}">{su["title"]}</h2><p class="s" id="sus">{su["sub"]}</p>
+<button type="button" class="gbx" id="google"><span class="gi">{GLOGO}</span><span class="gl">{su["google"]}</span></button><div class="orx">{su["or"]}</div><div class="emr"><input class="in" id="em" type="email" placeholder="{su["email_placeholder"]}" aria-label="{su["email_aria"]}"><button type="button" class="btn o" id="magic">{su["magic"]}</button></div><p class="sgt">{"".join(f"<span>{t}</span>" for t in su["trust"])}</p>
+<hr class="sudiv"><p class="sufoot"><span id="sufootnew">{su["have"]} <button type="button" id="sulinkin">{su["sign_in"]}</button></span><span id="sufootin" hidden><button type="button" id="sulinknew">{su["title"]}</button></span></p><p class="msg" id="sumsg"></p></div>'''
 
 def signup_modal():
     su = S['signup']
