@@ -2,7 +2,8 @@
    their order, titles, subtitles, unit labels and renderer come from copy.json "sections". Exposes window.RegretCompany. */
 (function () {
   const CFG = window.REGRET.copy, COPY = CFG.company, PILL = CFG.site.pills;
-  const fmt = (t, o) => t.replace(/\{(\w+)\}/g, (_, k) => o[k]);
+  const fmt = (t, o) => String(t == null ? '' : t).replace(/\{(\w+)\}/g, (_, k) => o[k]);
+  const pl = (pair, n) => fmt(Array.isArray(pair) ? pair[n === 1 ? 0 : 1] : pair, { n });
   const esc = (x) => String(x == null ? '' : x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   // ALL-CAPS names from filings (SEC, FEC: "KUSHNER, JOSHUA → GROWTH DEMOCRATS") shown in title case, display only.
   // Same rules as secTitle() in launch/edge/firm.mjs and sec_title() in launch/build.py; the stored data is unchanged.
@@ -122,8 +123,8 @@
     return '<div class="fct' + (st === 'active' ? ' act' : '') + '">' + p + (f.needs_proof ? '<span class="np">Needs proof</span>' : '') + head + esc(who) + esc(f.text) + '<div class="src">' + src + '</div></div>';
   }
   function itemHtml(x) {
-    const meta = [x.who, shownYear(x), x.status && x.status[0].toUpperCase() + x.status.slice(1)].filter(Boolean).map(esc).join(' · ');
-    return '<div class="fct"><b>' + esc(x.title ? nice(x.title) : COPY.table.untitled) + '</b>' + (meta ? ' · ' + meta : '') + (x.note ? '<br>' + esc(nice(x.note)) : '') + '</div>';
+    const meta = caseMeta(x);
+    return '<div class="fct"><b>' + esc(x.title ? nice(x.title) : COPY.table.untitled) + '</b>' + (meta ? ' · ' + meta : '') + (x.note ? '<br>' + esc(nice(x.note)) : '') + sourceHtml(x, false) + '</div>';
   }
   const spill = (st) => st === 'active' ? '<span class="cs cs-act">Active</span>' : st === 'closed' ? '<span class="cs cs-cl">Closed</span>' : '';
   // Unconfirmed same-name hit (firm_page checks[].name_only). The result stays Clear; the list sits in the existing muted line under the check.
@@ -333,10 +334,32 @@
 
   // Checks table (approved layout 3): #, check, result pill, what was found, date searched. A row with something to show
   // opens a details row underneath: the itemized findings (firm_page checks[].items: only on an unlocked page) and what was
-  // searched. Everything shown comes from the data; when the count is higher than the itemized rows the table says so.
+  // searched. A Review row with no submission findings lists the firm's saved active cases and open regulator actions.
+  // A count with nothing itemized says details are coming and links a court search for the legal name.
   // Pills are only Clear / Review / Worth knowing / Not checked yet; while a bot holds the claim, not-done rows read
   // "Checking…" (the first) and "Waiting".
   const T = COPY.table;
+  function caseMeta(x) {
+    const y = shownYear(x);
+    const st = x.status ? x.status[0].toUpperCase() + x.status.slice(1) : '';
+    return [x.who, x.court, y, st].filter(Boolean).map(esc).join(' · ');
+  }
+  function sourceText(x) {
+    const u = safeUrl(x.url);
+    if (!u) return '';
+    if (/courtlistener\.com/i.test(u)) return T.docket;
+    return x.src || '';
+  }
+  function sourceHtml(x, para) {
+    const u = safeUrl(x.url), label = sourceText(x);
+    if (!u || !label) return '';
+    const a = '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(label) + ' ↗</a>';
+    return para ? '<p>' + esc(T.source) + ' ' + a + '</p>' : '<div class="src">' + esc(T.source) + ' ' + a + '</div>';
+  }
+  function courtSearch(P) {
+    const name = (P.firm && (P.firm.sec_name || P.firm.name)) || '';
+    return 'https://www.courtlistener.com/?q=' + encodeURIComponent(name);
+  }
   const tpill = (st) => pill(st === 'red' ? 'review' : st);
   const cnum = (c) => { const m = /^(\d+)\s/.exec(c || ''); return m ? +m[1] : 0; };
   const sdate = (r) => window.RegretDate && r.searched_at ? window.RegretDate.format(r.searched_at) : '';
@@ -353,9 +376,12 @@
       const S = (COPY.searched || {})[r.n] || '';
       let d = '';
       if (!nc) {
-        if (fnd && n > it) d += '<p class="ctn">' + esc(it ? fmt(T.partial, { n, count: r.count, m: it }) : T.none_itemized) + '</p>';
-        if (fnd && items) d += items.filter(x => x.title || x.note || x.who).map(x => { const y = shownYear(x); const meta = [x.who, y, x.status && x.status[0].toUpperCase() + x.status.slice(1)].filter(Boolean).map(esc).join(' · ');
-          return '<div class="cti"><b>' + esc(x.title ? nice(x.title) : T.untitled) + '</b>' + (meta ? '<span class="ctmeta">' + meta + '</span>' : '') + (x.note ? '<p>' + esc(nice(x.note)) + '</p>' : '') + '</div>'; }).join('');
+        const shown = items ? items.filter(x => x.title || x.note || x.who) : [];
+        if (fnd && n > it && it) d += '<p class="ctn">' + esc(fmt(T.partial, { n, count: r.count, m: it })) + '</p>';
+        if (fnd && n > it && !it) d += '<p class="ctn">' + esc(pl(T.coming, n)) + ' <a href="' + esc(courtSearch(P)) + '" target="_blank" rel="noopener">' + esc(T.search_courts) + '</a></p>';
+        if (fnd && shown.length && /active cases?/i.test(r.count || '')) d += '<p class="ctn"><b>' + esc(pl(T.active_h, shown.length)) + '</b></p>';
+        if (fnd && shown.length) d += shown.map(x => { const meta = caseMeta(x);
+          return '<div class="cti"><b>' + esc(x.title ? nice(x.title) : T.untitled) + '</b>' + (meta ? '<span class="ctmeta">' + meta + '</span>' : '') + (x.note ? '<p>' + esc(nice(x.note)) + '</p>' : '') + sourceHtml(x, true) + '</div>'; }).join('');
         else if (fnd && it) d += '<button type="button" class="ctl" data-sec="checks">' + esc(fmt(T.locked, { m: it })) + ' <span>' + COPY.locked + '</span></button>';
         d += '<p class="ctw"><b>' + esc(T.what) + '</b> ' + esc(S) + (sdate(r) ? ' · ' + esc(fmt(COPY.searched_on, { date: sdate(r) })) : '') + (r.state === 'clear' || r.state === 'nf' ? ' · ' + esc(COPY.searched_nf) : '') + '</p>';
       }
