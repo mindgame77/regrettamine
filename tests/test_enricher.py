@@ -98,3 +98,87 @@ def test_superseded_enrichment_search_log_is_not_counted():
         assert c.execute("select searches, none from firm_site_coverage where firm_id = %s and section = 'board_seats' and source_site = 'sec.gov'", (fid,)).fetchone() == (1, 0)
         st = dict(c.execute("select item, status from firm_section_status where slug = %s", (slug,)).fetchall())
         assert st["board_seats"] == "missing"
+
+
+UPFRONT_NOTE = (
+    "Sanctions search log: result recorded as 'none' (the spec's closest neutral value; "
+    "the searches field allows only found/none/blocked/error) — name-only near match, unconfirmed; "
+    "not a hit and not an identification of anyone.\n"
+    "Kan Chen ITAR name-only match: the public identifiers differ; kept as a name-only lead.\n"
+    "[Legal & regulatory] Sanctions screen: name-only match: \"Kevin Zhang\" matches the name in "
+    "Consolidated Screening List entry \"Kevin Zhang\" (ITAR Debarred (DTC) - State Department, 78 FR 66984); "
+    "no shared identifiers, across OFAC SDN (+ALT), OFAC non-SDN consolidated, Consolidated Screening List, "
+    "UN, UK (FCDO) and EU lists for 35 names.\n"
+    "Surname-only match for Tucker, not this person."
+)
+
+
+def _checks(slug):
+    return {"slug": slug, "sections": {"Timeline": [{"date": "1983", "item": "Founded", "source": "https://www.reuters.com/a"}]}}
+
+
+def test_name_only_flag_is_clear_and_leaves_the_payload_alone():
+    slug = "nmon-" + uuid.uuid4().hex[:8]
+    with _db() as c:
+        fid = c.execute(
+            "insert into firms(slug, name, short_name, published, data_status, primary_domain) "
+            "values (%s, 'Name Only Test', 'Nmon', true, 'real', 'nmon.test') returning id",
+            (slug,),
+        ).fetchone()[0]
+        c.execute(
+            "insert into firm_check_rows (firm_id, n, title, descr, state) "
+            "select %s, n, 'T' || n, 'D', 'nc' from generate_series(1, 10) n",
+            (fid,),
+        )
+        c.execute("update firm_check_rows set state = 'review' where firm_id = %s and n = 4", (fid,))
+        def parsed(txt):
+            return c.execute("select n, list_name from _name_only_from_text(%s) order by 1, 2", (txt,)).fetchall()
+        # the log line names the file that was screened; the list after the phrase is the one that counts
+        assert parsed('Screened against UK Sanctions List, report date 2026-10-16: name-only match: "James Kim" appears as an alias string in the EU consolidated list, across OFAC SDN and EU lists. — https://sanctionslist.fcdo.gov.uk/docs/UK-Sanctions-List.csv') == [(1, "EU consolidated list")]
+        assert parsed('Screened against UK Sanctions List: name-only match: "John Lee" matches a Consolidated Screening List Non-SDN Menu-Based Sanctions (NS-MBS) entry, across OFAC SDN and UK lists.') == [(1, "Non-SDN Menu-Based Sanctions (NS-MBS)")]
+        assert parsed('name-only near match, unconfirmed. Surname-only match for Tucker. recorded as name-only text matches, not a hit.') == []
+        p = _checks(slug)
+        p["notes"] = UPFRONT_NOTE
+        p["searches"] = [{"section": "checks", "site": "trade.gov", "query": "35 names", "searched_at": "2026-10-24", "result": "none", "item_count": 0}]
+        raw = json.dumps(p)
+        c.execute("select research_enrich('toxy-enricher', %s::jsonb)", (raw,))
+        stored = c.execute("select payload from research_enrichments where firm_id = %s", (fid,)).fetchone()[0]
+        if isinstance(stored, str):
+            stored = json.loads(stored)
+        assert stored == p
+        # the screened-list trailer is not a hit; the shorter ITAR label collapses into the specific one
+        rows = dict(c.execute("select n, name_only from firm_check_rows where firm_id = %s and name_only is not null", (fid,)).fetchall())
+        assert rows == {3: ["ITAR Debarred (DTC)"]}
+        assert c.execute("select state from firm_check_rows where firm_id = %s and n = 3", (fid,)).fetchone()[0] == "nc"
+        anon = str(uuid.uuid4())
+        def page(spend):
+            v = c.execute("select firm_page(%s, %s, %s)", (slug, anon, spend)).fetchone()[0]
+            return v if isinstance(v, dict) else json.loads(v)
+        locked = page(False)
+        assert not locked["open"]
+        assert all(ch["state"] is None and ch["name_only"] is None for ch in locked["checks"])
+        opened = page(True)
+        by_n = {ch["n"]: ch for ch in opened["checks"]}
+        assert opened["open"] and by_n[3]["state"] == "clear" and by_n[3]["name_only"] == ["ITAR Debarred (DTC)"]
+        assert by_n[1]["name_only"] is None and by_n[1]["state"] == "nc"
+        # a real review is not turned into a name-only Clear
+        c.execute("update firm_check_rows set name_only = array['OFAC SDN'], state = 'review' where firm_id = %s and n = 1", (fid,))
+        opened = page(False)
+        by_n = {ch["n"]: ch for ch in opened["checks"]}
+        assert by_n[1]["state"] == "review" and by_n[1]["name_only"] is None
+        # re-promotion from a structured flag replaces the derived row; the first payload is untouched
+        before = c.execute("select id, md5(payload::text) from research_enrichments where firm_id = %s", (fid,)).fetchone()
+        p2 = _checks(slug)
+        p2["searches"] = [{"section": "checks", "site": "fcdo.gov.uk", "query": "James Kim", "searched_at": "2026-10-25", "result": "none", "item_count": 0,
+                           "name_only": True, "list": "EU consolidated list", "check": 1}]
+        c.execute("select research_enrich('toxy-enricher', %s::jsonb)", (json.dumps(p2),))
+        assert c.execute("select md5(payload::text) from research_enrichments where id = %s", (before[0],)).fetchone()[0] == before[1]
+        rows = dict(c.execute("select n, name_only from firm_check_rows where firm_id = %s and name_only is not null order by n", (fid,)).fetchall())
+        assert rows[1] == ["EU consolidated list"] and 3 not in rows
+        assert c.execute("select result, name_only from search_log_current where firm_id = %s and section = 'checks' and query = 'James Kim'", (fid,)).fetchone() == ("none", True)
+        # near-match boilerplate and a surname-only line do not invent a list
+        p3 = _checks(slug)
+        p3["notes"] = "result recorded as 'none' — name-only near match, unconfirmed (2 name-only near match(es)). Surname-only match for Tucker, not this person."
+        c.execute("select research_enrich('toxy-enricher', %s::jsonb)", (json.dumps(p3),))
+        assert c.execute("select count(*) from firm_check_rows where firm_id = %s and name_only is not null", (fid,)).fetchone()[0] == 0
+        c.rollback()

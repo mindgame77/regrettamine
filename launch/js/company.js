@@ -86,6 +86,13 @@
     return '<div class="fct"><b>' + esc(x.title ? nice(x.title) : COPY.table.untitled) + '</b>' + (meta ? ' · ' + meta : '') + (x.note ? '<br>' + esc(nice(x.note)) : '') + '</div>';
   }
   const spill = (st) => st === 'active' ? '<span class="cs cs-act">Active</span>' : st === 'closed' ? '<span class="cs cs-cl">Closed</span>' : '';
+  // Unconfirmed same-name hit (firm_page checks[].name_only). The result stays Clear; the list sits in the existing muted line under the check.
+  function nameOnlyNotes(r, tag) {
+    const lists = Array.isArray(r.name_only) ? r.name_only.filter(Boolean) : [];
+    if (!lists.length || (r.state !== 'clear' && r.state !== 'nf') || !COPY.name_only) return '';
+    const cls = tag === 'em' ? ' class="srch"' : '';
+    return lists.map(list => '<' + tag + cls + '>' + esc(fmt(COPY.name_only, { list })) + '</' + tag + '>').join('');
+  }
   // /full/ keeps the 906d82a design: the old 10-checks list with evidence rows (the checks table is only on /vc/<slug>/)
   function checkRows(P) {
     const det = {}, out = {}; (P.details || []).forEach(r => det[r.row] = r.facts || []); (P.outline || []).forEach(r => out[r.row] = r.items || []);
@@ -103,7 +110,7 @@
       const useIts = !fs.length && its.length > 0, shown = useIts ? its.length : fs.length;
       const part = n > shown && shown ? '<div class="fct">' + esc(fmt(COPY.table.partial, { n, count: r.count, m: shown })) + '</div>' : '';
       const d = P.open ? (useIts ? part + its.map(itemHtml).join('') : fs.length ? part + fs.map(factHtml).join('') : '<div class="fct">' + COPY.no_facts + '</div>') : '';
-      return '<div class="row' + (r.n === 10 ? ' last' : '') + (P.open ? ' tog' : '') + '" id="check-' + r.n + '"><span class="n">' + String(r.n).padStart(2, '0') + '</span><div class="tx"><b>' + esc(r.title) + '</b><span>' + esc(r.descr) + '</span></div>'
+      return '<div class="row' + (r.n === 10 ? ' last' : '') + (P.open ? ' tog' : '') + '" id="check-' + r.n + '"><span class="n">' + String(r.n).padStart(2, '0') + '</span><div class="tx"><b>' + esc(r.title) + '</b><span>' + esc(r.descr) + '</span>' + nameOnlyNotes(r, 'em') + '</div>'
         + '<div class="pc">' + pill(r.state) + cnt + '</div><span class="lk"></span><div class="gl">' + gl + '</div><div class="det">' + d + '</div></div>';
     }).join('') + '</div>';
   }
@@ -288,7 +295,7 @@
       }
       const tog = !!d && !checking;
       return '<tr class="crow' + (tog ? ' tog' : '') + (nc ? (checking && r.n === curN ? ' cur' : ' up') : '') + '" id="check-' + r.n + '"' + (tog ? ' tabindex="0" aria-expanded="false" aria-controls="cdx-' + r.n + '"' : '') + '>'
-        + '<td class="kcn">' + String(r.n).padStart(2, '0') + '</td><td class="kct"><b>' + esc(r.title) + '</b><span>' + esc(r.descr) + '</span></td>'
+        + '<td class="kcn">' + String(r.n).padStart(2, '0') + '</td><td class="kct"><b>' + esc(r.title) + '</b><span>' + esc(r.descr) + '</span>' + nameOnlyNotes(r, 'span') + '</td>'
         + '<td class="kcr">' + res + '</td><td class="kcf">' + found + '</td><td class="kcd">' + (sdate(r) ? esc(sdate(r)) : '<span class="ctm">—</span>') + '</td></tr>'
         + (tog ? '<tr class="cdx" id="cdx-' + r.n + '" hidden><td></td><td colspan="4">' + d + '</td></tr>' : '');
     }).join('');
