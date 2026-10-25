@@ -676,11 +676,12 @@
   "searched_on": "Searched {date}",
   "searched_nc": "Not checked yet.",
   "checking": {
-   "_note": "Checking view on /vc/<slug>/ while a firm's 10 checks are not all done (js/company.js summary + js/app.js). {firm}, {done}, {check}, {time}, {email} are filled in.",
+   "_note": "Checking view on /vc/<slug>/ while a firm's 10 checks are not all done (js/company.js summary + js/app.js). {firm}, {done}, {check}, {time}, {date}, {email} are filled in. started_on is used when the claim did not begin today in Pacific time.",
    "title": "Checking {firm}",
    "progress": "{done} of 10 done · now checking: {check}",
    "usually": "Usually 5–20 min",
    "started": "Started {time} PT",
+   "started_on": "Started {date}, {time} PT",
    "current": "Checking…",
    "waiting": "Waiting",
    "sources": [

@@ -77,3 +77,46 @@ def test_bump_progress_and_notify():
         assert cur.fetchone()[0] == 0
         assert _j(cur, "select bump_firm_check('zz-chk', %s)", (str(uuid.uuid4()),))["status"] == "complete"
         conn.rollback()
+
+
+def test_expired_normal_claim_is_not_shown_as_checking():
+    import psycopg
+
+    with psycopg.connect(DATABASE_URL) as conn, conn.cursor() as cur:
+        cur.execute("insert into firms (slug, name, published, launch_page, data_status, sec_crd) values ('zz-exp', 'Zz Expired Capital', true, true, 'real', '999441') returning id")
+        fid = cur.fetchone()[0]
+        cur.execute("insert into firm_check_rows (firm_id, n, title, descr, state) select %s, n, 'T' || n, 'D', 'nc' from generate_series(1, 10) n", (fid,))
+        cur.execute("insert into research_queue (registry_id, name, sec_crd, priority, status, lane, claimed_by, claimed_at, last_error) values "
+                    "('zz-exp', 'ZZ EXPIRED CAPITAL LLC', '999441', 900000, 'claimed', 'normal', 'portal-night-bot-2', now() - interval '7 hours', 'gap-fill claim')")
+        cur.execute("update firms set registry_id = 'zz-exp' where id = %s", (fid,))
+        anon = str(uuid.uuid4())
+
+        def status():
+            return _j(cur, "select firm_check_status('zz-exp')", ())
+
+        def page():
+            return _j(cur, "select firm_page('zz-exp', %s, false, null)", (anon,))
+
+        s = status()
+        assert s["queue"] == "queued" and s["started_at"] is None
+        p = page()
+        assert p["queue"] == "queued" and p["started_at"] is None
+        cur.execute("select status, claimed_by from research_queue where registry_id = 'zz-exp'")
+        assert cur.fetchone() == ("claimed", "portal-night-bot-2")
+
+        cur.execute("update research_queue set claimed_at = now() where registry_id = 'zz-exp'")
+        s = status()
+        assert s["queue"] == "claimed" and s["started_at"]
+        assert page()["queue"] == "claimed" and page()["started_at"]
+
+        cur.execute("update research_queue set lane = 'paid', claimed_at = now() - interval '7 hours' where registry_id = 'zz-exp'")
+        s = status()
+        assert s["queue"] == "claimed" and s["started_at"]
+
+        cur.execute("update research_queue set lane = 'normal' where registry_id = 'zz-exp'")
+        cur.execute("insert into ondemand_jobs (firm_id, registry_id, status) values (%s, 'zz-exp', 'queued')", (fid,))
+        s = status()
+        assert s["queue"] == "claimed" and s["started_at"]
+        cur.execute("select status from research_queue where registry_id = 'zz-exp'")
+        assert cur.fetchone()[0] == "claimed"
+        conn.rollback()
