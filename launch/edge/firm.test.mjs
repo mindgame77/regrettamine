@@ -101,6 +101,33 @@ test('merged duplicate slug 301s to the surviving page (summary and full, query 
   assert.equal((await get('/vc/not-a-firm/')).status, 404);
 });
 
+test('full report header uses the common name; the SEC legal name stays in the page head', () => {
+  const F = { name: 'Andreessen Horowitz', legal_name: 'AH Capital Management, L.L.C.', slug: 'a16z', primary_domain: 'a16z.com' };
+  const html = fillFirm('<title>{{NAME}}</title>{{HEAD}}<h1>{{NAME}}</h1><input value="{{NAME}}">', F, true);
+  assert.match(html, /<h1>Andreessen Horowitz<\/h1><input value="Andreessen Horowitz">/);
+  assert.equal((html.match(/AH Capital Management, L\.L\.C\./g) || []).length, 1);
+  assert.ok(html.includes('"legalName":"AH Capital Management, L.L.C."'));
+  const built = read('vc/a16z/full/index.html');
+  assert.ok(built.includes('<h1>Andreessen Horowitz'));
+  assert.ok(built.includes('value="Andreessen Horowitz"'));
+  assert.ok(!built.includes('<h1>AH Capital'));
+  assert.ok(built.includes('legalName'));
+});
+
+test('Pricing and Sign in go to real pages, and those pages exist', () => {
+  const home = read('index.html');
+  assert.match(home, /href="plans\/"[^>]*data-open="paywall"/);
+  assert.match(home, /href="login\/"[^>]*data-open="signup"/);
+  assert.match(home, /dates\.js\?v=/);
+  const plans = read('plans/index.html'), login = read('login/index.html');
+  assert.match(plans, /noindex/);
+  assert.ok(plans.includes('data-plans="nav"') && plans.includes('id="signup"') && !plans.includes('id="paywall"'));
+  assert.match(login, /noindex/);
+  assert.ok(login.includes('id="google"') && login.includes('id="paywall"') && !login.includes('id="signup"'));
+  assert.match(read('_tpl/full.html'), /href="\.\.\/\.\.\/\.\.\/plans\/"/);
+  assert.match(read('_tpl/summary.html'), /href="\.\.\/\.\.\/login\/"/);
+});
+
 test('SEC legal names shown in title case on the full check (display only)', () => {
   const cases = {
     'IVP MANAGEMENT, L.L.C.': 'IVP Management, L.L.C.',

@@ -13,6 +13,10 @@ python3 -m http.server -d site 8000
 
 Open [http://localhost:8000/](http://localhost:8000/) and [http://localhost:8000/vc/a16z/](http://localhost:8000/vc/a16z/).
 
+## Dates
+
+Every date a visitor sees on the launch site (`launch/`, served at regretamin.com) goes through `launch/js/dates.js` (`RegretDate`). A date on its own is `Mar 15, 2024`. Where a time is shown it is Pacific: `Mar 15, 2024, 3:58 PM PT`. New pages and templates use that helper. Do not call `toLocaleDateString` or format a date by hand.
+
 `site/` is generated. Do not edit it by hand. Python 3.9 or newer is enough. There is no install step.
 
 Links and assets are relative, so the same build works at the project URL (`https://<user>.github.io/regrettamine/`) and at the domain root (`https://regretamin.com/`). No base-path setting.

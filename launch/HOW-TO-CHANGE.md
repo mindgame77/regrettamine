@@ -20,6 +20,7 @@ It never touches the live site (mindgame77.github.io/regrettamine).
 | Colors, spacing, fonts | `launch/style.css` (pill colors: `.p-ok/.p-rev/.p-red/.p-g`) | `launch/deploy_preview.sh` |
 | Page layout / HTML structure | `launch/build.py` (no copy in it, only markup) | `launch/deploy_preview.sh` |
 | How a section's items are drawn | `launch/js/company.js` (`R.<renderer>`) | `launch/deploy_preview.sh` |
+| Any date a visitor sees (timeline, My checks, Started line, Date searched) | `launch/js/dates.js` (`RegretDate`). Date only is `Mar 15, 2024`. A time is Pacific: `Mar 15, 2024, 3:58 PM PT`. Do not format a date anywhere else. | `launch/deploy_preview.sh` |
 | What Stripe actually charges (amount) | Stripe: new Price, then Supabase Edge Function secret `STRIPE_PRICE_SINGLE` / `_M10` / `_M30` / `_Y10` / `_Y30`; also update shown price in `copy.json` → `plans` | `supabase secrets set ...` + `launch/deploy_preview.sh` |
 | Checks granted per month (monthly and yearly plans) | `supabase/functions/regretamin-stripe-webhook/index.ts` `PLAN`, `supabase/functions/create-checkout/index.ts` `CHECKS` **and** `copy.json` → `plans.*.checks` | deploy webhook function + `launch/deploy_preview.sh` |
 | Firm facts, cases, press items, people, checks results | DB: `firms`, `firm_profile_facts`, check tables (via `launch/sync_checks.py` → migration) | migration (backup first) |
