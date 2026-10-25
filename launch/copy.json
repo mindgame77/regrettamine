@@ -697,9 +697,9 @@
   "searched_nf": "Nothing found.",
   "name_only": "A person with the same name appears on {list}; we couldn't confirm it's the same person.",
   "header": {
-   "_note": "Firm header under the search box when the page has no hero cards (js/company.js). missing is the value for a blank HQ or assets field.",
+   "_note": "Firm header under the search box (js/company.js). assets is the one label for the SEC assets figure, including a stored card named Assets, Regulatory AUM, or AUM. missing is the value for a blank HQ or assets field.",
    "hq": "HQ",
-   "assets": "Assets",
+   "assets": "Assets (SEC)",
    "missing": "Not found in public records"
   },
   "searched_on": "Searched {date}",

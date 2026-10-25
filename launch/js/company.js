@@ -59,14 +59,16 @@
     return window.RegretDate.caseYear(x.title || x.head || x.case || x.kind || '', x.note || x.text || '', x.year);
   };
   const MISS = (COPY.header && COPY.header.missing) || 'Not found in public records';
+  // One label for the SEC assets figure. Stored cards still say Assets, Regulatory AUM, or AUM.
+  const assetLabel = (label) => (label === 'Assets' || label === 'Regulatory AUM' || label === 'AUM') && COPY.header && COPY.header.assets ? COPY.header.assets : label;
   function headerCards(P) {
     const hero = (Array.isArray(P.hero) ? P.hero : []).filter(h => h && (h.label || h.value));
-    if (hero.length) return hero.map(h => Object.assign({}, h, { src: h.src || [] }));
+    if (hero.length) return hero.map(h => Object.assign({}, h, { label: assetLabel(h.label), src: h.src || [] }));
     const H = COPY.header || {};
     const firm = P.firm || {};
     return [
       { label: H.hq || 'HQ', value: firm.hq || MISS, anchor: '', src: [] },
-      { label: H.assets || 'Assets', value: firm.assets || MISS, anchor: '', src: [] },
+      { label: H.assets, value: firm.assets || MISS, anchor: '', src: [] },
     ];
   }
   function siteLink(P) {
@@ -158,7 +160,7 @@
 
   // Open-state renderers, keyed by copy.json sections[].renderer
   const R = {
-    facts: (it) => '<div class="kvs">' + it.map(x => '<div class="kv"><span class="k">' + esc(x.label) + '</span><span>' + esc(nice(x.value)) + chips(x.src) + '</span></div>').join('') + '</div>',
+    facts: (it) => '<div class="kvs">' + it.map(x => '<div class="kv"><span class="k">' + esc(assetLabel(x.label)) + '</span><span>' + esc(nice(x.value)) + chips(x.src) + '</span></div>').join('') + '</div>',
     checks: (it, P) => checkRows(P),
     legal: (it) => group(it, 'grp', COPY.legal, xs => xs.filter(x => x.title || x.head || x.note).map(x => '<div class="it' + (x.state === 'Active' ? ' act' : '') + '">'
       + (x.state ? '<span class="cs ' + COPY.state[x.state] + '">' + esc(x.state) + '</span> ' : '') + (x.status ? '<span class="pill ' + (COPY.tone[x.tone] || 'p-g') + '"><i></i>' + esc(x.status) + '</span> ' : '')
