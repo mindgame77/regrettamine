@@ -1,11 +1,13 @@
 """Terms and Privacy are rendered from launch/legal/*.md into the existing page shell."""
-import importlib
-import sys
+import importlib.util
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "launch"))
-legal = importlib.import_module("legal")
+# Load the renderer by file path. Putting launch/ on sys.path would shadow the
+# repo's build.py when the rest of the suite does `from build import ...`.
+_spec = importlib.util.spec_from_file_location("launch_legal", ROOT / "launch" / "legal" / "__init__.py")
+legal = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(legal)
 
 
 def test_terms_and_privacy_render_the_approved_pages():
