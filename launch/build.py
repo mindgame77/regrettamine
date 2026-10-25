@@ -168,19 +168,32 @@ def ftabs(on, base):  # two-tab switch between /vc/<slug>/ (Checks) and /vc/<slu
     a = lambda k, href, t, n: f'<a class="rgt-tab{" on" if on == k else ""}" href="{href}"{' aria-current="page"' if on == k else ""}>{t}{n}</a>'
     return f'<nav class="rgt-tabs" aria-label="{Q["tabs_aria"]}">' + a('c', base, Q['tab_checks'], ' <em>10</em>') + a('f', base + 'full/', Q['tab_full'], ' <em class="rgt-n" hidden></em>') + '</nav>'
 
+def pay_case():  # existing unlock popup (balance, Use 1 credit, email). Summary and /full/ both include it.
+    p = S['pay']
+    return (f'<div class="ov pp-ov" id="paycase" hidden><div class="pp" role="dialog" aria-modal="true" aria-labelledby="pph">'
+            f'<button class="pp-x" data-close aria-label="{p["close"]}">×</button><header class="pp-hero"><span class="lockctx" id="pcase"></span>'
+            f'<h1 id="pph">{p["title"]}</h1><p class="sub">{p["sub"]}</p></header><div class="pp-bal"><div><b id="pbal">{p["balance_loading"]}</b>'
+            f'<span id="puse"></span></div><button class="pb v" id="usecheck" disabled>{p["use"]}</button></div><p class="msg" id="pmsg2"></p>{pay_plans()}'
+            f'<div class="pp-sgn" id="panon" hidden><div><b id="psgnh">{p["sign_title"]}</b><span>{p["sign_sub"]}</span></div><div class="sb2">'
+            f'<button class="pb w gbtn" data-google>{GLOGO}{p["google"]}</button><div class="or">{p["or"]}</div>'
+            f'<form class="ml" data-magic><input type="email" name="email" required placeholder="{p["email_placeholder"]}" aria-label="{p["email_aria"]}">'
+            f'<button class="pb v">{p["magic"]}</button></form></div><p class="msg" data-magicmsg></p></div>'
+            f'<p class="fine2" data-fine>{p["fine"]}</p></div></div>')
+
 def summary(F):  # /vc/<slug>/: name + Save, key facts, the 10 checks (closed), "See the full check" (js/company.js summary)
     Q = S['summary']
     return f'''<main class="wrap sumpg unlocked ld" data-firm="{E(F["slug"])}" data-view="summary"><div class="rh">{bigsearch(F)}</div>
 <div class="fh"><h1>{E(F["name"])}</h1><div>{SAVE}</div></div>{checking_box()}<div class="kf">{SK_KF}</div>{ftabs("c", "./")}<div class="cban" hidden></div><div class="list">{skel()}</div>
-<div class="rgt-see"><a href="full/">{Q["see_full"]}</a></div><p class="fine">{S["result"]["fine"]}</p></main>'''
+<div class="rgt-see"><a href="full/">{Q["see_full"]}</a></div><p class="fine">{S["result"]["fine"]}</p></main>
+{pay_case()}'''
 
 def result(F):
-    r, p = S['result'], S['pay']
+    r = S['result']
     return f'''<main class="wrap prof ld" data-firm="{E(F["slug"])}">{bigsearch(F, "ps0")}
-<div class="ph"><h1>{E(F["name"])}{SAVE}</h1><p class="m"><i class="sk" style="width:300px"></i></p><div class="hfs">{SK_HFS}</div></div>{ftabs("f", "../")}<div class="csum">{SK_CSUM}</div><div class="spl">{SK_SPL}</div>
+<div class="ph"><h1>{E(F["name"])}{SAVE}</h1><p class="m"><i class="sk" style="width:300px"></i></p><div class="hfs">{SK_HFS}</div></div>{ftabs("f", "../")}<div class="cban" hidden></div><div class="csum">{SK_CSUM}</div><div class="spl">{SK_SPL}</div>
 <div class="unlock" id="lockcard" hidden><div><b></b><p></p></div><button class="btn" id="unlock">{r["lock_button"]}</button></div>
 <div class="pgrid"><div class="pmain">{SK_PMAIN}</div><nav class="toc" aria-label="{r["toc_aria"]}">{SK_TOC}</nav></div><p class="fine">{r["fine"]}</p></main>
-<div class="ov pp-ov" id="paycase" hidden><div class="pp" role="dialog" aria-modal="true" aria-labelledby="pph"><button class="pp-x" data-close aria-label="{p["close"]}">×</button><header class="pp-hero"><span class="lockctx" id="pcase"></span><h1 id="pph">{p["title"]}</h1><p class="sub">{p["sub"]}</p></header><div class="pp-bal"><div><b id="pbal">{p["balance_loading"]}</b><span id="puse"></span></div><button class="pb v" id="usecheck" disabled>{p["use"]}</button></div><p class="msg" id="pmsg2"></p>{pay_plans()}<div class="pp-sgn" id="panon" hidden><div><b id="psgnh">{p["sign_title"]}</b><span>{p["sign_sub"]}</span></div><div class="sb2"><button class="pb w gbtn" data-google>{GLOGO}{p["google"]}</button><div class="or">{p["or"]}</div><form class="ml" data-magic><input type="email" name="email" required placeholder="{p["email_placeholder"]}" aria-label="{p["email_aria"]}"><button class="pb v">{p["magic"]}</button></form></div><p class="msg" data-magicmsg></p></div><p class="fine2" data-fine>{p["fine"]}</p></div></div>'''
+{pay_case()}'''
 
 A, M, SO = S['account'], S['my_checks'], S['signed_out']
 def why(k, q):  # optional exit question; values match exit_reasons.reason

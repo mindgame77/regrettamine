@@ -167,6 +167,7 @@
       main.querySelector('.hfs').innerHTML = P.hero.map(h => '<span class="hf"><span>' + esc(h.label) + '</span><b>' + esc(nice(h.value)) + '</b>' + h.src.map(c => '<span class="sc">' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</span>').join('') + '</span>').join('');
       main.querySelector('.csum').hidden = true; main.querySelector('.spl').innerHTML = ''; main.querySelector('.toc').innerHTML = ''; main.querySelector('.toc').style.display = 'none';
       main.querySelector('#lockcard').hidden = true; main.querySelector('#lockcard').style.display = 'none';
+      researchBan(main, false);
       // 'Not checked yet' page (no research yet): the 10 checks as 'Not checked yet' and the same card (it leads to the request-a-check form)
       main.querySelector('.pmain').innerHTML = P.unchecked ? '<section class="ps">' + ctable(P, false, 0) + '</section>' + gate(P, '') : gate(P, '<section class="ps">' + ghost(P) + '</section>' + ghostSecs());
       return { total: 0, head: () => GT.title };
@@ -186,6 +187,8 @@
     const lc = main.querySelector('#lockcard'); lc.hidden = P.open;
     lc.querySelector('b').textContent = fmt(COPY.lockcard, { n: total, firm }); lc.querySelector('p').textContent = COPY.lockcard_sub;
     document.getElementById('puse').textContent = fmt(COPY.use_line, { n: total, firm });
+    const od = P.ondemand;
+    researchBan(main, !!(od && od.mine && (od.status === 'queued' || od.status === 'in_progress')));
     main.querySelectorAll('.row.tog').forEach(row => row.onclick = (e) => { if (!e.target.closest('a')) row.classList.toggle('open'); });
     return { total, head: (key) => { const s = secs.find(x => x.key === key); return s ? fmt(COPY.pay_head, { title: s.title, firm, count: label(s) }) : fmt(COPY.pay_all, { n: total, firm }); } };
   }
@@ -212,6 +215,12 @@
   const sdt = (r) => { const t = r.searched_at ? new Date(r.searched_at) : null;
     return t && !isNaN(t) ? '<em class="sdt">' + esc(fmt(COPY.searched_on, { date: t.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) })) + '</em>' : ''; };
   const CK = COPY.checking;
+  // Same banner the summary page uses after a credit buys research. /full/ shows it too (the confirmation).
+  function researchBan(main, on) {
+    const b = main.querySelector('.cban'); if (!b) return;
+    b.className = 'cban'; b.hidden = !on;
+    b.innerHTML = on ? '<div class="ch"><b>' + esc(CK.research) + '</b><span>' + esc(CK.research_sub) + '</span></div>' : '';
+  }
   const doneN = (P) => !P.open && P.done != null ? P.done : (P.checks || []).filter(r => r.state !== 'nc').length;
   function checkingHead(main, P, st) {
     const done = doneN(P), cur = (P.checks || []).find(r => r.state === 'nc'), firm = P.firm.name;
@@ -233,8 +242,7 @@
     if (checking) checkingHead(main, P, st);
     else if (research) {
       main.querySelector('.fh h1').textContent = P.firm.name;
-      const b = main.querySelector('.cban'); b.className = 'cban'; b.hidden = false;
-      b.innerHTML = '<div class="ch"><b>' + esc(CK.research) + '</b><span>' + esc(CK.research_sub) + '</span></div>';
+      researchBan(main, true);
     } else {
       main.querySelector('.fh h1').textContent = P.firm.name;
       const b = main.querySelector('.cban'); b.hidden = !justDone; b.className = 'cban ok';

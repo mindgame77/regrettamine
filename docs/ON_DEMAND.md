@@ -1,9 +1,12 @@
 # On-demand research (paid lane)
 
 A visitor clicks **Check with 1 credit** on a firm page that still needs research: an unchecked ("Not checked yet") page,
-or a published partial page where any of the 10 checks still says *Not checked yet*. The credit is spent with the usual rules
-(signed out: free checks, 4 free spends per IP per 30 days; signed in: free then paid credits), the page unlocks for that
-visitor, and the firm goes to the front of the research queue in the **paid lane**.
+or a published partial page where any of the 10 checks still says *Not checked yet*. Signed out, that button opens the
+existing unlock popup and does not spend. **Use 1 credit** requires the popup's email field; that address is saved, the
+credit is spent with the usual rules (free checks, 4 free spends per IP per 30 days), and the firm goes to the front of
+the research queue in the **paid lane**. Signed in, the card spends immediately (the account email is already known):
+free credits, then paid. The page unlocks for that visitor. A slower locked `firm_page` response cannot redraw the lock
+over an unlock that already landed.
 
 ## Data (migration `20261024240000_ondemand_research.sql`)
 
@@ -70,8 +73,9 @@ Then claim the next one.
 
 ## Status, emails, refunds
 
-* Page: requesters see **Research in progress** (existing banner style) and the existing *Email me when it's ready* box until a
-  bot holds the claim (then the usual *Checking* view). They keep the full page after it is done (the credit is the unlock).
+* Page: requesters see **Research in progress** (existing banner, on the summary page and on `/full/`) and, on the summary
+  page, the existing *Email me when it's ready* box until a bot holds the claim (then the usual *Checking* view). That
+  banner is the confirmation after **Use 1 credit**. They keep the full page after it is done (the credit is the unlock).
 * `ondemand_tick()` runs every 2 minutes (pg_cron job `regretamin-ondemand-tick`): `ondemand_refund_expired()` refunds
   requests older than 24 h (credit back to the same bucket, `refund_ondemand` event), then, when `ondemand_outbox()` has mail,
   calls Edge Function `ondemand-notify` (pg_net). The call is authenticated with the Vault secret `ondemand_cron_key`.
