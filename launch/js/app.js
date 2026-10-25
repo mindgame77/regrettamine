@@ -464,7 +464,8 @@
   const toRequest = () => { location.href = liveUrl((PAGE && PAGE.firm && PAGE.firm.name) || main.dataset.firm); };
   async function openPay(sec) {
     SEC = sec || '';
-    $('#pph').textContent = VIEW ? VIEW.head(SEC) : C.copy.site.pay.title;
+    const head = VIEW && VIEW.head ? VIEW.head(SEC) : '';
+    $('#pph').textContent = head || C.copy.site.pay.title;
     $('#pmsg2').textContent = '';
     const ub = $('#usecheck'), pb = $('#pbal'); ub.disabled = true; pb.textContent = C.copy.site.pay.balance_loading;
     $('#panon').classList.remove('hi'); $('#psgnh').textContent = C.copy.site.pay.sign_title;
@@ -479,6 +480,7 @@
     pb.textContent = n > 0 ? pl(n, T.have, { n, free: BAL.signed_in ? '' : T.free }) : (BAL.signed_in ? T.none_signed : T.none_anon);
     if (n <= 0) $('#pmsg2').textContent = BAL.signed_in ? T.pick_more : T.sign_more;
     ub.disabled = n <= 0;
+    if (!BAL.signed_in && n > 0) { const em = $('#panon input[type=email]'); if (em) em.focus(); }
   }
   // Save button by the firm name, on every firm page (checked or not). Signed out: opens the sign-in popup (data-open, handled above).
   // Signed in: shows the saved state from my_firms() (my_checks() fallback) and toggles watch_fund / unwatch_fund.
@@ -524,7 +526,8 @@
     if (document.hidden) return;
     const { data } = await Promise.resolve(sb.rpc('firm_check_status', { p_slug: main.dataset.firm })).catch(() => ({}));
     if (!data || data.status !== 'ok') return;
-    const was = PAGE ? (PAGE.checks || []).filter(r => r.state !== 'nc').length : -1, wasQ = VIEW ? VIEW.queue : undefined;
+    // Locked firm_page nulls check states, so a state !== 'nc' count would look finished and reload at once.
+    const was = !PAGE ? -1 : PAGE.done != null ? PAGE.done : (PAGE.checks || []).filter(r => r.state !== 'nc').length, wasQ = VIEW ? VIEW.queue : undefined;
     ST = data;
     if (data.done !== was) { if (data.complete) ST.just_done = true; return loadPage(false); }
     if (VIEW && (VIEW.checking || VIEW.research || data.queue !== wasQ) && main.dataset.view === 'summary') { VIEW = window.RegretCompany.summary(main, PAGE, ST); checking(); }
@@ -575,7 +578,12 @@
     if ((error || !data) && !spend && !retry && !PAGE) return loadPage(false, true); // one quiet retry (slow session refresh / expired token)
     if (error || !data) { if (spend) $('#pmsg2').textContent = T.error; else loadFail(); return; }
     if (!spend && !['ok', 'need_signup', 'out'].includes(data.status)) return loadFail();
-    if (data.status === 'ok') { if (data.open) closeOv($('#paycase')); return draw(data); }
+    if (data.status === 'ok') {
+      // A slower locked firm_page (the first paint) must not cover an unlock that already landed.
+      if (!data.open && PAGE && PAGE.open) return;
+      if (data.open) closeOv($('#paycase'));
+      return draw(data);
+    }
     if (data.status === 'unchecked') return toRequest();
     if (data.status === 'need_signup') { $('#pmsg2').textContent = T.need_signup; const g = $('#panon'); g.hidden = false; g.classList.add('hi'); $('#usecheck').disabled = true; }
     if (data.status === 'out') { $('#pmsg2').textContent = T.out; $('#usecheck').disabled = true; }
@@ -589,11 +597,19 @@
     var bindMain = () => { if ($('#unlock')) $('#unlock').onclick = () => openPay(''); };
     bindMain();
     main.addEventListener('click', (e) => { const s = !main.classList.contains('unlocked') && e.target.closest('[data-sec]'); if (s) openPay(s.dataset.sec); });
-    // "Check with 1 credit" on a locked page (summary and /full/): spend 1 (free checks first, signed out too) and reveal both pages.
+    // "Check with 1 credit" on a locked page (summary and /full/). Signed out: open the existing unlock popup and
+    // do not spend; "Use 1 credit" saves the popup email first. Signed in: spend now (the account email is known).
     // need_signup -> sign-in popup; out (signed in, 0 credits) -> Pricing.
     main.addEventListener('click', async (e) => {
       const b = e.target.closest('[data-gate]'); if (!b) return;
       if (!sb) return;
+      const { data: ss } = await sb.auth.getSession().catch(() => ({ data: {} }));
+      if (!(ss && ss.session)) {
+        const n = main.querySelector('[data-notify] input[type=email]'), em = $('#panon input[type=email]');
+        if (n && em && n.value.trim() && !em.value.trim()) em.value = n.value.trim();
+        openPay('');
+        return;
+      }
       const G = C.copy.company.gate, m = b.parentNode.querySelector('.gmsg'); b.disabled = true; b.textContent = G.busy; m.textContent = '';
       const { data, error } = await Promise.resolve(sb.rpc('firm_page', { p_slug: main.dataset.firm, p_anon: anonId(), p_spend: true, p_email: typedEmail() })).catch(x => ({ error: x }));
       b.disabled = false; b.textContent = G.button;
@@ -603,7 +619,11 @@
       if (data && data.status === 'out') { m.textContent = G.out; return open('paywall'); }
       m.textContent = G.error;
     });
-    if ($('#usecheck')) $('#usecheck').onclick = () => { $('#usecheck').disabled = true; loadPage(true).then(paint).finally(async () => { BAL = await balance(); if (BAL && BAL.left > 0 && !(PAGE && PAGE.open)) $('#usecheck').disabled = false; }); };
+    if ($('#usecheck')) $('#usecheck').onclick = () => {
+      const box = $('#panon'), em = box && box.querySelector('input[type=email]');
+      if (box && !box.hidden && em) { em.value = em.value.trim(); if (!em.checkValidity()) { em.reportValidity(); return; } }
+      $('#usecheck').disabled = true; loadPage(true).then(paint).finally(async () => { BAL = await balance(); if (BAL && BAL.left > 0 && !(PAGE && PAGE.open)) $('#usecheck').disabled = false; });
+    };
     if (!sb) loadFail(); // no Supabase client (config or CDN script missing): never leave the skeleton up
     if (sb) {
       // getSession() can stall (auth lock / token refresh); never let it hold the skeleton: give up after 3 s and load anyway.
