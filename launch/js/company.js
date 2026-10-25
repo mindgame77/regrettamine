@@ -236,7 +236,7 @@
     const b = main.querySelector('.cban'); b.className = 'cban'; b.hidden = false;
     b.innerHTML = '<div class="ch"><b>' + esc(fmt(CK.progress, { done, check: cur ? cur.title : '' })) + '</b><span>' + esc(CK.usually) + '</span></div>'
       + '<div class="cbar" role="progressbar" aria-valuemin="0" aria-valuemax="10" aria-valuenow="' + done + '"><i style="width:' + Math.max(done * 10, 4) + '%"></i></div>'
-      + (t && !isNaN(t) ? '<div class="cs2">' + esc(fmt(CK.started, { time: t.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) })) + '</div>' : '');
+      + (t && !isNaN(t) ? '<div class="cs2">' + esc(fmt(CK.started, { time: t.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', timeZone: 'America/Los_Angeles' }) })) + '</div>' : '');
   }
   function summary(main, P, st) {
     const queue = st && st.queue !== undefined ? st.queue : P.queue;

@@ -41,6 +41,10 @@ research-ingest endpoint and ingest key as the other researchers.
 
 Claim size: other bots can claim up to 300 normal-lane firms per `claim` call (`count` 1-300, default 1; it was 5). The paid lane still hands out one paid firm per call. Claims use skip-locked, so two bots never get the same firm, and unfinished claims go back to the queue after 6 hours.
 
+A paid or request job takes a firm that a normal-lane claim is holding, including a gap-fill claim (`last_error` `gap-fill claim`, for example `portal-night-bot`). `_preempt_normal_claims()` runs when the job is filed and again at the start of every `research_claim`. It sets that row back to `queued` on the paid or request lane, clears `claimed_by` / `claimed_at`, and stores the previous bot in `prior_claimed_by`. Researcher 3 can claim it on the next call. A normal claim with no paid or request job is not touched; it still lasts 6 hours. Researcher 3's own claim is not released this way.
+
+The previous bot's later upload is still accepted. `research_submit` from `prior_claimed_by` inserts the payload as sent. If nobody else holds the firm, a valid submit follows the usual path (`submitted`, and `zz_ondemand_done` closes the open job). If Researcher 3 already holds the claim, the dump is still stored and the usual ingest triggers run, and that claim stays so Researcher 3 can submit too. An invalid dump from the preempted bot is stored and does not burn attempts or drop the paid claim. Raw submission and enrichment payloads are not rewritten.
+
 `POST https://sxxgvkdwgiouyqciztec.supabase.co/functions/v1/research-ingest`
 headers `x-ingest-key: <ingest key>`, `content-type: application/json`
 

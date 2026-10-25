@@ -674,7 +674,7 @@
    "title": "Checking {firm}",
    "progress": "{done} of 10 done · now checking: {check}",
    "usually": "Usually 5–20 min",
-   "started": "Started {time}",
+   "started": "Started {time} PT",
    "current": "Checking…",
    "waiting": "Waiting",
    "sources": [
