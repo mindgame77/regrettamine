@@ -131,9 +131,6 @@ def press():
 def SB(sm=False):
     return f'<form class="sb{" sm" if sm else ""}" data-search><input name="q" placeholder="{S["search_placeholder"]}" autocomplete="off" aria-label="{S["search_aria"]}"><button class="btn">{S["search_button"]}</button></form>'
 
-def pay_plans():  # plan area in the company-page unlock popup
-    return billing() + '<section class="pp-plans" data-plans="pay"></section>' + code_field()
-
 def bigsearch(F, cls=''):
     return f'<form class="sb big{" " + cls if cls else ""}" data-search><svg class="mg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input name="q" value="{E(F["name"])}" aria-label="{S["search_aria"]}" autocomplete="off" onfocus="this.select()"><button class="btn">{S["search_button"]}</button></form>'
 
@@ -168,17 +165,16 @@ def ftabs(on, base):  # two-tab switch between /vc/<slug>/ (Checks) and /vc/<slu
     a = lambda k, href, t, n: f'<a class="rgt-tab{" on" if on == k else ""}" href="{href}"{' aria-current="page"' if on == k else ""}>{t}{n}</a>'
     return f'<nav class="rgt-tabs" aria-label="{Q["tabs_aria"]}">' + a('c', base, Q['tab_checks'], ' <em>10</em>') + a('f', base + 'full/', Q['tab_full'], ' <em class="rgt-n" hidden></em>') + '</nav>'
 
-def pay_case():  # existing unlock popup (balance, Use 1 credit, email). Summary and /full/ both include it.
+def pay_case():  # simpler unlock popup (approved mockup). Summary and /full/ both include it.
     p = S['pay']
-    return (f'<div class="ov pp-ov" id="paycase" hidden><div class="pp" role="dialog" aria-modal="true" aria-labelledby="pph">'
-            f'<button class="pp-x" data-close aria-label="{p["close"]}">×</button><header class="pp-hero"><span class="lockctx" id="pcase"></span>'
-            f'<h1 id="pph">{p["title"]}</h1><p class="sub">{p["sub"]}</p></header><div class="pp-bal"><div><b id="pbal">{p["balance_loading"]}</b>'
-            f'<span id="puse"></span></div><button class="pb v" id="usecheck" disabled>{p["use"]}</button></div><p class="msg" id="pmsg2"></p>{pay_plans()}'
-            f'<div class="pp-sgn" id="panon" hidden><div><b id="psgnh">{p["sign_title"]}</b><span>{p["sign_sub"]}</span></div><div class="sb2">'
-            f'<button class="pb w gbtn" data-google>{GLOGO}{p["google"]}</button><div class="or">{p["or"]}</div>'
-            f'<form class="ml" data-magic><input type="email" name="email" required placeholder="{p["email_placeholder"]}" aria-label="{p["email_aria"]}">'
-            f'<button class="pb v">{p["magic"]}</button></form></div><p class="msg" data-magicmsg></p></div>'
-            f'<p class="fine2" data-fine>{p["fine"]}</p></div></div>')
+    return (f'<div class="ov pp-ov" id="paycase" hidden><div class="pp s" role="dialog" aria-modal="true" aria-labelledby="pph">'
+            f'<button class="pp-x" data-close aria-label="{p["close"]}">×</button><header class="pp-hero"><h1 id="pph"></h1></header>'
+            f'<label class="pready" id="pready" hidden><span>{p["ready_label"]}</span>'
+            f'<input type="email" name="email" placeholder="{p["email_placeholder"]}" aria-label="{p["ready_label"]}" autocomplete="email"></label>'
+            f'<button class="pb v big" id="usecheck" type="button" disabled>{p["check"]}</button>'
+            f'<p class="helper" id="preadyh" hidden>{p["ready_help"]}</p><p class="msg" id="pmsg2"></p>'
+            f'<div class="lks"><a href="#" data-open="paywall">{p["see_plans"]}</a>'
+            f'<span id="psign">{p["have_account"]} <a href="#" data-open="signup">{p["sign_in"]}</a></span></div></div></div>')
 
 def summary(F):  # /vc/<slug>/: name + Save, key facts, the 10 checks (closed), "See the full check" (js/company.js summary)
     Q = S['summary']

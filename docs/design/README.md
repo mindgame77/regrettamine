@@ -29,6 +29,7 @@ Mockups are kept outside the repo in the design workspace (`toxybase/design/`). 
 
 | Mockup | Status | Diffs vs shipped |
 |---|---|---|
+| Firm-page unlock popup, simpler (Alex, Oct 25 2026) | SHIPPED | Firm name as the title. One button, Check this firm. See plans and Already have an account? Sign in. No credit counter and no plan cards in this popup. Email field only while signed out on a firm that still needs research, labeled Email me when it's ready. Prices stay in the pricing popup. |
 | `landing/regret-fund.html` (fund page, Score/Public tabs) | SHIPPED | Mock nav shows "VCs · How it works · Scoring"; live is "VCs · Scoring · Pricing" (live wins). Mock verdict said "Safe to take a meeting"; now "Reasonable to take a meeting". |
 | `landing/regret-v3.html` (landing: fund list, filters, latest updates) | SHIPPED | Live adds the 4th stat "funds sanctioned" and search hint. Will move to the VCs page under the trust-check plan. |
 | `landing/pricing-1/` | SHIPPED (as `/plans/`) | Live adds the $1 test purchase button (admin only). |

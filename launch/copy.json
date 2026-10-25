@@ -319,7 +319,13 @@
    "email_placeholder": "you@company.com",
    "email_aria": "Email",
    "magic": "Email me a link",
-   "fine": "Monthly plans renew each month. 1 firm = 1 credit."
+   "fine": "Monthly plans renew each month. 1 firm = 1 credit.",
+   "check": "Check this firm",
+   "see_plans": "See plans",
+   "have_account": "Already have an account?",
+   "sign_in": "Sign in",
+   "ready_label": "Email me when it's ready",
+   "ready_help": "We'll email you when the report is ready."
   },
   "pending": {
    "h1": "Request this firm",

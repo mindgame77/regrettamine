@@ -71,6 +71,12 @@ a{color:inherit;text-decoration:none}.left:empty{display:none}
 /* Payment popup (approved mockup opt13/14-pay-popup) */
 .pp-ov{background:rgba(20,16,40,.55);backdrop-filter:blur(2px);align-items:center;padding:24px}
 .pp{position:relative;width:min(1160px,100%);max-height:calc(100vh - 48px);overflow:auto;background:#fff;border-radius:28px;box-shadow:0 30px 80px rgba(0,0,0,.35);padding:8px 40px 28px;overscroll-behavior:contain}
+.pp.s{width:min(520px,100%);padding:8px 26px 22px}.pp.s .pp-hero{padding-top:34px}.pp.s .pp-hero h1{font-size:36px;margin:6px 0 0}
+.pready{display:block;margin-top:22px;text-align:left}.pready span{display:block;font-size:14px;font-weight:700;margin:0 0 8px}
+.pready input{width:100%;height:52px;border:1.5px solid var(--line);border-radius:999px;padding:0 18px;font:inherit;color:var(--ink)}.pready input::placeholder{color:var(--mute)}
+.pb.big{width:100%;height:56px;font-size:17px;margin-top:12px}
+.helper{font-size:14px;color:var(--ink2);text-align:center;margin:12px 0 0}
+.lks{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;margin-top:16px;font-size:14px;color:var(--ink2)}.lks a{color:var(--vio);font-weight:700;text-decoration:underline}
 .pp *{min-width:0}.pp h1,.pp h3{font-family:'Bricolage Grotesque',sans-serif;letter-spacing:-.025em}
 .pp-x{position:absolute;right:18px;top:18px;width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line);background:#fff;font-size:22px;line-height:1;cursor:pointer;z-index:5;color:var(--ink)}
 .pp-hero{text-align:center;padding:28px 0 0}.pp-hero h1{font-size:40px;line-height:1.05;font-weight:800;margin:6px 0 8px}.pp .mark{background:var(--sun);padding:0 8px;border-radius:10px}.pp .sub{color:var(--ink2);margin:4px auto 0;font-size:17px}
