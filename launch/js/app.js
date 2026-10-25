@@ -352,7 +352,6 @@
     const pay = $('#paycase'), inPay = pay && !pay.hidden, out = inPay ? $('#pmsg2') : $('#pwmsg'), msg = (t) => { if (out) out.textContent = t; else if (t && !/…$/.test(t)) alert(t); };
     if (!s.session) {
       setPend(kind, CODE && CODE.code); // after sign-in (Google redirect or magic link) we come back here and continue to checkout
-      if (inPay) { const g = $('#panon'); g.hidden = false; g.classList.add('hi'); $('#psgnh').textContent = T.sign_checkout; g.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
       $('#suh').textContent = T.sign_buy; $('#signup').classList.add('buy'); return open('signup');
     }
     document.querySelectorAll('[data-buy]').forEach(b => b.disabled = true); msg(T.opening);
@@ -462,25 +461,37 @@
   // 'Not checked yet' / partial page: 'Check with 1 credit' buys on-demand research (docs/ON_DEMAND.md). Only when the firm has
   // nothing to research from (firm_page answers 'unchecked') is the visitor sent to the request-a-check form instead.
   const toRequest = () => { location.href = liveUrl((PAGE && PAGE.firm && PAGE.firm.name) || main.dataset.firm); };
+  // Research still to start (unchecked page, or any of the 10 checks still Not checked yet). The optional
+  // ready-email field is only for that case, and only while signed out. A finished firm has no email field.
+  function needsResearch() {
+    return !!(PAGE && (PAGE.unchecked || (PAGE.done != null && PAGE.done < 10)));
+  }
   async function openPay(sec) {
     SEC = sec || '';
-    const head = VIEW && VIEW.head ? VIEW.head(SEC) : '';
-    $('#pph').textContent = head || C.copy.site.pay.title;
+    const P = C.copy.site.pay;
+    $('#pph').textContent = (PAGE && PAGE.firm && PAGE.firm.name) || '';
     $('#pmsg2').textContent = '';
-    const ub = $('#usecheck'), pb = $('#pbal'); ub.disabled = true; pb.textContent = C.copy.site.pay.balance_loading;
-    $('#panon').classList.remove('hi'); $('#psgnh').textContent = C.copy.site.pay.sign_title;
+    const ub = $('#usecheck'); ub.disabled = true; ub.textContent = P.check;
+    const ready = $('#pready'), help = $('#preadyh'), sign = $('#psign');
+    if (ready) ready.hidden = true; if (help) help.hidden = true;
     open('paycase');
     const { data: ss } = sb ? await sb.auth.getSession().catch(() => ({ data: {} })) : { data: {} }; // session first (local, no network)
-    $('#panon').hidden = !!(ss && ss.session);
     BAL = await balance();
-    if (!BAL) { pb.innerHTML = esc(T.balance_fail) + ' <a href="#" data-retry>' + esc(T.retry) + '</a>'; pb.querySelector('[data-retry]').onclick = (e) => { e.preventDefault(); openPay(SEC); }; return; }
-    $('#panon').hidden = !!BAL.signed_in;
-    const n = BAL.left;
-    if (n <= 0 && !BAL.signed_in) return open('signup'); // anonymous free checks used up: sign-in popup right away
-    pb.textContent = n > 0 ? pl(n, T.have, { n, free: BAL.signed_in ? '' : T.free }) : (BAL.signed_in ? T.none_signed : T.none_anon);
-    if (n <= 0) $('#pmsg2').textContent = BAL.signed_in ? T.pick_more : T.sign_more;
-    ub.disabled = n <= 0;
-    if (!BAL.signed_in && n > 0) { const em = $('#panon input[type=email]'); if (em) em.focus(); }
+    const signed = !!(BAL && BAL.signed_in) || !!(ss && ss.session);
+    const showEmail = !signed && needsResearch();
+    if (ready) ready.hidden = !showEmail;
+    if (help) help.hidden = !showEmail;
+    if (sign) sign.hidden = signed;
+    if (!BAL) {
+      $('#pmsg2').innerHTML = esc(T.balance_fail) + ' <a href="#" data-retry>' + esc(T.retry) + '</a>';
+      $('#pmsg2').querySelector('[data-retry]').onclick = (e) => { e.preventDefault(); openPay(SEC); };
+      return;
+    }
+    ub.disabled = false;
+    if (showEmail) {
+      const em = ready.querySelector('input[type=email]'), n = main && main.querySelector('[data-notify] input[type=email]');
+      if (em && n && n.value.trim() && !em.value.trim()) em.value = n.value.trim();
+    }
   }
   // Save button by the firm name, on every firm page (checked or not). Signed out: opens the sign-in popup (data-open, handled above).
   // Signed in: shows the saved state from my_firms() (my_checks() fallback) and toggles watch_fund / unwatch_fund.
@@ -566,10 +577,13 @@
     main.querySelector('[data-reload]').onclick = () => { main.innerHTML = SKEL; main.classList.remove('lderr'); main.classList.add('ld'); bindMain(); loadPage(false).then(paint); };
     saveBtn();
   }
-  // Email typed in the pay popup or the notify box. Saved on every credit spend, including a firm whose research is already done.
+  // Optional address for an unresearched firm. Empty is allowed. A finished firm sends nothing.
   function typedEmail() {
-    const vals = ['#panon input[type=email]', '[data-notify] input[type=email]'].map(s => { const el = document.querySelector(s); return el && el.value ? el.value.trim() : ''; }).filter(Boolean);
-    return vals[0] || null;
+    const ready = $('#pready'), em = ready && !ready.hidden && ready.querySelector('input[type=email]');
+    const v = em && em.value ? em.value.trim() : '';
+    if (v) return v;
+    const n = document.querySelector('[data-notify] input[type=email]');
+    return n && n.value && n.value.trim() ? n.value.trim() : null;
   }
   async function loadPage(spend, retry) {
     if (!sb) return loadFail();
@@ -585,8 +599,8 @@
       return draw(data);
     }
     if (data.status === 'unchecked') return toRequest();
-    if (data.status === 'need_signup') { $('#pmsg2').textContent = T.need_signup; const g = $('#panon'); g.hidden = false; g.classList.add('hi'); $('#usecheck').disabled = true; }
-    if (data.status === 'out') { $('#pmsg2').textContent = T.out; $('#usecheck').disabled = true; }
+    if (data.status === 'need_signup') { $('#pmsg2').textContent = T.need_signup; const ub = $('#usecheck'); if (ub) ub.disabled = false; }
+    if (data.status === 'out') { const ub = $('#usecheck'); if (ub) ub.disabled = false; buy('single'); }
   }
   if (main) {
     // In-page anchors: smooth scroll and update the hash
@@ -597,32 +611,27 @@
     var bindMain = () => { if ($('#unlock')) $('#unlock').onclick = () => openPay(''); };
     bindMain();
     main.addEventListener('click', (e) => { const s = !main.classList.contains('unlocked') && e.target.closest('[data-sec]'); if (s) openPay(s.dataset.sec); });
-    // "Check with 1 credit" on a locked page (summary and /full/). Signed out: open the existing unlock popup and
-    // do not spend; "Use 1 credit" saves the popup email first. Signed in: spend now (the account email is known).
-    // need_signup -> sign-in popup; out (signed in, 0 credits) -> Pricing.
+    // "Check with 1 credit" opens the unlock popup for everyone and does not spend. "Check this firm" spends a
+    // credit when one is left (no email required). With none left it starts single-credit checkout.
     main.addEventListener('click', async (e) => {
       const b = e.target.closest('[data-gate]'); if (!b) return;
       if (!sb) return;
-      const { data: ss } = await sb.auth.getSession().catch(() => ({ data: {} }));
-      if (!(ss && ss.session)) {
-        const n = main.querySelector('[data-notify] input[type=email]'), em = $('#panon input[type=email]');
-        if (n && em && n.value.trim() && !em.value.trim()) em.value = n.value.trim();
-        openPay('');
+      openPay('');
+    });
+    if ($('#usecheck')) $('#usecheck').onclick = async () => {
+      const ready = $('#pready'), em = ready && !ready.hidden && ready.querySelector('input[type=email]');
+      if (em && em.value.trim()) {
+        em.value = em.value.trim();
+        if (!em.checkValidity()) { $('#pmsg2').textContent = C.copy.company.checking.email_bad; return; }
+      } else if (em) em.value = '';
+      if (!BAL) BAL = await balance();
+      if (!BAL) return openPay(SEC);
+      if (BAL.left > 0) {
+        $('#usecheck').disabled = true;
+        loadPage(true).then(paint).finally(async () => { BAL = await balance(); if (!(PAGE && PAGE.open)) { const ub = $('#usecheck'); if (ub) ub.disabled = false; } });
         return;
       }
-      const G = C.copy.company.gate, m = b.parentNode.querySelector('.gmsg'); b.disabled = true; b.textContent = G.busy; m.textContent = '';
-      const { data, error } = await Promise.resolve(sb.rpc('firm_page', { p_slug: main.dataset.firm, p_anon: anonId(), p_spend: true, p_email: typedEmail() })).catch(x => ({ error: x }));
-      b.disabled = false; b.textContent = G.button;
-      if (!error && data && data.status === 'ok' && data.open) { draw(data); paint(); return; }
-      if (data && data.status === 'unchecked') return toRequest();
-      if (data && data.status === 'need_signup') { m.textContent = G.signin; return open('signup'); }
-      if (data && data.status === 'out') { m.textContent = G.out; return open('paywall'); }
-      m.textContent = G.error;
-    });
-    if ($('#usecheck')) $('#usecheck').onclick = () => {
-      const box = $('#panon'), em = box && box.querySelector('input[type=email]');
-      if (box && !box.hidden && em) { em.value = em.value.trim(); if (!em.checkValidity()) { em.reportValidity(); return; } }
-      $('#usecheck').disabled = true; loadPage(true).then(paint).finally(async () => { BAL = await balance(); if (BAL && BAL.left > 0 && !(PAGE && PAGE.open)) $('#usecheck').disabled = false; });
+      buy('single');
     };
     if (!sb) loadFail(); // no Supabase client (config or CDN script missing): never leave the skeleton up
     if (sb) {

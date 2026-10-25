@@ -1,12 +1,18 @@
 # On-demand research (paid lane)
 
 A visitor clicks **Check with 1 credit** on a firm page that still needs research: an unchecked ("Not checked yet") page,
-or a published partial page where any of the 10 checks still says *Not checked yet*. Signed out, that button opens the
-existing unlock popup and does not spend. **Use 1 credit** requires the popup's email field; that address is saved, the
-credit is spent with the usual rules (free checks, 4 free spends per IP per 30 days), and the firm goes to the front of
-the research queue in the **paid lane**. Signed in, the card spends immediately (the account email is already known):
-free credits, then paid. The page unlocks for that visitor. A slower locked `firm_page` response cannot redraw the lock
-over an unlock that already landed.
+or a published partial page where any of the 10 checks still says *Not checked yet*. Signed out or signed in, that
+button opens the unlock popup and does not spend. The popup title is the firm name. **Check this firm** spends one
+credit when the visitor has one (free, then paid; 4 free spends per IP per 30 days) and does not ask for an email.
+With no credit left, the same button starts single-credit checkout. **See plans** opens the existing pricing popup.
+**Already have an account? Sign in** opens the existing sign-in popup, and is hidden once they are signed in.
+The page unlocks for that visitor. A slower locked `firm_page` response cannot redraw the lock over an unlock that
+already landed.
+
+The email field is only for a firm that still needs research, and only while signed out. It is optional, labeled
+**Email me when it's ready**. An address that is filled in is saved on the paid-lane job so the ready email can go
+out. Leaving it blank still spends the credit and starts the research. A firm whose 10 checks are already done has
+no email field. Signed in, the popup has no email field; the account address is saved when research starts.
 
 ## Data (migration `20261024240000_ondemand_research.sql`)
 
@@ -22,10 +28,9 @@ Several people paying for the same firm share one job; each gets their own reque
 
 ## Who moves the queue
 
-* Paid request (`unlock_firm` -> `_ondemand_enqueue`): paid lane, front of the queue. The email is saved whenever one
-  is available (the account email, or the address typed in the pay popup / notify box), including when the firm is
-  already fully checked. A finished firm does not go back on the paid lane; the address is stored on a done request so
-  the ready email can go out.
+* Paid request (`unlock_firm` -> `_ondemand_enqueue`): paid lane, front of the queue. The email is saved when one
+  is available (the account email, or the optional address on an unresearched firm). A blank address still starts
+  the research. A finished firm does not go back on the paid lane, and a spend with no address stores nothing extra.
 * Notify me (`notify_when_checked`) and the request-a-check form (`request_check`): a firm already on the site gets a
   paid-lane job (`spend_kind = 'request'`, no credit, never refunded), the same shape as a hand-routed notify. A name
   that is not on the site gets `research_queue.registry_id = 'req-<check_requests id>'` (or `req-c<id>` when `req-<id>`
@@ -79,7 +84,7 @@ Then claim the next one.
 
 * Page: requesters see **Research in progress** (existing banner, on the summary page and on `/full/`) and, on the summary
   page, the existing *Email me when it's ready* box until a bot holds the claim (then the usual *Checking* view). That
-  banner is the confirmation after **Use 1 credit**. They keep the full page after it is done (the credit is the unlock).
+  banner is the confirmation after **Check this firm**. They keep the full page after it is done (the credit is the unlock).
 * `ondemand_tick()` runs every 2 minutes (pg_cron job `regretamin-ondemand-tick`): `ondemand_refund_expired()` refunds
   requests older than 24 h (credit back to the same bucket, `refund_ondemand` event), then, when `ondemand_outbox()` has mail,
   calls Edge Function `ondemand-notify` (pg_net). The call is authenticated with the Vault secret `ondemand_cron_key`.

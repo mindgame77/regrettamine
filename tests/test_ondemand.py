@@ -160,6 +160,38 @@ def test_notify_signup_job_and_single_ready_mail():
         conn.rollback()
 
 
+def test_spend_without_email_unlocks_and_still_starts_research():
+    """A signed-out spend with no address unlocks the page. An unfinished firm still gets a paid job.
+    An address, when one is given, is stored for the ready email. A finished firm stores nothing extra."""
+    import psycopg
+
+    with psycopg.connect(DATABASE_URL) as conn, conn.cursor() as cur:
+        cur.execute("insert into research_queue (registry_id, name, priority, status) values ('zz-noem', 'Zz Noemail Partners', 900000, 'submitted')")
+        fid, slug = cur.execute("select id, slug from firms where registry_id = 'zz-noem'").fetchone()
+        cur.execute("update firms set indexable = true where id = %s", (fid,))
+        cur.execute("update firm_check_rows set state = 'clear' where firm_id = %s and n <= 7", (fid,))
+        a = str(uuid.uuid4())
+        P = _j(cur.execute("select firm_page(%s, %s, true, null)", (slug, a)).fetchone()[0])
+        assert P["status"] == "ok" and P["open"] is True and P["ondemand"]["status"] == "queued"
+        job, email = cur.execute("select j.status, r.email from ondemand_jobs j join research_requests r on r.job_id = j.id where j.firm_id = %s", (fid,)).fetchone()
+        assert job == "queued" and email is None
+        assert cur.execute("select lane from research_queue where registry_id = 'zz-noem'").fetchone()[0] == "paid"
+        b = str(uuid.uuid4())
+        P = _j(cur.execute("select firm_page(%s, %s, true, 'Later@Example.com')", (slug, b)).fetchone()[0])
+        assert P["open"] is True
+        assert cur.execute("select count(*) from ondemand_jobs where firm_id = %s", (fid,)).fetchone()[0] == 1
+        assert cur.execute("select email from research_requests where firm_id = %s and anon_id = %s", (fid, b)).fetchone()[0] == "later@example.com"
+        cur.execute("insert into research_queue (registry_id, name, priority, status) values ('zz-done2', 'Zz Done Partners', 900000, 'submitted')")
+        fid2, slug2 = cur.execute("select id, slug from firms where registry_id = 'zz-done2'").fetchone()
+        cur.execute("update firms set indexable = true where id = %s", (fid2,))
+        cur.execute("update firm_check_rows set state = 'clear' where firm_id = %s", (fid2,))
+        c = str(uuid.uuid4())
+        P = _j(cur.execute("select firm_page(%s, %s, true, null)", (slug2, c)).fetchone()[0])
+        assert P["status"] == "ok" and P["open"] is True and P["ondemand"] is None
+        assert cur.execute("select count(*) from research_requests where firm_id = %s", (fid2,)).fetchone()[0] == 0
+        conn.rollback()
+
+
 def test_paid_job_preempts_normal_claim_and_keeps_the_upload():
     """A fresh normal-lane claim (gap-fill) loses the firm as soon as a paid job exists.
     Researcher 3 can claim it. The previous bot's later submit is stored unchanged.
