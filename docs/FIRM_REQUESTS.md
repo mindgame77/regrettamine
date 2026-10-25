@@ -16,7 +16,8 @@ The visitor leaves an email and, optionally, the firm's website. It's free.
 Since migration `20261024370000_researcher3_requests_only.sql` a new request is filed into `research_queue` right away
 (`_firm_request_file`): `registry_id = 'req-<request id>'`, `lane = 'request'`, `list_source = 'firm_request'`, `paid_at` = when
 first requested. No firm page is made for a request-lane row. Only `toxy-researcher-3` claims it, after paid checks
-(docs/ON_DEMAND.md). When its valid research lands, trigger `zz_firm_request_done` links the request to the new page
+(docs/ON_DEMAND.md). If that row is already held by a normal-lane claim, filing the request releases the claim
+immediately (same `_preempt_normal_claims` path as a paid job) and the previous bot's later upload is still accepted. When its valid research lands, trigger `zz_firm_request_done` links the request to the new page
 (`firm_request_link`) and moves the row to the normal lane; requesters then get `ready_request` (or, if checks are still
 missing, the step-4 on-demand flow below finishes them). If the dedupe trigger matches the name to a known registered firm,
 the request is linked to that firm at once instead.

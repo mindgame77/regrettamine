@@ -158,3 +158,55 @@ def test_notify_signup_job_and_single_ready_mail():
         ).fetchone()
         assert reg.startswith("req-") and lane == "request" and src == "check_request"
         conn.rollback()
+
+
+def test_paid_job_preempts_normal_claim_and_keeps_the_upload():
+    """A fresh normal-lane claim (gap-fill) loses the firm as soon as a paid job exists.
+    Researcher 3 can claim it. The previous bot's later submit is stored unchanged.
+    A normal claim with no paid or request job still lasts until the 6-hour expiry."""
+    import psycopg
+
+    with psycopg.connect(DATABASE_URL) as conn, conn.cursor() as cur:
+        cur.execute("insert into research_queue (registry_id, name, priority, status, lane, claimed_by, claimed_at, last_error) values "
+                    "('zz-pre1', 'Zz Preempt Partners', 900000, 'claimed', 'normal', 'portal-night-bot', now(), 'gap-fill claim'), "
+                    "('zz-hold', 'Zz Still Held', 900000, 'claimed', 'normal', 'portal-night-bot', now() - interval '1 hour', 'gap-fill claim'), "
+                    "('zz-old', 'Zz Expired Hold', 900000, 'claimed', 'normal', 'portal-night-bot', now() - interval '7 hours', 'gap-fill claim'), "
+                    "('zz-reqhold', 'Zz Request Held', 0, 'claimed', 'request', 'portal-night-bot', now(), 'gap-fill claim')")
+        fid = cur.execute("select id from firms where registry_id = 'zz-pre1'").fetchone()[0]
+        a = str(uuid.uuid4())
+        cur.execute("select _ondemand_enqueue(%s, 'zz-pre1', null, 'spend_free', null, %s)", (fid, a))
+        status, lane, claimed_by, prior = cur.execute(
+            "select status, lane, claimed_by, prior_claimed_by from research_queue where registry_id = 'zz-pre1'").fetchone()
+        assert (status, lane, claimed_by, prior) == ("queued", "paid", None, "portal-night-bot")
+        # the young normal claim is not released; the 6-hour claim is, on the next claim call
+        assert cur.execute("select status, claimed_by from research_queue where registry_id = 'zz-hold'").fetchone() == ("claimed", "portal-night-bot")
+        assert [r[0] for r in cur.execute("select registry_id from research_claim('toxy-researcher-3', 1)").fetchall()] == ["zz-pre1"]
+        assert cur.execute("select status, claimed_by from research_queue where registry_id = 'zz-hold'").fetchone() == ("claimed", "portal-night-bot")
+        assert cur.execute("select status, claimed_by, left(last_error, 13) from research_queue where registry_id = 'zz-old'").fetchone() == (
+            "queued", None, "claim expired")
+        # a stranger is still rejected; the preempted bot's dump is stored as sent and does not drop researcher 3
+        denied = _j(cur.execute("select research_submit('zz-pre1', 'toxy-researcher-1', %s, 1, true, '[]'::jsonb)", (json.dumps(PAYLOAD),)).fetchone()[0])
+        assert denied["ok"] is False and "not claimed" in denied["error"]
+        dump = {"firm": {"generated_at": "2026-10-25T00:38:26Z", "note": "friend dump"}, "records": []}
+        raw = json.dumps(dump)
+        ok = _j(cur.execute("select research_submit('zz-pre1', 'portal-night-bot', %s::jsonb, 1, true, '[]'::jsonb)", (raw,)).fetchone()[0])
+        assert ok["ok"] is True and ok["status"] == "submitted"
+        stored = cur.execute("select payload::text from research_submissions where id = %s", (ok["submission_id"],)).fetchone()[0]
+        assert json.loads(stored) == dump
+        assert cur.execute("select status, claimed_by, lane from research_queue where registry_id = 'zz-pre1'").fetchone() == (
+            "claimed", "toxy-researcher-3", "normal")
+        # request lane: a normal bot's hold is released and researcher 3 can take it
+        cur.execute("select _preempt_normal_claims()")
+        assert cur.execute("select status, lane, claimed_by, prior_claimed_by from research_queue where registry_id = 'zz-reqhold'").fetchone() == (
+            "queued", "request", None, "portal-night-bot")
+        assert [r[0] for r in cur.execute("select registry_id from research_claim('toxy-researcher-1', 50)").fetchall()].count("zz-reqhold") == 0
+        assert cur.execute("select registry_id from research_claim('toxy-researcher-3', 1)").fetchone()[0] == "zz-reqhold"
+        # before anyone reclaims, the preempted bot's valid submit is the normal submitted path
+        cur.execute("update research_queue set status = 'queued', claimed_by = null, lane = 'paid' where registry_id = 'zz-reqhold'")
+        cur.execute("insert into ondemand_jobs (firm_id, registry_id, status) values (%s, 'zz-reqhold', 'queued')", (fid,))
+        early = _j(cur.execute("select research_submit('zz-reqhold', 'portal-night-bot', %s::jsonb, 1, true, '[]'::jsonb)", (raw,)).fetchone()[0])
+        assert early["ok"] is True and early["status"] == "submitted"
+        assert json.loads(cur.execute("select payload::text from research_submissions where id = %s", (early["submission_id"],)).fetchone()[0]) == dump
+        assert cur.execute("select status from research_queue where registry_id = 'zz-reqhold'").fetchone()[0] == "submitted"
+        assert cur.execute("select status from ondemand_jobs where registry_id = 'zz-reqhold'").fetchone()[0] == "done"
+        conn.rollback()
