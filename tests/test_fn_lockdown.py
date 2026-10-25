@@ -23,6 +23,8 @@ LOCKED = [
     "checks_from_upload_trg()",
     "promote_bot_facts(uuid)",
     "promote_bot_facts_trg()",
+    "check_saved_items(uuid,integer)",
+    "check_row_items(uuid,bigint,integer)",
 ]
 USER_ONLY = ["watch_fund(text)", "unwatch_fund(text)", "set_fund_alert(text,boolean)", "delete_my_account()"]
 PUBLIC = ["firm_page(text,uuid,boolean,text)", "firm_meta(text)", "firm_sitemap(integer,integer)", "search_funds(text)", "public_site_bundle()", "bump_firm_check(text,uuid)"]

@@ -736,7 +736,7 @@
    "complete_sub": "· 10 of 10 checks · just now"
   },
   "table": {
-   "_note": "Checks table on /vc/<slug>/ and /full/ (js/company.js ctable). {count} is firm_check_rows.count_label, {n}/{m} are numbers.",
+   "_note": "Checks table on /vc/<slug>/ and /full/ (js/company.js ctable). {count} is firm_check_rows.count_label, {n}/{m} are numbers. active_h and coming are [one, many]. An opened Review row lists each named case or action. A count with nothing itemized uses coming plus search_courts.",
    "h_check": "Check",
    "h_result": "Result",
    "h_found": "What was found",
@@ -747,6 +747,11 @@
    "more": "+{n} more",
    "partial": "{n} on record; {m} itemized below.",
    "none_itemized": "Not itemized in this table yet.",
+   "active_h": ["{n} active case:", "{n} active cases:"],
+   "coming": ["{n} active case, details coming soon", "{n} active cases, details coming soon"],
+   "search_courts": "Search court records",
+   "source": "Source:",
+   "docket": "CourtListener docket",
    "locked": "{m} itemized on the full record.",
    "what": "What was searched:",
    "untitled": "Untitled record",
