@@ -76,9 +76,9 @@ def test_duplicate_merges_source_and_role_conflict_is_flagged():
         assert c.execute("select role from firm_people_roles where id = %s", (pid,)).fetchone()[0] == "General Partner"
         assert c.execute("select count(*) from fact_sources f join sources s on s.id = f.source_id "
                          "where f.fact_id = %s and s.url = 'https://www.sec.gov/ben'", (pid,)).fetchone()[0] == 1
-        # re-promote removes only the source it added; the person stays
+        # re-promote is add-only (step 1): the person and the source it added both stay
         _enrich(c, {"slug": slug, "sections": {"Timeline": [{"date": "2009", "event": "Founded", "source": SRC}]}})
-        assert c.execute("select count(*) from fact_sources where fact_id = %s", (pid,)).fetchone()[0] == 0
+        assert c.execute("select count(*) from fact_sources where fact_id = %s", (pid,)).fetchone()[0] == 1
         assert c.execute("select count(*) from firm_people_roles where id = %s", (pid,)).fetchone()[0] == 1
         c.rollback()
 
