@@ -116,7 +116,7 @@ SEC_KEEP = {'LLC': 'LLC', 'L.L.C.': 'L.L.C.', 'L.L.C': 'L.L.C', 'LP': 'LP', 'L.P
             'INC': 'Inc', 'INC.': 'Inc.', 'LTD': 'Ltd', 'LTD.': 'Ltd.', 'CO': 'Co', 'CO.': 'Co.', 'CORP': 'Corp', 'CORP.': 'Corp.',
             'PLC': 'PLC', 'GP': 'GP', 'SA': 'SA', 'S.A.': 'S.A.', 'AG': 'AG', 'GMBH': 'GmbH', 'SARL': 'SARL', 'S.A.R.L.': 'S.à r.l.',
             'BV': 'BV', 'B.V.': 'B.V.', 'NV': 'NV', 'AB': 'AB', 'AS': 'AS', 'SPA': 'SpA', 'PTE': 'Pte', 'PTY': 'Pty', 'LLLP': 'LLLP',
-            'A16Z': 'a16z', 'US': 'US', 'USA': 'USA', 'UK': 'UK', 'VC': 'VC', 'AI': 'AI', 'II': 'II', 'III': 'III', 'IV': 'IV', 'VI': 'VI',
+            'A16Z': 'a16z', 'YC': 'YC', 'ES20': 'ES20', 'US': 'US', 'USA': 'USA', 'UK': 'UK', 'VC': 'VC', 'AI': 'AI', 'II': 'II', 'III': 'III', 'IV': 'IV', 'VI': 'VI',
             'VII': 'VII', 'VIII': 'VIII', 'IX': 'IX', 'XI': 'XI', 'XII': 'XII', 'NEA': 'NEA', 'IVP': 'IVP', 'KKR': 'KKR', 'TPG': 'TPG',
             'GGV': 'GGV', 'USV': 'USV', 'TCV': 'TCV', 'IDG': 'IDG', 'NFX': 'NFX', 'DST': 'DST', 'EQT': 'EQT', 'QED': 'QED', 'SOSV': 'SOSV',
             'HV': 'HV', 'GV': 'GV', 'DCM': 'DCM', 'JMI': 'JMI', 'TA': 'TA', 'RRE': 'RRE', 'FPV': 'FPV', 'AVF': 'AVF', 'ESP': 'ESP', 'HIG': 'HIG',
@@ -188,10 +188,10 @@ def skel():  # loading placeholder for the checks table (same table markup, grey
     return (f'<table class="ctab skt" aria-busy="true" aria-label="{E(T["loading"])}"><thead><tr><th>#</th><th>{T["h_check"]}</th><th>{T["h_result"]}</th><th>{T["h_found"]}</th><th>{T["h_date"]}</th></tr></thead><tbody>'
             + ''.join(row(i) for i in range(10)) + '</tbody></table>')
 
-def ftabs(on, base):  # two-tab switch between /vc/<slug>/ (Checks) and /vc/<slug>/full/ (Full report)
+def ftabs(on):  # Checks and Full report are both in the page. js/app.js shows one; the address changes without a reload.
     Q = S['summary']
-    a = lambda k, href, t, n: f'<a class="rgt-tab{" on" if on == k else ""}" href="{href}"{' aria-current="page"' if on == k else ""}>{t}{n}</a>'
-    return f'<nav class="rgt-tabs" aria-label="{Q["tabs_aria"]}">' + a('c', base, Q['tab_checks'], ' <em>10</em>') + a('f', base + 'full/', Q['tab_full'], ' <em class="rgt-n" hidden></em>') + '</nav>'
+    b = lambda k, t, n: f'<button type="button" class="rgt-tab{" on" if on == k else ""}" data-tab="{k}" aria-selected="{"true" if on == k else "false"}">{t}{n}</button>'
+    return f'<nav class="rgt-tabs" aria-label="{Q["tabs_aria"]}">' + b('checks', Q['tab_checks'], ' <em>10</em>') + b('full', Q['tab_full'], ' <em class="rgt-n" hidden></em>') + '</nav>'
 
 def pay_case(root=''):  # simpler unlock popup (approved mockup). Summary and /full/ both include it.
     p = S['pay']
@@ -204,20 +204,26 @@ def pay_case(root=''):  # simpler unlock popup (approved mockup). Summary and /f
             f'<div class="lks"><a href="{root}plans/" data-open="paywall">{p["see_plans"]}</a>'
             f'<span id="psign">{p["have_account"]} <a href="{root}login/" data-open="signup">{p["sign_in"]}</a></span></div></div></div>')
 
-def summary(F, root='./'):  # /vc/<slug>/: name + Save, key facts, the 10 checks (closed), "See the full check" (js/company.js summary)
-    Q = S['summary']
-    return f'''<main class="wrap sumpg unlocked ld" data-firm="{E(F["slug"])}" data-view="summary"><div class="rh">{bigsearch(F)}</div>
-<div class="fh"><h1>{E(F["name"])}</h1><div>{SAVE}</div></div>{checking_box()}<div class="kf">{SK_KF}</div><div class="actw" hidden></div>{ftabs("c", "./")}<div class="cban" hidden></div><div class="list">{skel()}</div>
-<div class="rgt-see"><a href="full/">{Q["see_full"]}</a></div><p class="fine">{S["result"]["fine"]}</p></main>
+def firm_shell(F, root, tab):  # both tabs in one shell. tab is the one shown before JS runs.
+    Q, r = S['summary'], S['result']
+    checks_hidden = '' if tab == 'checks' else ' hidden'
+    full_hidden = '' if tab == 'full' else ' hidden'
+    return f'''<main class="wrap sumpg prof ld" data-firm="{E(F["slug"])}" data-tab="{tab}"><div class="rh">{bigsearch(F, "ps0")}</div>
+<div class="ph"><h1>{E(F["name"])}{SAVE}</h1><p class="m"><i class="sk" style="width:300px"></i></p><div class="hfs heros"></div><div class="actw"><div class="hfs">{SK_HFS}</div></div></div>
+{checking_box()}{ftabs(tab)}<div class="cban" hidden></div>
+<div id="panel-checks"{checks_hidden}><div class="list">{skel()}</div>
+<div class="rgt-see"><button type="button" data-tab="full">{Q["see_full"]}</button></div></div>
+<div id="panel-full"{full_hidden}><div class="spl">{SK_SPL}</div>
+<div class="unlock" id="lockcard" hidden><div><b></b><p></p></div><button class="btn" id="unlock">{r["lock_button"]}</button></div>
+<div class="pgrid"><div class="pmain">{SK_PMAIN}</div><nav class="toc" aria-label="{r["toc_aria"]}">{SK_TOC}</nav></div></div>
+<p class="fine">{r["fine"]}</p></main>
 {pay_case(root)}'''
 
-def result(F, root='../'):
-    r = S['result']
-    return f'''<main class="wrap prof ld" data-firm="{E(F["slug"])}">{bigsearch(F, "ps0")}
-<div class="ph"><h1>{E(F["name"])}{SAVE}</h1><p class="m"><i class="sk" style="width:300px"></i></p><div class="hfs actw">{SK_HFS}</div></div>{ftabs("f", "../")}<div class="cban" hidden></div><div class="csum">{SK_CSUM}</div><div class="spl">{SK_SPL}</div>
-<div class="unlock" id="lockcard" hidden><div><b></b><p></p></div><button class="btn" id="unlock">{r["lock_button"]}</button></div>
-<div class="pgrid"><div class="pmain">{SK_PMAIN}</div><nav class="toc" aria-label="{r["toc_aria"]}">{SK_TOC}</nav></div><p class="fine">{r["fine"]}</p></main>
-{pay_case(root)}'''
+def summary(F, root='./'):  # /vc/<slug>/ opens on Checks. Full report is already in the page.
+    return firm_shell(F, root, 'checks')
+
+def result(F, root='../'):  # /vc/<slug>/full/ opens on Full report. Checks is already in the page.
+    return firm_shell(F, root, 'full')
 
 A, M, SO = S['account'], S['my_checks'], S['signed_out']
 def why(k, q):  # optional exit question; values match exit_reasons.reason

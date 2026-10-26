@@ -88,7 +88,7 @@
   }
  },
  "sections": {
-  "_note": "Company page sections, in display order. renderer = facts | checks | legal | press | founders | people | timeline (js/company.js). Remove an entry to hide a section. The DB only supplies the data per key.",
+  "_note": "Company page sections, in display order. renderer = facts | legal | news | founders | people (js/company.js). Check summary is drawn by the page after Overview and is not a section. Remove an entry to hide a section. The DB only supplies the data per key.",
   "list": [
    {
     "key": "overview",
@@ -99,14 +99,6 @@
     "unit_many": "facts"
    },
    {
-    "key": "checks",
-    "title": "The 10 checks",
-    "subtitle": "Sanctions, regulators, courts, registration and people.",
-    "renderer": "checks",
-    "unit_one": "check",
-    "unit_many": "checks"
-   },
-   {
     "key": "legal",
     "title": "Legal & regulatory",
     "subtitle": "Cases where the firm itself is a party, and regulator records.",
@@ -115,12 +107,12 @@
     "unit_many": "records"
    },
    {
-    "key": "press",
-    "title": "Press coverage",
-    "subtitle": "Articles naming the firm, with the outlet and date.",
-    "renderer": "press",
-    "unit_one": "article",
-    "unit_many": "articles"
+    "key": "news",
+    "title": "News",
+    "subtitle": "Articles, court events and filings, newest first. Since 2023.",
+    "renderer": "news",
+    "unit_one": "item",
+    "unit_many": "items"
    },
    {
     "key": "founders",
@@ -153,14 +145,6 @@
     "renderer": "facts",
     "unit_one": "LP",
     "unit_many": "LPs"
-   },
-   {
-    "key": "timeline",
-    "title": "Timeline",
-    "subtitle": "Dated events with a source.",
-    "renderer": "timeline",
-    "unit_one": "event",
-    "unit_many": "events"
    }
   ]
  },
@@ -658,16 +642,18 @@
   "pay_all": "Unlock all {n} sourced facts for {firm}",
   "use_line": "Use 1 to open all {n} sourced facts about {firm}.",
   "legal": {
-   "case": "Cases where the firm is a party",
-   "regulator": "Regulators & lists",
-   "context": "Context, not counted",
+   "case": "Cases",
+   "regulator": "Regulators",
+   "context": "Context",
    "contextSub": "The firm itself is not a party in these."
   },
   "people": {
    "board": "Board seats",
    "move": "Partner moves",
-   "officer": "Officers & owners"
+   "officer": "Officers"
   },
+  "commitments": "{n} commitments",
+  "outlets": ["{n} outlet", "{n} outlets"],
   "no_facts": "No sourced facts on file for this check yet.",
   "retrieved": "retrieved ",
   "source": "Source",
@@ -697,9 +683,13 @@
   "searched_nf": "Nothing found.",
   "name_only": "A person with the same name appears on {list}; we couldn't confirm it's the same person.",
   "header": {
-   "_note": "Firm header under the search box (js/company.js). assets is the one label for the SEC assets figure, including a stored card named Assets, Regulatory AUM, or AUM. missing is the value for a blank HQ or assets field.",
+   "_note": "Firm header chips (js/company.js). Regulatory AUM and Fund gross assets are different figures. A stored Assets or AUM card that is not a gross-asset figure reads as Regulatory AUM. Staff splits into Staff and Investment staff when the value has two parts. missing is the value for a blank HQ or assets field.",
    "hq": "HQ",
-   "assets": "Assets (SEC)",
+   "staff": "Staff",
+   "investment_staff": "Investment staff",
+   "regulatory_aum": "Regulatory AUM",
+   "fund_gross": "Fund gross assets",
+   "assets": "Regulatory AUM",
    "missing": "Not found in public records"
   },
   "searched_on": "Searched {date}",
