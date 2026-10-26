@@ -19,8 +19,10 @@ def db_site():
 
 @pytest.fixture(scope="session", autouse=True)
 def _legacy_auto_promote():
-    """Older tests expect research to publish on insert; production keeps it off (step 1).
-    Tests that check the holding-area behaviour switch it off inside their own rolled-back transaction."""
+    """Older tests expect research to publish on insert. Production never does: the switch only works in a database
+    that also has app.test_auto_publish = '1' (set here, test database only). Publishing on prod goes through a
+    publish batch (create -> dry run -> Alex approves -> run). Tests that check the holding-area behaviour switch
+    it off inside their own rolled-back transaction."""
     if not DATABASE_URL:
         yield
         return
@@ -28,4 +30,7 @@ def _legacy_auto_promote():
     with psycopg.connect(DATABASE_URL) as c:
         c.execute("insert into ingest_settings(key, value) values ('auto_promote_enrichment', '1') "
                   "on conflict (key) do update set value = '1'")
+        from psycopg import sql
+        dbname = c.execute("select current_database()").fetchone()[0]
+        c.execute(sql.SQL("alter database {} set app.test_auto_publish = '1'").format(sql.Identifier(dbname)))
     yield

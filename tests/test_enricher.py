@@ -55,21 +55,19 @@ def test_enrichment_promotes_without_touching_friend_rows():
         # leads are never public (step 4): they stay in the holding area, logged as rejected
         assert c.execute("select count(*) from firm_legal_items where firm_id = %s and title like 'Lead%%'", (fid,)).fetchone()[0] == 0
         assert any(x.startswith("lead:") for x in reasons)
-        # the fix overrides the displayed role; the friend's row itself is unchanged
+        # fixes are held for a person (publish step): the displayed role and the friend's row stay unchanged
         people = c.execute("select _sec_items('people', %s)", (fid,)).fetchone()[0]
         jane = [x for x in people if x["head"] == "Jane Roe"][0]
-        assert jane["role"].startswith("former partner") and jane["badge"] == "Corrected"
-        # a fix can target an enricher row
+        assert not jane["role"].startswith("former partner") and jane.get("badge") != "Corrected"
+        assert c.execute("select count(*) from publish_checks where firm_id = %s and kind = 'fix' and outcome = 'held'", (fid,)).fetchone()[0] >= 1
+        assert c.execute("select count(*) from firm_corrections where firm_id = %s", (fid,)).fetchone()[0] == 0
+        # a second enrichment for the same firm: its fixes are held too, its new person is added
         p["sections"]["People & board seats"] = [{"name": "Max Doe", "role": "Partner", "since": "2019", "source": "https://www.sec.gov/p"}]
-        p["fix"] += [{"field": "people[Max Doe].current", "bot_value": "Partner", "correct_value": "former partner (left 2026)", "source_url": "https://tech.eu/m"},
-                     {"field": "people[Nobody Here].current", "correct_value": "Nobody Here left in 2026", "source_url": "https://tech.eu/n"}]
+        p["fix"] += [{"field": "people[Max Doe].current", "bot_value": "Partner", "correct_value": "former partner (left 2026)", "source_url": "https://tech.eu/m"}]
         c.execute("select research_enrich('toxy-enricher', %s::jsonb)", (json.dumps(p),))
         people = c.execute("select _sec_items('people', %s)", (fid,)).fetchone()[0]
         mx = [x for x in people if x["head"].startswith("Max Doe")][0]
-        assert mx["role"].startswith("former partner") and mx["badge"] == "Corrected"
-        # under docs/DATA_RULES.md a fix for a person who is not on the page is not shown; the reason goes back to the bot
-        assert not [x for x in people if x["head"].startswith("Nobody Here")]
-        assert "not on the page" in c.execute("select reason from publish_checks where firm_id = %s and outcome = 'rejected' and field = 'people[Nobody Here].current'", (fid,)).fetchone()[0]
+        assert mx["role"].startswith("Partner")
         assert c.execute("select role from firm_people_roles where id = %s", (pid,)).fetchone()[0] == "Partner"
         # re-promotion is idempotent and leaves the friend's rows alone
         before = c.execute("select count(*) from enrichment_rows where firm_id = %s", (fid,)).fetchone()[0]

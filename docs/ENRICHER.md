@@ -31,14 +31,25 @@ Body:
 a different role/figure is flagged as a conflict, not overwritten. Every verdict is stored in `publish_checks`.
 
 Rules: every item needs a source URL; .gov/.mil are rejected except sec.gov and courts (courtlistener, uscourts, PACER);
-AUM must contain a number; leads/allegations are shown as "Lead" / Unverified; founder quotes from the firm's own accounts are labelled not independent.
+AUM must contain a number; leads/allegations and fixes are never published: they are kept with the outcome `held` for a person to review (leads are never public); founder quotes from the firm's own accounts are labelled not independent.
 Own media: a founder or press item is the firm's own media (`independent=false`, outlet text gets "· Own media") when its URL is on the
 firm's domain or social handles, or on an entry of the per-firm `firm_owned_media` list (a podcast, YouTube channel, newsletter or blog the
 firm runs). Send `owned_media` (URLs, or `{url, label}`; a path such as `/@handle` limits the match to that channel). Entries from the
 latest enrichment replace earlier enricher entries; manual entries (e.g. Accel's seedtoscale.com) stay.
-Fixes never edit the friend's rows: they go to `firm_corrections` and override what the page shows. A people fix targets the named person's row (friend or enricher row); with no match it is rejected (the correction is stored, not shown). Resubmitting a firm replaces the previous enrichment.
+Fixes are held (not written to `firm_corrections`, not shown) until a person reviews them. Nothing publishes on arrival: see "Publishing" below. Resubmitting a firm adds a newer enrichment; at publish, items are merged item by item across all of the firm's waiting rows (newer wins, the older source is added to the same item).
 Name-only sanctions: a same-name hit that is not a confirmed identity is not a finding. Keep `result` as `none` (searches still allow only `found`, `none`, `blocked`, `error`) and set `name_only` true, `list` to the list name, and `check` to 1–10 (`3` for ITAR / export / debarment). The check shows as Clear with the line "A person with the same name appears on {list}; we couldn't confirm it's the same person." Do not put that hit in a section as a legal item. A surname-only line, or a "name-only near match" with no list, is not this flag. Older notes that say `name-only match:` and name the list are still read. The stored payload is not rewritten.
 
 The reply lists accepted/rejected items with a reason, `notes_kept`, `outcomes` (published/merged/conflict/rejected counts) and `conflicts`, plus `bot_feedback`.
 
 Views (service role): `firm_section_status`, `firm_site_coverage`, `site_search_stats` (all read `search_log_current`: rows with no enrichment_id or from the latest valid enrichment per firm+bot; older rows stay in `search_log`), `feedback_pattern_stats`; RPC `next_firms_to_enrich(p_limit)`.
+
+## Publishing (batches, since 2026-10-26)
+Nothing goes live on insert. Enrichments (`research_enrichments`) and friend submissions (`research_submissions`) wait in the
+holding area until a batch is approved by Alex and run by hand:
+`create_publish_batch(id, 'enricher'|'submissions', bot_like)` → `dry_run_publish_batch(id)` (per-firm before/after check,
+nothing kept) → `publish_batch_summary(id, 'dry')` → `approve_publish_batch(id, 'alex')` → `run_publish_batch(id)`.
+A firm whose page check fails (a section goes missing or drops, new duplicates/collisions, more rule violations, or an
+unexplained alert) is held and rolled back; the rest go live. Every added row carries the `batch_id`.
+`undo_publish_batch(id)` hides the batch's added rows, takes back founder reviews (not public), removes added source links
+(a copy is kept in `cleanup_backup`) and restores overwritten values. Check history (`publish_checks`) is kept.
+Migration: `supabase/migrations/20261026210000_publish_step.sql`. Plain-language guide: docs/HOW_IT_WORKS.md.

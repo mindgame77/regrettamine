@@ -46,11 +46,17 @@ Every publish path goes through the same rules: `promote_enrichment` (Enricher),
 3. **Flags conflicts** instead of overwriting: same person with a different role, same fund/figure label with a
    different value, an HQ / Founded / Regulatory AUM that differs from the page. The page keeps its value.
 4. **Never publishes notes.**
-5. **Records every verdict** in `publish_checks` (`published`, `merged`, `conflict`, `rejected`, `note`) with the reason.
+5. **Records every verdict** in `publish_checks` (`published`, `merged`, `conflict`, `rejected`, `note`, `held`) with the reason.
+   Fixes, leads and allegations are `held` (never published; leads are never public).
    The `enrich` reply returns the rejects, notes kept, conflicts and counts, so the bot can resend fixed items.
 
 ## 3. Existing data
 
-Enrichments received before the rule (ids below `ingest_settings.data_rules_from_enrichment_id`) keep the old path, so
-pages do not change until the cleanup, which is done firm by firm with a before/after (a16z and YC first).
+Enrichments received before the rule (ids below `ingest_settings.data_rules_from_enrichment_id`, the "old format") go
+through the same rules at publish: items that pass are published, the rest are logged with an `old format:` reason, and a
+row with nothing readable is `held`. Nothing is dropped silently.
 Nothing is deleted without Alex's approval. `people_note_guard` (hidden note-like people rows) stays.
+
+## 4. Publishing is by approved batch only
+Nothing publishes when a bot sends data. A person runs a batch by hand; Alex approves each batch after its dry run.
+See docs/ENRICHER.md "Publishing" and docs/HOW_IT_WORKS.md.

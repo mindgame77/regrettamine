@@ -1,7 +1,9 @@
 # Gold examples for bots
 
-Reference pages (the target look): https://regretamin.com/vc/y-combinator/ ,
-https://regretamin.com/vc/a16z/ , https://regretamin.com/vc/accel/
+There are exactly two gold examples (the target look): https://regretamin.com/vc/y-combinator/
+and https://regretamin.com/vc/a16z/ . Accel is no longer a gold example (2026-10-26).
+Bots compare their output against these two pages before submitting.
+"Wrong" examples below may come from other firms (e.g. accel) as real mistakes to avoid; they are not gold.
 
 Read with docs/DATA_RULES.md. Every item is one structured JSON object with a
 `source` URL. Free text goes only in `{"note": "..."}`; `{"item": "..."}` is refused.
@@ -41,7 +43,7 @@ Right shape:
 ```json
 {"section":"lps","name":"<LP institution name>","type":"pension","source":"<public filing or LP report URL>"}
 ```
-None of the three firms has a sourced LP list yet. Wrong: `{"section":"lps","name":"Ben Horowitz","type":"Databricks"}`. Why: that is a board seat (put it under people, `kind: "board"`), not an LP.
+Neither gold firm has a sourced LP list yet. Wrong: `{"section":"lps","name":"Ben Horowitz","type":"Databricks"}`. Why: that is a board seat (put it under people, `kind: "board"`), not an LP.
 
 ## Legal
 Right (a16z):
@@ -71,10 +73,6 @@ Wrong: a founder's tweet submitted as press. Why: first-hand founder posts go to
 Right (y-combinator):
 ```json
 {"section":"reviews","who":"Naman Ambavi","quote":"My group partner called this out before we went up","date":"2026-02-03","type":"founder","source":"https://www.linkedin.com/posts/namanambavi_i-demoed-oximy-yc-w26-live-for-the-first-activity-7424266633751314433-dFZ7"}
-```
-Right (accel):
-```json
-{"section":"reviews","who":"Christian Hecker","quote":"Luca backed and believed in us early, and from the very beginning he has been a thoughtful sparring partner to me.","date":"2026-09-11","type":"founder","source":"https://tech.eu/2026/09/11/luca-bocchio-joins-balderton-as-partner-after-more-than-a-decade-in-european-vc/"}
 ```
 Wrong (accel, Bob McGrew, before the 2026-10-26 cleanup):
 ```json
