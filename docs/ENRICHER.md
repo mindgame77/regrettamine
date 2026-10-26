@@ -48,10 +48,21 @@ Views (service role): `firm_section_status`, `firm_site_coverage`, `site_search_
 ## Publishing (batches, since 2026-10-26)
 Nothing goes live on insert. Enrichments (`research_enrichments`) and friend submissions (`research_submissions`) wait in the
 holding area until a batch is approved by Alex and run by hand:
-`create_publish_batch(id, 'enricher'|'submissions', bot_like)` → `dry_run_publish_batch(id)` (per-firm before/after check,
-nothing kept) → `publish_batch_summary(id, 'dry')` → `approve_publish_batch(id, 'alex')` → `run_publish_batch(id)`.
+`create_publish_batch(id, 'enricher'|'submissions', bot_like)` → `dry_run_publish_firm(id, firm)` or
+`dry_run_publish_batch(id)` → `publish_batch_summary(id, 'dry')` → `approve_publish_batch(id, 'alex')` → `run_publish_batch(id)`.
+
+The dry run uses the same `_publish_firm` check as before (section missing or shrinking, new duplicates or stable-key
+collisions, more rule violations, an unexplained alert), inside the same rollback, so a dry run still keeps nothing
+except that firm's report row. `dry_run_publish_firm` replaces only that firm's dry row. `dry_run_publish_batch` no longer
+wipes the batch: it checks firms with no dry row, or with a submission, enrichment, or firm edit newer than `checked_at`,
+at most `p_limit` firms per call (default 1), and returns how many are still waiting. Only one dry run runs at a time.
+Each firm check is limited to 20 seconds.
+
+Researcher uploads (`research_submit`) are capped at 20 per minute per `bot_id`. The reply
+`rate_limited: max 20 uploads per minute per bot, retry shortly` means nothing was stored. Wait and retry.
+
 A firm whose page check fails (a section goes missing or drops, new duplicates/collisions, more rule violations, or an
 unexplained alert) is held and rolled back; the rest go live. Every added row carries the `batch_id`.
 `undo_publish_batch(id)` hides the batch's added rows, takes back founder reviews (not public), removes added source links
 (a copy is kept in `cleanup_backup`) and restores overwritten values. Check history (`publish_checks`) is kept.
-Migration: `supabase/migrations/20261026210000_publish_step.sql`. Plain-language guide: docs/HOW_IT_WORKS.md.
+Migrations: `supabase/migrations/20261026210000_publish_step.sql`, `supabase/migrations/20261026230000_submit_rate_and_dry_firm.sql`. Plain-language guide: docs/HOW_IT_WORKS.md.

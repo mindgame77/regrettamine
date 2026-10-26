@@ -160,7 +160,120 @@ def test_firm_that_breaks_its_page_is_held_rest_go_live():
 
 def test_approval_functions_are_not_callable_by_the_site():
     with _db() as c:
-        for fn in ("approve_publish_batch(text, text)", "run_publish_batch(text)", "undo_publish_batch(text)"):
+        for fn in ("approve_publish_batch(text, text)", "run_publish_batch(text)", "undo_publish_batch(text)",
+                   "dry_run_publish_firm(text, uuid)", "dry_run_publish_batch(text, integer, integer)"):
             for role in ("anon", "authenticated"):
                 if c.execute("select 1 from pg_roles where rolname = %s", (role,)).fetchone():
                     assert not c.execute("select has_function_privilege(%s, %s, 'execute')", (role, "public." + fn)).fetchone()[0]
+
+
+def _gold(c, slug, name):
+    row = c.execute("select id from firms where slug = %s and deleted_at is null", (slug,)).fetchone()
+    if row:
+        return row[0]
+    return c.execute("insert into firms(slug, name, short_name, published, data_status) "
+                     "values (%s, %s, %s, true, 'real') returning id", (slug, name, slug[:8])).fetchone()[0]
+
+
+def _legacy_dry(c, batch, fid):
+    """The old per-firm dry body: _publish_firm inside the same rollback, with the same held handling."""
+    c.execute("""
+      create or replace function pg_temp.legacy_dry(p_id text, p_firm uuid) returns jsonb
+      language plpgsql set search_path = public as $fn$
+      declare b publish_batches; r jsonb;
+      begin
+        select * into b from publish_batches where id = p_id;
+        begin
+          r := _publish_firm(p_id, b.source, p_firm);
+          raise exception using errcode = 'P0001', message = 'dryrun-rollback';
+        exception when others then
+          if sqlerrm <> 'dryrun-rollback' then r := jsonb_build_object('decision', 'held', 'reasons', jsonb_build_array('error: ' || sqlerrm)); end if;
+        end;
+        return r;
+      end $fn$
+    """)
+    return c.execute("select pg_temp.legacy_dry(%s, %s)", (batch, fid)).fetchone()[0]
+
+
+def test_per_firm_dry_run_matches_legacy_for_yc_and_a16z():
+    with _db() as c:
+        firms = [("y-combinator", _gold(c, "y-combinator", "Y Combinator")),
+                 ("a16z", _gold(c, "a16z", "Andreessen Horowitz"))]
+        b = "t-" + uuid.uuid4().hex[:6]
+        c.execute("select create_publish_batch(%s, 'enricher', null, %s::uuid[])", (b, [str(fid) for _, fid in firms]))
+        before = {fid: _n(c, "timeline_events", fid) for _, fid in firms}
+        legacy = {slug: _legacy_dry(c, b, fid) for slug, fid in firms}
+        for slug, fid in firms:
+            c.execute("select dry_run_publish_firm(%s, %s)", (b, fid))
+            decision, reasons, items = c.execute(
+                "select decision, reasons, items from publish_batch_firms where batch_id = %s and firm_id = %s and phase = 'dry'",
+                (b, fid)).fetchone()
+            old = legacy[slug]
+            assert decision == old["decision"], slug
+            assert list(reasons) == list(old["reasons"]), slug
+            for key in ("items", "counts_before", "counts_after", "alerts", "blocked"):
+                assert items.get(key) == old.get(key), (slug, key)
+            assert _n(c, "timeline_events", fid) == before[fid]
+        c.rollback()
+
+
+def test_dry_run_batch_is_changed_only_and_keeps_other_rows():
+    with _db() as c:
+        s1, f1 = _firm(c)
+        s2, f2 = _firm(c)
+        for s in (s1, s2):
+            _enrich(c, s, {"Timeline": [{"date": "2012", "event": "Opened a desk", "source": ADV}]})
+        b = "t-" + uuid.uuid4().hex[:6]
+        c.execute("select create_publish_batch(%s, 'enricher', null, %s::uuid[])", (b, [str(f1), str(f2)]))
+        assert list(c.execute("select _publish_changed_firms(%s)", (b,)).fetchone()[0]) == [f1, f2]
+        rep = c.execute("select dry_run_publish_batch(%s)", (b,)).fetchone()[0]
+        assert rep["firms_checked"] == 1 and rep["remaining"] == 1 and rep["next"] == str(f2)
+        kept = c.execute("select id, checked_at from publish_batch_firms where batch_id = %s and firm_id = %s and phase = 'dry'", (b, f1)).fetchone()
+        rep2 = c.execute("select dry_run_publish_batch(%s)", (b,)).fetchone()[0]
+        assert rep2["firms_checked"] == 1 and rep2["remaining"] == 0 and rep2["next"] is None
+        assert c.execute("select id, checked_at from publish_batch_firms where batch_id = %s and firm_id = %s and phase = 'dry'", (b, f1)).fetchone() == kept
+        assert list(c.execute("select _publish_changed_firms(%s)", (b,)).fetchone()[0]) == []
+        # a later firm edit, enrichment, or submission puts only that firm back on the list
+        c.execute("insert into cleanup_backup(batch, firm_id, table_name, row_data, saved_at) "
+                  "values ('edit-test', %s, 'firm_legal_items', '{}'::jsonb, now() + interval '1 second')", (f1,))
+        assert list(c.execute("select _publish_changed_firms(%s)", (b,)).fetchone()[0]) == [f1]
+        c.execute("delete from cleanup_backup where firm_id = %s and batch = 'edit-test'", (f1,))
+        c.execute("insert into research_enrichments(bot_id, firm_id, payload, valid, received_at) "
+                  "values ('toxy-enricher', %s, '{}'::jsonb, true, now() + interval '1 second')", (f1,))
+        assert list(c.execute("select _publish_changed_firms(%s)", (b,)).fetchone()[0]) == [f1]
+        c.execute("delete from research_enrichments where firm_id = %s", (f1,))
+        reg = "zz-chg-" + uuid.uuid4().hex[:8]
+        c.execute("insert into research_queue (registry_id, name, priority, status) values (%s, 'Zz Change', 900000, 'queued')", (reg,))
+        c.execute("update firms set registry_id = null where registry_id = %s and id <> %s", (reg, f1))
+        c.execute("update firms set registry_id = %s where id = %s", (reg, f1))
+        c.execute("insert into research_submissions(registry_id, bot_id, payload, record_count, valid, received_at) "
+                  "values (%s, 'zz-bot', '{}'::jsonb, 1, true, now() + interval '1 second')", (reg,))
+        assert list(c.execute("select _publish_changed_firms(%s)", (b,)).fetchone()[0]) == [f1]
+        c.rollback()
+
+
+def test_submit_rate_limit_rejects_the_21st_without_inserting():
+    with _db() as c:
+        bot = "zz-rate-" + uuid.uuid4().hex[:8]
+        other = bot + "-b"
+        reg = "zz-rate-" + uuid.uuid4().hex[:8]
+        payload = json.dumps({"schema_version": "dump-1.2"})
+        c.execute("insert into research_queue (registry_id, name, priority, status, claimed_by, claimed_at) "
+                  "values (%s, 'Zz Rate Partners', 900000, 'claimed', %s, now())", (reg, bot))
+        for _ in range(20):
+            c.execute("update research_queue set status = 'claimed', claimed_by = %s, attempts = 0, claimed_at = now() where registry_id = %s", (bot, reg))
+            got = c.execute("select research_submit(%s, %s, %s::jsonb, 1, true, '[]'::jsonb)", (reg, bot, payload)).fetchone()[0]
+            assert got["ok"] is True
+        assert c.execute("select count(*) from research_submissions where bot_id = %s", (bot,)).fetchone()[0] == 20
+        assert c.execute("select 1 from pg_indexes where indexname = 'research_submissions_bot_received_idx'").fetchone()
+        c.execute("savepoint rate")
+        with pytest.raises(Exception) as ei:
+            c.execute("update research_queue set status = 'claimed', claimed_by = %s, attempts = 0 where registry_id = %s", (bot, reg))
+            c.execute("select research_submit(%s, %s, %s::jsonb, 1, true, '[]'::jsonb)", (reg, bot, payload))
+        assert "rate_limited: max 20 uploads per minute per bot, retry shortly" in str(ei.value)
+        c.execute("rollback to savepoint rate")
+        assert c.execute("select count(*) from research_submissions where bot_id = %s", (bot,)).fetchone()[0] == 20
+        c.execute("update research_queue set status = 'claimed', claimed_by = %s, attempts = 0, claimed_at = now() where registry_id = %s", (other, reg))
+        other_ok = c.execute("select research_submit(%s, %s, %s::jsonb, 1, true, '[]'::jsonb)", (reg, other, payload)).fetchone()[0]
+        assert other_ok["ok"] is True
+        c.rollback()

@@ -226,7 +226,11 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       const valid = v.errors.length === 0;
       const { data, error } = await db.rpc("research_submit", { p_id: body.registry_id, p_bot: bot,
         p_payload: body.dump ?? null, p_count: v.good + v.bad, p_valid: valid, p_errors: valid ? null : v.errors.slice(0, 200) });
-      if (error) return json({ error: "server error" }, 500);
+      if (error) {
+        const msg = String(error.message || error.details || "");
+        if (msg.includes("rate_limited:")) return json({ error: "rate_limited: max 20 uploads per minute per bot, retry shortly" }, 429, { "retry-after": "60" });
+        return json({ error: "server error" }, 500);
+      }
       if (data.error) return json({ error: data.error }, 409);
       let lpRes: any = undefined;
       if (valid && (hasLps || body.lps_over_100 === true)) {

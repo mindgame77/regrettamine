@@ -23,6 +23,9 @@ Bots only **collect**. They never write to the live page tables. Everything they
 Every bot sends through one door, the `research-ingest` Edge Function, with its own key. A reply tells the bot what was
 accepted and what was refused and why (`bot_feedback`). That way the bot learns.
 
+A researcher (`research_submit`) can upload at most 20 dumps a minute for its own `bot_id`. If the reply is
+`rate_limited: max 20 uploads per minute per bot, retry shortly`, nothing was stored. Wait and retry the same upload.
+
 ## 3. Holding area vs live data
 * **Holding area** (`research_submissions`, `research_enrichments`): what bots sent, kept exactly as sent. Never
   edited and never shown to the public.
@@ -73,8 +76,11 @@ merges instead of appearing twice. `stable_key_collisions()` lists the existing 
 One gate for everything bots send (both holding tables). Batches are run by hand only.
 1. **Create a batch:** `create_publish_batch(id, 'enricher' or 'submissions', bot name pattern)` collects the firms with
    waiting data.
-2. **Dry run:** `dry_run_publish_batch(id)` publishes each firm for real *inside a transaction that is rolled back*. It
-   compares the firm's page before and after:
+2. **Dry run:** `dry_run_publish_firm(id, firm)` publishes that one firm for real *inside a transaction that is rolled back*,
+   with the same page check as before. It replaces only that firm's dry-run row. `dry_run_publish_batch(id)` does this for
+   firms that have no dry-run row yet, or whose submissions, enrichments, or edits are newer than that row's check time.
+   Each call handles at most one firm unless you pass a higher limit, leaves every other firm's row in place, and says how
+   many firms are still waiting. Only one dry run runs at a time, and each firm check stops after 20 seconds. The check is:
    * no section goes missing or shrinks
    * no new duplicates or stable-key collisions
    * no increase in rule violations
