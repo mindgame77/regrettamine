@@ -62,5 +62,7 @@ def test_moved_card_is_hidden_others_stay():
         rid = c.execute("insert into reviews(firm_id, body, review_type) values (%s, 's', 'founder') returning id", (fid,)).fetchone()[0]
         c.execute("update founder_accounts set moved_to_review = %s where id = %s", (rid, ids[0]))
         assert n() == 1
+        c.execute("update founder_accounts set moved_to = 'press' where id = %s", (ids[1],))
+        assert n() == 0
         assert c.execute("select count(*) from founder_accounts where firm_id = %s", (fid,)).fetchone()[0] == 2
         c.rollback()
