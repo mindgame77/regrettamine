@@ -44,12 +44,11 @@ def test_enrichment_promotes_without_touching_friend_rows():
         # source tiers (docs/SOURCE_TIERS.md): any real page is accepted (the embassy .gov bio is tier 'other'); no URL stays unshown
         assert not any("not allowed" in x for x in reasons) and "no source URL" in reasons and "AUM needs a numeric figure" in reasons
         n = lambda k: len(c.execute("select _sec_items(%s, %s)", (k, fid)).fetchone()[0])
-        assert n("press") == 2 and n("founders") == 3 and n("timeline") == 1 and n("legal") == 3 and n("funds") == 1
-        # firm-owned founder source is labelled as not independent
-        assert c.execute("select count(*) from founder_accounts where firm_id = %s and not independent", (fid,)).fetchone()[0] == 2
-        fnd = c.execute("select _sec_items('founders', %s)", (fid,)).fetchone()[0]
-        own = [x for x in fnd if not x["independent"]]
-        assert len(own) == 2 and all(x["outlet"].endswith(" · Own media") for x in own)
+        assert n("press") == 2 and n("founders") == 0 and n("timeline") == 1 and n("legal") == 3 and n("funds") == 1
+        # founder quotes go to reviews (Activity), not founder_accounts; firm-owned sources are firm_voice, not public
+        assert c.execute("select count(*) from founder_accounts where firm_id = %s", (fid,)).fetchone()[0] == 0
+        rv = c.execute("select review_type, is_public, independent from reviews where firm_id = %s order by review_type", (fid,)).fetchall()
+        assert rv == [("firm_voice", False, False), ("firm_voice", False, False), ("founder", True, True)]
         # owned media from the payload (a podcast the firm runs) also marks press as own media
         press = c.execute("select _sec_items('press', %s)", (fid,)).fetchone()[0]
         assert [x["independent"] for x in press if "enrpod" in x["url"]] == [False]
