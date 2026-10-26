@@ -103,6 +103,7 @@ Important: paid on-demand research results now also wait for a batch approval be
 ## 8. The single page builder
 * **Data** comes from the database. `firm_page()` returns each section's items and counts. The full static site is built from `published_site_bundle()`.
 * **Ready-made details.** `firm_page_cache` stores the full `firm_details` payload for a firm (every fact, not a locked slice). `unlock_firm`, which `firm_page` calls, reads that row when it is there and builds it, then stores it, when the row is missing. A publish, an enricher write, or a fact or legal edit deletes the row. The trigger does not rebuild the page. Whether this visitor can see it is still decided per visit, outside the cache.
+* Shared features use one shared module on every page.
 * **Look and words** come from the repo: `launch/copy.json` (all text, section titles, order), `launch/style.css`,
   `launch/build.py` (markup) and `launch/js/*`. There is one template for every firm. On Cloudflare, `launch/functions/vc/[[path]].js`
   serves `/vc/<slug>/` for every published firm, and `launch/edge/firm.mjs` mirrors the builder (a test checks that they match).

@@ -1,5 +1,4 @@
-// The firm page writes its name into the search box when the page draws.
-// A query the visitor has already typed must stay, or Check never leaves this firm.
+// The firm page updates its heading. It does not own the search box.
 // node --test tests/search_box.test.mjs
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -21,8 +20,8 @@ vm.runInContext(fs.readFileSync(new URL('launch/js/dates.js', root), 'utf8'), sa
 vm.runInContext(fs.readFileSync(new URL('launch/js/company.js', root), 'utf8'), sandbox, { filename: 'company.js' });
 const { setFirmName } = sandbox.window.RegretCompany;
 
-function page(value, def) {
-  const input = { value, defaultValue: def };
+function page(value) {
+  const input = { value, defaultValue: 'Andreessen Horowitz' };
   const h1 = { textContent: 'Old', querySelector() { return null; } };
   const main = {
     querySelector(sel) {
@@ -34,18 +33,14 @@ function page(value, def) {
   return { main, input, h1 };
 }
 
-test('a paint still fills the search box when the visitor has not typed', () => {
-  const p = page('Andreessen Horowitz', 'Andreessen Horowitz');
-  setFirmName(p.main, 'Andreessen Horowitz');
-  assert.equal(p.input.value, 'Andreessen Horowitz');
-  assert.equal(p.input.defaultValue, 'Andreessen Horowitz');
-  assert.equal(p.h1.textContent, 'Andreessen Horowitz');
-});
+test('a firm-page paint updates the heading and leaves the search box alone', () => {
+  const typed = page('y com');
+  setFirmName(typed.main, 'Andreessen Horowitz');
+  assert.equal(typed.h1.textContent, 'Andreessen Horowitz');
+  assert.equal(typed.input.value, 'y com');
+  assert.equal(typed.input.defaultValue, 'Andreessen Horowitz');
 
-test('a paint leaves y com in the box on a firm page', () => {
-  const p = page('y com', 'Andreessen Horowitz');
-  setFirmName(p.main, 'Andreessen Horowitz');
-  assert.equal(p.input.value, 'y com');
-  assert.equal(p.input.defaultValue, 'Andreessen Horowitz');
-  assert.equal(p.h1.textContent, 'Andreessen Horowitz');
+  const fresh = page('Andreessen Horowitz');
+  setFirmName(fresh.main, 'Andreessen Horowitz');
+  assert.equal(fresh.input.value, 'Andreessen Horowitz');
 });
