@@ -21,6 +21,11 @@ Bots never write to page tables. What they send is stored as-is in the holding a
 | Press coverage | `outlet`, `date`, `headline`, `url`, `snippet` |
 | What founders say | `who`, `quote`, `date`, `source` |
 
+**Timeline dates may be informal.** Store single dates as `YYYY`, `YYYY-MM` or `YYYY-MM-DD` (never pad a month-only date
+to `-01`), but a range such as `May–Jul 2025` or `2024-09-24/25` is fine as-is. Dates written inside body text that the
+design doesn't show as a date don't need the formal format. If a timeline row is undated but its text contains a date, use
+that date (e.g. "29 June 2026: Form ADV…" → `2026-06-29`).
+
 `add` / `leads` items send the same object as `value`. A `fix` may send a short string (`correct_value`) for one person's field
 or one overview/funds figure. `submit` records keep the dump-1.2 shapes (they were already structured).
 
