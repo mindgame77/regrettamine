@@ -101,6 +101,9 @@
   const chips = (src) => '<div class="scs">' + (src || []).map(s => { const u = safeUrl(s.url); const t = esc(s.label) + (s.date ? ' · ' + esc(fdate(s.date)) : '') + ' ↗';
     return u ? '<a class="sc" href="' + esc(u) + '" target="_blank" rel="noopener">' + t + '</a>' : ''; }).join('') + '</div>';
   const pill = (st) => { const p = PILL[st] || PILL.nc; return '<span class="pill ' + p[0] + '"><i></i>' + p[1] + '</span>'; };
+  // A person card's name is a short fact about one person. Bot research notes (ADV Schedule A summaries, "Bot people records",
+  // Form D related-person lists, anything with a URL or over 300 characters) are hidden in the DB; never draw one as a card either.
+  const isNoteText = (t) => { t = String(t || ''); return t.length > 300 || /schedule a individuals|bot people records|related persons|https?:\/\/|www\./i.test(t); };
   const group = (items, key, labels, body) => Object.keys(labels).map(g => { const xs = items.filter(i => i[key] === g);
     return xs.length ? '<h3>' + esc(labels[g]) + ' · ' + xs.length + '</h3>' + (g === 'context' ? '<p class="psub">' + esc(COPY.legal.contextSub) + '</p>' : '') + body(xs) : ''; }).join('');
 
@@ -167,7 +170,7 @@
       + (x.role ? '<span class="cs cs-cl">' + esc(x.role) + '</span> ' : '') + '<b>' + esc(nice(x.title || x.head || '')) + (shownYear(x) ? ' · ' + esc(shownYear(x)) : '') + '</b>' + (x.note ? ' · ' + esc(nice(x.note)) : '') + chips(x.src) + '</div>').join('')),
     press: (it) => '<div class="pgr">' + it.map(x => card(x, true)).join('') + '</div>',
     founders: (it) => '<div class="pgr">' + it.map(x => card(x, false)).join('') + '</div>',
-    people: (it) => group(it, 'kind', COPY.people, xs => '<div class="pcards">' + xs.map(x => '<div class="pcard"><b>' + esc(nice(x.head)) + '</b>' + (x.badge ? '<span class="cs cs-act">' + esc(x.badge) + '</span>' : '') + '<span>' + esc(x.role) + '</span>' + chips(x.src) + '</div>').join('') + '</div>'),
+    people: (it) => group(it.filter(x => !isNoteText(x.head)), 'kind', COPY.people, xs => '<div class="pcards">' + xs.map(x => '<div class="pcard"><b>' + esc(nice(x.head)) + '</b>' + (x.badge ? '<span class="cs cs-act">' + esc(x.badge) + '</span>' : '') + '<span>' + esc(x.role) + '</span>' + chips(x.src) + '</div>').join('') + '</div>'),
     timeline: (it) => {
       const rows = it.map((x, i) => ({ x, i })).sort((a, b) => {
         const sa = window.RegretDate ? window.RegretDate.stamp(a.x.date) : null, sb = window.RegretDate ? window.RegretDate.stamp(b.x.date) : null;
@@ -415,7 +418,7 @@
       if (!src) return '';
       const lab = assetLabel(h.label), v = nice(h.value), parts = String(v).split(' · ');
       const t = /^(Assets|Regulatory AUM|AUM)$/.test(h.label) ? v + ' ' + lab.toLowerCase() : parts[0] + ' ' + lab.toLowerCase() + (parts.length > 1 ? ' · ' + parts.slice(1).join(' · ') : '');
-      return '<a class="sc" href="' + esc(src.url) + '" target="_blank" rel="noopener">' + esc(t) + '</a>'; }).filter(Boolean).slice(0, 7).join('');
+      return '<a class="sc" href="' + esc(src.url) + '" target="_blank" rel="noopener">' + esc(t) + '</a>'; }).filter(Boolean).slice(0, 7).join('').replace(/^(.+)$/, '<span class="secp">$1</span>');
   }
   const tile = (lab, big, sub, cls) => '<div class="att ' + cls + '"><small>' + esc(lab) + '</small><b>' + big + '</b><span>' + sub + '</span></div>';
   function dealRows(ds) {

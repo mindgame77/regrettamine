@@ -417,7 +417,7 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 @media (max-width:760px){.mfr{grid-template-columns:30px minmax(0,1fr) auto}.mfr>.star{grid-row:1}.mfr .nm3{grid-column:2;grid-row:1;min-width:0;overflow-wrap:anywhere}.mfr .btn{grid-column:3;grid-row:1}}
 /* Firm activity (firm_page.activity): SEC pills, tiles, latest deal, latest founder review */
 .kf .m{color:var(--mute);font-size:15px;margin:0;display:block}.kf .m span{background:none;padding:0;font-size:inherit;color:inherit}
-.m .sc{margin:4px 6px 0 0}.m .sc:first-of-type{margin-left:12px}.m{line-height:1.9}
+.secp{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;max-height:50px;overflow:hidden}.secp .sc{margin:0;line-height:18px}
 .hfs.actw{display:block;min-height:0}.actw[hidden]{display:none}
 .actv{border:1.5px solid var(--line);border-radius:20px;padding:20px 22px;margin:18px 0 20px;display:flex;flex-direction:column;gap:22px}
 .ats{display:grid;gap:12px}.att{border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:4px;min-width:0}
