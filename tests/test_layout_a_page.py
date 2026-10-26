@@ -59,3 +59,8 @@ def test_overview_rows_for_yc_and_a16z():
 def test_search_click_is_not_a_tab_switch():
     r = subprocess.run(["node", "--test", "tests/search_nav.test.mjs"], cwd=ROOT, capture_output=True, text=True)
     assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-2000:]
+
+
+def test_firm_page_keeps_a_typed_search():
+    r = subprocess.run(["node", "--test", "tests/search_box.test.mjs"], cwd=ROOT, capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-2000:]
