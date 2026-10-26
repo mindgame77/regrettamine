@@ -83,15 +83,15 @@ def test_duplicate_merges_source_and_role_conflict_is_flagged():
         c.rollback()
 
 
-def test_enrichments_before_the_cutoff_keep_the_old_path():
+def test_old_format_rows_go_through_the_same_rules():
     with _db() as c:
         slug, fid = _firm(c, "drl")
         c.execute("update ingest_settings set value = '999999999' where key = 'data_rules_from_enrichment_id'")
         c.execute("select research_enrich('toxy-enricher', %s::jsonb)",
                   (json.dumps({"slug": slug, "sections": {"Timeline": [{"date": "1983", "item": "Founded", "source": SRC}]}}),))
-        assert c.execute("select count(*) from timeline_events where firm_id = %s", (fid,)).fetchone()[0] == 1
-        r = c.execute("select promote_enrichment(%s)", (fid,)).fetchone()[0]
-        assert "rule" not in (r if isinstance(r, dict) else json.loads(r))
+        # {"item": ...} is not a timeline field under the data rules: nothing is published, nothing is silently dropped
+        assert c.execute("select count(*) from timeline_events where firm_id = %s", (fid,)).fetchone()[0] == 0
+        assert c.execute("select count(*) from publish_checks where firm_id = %s and outcome in ('rejected', 'held')", (fid,)).fetchone()[0] >= 1
         c.rollback()
 
 
