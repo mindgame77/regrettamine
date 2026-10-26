@@ -239,7 +239,7 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
         hint: valid ? (v.tiers.needs_source ? `stored; ${v.tiers.needs_source} record(s) have no usable source: kept as needs_source (hidden until a source is added). Claim the next firm` : "stored; claim the next firm") : "not accepted (kept for audit only); fix ALL errors and resubmit the whole dump once (same registry_id, same bot_id)" }, valid ? 200 : 422);
     }
     case "enrich": {
-      // Enricher results for one firm (sections + confirm/fix/add/leads, each item with a source URL; optional searches log).
+      // Enricher results for one firm (sections + confirm/fix/add/leads, each item one structured fact with a source URL; free text only as {note}; docs/DATA_RULES.md).
       // Stored raw in research_enrichments; the AFTER INSERT trigger promotes accepted items onto the page tables on top of
       // the friend's data (fixes go to the firm_corrections override layer). Never touches research_submissions.
       if (!bot) return bad("bot_id required", "add a stable \"bot_id\" string (the same on every call)", "enrich");
