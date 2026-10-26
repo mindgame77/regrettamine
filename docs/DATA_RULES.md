@@ -8,6 +8,10 @@ Approved by Alex on 2026-10-25. This applies to every bot that sends data: the r
 Bots never write to page tables. What they send is stored as-is in the holding area (`research_submissions`,
 `research_enrichments`) and only reaches a page through the checker below.
 
+**Upload rate.** `research_submit` stores at most 20 submissions per minute for one `bot_id`. The next one in that
+minute raises `rate_limited: max 20 uploads per minute per bot, retry shortly` and stores nothing. Wait and retry
+that same submit.
+
 **One structured item per fact.** Each item has the fields for its kind, plus a source link:
 
 | Section (enrich) | Item fields |

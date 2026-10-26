@@ -75,10 +75,11 @@ curl -s -X POST "$URL" -H "x-ingest-key: $KEY" -H 'content-type: application/jso
 - Only free, public pages. No paid, login-walled or gated sites; do not bypass paywalls.
 - Respect robots.txt and each site's terms of service. Go slowly; no bulk scraping.
 - Do not scrape commercial VC databases (Crunchbase, PitchBook, CB Insights, Tracxn, Dealroom, PrivCo, etc.). Primary sources (SEC, courts, regulators, company sites, news) are preferred.
-- Rate limit: 300 requests per minute. On a 429, wait 60 seconds and retry.
+- Rate limit: 300 requests per minute on the key. On a 429, wait 60 seconds and retry.
+- Submit cap: at most 20 uploads per minute for your `bot_id`. If the reply is `rate_limited: max 20 uploads per minute per bot, retry shortly`, nothing was stored. Wait and retry that same submit.
 
 ### Errors from the API
-- **429** (rate limited): wait 60 seconds, retry the same request.
+- **429** (rate limited): wait 60 seconds, retry the same request. A submit that returns `rate_limited: max 20 uploads per minute per bot, retry shortly` stored nothing; wait and retry that submit.
 - **503** (paused): the operator has paused the run. **Stop completely.** Do not retry; go to Step 4.
 - **401**: the key is wrong or revoked. Stop and ask the user.
 - **409**: the firm is not claimed by your `bot_id` (claim expired or wrong id). Drop it and claim a new firm.
