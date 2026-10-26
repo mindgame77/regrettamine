@@ -799,7 +799,8 @@
    "what": "What was searched:",
    "untitled": "Untitled record",
    "loading": "Loading the 10 checks…"
-  }
+  },
+  "not_confirmed": "Not confirmed"
  },
  "js": {
   "_note": "Strings used by js/app.js. [one, many] pairs are picked by count. HTML allowed where the code uses innerHTML (values are escaped).",
