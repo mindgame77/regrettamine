@@ -698,6 +698,12 @@
   // The Checks / Full report control is the one from 843bff8. That commit used a link, which loaded
   // the other URL and drew the header again. Here the two panels are already in the page, so the
   // click only shows one of them. The header above the control is left as it is, and the scroll stays.
+  // The tab control is a button or link that carries data-tab. The firm page root carries the same
+  // attribute as state, so a click on Check or a suggestion must not count as a tab click.
+  function firmPageTab(target, root) {
+    const tab = target.closest('[data-tab="checks"], [data-tab="full"]');
+    return tab && tab !== root && root.contains(tab) ? tab.dataset.tab : '';
+  }
   function goTab(which) {
     if (!window.RegretCompany || !window.RegretCompany.applyTab) return;
     const y = window.scrollY;
@@ -714,9 +720,11 @@
       window.scrollTo(0, y);
     });
     // Tab buttons show the other panel in place. Anchors still scroll, and do not jump back to the top.
+    // main itself has data-tab for the panel that is showing. closest() would match that on every click
+    // in the page, cancel the click, and the search box could neither submit nor follow a suggestion.
     document.addEventListener('click', (e) => {
-      const tab = e.target.closest('[data-tab="checks"], [data-tab="full"]');
-      if (tab && main.contains(tab)) { e.preventDefault(); goTab(tab.dataset.tab); return; }
+      const which = firmPageTab(e.target, main);
+      if (which) { e.preventDefault(); goTab(which); return; }
       const a = e.target.closest('a[href^="#"]'), id = a && a.getAttribute('href').slice(1), t = id && document.getElementById(id); if (!t) return;
       e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); history.pushState(null, '', '#' + id);
     });
