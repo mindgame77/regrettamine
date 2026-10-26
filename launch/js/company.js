@@ -235,15 +235,21 @@
     }).join('');
   }
   const yearNum = (x) => { const y = shownYear(x) || (x && x.year) || ''; const m = String(y).match(/(19|20)\d{2}/); return m ? +m[0] : 0; };
+  // Display-only order for Legal & regulatory. Active rows first, newest year first, then every other status the same way.
+  function legalStatus(x) {
+    const lead = x.state === 'Unverified' || isLeadTag(x.status) || LEAD_PRE.test(x.title || x.head || '');
+    return lead ? NC : (x.state || (x.status ? x.status[0].toUpperCase() + x.status.slice(1) : ''));
+  }
+  function orderLegal(xs) {
+    return xs.filter(x => x.title || x.head || x.note).slice().sort((a, b) => (legalStatus(a) === 'Active' ? 0 : 1) - (legalStatus(b) === 'Active' ? 0 : 1) || yearNum(b) - yearNum(a));
+  }
   // Open-state renderers, keyed by copy.json sections[].renderer. The section is the third argument (LP grouping).
   const R = {
     facts: (it, P, s) => '<div class="rws">' + (s && s.key === 'lps' ? groupLps(it) : it.map(factRow).join('')) + '</div>',
     checks: (it, P) => checkRows(P),
-    legal: (it) => group(it, 'grp', COPY.legal, xs => '<div class="rws">' + xs.filter(x => x.title || x.head || x.note).slice().sort((a, b) => yearNum(b) - yearNum(a)).map(x => {
-      const lead = x.state === 'Unverified' || isLeadTag(x.status) || LEAD_PRE.test(x.title || x.head || '');
+    legal: (it) => group(it, 'grp', COPY.legal, xs => '<div class="rws">' + orderLegal(xs).map(x => {
       const note = [x.role, x.note].filter(Boolean).map(nice).join(' · ');
-      const status = lead ? NC : (x.state || (x.status ? x.status[0].toUpperCase() + x.status.slice(1) : ''));
-      return row(nice(ncStrip(x.title || x.head || '')), shownYear(x) || x.year || '', status, x.src, note);
+      return row(nice(ncStrip(x.title || x.head || '')), shownYear(x) || x.year || '', legalStatus(x), x.src, note);
     }).join('') + '</div>'),
     press: (it) => '<div class="pgr">' + it.map(x => card(x, true)).join('') + '</div>',
     news: (it) => '<div class="pgr">' + it.map(x => card(x, true)).join('') + '</div>',

@@ -44,3 +44,8 @@ def test_page_renders_rows_news_and_a_client_side_toggle():
 def test_news_is_combined_when_the_page_draws():
     r = subprocess.run(["node", "--test", "tests/news_display.test.mjs"], cwd=ROOT, capture_output=True, text=True)
     assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-2000:]
+
+
+def test_legal_rows_put_active_first():
+    r = subprocess.run(["node", "--test", "tests/legal_order.test.mjs"], cwd=ROOT, capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-2000:]
