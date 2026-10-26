@@ -11,6 +11,7 @@ const sandbox = {
   window: { REGRET: { copy } },
   document: { addEventListener() {}, getElementById() { return null; }, createElement() { return { className: '', hidden: true }; } },
   console,
+  URL,
 };
 sandbox.window.window = sandbox.window;
 sandbox.globalThis = sandbox;
@@ -60,14 +61,14 @@ test('two timeline events that share a link and differ by date stay two cards', 
   assert.equal(filings.length, 1);
 });
 
-test('the same date with a different link stays two cards, and dates before 2023 are left off', () => {
+test('the same fund close from two outlets is one card, and a different story that day stays separate', () => {
   const day = '2026-05-12';
   const live = 'https://www.reuters.com/doj';
   const cards = buildNews(
     [
       press('https://news.example/2016', 'How the firm started', '2016-06-01'),
       press(live, 'A 2026 article', '2026-01-02'),
-      press('https://fund.example/close', 'Fund III final close', day),
+      press('https://fund.example/close', 'Fund III final close', day, { outlet: 'Wire', src: [{ label: 'Wire', date: day, url: 'https://fund.example/close' }] }),
     ],
     [
       timeline('1983', 'Reported', 'Founded', 'https://news.example/1983'),
@@ -78,13 +79,14 @@ test('the same date with a different link stays two cards, and dates before 2023
   assert.equal(cards.map(c => c.head).sort().join('|'), [
     'A 2026 article',
     'Fund III final close',
-    'Fund III final close, other outlet',
   ].join('|'));
   const article = cards.find(c => c.head === 'A 2026 article');
   assert.equal(article.src.length, 1);
   assert.ok(!article.src.some(s => s.label === 'Docket'));
-  const reported = cards.find(c => c.head === 'Fund III final close, other outlet');
-  assert.equal(reported.tag, '');
+  assert.equal(article.outlets, undefined);
+  const close = cards.find(c => c.head === 'Fund III final close');
+  assert.equal(close.outlets, 2);
+  assert.equal(close.src.map(s => s.label).sort().join('|'), 'Docket|Wire');
 });
 
 test('an undated item is shown, and three outlets stay three cards', () => {
@@ -112,4 +114,80 @@ test('pageSecs draws News from press and timeline and does not draw those sectio
   assert.equal(secs[1].count, 1);
   assert.equal(secs[1].items[0].tag, 'Court');
   assert.equal(secs[2].count, 1);
+});
+
+const A16Z = { name: 'Andreessen Horowitz', short_name: 'a16z', sec_name: 'AH Capital Management, L.L.C.' };
+const outlet = (url, head, date, label) => press(url, head, date, {
+  outlet: label, src: [{ label, date, url }],
+});
+
+test('a16z groups the three DOJ outlets into one card and leaves other stories alone', () => {
+  const tc = 'https://techcrunch.com/2026/08/18/dojs-probe-into-andreessen-horowitz-over-board-seats-baffles-vcs/';
+  const reu = 'https://www.reuters.com/legal/legalindustry/andreessen-horowitz-focus-doj-probe-over-board-directors-bloomberg-news-reports-2026-08-17/';
+  const tnw = 'https://thenextweb.com/news/andreessen-horowitz-doj-probe-databricks-fivetran-board-seats';
+  const cards = buildNews([
+    outlet(tc, "DOJ probes a16z partners' board seats at Databricks and Fivetran", 'Aug 18, 2026', 'TechCrunch'),
+    outlet(reu, 'Andreessen Horowitz focus of DOJ probe over board directors, Bloomberg News reports', '2026-08-17', 'Reuters'),
+    outlet(tnw, 'DOJ probe into a16z over Databricks and Fivetran board seats', '2026', 'The Next Web'),
+    outlet('https://www.axios.com/pregnancy', 'Run The World co-founder alleges pregnancy discrimination, names a16z', 'Sep 11, 2023', 'Axios'),
+    outlet('https://www.bloomberg.com/pac', 'a16z-backed AI super PAC passes $50M', 'Apr 15, 2026', 'Bloomberg'),
+    outlet('https://www.propublica.org/cfpb', 'CFPB probes into a16z-backed fintechs disrupted under political pressure', '2025', 'ProPublica'),
+    outlet('https://www.cnbc.com/accuse', "Ex-partner John O'Farrell accuses a16z of political infiltration", 'Jun 11, 2026', 'CNBC'),
+    outlet('https://example.com/stripe', 'DOJ probes Stripe over payment fees', '2026-08-16', 'StripeWire'),
+  ], [
+    timeline('2026-08-18', 'Regulator', "DOJ probe into partners' board seats at Databricks and Fivetran reported. Open, no charges.", tc),
+    timeline('2026-08-17', 'Reported', 'Reuters reports DOJ probe focused on a16z board directors', reu),
+    timeline('2009', 'Reported', 'Founded by Marc Andreessen and Ben Horowitz', reu),
+  ], A16Z);
+  const doj = cards.filter(c => /Databricks and Fivetran/.test(c.head) || /Bloomberg News reports/.test(c.head));
+  assert.equal(doj.length, 1);
+  assert.equal(doj[0].head, "DOJ probes a16z partners' board seats at Databricks and Fivetran");
+  assert.equal(doj[0].outlets, 3);
+  assert.equal(doj[0].tag, 'Regulator');
+  assert.equal(doj[0].src.map(s => s.label).sort().join('|'), 'Reuters|TechCrunch|The Next Web');
+  assert.equal(cards.filter(c => c.head === 'DOJ probes Stripe over payment fees').length, 1);
+  assert.ok(cards.some(c => c.head.startsWith('Run The World')));
+  assert.ok(cards.some(c => /super PAC/.test(c.head)));
+  assert.ok(cards.some(c => c.head.startsWith('CFPB')));
+  assert.ok(cards.some(c => /O'Farrell/.test(c.head)));
+  assert.equal(cards.filter(c => /Founded by Marc/.test(c.head)).length, 0);
+});
+
+test('obviously different stories are not grouped', () => {
+  const split = buildNews([
+    outlet('https://example.com/cfpb', 'CFPB probes fintech lenders over fees', '2026-08-18', 'A'),
+    outlet('https://example.com/doj', 'DOJ probes Databricks and Fivetran', '2026-08-18', 'B'),
+    outlet('https://example.com/f7', 'Fund VII final close', '2026-05-12', 'C'),
+    outlet('https://example.com/f8', 'Fund VIII final close', '2026-05-12', 'D'),
+    outlet('https://example.com/sb', 'Series B raise closes', '2026-03-01', 'E'),
+    outlet('https://example.com/sc', 'Series C raise closes', '2026-03-02', 'F'),
+    outlet('https://example.com/d1', 'DOJ probes Databricks', '2026-08-01', 'G'),
+    outlet('https://example.com/d2', 'DOJ probes Databricks', '2026-08-09', 'H'),
+    outlet('https://example.com/disc', 'Firm disclosed a letter about Fund III', '2026-05-12', 'I'),
+    outlet('https://example.com/close', 'Fund III final close', '2026-05-12', 'J'),
+  ], [], A16Z);
+  assert.equal(split.length, 10);
+  const week = buildNews([
+    outlet('https://near.example/a', 'DOJ probes Databricks', '2026-08-01', 'Near'),
+    outlet('https://week.example/a', 'DOJ probes Databricks', '2026-08-08', 'Week'),
+  ], [], A16Z);
+  assert.equal(week.length, 1);
+  assert.equal(week[0].outlets, 2);
+  const bridge = buildNews([
+    outlet('https://example.com/jan', 'DOJ probes Databricks and Fivetran', '2026-01-10', 'Jan'),
+    outlet('https://example.com/aug', 'DOJ probes Databricks and Fivetran', '2026-08-18', 'Aug'),
+    outlet('https://example.com/year', 'DOJ probe into Databricks and Fivetran', '2026', 'Year'),
+  ], [], A16Z);
+  assert.equal(bridge.filter(c => c.src.some(s => s.label === 'Jan') && c.src.some(s => s.label === 'Aug')).length, 0);
+  assert.ok(bridge.filter(c => c.src.some(s => s.label === 'Year')).length <= 1);
+  const months = buildNews([
+    outlet('https://example.com/m1', 'DOJ probes Databricks', '2026-08', 'MonthA'),
+    outlet('https://example.com/m2', 'DOJ probe of Databricks', '2026-08', 'MonthB'),
+  ], [], A16Z);
+  assert.equal(months.length, 2);
+  const undated = buildNews([
+    outlet('https://example.com/u', 'DOJ probes Databricks', '', 'Undated'),
+    outlet('https://example.com/dated', 'DOJ probes Databricks', '2026-08-18', 'Dated'),
+  ], [], A16Z);
+  assert.equal(undated.length, 2);
 });

@@ -265,7 +265,8 @@
     const court = x.tag === 'Court' || x.tag === 'Filing';
     const fav = !court && logo && x.logo ? '<img class="fav" src="' + esc(ROOT + x.logo) + '" alt="" width="20" height="20">' : '<span class="fav lb">' + esc((x.outlet || x.tag || '?')[0]) + '</span>';
     const tag = x.tag ? '<span class="cs cs-cl">' + esc(x.tag) + '</span>' : '';
-    return '<div class="pi"><div class="pio">' + fav + '<span>' + esc(x.outlet || '') + (host && String(x.outlet || '').split(' · ')[0].trim().toLowerCase().replace(/^www\./, '') !== host ? ' · ' + esc(host) : '') + (x.date ? ' · ' + esc(fdate(x.date) || x.date) : '') + '</span>' + tag + '</div>'
+    const note = x.outlets > 1 && COPY.outlets ? '<span class="nout">' + esc(pl(COPY.outlets, x.outlets)) + '</span>' : '';
+    return '<div class="pi"><div class="pio">' + fav + '<span>' + esc(x.outlet || '') + (host && String(x.outlet || '').split(' · ')[0].trim().toLowerCase().replace(/^www\./, '') !== host ? ' · ' + esc(host) : '') + (x.date ? ' · ' + esc(fdate(x.date) || x.date) : '') + '</span>' + tag + note + '</div>'
       + (u ? '<a class="pih" href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(x.head) + '</a>' : '<b class="pih">' + esc(x.head) + '</b>')
       + (x.snippet ? '<p class="pis">' + esc(x.snippet) + '</p>' : '') + chips(x.src) + '</div>';
   }
@@ -300,7 +301,7 @@
   const gate = (P, inner) => '<div class="gate"><div class="gveil" aria-hidden="true" inert>' + inner + '</div><div class="gcard" role="region" aria-label="' + esc(GT.title) + '"><b>' + esc(GT.title) + '</b><p>'
     + esc(fmt(GT.sub, { firm: P.firm.name })) + '</p><button type="button" class="btn" data-gate>' + esc(GT.button) + '</button><p class="gmsg" role="status"></p></div></div>';
   // News is drawn here from the press and timeline rows firm_page already returns. Nothing is written back.
-  // The link merge and the 2023 cutoff apply only to this list. Several outlets on one story stay several cards.
+  // The link merge, the story grouping and the 2023 cutoff apply only to this list.
   function normLink(u) {
     return String(u || '').trim().toLowerCase().replace(/#.*$/, '').replace(/\?.*$/, '').replace(/^https?:\/\/(?:www\.)?/, '').replace(/\/+$/, '');
   }
@@ -344,7 +345,214 @@
     const sa = newsStamp(a), sb = newsStamp(b);
     return sa != null && sa === sb;
   }
-  function buildNews(press, timeline) {
+  const STORY_DAYS = 7 * 86400000;
+  const STORY_STOP = new Set('a an the of into over and or for at on in to from with by as its their his her board boards seat seats director directors partner partners news report reports reported founder founders focus focuses focused final other outlet outlets firm firms company companies people person opens open draw draws look looks review reviews widens widen new says said after before about than then this that these those was were are is be been being not no nor but under up down out off via per also who what when where why how did does do own post posts across despite names co'.split(' '));
+  const STORY_AGENCY_SKIP = new Set('ai gp lp llc inc ltd co us uk eu un vc ceo cfo cto coo pr hr tv ok am pm ii iii iv vi vii viii ix xi xii nyc pac'.split(' '));
+  const EVENT_WORD = /\b(probes?|probing|investigat\w*|lawsuits?|sued|suits?|filings?|filed|indict\w*|settl\w*|acqui\w*|raises?|raised|raising|appoint\w*|resign\w*|quits?|closes?|closed|closing|discriminat\w*|charges?|charged|alleg\w*|fines?|fined|bankrupt\w*)\b/ig;
+  const escRe = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  function eventStem(w) {
+    w = String(w || '').toLowerCase();
+    if (/^prob/.test(w)) return 'probe';
+    if (/^invest/.test(w)) return 'investigat';
+    if (/^lawsuit|^sued|^suit/.test(w)) return 'suit';
+    if (/^fil/.test(w)) return 'filing';
+    if (/^indict/.test(w)) return 'indict';
+    if (/^settl/.test(w)) return 'settle';
+    if (/^acqui/.test(w)) return 'acqui';
+    if (/^rais/.test(w)) return 'raise';
+    if (/^appoint/.test(w)) return 'appoint';
+    if (/^resign|^quit/.test(w)) return 'resign';
+    if (/^clos/.test(w)) return 'close';
+    if (/^discrim/.test(w)) return 'discriminat';
+    if (/^charg/.test(w)) return 'charge';
+    if (/^alleg/.test(w)) return 'alleg';
+    if (/^fin/.test(w)) return 'fine';
+    if (/^bankrupt/.test(w)) return 'bankrupt';
+    return '';
+  }
+  function stripAttribution(head) {
+    return String(head || '').replace(/,\s+[A-Z][\w .&'"’-]*\breports?\b\.?\s*$/i, '').replace(/\breported by\b.*$/i, '').trim();
+  }
+  function firmAliases(firm) {
+    const out = [];
+    ['name', 'short_name', 'sec_name'].forEach(k => {
+      const v = firm && firm[k] ? String(firm[k]).trim() : '';
+      if (v.length >= 3) out.push(v);
+    });
+    return out.sort((a, b) => b.length - a.length);
+  }
+  function storyWhen(label) {
+    const t = String(label || '').trim();
+    if (!t) return { prec: 'none', stamp: null, year: null, month: null };
+    const day = t.match(/^(\d{4})-(\d{2})-(\d{2})\b/);
+    if (day) return { prec: 'day', stamp: Date.UTC(+day[1], +day[2] - 1, +day[3]), year: +day[1], month: +day[2] };
+    if (window.RegretDate) {
+      const s = window.RegretDate.stamp(t);
+      if (s != null) { const d = new Date(s); return { prec: 'day', stamp: s, year: d.getUTCFullYear(), month: d.getUTCMonth() + 1 }; }
+    }
+    const months = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12 };
+    const isoM = t.match(/^(\d{4})-(\d{2})$/), named = t.match(/^([A-Za-z]+)\.?\s+(\d{4})$/);
+    if (isoM && +isoM[2] >= 1 && +isoM[2] <= 12) return { prec: 'month', stamp: null, year: +isoM[1], month: +isoM[2] };
+    if (named && months[named[1].toLowerCase().slice(0, 3)]) return { prec: 'month', stamp: null, year: +named[2], month: months[named[1].toLowerCase().slice(0, 3)] };
+    if (/^\d{4}$/.test(t)) return { prec: 'year', stamp: null, year: +t, month: null };
+    return { prec: 'none', stamp: null, year: null, month: null };
+  }
+  function storyParts(head, firm) {
+    const cleaned = stripAttribution(head);
+    const aliases = firmAliases(firm);
+    const hasFirm = aliases.some(a => new RegExp('\\b' + escRe(a) + '\\b', 'i').test(cleaned));
+    let text = cleaned;
+    aliases.forEach(a => { text = text.replace(new RegExp('\\b' + escRe(a) + '\\b', 'gi'), ' '); });
+    const events = new Set();
+    text.replace(EVENT_WORD, w => { const s = eventStem(w); if (s) events.add(s); return w; });
+    const companies = new Set(), agencies = new Set();
+    text = text.replace(/\bfund\s+(i{1,3}|iv|vi{0,3}|ix|xi{0,3}|xii|\d+)\b/gi, (_, n) => { companies.add('fund-' + String(n).toUpperCase()); return ' '; });
+    text = text.replace(/\bseries\s+([a-z])\b/gi, (_, n) => { companies.add('series-' + n.toLowerCase()); return ' '; });
+    const tokens = text.match(/[A-Za-z0-9][A-Za-z0-9'’]*/g) || [];
+    tokens.forEach(w => {
+      if (/\d/.test(w) && /[A-Za-z]/.test(w) && w.length <= 8 && !STORY_STOP.has(w.toLowerCase())) companies.add(w.toLowerCase());
+      if (/^[A-Z]{2,6}$/.test(w)) { const k = w.toLowerCase(); if (!STORY_AGENCY_SKIP.has(k) && !STORY_STOP.has(k)) agencies.add(k); }
+    });
+    let phrase = [];
+    const flush = () => {
+      const parts = phrase.filter(w => !STORY_STOP.has(w.toLowerCase()) && !/^[A-Z]{2,6}$/.test(w) && !eventStem(w));
+      if (parts.length) companies.add(parts.map(w => w.toLowerCase()).join('-'));
+      phrase = [];
+    };
+    tokens.forEach(w => { if (/^[A-Z][a-z]/.test(w)) phrase.push(w); else flush(); });
+    flush();
+    return { events, companies, agencies, hasFirm };
+  }
+  function setShares(a, b) { let n = 0; a.forEach(x => { if (b.has(x)) n++; }); return n; }
+  function storyOverlap(a, b, strong) {
+    if (!setShares(a.events, b.events)) return 0;
+    const comp = setShares(a.companies, b.companies);
+    const bothComp = a.companies.size && b.companies.size;
+    if (bothComp && !comp) return 0;
+    const ag = setShares(a.agencies, b.agencies);
+    if (a.agencies.size && b.agencies.size && !ag) return 0;
+    let score = comp * 10 + ag * 3;
+    if (a.hasFirm && b.hasFirm) score += 1;
+    if (!score) return 0;
+    if (strong) return comp || (ag && a.hasFirm && b.hasFirm && !bothComp) ? score : 0;
+    return comp || (ag && !bothComp) ? score : 0;
+  }
+  function srcHost(url) {
+    const u = safeUrl(url);
+    if (!u) return '';
+    try { return new URL(u).hostname.replace(/^www\./, '').toLowerCase(); } catch (e) { return ''; }
+  }
+  function collapseSrc(list) {
+    const by = new Map();
+    (list || []).forEach(s => {
+      if (!s || !s.url) return;
+      const host = srcHost(s.url), key = host || String(s.label || '').toLowerCase();
+      if (!key) return;
+      const cur = by.get(key);
+      if (!cur) { by.set(key, s); return; }
+      const bare = (label) => String(label || '').replace(/\s*·\s*own media\s*$/i, '').replace(/\s*·\s*other source\s*$/i, '').split(' · ')[0].trim().toLowerCase();
+      if (bare(cur.label) === host && bare(s.label) !== host) by.set(key, s);
+    });
+    return Array.from(by.values());
+  }
+  function groupStories(cards, firm) {
+    const info = cards.map(c => Object.assign(storyWhen(c.date), storyParts(c.head, firm)));
+    const n = cards.length, parent = cards.map((_, i) => i);
+    const find = (i) => parent[i] === i ? i : (parent[i] = find(parent[i]));
+    const membersOf = (root) => { const out = []; for (let i = 0; i < n; i++) if (find(i) === root) out.push(i); return out; };
+    const daySpan = (members) => {
+      const ds = members.filter(i => info[i].prec === 'day' && info[i].stamp != null).map(i => info[i].stamp);
+      return ds.length ? Math.max.apply(null, ds) - Math.min.apply(null, ds) : 0;
+    };
+    const unionDay = (i, j) => {
+      const a = find(i), b = find(j);
+      if (a === b) return;
+      if (daySpan(membersOf(a).concat(membersOf(b))) > STORY_DAYS) return;
+      parent[b] = a;
+    };
+    const clusterParts = (members) => {
+      const events = new Set(), companies = new Set(), agencies = new Set();
+      let hasFirm = false;
+      members.forEach(i => {
+        info[i].events.forEach(e => events.add(e));
+        info[i].companies.forEach(e => companies.add(e));
+        info[i].agencies.forEach(e => agencies.add(e));
+        if (info[i].hasFirm) hasFirm = true;
+      });
+      return { events, companies, agencies, hasFirm };
+    };
+    const pair = (wantCompanies) => {
+      for (let i = 0; i < n; i++) {
+        if (info[i].prec !== 'day' || (info[i].companies.size > 0) !== wantCompanies) continue;
+        for (let j = i + 1; j < n; j++) {
+          if (info[j].prec !== 'day' || (info[j].companies.size > 0) !== wantCompanies) continue;
+          if (Math.abs(info[i].stamp - info[j].stamp) > STORY_DAYS) continue;
+          if (!storyOverlap(info[i], info[j], false)) continue;
+          unionDay(i, j);
+        }
+      }
+    };
+    pair(true); pair(false);
+    const dayRoots = () => {
+      const s = [], seen = new Set();
+      for (let i = 0; i < n; i++) {
+        if (info[i].prec !== 'day') continue;
+        const r = find(i); if (seen.has(r)) continue; seen.add(r); s.push(r);
+      }
+      return s;
+    };
+    dayRoots().filter(r => membersOf(r).every(i => !info[i].companies.size)).forEach(r => {
+      const mem = membersOf(r), plain = clusterParts(mem);
+      let best = -1, bestScore = 0, bestStamp = -1, ties = 0;
+      dayRoots().forEach(cr => {
+        if (cr === r) return;
+        const cm = membersOf(cr);
+        if (!cm.some(i => info[i].companies.size) || daySpan(mem.concat(cm)) > STORY_DAYS) return;
+        const score = storyOverlap(plain, clusterParts(cm), true);
+        const stamp = Math.max.apply(null, cm.map(i => info[i].stamp || 0));
+        if (!score) return;
+        if (score > bestScore || (score === bestScore && stamp > bestStamp)) { best = cr; bestScore = score; bestStamp = stamp; ties = 1; }
+        else if (score === bestScore) ties++;
+      });
+      if (bestScore && ties === 1) parent[r] = best;
+    });
+    for (let i = 0; i < n; i++) {
+      if ((info[i].prec !== 'year' && info[i].prec !== 'month') || find(i) !== i) continue;
+      let best = -1, bestScore = 0, bestStamp = -1, ties = 0;
+      const seen = new Set();
+      for (let j = 0; j < n; j++) {
+        if (info[j].prec !== 'day') continue;
+        const cr = find(j); if (seen.has(cr)) continue; seen.add(cr);
+        const days = membersOf(cr).filter(k => info[k].prec === 'day');
+        if (!days.length || daySpan(days) > STORY_DAYS) continue;
+        const years = new Set(days.map(k => info[k].year)), months = new Set(days.map(k => info[k].month));
+        if (info[i].prec === 'year' && (years.size !== 1 || !years.has(info[i].year))) continue;
+        if (info[i].prec === 'month' && (years.size !== 1 || months.size !== 1 || !years.has(info[i].year) || !months.has(info[i].month))) continue;
+        const score = storyOverlap(info[i], clusterParts(days), true);
+        const stamp = Math.max.apply(null, days.map(k => info[k].stamp || 0));
+        if (!score) continue;
+        if (score > bestScore || (score === bestScore && stamp > bestStamp)) { best = cr; bestScore = score; bestStamp = stamp; ties = 1; }
+        else if (score === bestScore) ties++;
+      }
+      if (bestScore && ties === 1) parent[i] = best;
+    }
+    const groups = new Map();
+    for (let i = 0; i < n; i++) { const r = find(i); if (!groups.has(r)) groups.set(r, []); groups.get(r).push(i); }
+    const keep = [];
+    groups.forEach(mem => {
+      const days = mem.filter(i => info[i].prec === 'day');
+      const pool = (days.length ? days : mem).slice().sort((a, b) => (info[b].stamp || 0) - (info[a].stamp || 0) || a - b);
+      const k = pool[0];
+      mem.forEach(i => { if (i === k) return; addSrc(cards[k], cards[i].src); bumpTag(cards[k], cards[i].tag); });
+      if (mem.length > 1) {
+        cards[k].src = collapseSrc(cards[k].src);
+        cards[k].outlets = cards[k].src.length;
+      }
+      keep.push(cards[k]);
+    });
+    return keep;
+  }
+  function buildNews(press, timeline, firm) {
     const cards = [];
     (press || []).map((x, i) => ({ x, i })).sort((a, b) => {
       const sa = newsStamp(a.x.date), sb = newsStamp(b.x.date);
@@ -389,19 +597,24 @@
       addSrc(card, links);
       cards.push(card);
     });
-    return cards.filter(c => { const y = c._year != null ? c._year : newsYear(c.date); return y == null || y >= 2023; }).sort((a, b) => {
+    const shown = cards.filter(c => { const y = c._year != null ? c._year : newsYear(c.date); return y == null || y >= 2023; });
+    return groupStories(shown, firm).sort((a, b) => {
       const sa = newsStamp(a.date), sb = newsStamp(b.date);
       if (sa == null && sb == null) return 0;
       if (sa == null) return 1;
       if (sb == null) return -1;
       return sb - sa;
-    }).map(c => ({ head: c.head, outlet: c.outlet, date: c.date, url: c.url, snippet: c.snippet, logo: c.logo, tag: c.tag, src: c.src, origin: c.origin }));
+    }).map(c => {
+      const pub = { head: c.head, outlet: c.outlet, date: c.date, url: c.url, snippet: c.snippet, logo: c.logo, tag: c.tag, src: c.src, origin: c.origin };
+      if (c.outlets > 1) pub.outlets = c.outlets;
+      return pub;
+    });
   }
   // Sections the new page draws. "The 10 checks" is not one of them. An LP with several commitments counts once.
   // News is not a stored section: it is press and timeline combined at display time.
   function pageSecs(P) {
     const byKey = Object.fromEntries((P.sections || []).map(s => [s.key, s]));
-    const newsItems = buildNews((byKey.press && byKey.press.items) || [], (byKey.timeline && byKey.timeline.items) || []);
+    const newsItems = buildNews((byKey.press && byKey.press.items) || [], (byKey.timeline && byKey.timeline.items) || [], P && P.firm);
     return CFG.sections.list.filter(c => c.key !== 'checks' && (c.key === 'news' ? newsItems.length : byKey[c.key])).map(c => {
       if (c.key === 'news') return Object.assign({}, c, { count: newsItems.length, items: newsItems, teaser: (newsItems[0] && newsItems[0].head) || '' });
       const s = Object.assign({}, byKey[c.key], c);

@@ -377,7 +377,7 @@ button.rgt-tab{border:0;background:transparent;cursor:pointer}
 .rws{margin-top:4px}.rw{padding:11px 0;border-bottom:1px solid var(--line)}.rw:last-child{border-bottom:0}
 .rt{font-weight:700;font-size:15px;color:var(--ink)}.rn{color:var(--ink2);font-size:14px;margin-top:2px}
 .rm{font-size:12px;color:var(--mute);margin-top:4px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}.rm .sc{margin:0}
-.pio .cs{margin-left:6px}.seefull{margin:14px 0 0}.seefull a{color:var(--vio);font-weight:700;text-decoration:none}
+.pio .cs{margin-left:6px}.nout{font-size:12px;color:var(--mute);margin-left:6px}.seefull{margin:14px 0 0}.seefull a{color:var(--vio);font-weight:700;text-decoration:none}
 .toc a span{color:var(--mute);margin-left:6px}
 .sumpg.checking .rgt-see{display:none}
 

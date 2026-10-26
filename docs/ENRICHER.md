@@ -26,7 +26,7 @@ Body:
                 {"section": "checks", "site": "trade.gov", "query": "Kevin Zhang", "searched_at": "2026-10-24T17:13:00-07:00", "result": "none", "item_count": 0, "name_only": true, "list": "ITAR Debarred (DTC)", "check": 3}]}}
 ```
 
-**News (docs/DATA_RULES.md §4):** keep sending Press coverage and Timeline as they are. The page combines those rows into one News section when it draws. The same link becomes one card, and items dated before 2023 are left off that section. Both rules are display-only and apply only to News.
+**News (docs/DATA_RULES.md §4):** keep sending Press coverage and Timeline as they are. The page combines those rows into one News section when it draws. The same link becomes one card. Headlines that share an event and a name, and fall within about 7 days, become one card with an outlets note. Items dated before 2023 are left off that section. These rules are display-only and apply only to News.
 
 **Data rules (docs/DATA_RULES.md):** one structured item per fact with the fields shown above; free text only as
 `{"note": "..."}` (kept, never published). `{"item": "..."}` free text is refused. Duplicates of page rows add their source;

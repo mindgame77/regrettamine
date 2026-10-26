@@ -23,6 +23,7 @@ def test_sections_are_layout_a():
     assert COPY["company"]["legal"]["context"] == "Context"
     assert COPY["company"]["people"]["officer"] == "Officers"
     assert COPY["company"]["commitments"] == "{n} commitments"
+    assert COPY["company"]["outlets"] == ["{n} outlet", "{n} outlets"]
     assert COPY["company"]["summary"] == "Check summary"
     assert "data-tab" in COPY["company"]["full_check"] or "full_check" in COPY["company"]
 
@@ -35,7 +36,7 @@ def test_page_renders_rows_news_and_a_client_side_toggle():
     assert 'data-tab="{k}"' in BUILD and 'id="panel-checks"' in BUILD and 'id="panel-full"' in BUILD
     assert "function goTab(" in APP and "history.pushState" in APP
     assert "scrollTo(0, 0)" not in APP
-    assert "#panel-checks[hidden]" in CSS and ".rw{" in CSS
+    assert "#panel-checks[hidden]" in CSS and ".rw{" in CSS and ".nout{" in CSS
     assert "display only" in RULES and "only when News is drawn" in RULES
     assert "news_items" not in RULES and "story_key" not in RULES
 

@@ -653,6 +653,7 @@
    "officer": "Officers"
   },
   "commitments": "{n} commitments",
+  "outlets": ["{n} outlet", "{n} outlets"],
   "no_facts": "No sourced facts on file for this check yet.",
   "retrieved": "retrieved ",
   "source": "Source",

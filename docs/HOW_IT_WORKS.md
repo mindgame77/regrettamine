@@ -50,7 +50,7 @@ accepted and what was refused and why (`bot_feedback`). That way the bot learns.
   the older row's source is added to the same item.
 * **Old-format rows** (the enrichments from before the rules, ids below `data_rules_from_enrichment_id`) go through the
   same rules. Anything unreadable is held with a reason. Nothing is dropped silently.
-* **News is one section on the page.** Press and timeline stay stored as they are. The page combines them into News when it draws: the same link is one card, and items dated before 2023 are left off that section. This cutoff and this link merge apply only to News. The same date with a different link is not a merge. Several outlets on one story stay several cards.
+* **News is one section on the page.** Press and timeline stay stored as they are. The page combines them into News when it draws: the same link is one card, headlines that share an event and a name within about 7 days are one card, and items dated before 2023 are left off that section. This cutoff, this link merge and this story grouping apply only to News. The same date with a different link is not, by itself, a merge.
 * **Own media:** a founder quote or press item from the firm's own site, podcast or channels is labelled "Own media" (not independent).
 * **Scores** follow docs/toxy-score-v2-rules.md (start full, lose points only for verified evidence, rates not counts).
 

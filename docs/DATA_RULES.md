@@ -71,9 +71,13 @@ These two rules apply **only when News is drawn**. No other section drops old ro
    tag (Court, Filing, Regulator, People, Fund) is kept on that card. Normalization is lowercase, without the scheme,
    `www.`, query, hash or a trailing slash. A timeline event dated before 2023 does not fold into a card dated 2023
    or later, or into a card with no date. Two timeline events that share a link stay two cards when their dates differ.
-   The same date with a different link is not a merge. Several outlets covering one story stay several cards until a
-   later data check says otherwise.
-2. **Since 2023.** Items dated before 2023 are not shown in News. They stay stored. Undated items are shown.
+   The same date with a different link is not, by itself, a merge.
+2. **One card per story.** After the link merge, News groups items whose dates fall within 7 days when the headlines
+   share an event word and a name (a company, a fund, or an agency such as DOJ). The firm’s own name is not enough on
+   its own. A date that is only a year can join one group from that year whose days already sit within 7 days; it does
+   not join two groups that are further apart. The card keeps the newest dated headline, lists each outlet, and adds
+   an “N outlets” note when more than one outlet is grouped. Headlines that do not share those terms stay separate cards.
+3. **Since 2023.** Items dated before 2023 are not shown in News. They stay stored. Undated items are shown.
 
 ## 5. Publishing is by approved batch only
 Nothing publishes when a bot sends data. A person runs a batch by hand; Alex approves each batch after its dry run.
