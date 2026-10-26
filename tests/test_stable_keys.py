@@ -87,8 +87,28 @@ def test_section_count_alerts():
         assert c.execute("select count(*) from section_count_alerts where firm_id = %s", (fid,)).fetchone()[0] == 0
         _submit(c, slug, {"Timeline": [{"date": str(2011 + i), "event": f"Later event {i}", "source": ADV} for i in range(2)]})  # 3 -> 5
         tid = c.execute("select id from timeline_events where firm_id = %s limit 1", (fid,)).fetchone()[0]
-        c.execute("select record_removed('timeline_events', %s, %s, 'test', 'pytest', true)", (tid, fid))
+        c.execute("update timeline_events set hidden = true where id = %s", (tid,))  # not recorded: a real drop
         _submit(c, slug, {"Overview": [{"label": "Founded", "value": "1999", "source": ADV}]})  # timeline 5 -> 4: drop
         got = c.execute("select section, prev_n, new_n, kind from section_count_alerts where firm_id = %s order by id", (fid,)).fetchall()
         assert got == [("timeline", 3, 5, "jump"), ("timeline", 5, 4, "drop")], got
+        c.rollback()
+
+
+def test_recorded_hide_or_replace_does_not_raise_a_drop_alert():
+    with _db() as c:
+        slug, fid = _firm(c)
+        _submit(c, slug, {"Timeline": [{"date": str(2000 + i), "event": f"Event number {i}", "source": ADV} for i in range(3)]})
+        alerts = lambda: c.execute("select section, prev_n, new_n, kind from section_count_alerts where firm_id = %s order by id", (fid,)).fetchall()
+        # replace: add the clean item, then hide the old one with a reason
+        _submit(c, slug, {"Timeline": [{"date": "2010", "event": "Clean replacement event", "source": ADV}]})
+        old = c.execute("select id from timeline_events where firm_id = %s and body = 'Event number 0'", (fid,)).fetchone()[0]
+        c.execute("select record_removed('timeline_events', %s, %s, 'replaced by clean item', 'pytest', true)", (old, fid))
+        assert c.execute("select n from section_counts where firm_id = %s and section = 'timeline'", (fid,)).fetchone()[0] == 3
+        _submit(c, slug, {"Overview": [{"label": "Founded", "value": "1999", "source": ADV}]})
+        assert alerts() == [], alerts()
+        # restore is also snapshotted
+        c.execute("select restore_hidden('timeline_events', %s, %s, 'pytest')", (old, fid))
+        assert c.execute("select n from section_counts where firm_id = %s and section = 'timeline'", (fid,)).fetchone()[0] == 4
+        _submit(c, slug, {"Overview": [{"label": "Founded", "value": "1999", "source": ADV}]})
+        assert alerts() == [], alerts()
         c.rollback()
