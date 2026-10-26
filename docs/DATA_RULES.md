@@ -83,6 +83,12 @@ These two rules apply **only when News is drawn**. No other section drops old ro
    an “N outlets” note when more than one outlet is grouped. Headlines that do not share those terms stay separate cards.
 3. **Since 2023.** Items dated before 2023 are not shown in News. They stay stored. Undated items are shown.
 
+## 4a. Overview rows are cleaned when the page draws (display only)
+
+The stored overview facts stay as filed. `launch/js/company.js` rewrites them only while drawing the Overview section. No other section uses these rules.
+
+Hidden rows: Other names, Type, Staff, Private funds, Legal entity, Sanctions screening, and any row that is empty or "Not found". CRD numbers and SEC file numbers are removed from the rows that stay. A row whose label is the entity name (for example `Y COMBINATOR MANAGEMENT, LLC`) is shown as `Legal name:` plus that name in title case. Registration is shortened to `SEC-registered since <year>, active`, or `SEC exempt reporting adviser, active` for an exempt reporting adviser. If Registration is missing and Legal entity holds that status, that text becomes the Registration line. Founders are merged into Founded (`2009 · Marc Andreessen, Ben Horowitz`). The order is HQ, Legal name, Registration, Founded, Owners, Recent changes, then any other overview row that was not hidden. The section count is the number of rows still shown. Source pills stay on the kept rows. A merged row keeps both rows' pills, with the same link once.
+
 ## 5. Publishing is by approved batch only
 Nothing publishes when a bot sends data. A person runs a batch by hand; Alex approves each batch after its dry run.
 See docs/ENRICHER.md "Publishing" and docs/HOW_IT_WORKS.md.

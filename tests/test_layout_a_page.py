@@ -49,3 +49,8 @@ def test_news_is_combined_when_the_page_draws():
 def test_legal_rows_put_active_first():
     r = subprocess.run(["node", "--test", "tests/legal_order.test.mjs"], cwd=ROOT, capture_output=True, text=True)
     assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-2000:]
+
+
+def test_overview_rows_for_yc_and_a16z():
+    r = subprocess.run(["node", "--test", "tests/overview_display.test.mjs"], cwd=ROOT, capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-2000:]

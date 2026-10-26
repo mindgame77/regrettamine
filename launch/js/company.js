@@ -234,6 +234,119 @@
       return row(title, '', g.lead ? NC : '', src, g.values.map(v => nice(cleanLead(v))).filter(Boolean).join(' | '));
     }).join('');
   }
+  // Overview is cleaned here, when the page draws. Stored rows are not changed, and no other section uses this.
+  // Hidden: Other names, Type, Staff, Private funds, Legal entity, Sanctions screening, empty, and "Not found".
+  // Legal entity is kept only as the Registration line when that row is missing and the entity text holds the status.
+  const OV_LINE = COPY.overview_line || {};
+  const LEGAL_SUFFIX = /\b(l\.?l\.?c\.?|l\.?l\.?p\.?|l\.?p\.?|inc\.?|ltd\.?|corp\.?|plc|gmbh|s\.?a\.?r?\.?l\.?|a\.?g\.?|b\.?v\.?|n\.?v\.?|ulc|pte\.?|pty\.?|icav)\b/i;
+  function ovSlot(label) {
+    const l = String(label || '').replace(/\s+/g, ' ').trim().toLowerCase();
+    if (l === 'hq' || l === 'headquarters' || l === 'headquarter') return 'hq';
+    if (l === 'legal name') return 'legal';
+    if (l === 'registration') return 'registration';
+    if (l === 'founded') return 'founded';
+    if (l === 'founders' || l === 'founder') return 'founders';
+    if (l === 'owners' || l === 'owner') return 'owners';
+    if (l === 'recent changes' || l === 'recent change') return 'changes';
+    if (l === 'other names' || l === 'type' || l === 'staff' || l === 'private funds' || l === 'legal entity' || l === 'sanctions screening') return 'hide';
+    if (LEGAL_SUFFIX.test(String(label || ''))) return 'entity';
+    return 'other';
+  }
+  function blankOverview(v) {
+    const t = String(v || '').replace(/\s+/g, ' ').trim();
+    return !t || /^(not found( in public records)?|no data yet|n\/a|none|—|–|-|\.{1,3})[.!]?$/i.test(t);
+  }
+  function stripFileNums(s) {
+    let t = String(s || '');
+    t = t.replace(/\bCRD\s*#?\s*\d+\b/gi, '');
+    t = t.replace(/\bSEC\s*#?\s*\d{3}-\d+\b/gi, '');
+    t = t.replace(/\b80[12]-\d{4,6}\b/g, '');
+    t = t.replace(/\(\s*(?:,\s*)*\)/g, '');
+    t = t.replace(/[ \t]{2,}/g, ' ');
+    t = t.replace(/\s*·\s*(·\s*)+/g, ' · ');
+    t = t.replace(/\s*,\s*(,\s*)+/g, ', ');
+    t = t.replace(/\s+([,;])/g, '$1');
+    t = t.replace(/\(\s*,/g, '(').replace(/,\s*\)/g, ')');
+    t = t.replace(/^[,\s·;:]+|[,\s·;:]+$/g, '');
+    t = t.replace(/\(\s*\)/g, '').replace(/\s{2,}/g, ' ').trim();
+    return t;
+  }
+  function dedupeSrc(list) {
+    const seen = {}, out = [];
+    (list || []).forEach(s => {
+      if (!s) return;
+      const url = String(s.url || '').trim().toLowerCase().replace(/\/+$/, '');
+      const id = url || ('|' + (s.label || ''));
+      if (!id || seen[id]) return;
+      seen[id] = 1;
+      out.push(s);
+    });
+    return out;
+  }
+  function holdsRegStatus(raw) {
+    return /exempt reporting adviser|sec-registered|investment adviser|\bapproved\b|\bactive\b/i.test(raw || '');
+  }
+  function registrationLine(raw) {
+    const era = /exempt reporting adviser/i.test(raw || '');
+    const inactive = /\b(inactive|withdrawn|terminated|not active)\b/i.test(raw || '');
+    const active = /\bactive\b/i.test(raw || '') && !inactive;
+    const year = (String(raw || '').match(/\b(?:approved|since|registered|registration)\b[\s\S]{0,40}?((?:19|20)\d{2})\b/i) || [])[1];
+    if (era) return active ? (OV_LINE.era_active || 'SEC exempt reporting adviser, active') : (OV_LINE.era || 'SEC exempt reporting adviser');
+    if (year && active) return fmt(OV_LINE.sec_active || 'SEC-registered since {year}, active', { year });
+    if (year) return fmt(OV_LINE.sec_since || 'SEC-registered since {year}', { year });
+    if (active && /sec-registered|investment adviser|\bapproved\b/i.test(raw || '')) return OV_LINE.sec_active_noyear || 'SEC-registered, active';
+    return stripFileNums(raw);
+  }
+  function overviewRows(items) {
+    const slot = { hq: [], legal: [], entity: [], registration: [], founded: [], founders: [], owners: [], changes: [], legalEntity: [], other: [] };
+    (items || []).forEach((x, i) => {
+      const k = ovSlot(x && x.label);
+      const row = Object.assign({ _i: i }, x);
+      if (k === 'hide') {
+        if (String(x.label || '').replace(/\s+/g, ' ').trim().toLowerCase() === 'legal entity') slot.legalEntity.push(row);
+        return;
+      }
+      (slot[k] || slot.other).push(row);
+    });
+    const out = [];
+    const push = (label, value, src, lead) => {
+      const core = stripFileNums(cleanLead(value));
+      if (blankOverview(core)) return;
+      out.push({ label, value: lead ? ('Lead: ' + core) : core, src: dedupeSrc(src) });
+    };
+    const byIndex = (a, b) => a._i - b._i;
+    slot.hq.sort(byIndex).forEach(x => push(x.label || 'HQ', x.value, x.src, isLeadVal(x.value) || isLeadVal(x.label)));
+    slot.legal.sort(byIndex).forEach(x => push('Legal name', x.value, x.src, isLeadVal(x.value) || isLeadVal(x.label)));
+    slot.entity.sort(byIndex).forEach(x => push('Legal name', nice(String(x.label || '').trim()), x.src, isLeadVal(x.label)));
+    if (slot.registration.length) {
+      slot.registration.sort(byIndex).forEach(x => push('Registration', registrationLine(x.value), x.src, isLeadVal(x.value) || isLeadVal(x.label)));
+    } else {
+      const hold = slot.legalEntity.find(x => holdsRegStatus(x.value));
+      if (hold) push('Registration', registrationLine(hold.value), hold.src, isLeadVal(hold.value));
+    }
+    if (slot.founded.length || slot.founders.length) {
+      let value = '';
+      slot.founded.sort(byIndex).forEach(x => {
+        const core = stripFileNums(cleanLead(x.value));
+        if (blankOverview(core)) return;
+        if (value.toLowerCase().indexOf(core.toLowerCase()) < 0) value = value ? value + ' · ' + core : core;
+      });
+      slot.founders.sort(byIndex).forEach(x => {
+        const core = stripFileNums(cleanLead(x.value));
+        if (blankOverview(core) || value.toLowerCase().indexOf(core.toLowerCase()) >= 0) return;
+        value = value ? value + ' · ' + core : core;
+      });
+      const src = [];
+      slot.founded.forEach(x => (x.src || []).forEach(s => src.push(s)));
+      slot.founders.forEach(x => (x.src || []).forEach(s => src.push(s)));
+      const lead = slot.founded.concat(slot.founders).some(x => isLeadVal(x.value) || isLeadVal(x.label));
+      push('Founded', value, src, lead);
+    }
+    slot.owners.sort(byIndex).forEach(x => push(x.label || 'Owners', x.value, x.src, isLeadVal(x.value) || isLeadVal(x.label)));
+    slot.changes.sort(byIndex).forEach(x => push(x.label || 'Recent changes', x.value, x.src, isLeadVal(x.value) || isLeadVal(x.label)));
+    slot.other.sort(byIndex).forEach(x => push(x.label, x.value, x.src, isLeadVal(x.value) || isLeadVal(x.label)));
+    return out;
+  }
   const yearNum = (x) => { const y = shownYear(x) || (x && x.year) || ''; const m = String(y).match(/(19|20)\d{2}/); return m ? +m[0] : 0; };
   // Display-only order for Legal & regulatory. Active rows first, newest year first, then every other status the same way.
   function legalStatus(x) {
@@ -625,8 +738,14 @@
       if (c.key === 'news') return Object.assign({}, c, { count: newsItems.length, items: newsItems, teaser: (newsItems[0] && newsItems[0].head) || '' });
       const s = Object.assign({}, byKey[c.key], c);
       if (s.key === 'lps') { const n = new Set((s.items || []).map(x => x.label)).size; if (n) s.count = n; }
+      if (s.key === 'overview') {
+        const items = overviewRows(s.items || []);
+        if (!items.length) return null;
+        s.items = items;
+        s.count = items.length;
+      }
       return s;
-    });
+    }).filter(Boolean);
   }
   function checkSummaryHtml(P) {
     if (!P.open || !P.checks || !P.checks.length) return '';
@@ -963,5 +1082,5 @@
     view.total = full.total; view.head = full.head;
     return view;
   }
-  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs };
+  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows };
 })();

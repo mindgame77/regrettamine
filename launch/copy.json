@@ -790,7 +790,15 @@
    "untitled": "Untitled record",
    "loading": "Loading the 10 checks…"
   },
-  "not_confirmed": "Not confirmed"
+  "not_confirmed": "Not confirmed",
+  "overview_line": {
+   "_note": "Overview registration lines, display only (js/company.js overviewRows). Stored facts stay as filed. {year} is the approval year from the row.",
+   "sec_active": "SEC-registered since {year}, active",
+   "sec_since": "SEC-registered since {year}",
+   "sec_active_noyear": "SEC-registered, active",
+   "era_active": "SEC exempt reporting adviser, active",
+   "era": "SEC exempt reporting adviser"
+  }
  },
  "js": {
   "_note": "Strings used by js/app.js. [one, many] pairs are picked by count. HTML allowed where the code uses innerHTML (values are escaped).",
