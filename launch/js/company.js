@@ -427,11 +427,41 @@
         return '<div class="ad"><b>' + esc(d.company || '') + '</b><span>' + esc(roundName(d.round)) + '</span><span>' + esc(fdate(d.date) || '') + '</span>'
           + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(hostOf(u)) + ' ↗</a>' : '<span></span>') + '</div>'; }).join('') + '</div>';
   }
+  // "What people say": source icon (inline SVG, Simple Icons 16.36 / LinkedIn mark from Simple Icons 10.4, CC0;
+  // no image files, no hotlinking) or a letter badge, plus an outlined type pill from the review's stored type.
+  const SRC_ICONS = {
+    x: ['000000', 'M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z'],
+    reddit: ['FF4500', 'M12 0C5.373 0 0 5.373 0 12c0 3.314 1.343 6.314 3.515 8.485l-2.286 2.286C.775 23.225 1.097 24 1.738 24H12c6.627 0 12-5.373 12-12S18.627 0 12 0Zm4.388 3.199c1.104 0 1.999.895 1.999 1.999 0 1.105-.895 2-1.999 2-.946 0-1.739-.657-1.947-1.539v.002c-1.147.162-2.032 1.15-2.032 2.341v.007c1.776.067 3.4.567 4.686 1.363.473-.363 1.064-.58 1.707-.58 1.547 0 2.802 1.254 2.802 2.802 0 1.117-.655 2.081-1.601 2.531-.088 3.256-3.637 5.876-7.997 5.876-4.361 0-7.905-2.617-7.998-5.87-.954-.447-1.614-1.415-1.614-2.538 0-1.548 1.255-2.802 2.803-2.802.645 0 1.239.218 1.712.585 1.275-.79 2.881-1.291 4.64-1.365v-.01c0-1.663 1.263-3.034 2.88-3.207.188-.911.993-1.595 1.959-1.595Zm-8.085 8.376c-.784 0-1.459.78-1.506 1.797-.047 1.016.64 1.429 1.426 1.429.786 0 1.371-.369 1.418-1.385.047-1.017-.553-1.841-1.338-1.841Zm7.406 0c-.786 0-1.385.824-1.338 1.841.047 1.017.634 1.385 1.418 1.385.785 0 1.473-.413 1.426-1.429-.046-1.017-.721-1.797-1.506-1.797Zm-3.703 4.013c-.974 0-1.907.048-2.77.135-.147.015-.241.168-.183.305.483 1.154 1.622 1.964 2.953 1.964 1.33 0 2.47-.81 2.953-1.964.057-.137-.037-.29-.184-.305-.863-.087-1.795-.135-2.769-.135Z'],
+    ycombinator: ['F0652F', 'M0 24V0h24v24H0zM6.951 5.896l4.112 7.708v5.064h1.583v-4.972l4.148-7.799h-1.749l-2.457 4.875c-.372.745-.688 1.434-.688 1.434s-.297-.708-.651-1.434L8.831 5.896h-1.88z'],
+    glassdoor: ['00A162', 'M14.1093.0006c-.0749-.0074-.1348.0522-.1348.127v3.451c0 .0673.0537.1194.121.127 2.619.172 4.6092.9501 4.6092 3.6814H13.086a.1343.1343 0 0 0-.1348.1347v8.9644c0 .0748.06.1347.1348.1347h10.0034c.0748 0 .1347-.0599.1347-.1347V7.342c0-2.2374-.7996-4.0558-2.4159-5.3279C19.3191.8469 17.0874.1428 14.1093.0006ZM.9107 7.387a.1342.1342 0 0 0-.1347.1347v8.9566c0 .0748.06.1347.1347.1347h5.6189c0 2.7313-1.9902 3.5094-4.6091 3.6815-.0674.0075-.1192.0596-.1192.127v3.451c0 .0747.06.1343.1348.1269 2.9781-.1422 5.2078-.8463 6.6969-2.0136 1.6163-1.272 2.4159-3.0905 2.4159-5.3278V7.5217a.1343.1343 0 0 0-.1348-.1347z'],
+    trustpilot: ['00B67A', 'M17.227 16.67l2.19 6.742-7.413-5.388 5.223-1.354zM24 9.31h-9.165L12.005.589l-2.84 8.723L0 9.3l7.422 5.397-2.84 8.714 7.422-5.388 4.583-3.326L24 9.311z'],
+    youtube: ['FF0000', 'M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z'],
+    medium: ['000000', 'M4.21 0A4.201 4.201 0 0 0 0 4.21v15.58A4.201 4.201 0 0 0 4.21 24h15.58A4.201 4.201 0 0 0 24 19.79v-1.093c-.137.013-.278.02-.422.02-2.577 0-4.027-2.146-4.09-4.832a7.592 7.592 0 0 1 .022-.708c.093-1.186.475-2.241 1.105-3.022a3.885 3.885 0 0 1 1.395-1.1c.468-.237 1.127-.367 1.664-.367h.023c.101 0 .202.004.303.01V4.211A4.201 4.201 0 0 0 19.79 0Zm.198 5.583h4.165l3.588 8.435 3.59-8.435h3.864v.146l-.019.004c-.705.16-1.063.397-1.063 1.254h-.003l.003 10.274c.06.676.424.885 1.063 1.03l.02.004v.145h-4.923v-.145l.019-.005c.639-.144.994-.353 1.054-1.03V7.267l-4.745 11.15h-.261L6.15 7.569v9.445c0 .857.358 1.094 1.063 1.253l.02.004v.147H4.405v-.147l.019-.004c.705-.16 1.065-.397 1.065-1.253V6.987c0-.857-.358-1.094-1.064-1.254l-.018-.004zm19.25 3.668c-1.086.023-1.733 1.323-1.813 3.124H24V9.298a1.378 1.378 0 0 0-.342-.047Zm-1.862 3.632c-.1 1.756.86 3.239 2.204 3.634v-3.634z'],
+    substack: ['FF6719', 'M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z'],
+    techcrunch: ['029F00', 'M0 6v4h4v8h4v-8h4V6Zm12 4v8h12v-4h-8v-4zm4 0h8V6h-8z'],
+    linkedin: ['0A66C2', 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z']
+  };
+  const srcKey = (h) => h === 'x.com' || h === 'twitter.com' || h === 'mobile.twitter.com' ? 'x'
+    : /(^|\.)linkedin\.com$/.test(h) ? 'linkedin' : /(^|\.)reddit\.com$/.test(h) ? 'reddit'
+    : h === 'news.ycombinator.com' ? 'ycombinator' : /(^|\.)glassdoor\.[a-z.]+$/.test(h) ? 'glassdoor'
+    : /(^|\.)trustpilot\.com$/.test(h) ? 'trustpilot' : /(^|\.)(youtube\.com|youtu\.be)$/.test(h) ? 'youtube'
+    : /(^|\.)medium\.com$/.test(h) ? 'medium' : /\.substack\.com$/.test(h) || h === 'substack.com' ? 'substack'
+    : h === 'techcrunch.com' ? 'techcrunch' : '';
+  const BADGE_COLORS = ['#6C4CF1', '#0E9F6E', '#D9480F', '#1C7ED6', '#C2255C', '#5F3DC4', '#2B8A3E', '#E67700'];
+  function srcBadge(h) {
+    const k = srcKey(h), I = k && SRC_ICONS[k];
+    if (I) return '<span class="arsi" title="' + esc(h) + '"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="#' + I[0] + '"><path d="' + I[1] + '"/></svg></span>';
+    const name = String(h || '').replace(/^(www|m|blog|news|en)\./, ''), ch = (name.match(/[a-z0-9]/i) || ['?'])[0].toUpperCase();
+    let n = 0; for (const c of name) n = (n * 31 + c.charCodeAt(0)) >>> 0;
+    return '<span class="arsl" aria-hidden="true" style="background:' + BADGE_COLORS[n % BADGE_COLORS.length] + '">' + esc(ch) + '</span>';
+  }
+  const TYPE_PILL = { founder: 'tf', employee: 'te', portfolio: 'tp', company: 'tc', firm_voice: 'tv', aggregator: 'ta' };
+  const typePill = (t) => { const T = AC.types || {}, k = t || 'founder'; return T[k] ? '<span class="arty ' + (TYPE_PILL[k] || '') + '">' + esc(T[k]) + '</span>' : ''; };
   function revCard(r) {
     const u = safeUrl(r.url), R = AC.ratings || {};
     const who = r.author || (r.role ? '' : AC.anon), meta = [who && r.role && r.role.indexOf(who) === 0 ? r.role.slice(who.length).replace(/^[\s,]+/, '') : r.role, r.company, roundName(r.round)].filter(Boolean).join(' · ');
     const chipsR = Object.keys(R).filter(k => r.ratings && r.ratings[k]).map(k => '<span class="arc"><span>' + esc(R[k]) + '</span><i>' + '●'.repeat(r.ratings[k]) + '<em>' + '●'.repeat(Math.max(0, 5 - r.ratings[k])) + '</em></i></span>').join('');
-    return '<div class="arv"><div class="arh">' + (who ? '<b>' + esc(who) + '</b>' : '') + (meta ? '<span>' + esc(meta) + '</span>' : '') + '<span class="ard">' + esc(fdate(r.date) || '') + '</span></div>'
+    return '<div class="arv"><div class="arh">' + srcBadge(hostOf(u)) + (who ? '<b>' + esc(who) + '</b>' : '') + typePill(r.type) + (meta ? '<span>' + esc(meta) + '</span>' : '') + '<span class="ard">' + esc(fdate(r.date) || '') + '</span></div>'
       + '<p>“' + esc(r.body || '') + '”</p><div class="arf">' + chipsR + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"><span>' + esc(AC.source) + '</span> ' + esc(hostOf(u)) + ' ↗</a>' : '') + '</div></div>';
   }
   const showAll = (P, kind, n) => '<button type="button" class="ash"' + (P.open ? ' data-open="act' + kind + '"' : ' data-gate') + '>' + esc(pl(kind === 'deals' ? AC.all_deals : AC.all_reviews, n)) + ' ↓</button>';

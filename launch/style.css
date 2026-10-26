@@ -426,10 +426,12 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 .amt{background:var(--mintbg)}.afd{background:var(--viobg)}
 .aon{background:#E7F8EE;flex-direction:row;align-items:center;gap:14px}.aon>i{width:14px;height:14px;border-radius:50%;background:#16A34A;box-shadow:0 0 0 6px #C9F0D8;flex:none}
 .aon div{display:flex;flex-direction:column;gap:2px;min-width:0}.aon b{font-size:24px;color:#0F7A3A}.aon em{font-style:normal;font-size:13px;color:var(--mute)}
-.apt{font:800 20px 'Bricolage Grotesque';display:block;margin-bottom:8px}.arvs h2{font:800 26px 'Bricolage Grotesque';margin-bottom:10px}
+.apt{font:800 20px 'Bricolage Grotesque';display:block;margin-bottom:8px}.arvs h2{font:800 20px 'Bricolage Grotesque';display:block;margin-bottom:8px}
 .adl{border:1.5px solid var(--line);border-radius:14px;overflow:hidden}.ad{display:grid;grid-template-columns:2fr 1fr 1fr 1.3fr;gap:12px;padding:11px 16px;border-top:1px solid var(--line);font-size:14.5px;align-items:center}
 .ad:first-child{border-top:0}.adh{background:#FAFAFC;font:700 12px 'DM Sans';color:var(--mute);text-transform:uppercase;letter-spacing:.05em}.ad a{color:var(--vio);text-decoration:none;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .arv{border:1.5px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:12px}.arh{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}.arh b{font-size:15.5px}.arh span{color:var(--mute);font-size:13.5px}.arh .ard{margin-left:auto}
+.arh{align-items:center}.arh .arsi,.arh .arsl{flex:none;width:18px;height:18px;display:inline-grid;place-items:center;margin-right:-2px}.arh .arsl{border-radius:50%;color:#fff;font:700 10.5px/1 'DM Sans',sans-serif}
+.arh .arty{font-size:10.5px;font-weight:600;line-height:1.5;padding:0 8px;border-radius:999px;border:1px solid currentColor;background:transparent;white-space:nowrap;color:#17733a}.arh .arty.te{color:#1c63b8}.arh .arty.tp{color:#6b3fd4}.arh .arty.tc{color:#5c6270}.arh .arty.tv{color:#b4540a}.arh .arty.ta{color:#8a6d00}
 .arv p{margin:10px 0;line-height:1.5;color:var(--ink2);font-size:15px}.arf{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .arc{display:inline-flex;gap:6px;align-items:center;background:#F5F3FB;border-radius:99px;padding:4px 10px;font-size:12px;color:var(--ink2)}.arc i{font-style:normal;color:var(--vio);letter-spacing:1px;font-size:9px}.arc em{font-style:normal;color:#D9D4EA}
 .arf a{margin-left:auto;font-size:13px;color:var(--vio);text-decoration:none;font-weight:600}.arf a span{color:var(--mute);font-weight:400}
