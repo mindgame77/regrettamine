@@ -13,8 +13,8 @@ DOCKET = "https://www.courtlistener.com/docket/999001/hidden-test/"
 SECTIONS = {
     "Overview": [{"label": "Founded", "value": "Founded in 1999 in Menlo Park", "source": ADV},
                  {"label": "Offices", "value": "Offices in Menlo Park and London", "source": ADV}],
-    "Legal & regulatory": [{"title": "Hidden Test v. Example Corp, 25-cv-01234 (N.D. Cal.)", "allegation": True, "source": DOCKET},
-                           {"title": "Other Corp v. Hidden Test, 25-cv-05678 (S.D.N.Y.)", "allegation": True, "source": DOCKET + "2/"}],
+    "Legal & regulatory": [{"title": "Hidden Test v. Example Corp, 25-cv-01234 (N.D. Cal.)", "allegation": False, "source": DOCKET},
+                           {"title": "Other Corp v. Hidden Test, 25-cv-05678 (S.D.N.Y.)", "allegation": False, "source": DOCKET + "2/"}],
     "Timeline": [{"date": "1999", "event": "Firm founded", "source": ADV},
                  {"date": "2010", "event": "Opened London office", "source": ADV}],
     "Press": [{"headline": "Hidden Test raises fund one", "source": "https://news.example.com/a", "outlet": "Example News"},

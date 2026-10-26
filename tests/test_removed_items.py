@@ -61,13 +61,13 @@ def test_reworded_lead_and_note_are_rejected():
     with _db() as c:
         slug, fid = _firm(c)
         _enrich(c, {"slug": slug, "sections": {
-            "Legal & regulatory": [{"title": FTX, "allegation": True, "source": DOCKET}],
+            "Legal & regulatory": [{"title": FTX, "allegation": False, "source": DOCKET}],
             "Overview": [{"label": "Registration", "value": NOTE, "source": ADV}]}})
         _remove(c, "firm_legal_items", fid, "%23-50380%")
         _remove(c, "firm_profile_facts", fid, "The US entity%")
         r = _enrich(c, {"slug": slug, "sections": {
             "Legal & regulatory": [{"title": "Y Combinator funds named in FTX Trading adversary proceeding no. 23-50380 (Delaware bankruptcy court)",
-                                    "allegation": True, "date": "2024-01-10", "source": "https://www.reuters.com/ftx"}],
+                                    "allegation": False, "date": "2024-01-10", "source": "https://www.reuters.com/ftx"}],
             "Overview": [{"label": "Registration", "value": "The U.S. entity is SEC registered; the London LLP and Guernsey entity are "
                           "SEC exempt reporting advisers. Both forms of registration count as \"Clear\".", "source": ADV},
                          {"label": "Founded", "value": "Founded in 1983 in Palo Alto", "source": ADV}]}})
