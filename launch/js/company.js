@@ -98,6 +98,15 @@
   function heroBits(h) {
     return '<span>' + esc(h.label) + '</span><b>' + esc(nice(h.value)) + '</b>' + (h.src || []).map(c => '<span class="sc">' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</span>').join('');
   }
+  // Leads (unconfirmed items) stay on the page but read one way everywhere: a 'Not confirmed' label.
+  // Display only: stored rows keep their lead wording, so the data rules (leads never auto-published) still see them.
+  const NC = COPY.not_confirmed || 'Not confirmed';
+  const LEAD_PRE = /^\s*(?:lead\b(?:\s*\([^)]*\))?\s*:\s*)+/i, LEAD_TAG = /lead\s*\((?:not confirmed|unverified)\)/i;
+  const isLeadTag = (t) => /\b(lead|unverified|allegation)\b/i.test(t || '');
+  const ncStrip = (t) => String(t == null ? '' : t).replace(LEAD_PRE, '');
+  const ncValue = (t) => { const s = String(t == null ? '' : t); if (LEAD_TAG.test(s)) return s.replace(LEAD_TAG, NC);
+    return LEAD_PRE.test(s) ? s.replace(LEAD_PRE, '') + ' · ' + NC : s; };
+  const ncPill = '<span class="cs cs-cl">' + esc(NC) + '</span> ';
   const chips = (src) => '<div class="scs">' + (src || []).map(s => { const u = safeUrl(s.url); const t = esc(s.label) + (s.date ? ' · ' + esc(fdate(s.date)) : '') + ' ↗';
     return u ? '<a class="sc" href="' + esc(u) + '" target="_blank" rel="noopener">' + t + '</a>' : ''; }).join('') + '</div>';
   const pill = (st) => { const p = PILL[st] || PILL.nc; return '<span class="pill ' + p[0] + '"><i></i>' + p[1] + '</span>'; };
@@ -129,7 +138,7 @@
   }
   function itemHtml(x) {
     const meta = caseMeta(x);
-    return '<div class="fct"><b>' + esc(x.title ? nice(x.title) : COPY.table.untitled) + '</b>' + (meta ? ' · ' + meta : '') + (x.note ? '<br>' + esc(nice(x.note)) : '') + sourceHtml(x, false) + '</div>';
+    return '<div class="fct"><b>' + esc(x.title ? nice(ncStrip(x.title)) : COPY.table.untitled) + '</b>' + (meta ? ' · ' + meta : '') + (x.note ? '<br>' + esc(nice(x.note)) : '') + sourceHtml(x, false) + '</div>';
   }
   const spill = (st) => st === 'active' ? '<span class="cs cs-act">Active</span>' : st === 'closed' ? '<span class="cs cs-cl">Closed</span>' : '';
   // Unconfirmed same-name hit (firm_page checks[].name_only). The result stays Clear; the list sits in the existing muted line under the check.
@@ -163,14 +172,15 @@
 
   // Open-state renderers, keyed by copy.json sections[].renderer
   const R = {
-    facts: (it) => '<div class="kvs">' + it.map(x => '<div class="kv"><span class="k">' + esc(assetLabel(x.label)) + '</span><span>' + esc(nice(x.value)) + chips(x.src) + '</span></div>').join('') + '</div>',
+    facts: (it) => '<div class="kvs">' + it.map(x => '<div class="kv"><span class="k">' + esc(assetLabel(x.label)) + '</span><span>' + esc(nice(ncValue(x.value))) + chips(x.src) + '</span></div>').join('') + '</div>',
     checks: (it, P) => checkRows(P),
-    legal: (it) => group(it, 'grp', COPY.legal, xs => xs.filter(x => x.title || x.head || x.note).map(x => '<div class="it' + (x.state === 'Active' ? ' act' : '') + '">'
-      + (x.state ? '<span class="cs ' + COPY.state[x.state] + '">' + esc(x.state) + '</span> ' : '') + (x.status ? '<span class="pill ' + (COPY.tone[x.tone] || 'p-g') + '"><i></i>' + esc(x.status) + '</span> ' : '')
-      + (x.role ? '<span class="cs cs-cl">' + esc(x.role) + '</span> ' : '') + '<b>' + esc(nice(x.title || x.head || '')) + (shownYear(x) ? ' · ' + esc(shownYear(x)) : '') + '</b>' + (x.note ? ' · ' + esc(nice(x.note)) : '') + chips(x.src) + '</div>').join('')),
+    legal: (it) => group(it, 'grp', COPY.legal, xs => xs.filter(x => x.title || x.head || x.note).map(x => { const lead = x.state === 'Unverified' || isLeadTag(x.status) || LEAD_PRE.test(x.title || x.head || '');
+      return '<div class="it' + (x.state === 'Active' ? ' act' : '') + '">'
+      + (lead ? ncPill : (x.state ? '<span class="cs ' + COPY.state[x.state] + '">' + esc(x.state) + '</span> ' : '') + (x.status ? '<span class="pill ' + (COPY.tone[x.tone] || 'p-g') + '"><i></i>' + esc(x.status) + '</span> ' : ''))
+      + (x.role ? '<span class="cs cs-cl">' + esc(x.role) + '</span> ' : '') + '<b>' + esc(nice(ncStrip(x.title || x.head || ''))) + (shownYear(x) ? ' · ' + esc(shownYear(x)) : '') + '</b>' + (x.note ? ' · ' + esc(nice(x.note)) : '') + chips(x.src) + '</div>'; }).join('')),
     press: (it) => '<div class="pgr">' + it.map(x => card(x, true)).join('') + '</div>',
     founders: (it) => '<div class="pgr">' + it.map(x => card(x, false)).join('') + '</div>',
-    people: (it) => group(it.filter(x => !isNoteText(x.head)), 'kind', COPY.people, xs => '<div class="pcards">' + xs.map(x => '<div class="pcard"><b>' + esc(nice(x.head)) + '</b>' + (x.badge ? '<span class="cs cs-act">' + esc(x.badge) + '</span>' : '') + '<span>' + esc(x.role) + '</span>' + chips(x.src) + '</div>').join('') + '</div>'),
+    people: (it) => group(it.filter(x => !isNoteText(x.head)), 'kind', COPY.people, xs => '<div class="pcards">' + xs.map(x => '<div class="pcard"><b>' + esc(nice(x.head)) + '</b>' + (x.badge ? (isLeadTag(x.badge) ? '<span class="cs cs-cl">' + esc(NC) + '</span>' : '<span class="cs cs-act">' + esc(x.badge) + '</span>') : '') + '<span>' + esc(x.role) + '</span>' + chips(x.src) + '</div>').join('') + '</div>'),
     timeline: (it) => {
       const rows = it.map((x, i) => ({ x, i })).sort((a, b) => {
         const sa = window.RegretDate ? window.RegretDate.stamp(a.x.date) : null, sb = window.RegretDate ? window.RegretDate.stamp(b.x.date) : null;
@@ -179,7 +189,7 @@
         if (sb == null) return -1;
         return sb - sa || a.i - b.i;
       });
-      return '<div class="tls">' + rows.map(({ x }) => '<div class="tl"><span class="tld">' + esc(fdate(x.date) || x.date || '') + '</span><span><span class="cs cs-cl">' + esc(x.kind) + '</span> ' + esc(nice(x.body)) + chips(x.src) + '</span></div>').join('') + '</div>';
+      return '<div class="tls">' + rows.map(({ x }) => '<div class="tl"><span class="tld">' + esc(fdate(x.date) || x.date || '') + '</span><span><span class="cs cs-cl">' + esc(isLeadTag(x.kind) ? NC : x.kind) + '</span> ' + esc(nice(ncStrip(x.body))) + chips(x.src) + '</span></div>').join('') + '</div>';
     },
   };
   function card(x, logo) {
