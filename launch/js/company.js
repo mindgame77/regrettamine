@@ -435,11 +435,24 @@
       + '<p>“' + esc(r.body || '') + '”</p><div class="arf">' + chipsR + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"><span>' + esc(AC.source) + '</span> ' + esc(hostOf(u)) + ' ↗</a>' : '') + '</div></div>';
   }
   const showAll = (P, kind, n) => '<button type="button" class="ash"' + (P.open ? ' data-open="act' + kind + '"' : ' data-gate') + '>' + esc(pl(kind === 'deals' ? AC.all_deals : AC.all_reviews, n)) + ' ↓</button>';
-  function actModal(id, title, inner) {
+  function actModal(id, title, inner, lazy) {
     let ov = document.getElementById(id);
     if (!ov) { ov = document.createElement('div'); ov.className = 'ov tall'; ov.id = id; ov.hidden = true; document.body.appendChild(ov); }
     ov.innerHTML = '<div class="md w amd" role="dialog" aria-modal="true" aria-label="' + esc(title) + '"><div class="amh"><button class="x" data-close aria-label="' + esc(AC.close) + '">×</button><b>' + esc(title) + '</b></div><div class="amb">' + inner + '</div></div>';
+    ov._lazy = lazy || null;
   }
+  // Fill a lazy "Show all" popup on first open. One request per popup; a failure leaves it to retry on the next open.
+  document.addEventListener('click', async (e) => {
+    const t = e.target.closest('.ash[data-open^="act"]'), ov = t && document.getElementById(t.dataset.open);
+    if (!ov || !ov._lazy || ov._busy || !window.RegretActList) return;
+    const L = ov._lazy, box = ov.querySelector('.amb'); ov._busy = true;
+    try {
+      const d = await window.RegretActList(L.slug, L.kind);
+      if (d && d.status === 'ok' && Array.isArray(d.items) && ov._lazy === L) {
+        box.innerHTML = L.kind === 'deals' ? dealRows(d.items) : d.items.map(revCard).join(''); ov._lazy = null;
+      }
+    } finally { ov._busy = false; }
+  });
   function activity(P) {
     const A = P.activity, firm = P.firm.name;
     if (!A) return '';
@@ -459,8 +472,11 @@
     let h = '<section class="actv" aria-label="' + esc(AC.reviews) + '">' + (tiles.length ? '<div class="ats" style="grid-template-columns:repeat(' + tiles.length + ',1fr)">' + tiles.join('') + '</div>' : '');
     if (d0) h += '<div class="aps"><b class="apt">' + esc(AC.latest_deal) + '</b>' + dealRows([d0]) + (n.deals > 1 ? showAll(P, 'deals', n.deals) : '') + '</div>';
     if (r0) h += '<div class="aps arvs"><h2>' + esc(AC.reviews) + '</h2>' + revCard(r0) + (n.reviews > 1 ? showAll(P, 'revs', n.reviews) : '') + '</div>';
-    if (P.open && Array.isArray(A.deals) && A.deals.length > 1) actModal('actdeals', fmt(AC.deals_title, { n: A.deals.length, firm }), dealRows(A.deals));
-    if (P.open && Array.isArray(A.reviews) && A.reviews.length > 1) actModal('actrevs', fmt(AC.reviews_title, { n: A.reviews.length, firm }), A.reviews.map(revCard).join(''));
+    // firm_page sends only the first slice (A.lazy); the full list loads once when "Show all" opens (firm_activity_list).
+    const full = (k, list, n) => !A.lazy && Array.isArray(list) && list.length > 1 ? list : (n > 1 ? null : undefined);
+    const fd = full('deals', A.deals, n.deals), fr = full('revs', A.reviews, n.reviews);
+    if (P.open && fd !== undefined) actModal('actdeals', fmt(AC.deals_title, { n: fd ? fd.length : n.deals, firm }), fd ? dealRows(fd) : '', !fd && { slug: P.firm.slug, kind: 'deals' });
+    if (P.open && fr !== undefined) actModal('actrevs', fmt(AC.reviews_title, { n: fr ? fr.length : n.reviews, firm }), fr ? fr.map(revCard).join('') : '', !fr && { slug: P.firm.slug, kind: 'revs' });
     return h + '</section>';
   }
   function paintActivity(main, P) {

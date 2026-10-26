@@ -48,7 +48,19 @@ def test_activity_key_live_and_private():
         assert a["latest_fund"]["name"] == "ZZ Fund I" and float(a["latest_fund"]["raised_usd"]) == 1710000000
         assert a["latest_fund"]["url"] == "https://www.sec.gov/x"
         assert a["latest_review"]["author"] == "Zed" and a["latest_review"]["ratings"] == {"honesty": 4}
-        assert len(a["deals"]) == 2 and len(a["reviews"]) == 1
+        # first slice only; the full lists come from firm_activity_list (unlocked visitors only)
+        assert a["lazy"] is True and len(a["deals"]) == 1 and len(a["reviews"]) == 1
+        cur.execute("select firm_activity_list('zz-activity', gen_random_uuid(), 'deals')")
+        assert cur.fetchone()[0]["status"] == "locked"
+        cur.execute("select (_balance('00000000-0000-4000-8000-00000000a11a'::uuid)).id")
+        bid = cur.fetchone()[0]
+        cur.execute("insert into check_events(balance_id, firm_id, kind, amount) values (%s, %s, 'spend_paid', -1)", (bid, fid))
+        cur.execute("select firm_activity_list('zz-activity', '00000000-0000-4000-8000-00000000a11a'::uuid, 'deals')")
+        full = cur.fetchone()[0]
+        assert full["status"] == "ok" and [d["round"] for d in full["items"]] == ["Seed", "Pre-seed"]
+        cur.execute("select firm_activity_list('zz-activity', '00000000-0000-4000-8000-00000000a11a'::uuid, 'revs')")
+        revs = cur.fetchone()[0]["items"]
+        assert len(revs) == 1 and str(uid) not in json.dumps(revs)
         text = json.dumps(a)
         assert str(uid) not in text and "linkedin" not in text and "profile_id" not in text
 
