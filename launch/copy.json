@@ -748,7 +748,15 @@
    "h_round": "Round",
    "h_date": "Date",
    "h_source": "Source",
-   "reviews": "Founder reviews",
+   "reviews": "What people say",
+   "types": {
+    "founder": "Founder",
+    "employee": "Employee",
+    "portfolio": "Portfolio company",
+    "company": "Company",
+    "firm_voice": "From the firm",
+    "aggregator": "Review"
+   },
    "anon": "Anonymous founder",
    "source": "Source:",
    "all_deals": [
