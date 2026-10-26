@@ -11,7 +11,7 @@
     'INC': 'Inc', 'INC.': 'Inc.', 'LTD': 'Ltd', 'LTD.': 'Ltd.', 'CO': 'Co', 'CO.': 'Co.', 'CORP': 'Corp', 'CORP.': 'Corp.',
     'PLC': 'PLC', 'GP': 'GP', 'SA': 'SA', 'S.A.': 'S.A.', 'AG': 'AG', 'GMBH': 'GmbH', 'SARL': 'SARL', 'S.A.R.L.': 'S.à r.l.',
     'BV': 'BV', 'B.V.': 'B.V.', 'NV': 'NV', 'AB': 'AB', 'AS': 'AS', 'SPA': 'SpA', 'PTE': 'Pte', 'PTY': 'Pty', 'LLLP': 'LLLP',
-    'A16Z': 'a16z', 'US': 'US', 'USA': 'USA', 'UK': 'UK', 'VC': 'VC', 'AI': 'AI', 'II': 'II', 'III': 'III', 'IV': 'IV', 'VI': 'VI',
+    'A16Z': 'a16z', 'YC': 'YC', 'US': 'US', 'USA': 'USA', 'UK': 'UK', 'VC': 'VC', 'AI': 'AI', 'II': 'II', 'III': 'III', 'IV': 'IV', 'VI': 'VI',
     'VII': 'VII', 'VIII': 'VIII', 'IX': 'IX', 'XI': 'XI', 'XII': 'XII', 'NEA': 'NEA', 'IVP': 'IVP', 'KKR': 'KKR', 'TPG': 'TPG',
     'GGV': 'GGV', 'USV': 'USV', 'TCV': 'TCV', 'IDG': 'IDG', 'NFX': 'NFX', 'DST': 'DST', 'EQT': 'EQT', 'QED': 'QED', 'SOSV': 'SOSV',
     'HV': 'HV', 'GV': 'GV', 'DCM': 'DCM', 'JMI': 'JMI', 'TA': 'TA', 'RRE': 'RRE', 'FPV': 'FPV', 'AVF': 'AVF', 'ESP': 'ESP', 'HIG': 'HIG',
@@ -59,11 +59,23 @@
     return window.RegretDate.caseYear(x.title || x.head || x.case || x.kind || '', x.note || x.text || '', x.year);
   };
   const MISS = (COPY.header && COPY.header.missing) || 'Not found in public records';
-  // One label for the SEC assets figure. Stored cards still say Assets, Regulatory AUM, or AUM.
-  const assetLabel = (label) => (label === 'Assets' || label === 'Regulatory AUM' || label === 'AUM') && COPY.header && COPY.header.assets ? COPY.header.assets : label;
+  const HCOPY = COPY.header || {};
+  // Regulatory AUM and Fund gross assets stay two figures. A stored "Assets" / "AUM" card that names
+  // gross assets (and not regulatory AUM) reads as Fund gross assets; any other assets figure reads as Regulatory AUM.
+  function assetLabel(label, value) {
+    const blob = (label || '') + ' ' + (value || '');
+    if (/^headquarters$/i.test(label || '')) return HCOPY.hq || 'HQ';
+    if (/^fund gross assets$/i.test(label || '')) return HCOPY.fund_gross || 'Fund gross assets';
+    if (/^regulatory aum$/i.test(label || '')) return HCOPY.regulatory_aum || 'Regulatory AUM';
+    if (/^(assets|aum)$/i.test(label || '')) {
+      if (/gross asset/i.test(blob) && !/regulatory aum|item 5f|\braum\b/i.test(blob)) return HCOPY.fund_gross || 'Fund gross assets';
+      return HCOPY.regulatory_aum || 'Regulatory AUM';
+    }
+    return label;
+  }
   function headerCards(P) {
     const hero = (Array.isArray(P.hero) ? P.hero : []).filter(h => h && (h.label || h.value));
-    if (hero.length) return hero.map(h => Object.assign({}, h, { label: assetLabel(h.label), src: h.src || [] }));
+    if (hero.length) return hero.map(h => Object.assign({}, h, { label: assetLabel(h.label, h.value), src: h.src || [] }));
     const H = COPY.header || {};
     const firm = P.firm || {};
     return [
@@ -94,6 +106,25 @@
     }
     const inp = main.querySelector('form[data-search] input[name=q]');
     if (inp) { inp.value = name; inp.defaultValue = name; }
+  }
+  // "738 · 88 investment" is two chips: Staff, and Investment staff.
+  function heroChips(P) {
+    const out = [];
+    headerCards(P).forEach(h => {
+      if (/^staff$/i.test(h.label) && h.value && String(h.value).indexOf('·') >= 0) {
+        const parts = String(h.value).split('·');
+        const inv = (parts.slice(1).join('·').trim().match(/^(\d+)/) || [])[1];
+        out.push({ label: HCOPY.staff || 'Staff', value: parts[0].trim() });
+        if (inv) out.push({ label: HCOPY.investment_staff || 'Investment staff', value: inv });
+      } else out.push(h);
+    });
+    return out;
+  }
+  function paintHero(main, P) {
+    const box = main.querySelector('.heros'); if (!box) return;
+    const chips = heroChips(P);
+    box.innerHTML = chips.map(h => '<div class="hf"><span>' + esc(h.label) + '</span><b>' + esc(nice(h.value)) + '</b></div>').join('');
+    box.hidden = !chips.length;
   }
   function heroBits(h) {
     return '<span>' + esc(h.label) + '</span><b>' + esc(nice(h.value)) + '</b>' + (h.src || []).map(c => '<span class="sc">' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</span>').join('');
@@ -170,16 +201,53 @@
     }).join('') + '</div>';
   }
 
-  // Open-state renderers, keyed by copy.json sections[].renderer
+  // Layout A: one row. Bold title, optional note, then a grey line with the date, status and source pills.
+  const showDate = (d) => { if (!d) return ''; const f = fdate(d); return f || String(d); };
+  const cleanLead = (t) => String(t == null ? '' : t).replace(LEAD_TAG, '').replace(LEAD_PRE, '').replace(/\s*·\s*·\s*/g, ' · ').replace(/\s*·\s*$/, '').replace(/^\s*·\s*/, '').trim();
+  const isLeadVal = (t) => LEAD_TAG.test(t || '') || LEAD_PRE.test(t || '');
+  function row(title, date, status, src, note) {
+    const st = status ? '<span class="cs ' + (COPY.state[status] || 'cs-cl') + '">' + esc(status) + '</span>' : '';
+    const meta = [date ? '<span class="rd">' + esc(showDate(date)) + '</span>' : '', st, chips(src)].filter(Boolean).join(' ');
+    return '<div class="rw"><div class="rt">' + esc(title) + '</div>' + (note ? '<div class="rn">' + esc(note) + '</div>' : '') + '<div class="rm">' + meta + '</div></div>';
+  }
+  function factRow(x) {
+    const lead = isLeadVal(x.value) || isLeadVal(x.label);
+    const label = nice(assetLabel(x.label, x.value));
+    const val = nice(cleanLead(x.value));
+    return row(val ? label + ': ' + val : label, '', lead ? NC : '', x.src, '');
+  }
+  function groupLps(it) {
+    const order = [], map = {};
+    it.forEach(x => {
+      const k = x.label || '';
+      if (!map[k]) { map[k] = { label: k, values: [], src: [], lead: false }; order.push(k); }
+      const g = map[k];
+      if (x.value) g.values.push(x.value);
+      g.src = g.src.concat(x.src || []);
+      if (isLeadVal(x.value)) g.lead = true;
+    });
+    return order.map(k => {
+      const g = map[k], n = g.values.length;
+      const title = nice(g.label) + (n > 1 ? ' · ' + fmt(COPY.commitments || '{n} commitments', { n }) : '');
+      const seen = {}, src = [];
+      g.src.forEach(s => { const id = (s.url || '') + '|' + (s.label || ''); if (!seen[id]) { seen[id] = 1; src.push(s); } });
+      return row(title, '', g.lead ? NC : '', src, g.values.map(v => nice(cleanLead(v))).filter(Boolean).join(' | '));
+    }).join('');
+  }
+  const yearNum = (x) => { const y = shownYear(x) || (x && x.year) || ''; const m = String(y).match(/(19|20)\d{2}/); return m ? +m[0] : 0; };
+  // Open-state renderers, keyed by copy.json sections[].renderer. The section is the third argument (LP grouping).
   const R = {
-    facts: (it) => '<div class="kvs">' + it.map(x => '<div class="kv"><span class="k">' + esc(assetLabel(x.label)) + '</span><span>' + esc(nice(ncValue(x.value))) + chips(x.src) + '</span></div>').join('') + '</div>',
+    facts: (it, P, s) => '<div class="rws">' + (s && s.key === 'lps' ? groupLps(it) : it.map(factRow).join('')) + '</div>',
     checks: (it, P) => checkRows(P),
-    legal: (it) => group(it, 'grp', COPY.legal, xs => xs.filter(x => x.title || x.head || x.note).map(x => { const lead = x.state === 'Unverified' || isLeadTag(x.status) || LEAD_PRE.test(x.title || x.head || '');
-      return '<div class="it' + (x.state === 'Active' ? ' act' : '') + '">'
-      + (lead ? ncPill : (x.state ? '<span class="cs ' + COPY.state[x.state] + '">' + esc(x.state) + '</span> ' : '') + (x.status ? '<span class="pill ' + (COPY.tone[x.tone] || 'p-g') + '"><i></i>' + esc(x.status) + '</span> ' : ''))
-      + (x.role ? '<span class="cs cs-cl">' + esc(x.role) + '</span> ' : '') + '<b>' + esc(nice(ncStrip(x.title || x.head || ''))) + (shownYear(x) ? ' · ' + esc(shownYear(x)) : '') + '</b>' + (x.note ? ' · ' + esc(nice(x.note)) : '') + chips(x.src) + '</div>'; }).join('')),
+    legal: (it) => group(it, 'grp', COPY.legal, xs => '<div class="rws">' + xs.filter(x => x.title || x.head || x.note).slice().sort((a, b) => yearNum(b) - yearNum(a)).map(x => {
+      const lead = x.state === 'Unverified' || isLeadTag(x.status) || LEAD_PRE.test(x.title || x.head || '');
+      const note = [x.role, x.note].filter(Boolean).map(nice).join(' · ');
+      const status = lead ? NC : (x.state || (x.status ? x.status[0].toUpperCase() + x.status.slice(1) : ''));
+      return row(nice(ncStrip(x.title || x.head || '')), shownYear(x) || x.year || '', status, x.src, note);
+    }).join('') + '</div>'),
     press: (it) => '<div class="pgr">' + it.map(x => card(x, true)).join('') + '</div>',
-    founders: (it) => '<div class="pgr">' + it.map(x => card(x, false)).join('') + '</div>',
+    news: (it) => '<div class="pgr">' + it.map(x => card(x, true)).join('') + '</div>',
+    founders: (it) => '<div class="rws">' + it.map(x => row(nice(ncStrip(x.head || '')), x.date, '', x.src, x.snippet ? nice(x.snippet) : '')).join('') + '</div>',
     people: (it) => group(it.filter(x => !isNoteText(x.head)), 'kind', COPY.people, xs => '<div class="pcards">' + xs.map(x => '<div class="pcard"><b>' + esc(nice(x.head)) + '</b>' + (x.badge ? (isLeadTag(x.badge) ? '<span class="cs cs-cl">' + esc(NC) + '</span>' : '<span class="cs cs-act">' + esc(x.badge) + '</span>') : '') + '<span>' + esc(x.role) + '</span>' + chips(x.src) + '</div>').join('') + '</div>'),
     timeline: (it) => {
       const rows = it.map((x, i) => ({ x, i })).sort((a, b) => {
@@ -194,8 +262,10 @@
   };
   function card(x, logo) {
     const u = safeUrl(x.url), host = u ? new URL(u).hostname.replace(/^www\./, '') : '';
-    const fav = logo && x.logo ? '<img class="fav" src="' + esc(ROOT + x.logo) + '" alt="" width="20" height="20">' : '<span class="fav lb">' + esc((x.outlet || '?')[0]) + '</span>';
-    return '<div class="pi"><div class="pio">' + fav + '<span>' + esc(x.outlet) + (host && String(x.outlet || '').split(' · ')[0].trim().toLowerCase().replace(/^www\./, '') !== host ? ' · ' + esc(host) : '') + (x.date ? ' · ' + esc(fdate(x.date)) : '') + '</span></div>'
+    const court = x.tag === 'Court' || x.tag === 'Filing';
+    const fav = !court && logo && x.logo ? '<img class="fav" src="' + esc(ROOT + x.logo) + '" alt="" width="20" height="20">' : '<span class="fav lb">' + esc((x.outlet || x.tag || '?')[0]) + '</span>';
+    const tag = x.tag ? '<span class="cs cs-cl">' + esc(x.tag) + '</span>' : '';
+    return '<div class="pi"><div class="pio">' + fav + '<span>' + esc(x.outlet || '') + (host && String(x.outlet || '').split(' · ')[0].trim().toLowerCase().replace(/^www\./, '') !== host ? ' · ' + esc(host) : '') + (x.date ? ' · ' + esc(fdate(x.date) || x.date) : '') + '</span>' + tag + '</div>'
       + (u ? '<a class="pih" href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(x.head) + '</a>' : '<b class="pih">' + esc(x.head) + '</b>')
       + (x.snippet ? '<p class="pis">' + esc(x.snippet) + '</p>' : '') + chips(x.src) + '</div>';
   }
@@ -229,41 +299,166 @@
   const ghostSecs = () => [0, 1, 2].map(k => '<section class="ps"><h2>' + gbar(30 + k * 10) + '</h2>' + [0, 1, 2, 3].map(j => '<div class="fct">' + gbar(90 - ((j + k) * 13) % 40) + gbar(55) + '</div>').join('') + '</section>').join('');
   const gate = (P, inner) => '<div class="gate"><div class="gveil" aria-hidden="true" inert>' + inner + '</div><div class="gcard" role="region" aria-label="' + esc(GT.title) + '"><b>' + esc(GT.title) + '</b><p>'
     + esc(fmt(GT.sub, { firm: P.firm.name })) + '</p><button type="button" class="btn" data-gate>' + esc(GT.button) + '</button><p class="gmsg" role="status"></p></div></div>';
+  // News is drawn here from the press and timeline rows firm_page already returns. Nothing is written back.
+  // The link merge and the 2023 cutoff apply only to this list. Several outlets on one story stay several cards.
+  function normLink(u) {
+    return String(u || '').trim().toLowerCase().replace(/#.*$/, '').replace(/\?.*$/, '').replace(/^https?:\/\/(?:www\.)?/, '').replace(/\/+$/, '');
+  }
+  function newsYear(label) {
+    const m = String(label || '').match(/(?:19|20)\d{2}/);
+    return m ? +m[0] : null;
+  }
+  function newsStamp(label) {
+    if (window.RegretDate) { const s = window.RegretDate.stamp(label); if (s != null) return s; }
+    const iso = String(label || '').match(/^(\d{4})-(\d{2})(?:-(\d{2}))?/);
+    if (iso) return Date.UTC(+iso[1], +iso[2] - 1, iso[3] ? +iso[3] : 1);
+    const y = newsYear(label);
+    return y ? Date.UTC(y, 0, 1) : null;
+  }
+  function newsTag(kind, grp) {
+    const k = String(kind || ''), g = String(grp || '');
+    if (/^(court|case filed)$/i.test(k)) return 'Court';
+    if (/^filing$/i.test(k)) return 'Filing';
+    if (/^(fund|fund raise)$/i.test(k)) return 'Fund';
+    if (/^(people|people move)$/i.test(k)) return 'People';
+    if (/^regulator/i.test(k)) return 'Regulator';
+    if (/regulator/i.test(g)) return 'Regulator';
+    if (/people/i.test(g)) return 'People';
+    if (/fund/i.test(g)) return 'Fund';
+    return '';
+  }
+  const TAG_RANK = { Court: 5, Filing: 4, Regulator: 3, People: 2, Fund: 1 };
+  function bumpTag(card, tag) { if (tag && (TAG_RANK[tag] || 0) > (TAG_RANK[card.tag] || 0)) card.tag = tag; }
+  function addSrc(card, list) {
+    (list || []).forEach(s => {
+      if (!s || !s.url) return;
+      const id = normLink(s.url) + '|' + (s.label || '');
+      if (card._seen[id]) return;
+      card._seen[id] = 1;
+      card.src.push({ label: s.label || '', date: s.date || '', url: s.url });
+    });
+  }
+  function datesMatch(a, b) {
+    if (!a || !b) return true;
+    if (a === b) return true;
+    const sa = newsStamp(a), sb = newsStamp(b);
+    return sa != null && sa === sb;
+  }
+  function buildNews(press, timeline) {
+    const cards = [];
+    (press || []).map((x, i) => ({ x, i })).sort((a, b) => {
+      const sa = newsStamp(a.x.date), sb = newsStamp(b.x.date);
+      if (sa == null && sb == null) return a.i - b.i;
+      if (sa == null) return 1;
+      if (sb == null) return -1;
+      return sb - sa || a.i - b.i;
+    }).forEach(({ x }) => {
+      const url = x.url || '', norm = normLink(url);
+      if (!norm) return;
+      const tag = newsTag('', x.group);
+      const src = (x.src && x.src.length) ? x.src : [{ label: String(x.outlet || '').split(' · ')[0], date: x.date || '', url }];
+      const keeper = cards.find(c => c.origin === 'press' && c.norm === norm);
+      if (keeper) { addSrc(keeper, src); bumpTag(keeper, tag); return; }
+      const card = { origin: 'press', head: x.head || '', outlet: x.outlet || '', date: x.date || '', url, snippet: x.snippet || '', logo: x.logo || '', tag, norm, norms: [norm], src: [], _seen: {}, _year: newsYear(x.date) };
+      addSrc(card, src);
+      cards.push(card);
+    });
+    (timeline || []).forEach(x => {
+      const tag = newsTag(x.kind, ''), ty = newsYear(x.date);
+      const links = (x.src || []).filter(s => s && s.url);
+      for (let i = 0; i < links.length; i++) {
+        const norm = normLink(links[i].url);
+        if (!norm) continue;
+        const keeper = cards.find(c => c.origin === 'press' && c.norm === norm);
+        if (!keeper) continue;
+        const py = keeper._year;
+        if (!(ty == null || ty >= 2023 || (py != null && py < 2023))) continue;
+        addSrc(keeper, links);
+        bumpTag(keeper, tag);
+        return;
+      }
+      const norms = links.map(s => normLink(s.url)).filter(Boolean);
+      const other = cards.find(c => c.origin === 'timeline' && norms.some(n => c.norms.indexOf(n) >= 0) && datesMatch(c.date, x.date || ''));
+      if (other) {
+        addSrc(other, links);
+        bumpTag(other, tag);
+        norms.forEach(n => { if (other.norms.indexOf(n) < 0) other.norms.push(n); });
+        return;
+      }
+      const card = { origin: 'timeline', head: x.body || x.head || '', outlet: (links[0] && links[0].label) || '', date: x.date || '', url: (links[0] && links[0].url) || '', snippet: '', logo: '', tag, norm: norms[0] || '', norms, src: [], _seen: {}, _year: ty };
+      addSrc(card, links);
+      cards.push(card);
+    });
+    return cards.filter(c => { const y = c._year != null ? c._year : newsYear(c.date); return y == null || y >= 2023; }).sort((a, b) => {
+      const sa = newsStamp(a.date), sb = newsStamp(b.date);
+      if (sa == null && sb == null) return 0;
+      if (sa == null) return 1;
+      if (sb == null) return -1;
+      return sb - sa;
+    }).map(c => ({ head: c.head, outlet: c.outlet, date: c.date, url: c.url, snippet: c.snippet, logo: c.logo, tag: c.tag, src: c.src, origin: c.origin }));
+  }
+  // Sections the new page draws. "The 10 checks" is not one of them. An LP with several commitments counts once.
+  // News is not a stored section: it is press and timeline combined at display time.
+  function pageSecs(P) {
+    const byKey = Object.fromEntries((P.sections || []).map(s => [s.key, s]));
+    const newsItems = buildNews((byKey.press && byKey.press.items) || [], (byKey.timeline && byKey.timeline.items) || []);
+    return CFG.sections.list.filter(c => c.key !== 'checks' && (c.key === 'news' ? newsItems.length : byKey[c.key])).map(c => {
+      if (c.key === 'news') return Object.assign({}, c, { count: newsItems.length, items: newsItems, teaser: (newsItems[0] && newsItems[0].head) || '' });
+      const s = Object.assign({}, byKey[c.key], c);
+      if (s.key === 'lps') { const n = new Set((s.items || []).map(x => x.label)).size; if (n) s.count = n; }
+      return s;
+    });
+  }
+  function checkSummaryHtml(P) {
+    if (!P.open || !P.checks || !P.checks.length) return '';
+    return '<section id="check-summary" class="ps"><h2>' + esc(COPY.summary) + ' <em class="pc2">' + P.checks.length + '</em></h2><div class="cks">'
+      + P.checks.map(r => '<a class="ck" href="#panel-checks" data-tab="checks"><span class="ckn">' + String(r.n).padStart(2, '0') + '</span>' + esc(r.title) + pill(r.state) + '</a>').join('')
+      + '</div><p class="seefull"><a href="#panel-checks" data-tab="checks">' + esc(COPY.full_check) + '</a></p></section>';
+  }
   function render(main, P) {
-    const firm = P.firm.name, byKey = Object.fromEntries(P.sections.map(s => [s.key, s])),
-      secs = CFG.sections.list.filter(c => byKey[c.key]).map(c => Object.assign({}, byKey[c.key], c)), total = secs.filter(s => s.key !== 'checks').reduce((a, s) => a + s.count, 0);
+    const firm = P.firm.name, secs = pageSecs(P), total = secs.reduce((a, s) => a + s.count, 0);
     setFirmName(main, firm);
     main.classList.toggle('unlocked', P.open);
-    main.querySelector('.toc').style.display = ''; const lk = main.querySelector('#lockcard'); if (lk) lk.style.display = '';
+    const tocEl = main.querySelector('.toc'), csum = main.querySelector('.csum'), lk = main.querySelector('#lockcard');
+    if (tocEl) tocEl.style.display = ''; if (lk) lk.style.display = '';
+    const meta = main.querySelector('.m'); if (meta) meta.innerHTML = metaLine(P);
+    paintHero(main, P);
+    paintActivity(main, P);
+    if (csum) { csum.hidden = true; csum.innerHTML = ''; }
     if (!P.open) {
-      main.querySelector('.m').innerHTML = metaLine(P) + secPills(P);
-      paintActivity(main, P);
-      main.querySelector('.csum').hidden = true; main.querySelector('.spl').innerHTML = ''; main.querySelector('.toc').innerHTML = ''; main.querySelector('.toc').style.display = 'none';
-      main.querySelector('#lockcard').hidden = true; main.querySelector('#lockcard').style.display = 'none';
+      if (main.querySelector('.spl')) main.querySelector('.spl').innerHTML = '';
+      if (tocEl) { tocEl.innerHTML = ''; tocEl.style.display = 'none'; }
+      if (lk) { lk.hidden = true; lk.style.display = 'none'; }
       researchBan(main, false);
-      // 'Not checked yet' page (no research yet): the 10 checks as 'Not checked yet' and the same card (it leads to the request-a-check form)
-      main.querySelector('.pmain').innerHTML = P.unchecked ? '<section class="ps">' + ctable(P, false, 0) + '</section>' + gate(P, '') : gate(P, '<section class="ps">' + ghost(P) + '</section>' + ghostSecs());
+      const pmain = main.querySelector('.pmain');
+      if (pmain) pmain.innerHTML = P.unchecked ? '<section class="ps">' + ctable(P, false, 0) + '</section>' + gate(P, '') : gate(P, '<section class="ps">' + ghost(P) + '</section>' + ghostSecs());
       return { total: 0, head: () => GT.title };
     }
-    main.querySelector('.m').innerHTML = metaLine(P) + secPills(P);
-    const has = new Set(secs.map(s => s.key));
-    paintActivity(main, P);
-    main.querySelector('.csum').innerHTML = has.has('checks') ? '<div class="csh"><b>' + COPY.summary + '</b><a href="#checks">' + COPY.full_check + '</a></div><div class="cks">'
-      + P.checks.map(r => '<a class="ck" href="#checks"><span class="ckn">' + String(r.n).padStart(2, '0') + '</span>' + esc(r.title) + pill(r.state) + '</a>').join('') + '</div>' : '';
-    main.querySelector('.csum').hidden = !has.has('checks');
     const fn = main.querySelector('.rgt-n'); if (fn && total) { fn.textContent = total; fn.hidden = false; }
-    main.querySelector('.spl').innerHTML = secs.map(s => '<a class="spp" href="#' + esc(s.key) + '">' + esc(s.title) + ' <em>' + s.count + '</em></a>').join('');
-    main.querySelector('.toc').innerHTML = '<b>' + COPY.toc + '</b>' + secs.map(s => '<a href="#' + esc(s.key) + '">' + esc(s.title) + '</a>').join('');
-    main.querySelector('.pmain').innerHTML = secs.map(s => '<section id="' + esc(s.key) + '" class="ps"><h2>' + esc(s.title) + ' <em class="pc2">' + esc(label(s)) + '</em></h2><p class="psub">' + esc(s.subtitle || '') + '</p>'
-      + (P.open || s.key === 'checks' ? (R[s.renderer] || R.facts)(s.items || [], P) : lockedBody(s)) + '</section>').join('');
-    spy(main);
-    const lc = main.querySelector('#lockcard'); lc.hidden = P.open;
-    lc.querySelector('b').textContent = fmt(COPY.lockcard, { n: total, firm }); lc.querySelector('p').textContent = COPY.lockcard_sub;
+    const toc = [];
+    secs.forEach(s => {
+      toc.push(s);
+      if (s.key === 'overview' && P.checks && P.checks.length) toc.push({ key: 'check-summary', title: COPY.summary, count: P.checks.length });
+    });
+    if (P.checks && P.checks.length && !secs.some(s => s.key === 'overview')) toc.unshift({ key: 'check-summary', title: COPY.summary, count: P.checks.length });
+    if (main.querySelector('.spl')) main.querySelector('.spl').innerHTML = secs.map(s => '<a class="spp" href="#' + esc(s.key) + '">' + esc(s.title) + ' <em>' + s.count + '</em></a>').join('');
+    if (tocEl) tocEl.innerHTML = '<b>' + COPY.toc + '</b>' + toc.map(s => '<a href="#' + esc(s.key) + '">' + esc(s.title) + ' <span>' + s.count + '</span></a>').join('');
+    let body = '';
+    secs.forEach(s => {
+      body += '<section id="' + esc(s.key) + '" class="ps"><h2>' + esc(s.title) + ' <em class="pc2">' + s.count + '</em></h2><p class="psub">' + esc(s.subtitle || '') + '</p>'
+        + (R[s.renderer] || R.facts)(s.items || [], P, s) + '</section>';
+      if (s.key === 'overview') body += checkSummaryHtml(P);
+    });
+    if (!secs.some(s => s.key === 'overview')) body = checkSummaryHtml(P) + body;
+    const pmain = main.querySelector('.pmain'); if (pmain) pmain.innerHTML = body;
+    if (tocEl) spy(main);
+    const lc = main.querySelector('#lockcard');
+    if (lc) { lc.hidden = P.open; lc.querySelector('b').textContent = fmt(COPY.lockcard, { n: total, firm }); lc.querySelector('p').textContent = COPY.lockcard_sub; }
     const pu = document.getElementById('puse'); if (pu) pu.textContent = fmt(COPY.use_line, { n: total, firm });
     const od = P.ondemand;
     researchBan(main, !!(od && od.mine && (od.status === 'queued' || od.status === 'in_progress')));
     main.querySelectorAll('.row.tog').forEach(row => row.onclick = (e) => { if (!e.target.closest('a')) row.classList.toggle('open'); });
-    return { total, head: (key) => { const s = secs.find(x => x.key === key); return s ? fmt(COPY.pay_head, { title: s.title, firm, count: label(s) }) : fmt(COPY.pay_all, { n: total, firm }); } };
+    return { total, head: (key) => { const s = secs.find(x => x.key === key); return s ? fmt(COPY.pay_head, { title: s.title, firm, count: s.count }) : fmt(COPY.pay_all, { n: total, firm }); } };
   }
 
   // Summary page (/vc/<slug>/): name, key-fact chips, the 10 checks (closed), then "See the full check".
@@ -307,7 +502,8 @@
   }
   function checkingHead(main, P, st) {
     const done = doneN(P), cur = (P.checks || []).find(r => r.state === 'nc'), firm = P.firm.name;
-    main.querySelector('.fh h1').innerHTML = esc(fmt(CK.title, { firm })) + '<span class="dots">…</span>';
+    const h1 = main.querySelector('.ph h1') || main.querySelector('.fh h1');
+    if (h1) { const save = h1.querySelector('[data-save]'); h1.innerHTML = esc(fmt(CK.title, { firm })) + '<span class="dots">…</span>'; if (save) h1.appendChild(save); }
     const s0 = st && st.started_at !== undefined ? st.started_at : P.started_at, t = s0 ? new Date(s0) : null;
     const b = main.querySelector('.cban'); b.className = 'cban'; b.hidden = false;
     b.innerHTML = '<div class="ch"><b>' + esc(fmt(CK.progress, { done, check: cur ? cur.title : '' })) + '</b><span>' + esc(CK.usually) + '</span></div>'
@@ -321,24 +517,28 @@
     const od = P.ondemand, research = !checking && !!(od && od.mine && (od.status === 'queued' || od.status === 'in_progress'));
     main.classList.toggle('checking', checking);
     setFirmName(main, P.firm.name);
-    main.querySelector('.cside').hidden = !(checking || research);
+    const side = main.querySelector('.cside'); if (side) side.hidden = !(checking || research);
     if (research) { const ep = main.querySelector('[data-notify] p'); if (ep) ep.textContent = CK.research_email; }
     if (checking) checkingHead(main, P, st);
     else if (research) {
-      main.querySelector('.fh h1').textContent = P.firm.name;
+      setFirmName(main, P.firm.name);
       researchBan(main, true);
     } else {
-      main.querySelector('.fh h1').textContent = P.firm.name;
+      setFirmName(main, P.firm.name);
       const b = main.querySelector('.cban'); b.hidden = !justDone; b.className = 'cban ok';
       b.innerHTML = justDone ? '<div class="ch"><div><b>' + esc(CK.complete) + '</b> <span>' + esc(CK.complete_sub) + '</span></div></div>' : '';
     }
     const curN = checking && P.open ? P.checks.find(r => r.state === 'nc').n : 0;
     const link = siteLink(P);
-    if (checking && !(P.hero && P.hero.length)) main.querySelector('.kf').innerHTML = '<span>' + esc(CK.sources[0]) + ' <b>' + esc(CK.sources[1]) + '</b></span>' + (link ? '<span>' + link + '</span>' : '');
-    else main.querySelector('.kf').innerHTML = '<p class="m">' + metaLine(P) + secPills(P) + '</p>';
+    const meta = main.querySelector('.ph .m') || main.querySelector('.m');
+    if (checking && !(P.hero && P.hero.length)) {
+      if (meta) meta.innerHTML = esc(CK.sources[0]) + ' <b>' + esc(CK.sources[1]) + '</b>' + (link ? ' · ' + link : '');
+      const heros = main.querySelector('.heros'); if (heros) { heros.innerHTML = ''; heros.hidden = true; }
+    } else if (meta) meta.innerHTML = metaLine(P);
+    if (!(checking && !(P.hero && P.hero.length))) paintHero(main, P);
     paintActivity(main, P);
-    main.querySelector('.list').innerHTML = P.open ? ctable(P, checking, curN) : P.unchecked ? ctable(P, false, 0) + gate(P, '') : gate(P, ghost(P));
-    const fn = main.querySelector('.rgt-n'), ft = (P.sections || []).filter(s => s.key !== 'checks').reduce((a, s) => a + (s.count || 0), 0);
+    const list = main.querySelector('.list'); if (list) list.innerHTML = P.open ? ctable(P, checking, curN) : P.unchecked ? ctable(P, false, 0) + gate(P, '') : gate(P, ghost(P));
+    const fn = main.querySelector('.rgt-n'), ft = pageSecs(P).reduce((a, s) => a + (s.count || 0), 0);
     if (fn && ft) { fn.textContent = ft; fn.hidden = false; }
     bindTable(main);
     return { total: 0, head: () => '', checking, research, pending, queue };
@@ -426,7 +626,7 @@
     const hero = (Array.isArray(P.hero) ? P.hero : []).filter(h => h && h.value && h.label !== 'HQ');
     return hero.map(h => { const src = (h.src || []).find(c => /(^|\.)sec\.gov\//i.test((safeUrl(c.url) || '').replace(/^https?:\/\//i, '').replace(/\/.*/, '/')));
       if (!src) return '';
-      const lab = assetLabel(h.label), v = nice(h.value), parts = String(v).split(' · ');
+      const lab = assetLabel(h.label, h.value), v = nice(h.value), parts = String(v).split(' · ');
       const t = /^(Assets|Regulatory AUM|AUM)$/.test(h.label) ? v + ' ' + lab.toLowerCase() : parts[0] + ' ' + lab.toLowerCase() + (parts.length > 1 ? ' · ' + parts.slice(1).join(' · ') : '');
       return '<a class="sc" href="' + esc(src.url) + '" target="_blank" rel="noopener">' + esc(t) + '</a>'; }).filter(Boolean).slice(0, 7).join('').replace(/^(.+)$/, '<span class="secp">$1</span>');
   }
@@ -524,5 +724,25 @@
     const h = activity(P); box.innerHTML = h; box.hidden = !h;
   }
 
-  window.RegretCompany = { render, summary };
+  function applyTab(main, which) {
+    which = which === 'full' ? 'full' : 'checks';
+    main.dataset.tab = which;
+    const c = main.querySelector('#panel-checks'), f = main.querySelector('#panel-full');
+    if (c) c.hidden = which !== 'checks';
+    if (f) f.hidden = which !== 'full';
+    main.querySelectorAll('.rgt-tab[data-tab]').forEach(b => {
+      const on = b.dataset.tab === which;
+      b.classList.toggle('on', on);
+      if (b.tagName === 'BUTTON') b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+  }
+  // Both tabs are already in the page. paint fills them; switching only shows one, with no reload.
+  function paint(main, P, st) {
+    const full = render(main, P);
+    const view = summary(main, P, st);
+    applyTab(main, main.dataset.tab || 'checks');
+    view.total = full.total; view.head = full.head;
+    return view;
+  }
+  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs };
 })();

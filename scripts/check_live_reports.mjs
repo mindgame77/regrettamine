@@ -34,11 +34,11 @@ try {
     try {
       const r = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 45000 });
       if (!r || r.status() !== 200) return fail(slug + ' ' + view + ': status ' + (r && r.status()));
-      try { await page.waitForFunction(() => document.querySelectorAll('.gate .gveil tr.crow').length === 10, null, { timeout: 30000 }); }
+      try { await page.waitForFunction(() => { const root = document.querySelector('#panel-checks:not([hidden])') || document.querySelector('#panel-full:not([hidden])') || document; return root.querySelectorAll('.gate .gveil tr.crow').length === 10; }, null, { timeout: 30000 }); }
       catch (_) { return fail(slug + ' ' + view + ': locked placeholder (10 rows) never rendered'); }
-      const g = await page.evaluate(() => { const v = document.querySelector('.gate .gveil'), c = document.querySelector('.gate .gcard');
-        return { blur: getComputedStyle(v).filter, card: !!c && c.offsetHeight > 0, btn: !!(c && c.querySelector('[data-gate]')), real: document.querySelectorAll('.gveil .pill:not(.gp), .gveil .cti, .gveil .cdx').length,
-          full: !!document.querySelector('.rgt-tabs a[href$="full/"]') }; });
+      const g = await page.evaluate(() => { const root = document.querySelector('#panel-checks:not([hidden])') || document.querySelector('#panel-full:not([hidden])') || document; const v = root.querySelector('.gate .gveil'), c = root.querySelector('.gate .gcard');
+        return { blur: v ? getComputedStyle(v).filter : '', card: !!c && c.offsetHeight > 0, btn: !!(c && c.querySelector('[data-gate]')), real: root.querySelectorAll('.gveil .pill:not(.gp), .gveil .cti, .gveil .cdx').length,
+          full: !!document.querySelector('.rgt-tabs [data-tab="full"], .rgt-tabs a[href$="full/"]') }; });
       if (!/blur\(10px\)/.test(g.blur)) fail(slug + ' ' + view + ': placeholder not blurred (' + g.blur + ')');
       if (!g.card || !g.btn) fail(slug + ' ' + view + ': no "Check with 1 credit" card');
       if (g.real) fail(slug + ' ' + view + ': placeholder contains result elements');

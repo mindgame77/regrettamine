@@ -6,8 +6,8 @@ detailed doc. If this guide and a detailed doc ever disagree, the detailed doc a
 ## 1. What the product is
 Regretamin (regretamin.com) helps founders background-check a VC firm before taking its money. Each firm has one page,
 `/vc/<slug>/`, with sections such as People & board seats, Funds, Overview, Limited partners, Legal & regulatory,
-Timeline, Press, What founders say, Deals and the 10 checks. A visitor sees a summary. Spending a credit (free or paid)
-unlocks the full page. (On 2026-10-26 the database had 10,276 firms that were not deleted, and 10,275 of them were published.)
+News (press and timeline together), What founders say, Deals and the 10 checks. A visitor sees a summary. Spending a credit (free or paid)
+unlocks the full page. Checks and Full report are two views of that same page. (On 2026-10-26 the database had 10,276 firms that were not deleted, and 10,275 of them were published.)
 
 ## 2. The bots (who collects the data)
 Bots only **collect**. They never write to the live page tables. Everything they send lands in the holding area (section 3).
@@ -50,6 +50,7 @@ accepted and what was refused and why (`bot_feedback`). That way the bot learns.
   the older row's source is added to the same item.
 * **Old-format rows** (the enrichments from before the rules, ids below `data_rules_from_enrichment_id`) go through the
   same rules. Anything unreadable is held with a reason. Nothing is dropped silently.
+* **News is one section on the page.** Press and timeline stay stored as they are. The page combines them into News when it draws: the same link is one card, and items dated before 2023 are left off that section. This cutoff and this link merge apply only to News. The same date with a different link is not a merge. Several outlets on one story stay several cards.
 * **Own media:** a founder quote or press item from the firm's own site, podcast or channels is labelled "Own media" (not independent).
 * **Scores** follow docs/toxy-score-v2-rules.md (start full, lose points only for verified evidence, rates not counts).
 

@@ -510,7 +510,15 @@
       let h = !box.hidden && hits[act] || hits.find(x => same(x, q));
       if (!h && main && q.toLowerCase() === inp.defaultValue.trim().toLowerCase()) h = { slug: main.dataset.firm };
       if (!h && sb) { const n = ++seq; const { data } = await Promise.resolve(sb.rpc('firm_suggest', { q })).catch(() => ({})); if (n === seq) h = (data || []).find(x => same(x, q)); }
-      if (main && h && h.slug === main.dataset.firm) { show(false); if (main.dataset.view !== 'summary') location.href = firmUrl(h.slug); return; }
+      if (main && h && h.slug === main.dataset.firm) {
+        show(false);
+        if (main.dataset.tab === 'full' && window.RegretCompany && window.RegretCompany.applyTab) {
+          window.RegretCompany.applyTab(main, 'checks');
+          const base = location.pathname.replace(/full\/$/, '');
+          history.pushState({ tab: 'checks' }, '', base + location.search);
+        }
+        return;
+      }
       location.href = h ? firmUrl(h.slug) : liveUrl(q);
     };
   });
@@ -613,7 +621,12 @@
     const was = !PAGE ? -1 : PAGE.done != null ? PAGE.done : (PAGE.checks || []).filter(r => r.state !== 'nc').length, wasQ = VIEW ? VIEW.queue : undefined;
     ST = data;
     if (data.done !== was) { if (data.complete) ST.just_done = true; return loadPage(false); }
-    if (VIEW && (VIEW.checking || VIEW.research || data.queue !== wasQ) && main.dataset.view === 'summary') { VIEW = window.RegretCompany.summary(main, PAGE, ST); checking(); }
+    if (VIEW && (VIEW.checking || VIEW.research || data.queue !== wasQ)) {
+      const y = window.scrollY;
+      VIEW = window.RegretCompany.paint(main, PAGE, ST);
+      window.scrollTo(0, y);
+      checking();
+    }
   }
   async function notifyBox() {
     const f = main.querySelector('[data-notify]'); if (!f) return; NOTIFY = true;
@@ -630,9 +643,12 @@
     };
   }
   function draw(P) {
-    PAGE = P; VIEW = window.RegretCompany[main.dataset.view === 'summary' ? 'summary' : 'render'](main, P, ST); main.classList.remove('ld'); saveBtn(); checking();
+    PAGE = P; VIEW = window.RegretCompany.paint(main, P, ST); main.classList.remove('ld'); saveBtn(); checking();
     const id = decodeURIComponent(location.hash.slice(1)), t = id && document.getElementById(id);
-    if (t) t.scrollIntoView();
+    if (!t) return;
+    if (t.closest('#panel-full')) window.RegretCompany.applyTab(main, 'full');
+    else if (t.closest('#panel-checks')) window.RegretCompany.applyTab(main, 'checks');
+    t.scrollIntoView();
   }
   // firm_page() failed or took longer than 10 s and nothing is drawn yet: swap the grey skeleton for "Couldn't load this firm" + Retry.
   // Save, the fine print and (on /full/) the unlock card still show. Retry puts the skeleton back and calls firm_page() again.
@@ -679,9 +695,28 @@
     }
   }
   window.RegretActList = async (slug, kind) => { if (!sb) return null; const { data, error } = await Promise.resolve(sb.rpc('firm_activity_list', { p_slug: slug, p_anon: anonId(), p_kind: kind })).catch(e => ({ error: e })); return error ? null : data; };
+  // The Checks / Full report control is the one from 843bff8. That commit used a link, which loaded
+  // the other URL and drew the header again. Here the two panels are already in the page, so the
+  // click only shows one of them. The header above the control is left as it is, and the scroll stays.
+  function goTab(which) {
+    if (!window.RegretCompany || !window.RegretCompany.applyTab) return;
+    const y = window.scrollY;
+    window.RegretCompany.applyTab(main, which);
+    const base = location.pathname.replace(/full\/$/, '');
+    const url = (which === 'full' ? base + 'full/' : base) + location.search;
+    if (location.pathname + location.search !== url) history.pushState({ tab: which }, '', url);
+    window.scrollTo(0, y);
+  }
   if (main) {
-    // In-page anchors: smooth scroll and update the hash
+    window.addEventListener('popstate', () => {
+      const y = window.scrollY;
+      if (window.RegretCompany && window.RegretCompany.applyTab) window.RegretCompany.applyTab(main, /\/full\/$/.test(location.pathname) ? 'full' : 'checks');
+      window.scrollTo(0, y);
+    });
+    // Tab buttons show the other panel in place. Anchors still scroll, and do not jump back to the top.
     document.addEventListener('click', (e) => {
+      const tab = e.target.closest('[data-tab="checks"], [data-tab="full"]');
+      if (tab && main.contains(tab)) { e.preventDefault(); goTab(tab.dataset.tab); return; }
       const a = e.target.closest('a[href^="#"]'), id = a && a.getAttribute('href').slice(1), t = id && document.getElementById(id); if (!t) return;
       e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); history.pushState(null, '', '#' + id);
     });

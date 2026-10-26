@@ -10,7 +10,9 @@ JS = (ROOT / "launch" / "js" / "company.js").read_text()
 
 def test_label_set_once():
     assert COPY["company"]["not_confirmed"] == "Not confirmed"
-    assert "ncValue(x.value)" in JS and "ncPill" in JS and "isLeadTag(x.badge)" in JS and "isLeadTag(x.kind)" in JS
+    # A lead fact keeps the stored wording and shows one "Not confirmed" status pill. The value text is stripped.
+    assert "isLeadVal(x.value)" in JS and "ncPill" in JS and "isLeadTag(x.badge)" in JS and "isLeadTag(x.kind)" in JS
+    assert "const ncValue" in JS
 
 
 def test_rewrites():
