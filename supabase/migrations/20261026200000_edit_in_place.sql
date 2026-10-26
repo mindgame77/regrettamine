@@ -97,5 +97,21 @@ begin
   return true;
 end $$;
 
+-- many edits, each in its own savepoint: one refused edit does not undo the others. items: [{table,row,firm,fields}]
+create or replace function public.edit_in_place_batch(p_items jsonb, p_batch text, p_who text default 'cleanup')
+ returns table(row_id uuid, backup_id bigint, error text) language plpgsql security definer set search_path = public as $$
+declare it jsonb;
+begin
+  for it in select * from jsonb_array_elements(p_items) loop
+    row_id := (it->>'row')::uuid; backup_id := null; error := null;
+    begin
+      backup_id := edit_in_place(it->>'table', row_id, (it->>'firm')::uuid, it->'fields', p_batch, p_who);
+    exception when others then error := sqlerrm;
+    end;
+    return next;
+  end loop;
+end $$;
+
+revoke execute on function public.edit_in_place_batch(jsonb, text, text) from public, anon, authenticated;
 revoke execute on function public._edit_cols(text), public._row_rule(text, uuid), public.edit_in_place(text, uuid, uuid, jsonb, text, text),
   public.undo_edit_in_place(bigint, text) from public, anon, authenticated;

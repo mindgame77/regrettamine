@@ -92,3 +92,17 @@ def test_edit_in_place_people_row_and_no_count_alert():
                   "sections": {"Overview": [{"label": "Founded", "value": "1999", "source": ADV}]}}),))
         assert c.execute("select count(*) from section_count_alerts where firm_id = %s", (fid,)).fetchone()[0] == 0
         c.rollback()
+
+
+def test_edit_in_place_batch_keeps_good_edits_when_one_is_refused():
+    with _db() as c:
+        fid, lid = _setup(c)
+        pid = c.execute("select id from firm_people_roles where firm_id = %s", (fid,)).fetchone()[0]
+        items = [{"table": "firm_legal_items", "row": str(lid), "firm": str(fid), "fields": {"title": LONG + " x"}},
+                 {"table": "firm_people_roles", "row": str(pid), "firm": str(fid), "fields": {"role": "General Partner"}}]
+        got = c.execute("select row_id, backup_id is not null, error from edit_in_place_batch(%s::jsonb, 'b')", (json.dumps(items),)).fetchall()
+        assert got[0][0] == lid and got[0][1] is False and "still breaks a rule" in got[0][2]
+        assert got[1] == (pid, True, None)
+        assert c.execute("select role from firm_people_roles where id = %s", (pid,)).fetchone()[0] == "General Partner"
+        assert c.execute("select title from firm_legal_items where id = %s", (lid,)).fetchone()[0] == LONG
+        c.rollback()
