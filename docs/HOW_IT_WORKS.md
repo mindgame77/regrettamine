@@ -107,6 +107,7 @@ Important: paid on-demand research results now also wait for a batch approval be
   `launch/build.py` (markup) and `launch/js/*`. There is one template for every firm. On Cloudflare, `launch/functions/vc/[[path]].js`
   serves `/vc/<slug>/` for every published firm, and `launch/edge/firm.mjs` mirrors the builder (a test checks that they match).
 * A section shows only if it is listed in `copy.json` **and** the database returned it. See launch/HOW-TO-CHANGE.md for what to edit for each kind of change.
+* **Overview, display only.** The browser hides Other names, Type, Staff, Private funds, Legal entity, Sanctions screening, and empty or "Not found" rows, strips CRD and SEC file numbers, and shows what is left as HQ, Legal name, Registration, Founded, Owners, and Recent changes. The count matches those rows. Nothing is rewritten in the database.
 
 ## 9. Alerts and routines
 * **Section-count alerts** (`section_count_alerts`): after every publish, each section's item count is compared with the
