@@ -28,14 +28,14 @@ def test_enrichment_promotes_without_touching_friend_rows():
             "What founders say": [{"who": "A founder, X, 2026-10-20", "quote": "great", "source": "https://x.com/someone/status/1"},
                                   {"who": "Enr, X", "quote": "we are great", "source": "https://x.com/enrtest/status/2"},
                                   {"who": "B founder, Enr Pod", "quote": "on our pod", "source": "https://www.enrpod.fm/ep/1"}],
-            "Timeline": [{"date": "1983", "item": "Founded", "source": "https://www.reuters.com/a"}],
-            "Legal & regulatory": [{"item": "Doe v. Enr, terminated 2025", "source": "https://www.courtlistener.com/docket/1/"},
-                                   {"item": "Embassy bio", "source": "https://us.embassy.gov/bio"}],
-            "Funds": [{"item": "Fund I", "source": "https://reports.adviserinfo.sec.gov/x.pdf"}]},
+            "Timeline": [{"date": "1983", "event": "Founded", "source": "https://www.reuters.com/a"}],
+            "Legal & regulatory": [{"title": "Doe v. Enr, terminated 2025", "source": "https://www.courtlistener.com/docket/1/"},
+                                   {"title": "Embassy bio", "source": "https://us.embassy.gov/bio"}],
+            "Funds": [{"name": "Fund I", "source": "https://reports.adviserinfo.sec.gov/x.pdf"}]},
             "fix": [{"field": "people[Jane Roe].current", "bot_value": "Partner", "correct_value": "former partner (left 2020)", "source_url": "https://www.sec.gov/x"},
                     {"field": "aum", "correct_value": "no figure", "source_url": "https://www.sec.gov/y"}],
             "owned_media": [{"url": "https://enrpod.fm", "label": "Enr Pod"}],
-            "leads": [{"field": "lawsuits", "value": "Founder alleges breach", "source_url": "https://www.axios.com/z"}],
+            "leads": [{"field": "lawsuits", "value": {"title": "Founder alleges breach"}, "source_url": "https://www.axios.com/z"}],
             "add": [{"field": "people", "value": "No source here"}],
             "searches": [{"section": "board_seats", "site": "sec.gov", "query": "Enr board", "searched_at": "2026-10-24", "result": "none", "item_count": 0}]}
         r = c.execute("select research_enrich('toxy-enricher', %s::jsonb)", (json.dumps(p),)).fetchone()[0]
@@ -59,15 +59,17 @@ def test_enrichment_promotes_without_touching_friend_rows():
         people = c.execute("select _sec_items('people', %s)", (fid,)).fetchone()[0]
         jane = [x for x in people if x["head"] == "Jane Roe"][0]
         assert jane["role"].startswith("former partner") and jane["badge"] == "Corrected"
-        # a fix can target an enricher row, and a fix with no target still shows (its own source, no cite collision)
-        p["sections"]["People & board seats"] = [{"item": "Max Doe — Partner since 2019", "source": "https://www.sec.gov/p"}]
+        # a fix can target an enricher row
+        p["sections"]["People & board seats"] = [{"name": "Max Doe", "role": "Partner", "since": "2019", "source": "https://www.sec.gov/p"}]
         p["fix"] += [{"field": "people[Max Doe].current", "bot_value": "Partner", "correct_value": "former partner (left 2026)", "source_url": "https://tech.eu/m"},
                      {"field": "people[Nobody Here].current", "correct_value": "Nobody Here left in 2026", "source_url": "https://tech.eu/n"}]
         c.execute("select research_enrich('toxy-enricher', %s::jsonb)", (json.dumps(p),))
         people = c.execute("select _sec_items('people', %s)", (fid,)).fetchone()[0]
         mx = [x for x in people if x["head"].startswith("Max Doe")][0]
         assert mx["role"].startswith("former partner") and mx["badge"] == "Corrected"
-        assert [x["badge"] for x in people if x["head"].startswith("Nobody Here")] == ["Correction"]
+        # under docs/DATA_RULES.md a fix for a person who is not on the page is not shown; the reason goes back to the bot
+        assert not [x for x in people if x["head"].startswith("Nobody Here")]
+        assert "not on the page" in c.execute("select reason from publish_checks where firm_id = %s and outcome = 'rejected' and field = 'people[Nobody Here].current'", (fid,)).fetchone()[0]
         assert c.execute("select role from firm_people_roles where id = %s", (pid,)).fetchone()[0] == "Partner"
         # re-promotion is idempotent and leaves the friend's rows alone
         before = c.execute("select count(*) from enrichment_rows where firm_id = %s", (fid,)).fetchone()[0]
@@ -86,7 +88,7 @@ def test_superseded_enrichment_search_log_is_not_counted():
     slug = "enrs-" + uuid.uuid4().hex[:8]
     with _db() as c:
         fid = c.execute("insert into firms(slug, name, short_name, published, data_status, primary_domain) values (%s, 'Enrs Test', 'Enrs', true, 'real', 'enrs.com') returning id", (slug,)).fetchone()[0]
-        old = {"slug": slug, "sections": {"Timeline": [{"date": "1990", "item": "Founded", "source": "https://www.reuters.com/enrs"}]},
+        old = {"slug": slug, "sections": {"Timeline": [{"date": "1990", "event": "Founded", "source": "https://www.reuters.com/enrs"}]},
                "searches": [{"section": "board_seats", "site": "sec.gov", "query": "Enrs board", "searched_at": "2026-10-23", "result": "none", "item_count": 0}]}
         new = dict(old, searches=[{"section": "board_seats", "site": "sec.gov", "query": "Enrs board v2", "searched_at": "2026-10-24", "result": "error", "item_count": 0}])
         c.execute("select research_enrich('toxy-enricher', %s::jsonb)", (json.dumps(old),))
@@ -114,7 +116,7 @@ UPFRONT_NOTE = (
 
 
 def _checks(slug):
-    return {"slug": slug, "sections": {"Timeline": [{"date": "1983", "item": "Founded", "source": "https://www.reuters.com/a"}]}}
+    return {"slug": slug, "sections": {"Timeline": [{"date": "1983", "event": "Founded", "source": "https://www.reuters.com/a"}]}}
 
 
 def test_name_only_flag_is_clear_and_leaves_the_payload_alone():

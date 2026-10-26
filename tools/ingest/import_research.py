@@ -36,6 +36,35 @@ def clip(s, n=600):
     return s if len(s) <= n else s[:n - 1].rsplit(' ', 1)[0] + '…'
 def norm(s):
     return re.sub(r'[^a-z0-9]', '', str(s or '').lower())
+# docs/DATA_RULES.md: same text rule as the database checker (_note_text / _person_name_bad).
+NOTE_RE = re.compile(r"(\bbot [a-z ]*records?\b|schedule [a-d] (individuals|lists)|related persons?:|\bmatch(es)? an? (schedule|surname|fund)"
+                     r"|\(log entry|no source url|\[the 10 checks\]|\bsearched\b.*\bfound\b)", re.I)
+def note_text(t, maxlen=300):
+    t = str(t or '').strip()
+    if not t: return None
+    if NOTE_RE.search(t): return 'reads like a bot note, not a fact'
+    if re.search(r'https?://|www\.', t, re.I): return 'contains a URL'
+    if len(t) > maxlen: return f'longer than {maxlen} characters'
+    return None
+def person_name_bad(n):
+    n = str(n or '').strip()
+    if not n: return 'person needs name'
+    if note_text(n, 80): return 'name: ' + note_text(n, 80)
+    if re.search(r'[0-9;:|/()\[\]]', n): return 'name has digits or punctuation'
+    if re.search(r' and | & ', n, re.I): return 'one person per item'
+    if ',' in re.sub(r',\s*(Jr|Sr|II|III|IV)\.?$', '', n): return 'one person per item'
+    if len(n.split()) > 6: return 'name too long'
+    return None
+CHECK_COLS = {'firm_people_roles': (('role', 200),), 'firm_legal_items': (('title', 160),), 'timeline_events': (('body', 300),),
+              'firm_profile_facts': (('label', 120), ('value', 400))}
+def row_reject(table, cols):
+    if table == 'firm_people_roles':
+        bad = person_name_bad(cols.get('person_name'))
+        if bad: return bad
+    for c, m in CHECK_COLS.get(table, ()):
+        bad = note_text(cols.get(c), m)
+        if bad: return f'{c}: {bad}'
+    return None
 def human(s):
     return str(s or '').replace('_', ' ').strip().capitalize() or None
 
@@ -119,6 +148,9 @@ def build(sub, kept, lps, brand, slug):
     rows, by = [], {}
     for r in kept: by.setdefault(r['field_path'], []).append(r)
     def add(table, key, cols, srcs):
+        bad = row_reject(table, cols)
+        if bad:
+            print('skipped', table, key, '-', bad, file=sys.stderr); return
         rows.append((table, uid(reg, table, key), cols, src_rows(srcs)))
     def fact(section, key, label, value, srcs, hero=None, order=0):
         if value: add('firm_profile_facts', key, dict(section=section, label=clip(label, 120), value=clip(value, 400),
