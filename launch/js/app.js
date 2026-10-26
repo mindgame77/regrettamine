@@ -89,7 +89,10 @@
   // and repaint on every auth event that brings a session (INITIAL_SESSION, TOKEN_REFRESHED, SIGNED_IN) until the account is painted.
   let PAINT_TRY = 0, PAINT_T = 0, PAINTING = null;
   const cached = () => !!(window.REGRET_AU && window.REGRET_AU.email !== undefined);
-  const retry = () => { if (PAINT_TRY++ < 6) { clearTimeout(PAINT_T); PAINT_T = setTimeout(paint, Math.min(1000 * PAINT_TRY, 4000)); return true; } return false; };
+  // Exponential backoff (1s, 2s, 4s, 8s; at most 4 retries). A retry reuses a good check_balance answer from the last 30 s
+  // instead of calling it again; only a failed or signed-out answer is fetched again.
+  let BAL_OK = null;
+  const retry = () => { if (PAINT_TRY < 4) { PAINT_TRY++; clearTimeout(PAINT_T); PAINT_T = setTimeout(paint, 1000 * 2 ** (PAINT_TRY - 1)); return true; } return false; };
   function paint() { // one paint at a time; a call during a paint queues one more
     if (PAINTING) { PAINTING.again = true; return PAINTING.p; }
     const st = { again: false }; PAINTING = st;
@@ -97,7 +100,8 @@
     return st.p;
   }
   async function paintOnce() {
-    const b = await balance(5000 + 3000 * PAINT_TRY); // slow network: give each retry longer
+    const b = PAINT_TRY > 0 && BAL_OK && BAL_OK.signed_in && Date.now() - BAL_OK.t < 30000 ? BAL_OK.b : await balance(5000 + 3000 * PAINT_TRY); // slow network: give each retry longer
+    if (b && b.signed_in) BAL_OK = { b, t: Date.now() };
     const s = (!b || !b.signed_in) ? await session() : null;
     if (!b || (!b.signed_in && s)) { // check_balance failed, or ran before the refreshed token was ready: keep the header from the session
       if (s) hdr(true, s.user && s.user.email);
@@ -465,8 +469,8 @@
   if (sb) sb.auth.onAuthStateChange((ev, session) => {
     if ((ev === 'SIGNED_IN' || ev === 'INITIAL_SESSION') && session) { try { const r = JSON.parse(sessionStorage.getItem('rg_ret') || 'null'); sessionStorage.removeItem('rg_ret'); if (r && Date.now() - r.t < 600000 && typeof r.p === 'string' && /^\/vc\/[^/]+\/(full\/)?$/.test(r.p) && r.p !== location.pathname) { location.replace(location.origin + r.p); return; } } catch (x) {} }
     if (ev === 'SIGNED_IN') setTimeout(() => { PAINT_TRY = 0; paint(); }, 0); // nothing transfers at sign-in: the account has its own 4
-    else if ((ev === 'INITIAL_SESSION' || ev === 'TOKEN_REFRESHED') && session && !ACCT) setTimeout(() => { PAINT_TRY = 0; paint(); }, 0); // session became usable after the first paint
-    if (ev === 'SIGNED_OUT') setTimeout(() => { PAINT_TRY = 0; ACCT = null; paint(); }, 0);
+    else if ((ev === 'INITIAL_SESSION' || ev === 'TOKEN_REFRESHED') && session && !ACCT && !PAINT_TRY) setTimeout(() => { paint(); }, 0); // session became usable after the first paint
+    if (ev === 'SIGNED_OUT') setTimeout(() => { PAINT_TRY = 0; ACCT = null; BAL_OK = null; paint(); }, 0);
     if ((ev === 'SIGNED_IN' || ev === 'INITIAL_SESSION') && session) { const p = takePend(); if (p) setTimeout(async () => { if ($('#paycase')) open('paycase'); YEARLY = /^y/.test(p.k); drawPlans(); if (p.code) await applyCode(p.code); if (p.k !== 'code' || CODE) buy(p.k); }, 0); }
   });
   const main = document.querySelector('main[data-firm]');
@@ -657,7 +661,7 @@
     if (!sb) return loadFail();
     const to = new Promise(r => setTimeout(() => r({ error: 'timeout' }), spend ? 20000 : 10000));
     const { data, error } = await Promise.race([Promise.resolve(sb.rpc('firm_page', { p_slug: main.dataset.firm, p_anon: anonId(), p_spend: spend, p_email: spend ? typedEmail() : null })), to]).catch(e => ({ error: e }));
-    if ((error || !data) && !spend && !retry && !PAGE) return loadPage(false, true); // one quiet retry (slow session refresh / expired token)
+    if ((error || !data) && !spend && !retry && !PAGE) { await new Promise(r => setTimeout(r, 1500)); return loadPage(false, true); } // one quiet retry after a pause (slow session refresh / expired token)
     if (error || !data) { if (spend) $('#pmsg2').textContent = T.error; else loadFail(); return; }
     if (!spend && !['ok', 'need_signup', 'out'].includes(data.status)) return loadFail();
     if (data.status === 'ok') {
@@ -674,6 +678,7 @@
       if (ss && ss.session) buy('single'); else openOut();
     }
   }
+  window.RegretActList = async (slug, kind) => { if (!sb) return null; const { data, error } = await Promise.resolve(sb.rpc('firm_activity_list', { p_slug: slug, p_anon: anonId(), p_kind: kind })).catch(e => ({ error: e })); return error ? null : data; };
   if (main) {
     // In-page anchors: smooth scroll and update the hash
     document.addEventListener('click', (e) => {
