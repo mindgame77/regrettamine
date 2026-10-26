@@ -735,6 +735,41 @@
    "complete": "✓ Check complete",
    "complete_sub": "· 10 of 10 checks · just now"
   },
+  "activity": {
+   "active": "Active",
+   "last_deal": "Last deal {date}",
+   "fund_closed": "Fund closed {date}",
+   "deals_12m": "Deals, last 12 mo",
+   "fund": "Latest fund",
+   "raised": "{amount} raised",
+   "filing": "Filing",
+   "latest_deal": "The latest deal",
+   "h_company": "Company",
+   "h_round": "Round",
+   "h_date": "Date",
+   "h_source": "Source",
+   "reviews": "Founder reviews",
+   "anon": "Anonymous founder",
+   "source": "Source:",
+   "all_deals": [
+    "Show all {n} deal",
+    "Show all {n} deals"
+   ],
+   "all_reviews": [
+    "Show all {n} review",
+    "Show all {n} reviews"
+   ],
+   "deals_title": "{n} deals · {firm}",
+   "reviews_title": "{n} founder reviews · {firm}",
+   "close": "Close",
+   "ratings": {
+    "honesty": "Honesty",
+    "support_after_check": "Support after the check",
+    "founder_friendly_terms": "Founder-friendly terms",
+    "responsiveness": "Responsiveness",
+    "hard_times": "In hard times"
+   }
+  },
   "table": {
    "_note": "Checks table on /vc/<slug>/ and /full/ (js/company.js ctable). {count} is firm_check_rows.count_label, {n}/{m} are numbers. active_h and coming are [one, many]. An opened Review row lists each named case or action. A count with nothing itemized uses coming plus search_courts.",
    "h_check": "Check",

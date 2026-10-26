@@ -415,3 +415,24 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
    with its title; check-summary tiles can shrink; My firms rows keep 'Open' / 'Check' on the first row next to the name. */
 .prof .ps,.prof .kv>span,.prof .fct,.prof .it{overflow-wrap:anywhere;min-width:0}.cks>.ck{min-width:0}.ps h2 .pc2{white-space:nowrap}
 @media (max-width:760px){.mfr{grid-template-columns:30px minmax(0,1fr) auto}.mfr>.star{grid-row:1}.mfr .nm3{grid-column:2;grid-row:1;min-width:0;overflow-wrap:anywhere}.mfr .btn{grid-column:3;grid-row:1}}
+/* Firm activity (firm_page.activity): SEC pills, tiles, latest deal, latest founder review */
+.kf .m{color:var(--mute);font-size:15px;margin:0;display:block}.kf .m span{background:none;padding:0;font-size:inherit;color:inherit}
+.m .sc{margin:4px 6px 0 0}.m .sc:first-of-type{margin-left:12px}.m{line-height:1.9}
+.hfs.actw{display:block;min-height:0}.actw[hidden]{display:none}
+.actv{border:1.5px solid var(--line);border-radius:20px;padding:20px 22px;margin:18px 0 20px;display:flex;flex-direction:column;gap:22px}
+.ats{display:grid;gap:12px}.att{border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.att small{font:700 11.5px 'DM Sans';letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}.att b{font:800 30px 'Bricolage Grotesque';color:var(--ink)}.att b .asm{font-size:19px}
+.att span{font-size:13.5px;color:var(--ink2)}.att a{color:var(--vio);font-weight:700;text-decoration:none}
+.amt{background:var(--mintbg)}.afd{background:var(--viobg)}
+.aon{background:#E7F8EE;flex-direction:row;align-items:center;gap:14px}.aon>i{width:14px;height:14px;border-radius:50%;background:#16A34A;box-shadow:0 0 0 6px #C9F0D8;flex:none}
+.aon div{display:flex;flex-direction:column;gap:2px;min-width:0}.aon b{font-size:24px;color:#0F7A3A}.aon em{font-style:normal;font-size:13px;color:var(--mute)}
+.apt{font:800 20px 'Bricolage Grotesque';display:block;margin-bottom:8px}.arvs h2{font:800 26px 'Bricolage Grotesque';margin-bottom:10px}
+.adl{border:1.5px solid var(--line);border-radius:14px;overflow:hidden}.ad{display:grid;grid-template-columns:2fr 1fr 1fr 1.3fr;gap:12px;padding:11px 16px;border-top:1px solid var(--line);font-size:14.5px;align-items:center}
+.ad:first-child{border-top:0}.adh{background:#FAFAFC;font:700 12px 'DM Sans';color:var(--mute);text-transform:uppercase;letter-spacing:.05em}.ad a{color:var(--vio);text-decoration:none;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arv{border:1.5px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:12px}.arh{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}.arh b{font-size:15.5px}.arh span{color:var(--mute);font-size:13.5px}.arh .ard{margin-left:auto}
+.arv p{margin:10px 0;line-height:1.5;color:var(--ink2);font-size:15px}.arf{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.arc{display:inline-flex;gap:6px;align-items:center;background:#F5F3FB;border-radius:99px;padding:4px 10px;font-size:12px;color:var(--ink2)}.arc i{font-style:normal;color:var(--vio);letter-spacing:1px;font-size:9px}.arc em{font-style:normal;color:#D9D4EA}
+.arf a{margin-left:auto;font-size:13px;color:var(--vio);text-decoration:none;font-weight:600}.arf a span{color:var(--mute);font-weight:400}
+.ash{margin-top:10px;background:none;border:0;padding:0;font:700 14px 'DM Sans';color:var(--vio);cursor:pointer}
+.amd{padding:0}.amh{display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid var(--line)}.amh b{font:800 20px 'Bricolage Grotesque'}.amh .x{order:2;margin-left:auto}.amb{padding:18px 22px}.amb .arv:last-child{margin-bottom:0}
+@media (max-width:760px){.ats{grid-template-columns:1fr!important}.ad{grid-template-columns:1fr 1fr}.adh{display:none}.actv{padding:16px}}

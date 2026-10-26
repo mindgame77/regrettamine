@@ -222,10 +222,9 @@
     setFirmName(main, firm);
     main.classList.toggle('unlocked', P.open);
     main.querySelector('.toc').style.display = ''; const lk = main.querySelector('#lockcard'); if (lk) lk.style.display = '';
-    const cards = headerCards(P);
     if (!P.open) {
-      main.querySelector('.m').innerHTML = metaLine(P);
-      main.querySelector('.hfs').innerHTML = cards.map(h => '<span class="hf">' + heroBits(h) + '</span>').join('');
+      main.querySelector('.m').innerHTML = metaLine(P) + secPills(P);
+      paintActivity(main, P);
       main.querySelector('.csum').hidden = true; main.querySelector('.spl').innerHTML = ''; main.querySelector('.toc').innerHTML = ''; main.querySelector('.toc').style.display = 'none';
       main.querySelector('#lockcard').hidden = true; main.querySelector('#lockcard').style.display = 'none';
       researchBan(main, false);
@@ -233,12 +232,9 @@
       main.querySelector('.pmain').innerHTML = P.unchecked ? '<section class="ps">' + ctable(P, false, 0) + '</section>' + gate(P, '') : gate(P, '<section class="ps">' + ghost(P) + '</section>' + ghostSecs());
       return { total: 0, head: () => GT.title };
     }
-    main.querySelector('.m').innerHTML = metaLine(P);
+    main.querySelector('.m').innerHTML = metaLine(P) + secPills(P);
     const has = new Set(secs.map(s => s.key));
-    main.querySelector('.hfs').innerHTML = cards.map(h => {
-      const inner = heroBits(h);
-      return h.anchor && has.has(h.anchor) ? '<a class="hf" href="#' + esc(h.anchor) + '">' + inner + '</a>' : '<span class="hf">' + inner + '</span>';
-    }).join('');
+    paintActivity(main, P);
     main.querySelector('.csum').innerHTML = has.has('checks') ? '<div class="csh"><b>' + COPY.summary + '</b><a href="#checks">' + COPY.full_check + '</a></div><div class="cks">'
       + P.checks.map(r => '<a class="ck" href="#checks"><span class="ckn">' + String(r.n).padStart(2, '0') + '</span>' + esc(r.title) + pill(r.state) + '</a>').join('') + '</div>' : '';
     main.querySelector('.csum').hidden = !has.has('checks');
@@ -326,7 +322,8 @@
     const curN = checking && P.open ? P.checks.find(r => r.state === 'nc').n : 0;
     const link = siteLink(P);
     if (checking && !(P.hero && P.hero.length)) main.querySelector('.kf').innerHTML = '<span>' + esc(CK.sources[0]) + ' <b>' + esc(CK.sources[1]) + '</b></span>' + (link ? '<span>' + link + '</span>' : '');
-    else main.querySelector('.kf').innerHTML = headerCards(P).map(h => '<span>' + esc(h.label) + ' <b>' + esc(nice(h.value)) + '</b>' + (h.src || []).slice(0, 1).map(c => ' <i>· ' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</i>').join('') + '</span>').join('') + (link ? '<span>' + link + '</span>' : '');
+    else main.querySelector('.kf').innerHTML = '<p class="m">' + metaLine(P) + secPills(P) + '</p>';
+    paintActivity(main, P);
     main.querySelector('.list').innerHTML = P.open ? ctable(P, checking, curN) : P.unchecked ? ctable(P, false, 0) + gate(P, '') : gate(P, ghost(P));
     const fn = main.querySelector('.rgt-n'), ft = (P.sections || []).filter(s => s.key !== 'checks').reduce((a, s) => a + (s.count || 0), 0);
     if (fn && ft) { fn.textContent = ft; fn.hidden = false; }
@@ -402,5 +399,71 @@
       tr.onclick = t; tr.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t(); } };
     });
   }
+  // Activity (firm_page activity): tiles, the latest deal, the latest founder review. Signed out or locked, "Show all"
+  // is a [data-gate] button (js/app.js openPay('')). After a credit it opens a popup with the full list (activity.deals / .reviews).
+  const AC = COPY.activity || {};
+  const money = (v) => { const n = Number(v); if (!isFinite(n) || n <= 0) return '';
+    const u = [[1e9, 'B'], [1e6, 'M'], [1e3, 'K']].find(x => n >= x[0]);
+    return u ? '$' + String(+(n / u[0]).toFixed(n / u[0] >= 100 ? 0 : 2)) + u[1] : '$' + n; };
+  const hostOf = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return ''; } };
+  const roundName = (r) => String(r || '').replace(/^stage tag:\s*/i, '');
+  const fundName = (n) => String(n || '').replace(/,?\s*L\.?\s?P\.?$/i, '').trim();
+  // SEC facts from the hero list, as linked pills (not cards). HQ is the plain city text in the meta line.
+  function secPills(P) {
+    const hero = (Array.isArray(P.hero) ? P.hero : []).filter(h => h && h.value && h.label !== 'HQ');
+    return hero.map(h => { const src = (h.src || []).find(c => /(^|\.)sec\.gov\//i.test((safeUrl(c.url) || '').replace(/^https?:\/\//i, '').replace(/\/.*/, '/')));
+      if (!src) return '';
+      const lab = assetLabel(h.label), v = nice(h.value), parts = String(v).split(' · ');
+      const t = /^(Assets|Regulatory AUM|AUM)$/.test(h.label) ? v + ' ' + lab.toLowerCase() : parts[0] + ' ' + lab.toLowerCase() + (parts.length > 1 ? ' · ' + parts.slice(1).join(' · ') : '');
+      return '<a class="sc" href="' + esc(src.url) + '" target="_blank" rel="noopener">' + esc(t) + '</a>'; }).filter(Boolean).slice(0, 7).join('');
+  }
+  const tile = (lab, big, sub, cls) => '<div class="att ' + cls + '"><small>' + esc(lab) + '</small><b>' + big + '</b><span>' + sub + '</span></div>';
+  function dealRows(ds) {
+    return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
+      + ds.map(d => { const u = safeUrl(d.url);
+        return '<div class="ad"><b>' + esc(d.company || '') + '</b><span>' + esc(roundName(d.round)) + '</span><span>' + esc(fdate(d.date) || '') + '</span>'
+          + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(hostOf(u)) + ' ↗</a>' : '<span></span>') + '</div>'; }).join('') + '</div>';
+  }
+  function revCard(r) {
+    const u = safeUrl(r.url), R = AC.ratings || {};
+    const who = r.author || (r.role ? '' : AC.anon), meta = [who && r.role && r.role.indexOf(who) === 0 ? r.role.slice(who.length).replace(/^[\s,]+/, '') : r.role, r.company, roundName(r.round)].filter(Boolean).join(' · ');
+    const chipsR = Object.keys(R).filter(k => r.ratings && r.ratings[k]).map(k => '<span class="arc"><span>' + esc(R[k]) + '</span><i>' + '●'.repeat(r.ratings[k]) + '<em>' + '●'.repeat(Math.max(0, 5 - r.ratings[k])) + '</em></i></span>').join('');
+    return '<div class="arv"><div class="arh">' + (who ? '<b>' + esc(who) + '</b>' : '') + (meta ? '<span>' + esc(meta) + '</span>' : '') + '<span class="ard">' + esc(fdate(r.date) || '') + '</span></div>'
+      + '<p>“' + esc(r.body || '') + '”</p><div class="arf">' + chipsR + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"><span>' + esc(AC.source) + '</span> ' + esc(hostOf(u)) + ' ↗</a>' : '') + '</div></div>';
+  }
+  const showAll = (P, kind, n) => '<button type="button" class="ash"' + (P.open ? ' data-open="act' + kind + '"' : ' data-gate') + '>' + esc(pl(kind === 'deals' ? AC.all_deals : AC.all_reviews, n)) + ' ↓</button>';
+  function actModal(id, title, inner) {
+    let ov = document.getElementById(id);
+    if (!ov) { ov = document.createElement('div'); ov.className = 'ov tall'; ov.id = id; ov.hidden = true; document.body.appendChild(ov); }
+    ov.innerHTML = '<div class="md w amd" role="dialog" aria-modal="true" aria-label="' + esc(title) + '"><div class="amh"><button class="x" data-close aria-label="' + esc(AC.close) + '">×</button><b>' + esc(title) + '</b></div><div class="amb">' + inner + '</div></div>';
+  }
+  function activity(P) {
+    const A = P.activity, firm = P.firm.name;
+    if (!A) return '';
+    const n = A.counts || {}, d0 = A.latest_deal, r0 = A.latest_review, f = A.latest_fund, tiles = [];
+    if (A.active) {
+      const ld = d0 && d0.date ? fmt(AC.last_deal, { date: fdate(d0.date) }) : f && f.date ? fmt(AC.fund_closed, { date: fdate(f.date) }) : '';
+      const sub = d0 ? [d0.company, roundName(d0.round)].filter(Boolean).join(', ') : f ? fundName(f.name) : '';
+      tiles.push('<div class="att aon"><i></i><div><b>' + esc(AC.active) + '</b><span>' + esc(ld) + '</span><em>' + esc(sub) + '</em></div></div>');
+    }
+    if (A.deals_12m > 0) tiles.push(tile(AC.deals_12m, esc(A.deals_12m), '', 'amt'));
+    if (f) {
+      const amt = money(f.raised_usd), u = safeUrl(f.url);
+      const sub = esc(fundName(f.name)) + (amt ? ' · ' + esc(fmt(AC.raised, { amount: amt })) : '') + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(AC.filing) + ' ↗</a>' : '');
+      tiles.push(tile(AC.fund, amt ? esc(amt) : '<span class="asm">' + esc(fundName(f.name)) + '</span>', sub, 'afd'));
+    }
+    if (!tiles.length && !d0 && !r0) return '';
+    let h = '<section class="actv" aria-label="' + esc(AC.reviews) + '">' + (tiles.length ? '<div class="ats" style="grid-template-columns:repeat(' + tiles.length + ',1fr)">' + tiles.join('') + '</div>' : '');
+    if (d0) h += '<div class="aps"><b class="apt">' + esc(AC.latest_deal) + '</b>' + dealRows([d0]) + (n.deals > 1 ? showAll(P, 'deals', n.deals) : '') + '</div>';
+    if (r0) h += '<div class="aps arvs"><h2>' + esc(AC.reviews) + '</h2>' + revCard(r0) + (n.reviews > 1 ? showAll(P, 'revs', n.reviews) : '') + '</div>';
+    if (P.open && Array.isArray(A.deals) && A.deals.length > 1) actModal('actdeals', fmt(AC.deals_title, { n: A.deals.length, firm }), dealRows(A.deals));
+    if (P.open && Array.isArray(A.reviews) && A.reviews.length > 1) actModal('actrevs', fmt(AC.reviews_title, { n: A.reviews.length, firm }), A.reviews.map(revCard).join(''));
+    return h + '</section>';
+  }
+  function paintActivity(main, P) {
+    const box = main.querySelector('.actw'); if (!box) return;
+    const h = activity(P); box.innerHTML = h; box.hidden = !h;
+  }
+
   window.RegretCompany = { render, summary };
 })();
