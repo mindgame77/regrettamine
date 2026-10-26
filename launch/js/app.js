@@ -474,54 +474,11 @@
     if ((ev === 'SIGNED_IN' || ev === 'INITIAL_SESSION') && session) { const p = takePend(); if (p) setTimeout(async () => { if ($('#paycase')) open('paycase'); YEARLY = /^y/.test(p.k); drawPlans(); if (p.code) await applyCode(p.code); if (p.k !== 'code' || CODE) buy(p.k); }, 0); }
   });
   const main = document.querySelector('main[data-firm]');
-  // Search dropdown: firm_suggest() (max 8; prefix, then word, then contains). No match: run a live check.
+  // Search is launch/js/search.js, loaded on every page. This file does not bind a second box.
   const esc = (x) => String(x == null ? '' : x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   drawPlans();
-  const mark = (t, q) => { const i = t.toLowerCase().indexOf(q.toLowerCase()); return i < 0 || !q ? esc(t) : esc(t.slice(0, i)) + '<mark>' + esc(t.slice(i, i + q.length)) + '</mark>' + esc(t.slice(i + q.length)); };
   const firmUrl = (slug) => ROOT + 'vc/' + encodeURIComponent(slug) + '/';
   const liveUrl = (q) => ROOT + 'pending/?q=' + encodeURIComponent(q);
-  document.querySelectorAll('[data-search]').forEach(f => {
-    const inp = f.q, box = document.createElement('div'); let hits = [], act = -1, seq = 0, timer;
-    box.className = 'sdd'; box.id = 'sdd' + Math.random().toString(36).slice(2, 8); box.setAttribute('role', 'listbox'); box.hidden = true; f.appendChild(box);
-    inp.setAttribute('role', 'combobox'); inp.setAttribute('aria-controls', box.id); inp.setAttribute('aria-expanded', 'false'); inp.setAttribute('aria-autocomplete', 'list');
-    const show = (on) => { box.hidden = !on; inp.setAttribute('aria-expanded', on); };
-    const draw = (q) => {
-      box.innerHTML = hits.length ? hits.map((h, i) => '<a role="option" class="so2' + (i === act ? ' on' : '') + '" aria-selected="' + (i === act) + '" href="' + esc(firmUrl(h.slug)) + '"><b>' + mark(h.name, q) + '</b>'
-        + (h.short_name && h.short_name !== h.name ? '<em>' + mark(h.short_name, q) + '</em>' : '') + '<span>' + esc(h.hq || '') + '</span></a>').join('')
-        : '<a class="so2 none" href="' + esc(liveUrl(q)) + '">' + T.suggest_none + '</a>';
-      show(true);
-    };
-    inp.addEventListener('input', () => {
-      clearTimeout(timer); const q = inp.value.trim(); if (!q || !sb) { hits = []; return show(false); }
-      timer = setTimeout(async () => { const n = ++seq; const { data } = await sb.rpc('firm_suggest', { q }); if (n !== seq) return; hits = data || []; act = hits.length ? 0 : -1; draw(q); }, 120);
-    });
-    inp.addEventListener('keydown', (e) => {
-      if (box.hidden || !hits.length) { if (e.key === 'Escape') show(false); return; }
-      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); act = (act + (e.key === 'ArrowDown' ? 1 : hits.length - 1)) % hits.length; draw(inp.value.trim()); }
-      if (e.key === 'Escape') show(false);
-    });
-    inp.addEventListener('blur', () => setTimeout(() => show(false), 150));
-    // Check: the highlighted suggestion, else an exact name / short name / slug match. On a firm page the box is prefilled with the
-    // firm's own name and no suggestions were ever fetched (hits = []), so that name maps straight to this firm; any other query with no
-    // fetched hits asks firm_suggest() first, and only a query with no exact match goes to /pending/.
-    const same = (x, q) => [x.name, x.short_name, x.slug].some(v => v && v.toLowerCase() === q.toLowerCase());
-    f.onsubmit = async (e) => {
-      e.preventDefault(); const q = inp.value.trim(); if (!q) return;
-      let h = !box.hidden && hits[act] || hits.find(x => same(x, q));
-      if (!h && main && q.toLowerCase() === inp.defaultValue.trim().toLowerCase()) h = { slug: main.dataset.firm };
-      if (!h && sb) { const n = ++seq; const { data } = await Promise.resolve(sb.rpc('firm_suggest', { q })).catch(() => ({})); if (n === seq) h = (data || []).find(x => same(x, q)); }
-      if (main && h && h.slug === main.dataset.firm) {
-        show(false);
-        if (main.dataset.tab === 'full' && window.RegretCompany && window.RegretCompany.applyTab) {
-          window.RegretCompany.applyTab(main, 'checks');
-          const base = location.pathname.replace(/full\/$/, '');
-          history.pushState({ tab: 'checks' }, '', base + location.search);
-        }
-        return;
-      }
-      location.href = h ? firmUrl(h.slug) : liveUrl(q);
-    };
-  });
   // Unknown firm
   const pq = $('#pq');
   if (pq) {

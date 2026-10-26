@@ -104,12 +104,6 @@
       h1.textContent = name;
       if (save) h1.appendChild(save);
     }
-    const inp = main.querySelector('form[data-search] input[name=q]');
-    // The box starts as this firm's name. A later paint (the page arriving, a signed-in reload)
-    // must leave a query the visitor already typed, or Check stays on this firm.
-    if (!inp || inp.value.trim().toLowerCase() !== String(inp.defaultValue || '').trim().toLowerCase()) return;
-    inp.value = name;
-    inp.defaultValue = name;
   }
   // "738 · 88 investment" is two chips: Staff, and Investment staff.
   function heroChips(P) {

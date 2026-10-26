@@ -64,3 +64,8 @@ def test_search_click_is_not_a_tab_switch():
 def test_firm_page_keeps_a_typed_search():
     r = subprocess.run(["node", "--test", "tests/search_box.test.mjs"], cwd=ROOT, capture_output=True, text=True)
     assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-2000:]
+
+
+def test_search_is_one_shared_module():
+    r = subprocess.run(["node", "--test", "tests/search_shared.test.mjs"], cwd=ROOT, capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-2000:]

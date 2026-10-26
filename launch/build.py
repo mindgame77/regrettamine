@@ -10,7 +10,7 @@ E = html.escape
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE); OUT = os.path.join(ROOT, 'site-launch')
 def _v(f):  # content hash so browsers never run a stale cached copy (assets are max-age=600)
     return hashlib.sha1(open(os.path.join(HERE, f), 'rb').read()).hexdigest()[:10]
-V = {k: _v(f) for k, f in (('company', 'js/company.js'), ('app', 'js/app.js'), ('dates', 'js/dates.js'), ('css', 'style.css'))}
+V = {k: _v(f) for k, f in (('company', 'js/company.js'), ('app', 'js/app.js'), ('search', 'js/search.js'), ('dates', 'js/dates.js'), ('css', 'style.css'))}
 COPY = json.load(open(os.path.join(HERE, 'copy.json')))
 S = COPY['site']
 NOINDEX = os.environ.get('REGRET_NOINDEX') == '1'
@@ -64,7 +64,7 @@ def login_page():
 def page(path, body, root, title=S['brand'], company=False, active='', head='', modals='both'):
     n = S['nav']
     hon = ' class="on" aria-current="page"' if active == 'hwc' else ''
-    scripts = f'<script defer src="{root}dates.js?v={V["dates"]}"></script>' + (f'<script defer src="{root}company.js?v={V["company"]}"></script>' if company else '') + f'<script defer src="{root}app.js?v={V["app"]}"></script>'
+    scripts = f'<script defer src="{root}dates.js?v={V["dates"]}"></script>' + (f'<script defer src="{root}company.js?v={V["company"]}"></script>' if company else '') + f'<script defer src="{root}search.js?v={V["search"]}"></script><script defer src="{root}app.js?v={V["app"]}"></script>'
     nav = (f'<nav><a class="logo" href="{root}"><img src="{root}logo.svg" alt="">{S["brand"]}</a><div class="r">'
            f'<a href="{root}how-we-check/"{hon}>{n["how_we_check"]}</a><a href="{root}plans/" data-open="paywall">{n["pricing"]}</a><span class="left" id="left"></span><a href="{root}login/" data-open="signup" id="signin">{n["sign_in"]}</a>'
            f'<span class="navr" id="acct" hidden><button type="button" class="ab" id="acctbtn" aria-haspopup="true" aria-expanded="false"><span class="av" id="av"></span><span class="nm">{n["account_btn"]}</span></button>'
@@ -307,7 +307,7 @@ def launch_firms():
 
 def main():
     shutil.rmtree(OUT, ignore_errors=True); os.makedirs(OUT)
-    for f in ('style.css', 'logo.svg', 'js/app.js', 'js/company.js', 'js/dates.js'): shutil.copy(os.path.join(HERE, f), OUT)
+    for f in ('style.css', 'logo.svg', 'js/app.js', 'js/company.js', 'js/search.js', 'js/dates.js'): shutil.copy(os.path.join(HERE, f), OUT)
     shutil.copytree(os.path.join(HERE, 'fav'), os.path.join(OUT, 'fav'))
     shutil.copy(os.path.join(HERE, 'CNAME'), OUT)  # GitHub Pages custom domain (regretamin.com)
     firms = []
