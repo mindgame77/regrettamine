@@ -207,14 +207,14 @@ def pay_case(root=''):  # simpler unlock popup (approved mockup). Summary and /f
 def summary(F, root='./'):  # /vc/<slug>/: name + Save, key facts, the 10 checks (closed), "See the full check" (js/company.js summary)
     Q = S['summary']
     return f'''<main class="wrap sumpg unlocked ld" data-firm="{E(F["slug"])}" data-view="summary"><div class="rh">{bigsearch(F)}</div>
-<div class="fh"><h1>{E(F["name"])}</h1><div>{SAVE}</div></div>{checking_box()}<div class="kf">{SK_KF}</div>{ftabs("c", "./")}<div class="cban" hidden></div><div class="list">{skel()}</div>
+<div class="fh"><h1>{E(F["name"])}</h1><div>{SAVE}</div></div>{checking_box()}<div class="kf">{SK_KF}</div><div class="actw" hidden></div>{ftabs("c", "./")}<div class="cban" hidden></div><div class="list">{skel()}</div>
 <div class="rgt-see"><a href="full/">{Q["see_full"]}</a></div><p class="fine">{S["result"]["fine"]}</p></main>
 {pay_case(root)}'''
 
 def result(F, root='../'):
     r = S['result']
     return f'''<main class="wrap prof ld" data-firm="{E(F["slug"])}">{bigsearch(F, "ps0")}
-<div class="ph"><h1>{E(F["name"])}{SAVE}</h1><p class="m"><i class="sk" style="width:300px"></i></p><div class="hfs">{SK_HFS}</div></div>{ftabs("f", "../")}<div class="cban" hidden></div><div class="csum">{SK_CSUM}</div><div class="spl">{SK_SPL}</div>
+<div class="ph"><h1>{E(F["name"])}{SAVE}</h1><p class="m"><i class="sk" style="width:300px"></i></p><div class="hfs actw">{SK_HFS}</div></div>{ftabs("f", "../")}<div class="cban" hidden></div><div class="csum">{SK_CSUM}</div><div class="spl">{SK_SPL}</div>
 <div class="unlock" id="lockcard" hidden><div><b></b><p></p></div><button class="btn" id="unlock">{r["lock_button"]}</button></div>
 <div class="pgrid"><div class="pmain">{SK_PMAIN}</div><nav class="toc" aria-label="{r["toc_aria"]}">{SK_TOC}</nav></div><p class="fine">{r["fine"]}</p></main>
 {pay_case(root)}'''
