@@ -19,9 +19,10 @@ begin
   end if;
 end $$;
 
+-- Do not repeat NOSUPERUSER here. Changing that attribute needs a superuser,
+-- and a new role is already nosuperuser (also the default, along with nobypassrls).
 alter role bot_ingest
   login
-  nosuperuser
   nocreatedb
   nocreaterole
   noinherit
