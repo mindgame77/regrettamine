@@ -417,7 +417,7 @@
   const ghostSecs = () => [0, 1, 2].map(k => '<section class="ps"><h2>' + gbar(30 + k * 10) + '</h2>' + [0, 1, 2, 3].map(j => '<div class="fct">' + gbar(90 - ((j + k) * 13) % 40) + gbar(55) + '</div>').join('') + '</section>').join('');
   const gate = (P, inner) => '<div class="gate"><div class="gveil" aria-hidden="true" inert>' + inner + '</div><div class="gcard" role="region" aria-label="' + esc(GT.title) + '"><b>' + esc(GT.title) + '</b><p>'
     + esc(fmt(GT.sub, { firm: P.firm.name })) + '</p><button type="button" class="btn" data-gate>' + esc(GT.button) + '</button><p class="gmsg" role="status"></p></div></div>';
-  // News is drawn here from the press and timeline rows firm_page already returns. Nothing is written back.
+  // News is the checked press list. firm_page still returns timeline; this list does not read it.
   // The link merge, the story grouping and the 2023 cutoff apply only to this list.
   function normLink(u) {
     return String(u || '').trim().toLowerCase().replace(/#.*$/, '').replace(/\?.*$/, '').replace(/^https?:\/\/(?:www\.)?/, '').replace(/\/+$/, '');
@@ -669,7 +669,8 @@
     });
     return keep;
   }
-  function buildNews(press, timeline, firm) {
+  function buildNews(press, _timeline, firm) {
+    // _timeline is ignored. News reads press rows only.
     const cards = [];
     (press || []).map((x, i) => ({ x, i })).sort((a, b) => {
       const sa = newsStamp(a.x.date), sb = newsStamp(b.x.date);
@@ -688,32 +689,6 @@
       addSrc(card, src);
       cards.push(card);
     });
-    (timeline || []).forEach(x => {
-      const tag = newsTag(x.kind, ''), ty = newsYear(x.date);
-      const links = (x.src || []).filter(s => s && s.url);
-      for (let i = 0; i < links.length; i++) {
-        const norm = normLink(links[i].url);
-        if (!norm) continue;
-        const keeper = cards.find(c => c.origin === 'press' && c.norm === norm);
-        if (!keeper) continue;
-        const py = keeper._year;
-        if (!(ty == null || ty >= 2023 || (py != null && py < 2023))) continue;
-        addSrc(keeper, links);
-        bumpTag(keeper, tag);
-        return;
-      }
-      const norms = links.map(s => normLink(s.url)).filter(Boolean);
-      const other = cards.find(c => c.origin === 'timeline' && norms.some(n => c.norms.indexOf(n) >= 0) && datesMatch(c.date, x.date || ''));
-      if (other) {
-        addSrc(other, links);
-        bumpTag(other, tag);
-        norms.forEach(n => { if (other.norms.indexOf(n) < 0) other.norms.push(n); });
-        return;
-      }
-      const card = { origin: 'timeline', head: x.body || x.head || '', outlet: (links[0] && links[0].label) || '', date: x.date || '', url: (links[0] && links[0].url) || '', snippet: '', logo: '', tag, norm: norms[0] || '', norms, src: [], _seen: {}, _year: ty };
-      addSrc(card, links);
-      cards.push(card);
-    });
     const shown = cards.filter(c => { const y = c._year != null ? c._year : newsYear(c.date); return y == null || y >= 2023; });
     return groupStories(shown, firm).sort((a, b) => {
       const sa = newsStamp(a.date), sb = newsStamp(b.date);
@@ -728,10 +703,10 @@
     });
   }
   // Sections the new page draws. "The 10 checks" is not one of them. An LP with several commitments counts once.
-  // News is not a stored section: it is press and timeline combined at display time.
+  // News is not a stored section. It is the press section (checked_correct rows only), drawn here.
   function pageSecs(P) {
     const byKey = Object.fromEntries((P.sections || []).map(s => [s.key, s]));
-    const newsItems = buildNews((byKey.press && byKey.press.items) || [], (byKey.timeline && byKey.timeline.items) || [], P && P.firm);
+    const newsItems = buildNews((byKey.press && byKey.press.items) || [], [], P && P.firm);
     return CFG.sections.list.filter(c => c.key !== 'checks' && (c.key === 'news' ? newsItems.length : byKey[c.key])).map(c => {
       if (c.key === 'news') return Object.assign({}, c, { count: newsItems.length, items: newsItems, teaser: (newsItems[0] && newsItems[0].head) || '' });
       const s = Object.assign({}, byKey[c.key], c);

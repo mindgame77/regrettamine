@@ -29,7 +29,7 @@ const timeline = (date, kind, body, url) => ({
   src: [{ label: 'Docket', date, url }],
 });
 
-test('a timeline item folds into the press card with the same link and keeps the Court tag', () => {
+test('a timeline item is not added to News, and two press rows with one link stay one card', () => {
   const url = 'https://www.TechCrunch.com/story?utm=1#x';
   const cards = buildNews(
     [press(url, 'Firm named in a filing', '2026-03-15', { group: 'Regulators & legal' })],
@@ -37,8 +37,9 @@ test('a timeline item folds into the press card with the same link and keeps the
   );
   assert.equal(cards.length, 1);
   assert.equal(cards[0].origin, 'press');
-  assert.equal(cards[0].tag, 'Court');
+  assert.equal(cards[0].tag, 'Regulator');
   assert.equal(cards[0].head, 'Firm named in a filing');
+  assert.equal(cards[0].src.length, 1);
   const again = buildNews(
     [press(url, 'Firm named in a filing', '2026-03-15'), press(url, 'Same story, older line', '2026-03-15')],
     [],
@@ -46,7 +47,7 @@ test('a timeline item folds into the press card with the same link and keeps the
   assert.equal(again.length, 1);
 });
 
-test('two timeline events that share a link and differ by date stay two cards', () => {
+test('timeline events are not shown as News cards', () => {
   const docket = 'https://www.courtlistener.com/docket/case/';
   const cards = buildNews([], [
     timeline('2026-10-15', 'Court', 'Discovery order', docket),
@@ -54,11 +55,7 @@ test('two timeline events that share a link and differ by date stay two cards', 
     timeline('2026-04-01', 'Filing', 'First filing', 'https://example.com/same'),
     timeline('2026-04-01', 'Filing', 'Same day again', 'https://example.com/same'),
   ]);
-  const courts = cards.filter(c => c.tag === 'Court');
-  const filings = cards.filter(c => c.tag === 'Filing');
-  assert.equal(courts.length, 2);
-  assert.equal(courts.map(c => c.head).sort().join('|'), 'Discovery order|Ninth Circuit');
-  assert.equal(filings.length, 1);
+  assert.equal(cards.length, 0);
 });
 
 test('the same fund close from two outlets is one card, and a different story that day stays separate', () => {
@@ -85,8 +82,8 @@ test('the same fund close from two outlets is one card, and a different story th
   assert.ok(!article.src.some(s => s.label === 'Docket'));
   assert.equal(article.outlets, undefined);
   const close = cards.find(c => c.head === 'Fund III final close');
-  assert.equal(close.outlets, 2);
-  assert.equal(close.src.map(s => s.label).sort().join('|'), 'Docket|Wire');
+  assert.equal(close.outlets, undefined);
+  assert.equal(close.src.map(s => s.label).join('|'), 'Wire');
 });
 
 test('an undated item is shown, and three outlets stay three cards', () => {
@@ -100,7 +97,7 @@ test('an undated item is shown, and three outlets stay three cards', () => {
   assert.equal(cards[cards.length - 1].head, 'No date on this one');
 });
 
-test('pageSecs draws News from press and timeline and does not draw those sections', () => {
+test('pageSecs draws News from press only and does not draw press or timeline', () => {
   const P = {
     sections: [
       { key: 'overview', items: [{ label: 'Founded', value: '2009' }], count: 1 },
@@ -112,7 +109,9 @@ test('pageSecs draws News from press and timeline and does not draw those sectio
   const secs = pageSecs(P);
   assert.equal(secs.map(s => s.key).join('|'), 'overview|news|lps');
   assert.equal(secs[1].count, 1);
-  assert.equal(secs[1].items[0].tag, 'Court');
+  assert.equal(secs[1].items[0].origin, 'press');
+  assert.equal(secs[1].items[0].tag, '');
+  assert.equal(secs[1].items[0].head, 'A story');
   assert.equal(secs[2].count, 1);
 });
 
@@ -143,7 +142,7 @@ test('a16z groups the three DOJ outlets into one card and leaves other stories a
   assert.equal(doj.length, 1);
   assert.equal(doj[0].head, "DOJ probes a16z partners' board seats at Databricks and Fivetran");
   assert.equal(doj[0].outlets, 3);
-  assert.equal(doj[0].tag, 'Regulator');
+  assert.equal(doj[0].tag, '');
   assert.equal(doj[0].src.map(s => s.label).sort().join('|'), 'Reuters|TechCrunch|The Next Web');
   assert.equal(cards.filter(c => c.head === 'DOJ probes Stripe over payment fees').length, 1);
   assert.ok(cards.some(c => c.head.startsWith('Run The World')));

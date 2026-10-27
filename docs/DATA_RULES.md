@@ -64,25 +64,25 @@ through the same rules at publish: items that pass are published, the rest are l
 row with nothing readable is `held`. Nothing is dropped silently.
 Nothing is deleted without Alex's approval. `people_note_guard` (hidden note-like people rows) stays.
 
-## 4. News is one section on the page (display only)
+## 4. News is the checked press list (display only)
 
 Bots keep sending Press coverage and Timeline as two sections, and publish keeps them as two tables. The firm page
-draws one **News** section by combining those rows in the browser. Nothing is copied into another table, and nothing
-is hidden in the database for this.
+draws one **News** section from `press_items` joined to `press_item_firms` where `check_mark` is `checked_correct`
+and the url is not empty. Timeline rows stay in `timeline_events` and are not drawn into News. `vc_source_facts`,
+research submissions, and research enrichments are not read for this list. Nothing is copied, updated, or deleted
+for this.
 
-These two rules apply **only when News is drawn**. No other section drops old rows, and no other section merges on a link:
+These rules apply **only when News is drawn**. No other section drops old rows, and no other section merges on a link:
 
-1. **One card per link.** A press item and a timeline item with the same normalized link are one card. The timeline
-   tag (Court, Filing, Regulator, People, Fund) is kept on that card. Normalization is lowercase, without the scheme,
-   `www.`, query, hash or a trailing slash. A timeline event dated before 2023 does not fold into a card dated 2023
-   or later, or into a card with no date. Two timeline events that share a link stay two cards when their dates differ.
-   The same date with a different link is not, by itself, a merge.
-2. **One card per story.** After the link merge, News groups items whose dates fall within 7 days when the headlines
+1. **One card per link.** Press rows with the same normalized link are one card. Normalization is lowercase, without
+   the scheme, `www.`, query, hash or a trailing slash.
+2. **One card per story.** After the link merge, News groups press rows whose dates fall within 7 days when the headlines
    share an event word and a name (a company, a fund, or an agency such as DOJ). The firm’s own name is not enough on
    its own. A date that is only a year can join one group from that year whose days already sit within 7 days; it does
    not join two groups that are further apart. The card keeps the newest dated headline, lists each outlet, and adds
    an “N outlets” note when more than one outlet is grouped. Headlines that do not share those terms stay separate cards.
-3. **Since 2023.** Items dated before 2023 are not shown in News. They stay stored. Undated items are shown.
+3. **Since 2023.** Press rows dated before 2023 are not shown in News. They stay stored, including a `checked_correct`
+   row. Undated items are shown.
 
 ## 4a. Overview rows are cleaned when the page draws (display only)
 

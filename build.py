@@ -698,11 +698,7 @@ def render_companies(companies):
 def render_public(fund, prefix):
     pub = fund["public"]
     items = pub["items"]
-    press = (real_facts(fund).get("public") or {}).get("press") or []
-    press_card = fact_card("Press found in research", press, "Listed as found, with no sentiment rating.")
     if not items:
-        if press:
-            return press_card
         return '<div class="pc emptycard"><p>{{s:report.public.empty_all|no_data}}</p></div>'
     visible = items if len(items) <= PAGE_SIZE else items[:PAGE_SIZE]
     cards = []
@@ -742,7 +738,6 @@ def render_public(fund, prefix):
         f'<span class="note">{esc(pub["sentimentNote"])}</span></div>'
         f'<div class="sbar">{bar}</div><div class="sfl" role="group" aria-label="@@s:build.filter_by_sentiment@@">{filters}</div></div>'
         f'<div class="pubg"{"" if len(items) <= PAGE_SIZE else " id=\"pressList\""}>{"".join(cards)}</div>{pager}<p class="note sempty" hidden>{esc(pub["empty"])}</p>'
-        f'{press_card}'
     )
 
 
@@ -879,7 +874,7 @@ def _render_fund_page(fund, prefix):
     matters = {m["id"]: m for m in fund["matters"]}
     meta = [f'<span class="mi">{esc(item)}</span>' for item in header_meta(fund)]
     n_legal = legal_count(fund, matters)
-    n_public = len(fund["public"]["items"]) + len((real_facts(fund).get("public") or {}).get("press") or [])
+    n_public = len(fund["public"]["items"])
 
     def tab_button(key, label, count=None):
         zero = ' class="zero"' if count == 0 else ""

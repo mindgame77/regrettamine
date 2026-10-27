@@ -295,11 +295,8 @@ def shape_firm(slug, export):
         if r.get("slug") == slug:
             political.append({"title": r.get("person_name") or "Political activity", "detail": str(r.get("value") or ""),
                               "who": r.get("person_name") or "", "badge": r.get("kind") or "", "group": "", "sources": [_src(r)]})
+    # Press on the page comes from press_items. These rows stay in vc_source_facts and are not read here.
     press = []
-    for r in by("press_item"):
-        v = _val(r)
-        press.append({"title": str(v.get("value") or ""), "detail": v.get("publisher") or r.get("source_label") or "",
-                      "who": _who(v.get("entity")), "badge": "", "group": "", "sources": [_src(r)]})
     tabs = {
         "legal": {"cases": cases, "actions": actions, "checks": checks, "sanctions": screened},
         "fund": {"identity": identity, "facts": fund_facts, "people": people, "boards": boards,

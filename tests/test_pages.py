@@ -432,7 +432,7 @@ def test_report_copy_matches_the_landing_list():
     assert "No data yet" not in legal and "Court records" in legal and "retrieved Oct" in legal
     sequoia = render_fund_page(funds["sequoia"], "../../")
     public = sequoia.split('data-panel="public"', 1)[1].split('data-panel="portfolio"', 1)[0]
-    assert "No data yet" not in public and "Press found in research" in public
+    assert "Press found in research" not in public and "No data yet" in public
     a16z = render_fund_page(funds["a16z"], "../../")
     hero = a16z.split('data-panel="overview"', 1)[0]
     overview = a16z.split('data-panel="overview"', 1)[1].split('data-panel="score"', 1)[0]
