@@ -50,7 +50,8 @@ at ingest. A researcher submission is not published onto the page. Per item the 
    Press and timeline stay separate rows. The page combines them into News when it draws (see below). That
    combination is not a publish rule, and no other section uses it.
 3. **Flags conflicts** instead of overwriting: same person with a different role, same fund/figure label with a
-   different value, an HQ / Founded / Regulatory AUM that differs from the page. The page keeps its value.
+   different value, an HQ / Founded / Regulatory AUM that differs from the page. The page keeps its value until the
+   winner is chosen. Which value is shown, and that the other value is kept with its source, is docs/CONFLICT_RULE.md.
 4. **Never publishes notes.**
 5. **Records every verdict** in `publish_checks` (`published`, `merged`, `conflict`, `rejected`, `note`, `held`) with the reason.
    Fixes, leads and allegations are `held` (never published; leads are never public).

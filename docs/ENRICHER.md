@@ -30,7 +30,8 @@ Body:
 
 **Data rules (docs/DATA_RULES.md):** one structured item per fact with the fields shown above; free text only as
 `{"note": "..."}` (kept, never published). `{"item": "..."}` free text is refused. Duplicates of page rows add their source;
-a different role/figure is flagged as a conflict, not overwritten. Every verdict is stored in `publish_checks`.
+a different role/figure is flagged as a conflict, not overwritten. Which value is shown is docs/CONFLICT_RULE.md.
+Every verdict is stored in `publish_checks`.
 
 Rules: every item needs a source URL; .gov/.mil are rejected except sec.gov and courts (courtlistener, uscourts, PACER);
 AUM must contain a number; leads/allegations and fixes are never published: they are kept with the outcome `held` for a person to review (leads are never public); founder quotes from the firm's own accounts are labelled not independent.

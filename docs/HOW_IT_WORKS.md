@@ -44,7 +44,8 @@ A researcher (`research_submit`) can upload at most 20 dumps a minute for its ow
 * **Dates:** single dates are `YYYY`, `YYYY-MM` or `YYYY-MM-DD`. A month-only date is never padded to `-01`. Timeline ranges
   such as `May–Jul 2025` may stay as they are. Ambiguous numeric dates (e.g. 03/04/2025) are never converted automatically.
 * **The checker, per item:** checks the shape and source → looks for a duplicate already on the page (a duplicate adds
-  its source to the existing item, "merged") → flags a different value as a *conflict* (the page keeps its value) →
+  its source to the existing item, "merged") → flags a different value as a *conflict* (the page keeps its value until
+  the winner is chosen; which value is shown is docs/CONFLICT_RULE.md) →
   records a verdict for every item in `publish_checks` (published, merged, conflict, rejected, note, held).
 * **Leads are never public.** Leads, allegations and "fix this" requests are **held** for a person to review. They are
   never shown and never labelled "Lead (unverified)".
@@ -157,4 +158,4 @@ There are exactly two reference pages that show what a good page looks like: **Y
 | Locks / removed | `locked_rows`, `removed_items` |
 | Alerts | `section_count_alerts`, `section_counts` |
 | Switches | `bots.ingest_settings` (`auto_promote_enrichment` no longer gates `toxy-enricher`; that bot publishes at ingest) |
-| Detailed docs | DATA_RULES, ENRICHER, SOURCE_TIERS, DEDUPE, ON_DEMAND, FIRM_REQUESTS, GOLD_EXAMPLES, data-model, toxy-score-v2-rules |
+| Detailed docs | DATA_RULES, CONFLICT_RULE, ENRICHER, SOURCE_TIERS, DEDUPE, ON_DEMAND, FIRM_REQUESTS, GOLD_EXAMPLES, data-model, toxy-score-v2-rules |
