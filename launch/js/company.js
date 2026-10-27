@@ -58,9 +58,8 @@
     if (!window.RegretDate || !x) return '';
     return window.RegretDate.caseYear(x.title || x.head || x.case || x.kind || '', x.note || x.text || '', x.year);
   };
-  const MISS = (COPY.header && COPY.header.missing) || 'Not found in public records';
   const HCOPY = COPY.header || {};
-  // Regulatory AUM and Fund gross assets stay two figures. A stored "Assets" / "AUM" card that names
+  // Regulatory AUM and Fund gross assets stay two figures. A stored "Assets" / "AUM" label that names
   // gross assets (and not regulatory AUM) reads as Fund gross assets; any other assets figure reads as Regulatory AUM.
   function assetLabel(label, value) {
     const blob = (label || '') + ' ' + (value || '');
@@ -72,16 +71,6 @@
       return HCOPY.regulatory_aum || 'Regulatory AUM';
     }
     return label;
-  }
-  function headerCards(P) {
-    const hero = (Array.isArray(P.hero) ? P.hero : []).filter(h => h && (h.label || h.value));
-    if (hero.length) return hero.map(h => Object.assign({}, h, { label: assetLabel(h.label, h.value), src: h.src || [] }));
-    const H = COPY.header || {};
-    const firm = P.firm || {};
-    return [
-      { label: H.hq || 'HQ', value: firm.hq || MISS, anchor: '', src: [] },
-      { label: H.assets, value: firm.assets || MISS, anchor: '', src: [] },
-    ];
   }
   function siteLink(P) {
     const u = safeUrl(P.firm && P.firm.website);
@@ -104,28 +93,6 @@
       h1.textContent = name;
       if (save) h1.appendChild(save);
     }
-  }
-  // "738 · 88 investment" is two chips: Staff, and Investment staff.
-  function heroChips(P) {
-    const out = [];
-    headerCards(P).forEach(h => {
-      if (/^staff$/i.test(h.label) && h.value && String(h.value).indexOf('·') >= 0) {
-        const parts = String(h.value).split('·');
-        const inv = (parts.slice(1).join('·').trim().match(/^(\d+)/) || [])[1];
-        out.push({ label: HCOPY.staff || 'Staff', value: parts[0].trim() });
-        if (inv) out.push({ label: HCOPY.investment_staff || 'Investment staff', value: inv });
-      } else out.push(h);
-    });
-    return out;
-  }
-  function paintHero(main, P) {
-    const box = main.querySelector('.heros'); if (!box) return;
-    const chips = heroChips(P);
-    box.innerHTML = chips.map(h => '<div class="hf"><span>' + esc(h.label) + '</span><b>' + esc(nice(h.value)) + '</b></div>').join('');
-    box.hidden = !chips.length;
-  }
-  function heroBits(h) {
-    return '<span>' + esc(h.label) + '</span><b>' + esc(nice(h.value)) + '</b>' + (h.src || []).map(c => '<span class="sc">' + esc(c.label) + (c.date ? ' · ' + esc(fdate(c.date)) : '') + '</span>').join('');
   }
   // Leads (unconfirmed items) stay on the page but read one way everywhere: a 'Not confirmed' label.
   // Display only: stored rows keep their lead wording, so the data rules (leads never auto-published) still see them.
@@ -758,7 +725,6 @@
     const tocEl = main.querySelector('.toc'), csum = main.querySelector('.csum'), lk = main.querySelector('#lockcard');
     if (tocEl) tocEl.style.display = ''; if (lk) lk.style.display = '';
     const meta = main.querySelector('.m'); if (meta) meta.innerHTML = metaLine(P);
-    paintHero(main, P);
     paintActivity(main, P);
     if (csum) { csum.hidden = true; csum.innerHTML = ''; }
     if (!P.open) {
@@ -869,9 +835,7 @@
     const meta = main.querySelector('.ph .m') || main.querySelector('.m');
     if (checking && !(P.hero && P.hero.length)) {
       if (meta) meta.innerHTML = esc(CK.sources[0]) + ' <b>' + esc(CK.sources[1]) + '</b>' + (link ? ' · ' + link : '');
-      const heros = main.querySelector('.heros'); if (heros) { heros.innerHTML = ''; heros.hidden = true; }
     } else if (meta) meta.innerHTML = metaLine(P);
-    if (!(checking && !(P.hero && P.hero.length))) paintHero(main, P);
     paintActivity(main, P);
     const list = main.querySelector('.list'); if (list) list.innerHTML = P.open ? ctable(P, checking, curN) : P.unchecked ? ctable(P, false, 0) + gate(P, '') : gate(P, ghost(P));
     const fn = main.querySelector('.rgt-n'), ft = pageSecs(P).reduce((a, s) => a + (s.count || 0), 0);
