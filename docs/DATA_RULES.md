@@ -39,8 +39,8 @@ for the team and never published. The old `{"item": "..."}` free-text form is re
 
 ## 2. One checker at publish
 
-Every publish path goes through the same rules: `promote_enrichment` (Enricher), `promote_bot_facts` and
-`tools/ingest/import_research.py` (submissions). Per item it:
+Every publish path goes through the same rules. The live path is `promote_enrichment`, and only `toxy-enricher` calls it
+at ingest. A researcher submission is not published onto the page. Per item the checker:
 
 1. **Checks type and shape** for the section (fields above), the source (a real URL; `.gov`/`.mil` only sec.gov and courts),
    dates, AUM has a number, and that no text field is a note: bot bookkeeping phrases, a URL inside the text, or text that is
@@ -89,6 +89,7 @@ The stored overview facts stay as filed. `launch/js/company.js` rewrites them on
 
 Hidden rows: Other names, Type, Staff, Private funds, Legal entity, Sanctions screening, and any row that is empty or "Not found". CRD numbers and SEC file numbers are removed from the rows that stay. A row whose label is the entity name (for example `Y COMBINATOR MANAGEMENT, LLC`) is shown as `Legal name:` plus that name in title case. Registration is shortened to `SEC-registered since <year>, active`, or `SEC exempt reporting adviser, active` for an exempt reporting adviser. If Registration is missing and Legal entity holds that status, that text becomes the Registration line. Founders are merged into Founded (`2009 · Marc Andreessen, Ben Horowitz`). The order is HQ, Legal name, Registration, Founded, Owners, Recent changes, then any other overview row that was not hidden. The section count is the number of rows still shown. Source pills stay on the kept rows. A merged row keeps both rows' pills, with the same link once.
 
-## 5. Publishing is by approved batch only
-Nothing publishes when a bot sends data. A person runs a batch by hand; Alex approves each batch after its dry run.
-See docs/ENRICHER.md "Publishing" and docs/HOW_IT_WORKS.md.
+## 5. The Enricher publishes at ingest
+`toxy-enricher` publishes when its enrich call is stored. There is no batch approval on that path. Other bots' enrich
+calls stay in the holding tables. A researcher upload does not write a page. Batches remain for rows that are still
+waiting, and for undo. See docs/ENRICHER.md "Publishing" and docs/HOW_IT_WORKS.md.

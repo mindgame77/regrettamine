@@ -29,6 +29,7 @@ def test_paid_research_lifecycle():
     with psycopg.connect(DATABASE_URL) as conn, conn.cursor() as cur:
         cur.execute("insert into research_queue (registry_id, name, sec_crd, priority, status) values "
                     "('zz-od1', 'ZZ WOMBAT PARTNERS LLC', '998401', 900000, 'queued'), ('zz-od0', 'Zz Normal', null, -10, 'queued')")
+        cur.execute("select ensure_firm_for_registry('zz-od1', false)")
         fid, slug = cur.execute("select id, slug from firms where registry_id = 'zz-od1'").fetchone()
         a1, a2 = str(uuid.uuid4()), str(uuid.uuid4())
         # a page view only reads: no spend, no request, no reordering
@@ -64,7 +65,7 @@ def test_paid_research_lifecycle():
         assert cur.execute("select status from ondemand_jobs where firm_id = %s", (fid,)).fetchone()[0] == "done"
         assert cur.execute("select lane from research_queue where registry_id = 'zz-od1'").fetchone()[0] == "normal"
         cur.execute("select ensure_firm_for_registry('zz-od1', false)")
-        assert cur.execute("select indexable from firms where id = %s", (fid,)).fetchone()[0] is True
+        assert cur.execute("select indexable from firms where id = %s", (fid,)).fetchone()[0] is False
         assert cur.execute("select report_date from firms where id = %s", (fid,)).fetchone()[0] is None
         for a in (a1, a2):
             P = _j(cur.execute("select firm_page(%s, %s, false)", (slug, a)).fetchone()[0])
@@ -79,6 +80,7 @@ def test_partial_firm_and_refund():
 
     with psycopg.connect(DATABASE_URL) as conn, conn.cursor() as cur:
         cur.execute("insert into research_queue (registry_id, name, priority, status) values ('zz-od2', 'Zz Partial', 5, 'submitted')")
+        cur.execute("select ensure_firm_for_registry('zz-od2', false)")
         fid = cur.execute("select id from firms where registry_id = 'zz-od2'").fetchone()[0]
         cur.execute("update firms set slug = 'zz-partial', indexable = true where id = %s", (fid,))   # published partial page
         cur.execute("update firm_check_rows set state = 'clear' where firm_id = %s and n <= 7", (fid,))
@@ -120,6 +122,7 @@ def test_firm_request_lane():
         assert cur.execute("select lane, status from research_queue where registry_id = %s", (rid,)).fetchone() == ("request", "queued")
         assert cur.execute("select count(*) from firms where registry_id = %s", (rid,)).fetchone()[0] == 0
         cur.execute("insert into research_queue (registry_id, name, priority, status) values ('zz-rp1', 'Zz Paidcheck Partners', 900000, 'queued')")
+        cur.execute("select ensure_firm_for_registry('zz-rp1', false)")
         fid = cur.execute("select id from firms where registry_id = 'zz-rp1'").fetchone()[0]
         cur.execute("select _ondemand_enqueue(%s, 'zz-rp1', null, 'spend_free', null, %s)", (fid, a))
         assert rid not in [r[0] for r in cur.execute("select registry_id from research_claim('toxy-researcher-1', 300)").fetchall()]
@@ -138,6 +141,7 @@ def test_notify_signup_job_and_single_ready_mail():
 
     with psycopg.connect(DATABASE_URL) as conn, conn.cursor() as cur:
         cur.execute("insert into research_queue (registry_id, name, priority, status) values ('zz-nf1', 'Zz Notify Partners', 900000, 'queued')")
+        cur.execute("select ensure_firm_for_registry('zz-nf1', false)")
         fid, slug = cur.execute("select id, slug from firms where registry_id = 'zz-nf1'").fetchone()
         a = str(uuid.uuid4())
         assert _j(cur.execute("select notify_when_checked(%s, 'Notify@Example.com', %s)", (slug, a)).fetchone()[0])["status"] == "ok"
@@ -170,6 +174,7 @@ def test_spend_without_email_unlocks_and_still_starts_research():
 
     with psycopg.connect(DATABASE_URL) as conn, conn.cursor() as cur:
         cur.execute("insert into research_queue (registry_id, name, priority, status) values ('zz-noem', 'Zz Noemail Partners', 900000, 'submitted')")
+        cur.execute("select ensure_firm_for_registry('zz-noem', false)")
         fid, slug = cur.execute("select id, slug from firms where registry_id = 'zz-noem'").fetchone()
         cur.execute("update firms set indexable = true where id = %s", (fid,))
         cur.execute("update firm_check_rows set state = 'clear' where firm_id = %s and n <= 7", (fid,))
@@ -185,6 +190,7 @@ def test_spend_without_email_unlocks_and_still_starts_research():
         assert cur.execute("select count(*) from ondemand_jobs where firm_id = %s", (fid,)).fetchone()[0] == 1
         assert cur.execute("select email from research_requests where firm_id = %s and anon_id = %s", (fid, b)).fetchone()[0] == "later@example.com"
         cur.execute("insert into research_queue (registry_id, name, priority, status) values ('zz-done2', 'Zz Done Partners', 900000, 'submitted')")
+        cur.execute("select ensure_firm_for_registry('zz-done2', false)")
         fid2, slug2 = cur.execute("select id, slug from firms where registry_id = 'zz-done2'").fetchone()
         cur.execute("update firms set indexable = true where id = %s", (fid2,))
         cur.execute("update firm_check_rows set state = 'clear' where firm_id = %s", (fid2,))
@@ -207,6 +213,7 @@ def test_paid_job_preempts_normal_claim_and_keeps_the_upload():
                     "('zz-hold', 'Zz Still Held', 900000, 'claimed', 'normal', 'portal-night-bot', now() - interval '1 hour', 'gap-fill claim'), "
                     "('zz-old', 'Zz Expired Hold', 900000, 'claimed', 'normal', 'portal-night-bot', now() - interval '7 hours', 'gap-fill claim'), "
                     "('zz-reqhold', 'Zz Request Held', 0, 'claimed', 'request', 'portal-night-bot', now(), 'gap-fill claim')")
+        cur.execute("select ensure_firm_for_registry('zz-pre1', false)")
         fid = cur.execute("select id from firms where registry_id = 'zz-pre1'").fetchone()[0]
         a = str(uuid.uuid4())
         cur.execute("select _ondemand_enqueue(%s, 'zz-pre1', null, 'spend_free', null, %s)", (fid, a))

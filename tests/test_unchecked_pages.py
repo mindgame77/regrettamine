@@ -1,5 +1,5 @@
-"""'Not checked yet' pages: every non-duplicate queue entry without research gets a published, noindex page with the same
-template; 'Check with 1 credit' on it buys on-demand research (tests/test_ondemand.py), it stays out of the sitemap, ranks below checked firms in suggestions, and upgrades in place."""
+"""'Not checked yet' pages: ensure_firm makes a published, noindex page with the same template.
+A queue row does not. 'Check with 1 credit' buys on-demand research (tests/test_ondemand.py). A researcher upload does not make the page indexable."""
 import json
 import os
 import uuid
@@ -29,6 +29,8 @@ def test_unchecked_page_lifecycle():
         cur.execute("insert into firms (slug, name, published, data_status) values ('zz-quokka-capital', 'Zz Quokka Capital Checked', true, 'real')")
         cur.execute("insert into research_queue (registry_id, name, sec_crd, lei, priority, status, hq_city, state, country) values "
                     "('zz-u1', 'ZZ QUOKKA CAPITAL MANAGEMENT, LLC', '998301', 'LEI998301', 5, 'queued', 'AUSTIN', 'TX', 'US')")
+        assert cur.execute("select count(*) from firms where registry_id = 'zz-u1'").fetchone()[0] == 0
+        cur.execute("select ensure_firm_for_registry('zz-u1', false)")
         fid, slug, name, pub, ix = cur.execute("select id, slug, name, published, indexable from firms where registry_id = 'zz-u1'").fetchone()
         assert (slug, name, pub, ix) == ("zz-quokka-capital-2", "ZZ Quokka Capital", True, False)   # slug clash -> suffix
         assert cur.execute("select count(*), count(*) filter (where state = 'nc') from firm_check_rows where firm_id = %s", (fid,)).fetchone() == (10, 10)
@@ -44,14 +46,13 @@ def test_unchecked_page_lifecycle():
         assert cur.execute("select count(*) from firm_sitemap(1, 10000) where slug = %s", (slug,)).fetchone()[0] == 0
         sug = [r["slug"] for r in _j(cur.execute("select firm_suggest('zz quokka')").fetchone()[0])]
         assert sug == ["zz-quokka-capital", slug]                   # findable, ranked below the checked firm
-        # a bot upload stays in the holding area; the page upgrades when ensure_firm_for_registry runs
+        # a researcher upload stays in the holding area and does not make the page indexable
         cur.execute("insert into research_submissions (registry_id, payload, valid) values ('zz-u1', %s, true)", (json.dumps(PAYLOAD),))
         assert cur.execute("select id, slug, indexable from firms where registry_id = 'zz-u1'").fetchone() == (fid, slug, False)
         assert cur.execute("select count(*) from firm_sitemap(1, 10000) where slug = %s", (slug,)).fetchone()[0] == 0
         cur.execute("select ensure_firm_for_registry('zz-u1', false)")
-        assert cur.execute("select id, slug, indexable from firms where registry_id = 'zz-u1'").fetchone() == (fid, slug, True)
-        assert cur.execute("select count(*) from firm_sitemap(1, 10000) where slug = %s", (slug,)).fetchone()[0] == 1
-        P = _j(cur.execute("select firm_page(%s, %s, false)", (slug, anon)).fetchone()[0])
-        assert P["unchecked"] is False and P["open"] is True and P["ondemand"]["status"] == "done"
+        assert cur.execute("select id, slug, indexable from firms where registry_id = 'zz-u1'").fetchone() == (fid, slug, False)
+        assert cur.execute("select count(*) filter (where state = 'nc') from firm_check_rows where firm_id = %s", (fid,)).fetchone()[0] == 10
+        assert cur.execute("select status from ondemand_jobs where firm_id = %s", (fid,)).fetchone()[0] == "done"
         conn.rollback()
 

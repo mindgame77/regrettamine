@@ -1,5 +1,5 @@
-"""Publish step: nothing publishes on insert; batches (dry run -> Alex approves -> run -> undo); per-firm page check;
-leads and fixes held; item-by-item merge across a firm's rows; check history kept."""
+"""Publish step: toxy-enricher publishes on insert; other rows can still use a batch (dry run -> Alex approves -> run -> undo);
+per-firm page check; leads and fixes held; item-by-item merge; check history kept."""
 import json
 import os
 import uuid
@@ -36,13 +36,13 @@ def _n(c, table, fid, hidden=False):
     return c.execute(f"select count(*) from {table} where firm_id = %s and hidden = %s", (fid, hidden)).fetchone()[0]
 
 
-def test_switch_alone_never_publishes_outside_a_test_database():
+def test_enricher_publishes_even_when_the_batch_switch_is_off():
     with _db() as c:
-        slug, fid = _firm(c, auto="1")
+        slug, fid = _firm(c, auto="0")
         c.execute("set local app.test_auto_publish = ''")
         assert c.execute("select _auto_publish_on()").fetchone()[0] is False
         _enrich(c, slug, {"Timeline": [{"date": "2010", "event": "Opened office", "source": ADV}]})
-        assert _n(c, "timeline_events", fid) == 0
+        assert _n(c, "timeline_events", fid) == 1
         c.rollback()
 
 
@@ -74,16 +74,22 @@ def test_merge_across_rows_newer_wins_older_adds_source():
         tid = c.execute("select id from timeline_events where firm_id = %s", (fid,)).fetchone()[0]
         urls = {r[0] for r in c.execute("select s.url from fact_sources x join sources s on s.id = x.source_id where x.fact_id = %s", (tid,))}
         assert urls == {ADV, PRESS}
-        # the newer row is the one that published; the older one merged its source
+        # the first row publishes on insert; the later row adds its source to that item
         outs = c.execute("select e.id, p.outcome from publish_checks p join research_enrichments e on e.id = p.origin_id "
                          "where p.firm_id = %s and p.section = 'timeline' order by e.id", (fid,)).fetchall()
-        assert [o for _, o in outs] == ["merged", "published"]
+        assert [o for _, o in outs] == ["published", "merged"]
         c.rollback()
+
+
+def _hold_for_batch(c):
+    """Ingest publishes toxy-enricher immediately. These tests still cover the batch path, so they hold that trigger."""
+    c.execute("alter table bots.research_enrichments disable trigger enrichment_promote")
 
 
 def test_batch_dry_run_approve_run_undo():
     with _db() as c:
         slug, fid = _firm(c)
+        _hold_for_batch(c)
         _enrich(c, slug, {"Timeline": [{"date": "2010", "event": "Opened office", "source": ADV}],
                           "People": [{"name": "Jane Roe", "role": "Partner", "source": ADV}]})
         b = "t-" + uuid.uuid4().hex[:6]
@@ -113,6 +119,7 @@ def test_batch_dry_run_approve_run_undo():
 def test_undo_removes_added_sources_but_keeps_a_copy():
     with _db() as c:
         slug, fid = _firm(c)
+        _hold_for_batch(c)
         _enrich(c, slug, {"Timeline": [{"date": "2010", "event": "Opened office", "source": ADV}]})
         c.execute("select promote_enrichment(%s)", (fid,))  # already live from an earlier publish
         _enrich(c, slug, {"Timeline": [{"date": "2010", "event": "Opened office", "source": PRESS}]})
@@ -134,6 +141,7 @@ def test_firm_that_breaks_its_page_is_held_rest_go_live():
     with _db() as c:
         s1, f1 = _firm(c)
         s2, f2 = _firm(c)
+        _hold_for_batch(c)
         for s in (s1, s2):
             _enrich(c, s, {"Legal & regulatory": [{"title": "Roe v. Pub Capital, 1:20-cv-00001 (D. Del.)", "source": DOCKET}]})
         c.execute("select promote_enrichment(%s)", (f1,))
@@ -221,6 +229,7 @@ def test_dry_run_batch_is_changed_only_and_keeps_other_rows():
     with _db() as c:
         s1, f1 = _firm(c)
         s2, f2 = _firm(c)
+        _hold_for_batch(c)
         for s in (s1, s2):
             _enrich(c, s, {"Timeline": [{"date": "2012", "event": "Opened a desk", "source": ADV}]})
         b = "t-" + uuid.uuid4().hex[:6]

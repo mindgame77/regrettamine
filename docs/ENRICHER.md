@@ -38,16 +38,19 @@ Own media: a founder or press item is the firm's own media (`independent=false`,
 firm's domain or social handles, or on an entry of the per-firm `firm_owned_media` list (a podcast, YouTube channel, newsletter or blog the
 firm runs). Send `owned_media` (URLs, or `{url, label}`; a path such as `/@handle` limits the match to that channel). Entries from the
 latest enrichment replace earlier enricher entries; manual entries (e.g. Accel's seedtoscale.com) stay.
-Fixes are held (not written to `firm_corrections`, not shown) until a person reviews them. Nothing publishes on arrival: see "Publishing" below. Resubmitting a firm adds a newer enrichment; at publish, items are merged item by item across all of the firm's waiting rows (newer wins, the older source is added to the same item).
+Fixes are held (not written to `firm_corrections`, not shown) until a person reviews them. `toxy-enricher` publishes accepted items on arrival: see "Publishing" below. Another bot's enrich call is stored and is not written to the page. Resubmitting a firm adds a newer enrichment; items already on the page are merged item by item (the newer source is added to the same item).
 Name-only sanctions: a same-name hit that is not a confirmed identity is not a finding. Keep `result` as `none` (searches still allow only `found`, `none`, `blocked`, `error`) and set `name_only` true, `list` to the list name, and `check` to 1–10 (`3` for ITAR / export / debarment). The check shows as Clear with the line "A person with the same name appears on {list}; we couldn't confirm it's the same person." Do not put that hit in a section as a legal item. A surname-only line, or a "name-only near match" with no list, is not this flag. Older notes that say `name-only match:` and name the list are still read. The stored payload is not rewritten.
 
 The reply lists accepted/rejected items with a reason, `notes_kept`, `outcomes` (published/merged/conflict/rejected counts) and `conflicts`, plus `bot_feedback`.
 
 Views (service role): `firm_section_status`, `firm_site_coverage`, `site_search_stats` (all read `search_log_current`: rows with no enrichment_id or from the latest valid enrichment per firm+bot; older rows stay in `search_log`), `feedback_pattern_stats`; RPC `next_firms_to_enrich(p_limit)`.
 
-## Publishing (batches, since 2026-10-26)
-Nothing goes live on insert. Enrichments (`research_enrichments`) and friend submissions (`research_submissions`) wait in the
-holding area until a batch is approved by Alex and run by hand:
+## Publishing (Enricher at ingest, since 2026-10-27)
+`toxy-enricher` writes the public page when `research_enrich` stores a valid row. No batch approval. The reply field
+`on_page` is true only when this enrichment published or merged an item. It is not true just because the firm already
+has a page. Other bots' enrich calls stay in `bots.research_enrichments`. Researcher submissions never write the page.
+
+Rows that did not publish can still be run by hand:
 `create_publish_batch(id, 'enricher'|'submissions', bot_like)` → `dry_run_publish_firm(id, firm)` or
 `dry_run_publish_batch(id)` → `publish_batch_summary(id, 'dry')` → `approve_publish_batch(id, 'alex')` → `run_publish_batch(id)`.
 
@@ -65,4 +68,4 @@ A firm whose page check fails (a section goes missing or drops, new duplicates/c
 unexplained alert) is held and rolled back; the rest go live. Every added row carries the `batch_id`.
 `undo_publish_batch(id)` hides the batch's added rows, takes back founder reviews (not public), removes added source links
 (a copy is kept in `cleanup_backup`) and restores overwritten values. Check history (`publish_checks`) is kept.
-Migrations: `supabase/migrations/20261026210000_publish_step.sql`, `supabase/migrations/20261026230000_submit_rate_and_dry_firm.sql`. Plain-language guide: docs/HOW_IT_WORKS.md.
+Migrations: `supabase/migrations/20261026210000_publish_step.sql`, `supabase/migrations/20261026230000_submit_rate_and_dry_firm.sql`, `supabase/migrations/20261027050000_enricher_only_publish.sql`. Plain-language guide: docs/HOW_IT_WORKS.md.

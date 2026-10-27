@@ -19,10 +19,8 @@ def db_site():
 
 @pytest.fixture(scope="session", autouse=True)
 def _legacy_auto_promote():
-    """Older tests expect research to publish on insert. Production never does: the switch only works in a database
-    that also has app.test_auto_publish = '1' (set here, test database only). Publishing on prod goes through a
-    publish batch (create -> dry run -> Alex approves -> run). Tests that check the holding-area behaviour switch
-    it off inside their own rolled-back transaction."""
+    """Keeps the old auto-promote switch on in the test database. toxy-enricher publishes at ingest either way.
+    Researcher uploads do not. Tests that still exercise a batch disable the enricher insert trigger in that transaction."""
     if not DATABASE_URL:
         yield
         return

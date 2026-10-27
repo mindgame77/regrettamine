@@ -10,14 +10,14 @@ News (press and timeline together), What founders say, Deals and the 10 checks. 
 unlocks the full page. Checks and Full report are two views of that same page. (On 2026-10-26 the database had 10,276 firms that were not deleted, and 10,275 of them were published.)
 
 ## 2. The bots (who collects the data)
-Bots only **collect**. They never write to the live page tables. Everything they send lands in the holding area (section 3).
-Bots write only to the bots schema; the Enricher/publish path is the only way into firm records.
+Researchers only **collect**. What they send stays in the holding area (section 3) and is not copied onto a page.
+The Enricher (`toxy-enricher`) is the only bot that writes a public firm page, and it does that at ingest (section 7).
 
 | Bot | What it does | Where its data lands |
 |---|---|---|
 | Researchers (`toxy-researcher-*`, plus the friend's `portal-night-bot*`) | Research a firm and send a full "dump" (`submit`) | `bots.research_submissions` |
 | Researcher 3 (`toxy-researcher-3`) | Handles paid checks and "Request this firm" requests first (docs/ON_DEMAND.md, docs/FIRM_REQUESTS.md) | `bots.research_submissions` |
-| Enricher (`toxy-enricher`) | Adds structured items to an existing firm, section by section (`enrich`) and logs every search | `bots.research_enrichments`, `bots.search_log` |
+| Enricher (`toxy-enricher`) | Adds structured items to a firm, section by section (`enrich`), logs every search, and publishes accepted items onto the page at ingest | `bots.research_enrichments`, `bots.search_log`, then the page tables |
 | List builders | Pick which firms to research next, including firms visitors asked for | `research_queue`, `firm_requests` |
 | Checker / Activity Collector | Covered by the same data rules (docs/DATA_RULES.md) | holding area |
 
@@ -32,8 +32,8 @@ A researcher (`research_submit`) can upload at most 20 dumps a minute for its ow
   edited and never shown to the public.
 * **Live data**: the page tables (people roles, profile facts, legal items, timeline, press, reviews, funds, deals,
   check rows, plus `fact_sources`, which holds the source links). Only these are shown on the site.
-* Data moves from holding to live **only** through the checker, and since 2026-10-26 **only in an approved publish
-  batch** (section 7). Nothing publishes on its own when a bot sends data.
+* Data moves from holding to live **only** through the checker. Since 2026-10-27 that happens at ingest, and only for
+  `toxy-enricher` (section 7). A researcher upload does not write a page. Other bots' enrich calls stay in the holding tables.
 
 ## 4. Data and date rules (docs/DATA_RULES.md, docs/SOURCE_TIERS.md)
 * **One fact per item.** Each item has its own fields (e.g. a person: name, role, kind, since, source) and a source link.
@@ -73,8 +73,22 @@ Two pages for the same firm are merged with `merge_firms`. The extra page is sof
 and its names stay searchable. Inside a page, each item has a stable key (person, fund, legal case…), so the same fact
 merges instead of appearing twice. `stable_key_collisions()` lists the existing collisions; they are reported, never merged automatically.
 
-## 7. Publish, approvals and undo (since 2026-10-26)
-One gate for everything bots send (both holding tables). Batches are run by hand only.
+## 7. Publish, approvals and undo (since 2026-10-27)
+`toxy-enricher` publishes at ingest. There is no batch approval for that path, and a failed page check does not roll
+that write back. `on_page` in the enrich reply is true only when this enrichment published or merged at least one item.
+A published firm slug is not enough.
+
+Researcher uploads (`research_submissions`) do not write a page. The two upload triggers that used to copy checks and
+facts are closed. A submissions batch does not write a page either. Other bots' `enrich` calls fill `bots.research_enrichments`
+only.
+
+The research queue is a to-do list. Inserting a row does not create a firm. Linking a visitor request
+(`firm_request_link`) does not create a firm. The link and the to-do stay. The page appears when the Enricher publishes.
+A signed-in admin cannot write firm or page tables directly. Hand tools (`edit_in_place`, `record_removed`,
+`restore_hidden`, `merge_firms`, `rename_firm_slug`) stay, and they run with the service key.
+
+Batches remain for rows that are still waiting, and for undo of a batch that already ran:
+
 1. **Create a batch:** `create_publish_batch(id, 'enricher' or 'submissions', bot name pattern)` collects the firms with
    waiting data.
 2. **Dry run:** `dry_run_publish_firm(id, firm)` publishes that one firm for real *inside a transaction that is rolled back*,
@@ -96,10 +110,10 @@ One gate for everything bots send (both holding tables). Batches are run by hand
 6. **Undo:** `undo_publish_batch(id)` hides every row the batch added, takes back the founder reviews it added (made
    not public) and puts back any value it overwrote (from the `cleanup_backup` copy). It also removes the source links it
    added. Source links have no hidden flag, so those link rows are removed after a copy is saved in `cleanup_backup`. The check
-   history (`publish_checks`) is always kept. Note: check rows that a submissions batch created are left as they are
-   (never reset to "Not checked yet").
+   history (`publish_checks`) is always kept. A submissions batch does not write check rows.
 
-Important: paid on-demand research results now also wait for a batch approval before they show.
+A researcher upload does not finish a page. Paid on-demand still marks its job done when valid research is stored, and
+the ready email can go out, but the public page is filled only when `toxy-enricher` publishes.
 
 ## 8. The single page builder
 * **Data** comes from the database. `firm_page()` returns each section's items and counts. The full static site is built from `published_site_bundle()`.
@@ -142,5 +156,5 @@ There are exactly two reference pages that show what a good page looks like: **Y
 | Backups and undo copies | `cleanup_backup` |
 | Locks / removed | `locked_rows`, `removed_items` |
 | Alerts | `section_count_alerts`, `section_counts` |
-| Switches | `bots.ingest_settings` (`auto_promote_enrichment` = 0 on the live site) |
+| Switches | `bots.ingest_settings` (`auto_promote_enrichment` no longer gates `toxy-enricher`; that bot publishes at ingest) |
 | Detailed docs | DATA_RULES, ENRICHER, SOURCE_TIERS, DEDUPE, ON_DEMAND, FIRM_REQUESTS, GOLD_EXAMPLES, data-model, toxy-score-v2-rules |

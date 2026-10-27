@@ -35,13 +35,14 @@ def test_bot_upload_stays_in_bots_and_site_rpcs_still_work():
         row = cur.execute("select payload from bots.research_submissions where registry_id = 'zz-bot-hold'").fetchone()
         assert row is not None and _j(row[0])["search_log"][0]["query"] == "zz bot hold"
         assert cur.execute("select count(*) from bots.search_log where registry_id = 'zz-bot-hold'").fetchone()[0] == 0
-        assert cur.execute("select count(*) from firms where registry_id = 'zz-bot-hold'").fetchone()[0] == firms_before
-        assert cur.execute("select report_date from firms where registry_id = 'zz-bot-hold'").fetchone()[0] is None
-        fid = cur.execute("select id from firms where registry_id = 'zz-bot-hold'").fetchone()[0]
+        assert cur.execute("select count(*) from firms where registry_id = 'zz-bot-hold'").fetchone()[0] == firms_before == 0
+        fid = cur.execute(
+            "insert into firms (slug, name, published, data_status, registry_id, indexable) "
+            "values ('zz-bot-hold', 'ZZ Bot Hold', true, 'real', 'zz-bot-hold', false) returning id").fetchone()[0]
         pub = _j(cur.execute("select _promote_submissions(%s)", (fid,)).fetchone()[0])
-        assert pub["submission_id"] is not None
-        assert str(cur.execute("select report_date from firms where id = %s", (fid,)).fetchone()[0]) == "2026-10-01"
-        assert cur.execute("select indexable from firms where id = %s", (fid,)).fetchone()[0] is True
+        assert pub["closed"] is True and pub["submission_id"] is None and pub["facts"] == 0
+        assert cur.execute("select report_date from firms where id = %s", (fid,)).fetchone()[0] is None
+        assert cur.execute("select indexable from firms where id = %s", (fid,)).fetchone()[0] is False
 
         # CI seed has a16z. Y Combinator is created here when the database has no gold row.
         # The transaction rolls back, so this does not insert a firm for real.

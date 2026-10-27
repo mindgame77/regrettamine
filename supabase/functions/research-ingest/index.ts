@@ -246,8 +246,8 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
     }
     case "enrich": {
       // Enricher results for one firm (sections + confirm/fix/add/leads, each item one structured fact with a source URL; free text only as {note}; docs/DATA_RULES.md).
-      // Stored raw in research_enrichments; the AFTER INSERT trigger promotes accepted items onto the page tables on top of
-      // the friend's data (fixes go to the firm_corrections override layer). Never touches research_submissions.
+      // Stored raw in research_enrichments. Only bot_id toxy-enricher publishes onto the page at ingest.
+      // Other bots stay in the holding tables. Never touches research_submissions.
       if (!bot) return bad("bot_id required", "add a stable \"bot_id\" string (the same on every call)", "enrich");
       const en = body.enrichment;
       if (!isObj(en)) return bad("enrichment must be a JSON object", "send {\"action\":\"enrich\",\"bot_id\":\"toxy-enricher\",\"enrichment\":{...your <slug>.json...}}", "enrich");
@@ -257,8 +257,8 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       const { data, error } = await db.rpc("research_enrich", { p_bot: bot, p_payload: en });
       if (error) return json({ error: "server error" }, 500);
       if (data.error) return json({ error: data.error }, 409);
-      return json({ ok: data.valid, ...data, hint: data.valid ? (data.on_page ? "stored and promoted to the firm page; rejected items (if any) list the reason, fix their source and resubmit the whole file"
-          : "stored, not on a page yet: no published firm page for this slug/registry_id (it is created when the firm's research report is accepted, then these items are promoted); rejected items (if any) list the reason")
+      return json({ ok: data.valid, ...data, hint: data.valid ? (data.on_page ? "stored and on the firm page (at least one item published or merged); rejected items (if any) list the reason, fix their source and resubmit the whole file"
+          : "stored in the holding area; nothing from this file was published or merged onto a firm page. on_page is true only for bot_id toxy-enricher after an item lands on the page")
         : "nothing accepted: every item needs a source URL of the page itself (any site; search/chat result pages are not sources)" }, data.valid ? 200 : 422);
     }
     case "sources": {

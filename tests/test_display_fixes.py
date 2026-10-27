@@ -30,6 +30,7 @@ def test_header_website_assets_and_report_date_are_display_only():
             """insert into research_queue (registry_id, name, sec_crd, priority, status, hq_city, state, country, website)
                values ('zz-hdr', 'ZZ HEADER VENTURES LLC', '999441', 1, 'submitted', 'LOS ANGELES', 'California', 'US', 'https://www.instagram.com/zzhdr/')"""
         )
+        cur.execute("select ensure_firm_for_registry('zz-hdr', false)")
         cur.execute(
             """insert into firm_profile_facts (firm_id, section, label, value, sort_order)
                values (%s, 'overview', 'Overview', 'Item 5F regulatory AUM $3,383,647,755. Seen at https://zz-hdr-upfront.com/.', 1)
