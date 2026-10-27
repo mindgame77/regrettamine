@@ -4,7 +4,7 @@ Founder tool for background-checking a VC fund before taking their money. The li
 
 The pages are plain HTML, CSS, and JavaScript. Login is Google or an email link (`/login/`). Account is at `/account/`. Plans and checkout are at `/plans/`. See `launch/HOW-TO-CHANGE.md` for what to edit.
 
-`build.py` at the repo root still builds the previous site into `site/`. That output is not what regretamin.com serves.
+`python3 launch/build.py` writes `site-launch/`. That is the site Cloudflare publishes.
 
 ## Run it locally
 
@@ -13,7 +13,7 @@ python3 launch/build.py
 python3 -m http.server -d site-launch 8000
 ```
 
-Open [http://localhost:8000/](http://localhost:8000/). The previous site is still `python3 build.py` then `python3 -m http.server -d site 8000`. `site/` and `site-launch/` are generated. Do not edit them by hand. Python 3.9 or newer is enough. There is no install step.
+Open [http://localhost:8000/](http://localhost:8000/). `site-launch/` is generated. Do not edit it by hand. Python 3.9 or newer is enough. There is no install step.
 
 ## Dates
 
@@ -50,13 +50,13 @@ One-time setup:
 4. GitHub → this repo → **Settings → Secrets and variables → Actions**. Add:
    - `SUPABASE_URL` — the project URL
    - `SUPABASE_ANON_KEY` — the publishable key (`sb_publishable_...`) is recommended. The legacy anon JWT also works. Both were tested against the live project and the build matched the JSON output. `SUPABASE_URL` and `SUPABASE_ANON_KEY` are set on this repo.
-5. Push to `main`. The workflow passes `SUPABASE_URL` and `SUPABASE_ANON_KEY` into `launch/build.py`, which publishes to Cloudflare. The root `build.py` step still receives the service-role key. If either public secret is missing, the launch build falls back to `data/launch/`.
+5. Push to `main`. The workflow passes `SUPABASE_URL` and `SUPABASE_ANON_KEY` into `launch/build.py`, which publishes to Cloudflare. If either secret is missing, the launch build falls back to `data/launch/`.
 
 Anon can read published firms only. A signed-in person can insert their own watchlist rows, alert preferences, report views, and pending reviews. Writes in the Table Editor use the logged-in dashboard role, which bypasses row-level security. The anon key cannot insert or update content.
 
 ### Auth in the Supabase dashboard
 
-The site talks to Supabase Auth from the browser (`@supabase/supabase-js` on a CDN). `build.py` writes `site/js/supabase-config.js` from `SUPABASE_URL` and `SUPABASE_ANON_KEY`. Only the publishable key is embedded.
+The launch site talks to Supabase Auth from the browser (`@supabase/supabase-js` on a CDN). `launch/build.py` embeds `SUPABASE_URL` and `SUPABASE_ANON_KEY`. Only the publishable key is embedded.
 
 In the Supabase dashboard for this project (these fields are dashboard settings; this repo does not push them):
 
@@ -94,9 +94,7 @@ Do not set `published` on a row with `is_test` true. The database rejects it. `s
 
 ## Deploy
 
-Pushes to `main` run `.github/workflows/pages.yml`. The launch build is `python3 launch/build.py` (output `site-launch/`). The `cloudflare-preview` job publishes that directory to the Cloudflare Pages project `regretamin`: a preview branch, then production. Production is **https://regretamin.com/** (and `regretamin.pages.dev`).
-
-The same workflow still uploads a GitHub Pages artifact. That host is not the live site.
+Pushes to `main` run `.github/workflows/pages.yml`. The launch build is `python3 launch/build.py` (output `site-launch/`). The `cloudflare-preview` job publishes that directory to the Cloudflare Pages project `regretamin`: a preview branch, then production. Production is **https://regretamin.com/** (and `regretamin.pages.dev`). The live page check runs after that production deploy.
 
 Check a change locally before deploying:
 
