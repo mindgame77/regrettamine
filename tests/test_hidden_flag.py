@@ -34,8 +34,9 @@ def _setup(c):
     c.execute("update ingest_settings set value = '1' where key = 'data_rules_from_enrichment_id'")
     c.execute("update ingest_settings set value = '1' where key = 'auto_promote_enrichment'")
     c.execute("select research_enrich('toxy-enricher', %s::jsonb)", (json.dumps({"slug": slug, "sections": SECTIONS}),))
-    # A publish is not a check. The page shows press only after checked_correct.
+    # A publish is not a check. The page shows press and timeline only after checked_correct.
     c.execute("update press_item_firms set check_mark = 'checked_correct' where firm_id = %s", (fid,))
+    c.execute("update timeline_events set check_mark = 'checked_correct' where firm_id = %s", (fid,))
     return slug, fid
 
 
