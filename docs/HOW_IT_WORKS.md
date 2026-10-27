@@ -21,8 +21,12 @@ The Enricher (`toxy-enricher`) is the only bot that writes a public firm page, a
 | List builders | Pick which firms to research next, including firms visitors asked for | `research_queue`, `firm_requests` |
 | Checker / Activity Collector | Covered by the same data rules (docs/DATA_RULES.md) | holding area |
 
-Every bot sends through one door, the `research-ingest` Edge Function, with its own key. A reply tells the bot what was
-accepted and what was refused and why (`bot_feedback`). That way the bot learns.
+Every bot sends through one door, the `research-ingest` Edge Function, with its own key. The door logs into the database
+as `bot_ingest`, not with the service key. That login can only run the ingest functions. It cannot read or write tables,
+and it cannot bypass row security. A statement stops after 30 seconds, a lock wait stops after 5 seconds, an idle transaction stops after 15 seconds, and the login
+may hold 10 connections. The password is created when this is applied and stored as the function secret
+`BOT_INGEST_DB_URL`. It is not in git. The service key stays in the other edge functions (billing, account, mail).
+A reply tells the bot what was accepted and what was refused and why (`bot_feedback`). That way the bot learns.
 
 A researcher (`research_submit`) can upload at most 20 dumps a minute for its own `bot_id`. If the reply is
 `rate_limited: max 20 uploads per minute per bot, retry shortly`, nothing was stored. Wait and retry the same upload.
@@ -149,7 +153,7 @@ There are exactly two reference pages that show what a good page looks like: **Y
 | Code, docs, tests | GitHub `mindgame77/regrettamine` (merging to `main` deploys regretamin.com) |
 | Database, Edge Functions, scheduled jobs | Supabase project `sxxgvkdwgiouyqciztec` |
 | Database changes | `supabase/migrations/` (applied in name order, tested in CI on Postgres 16) |
-| Bot door | Edge Function `research-ingest` |
+| Bot door | Edge Function `research-ingest`, database login `bot_ingest` (secret `BOT_INGEST_DB_URL`) |
 | Holding area | `bots` schema: `research_submissions`, `research_enrichments`, `search_log`, `research_gaps`, `enrichment_rows`, `ingest_keys`, `ingest_rate`, `ingest_settings`, `bot_feedback`, `fact_source_additions`, `firm_lps`, `firm_lp_summary`. `research_queue` stays in `public` |
 | Verdicts per item | `publish_checks` |
 | Batches | `publish_batches`, `publish_batch_firms` |
