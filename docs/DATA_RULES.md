@@ -66,9 +66,7 @@ Nothing is deleted without Alex's approval. `people_note_guard` (hidden note-lik
 
 ## 4. News is one section on the page (display only)
 
-Bots keep sending Press coverage and Timeline as two sections, and publish keeps them as two tables. The firm page
-draws one **News** section by combining those rows in the browser. Nothing is copied into another table, and nothing
-is hidden in the database for this.
+Bots keep sending Press coverage and Timeline as two sections, and publish keeps them as two tables. `firm_page` returns a press row only when `press_item_firms.check_mark` is `checked_correct`, and a timeline row only when `timeline_events.check_mark` is `checked_correct`. The firm page draws one **News** section by combining those rows in the browser and sorting them by date. Legal stays its own section. `checked_wrong` and `not_checked` stay stored and are not drawn. Nothing is deleted, and nothing is copied into a News table for this.
 
 These two rules apply **only when News is drawn**. No other section drops old rows, and no other section merges on a link:
 
