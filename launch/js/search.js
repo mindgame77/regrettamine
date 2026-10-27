@@ -1,12 +1,14 @@
-/* Search on every page. Home and /vc/<slug>/ both load this file and no other search code. */
+/* Search on every page. Home and /vc/<slug>/ both load this file and no other search code.
+   Firm and pending links start at the site root, so /vc/<slug>/ and /vc/<slug>/full/ build the same URL. */
 (function () {
-  const C = window.REGRET || {}, ROOT = window.REGRET_ROOT || '';
+  const C = window.REGRET || {};
   const sb = C.url && C.key && window.supabase ? window.supabase.createClient(C.url, C.key) : null;
   const T = (C.copy && C.copy.js) || {};
   const esc = (x) => String(x == null ? '' : x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const mark = (t, q) => { const i = String(t).toLowerCase().indexOf(q.toLowerCase()); return i < 0 || !q ? esc(t) : esc(t.slice(0, i)) + '<mark>' + esc(t.slice(i, i + q.length)) + '</mark>' + esc(t.slice(i + q.length)); };
-  const firmUrl = (slug) => ROOT + 'vc/' + encodeURIComponent(slug) + '/';
-  const liveUrl = (q) => ROOT + 'pending/?q=' + encodeURIComponent(q);
+  // Site-root paths. A relative "vc/…" link is resolved against /vc/<slug>/ and becomes /vc/vc/<slug>/.
+  const firmUrl = (slug) => '/vc/' + encodeURIComponent(slug) + '/';
+  const liveUrl = (q) => '/pending/?q=' + encodeURIComponent(q);
   const same = (x, q) => [x.name, x.short_name, x.slug].some(v => v && String(v).toLowerCase() === q.toLowerCase());
   // Open list: the highlighted row. Otherwise an exact name, short name, or slug. Same on every page.
   function choose(q, hits, act, listOpen) {
@@ -41,5 +43,5 @@
       location.href = h ? firmUrl(h.slug) : liveUrl(q);
     };
   });
-  window.RegretSearch = { choose };
+  window.RegretSearch = { choose, firmUrl, liveUrl };
 })();

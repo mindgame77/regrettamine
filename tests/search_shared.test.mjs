@@ -39,6 +39,31 @@ test('a closed list picks only an exact name, short name, or slug', () => {
   assert.equal(choose('y-combinator', hits, -1, false).slug, 'y-combinator');
 });
 
+function loadSearch(pageRoot) {
+  const box = {
+    window: { REGRET: { copy: { js: {} } }, REGRET_ROOT: pageRoot },
+    document: { querySelectorAll() { return []; } },
+    console,
+  };
+  box.window.window = box.window;
+  box.globalThis = box;
+  vm.createContext(box);
+  vm.runInContext(searchSrc, box, { filename: 'search.js' });
+  return box.window.RegretSearch;
+}
+
+test('firmUrl is /vc/<slug>/ on the home page and on a firm page', () => {
+  const home = loadSearch('');
+  const firm = loadSearch('../../');
+  const full = loadSearch('../../../');
+  assert.equal(home.firmUrl('point-allerton'), '/vc/point-allerton/');
+  assert.equal(firm.firmUrl('point-allerton'), '/vc/point-allerton/');
+  assert.equal(full.firmUrl('point-allerton'), '/vc/point-allerton/');
+  assert.equal(home.firmUrl('y-combinator'), firm.firmUrl('y-combinator'));
+  assert.equal(home.liveUrl('point allerton'), '/pending/?q=point%20allerton');
+  assert.equal(firm.liveUrl('point allerton'), home.liveUrl('point allerton'));
+});
+
 test('search is one module, included on every page, and not copied into the firm page', () => {
   assert.match(searchSrc, /document\.querySelectorAll\('\[data-search\]'\)/);
   assert.match(searchSrc, /firm_suggest/);
