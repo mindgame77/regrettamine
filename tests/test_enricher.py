@@ -44,7 +44,12 @@ def test_enrichment_promotes_without_touching_friend_rows():
         # source tiers (docs/SOURCE_TIERS.md): any real page is accepted (the embassy .gov bio is tier 'other'); no URL stays unshown
         assert not any("not allowed" in x for x in reasons) and "no source URL" in reasons and "AUM needs a numeric figure" in reasons
         n = lambda k: len(c.execute("select _sec_items(%s, %s)", (k, fid)).fetchone()[0])
-        assert n("press") == 2 and n("founders") == 0 and n("timeline") == 1 and n("legal") == 2 and n("funds") == 1
+        # A new press link is not_checked, so it stays off the page until someone marks it.
+        assert c.execute("select check_mark from press_item_firms where firm_id = %s order by sort_order", (fid,)).fetchall() == [("not_checked",), ("not_checked",)]
+        assert n("press") == 0 and n("founders") == 0 and n("timeline") == 1 and n("legal") == 2 and n("funds") == 1
+        assert dict(c.execute("select item, status from firm_section_status where slug = %s", (slug,)).fetchall())["press"] == "missing"
+        c.execute("update press_item_firms set check_mark = 'checked_correct' where firm_id = %s", (fid,))
+        assert n("press") == 2
         # founder quotes go to reviews (Activity), not founder_accounts; firm-owned sources are firm_voice, not public
         assert c.execute("select count(*) from founder_accounts where firm_id = %s", (fid,)).fetchone()[0] == 0
         rv = c.execute("select review_type, is_public, independent from reviews where firm_id = %s order by review_type", (fid,)).fetchall()
@@ -77,6 +82,7 @@ def test_enrichment_promotes_without_touching_friend_rows():
         # search log + section status: board_seats searched with no result counts as done
         st = dict(c.execute("select item, status from firm_section_status where slug = %s", (slug,)).fetchall())
         assert st["press"] == "filled" and st["board_seats"] == "searched_none" and st["checks"] == "missing"
+        assert c.execute("select check_mark from press_item_firms where firm_id = %s", (fid,)).fetchall() == [("checked_correct",), ("checked_correct",)]
         assert c.execute("select count(*) from next_firms_to_enrich(500) where slug = %s", (slug,)).fetchone()[0] == 1
         assert c.execute("select count(*) from site_search_stats where source_site = 'sec.gov'").fetchone()[0] == 1
         c.rollback()
