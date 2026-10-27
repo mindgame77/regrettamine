@@ -135,8 +135,11 @@ jobs:
         with:
           node-version: "20"
       - name: Check live fund pages after hydration
+        timeout-minutes: 5
         run: |
           npm init -y
           npm install --no-save playwright@1.55.0
-          npx playwright install --with-deps chromium
+          # The runner already has the shared libraries. --with-deps apt-upgrades them and
+          # restarts services, which took about 11 minutes on 2026-10-27. The page check is ~10s.
+          npx playwright install chromium
           node scripts/check_live_reports.mjs
