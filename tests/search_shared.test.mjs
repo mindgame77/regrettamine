@@ -49,3 +49,119 @@ test('search is one module, included on every page, and not copied into the firm
   assert.match(buildSrc, /'js\/search\.js'/);
   assert.match(guide, /Shared features use one shared module on every page\./);
 });
+
+// One module instance per page. Home starts empty (ROOT ''). A firm page prefills the
+// firm name (ROOT '../../'), the same markup launch/build.py emits. Both run search.js.
+function wait(ms) { return new Promise((resolve) => setTimeout(resolve, ms)); }
+
+function control(location) {
+  const node = {
+    className: '', id: '', hidden: false, value: '', children: [], attrs: {}, listeners: {}, links: [],
+    setAttribute(k, v) { this.attrs[k] = String(v); },
+    getAttribute(k) { return this.attrs[k]; },
+    appendChild(child) { this.children.push(child); return child; },
+    addEventListener(type, fn) { (this.listeners[type] ||= []).push(fn); },
+  };
+  let html = '';
+  Object.defineProperty(node, 'innerHTML', {
+    get() { return html; },
+    set(v) {
+      html = String(v);
+      node.links = [];
+      for (const m of html.matchAll(/<a\b[^>]*href="([^"]*)"/g)) {
+        const href = m[1].replace(/&amp;/g, '&');
+        node.links.push({ href, click() { location.href = href; } });
+      }
+    },
+  });
+  return node;
+}
+
+function boot(pageRoot, initial) {
+  const location = { href: '' };
+  const rpc = [];
+  const input = control(location);
+  input.value = initial;
+  const form = control(location);
+  form.q = input;
+  form.appendChild(input);
+  const sb = {
+    rpc(name, args) {
+      rpc.push({ name, q: args.q });
+      const data = args.q === 'y com' ? [
+        { slug: 'y-combinator', name: 'Y Combinator', short_name: 'YC', hq: 'Mountain View' },
+        { slug: 'mayfield-fund', name: 'Mayfield Fund', short_name: '', hq: '' },
+      ] : [];
+      return Promise.resolve({ data });
+    },
+  };
+  const sandbox = {
+    window: {
+      REGRET: { url: 'https://example.supabase.co', key: 'test-key', copy: { js: { suggest_none: 'No match' } } },
+      REGRET_ROOT: pageRoot,
+      supabase: { createClient() { return sb; } },
+    },
+    document: {
+      querySelectorAll(sel) { return sel === '[data-search]' ? [form] : []; },
+      createElement() { return control(location); },
+    },
+    location,
+    setTimeout,
+    clearTimeout,
+    console,
+  };
+  sandbox.window.window = sandbox.window;
+  sandbox.globalThis = sandbox;
+  vm.createContext(sandbox);
+  vm.runInContext(searchSrc, sandbox, { filename: 'search.js' });
+  const box = form.children.find((c) => c.className === 'sdd');
+  return { form, input, box, location, rpc };
+}
+
+function fire(node, type) {
+  for (const fn of node.listeners[type] || []) fn({ type, preventDefault() {} });
+}
+
+// Relative hrefs from home ('') and from /vc/<slug>/ ('../../') land on the same firm.
+function pathFrom(pageRoot, href) {
+  const base = pageRoot === '../../' ? 'https://regretamin.com/vc/a16z/' : 'https://regretamin.com/';
+  return new URL(href, base).pathname;
+}
+
+async function runSearch(pageRoot, initial) {
+  const page = boot(pageRoot, initial);
+  assert.equal(page.input.value, initial);
+  assert.equal(page.box.hidden, true);
+
+  page.input.value = 'y com';
+  fire(page.input, 'input');
+  await wait(250);
+
+  assert.equal(page.input.value, 'y com');
+  assert.deepEqual(page.rpc.map((c) => c.q), ['y com']);
+  assert.equal(page.box.hidden, false);
+  assert.match(page.box.innerHTML.replace(/<[^>]+>/g, ''), /Y Combinator/);
+  const href = page.box.links[0].href;
+  assert.equal(pathFrom(pageRoot, href), '/vc/y-combinator/');
+
+  page.box.links[0].click();
+  assert.equal(pathFrom(pageRoot, page.location.href), '/vc/y-combinator/');
+
+  page.location.href = '';
+  const lookedUp = page.rpc.length;
+  await page.form.onsubmit({ preventDefault() {} });
+  assert.equal(page.rpc.length, lookedUp);
+  assert.equal(pathFrom(pageRoot, page.location.href), '/vc/y-combinator/');
+  assert.equal(page.input.value, 'y com');
+  return href;
+}
+
+test('home page: typing, suggestions, Check, and a suggestion click open Y Combinator', async () => {
+  const href = await runSearch('', '');
+  assert.equal(href, 'vc/y-combinator/');
+});
+
+test('firm page: typing, suggestions, Check, and a suggestion click open Y Combinator', async () => {
+  const href = await runSearch('../../', 'Andreessen Horowitz');
+  assert.equal(href, '../../vc/y-combinator/');
+});
