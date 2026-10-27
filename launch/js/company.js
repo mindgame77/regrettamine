@@ -931,6 +931,74 @@
       return '<a class="sc" href="' + esc(src.url) + '" target="_blank" rel="noopener">' + esc(t) + '</a>'; }).filter(Boolean).slice(0, 7).join('').replace(/^(.+)$/, '<span class="secp">$1</span>');
   }
   const tile = (lab, big, sub, cls) => '<div class="att ' + cls + '"><small>' + esc(lab) + '</small><b>' + big + '</b><span>' + sub + '</span></div>';
+  // A fund line already on the page: "Name · $22.7B · 2026-02-05". AUM sentences and $0 lines are not funds.
+  const amountText = (part) => { const m = String(part || '').trim().match(/^(\$[0-9][0-9,]*(?:\.[0-9]+)?(?:\s*[BMK])?)$/i); return m ? m[1].replace(/\s+/g, '') : ''; };
+  const amountNumber = (text) => { const m = String(text || '').replace(/,/g, '').match(/^\$([0-9]*\.?[0-9]+)([BMK])?$/i); if (!m) return 0;
+    const n = Number(m[1]); if (!isFinite(n) || n <= 0) return 0; const u = (m[2] || '').toUpperCase();
+    return n * (u === 'B' ? 1e9 : u === 'M' ? 1e6 : u === 'K' ? 1e3 : 1); };
+  function fundLineText(item) {
+    const value = String(item && item.value || '').trim();
+    if (value) return value;
+    const head = String(item && item.head || '').trim(), label = String(item && item.label || '').trim();
+    if (label && head.toLowerCase().startsWith(label.toLowerCase() + ':')) return head.slice(label.length + 1).trim();
+    return head;
+  }
+  function filingUrl(src) {
+    const urls = (src || []).map(s => safeUrl(s && s.url)).filter(Boolean);
+    return urls.find(u => /(^|\.)sec\.gov\//i.test(u.replace(/^https?:\/\//i, ''))) || urls[0] || '';
+  }
+  function earlierFund(P) {
+    const items = [];
+    (P.sections || []).forEach(s => { if (s && s.key === 'funds') (s.items || []).forEach(item => items.push(item)); });
+    const rows = [];
+    items.forEach((item, i) => {
+      const text = fundLineText(item);
+      if (!text) return;
+      const lab = assetLabel(item.label, text);
+      if (lab === (HCOPY.regulatory_aum || 'Regulatory AUM') || lab === (HCOPY.fund_gross || 'Fund gross assets')) return;
+      const parts = text.split(/\s*·\s*/).map(p => p.trim()).filter(Boolean);
+      if (parts.length < 2) return;
+      const name = parts[0];
+      if (!name || /^\$/.test(name) || /^item\s/i.test(name)) return;
+      let amount = '', date = '';
+      parts.slice(1).forEach(p => {
+        if (!amount) { const a = amountText(p); if (a && amountNumber(a) > 0) amount = a; }
+        if (!date && /^\d{4}-\d{2}-\d{2}$/.test(p)) date = p;
+      });
+      if (!amount) return;
+      rows.push({ name, amount, date, url: filingUrl(item.src), i });
+    });
+    rows.sort((a, b) => (b.date || '').localeCompare(a.date || '') || a.i - b.i);
+    return rows[0] || null;
+  }
+  function raisedFundTile(fund) {
+    const when = fund.date ? (fdate(fund.date) || fund.date) : '';
+    const sub = esc(fund.name) + ' · ' + esc(fmt(AC.raised, { amount: fund.amount }))
+      + (when ? ' · ' + esc(when) : '')
+      + (fund.url ? ' · <a href="' + esc(fund.url) + '" target="_blank" rel="noopener">' + esc(AC.filing) + ' ↗</a>' : '');
+    return tile(AC.fund, esc(fund.amount), sub, 'afd');
+  }
+  function aumFigure(raw) {
+    const s = String(raw || '');
+    const compact = s.match(/\$[0-9][0-9,]*(?:\.[0-9]+)?\s*[BMK]\b/i);
+    if (compact) return compact[0].replace(/\s+/g, '');
+    const dollars = s.match(/\$([0-9][0-9,]*(?:\.[0-9]+)?)/);
+    return dollars ? money(Number(dollars[1].replace(/,/g, ''))) : '';
+  }
+  function secSrc(src) {
+    return (src || []).find(c => /(^|\.)sec\.gov\//i.test((safeUrl(c && c.url) || '').replace(/^https?:\/\//i, '').replace(/\/.*/, '/')));
+  }
+  function aumTile(P) {
+    const hero = Array.isArray(P.hero) ? P.hero : [];
+    const hit = hero.find(h => h && h.value && assetLabel(h.label, h.value) === (HCOPY.regulatory_aum || 'Regulatory AUM'));
+    let value = hit ? aumFigure(hit.value) : '';
+    const src = hit ? (secSrc(hit.src) || (hit.src || []).find(c => safeUrl(c && c.url))) : null;
+    if (!value) value = aumFigure(P.firm && P.firm.assets);
+    if (!value) return '';
+    const u = src && safeUrl(src.url);
+    const sub = u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(src.label || AC.filing || 'Filing') + ' ↗</a>' : '';
+    return tile(AC.aum || 'Assets under management', esc(value), sub, 'afd');
+  }
   function dealRows(ds) {
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + ds.map(d => { const u = safeUrl(d.url);
@@ -1003,10 +1071,21 @@
       tiles.push('<div class="att aon"><i></i><div><b>' + esc(AC.active) + '</b><span>' + esc(ld) + '</span><em>' + esc(sub) + '</em></div></div>');
     }
     if (A.deals_12m > 0) tiles.push(tile(AC.deals_12m, esc(A.deals_12m), '', 'amt'));
-    if (f) {
-      const amt = money(f.raised_usd), u = safeUrl(f.url);
-      const sub = esc(fundName(f.name)) + (amt ? ' · ' + esc(fmt(AC.raised, { amount: amt })) : '') + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(AC.filing) + ' ↗</a>' : '');
-      tiles.push(tile(AC.fund, amt ? esc(amt) : '<span class="asm">' + esc(fundName(f.name)) + '</span>', sub, 'afd'));
+    // A fund with an amount raised stays the Latest fund tile. A $0 or missing amount is skipped.
+    // The next most recent fund that did raise money (already on the funds section) takes the tile.
+    // Only when no fund raised money does the tile show the firm's assets under management.
+    const raised = f && money(f.raised_usd);
+    if (raised) {
+      const u = safeUrl(f.url);
+      const sub = esc(fundName(f.name)) + ' · ' + esc(fmt(AC.raised, { amount: raised })) + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(AC.filing) + ' ↗</a>' : '');
+      tiles.push(tile(AC.fund, esc(raised), sub, 'afd'));
+    } else {
+      const prev = earlierFund(P);
+      if (prev) tiles.push(raisedFundTile(prev));
+      else {
+        const aum = aumTile(P);
+        if (aum) tiles.push(aum);
+      }
     }
     if (!tiles.length && !d0 && !r0) return '';
     let h = '<section class="actv" aria-label="' + esc(AC.reviews) + '">' + (tiles.length ? '<div class="ats" style="grid-template-columns:repeat(' + tiles.length + ',1fr)">' + tiles.join('') + '</div>' : '');
