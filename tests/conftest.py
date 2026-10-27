@@ -7,11 +7,10 @@ DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
 
 
 def db_site():
-    """Seed the test database and return (home, funds) through the build's own DB path."""
+    """Seed the test database and return (home, funds) through regrettamine.load_db."""
     if not DATABASE_URL:
         pytest.skip("DATABASE_URL is not set")
-    from scripts.seed import main as seed_main
-    from build import load_db
+    from scripts.seed import load_db, main as seed_main
 
     seed_main()
     return load_db()

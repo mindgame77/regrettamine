@@ -11,7 +11,7 @@ Deno.serve(async (req) => {
   if (req.headers.get("x-cron-secret") !== Deno.env.get("CRON_SECRET")) return new Response("forbidden", { status: 403 });
   const send = Deno.env.get("SEND_EMAILS") === "true" && !!Deno.env.get("RESEND_API_KEY");
   const only = Deno.env.get("TEST_ONLY_TO");
-  const site = (Deno.env.get("SITE_URL") ?? "https://regrettamine.com/").replace(/\/?$/, "/");
+  const site = (Deno.env.get("SITE_URL") ?? "https://regretamin.com/").replace(/\/?$/, "/");
   const { data: ready, error } = await admin.rpc("ready_check_requests");
   if (error) return new Response(JSON.stringify({ error: error.message }), { status: 500 });
   const out: unknown[] = [];

@@ -316,7 +316,7 @@ def test_shared_list_and_auth_pages(monkeypatch):
     assert "Access-Control-Allow-Origin" in portal_fn and "OPTIONS" in portal_fn
     # Portal config and key come from env (test/live switch in _shared/stripe_env.ts).
     assert "portalConfig()" in portal_fn
-    assert "settings/?tab=billing" in portal_fn
+    assert "https://regretamin.com/account/" in portal_fn
     assert "activeKey" in portal_fn
     assert "payment_methods" in portal_fn and "cardOnly" in portal_fn
     assert "card_last4" in (ROOT / "supabase" / "migrations" / "20261004300000_gate_card.sql").read_text(encoding="utf-8")

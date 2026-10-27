@@ -309,6 +309,10 @@ def main():
     shutil.rmtree(OUT, ignore_errors=True); os.makedirs(OUT)
     for f in ('style.css', 'logo.svg', 'js/app.js', 'js/company.js', 'js/search.js', 'js/dates.js'): shutil.copy(os.path.join(HERE, f), OUT)
     shutil.copytree(os.path.join(HERE, 'fav'), os.path.join(OUT, 'fav'))
+    # Email templates load this from https://regretamin.com/assets/logo/lockup-light@2x.png
+    logo_dir = os.path.join(OUT, 'assets', 'logo')
+    os.makedirs(logo_dir, exist_ok=True)
+    shutil.copy(os.path.join(HERE, 'assets', 'logo', 'lockup-light@2x.png'), logo_dir)
     shutil.copy(os.path.join(HERE, 'CNAME'), OUT)  # GitHub Pages custom domain (regretamin.com)
     firms = []
     T = {'name': T_NAME, 'slug': T_SLUG}
