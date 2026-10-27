@@ -63,6 +63,20 @@ def test_template_zero_one_and_many():
     many["fundTab"]["boards"]["items"] = [
         {"name": f"Stress Partner {i}", "value": "Board"} for i in range(1, 21)
     ]
+    # Live press is not_checked, so this page has no press to copy. The extra
+    # rows are test data and need a full page behind them.
+    if len(many["public"]["items"]) < 13:
+        sample_shape = {
+            "publisher": "Example News",
+            "domain": "example.test",
+            "date": "2026",
+            "headline": "TEST DATA base",
+            "url": "https://example.test/press/0",
+            "group": "News",
+            "sentiment": "neu",
+            "why": "Test item",
+        }
+        many["public"]["items"] = [dict(sample_shape, headline=f"TEST DATA base {i}", url=f"https://example.test/base/{i}") for i in range(1, 14)]
     sample = dict(many["public"]["items"][0])
     extra = []
     for i in range(1, 13):

@@ -34,6 +34,8 @@ def _setup(c):
     c.execute("update ingest_settings set value = '1' where key = 'data_rules_from_enrichment_id'")
     c.execute("update ingest_settings set value = '1' where key = 'auto_promote_enrichment'")
     c.execute("select research_enrich('toxy-enricher', %s::jsonb)", (json.dumps({"slug": slug, "sections": SECTIONS}),))
+    # A publish is not a check. The page shows press only after checked_correct.
+    c.execute("update press_item_firms set check_mark = 'checked_correct' where firm_id = %s", (fid,))
     return slug, fid
 
 
@@ -66,6 +68,8 @@ def test_hide_drops_row_from_page_data_and_restore_brings_it_back():
             row = c.execute(f"select hidden, hidden_reason, hidden_by from {table} where {col} = %s and firm_id = %s",
                             (ids[key], fid)).fetchone()
             assert row == (True, "test: wrong firm", "pytest")
+        assert c.execute("select check_mark from press_item_firms where press_item_id = %s and firm_id = %s",
+                         (ids["press"], fid)).fetchone()[0] == "checked_wrong"
         # promote (re-submitting the same items) never unhides or re-adds them
         c.execute("select research_enrich('toxy-enricher', %s::jsonb)", (json.dumps({"slug": slug, "sections": SECTIONS}),))
         assert _counts(c, fid) == after
@@ -76,6 +80,8 @@ def test_hide_drops_row_from_page_data_and_restore_brings_it_back():
         for key, table, col in TABLES:
             assert c.execute("select restore_hidden(%s, %s, %s, 'pytest')", (table, ids[key], fid)).fetchone()[0] is True
         assert _counts(c, fid) == before
+        assert c.execute("select check_mark from press_item_firms where press_item_id = %s and firm_id = %s",
+                         (ids["press"], fid)).fetchone()[0] == "checked_correct"
         assert c.execute("select count(*) from removed_items where firm_id = %s", (fid,)).fetchone()[0] == 0
         c.rollback()
 
