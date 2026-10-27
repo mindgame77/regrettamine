@@ -1,4 +1,5 @@
-"""Registry link: a valid report creates/links the firm page by CRD or registry_id, never by a fuzzy name."""
+"""Registry link: ensure_firm creates or links the firm page by CRD or registry_id, never by a fuzzy name.
+A queue row or a researcher upload does not create the page or copy checks onto it."""
 import json
 import os
 import uuid
@@ -56,11 +57,13 @@ def test_report_creates_published_page_and_queue_dedupes():
         assert cur.fetchone() == ("skipped", "zz-r1")          # name-only twin of a CRD entry
         cur.execute("insert into research_queue (registry_id, name, sec_crd, priority, status) values ('zz-r3', 'OTHER', '998101', 1, 'queued') returning 1")
         assert cur.fetchone() is None                           # second row for the same CRD is dropped
+        assert cur.execute("select count(*) from firms where registry_id in ('zz-r1', 'zz-r2')").fetchone()[0] == 0
         cur.execute("insert into research_enrichments (bot_id, registry_id, payload, valid, accepted, rejected) values ('b', 'zz-r1', '{}', false, 0, 0) returning id")
         eid = cur.fetchone()[0]
         cur.execute("insert into research_submissions (registry_id, payload, valid) values ('zz-r1', %s, false)", (json.dumps({"coverage": []}),))
+        cur.execute("select ensure_firm_for_registry('zz-r1', false)")
         cur.execute("select published, indexable from firms where registry_id = 'zz-r1'")
-        assert cur.fetchall() == [(True, False)]                # queued / invalid report: only the 'Not checked yet' page (noindex)
+        assert cur.fetchall() == [(True, False)]                # shell page only: published, noindex
         assert cur.execute("select count(*) from firms where registry_id = 'zz-r2'").fetchone()[0] == 0   # flagged duplicate: no page
         cur.execute("insert into research_submissions (registry_id, payload, valid) values ('zz-r1', %s, true)", (json.dumps(PAYLOAD),))
         assert cur.execute("select indexable from firms where registry_id = 'zz-r1'").fetchone()[0] is False  # upload does not upgrade the page
@@ -70,12 +73,12 @@ def test_report_creates_published_page_and_queue_dedupes():
         fid, slug, name, dn, legal, crd, dom, hq, pub, ds, src = cur.fetchone()
         assert (slug, name, dn, legal) == ("zz-rocket-ventures", "ZZ Rocket Ventures", "ZZ Rocket Ventures", "ZZ ROCKET VENTURES MANAGEMENT, LLC")
         assert (crd, dom, hq, pub, ds, src) == ("998101", "zzrocket.vc", "Palo Alto, CA", True, "real", "research")
-        assert cur.execute("select indexable from firms where id = %s", (fid,)).fetchone()[0] is True   # upgraded in place
+        assert cur.execute("select indexable from firms where id = %s", (fid,)).fetchone()[0] is False  # a researcher upload does not make it indexable
         cur.execute("select firm_id from research_enrichments where id = %s", (eid,))
-        assert cur.fetchone()[0] == fid                         # orphan enrichment linked
+        assert cur.fetchone()[0] is None                        # another bot's row is not linked
         cur.execute("select n, state from firm_check_rows where firm_id = %s order by n", (fid,))
         rows = cur.fetchall()
-        assert len(rows) == 10 and rows[7] == (8, "clear") and rows[0] == (1, "nc")   # partial: rest stays 'Not checked yet'
+        assert len(rows) == 10 and all(s == "nc" for _, s in rows)   # checks stay 'Not checked yet'
         P = _j(cur.execute("select firm_page(%s, %s, false)", (slug, str(uuid.uuid4()))).fetchone()[0])
         assert P["status"] == "ok" and P["firm"]["name"] == "ZZ Rocket Ventures" and P["firm"]["sec_name"] == "ZZ ROCKET VENTURES MANAGEMENT, LLC"
         assert cur.execute("select name, legal_name from firm_meta(%s)", (slug,)).fetchone() == ("ZZ Rocket Ventures", "ZZ ROCKET VENTURES MANAGEMENT, LLC")
@@ -83,7 +86,7 @@ def test_report_creates_published_page_and_queue_dedupes():
         # second report and an enrichment by registry_id reuse the same page (no duplicate firm), slug sent is kept
         cur.execute("insert into research_submissions (registry_id, payload, valid) values ('zz-r2', %s, true)", (json.dumps(PAYLOAD),))
         r = _j(cur.execute("select research_enrich('b', %s)", (json.dumps({"registry_id": "zz-r1", "slug": "zz-rocket-old"}),)).fetchone()[0])
-        assert r["firm"] == slug and r["on_page"] is True
+        assert r["firm"] == slug and r["on_page"] is False
         assert cur.execute("select slug, firm_id from research_enrichments where id = %s", (r["enrichment_id"],)).fetchone() == ("zz-rocket-old", fid)
         assert cur.execute("select count(*) from firms where sec_crd = '998101' or registry_id in ('zz-r1', 'zz-r2')").fetchone()[0] == 1
         conn.rollback()

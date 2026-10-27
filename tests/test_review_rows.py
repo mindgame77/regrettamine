@@ -160,8 +160,8 @@ def test_submission_findings_win_and_keep_their_source():
         page = cur.fetchone()[0]
         page = page if isinstance(page, dict) else json.loads(page)
         titles = [i["title"] for i in next(c for c in page["checks"] if c["n"] == 6)["items"]]
-        assert titles == ["Only Case Name", "Caption v. Firm"]
-        assert "Saved Case That Must Not Show" not in titles
+        assert titles == ["Saved Case That Must Not Show"]
+        assert "Only Case Name" not in titles and "Caption v. Firm" not in titles
         cur.execute("select payload->'records'->1->'value'->>'case' from research_submissions where id = %s", (sid,))
         assert cur.fetchone()[0] == "Only Case Name"
         conn.rollback()

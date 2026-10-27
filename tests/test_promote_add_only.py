@@ -44,12 +44,20 @@ PAYLOAD = {"sections": {
     "People & board seats": [{"name": "Pat Example", "role": "General Partner", "source": SRC}]}}
 
 
-def test_new_research_stays_in_holding_area():
+def test_enricher_publishes_and_another_bot_stays_in_holding():
     with _db() as c:
         slug, fid = _firm(c, auto="0")
-        _enrich(c, dict(PAYLOAD, slug=slug))
-        assert c.execute("select count(*) from research_enrichments where firm_id = %s", (fid,)).fetchone()[0] == 1
-        assert _rows(c, fid) == set()
+        c.execute("select set_config('app.test_auto_publish', '', true)")
+        got = _enrich(c, dict(PAYLOAD, slug=slug))
+        assert got["on_page"] is True
+        assert len(_rows(c, fid)) == 2
+        other = c.execute("select research_enrich('zz-other-bot', %s::jsonb)", (json.dumps(dict(PAYLOAD, slug=slug)),)).fetchone()[0]
+        other = other if isinstance(other, dict) else json.loads(other)
+        assert other["on_page"] is False
+        assert c.execute(
+            "select count(*) from publish_checks where origin = 'enrichment' and origin_id = %s and outcome in ('published', 'merged')",
+            (other["enrichment_id"],)).fetchone()[0] == 0
+        assert len(_rows(c, fid)) == 2
         c.rollback()
 
 
