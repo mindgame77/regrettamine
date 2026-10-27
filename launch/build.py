@@ -209,7 +209,7 @@ def firm_shell(F, root, tab):  # both tabs in one shell. tab is the one shown be
     checks_hidden = '' if tab == 'checks' else ' hidden'
     full_hidden = '' if tab == 'full' else ' hidden'
     return f'''<main class="wrap sumpg prof ld" data-firm="{E(F["slug"])}" data-tab="{tab}"><div class="rh">{bigsearch(F, "ps0")}</div>
-<div class="ph"><h1>{E(F["name"])}{SAVE}</h1><p class="m"><i class="sk" style="width:300px"></i></p><div class="hfs heros"></div><div class="actw"><div class="hfs">{SK_HFS}</div></div></div>
+<div class="ph"><h1>{E(F["name"])}{SAVE}</h1><p class="m"><i class="sk" style="width:300px"></i></p><div class="actw"><div class="hfs">{SK_HFS}</div></div></div>
 {checking_box()}{ftabs(tab)}<div class="cban" hidden></div>
 <div id="panel-checks"{checks_hidden}><div class="list">{skel()}</div>
 <div class="rgt-see"><button type="button" data-tab="full">{Q["see_full"]}</button></div></div>
