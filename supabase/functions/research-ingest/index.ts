@@ -1,11 +1,49 @@
 // research-ingest: staging intake for an EXTERNAL research bot (dump format 1.2).
 // Auth: header x-ingest-key (sha256 checked against bots.ingest_keys, active only). verify_jwt = false.
-// Writes through bot RPCs into the bots schema, and claims research_queue (kept in public) through those RPCs.
-// The function still connects with SUPABASE_SERVICE_ROLE_KEY. Each bot RPC sets statement_timeout 30s and
-// lock_timeout 5s locally (role settings do not apply through PostgREST's SET ROLE). See bots.bot_writer.
+// Database login is bot_ingest via the secret BOT_INGEST_DB_URL. That role can only execute the ingest RPCs.
+// It has no table grants and no bypassrls. The password is set at apply time and is never written here.
+// Each RPC also calls bots.apply_limits(). The role itself has statement_timeout 30s and lock_timeout 5s.
+// This function does not read the service key. Other edge functions still do.
 // Kill switch: ingest_settings.ingest_paused = 'true' -> 503. Rate limit per key per minute -> 429.
-import { createClient } from "npm:@supabase/supabase-js@2";
-const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+import postgres from "npm:postgres@3.4.5";
+type Sql = ReturnType<typeof postgres>;
+let client: Sql | undefined;
+function sql(): Sql {
+  if (!client) {
+    const url = Deno.env.get("BOT_INGEST_DB_URL");
+    if (!url) throw new Error("not_configured");
+    client = postgres(url, {
+      max: 1,
+      prepare: false,
+      ssl: "require",
+      connect_timeout: 10,
+      idle_timeout: 5,
+      max_lifetime: 60,
+      connection: { application_name: "research-ingest" },
+    });
+  }
+  return client;
+}
+function safeMessage(e: unknown): string {
+  const message = e instanceof Error ? e.message : "server error";
+  return message.replace(/postgres(?:ql)?:\/\/\S+/gi, "[redacted]");
+}
+async function callJson(run: (q: Sql) => Promise<{ j: unknown }[]>): Promise<{ data: any; error: { message: string } | null }> {
+  try {
+    const rows = await run(sql());
+    return { data: rows[0]?.j ?? null, error: null };
+  } catch (e) {
+    return { data: null, error: { message: safeMessage(e) } };
+  }
+}
+async function callRows(run: (q: Sql) => Promise<{ j: unknown }[]>): Promise<{ data: any[] | null; error: { message: string } | null }> {
+  try {
+    const rows = await run(sql());
+    return { data: rows.map((r) => r.j), error: null };
+  } catch (e) {
+    return { data: null, error: { message: safeMessage(e) } };
+  }
+}
 const MAX_BYTES = 2_000_000;
 const TOP_KEYS = ["schema_version", "firm", "coverage", "records", "leads", "search_log"];
 const CERTAINTY = ["adjudicated", "reported", "alleged", "self_reported"];
@@ -32,7 +70,7 @@ const sha256 = async (s: string) => [...new Uint8Array(await crypto.subtle.diges
 const isObj = (v: unknown): v is Record<string, unknown> => !!v && typeof v === "object" && !Array.isArray(v);
 
 // tier of one source URL: 'trusted' when the host is an allowlisted domain (public.trusted_source_domains) or a subdomain,
-// or an official government / court host; otherwise 'other'. Mirrors public.source_tier().
+// or an official government / court host; otherwise 'other'. Mirrors source_tier().
 const GOV = /(\.gov|\.gov\.[a-z]{2}|\.gouv\.[a-z]{2}|\.mil|\.europa\.eu|\.gc\.ca|\.admin\.ch)$/;
 function tierOf(url: string, allow: string[]): "trusted" | "other" {
   const h = (url.toLowerCase().match(/^https?:\/\/(?:www\.)?([^/:?#\s]+)/) ?? [])[1] ?? "";
@@ -43,8 +81,8 @@ function tierOf(url: string, allow: string[]): "trusted" | "other" {
 let allowCache: { at: number; list: string[] } = { at: 0, list: [] };
 async function allowlist(): Promise<string[]> {
   if (Date.now() - allowCache.at < 300_000 && allowCache.list.length) return allowCache.list;
-  const { data } = await db.from("trusted_source_domains").select("domain");
-  if (data?.length) allowCache = { at: Date.now(), list: data.map((r: any) => r.domain) };
+  const { data } = await callJson((q) => q`select public.ingest_trusted_domains() as j`);
+  if (Array.isArray(data) && data.length) allowCache = { at: Date.now(), list: data.map((r: any) => r.domain) };
   return allowCache.list;
 }
 
@@ -126,14 +164,12 @@ function validateLps(lps: unknown): string[] {
   return e;
 }
 
-// feedback channel: active public.bot_feedback rows ('*' or a bot_id prefix) are added as a `feedback` field to every
+// feedback channel: active bots.bot_feedback rows ('*' or a bot_id prefix) are added as a `feedback` field to every
 // authenticated JSON reply (success and error). Existing fields are never changed. Read failures never break the reply.
 const FEEDBACK_DOC = "https://docs.google.com/document/d/1GFdHpQzV8olMb9dhek5zK_xs_7Env0Pu-1uf6TDdfH4/edit";
 async function feedbackFor(bot: string) {
-  const { data, error } = await db.from("bot_feedback").select("bot_id, message, created_at").eq("active", true)
-    .order("created_at", { ascending: false }).limit(200);
-  const messages = error ? [] : (data ?? []).filter((f: any) => f.bot_id === "*" || (bot && bot.startsWith(f.bot_id)))
-    .slice(0, 20).map((f: any) => ({ message: f.message, created_at: f.created_at }));
+  const { data, error } = await callJson((q) => q`select public.ingest_bot_feedback(${bot}) as j`);
+  const messages = error || !Array.isArray(data) ? [] : data;
   return { rule: "read and follow these messages and the feedback doc", doc_url: FEEDBACK_DOC, messages };
 }
 // The friend-bot feedback field/doc is only for portal-night-bot (never for toxy-enricher or other bots).
@@ -150,7 +186,7 @@ async function withFeedback(res: Response, bot: string): Promise<Response> {
 }
 
 Deno.serve(async (req) => {
-  // one log line per request: action, bot_id, status (never the key)
+  // one log line per request: action, bot_id, status (never the key, never the database URL)
   const meta = { action: "", bot: "", authed: false };
   let res = await handle(req, meta);
   if (meta.authed) res = await withFeedback(res, meta.bot);
@@ -165,7 +201,7 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
   const authz = req.headers.get("authorization") ?? "";
   const key = req.headers.get("x-ingest-key") || (/^bearer\s+/i.test(authz) ? authz.replace(/^bearer\s+/i, "").trim() : "");
   if (!key) return json({ error: "unauthorized", hint: "send the ingest key in header x-ingest-key (or Authorization: Bearer <key>); never in the URL" }, 401);
-  const { data: auth, error: aerr } = await db.rpc("ingest_auth", { p_hash: await sha256(key) });
+  const { data: auth, error: aerr } = await callJson((q) => q`select public.ingest_auth(${await sha256(key)}) as j`);
   if (aerr) return json({ error: "server error" }, 500);
   if (!auth.ok) {
     if (auth.error === "paused") return json({ error: "ingest paused - stop and report" }, 503);
@@ -195,20 +231,21 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
   meta.bot = bot;
   switch (body.action) {
     case "status": {
-      const { data, error } = await db.rpc("research_status");
+      const { data, error } = await callJson((q) => q`select public.research_status() as j`);
       return error ? json({ error: "server error" }, 500) : json({ counts: data });
     }
     case "claim": {
       if (!bot) return bad("bot_id required", "add a stable \"bot_id\" string (the same on every call)", "claim");
       const n = Number(body.count ?? 1);
       if (!Number.isInteger(n) || n < 1 || n > 300) return bad("count must be 1-300", "omit count (defaults to 1) or send an integer 1-300", "claim");
-      const { data, error } = await db.rpc("research_claim", { p_bot: bot, p_count: n });
+      const { data, error } = await callRows((q) => q`select row_to_json(t) as j from public.research_claim(${bot}, ${n}) t`);
       if (error) return json({ error: "server error" }, 500);
       const firms = (data ?? []).map((f: any) => ({ registry_id: f.registry_id, firm_id: f.registry_id, name: f.name, website: f.website,
         country: f.country, state: f.state, hq_city: f.hq_city, sec_crd: f.sec_crd, lei: f.lei, attempts: f.attempts }));
       // paid on-demand jobs (only toxy-researcher-3 gets them): job id, missing checks, refund deadline (docs/ON_DEMAND.md)
       if (firms.length && bot === "toxy-researcher-3") {
-        const { data: info } = await db.rpc("ondemand_job_info", { p_ids: firms.map((f: any) => f.registry_id) });
+        const ids = firms.map((f: any) => f.registry_id);
+        const { data: info } = await callJson((q) => q`select public.ondemand_job_info(${ids}::text[]) as j`);
         for (const f of firms as any[]) if (info?.[f.registry_id]) Object.assign(f, info[f.registry_id]);
       }
       return json({ firms, none_left: firms.length === 0 });
@@ -226,8 +263,10 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       }
       const v = validate(body.dump, body.registry_id, await allowlist());
       const valid = v.errors.length === 0;
-      const { data, error } = await db.rpc("research_submit", { p_id: body.registry_id, p_bot: bot,
-        p_payload: body.dump ?? null, p_count: v.good + v.bad, p_valid: valid, p_errors: valid ? null : v.errors.slice(0, 200) });
+      const dump = body.dump ?? null;
+      const errs = valid ? null : v.errors.slice(0, 200);
+      const { data, error } = await callJson((q) => q`select public.research_submit(${body.registry_id}, ${bot},
+        ${dump === null ? null : q.json(dump)}, ${v.good + v.bad}, ${valid}, ${errs === null ? null : q.json(errs)}) as j`);
       if (error) {
         const msg = String(error.message || error.details || "");
         if (msg.includes("rate_limited:")) return json({ error: "rate_limited: max 20 uploads per minute per bot, retry shortly" }, 429, { "retry-after": "60" });
@@ -236,8 +275,9 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       if (data.error) return json({ error: data.error }, 409);
       let lpRes: any = undefined;
       if (valid && (hasLps || body.lps_over_100 === true)) {
-        const r = await db.rpc("research_store_lps", { p_id: body.registry_id, p_submission: data.submission_id,
-          p_lps: hasLps ? body.lps : [], p_over_100: body.lps_over_100 === true });
+        const lps = hasLps ? body.lps : [];
+        const r = await callJson((q) => q`select public.research_store_lps(${body.registry_id}, ${data.submission_id},
+          ${q.json(lps)}, ${body.lps_over_100 === true}) as j`);
         lpRes = r.error ? { ok: false, error: "lps not stored (server error); dump was stored" } : r.data;
       }
       return json({ ok: valid, ...(lpRes !== undefined ? { lps: lpRes } : {}), status: data.status, attempts: data.attempts ?? null, accepted_records: valid ? v.good : 0,
@@ -254,7 +294,7 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       if (typeof en.slug !== "string" && typeof en.registry_id !== "string") return bad("enrichment.slug or enrichment.registry_id required", "send the firm page slug (e.g. \"accel\") and/or its registry_id", "enrich");
       for (const k of ["fix", "add", "leads", "confirm", "searches"]) if (k in en && !Array.isArray(en[k])) return bad(`enrichment.${k} must be an array`, "send an array (or omit it)", "enrich");
       if ("sections" in en && !isObj(en.sections)) return bad("enrichment.sections must be an object of arrays", "e.g. {\"Press coverage\":[{outlet,date,headline,url,snippet}]}", "enrich");
-      const { data, error } = await db.rpc("research_enrich", { p_bot: bot, p_payload: en });
+      const { data, error } = await callJson((q) => q`select public.research_enrich(${bot}, ${q.json(en)}) as j`);
       if (error) return json({ error: "server error" }, 500);
       if (data.error) return json({ error: data.error }, 409);
       return json({ ok: data.valid, ...data, hint: data.valid ? (data.on_page ? "stored and on the firm page (at least one item published or merged); rejected items (if any) list the reason, fix their source and resubmit the whole file"
@@ -263,37 +303,38 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
     }
     case "sources": {
       // the trusted-source allowlist (tier 'trusted'); any other http(s) page is accepted as tier 'other'
-      const { data, error } = await db.from("trusted_source_domains").select("domain, label, kind, path_like").order("domain");
+      const { data, error } = await callJson((q) => q`select public.ingest_trusted_domains() as j`);
       return error ? json({ error: "server error" }, 500) : json({ trusted: data, other: "any other http(s) page is accepted and shown as an other source",
         never: "search or chat result pages (google/bing/duckduckgo search, grok, chatgpt, perplexity search)" });
     }
     case "needs_source": {
       // Enricher queue: bot records with no usable source (hidden publicly until a source is added via add_source)
       const n = Number(body.limit ?? 100);
-      let q = db.from("facts_needing_source").select("submission_id, registry_id, slug, firm_name, record_id, field_path, checklist_item, value, received_at")
-        .order("received_at", { ascending: false }).limit(Number.isInteger(n) && n > 0 && n <= 500 ? n : 100);
-      if (typeof body.registry_id === "string") q = q.eq("registry_id", body.registry_id);
-      if (typeof body.slug === "string") q = q.eq("slug", body.slug);
-      const { data, error } = await q;
+      const limit = Number.isInteger(n) && n > 0 && n <= 500 ? n : 100;
+      const reg = typeof body.registry_id === "string" ? body.registry_id : null;
+      const slug = typeof body.slug === "string" ? body.slug : null;
+      const { data, error } = await callJson((q) => q`select public.ingest_needs_source(${reg}, ${slug}, ${limit}) as j`);
       return error ? json({ error: "server error" }, 500) : json({ facts: data, count: (data ?? []).length });
     }
     case "firm_requests": {
       // List builders: firms visitors asked for (search had no results), most wanted first; no emails. docs/FIRM_REQUESTS.md
-      const { data, error } = await db.rpc("firm_requests_list", { p_limit: Number.isInteger(body.limit) ? body.limit : 100 });
+      const limit = Number.isInteger(body.limit) ? body.limit : 100;
+      const { data, error } = await callRows((q) => q`select row_to_json(t) as j from public.firm_requests_list(${limit}) t`);
       return error ? json({ error: "server error" }, 500) : json({ requests: data, count: (data ?? []).length,
         hint: "add the firm to research_queue with the same name (or website) and it links automatically; requesters are emailed when its research lands" });
     }
     case "add_source": {
       if (!bot || !Number.isInteger(body.submission_id) || typeof body.record_id !== "string" || typeof body.url !== "string")
         return bad("bot_id, submission_id (integer), record_id and url required", "take submission_id + record_id from action needs_source; url = the page that states the fact", "add_source");
-      const { data, error } = await db.rpc("fact_add_source", { p_sub: body.submission_id, p_record: body.record_id, p_url: body.url,
-        p_quote: typeof body.quote === "string" ? body.quote : null, p_by: bot });
+      const quote = typeof body.quote === "string" ? body.quote : null;
+      const { data, error } = await callJson((q) => q`select public.fact_add_source(${body.submission_id}, ${body.record_id}, ${body.url}, ${quote}, ${bot}) as j`);
       if (error) return json({ error: "server error" }, 500);
       return json(data, data.status === "ok" ? 200 : 400);
     }
     case "fail": {
       if (!bot || typeof body.registry_id !== "string") return bad("bot_id and registry_id required", "send the registry_id you claimed, the same bot_id, and a short reason", "fail");
-      const { data, error } = await db.rpc("research_fail", { p_id: body.registry_id, p_bot: bot, p_reason: String(body.reason ?? "").slice(0, 2000) });
+      const reason = String(body.reason ?? "").slice(0, 2000);
+      const { data, error } = await callJson((q) => q`select public.research_fail(${body.registry_id}, ${bot}, ${reason}) as j`);
       if (error) return json({ error: "server error" }, 500);
       return data.error ? json({ error: data.error }, 409) : json(data);
     }
@@ -301,7 +342,8 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       // out of scope / duplicate: marks the firm 'skipped' at once, no retries
       if (!bot || typeof body.registry_id !== "string") return bad("bot_id and registry_id required", "send the registry_id you claimed, the same bot_id, and a reason starting with skip:", "skip");
       const reason = String(body.reason ?? "").slice(0, 1990);
-      const { data, error } = await db.rpc("research_skip", { p_id: body.registry_id, p_bot: bot, p_reason: reason.toLowerCase().startsWith("skip:") ? reason : `skip: ${reason}` });
+      const why = reason.toLowerCase().startsWith("skip:") ? reason : `skip: ${reason}`;
+      const { data, error } = await callJson((q) => q`select public.research_skip(${body.registry_id}, ${bot}, ${why}) as j`);
       if (error) return json({ error: "server error" }, 500);
       return data.error ? json({ error: data.error }, 409) : json(data);
     }
@@ -309,14 +351,15 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       // list open gaps (optionally registry_id) so a gap-fill bot researches ONLY those items
       const rid = typeof body.registry_id === "string" ? body.registry_id : null;
       const n = Number(body.limit ?? 100);
-      const { data, error } = await db.rpc("research_gaps_list", { p_registry: rid, p_limit: Number.isInteger(n) ? n : 100 });
+      const limit = Number.isInteger(n) ? n : 100;
+      const { data, error } = await callJson((q) => q`select public.research_gaps_list(${rid}, ${limit}) as j`);
       return error ? json({ error: "server error" }, 500) : json({ gaps: data, count: (data ?? []).length });
     }
     case "claim_gap": {
       // claims ALL open gaps of one firm (optional registry_id) and puts the firm in 'claimed' for one merged resubmit
       if (!bot) return bad("bot_id required", "add a stable \"bot_id\" string (the same on every call)", "claim_gap");
       const rid = typeof body.registry_id === "string" ? body.registry_id : null;
-      const { data, error } = await db.rpc("research_claim_gaps", { p_bot: bot, p_registry: rid });
+      const { data, error } = await callJson((q) => q`select public.research_claim_gaps(${bot}, ${rid}) as j`);
       if (error) return json({ error: "server error" }, 500);
       return data.error ? json({ error: data.error }, 409) : json(data);
     }
