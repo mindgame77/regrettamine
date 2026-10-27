@@ -1,3 +1,5 @@
+Step 3b abandoned 2026-10-26 ~11 PM PT; never went live. Reason: Supabase-owned functions (net, auth, cron, storage...) stay executable by PUBLIC and can't be revoked without superuser; secrets can't be set from here.
+
 # Rollback for the ingest login (step 3b)
 
 Recorded from the live function before this change was merged.

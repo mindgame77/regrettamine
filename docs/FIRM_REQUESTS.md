@@ -24,7 +24,7 @@ trigger matches the name to a firm that already has a page, the request is linke
 
 ## For list builders
 * View `firm_requests_open` (service role): id, name, website, website_domain, requesters, first/last requested. Most wanted first. No emails.
-* RPC `firm_requests_list(p_limit)` (service role, and the ingest login `bot_ingest`), or research-ingest `{"action": "firm_requests", "limit": 100}`.
+* RPC `firm_requests_list(p_limit)` (service role), or research-ingest `{"action": "firm_requests", "limit": 100}`.
 * Optional: add the firm to `research_queue` as usual (its `req-<id>` row is then dropped as `skipped`). Adding a queue
   row does not create a page. A request with the same name key or website domain is **linked automatically**
   (trigger `zz_firm_request_link`) to a page that already exists. Link by hand: `select firm_request_link(<request id>, '<registry_id>')`.

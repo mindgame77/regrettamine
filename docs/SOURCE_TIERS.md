@@ -11,7 +11,7 @@ Every source URL is tagged by `source_tier(url)`:
 ## needs_source
 A fact or record with no usable source is **kept** (raw bot data is never changed), flagged `needs_source`, **hidden on
 public pages**, and queued for the Regretamin Enricher:
-* view `facts_needing_source` (service role). The ingest door calls `ingest_needs_source` instead of reading the view. research-ingest `{"action": "needs_source"}`.
+* view `facts_needing_source` (service role); research-ingest `{"action": "needs_source"}`.
 * add a source: `fact_add_source(...)` / research-ingest `{"action": "add_source", "submission_id", "record_id", "url"}`.
   Once it has a source, the fact shows.
 
