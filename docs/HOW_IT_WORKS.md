@@ -11,12 +11,13 @@ unlocks the full page. Checks and Full report are two views of that same page. (
 
 ## 2. The bots (who collects the data)
 Bots only **collect**. They never write to the live page tables. Everything they send lands in the holding area (section 3).
+Bots write only to the bots schema; the Enricher/publish path is the only way into firm records.
 
 | Bot | What it does | Where its data lands |
 |---|---|---|
-| Researchers (`toxy-researcher-*`, plus the friend's `portal-night-bot*`) | Research a firm and send a full "dump" (`submit`) | `research_submissions` |
-| Researcher 3 (`toxy-researcher-3`) | Handles paid checks and "Request this firm" requests first (docs/ON_DEMAND.md, docs/FIRM_REQUESTS.md) | `research_submissions` |
-| Enricher (`toxy-enricher`) | Adds structured items to an existing firm, section by section (`enrich`) and logs every search | `research_enrichments`, `search_log` |
+| Researchers (`toxy-researcher-*`, plus the friend's `portal-night-bot*`) | Research a firm and send a full "dump" (`submit`) | `bots.research_submissions` |
+| Researcher 3 (`toxy-researcher-3`) | Handles paid checks and "Request this firm" requests first (docs/ON_DEMAND.md, docs/FIRM_REQUESTS.md) | `bots.research_submissions` |
+| Enricher (`toxy-enricher`) | Adds structured items to an existing firm, section by section (`enrich`) and logs every search | `bots.research_enrichments`, `bots.search_log` |
 | List builders | Pick which firms to research next, including firms visitors asked for | `research_queue`, `firm_requests` |
 | Checker / Activity Collector | Covered by the same data rules (docs/DATA_RULES.md) | holding area |
 
@@ -27,7 +28,7 @@ A researcher (`research_submit`) can upload at most 20 dumps a minute for its ow
 `rate_limited: max 20 uploads per minute per bot, retry shortly`, nothing was stored. Wait and retry the same upload.
 
 ## 3. Holding area vs live data
-* **Holding area** (`research_submissions`, `research_enrichments`): what bots sent, kept exactly as sent. Never
+* **Holding area** (`bots.research_submissions`, `bots.research_enrichments`): what bots sent, kept exactly as sent. Never
   edited and never shown to the public.
 * **Live data**: the page tables (people roles, profile facts, legal items, timeline, press, reviews, funds, deals,
   check rows, plus `fact_sources`, which holds the source links). Only these are shown on the site.
@@ -119,6 +120,7 @@ Important: paid on-demand research results now also wait for a batch approval be
   * `regretamin-ondemand-tick` every 2 minutes: refunds paid checks not done within 24 h and sends ready/refund emails.
   * `regretamin-refill-yearly` hourly: refills the checks on yearly plans.
   * `downgrade-lapsed-payments` hourly: downgrades unpaid plans.
+  * `bots-search-log-retention` nightly: deletes `bots.search_log` rows older than 30 days that are tied to a firm. Rows with no firm are left for a later decision.
 
   There is **no** scheduled publishing.
 * **Emails** go out as plain text from `support@regretamin.com` (Resend): ready, request ready, refund and received.
@@ -134,11 +136,11 @@ There are exactly two reference pages that show what a good page looks like: **Y
 | Database, Edge Functions, scheduled jobs | Supabase project `sxxgvkdwgiouyqciztec` |
 | Database changes | `supabase/migrations/` (applied in name order, tested in CI on Postgres 16) |
 | Bot door | Edge Function `research-ingest` |
-| Holding area | `research_submissions`, `research_enrichments`, `search_log` |
+| Holding area | `bots` schema: `research_submissions`, `research_enrichments`, `search_log`, `research_gaps`, `enrichment_rows`, `ingest_keys`, `ingest_rate`, `ingest_settings`, `bot_feedback`, `fact_source_additions`, `firm_lps`, `firm_lp_summary`. `research_queue` stays in `public` |
 | Verdicts per item | `publish_checks` |
 | Batches | `publish_batches`, `publish_batch_firms` |
 | Backups and undo copies | `cleanup_backup` |
 | Locks / removed | `locked_rows`, `removed_items` |
 | Alerts | `section_count_alerts`, `section_counts` |
-| Switches | `ingest_settings` (`auto_promote_enrichment` = 0 on the live site) |
+| Switches | `bots.ingest_settings` (`auto_promote_enrichment` = 0 on the live site) |
 | Detailed docs | DATA_RULES, ENRICHER, SOURCE_TIERS, DEDUPE, ON_DEMAND, FIRM_REQUESTS, GOLD_EXAMPLES, data-model, toxy-score-v2-rules |

@@ -44,8 +44,11 @@ def test_unchecked_page_lifecycle():
         assert cur.execute("select count(*) from firm_sitemap(1, 10000) where slug = %s", (slug,)).fetchone()[0] == 0
         sug = [r["slug"] for r in _j(cur.execute("select firm_suggest('zz quokka')").fetchone()[0])]
         assert sug == ["zz-quokka-capital", slug]                   # findable, ranked below the checked firm
-        # research arrives: same page becomes a full, indexable page
+        # a bot upload stays in the holding area; the page upgrades when ensure_firm_for_registry runs
         cur.execute("insert into research_submissions (registry_id, payload, valid) values ('zz-u1', %s, true)", (json.dumps(PAYLOAD),))
+        assert cur.execute("select id, slug, indexable from firms where registry_id = 'zz-u1'").fetchone() == (fid, slug, False)
+        assert cur.execute("select count(*) from firm_sitemap(1, 10000) where slug = %s", (slug,)).fetchone()[0] == 0
+        cur.execute("select ensure_firm_for_registry('zz-u1', false)")
         assert cur.execute("select id, slug, indexable from firms where registry_id = 'zz-u1'").fetchone() == (fid, slug, True)
         assert cur.execute("select count(*) from firm_sitemap(1, 10000) where slug = %s", (slug,)).fetchone()[0] == 1
         P = _j(cur.execute("select firm_page(%s, %s, false)", (slug, anon)).fetchone()[0])

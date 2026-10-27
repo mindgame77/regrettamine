@@ -60,9 +60,12 @@ def test_paid_research_lifecycle():
         cur.execute("insert into research_submissions (registry_id, bot_id, payload, valid) values ('zz-od1', 'toxy-researcher-3', %s, true)", (json.dumps(PAYLOAD),))
         stored = _j(cur.execute("select payload from research_submissions where registry_id = 'zz-od1'").fetchone()[0])
         assert stored["firm"]["generated_at"] == "2026-10-25T00:38:26Z"
-        assert str(cur.execute("select report_date from firms where id = %s", (fid,)).fetchone()[0]) == "2026-10-25"
+        assert cur.execute("select report_date from firms where id = %s", (fid,)).fetchone()[0] is None
         assert cur.execute("select status from ondemand_jobs where firm_id = %s", (fid,)).fetchone()[0] == "done"
         assert cur.execute("select lane from research_queue where registry_id = 'zz-od1'").fetchone()[0] == "normal"
+        cur.execute("select ensure_firm_for_registry('zz-od1', false)")
+        assert cur.execute("select indexable from firms where id = %s", (fid,)).fetchone()[0] is True
+        assert cur.execute("select report_date from firms where id = %s", (fid,)).fetchone()[0] is None
         for a in (a1, a2):
             P = _j(cur.execute("select firm_page(%s, %s, false)", (slug, a)).fetchone()[0])
             assert P["status"] == "ok" and P["open"] is True and P["ondemand"]["status"] == "done"

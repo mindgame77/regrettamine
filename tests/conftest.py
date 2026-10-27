@@ -27,10 +27,16 @@ def _legacy_auto_promote():
         yield
         return
     import psycopg
+    from psycopg import sql
     with psycopg.connect(DATABASE_URL) as c:
+        # Bot tables live in bots. Tests (and this insert) use unqualified names.
+        # The role setting is test-database only; the migration does not change production roles.
+        c.execute("set search_path to bots, public")
+        dbname = c.execute("select current_database()").fetchone()[0]
+        user = c.execute("select current_user").fetchone()[0]
+        c.execute(sql.SQL("alter role {} in database {} set search_path = bots, public").format(
+            sql.Identifier(user), sql.Identifier(dbname)))
         c.execute("insert into ingest_settings(key, value) values ('auto_promote_enrichment', '1') "
                   "on conflict (key) do update set value = '1'")
-        from psycopg import sql
-        dbname = c.execute("select current_database()").fetchone()[0]
         c.execute(sql.SQL("alter database {} set app.test_auto_publish = '1'").format(sql.Identifier(dbname)))
     yield
