@@ -30,8 +30,33 @@ LOCKED = [
     "warm_firm_page_cache(integer)",
     "lock_enabled()",
 ]
-USER_ONLY = ["watch_fund(text)", "unwatch_fund(text)", "set_fund_alert(text,boolean)", "delete_my_account()"]
-PUBLIC = ["firm_page(text,uuid,boolean,text)", "firm_meta(text)", "firm_sitemap(integer,integer)", "search_funds(text)", "public_site_bundle()", "bump_firm_check(text,uuid)"]
+USER_ONLY = ["watch_fund(text)", "unwatch_fund(text)", "delete_my_account()"]
+PUBLIC = ["firm_page(text,uuid,boolean,text)", "firm_meta(text)", "firm_sitemap(integer,integer)", "public_site_bundle()", "bump_firm_check(text,uuid)"]
+# Old site RPCs. The functions stay. anon and authenticated cannot call them.
+REVOKED = [
+    "carry_anon_views(text)",
+    "fact_record_count()",
+    "firm_id_for_slug(text)",
+    "landing_funds()",
+    "my_alert_funds()",
+    "my_report_slugs()",
+    "my_watch_alerts()",
+    "my_watch_slugs()",
+    "public_firm_id(text)",
+    "search_funds(text)",
+    "set_fund_alert(text,boolean)",
+    "open_report(text,text)",
+]
+# Still callable. Do not revoke these with the old site.
+KEPT = [
+    "my_billing()",
+    "access_tier()",
+    "set_fund_alert_kind(text,text,boolean)",
+    "set_watch_alert_kind(text,boolean)",
+    "watch_fund(text)",
+    "unwatch_fund(text)",
+    "is_admin()",
+]
 
 
 def _can(cur, role, fn):
@@ -53,3 +78,10 @@ def test_internal_functions_locked():
             assert _can(cur, "authenticated", fn) in (True, None), fn
         for fn in PUBLIC:
             assert _can(cur, "anon", fn) in (True, None), fn
+        for fn in REVOKED:
+            for role in ("anon", "authenticated"):
+                assert _can(cur, role, fn) is False, (role, fn)
+            assert _can(cur, "service_role", fn) is True, fn
+        for fn in KEPT:
+            assert _can(cur, "authenticated", fn) is True, fn
+            assert _can(cur, "service_role", fn) is True, fn

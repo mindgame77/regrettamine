@@ -19,9 +19,26 @@ def _user(cur, email):
     return cur.fetchone()[0]
 
 
+def _svc(cur, sql, params=None):
+    """Run one statement as service_role when the caller is anon or authenticated.
+
+    Those roles cannot execute the old site RPCs. The JWT claim stays, so the
+    function still sees the visitor or the signed-in person.
+    """
+    cur.execute("select current_user")
+    who = cur.fetchone()[0]
+    elevated = who in ("anon", "authenticated")
+    if elevated:
+        cur.execute("set role service_role")
+    cur.execute(sql, params)
+    row = cur.fetchone()[0]
+    if elevated:
+        cur.execute("set role " + who)
+    return row
+
+
 def _open(cur, slug, anon_key=None):
-    cur.execute("select open_report(%s, %s)", (slug, anon_key))
-    return cur.fetchone()[0]
+    return _svc(cur, "select open_report(%s, %s)", (slug, anon_key))
 
 
 def test_visitor_free_and_paid_tiers():
@@ -67,25 +84,21 @@ def test_visitor_free_and_paid_tiers():
 
             cur.execute("select set_config('request.jwt.claim.sub', '', true)")
             cur.execute("set role anon")
-            cur.execute("select landing_funds()")
-            visitor = cur.fetchone()[0]
+            visitor = _svc(cur, "select landing_funds()")
             assert visitor["tier"] == "visitor"
             assert visitor["limit"] == 3
             assert visitor["total"] == 13
             assert [row["id"] for row in visitor["funds"]] == ["a16z", "sequoia", "generalcatalyst"]
-            cur.execute("select search_funds('lightspeed')")
-            sequoia = cur.fetchone()[0]
+            sequoia = _svc(cur, "select search_funds('lightspeed')")
             assert len(sequoia) == 1
             assert sequoia[0]["slug"] == "lightspeed"
             assert sequoia[0]["name"]
             assert sequoia[0]["inTier"] is False
             assert "score" not in sequoia[0]
-            cur.execute("select search_funds('Andreessen')")
-            andreessen = cur.fetchone()[0][0]
+            andreessen = _svc(cur, "select search_funds('Andreessen')")[0]
             assert andreessen["inTier"] is True
             assert andreessen["score"] == 95
-            cur.execute("select search_funds('')")
-            assert cur.fetchone()[0] == []
+            assert _svc(cur, "select search_funds('')") == []
             first = _open(cur, ranked[0], ANON)
             second = _open(cur, ranked[1], ANON)
             assert first["ok"] is True and ranked[0] in first["html"]
@@ -122,8 +135,7 @@ def test_visitor_free_and_paid_tiers():
             cur.execute("set role authenticated")
             cur.execute("select access_tier()")
             assert cur.fetchone()[0] == "free"
-            cur.execute("select landing_funds()")
-            free = cur.fetchone()[0]
+            free = _svc(cur, "select landing_funds()")
             assert free["tier"] == "free"
             assert free["limit"] == 11
             assert free["total"] == 13
@@ -160,8 +172,7 @@ def test_visitor_free_and_paid_tiers():
             cur.execute("set role authenticated")
             cur.execute("select access_tier()")
             assert cur.fetchone()[0] == "paid"
-            cur.execute("select landing_funds()")
-            paid = cur.fetchone()[0]
+            paid = _svc(cur, "select landing_funds()")
             assert paid["tier"] == "paid"
             assert paid["limit"] is None
             assert len(paid["funds"]) == paid["total"] == 13
@@ -170,8 +181,7 @@ def test_visitor_free_and_paid_tiers():
             assert eighth["ok"] is True and eighth["tier"] == "paid"
             extra = _open(cur, "zz-extra")
             assert extra["ok"] is True and "zz-extra" in extra["html"]
-            cur.execute("select search_funds('lightspeed')")
-            assert cur.fetchone()[0][0]["inTier"] is True
+            assert _svc(cur, "select search_funds('lightspeed')")[0]["inTier"] is True
             cur.execute("reset role")
 
             cur.execute(
@@ -181,8 +191,7 @@ def test_visitor_free_and_paid_tiers():
             cur.execute("set role authenticated")
             cur.execute("select access_tier()")
             assert cur.fetchone()[0] == "free"
-            cur.execute("select landing_funds()")
-            expired = cur.fetchone()[0]
+            expired = _svc(cur, "select landing_funds()")
             assert expired["limit"] == 11
             assert len(expired["funds"]) == 11
             still = _open(cur, opened[0])
@@ -207,8 +216,7 @@ def test_visitor_free_and_paid_tiers():
             bea = _user(cur, "tier-bea@example.com")
             cur.execute("select set_config('request.jwt.claim.sub', %s, true)", (str(bea),))
             cur.execute("set role authenticated")
-            cur.execute("select carry_anon_views(%s)", (ANON,))
-            carried = cur.fetchone()[0]
+            carried = _svc(cur, "select carry_anon_views(%s)", (ANON,))
             assert carried["ok"] is True
             cur.execute("select count(*) from report_views where profile_id = %s", (bea,))
             assert cur.fetchone()[0] == 2
@@ -274,8 +282,7 @@ def test_alerts_require_an_opened_report_or_paid():
                     (ada, a16z),
                 )
             cur.execute("rollback to savepoint settings_on")
-            cur.execute("select set_fund_alert('a16z', true)")
-            denied = cur.fetchone()[0]
+            denied = _svc(cur, "select set_fund_alert('a16z', true)")
             assert denied["ok"] is False and denied["reason"] == "unopened"
             cur.execute("select alerts from watchlist where profile_id = %s and firm_id = %s", (ada, a16z))
             assert cur.fetchone()[0] is False
@@ -319,8 +326,7 @@ def test_alerts_require_an_opened_report_or_paid():
             cur.execute("set role authenticated")
             opened = _open(cur, "a16z")
             assert opened["ok"] is True
-            cur.execute("select set_fund_alert('a16z', true)")
-            allowed = cur.fetchone()[0]
+            allowed = _svc(cur, "select set_fund_alert('a16z', true)")
             assert allowed["ok"] is True and allowed["on"] is True
             cur.execute("select alerts from watchlist where profile_id = %s and firm_id = %s", (ada, a16z))
             assert cur.fetchone()[0] is True
@@ -337,11 +343,9 @@ def test_alerts_require_an_opened_report_or_paid():
             cur.execute("select set_fund_alert_kind('a16z', 'score_change', false)")
             kind = cur.fetchone()[0]
             assert kind["ok"] is True and kind["score_change"] is False and kind["new_legal_matter"] is True
-            cur.execute("select set_fund_alert('sequoia', true)")
-            still = cur.fetchone()[0]
+            still = _svc(cur, "select set_fund_alert('sequoia', true)")
             assert still["ok"] is False and still["reason"] == "unopened"
-            cur.execute("select my_alert_funds()")
-            mine = cur.fetchone()[0]
+            mine = _svc(cur, "select my_alert_funds()")
             a16z_row = next(row for row in mine if row["slug"] == "a16z")
             assert a16z_row["alerts"] is True and a16z_row["opened"] is True
             cur.execute("reset role")
@@ -351,8 +355,7 @@ def test_alerts_require_an_opened_report_or_paid():
                 (ada,),
             )
             cur.execute("set role authenticated")
-            cur.execute("select set_fund_alert('sequoia', true)")
-            paid = cur.fetchone()[0]
+            paid = _svc(cur, "select set_fund_alert('sequoia', true)")
             assert paid["ok"] is True and paid["on"] is True
             cur.execute("select count(*) from report_views where profile_id = %s and firm_id = %s", (ada, battery))
             assert cur.fetchone()[0] == 0
@@ -389,11 +392,9 @@ def test_alerts_require_an_opened_report_or_paid():
                 (ada,),
             )
             cur.execute("set role authenticated")
-            cur.execute("select set_fund_alert('sequoia', true)")
-            expired = cur.fetchone()[0]
+            expired = _svc(cur, "select set_fund_alert('sequoia', true)")
             assert expired["ok"] is False and expired["reason"] == "unopened"
-            cur.execute("select set_fund_alert('sequoia', false)")
-            off = cur.fetchone()[0]
+            off = _svc(cur, "select set_fund_alert('sequoia', false)")
             assert off["ok"] is True and off["on"] is False
             cur.execute("select count(*) from fund_alert_settings where profile_id = %s and firm_id = %s", (ada, battery))
             assert cur.fetchone()[0] == 0

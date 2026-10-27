@@ -3,8 +3,7 @@ import importlib.util
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-# Load the renderer by file path. Putting launch/ on sys.path would shadow the
-# repo's build.py when the rest of the suite does `from build import ...`.
+# Load the renderer by file path. launch/ is not a Python package.
 _spec = importlib.util.spec_from_file_location("launch_legal", ROOT / "launch" / "legal" / "__init__.py")
 legal = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(legal)

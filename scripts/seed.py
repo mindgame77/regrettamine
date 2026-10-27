@@ -68,26 +68,16 @@ def load_db():
 
 
 def seed_report_bundles(cur):
-    """Render each report from the database, the same way the build does, for open_report."""
-    from build import render_report_payload
-    from regrettamine.assemble import assemble_site
-
-    cur.execute("select published_site_bundle()")
-    bundle = cur.fetchone()[0]
-    _home, funds = assemble_site(bundle)
-    import build
-    funds = build.apply_strings_to_data(funds)
-    build.assign_list_ranks(funds)
-    for slug, fund in funds.items():
-        html = render_report_payload(fund, "../../")
-        cur.execute(
-            """
-            insert into report_bundles (firm_id, payload)
-            select id, jsonb_build_object('html', %s::text) from firms where slug = %s
-            on conflict (firm_id) do update set payload = excluded.payload, updated_at = now()
-            """,
-            (html, slug),
-        )
+    """One report body per published firm. The old page renderer is gone."""
+    cur.execute(
+        """
+        insert into report_bundles (firm_id, payload)
+        select id, jsonb_build_object('html', '<article id="evidence">' || slug || '</article>')
+        from firms
+        where published and not is_test
+        on conflict (firm_id) do update set payload = excluded.payload, updated_at = now()
+        """
+    )
 
 
 def main():
