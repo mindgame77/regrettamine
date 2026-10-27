@@ -5,8 +5,9 @@ and https://regretamin.com/vc/a16z/ . Accel is no longer a gold example (2026-10
 Bots compare their output against these two pages before submitting.
 "Wrong" examples below may come from other firms (e.g. accel) as real mistakes to avoid; they are not gold.
 
-Read with docs/DATA_RULES.md. Every item is one structured JSON object with a
+Read with docs/DATA_RULES.md and docs/CONFLICT_RULE.md. Every item is one structured JSON object with a
 `source` URL. Free text goes only in `{"note": "..."}`; `{"item": "..."}` is refused.
+When two sourced values are the same fact, the conflict rule picks which one is shown. The other stays, with its source.
 
 ## People / officers
 Right (y-combinator, Form ADV Schedule A):
@@ -96,4 +97,4 @@ Why: a scraped label is not a round, and the source is another company's page. T
 5. Quotes: no wrapping quote marks, no meta lines.
 6. Reviews have `type`; legal has `status`.
 7. Research notes, "nothing found", leads → `{"note":...}` only.
-8. Check the page for an existing item first (no duplicates); flag conflicts (e.g. someone "left" but is still listed as a member).
+8. Check the page for an existing item first (no duplicates); flag conflicts (e.g. someone "left" but is still listed as a member). Which value is shown is docs/CONFLICT_RULE.md. A fund's size and a total raised are different facts: both stay, each labeled.
