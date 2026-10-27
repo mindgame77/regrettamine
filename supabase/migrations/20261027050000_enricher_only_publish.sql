@@ -136,7 +136,7 @@ begin
     res := promote_enrichment(p_firm);
   else
     res := jsonb_build_object('closed', true, 'facts', 0, 'reason', 'researcher submissions do not write the public page');
-    reasons := reasons || 'researcher submissions do not write the public page';
+    reasons := reasons || 'researcher submissions do not write the public page'::text;
   end if;
   select jsonb_object_agg(section, n) into b1 from _section_counts_now(p_firm);
   r1 := _firm_rules_n(p_firm); c1 := _firm_collisions_n(p_firm);
