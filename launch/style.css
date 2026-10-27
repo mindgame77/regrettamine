@@ -373,7 +373,6 @@ button.rgt-tab{border:0;background:transparent;cursor:pointer}
 .rgt-see a,.rgt-see button{background:var(--vio);color:#fff;border:0;border-radius:12px;padding:15px 30px;font:700 16px 'DM Sans';text-decoration:none;box-shadow:0 6px 18px rgba(108,59,255,.25);cursor:pointer}
 #panel-checks[hidden],#panel-full[hidden]{display:none}
 @media (max-width:640px){.rgt-tabs{width:100%;max-width:100%}.rgt-tab{padding:10px 12px}}
-.hfs.heros{margin-top:14px}
 .rws{margin-top:4px}.rw{padding:11px 0;border-bottom:1px solid var(--line)}.rw:last-child{border-bottom:0}
 .rt{font-weight:700;font-size:15px;color:var(--ink)}.rn{color:var(--ink2);font-size:14px;margin-top:2px}
 .rm{font-size:12px;color:var(--mute);margin-top:4px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}.rm .sc{margin:0}
