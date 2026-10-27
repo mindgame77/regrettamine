@@ -61,6 +61,12 @@ def insert_rows(cur, table, rows):
     )
 
 
+def load_db():
+    """(home, funds) from DATABASE_URL. The loader lives in regrettamine, not the old site build."""
+    from regrettamine.load_db import load_db as load
+    return load()
+
+
 def seed_report_bundles(cur):
     """Render each report from the database, the same way the build does, for open_report."""
     from build import render_report_payload

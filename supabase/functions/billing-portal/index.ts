@@ -5,9 +5,9 @@ import { portalConfig, stripeKey as activeKey } from "../_shared/stripe_env.ts";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const PORTAL_CONFIG = portalConfig(); // STRIPE_<MODE>_PORTAL_CONFIG
-const RETURN_URL = "https://mindgame77.github.io/regrettamine/settings/?tab=billing";
-// The launch Account page passes its own URL; only same-owner GitHub Pages URLs are accepted.
-const RETURN_RE = /^https:\/\/mindgame77\.github\.io\/[A-Za-z0-9._\/?=&-]*$/;
+const RETURN_URL = "https://regretamin.com/account/";
+// The Account page passes its own URL. Accept the live site and the old GitHub Pages host.
+const RETURN_RE = /^https:\/\/(regretamin\.com|www\.regretamin\.com|mindgame77\.github\.io)\/[A-Za-z0-9._\/?=&-]*$/;
 
 const cors = {
   "Access-Control-Allow-Origin": "*",

@@ -3,8 +3,8 @@
 Rule: **anything you see (words, prices shown, section titles/order, colors) is a repo file. No DB change needed.**
 The database only holds facts about firms and per-user data.
 
-After any repo edit below: `launch/deploy_preview.sh` → preview at https://mindgame77.github.io/regretamin-preview/ (about 1 min).
-It never touches the live site (mindgame77.github.io/regrettamine).
+The live site is **https://regretamin.com/**, published by Cloudflare Pages (project `regretamin`) when `main` is green.
+A merge to main also deploys a Cloudflare preview branch. `launch/deploy_preview.sh` still publishes a separate GitHub Pages preview at https://mindgame77.github.io/regretamin-preview/ and does not change regretamin.com.
 
 | Want to change | Edit | Then run |
 |---|---|---|
@@ -77,8 +77,8 @@ To stop a code: open the promotion code → **Archive** (or make it inactive). L
 
 ## Firm pages for every published firm (edge rendering)
 - One template per view: build.py writes `site-launch/_tpl/summary.html`, `_tpl/full.html`, `_tpl/404.html` (`{{HEAD}} {{NAME}} {{SLUG}}`).
-- The 30 static pages in `data/launch/` are filled from the same template (GitHub Pages, until the DNS move).
-- On Cloudflare Pages, `launch/functions/vc/[[path]].js` serves `/vc/<slug>/` and `/vc/<slug>/full/` for every firm that is
+- The static pages in `data/launch/` are filled from the same template when Supabase secrets are absent. With the secrets set, the build writes one page per published firm.
+- Cloudflare Pages is the live host. `launch/functions/vc/[[path]].js` serves `/vc/<slug>/` and `/vc/<slug>/full/` for every firm that is
   published, real, not test, not deleted (`firm_meta` RPC), 404 otherwise; cached 1h at the edge.
 - `/sitemap.xml` (Cloudflare) is an index: `sitemaps/static.xml` + `sitemaps/firms-N.xml` (10,000 firms each, `firm_sitemap` RPC). Only /vc/<slug>/ is listed: /vc/<slug>/full/ is `noindex, follow` with a self canonical (decided Oct 23). Both firm pages carry WebPage JSON-LD with `isAccessibleForFree:false` and `hasPart` → `.gveil` (the blurred check table).
 - `launch/edge/firm.mjs` mirrors build.py `firm_head`/`fill`; `node --test launch/edge/firm.test.mjs` checks they match.

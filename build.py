@@ -1181,14 +1181,6 @@ def load_site():
     return apply_strings_to_data(home), apply_strings_to_data(funds), {}, True
 
 
-def load_db():
-    """Full site data from the database, for tests and tools. Same path as the build."""
-    home, funds, _fragments, full = load_site()
-    if not full:
-        raise SystemExit("load_db needs the full bundle (service key, DATABASE_URL or SITE_BUNDLE)")
-    return home, funds
-
-
 def render_report_payload(fund, prefix):
     """Report body stored in report_pages. Not written into the public HTML."""
     page = render_fund_page(fund, prefix)

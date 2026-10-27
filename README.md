@@ -1,25 +1,25 @@
 # Regretamine
 
-Founder tool for background-checking a VC fund before taking their money. This repo is the static site for [regretamin.com](https://regretamin.com): the fund list at `/` and the Andreessen Horowitz report at `/vc/a16z/`.
+Founder tool for background-checking a VC fund before taking their money. The live site is [regretamin.com](https://regretamin.com), published by Cloudflare Pages from the launch build (`python3 launch/build.py` writes `site-launch/`).
 
-The pages are plain HTML, CSS, and JavaScript. `build.py` turns either the JSON in `data/` or a Supabase Postgres database into the site. Login is Google or email and password (`/login/`). A free account is at `/account/` (watchlist, alerts, share experience). Anonymous visitors get 2 reports, an account gets 5 more, then a plans placeholder with no prices and no checkout. The watchlist uses the same fund list as the homepage.
+The pages are plain HTML, CSS, and JavaScript. Login is Google or an email link (`/login/`). Account is at `/account/`. Plans and checkout are at `/plans/`. See `launch/HOW-TO-CHANGE.md` for what to edit.
+
+`build.py` at the repo root still builds the previous site into `site/`. That output is not what regretamin.com serves.
 
 ## Run it locally
 
 ```bash
-python3 build.py
-python3 -m http.server -d site 8000
+python3 launch/build.py
+python3 -m http.server -d site-launch 8000
 ```
 
-Open [http://localhost:8000/](http://localhost:8000/) and [http://localhost:8000/vc/a16z/](http://localhost:8000/vc/a16z/).
+Open [http://localhost:8000/](http://localhost:8000/). The previous site is still `python3 build.py` then `python3 -m http.server -d site 8000`. `site/` and `site-launch/` are generated. Do not edit them by hand. Python 3.9 or newer is enough. There is no install step.
 
 ## Dates
 
 Every date a visitor sees on the launch site (`launch/`, served at regretamin.com) goes through `launch/js/dates.js` (`RegretDate`). A date on its own is `Mar 15, 2024`. Where a time is shown it is Pacific: `Mar 15, 2024, 3:58 PM PT`. New pages and templates use that helper. Do not call `toLocaleDateString` or format a date by hand.
 
-`site/` is generated. Do not edit it by hand. Python 3.9 or newer is enough. There is no install step.
-
-Links and assets are relative, so the same build works at the project URL (`https://<user>.github.io/regrettamine/`) and at the domain root (`https://regretamin.com/`). No base-path setting.
+The live host is the domain root (`https://regretamin.com/`). Links in the launch build are root-relative.
 
 ## Add a fund in JSON
 
@@ -50,7 +50,7 @@ One-time setup:
 4. GitHub → this repo → **Settings → Secrets and variables → Actions**. Add:
    - `SUPABASE_URL` — the project URL
    - `SUPABASE_ANON_KEY` — the publishable key (`sb_publishable_...`) is recommended. The legacy anon JWT also works. Both were tested against the live project and the build matched the JSON output. `SUPABASE_URL` and `SUPABASE_ANON_KEY` are set on this repo.
-5. Re-run **Deploy to GitHub Pages** (or push to `main`). The workflow passes the secrets into `build.py`. If either secret is missing, the workflow keeps building from `data/`.
+5. Push to `main`. The workflow passes `SUPABASE_URL` and `SUPABASE_ANON_KEY` into `launch/build.py`, which publishes to Cloudflare. The root `build.py` step still receives the service-role key. If either public secret is missing, the launch build falls back to `data/launch/`.
 
 Anon can read published firms only. A signed-in person can insert their own watchlist rows, alert preferences, report views, and pending reviews. Writes in the Table Editor use the logged-in dashboard role, which bypasses row-level security. The anon key cannot insert or update content.
 
@@ -58,15 +58,13 @@ Anon can read published firms only. A signed-in person can insert their own watc
 
 The site talks to Supabase Auth from the browser (`@supabase/supabase-js` on a CDN). `build.py` writes `site/js/supabase-config.js` from `SUPABASE_URL` and `SUPABASE_ANON_KEY`. Only the publishable key is embedded.
 
-In the Supabase dashboard for this project:
+In the Supabase dashboard for this project (these fields are dashboard settings; this repo does not push them):
 
-1. **Authentication → Providers → Google**: turn it on. Create an OAuth client in Google Cloud (authorized redirect `https://<project-ref>.supabase.co/auth/v1/callback`) and paste the Client ID and Client secret. Leave GitHub off. Leave magic link / email OTP off. Email + password stays on.
+1. **Authentication → Providers → Google**: turn it on. Create an OAuth client in Google Cloud (authorized redirect `https://<project-ref>.supabase.co/auth/v1/callback`) and paste the Client ID and Client secret. Leave GitHub off. Email magic link is on for the launch site.
 2. **Authentication → URL configuration**
-   - Site URL: `https://mindgame77.github.io/regrettamine/`
-   - Redirect URLs: `https://mindgame77.github.io/regrettamine/` and `https://mindgame77.github.io/regrettamine/login/reset/`
-3. If **Confirm email** is on, the extra 5 reports stay locked until the person confirms. Google accounts are already confirmed.
-
-No Stripe and no prices. The plans card says the price is not set.
+   - Site URL: `https://regretamin.com/`
+   - Redirect URLs: `https://regretamin.com/**` so Google and the email link can return to the page the person was on (`/`, `/login/`, `/account/`, `/plans/`, `/vc/<slug>/`).
+3. **Authentication → Email templates**: the repo copies are `supabase/templates/confirmation.html`, `email_change.html`, and `recovery.html`. The dashboard templates are separate. Point their logo at `https://regretamin.com/assets/logo/lockup-light@2x.png`.
 
 ### Add or edit a firm
 
@@ -96,26 +94,15 @@ Do not set `published` on a row with `is_test` true. The database rejects it. `s
 
 ## Deploy
 
-Pushes to `main` run `.github/workflows/pages.yml`, which builds `site/` and deploys it with GitHub Actions.
+Pushes to `main` run `.github/workflows/pages.yml`. The launch build is `python3 launch/build.py` (output `site-launch/`). The `cloudflare-preview` job publishes that directory to the Cloudflare Pages project `regretamin`: a preview branch, then production. Production is **https://regretamin.com/** (and `regretamin.pages.dev`).
 
-The repository owner has to turn Pages on once:
+The same workflow still uploads a GitHub Pages artifact. That host is not the live site.
 
-1. GitHub → this repo → **Settings → Pages**.
-2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
-3. Merge to `main` (or re-run the “Deploy to GitHub Pages” workflow).
-4. When the deploy job is green, the site is at **https://mindgame77.github.io/regrettamine/**.
+Check a change locally before deploying:
 
-If the deploy fails with a Pages site error before that setting is saved, set the source and re-run the workflow. The URL is also printed on the workflow run and on the Pages settings screen.
+```bash
+python3 launch/build.py
+python3 -m http.server -d site-launch 8000
+```
 
-### Custom domain (regretamin.com)
-
-A `CNAME` file is not in the repo yet, so the `github.io` URL keeps working before DNS exists. When you are ready:
-
-1. Add a file named `CNAME` at the repo root whose only line is `regretamin.com`. `build.py` copies it into the published site. Commit it to `main`.
-2. At the DNS host, point the apex at GitHub Pages:
-   - `A` records for `@`: `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
-   - or an `ALIAS` / `ANAME` / apex `CNAME` to `mindgame77.github.io`, if the host supports it
-   - `www` as a `CNAME` to `mindgame77.github.io`
-3. Settings → Pages → **Custom domain**: `regretamin.com`. After DNS checks out, turn on **Enforce HTTPS**.
-
-Relative links mean you do not change paths when the custom domain goes live.
+Open [http://localhost:8000/](http://localhost:8000/).
