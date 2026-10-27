@@ -63,6 +63,8 @@ def test_report_creates_published_page_and_queue_dedupes():
         assert cur.fetchall() == [(True, False)]                # queued / invalid report: only the 'Not checked yet' page (noindex)
         assert cur.execute("select count(*) from firms where registry_id = 'zz-r2'").fetchone()[0] == 0   # flagged duplicate: no page
         cur.execute("insert into research_submissions (registry_id, payload, valid) values ('zz-r1', %s, true)", (json.dumps(PAYLOAD),))
+        assert cur.execute("select indexable from firms where registry_id = 'zz-r1'").fetchone()[0] is False  # upload does not upgrade the page
+        cur.execute("select ensure_firm_for_registry('zz-r1', false)")
         cur.execute("select id, slug, name, display_name, legal_name, sec_crd, primary_domain, hq, published, data_status, source_system "
                     "from firms where registry_id = 'zz-r1'")
         fid, slug, name, dn, legal, crd, dom, hq, pub, ds, src = cur.fetchone()

@@ -1,6 +1,8 @@
 // research-ingest: staging intake for an EXTERNAL research bot (dump format 1.2).
-// Auth: header x-ingest-key (sha256 checked against public.ingest_keys, active only). verify_jwt = false.
-// Writes ONLY to research_queue / research_submissions / research_gaps / firm_lps (staging). Never touches live/public tables.
+// Auth: header x-ingest-key (sha256 checked against bots.ingest_keys, active only). verify_jwt = false.
+// Writes through bot RPCs into the bots schema, and claims research_queue (kept in public) through those RPCs.
+// The function still connects with SUPABASE_SERVICE_ROLE_KEY. Each bot RPC sets statement_timeout 30s and
+// lock_timeout 5s locally (role settings do not apply through PostgREST's SET ROLE). See bots.bot_writer.
 // Kill switch: ingest_settings.ingest_paused = 'true' -> 503. Rate limit per key per minute -> 429.
 import { createClient } from "npm:@supabase/supabase-js@2";
 const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
@@ -92,7 +94,7 @@ function validate(d: unknown, registryId: string, allow: string[] = []) {
   return { errors, good, bad, warnings: w, tiers };
 }
 
-// optional submit.lps: [{lp_name, lp_type, status, source_url, ...}] -> public.firm_lps (only if the dump is accepted)
+// optional submit.lps: [{lp_name, lp_type, status, source_url, ...}] -> bots.firm_lps (only if the dump is accepted)
 const LP_TYPES = ["pension", "endowment", "foundation", "sovereign", "family_office", "fund_of_funds", "insurance", "corporate", "other"];
 const LP_STATUS = ["confirmed", "lead"];
 const SANCTIONS = ["clear", "possible_match", "match", "not_screened"];
