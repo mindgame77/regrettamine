@@ -36,5 +36,11 @@ def _legacy_auto_promote():
             sql.Identifier(user), sql.Identifier(dbname)))
         c.execute("insert into ingest_settings(key, value) values ('auto_promote_enrichment', '1') "
                   "on conflict (key) do update set value = '1'")
+        # The migration ships the paywall off. Tests keep it on so the locked page stays covered.
+        # A test that needs the open site sets app_settings.lock_enabled to false in its own transaction.
+        row = c.execute("select to_regclass('public.app_settings')").fetchone()
+        if row and row[0]:
+            c.execute("insert into public.app_settings(key, value) values ('lock_enabled', 'true') "
+                      "on conflict (key) do update set value = 'true'")
         c.execute(sql.SQL("alter database {} set app.test_auto_publish = '1'").format(sql.Identifier(dbname)))
     yield
