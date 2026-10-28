@@ -78,4 +78,28 @@ def test_cleanup_moves_a_register_source_and_blocks_a_failed_one():
             (fid, bad),
         ).fetchone()
         assert blocked[0] == "failure" and "rejected earlier" in blocked[1]
+        mid = cur.execute(
+            "insert into legal_matters(title) values ('ZZ Matter Held') returning id"
+        ).fetchone()[0]
+        cur.execute(
+            "insert into legal_matter_firms(matter_id, firm_id) values (%s, %s)",
+            (mid, fid),
+        )
+        cur.execute(
+            "insert into home_merge_log(firm_id, kind, item_key, action, detail) values (%s, 'legal', %s, 'held', '{}')",
+            (fid, "held:matter:" + str(mid)),
+        )
+        matter = cur.execute(
+            "select kind, passed, failed from lab_held_cleanup(true) where slug = %s and kind = 'legal'",
+            (slug,),
+        ).fetchone()
+        assert matter == ("legal", 0, 1)
+        assert cur.execute(
+            "select count(*) from legal_matter_firms where firm_id = %s and matter_id = %s",
+            (fid, mid),
+        ).fetchone()[0] == 0
+        assert cur.execute(
+            "select count(*) from home_held_backup where firm_id = %s and table_name = 'legal_matter_firms'",
+            (fid,),
+        ).fetchone()[0] == 1
         conn.rollback()
