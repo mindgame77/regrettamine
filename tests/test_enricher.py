@@ -84,14 +84,15 @@ def test_enrichment_promotes_without_touching_friend_rows():
         assert c.execute("select count(*) from firm_people_roles where id = %s", (pid,)).fetchone()[0] == 1
         # search log + section status: board_seats searched with no result counts as done
         st = dict(c.execute("select item, status from firm_section_status where slug = %s", (slug,)).fetchall())
-        assert st["press"] == "filled" and st["board_seats"] == "searched_none" and st["checks"] == "missing"
+        # bots.search_log was removed: a searched-empty section now reads as missing
+        assert st["press"] == "filled" and st["board_seats"] == "missing" and st["checks"] == "missing"
         assert c.execute("select check_mark from press_item_firms where firm_id = %s", (fid,)).fetchall() == [("checked_correct",), ("checked_correct",)]
         assert c.execute("select count(*) from next_firms_to_enrich(500) where slug = %s", (slug,)).fetchone()[0] == 1
-        assert c.execute("select count(*) from site_search_stats where source_site = 'sec.gov'").fetchone()[0] == 1
+        assert c.execute("select to_regclass('public.site_search_stats')").fetchone()[0] is None
         c.rollback()
 
 
-def test_superseded_enrichment_search_log_is_not_counted():
+def test_superseded_enrichment_searches_stay_in_payload():
     slug = "enrs-" + uuid.uuid4().hex[:8]
     with _db() as c:
         fid = c.execute("insert into firms(slug, name, short_name, published, data_status, primary_domain) values (%s, 'Enrs Test', 'Enrs', true, 'real', 'enrs.com') returning id", (slug,)).fetchone()[0]
@@ -100,11 +101,8 @@ def test_superseded_enrichment_search_log_is_not_counted():
         new = dict(old, searches=[{"section": "board_seats", "site": "sec.gov", "query": "Enrs board v2", "searched_at": "2026-10-24", "result": "error", "item_count": 0}])
         c.execute("select research_enrich('toxy-enricher', %s::jsonb)", (json.dumps(old),))
         c.execute("select research_enrich('toxy-enricher', %s::jsonb)", (json.dumps(new),))
-        # nothing is deleted: both versions stay in search_log
-        assert c.execute("select count(*) from search_log where firm_id = %s and section = 'board_seats'", (fid,)).fetchone()[0] == 2
-        # only the latest enrichment counts
-        assert c.execute("select count(*) from search_log_current where firm_id = %s and section = 'board_seats'", (fid,)).fetchone()[0] == 1
-        assert c.execute("select searches, none from firm_site_coverage where firm_id = %s and section = 'board_seats' and source_site = 'sec.gov'", (fid,)).fetchone() == (1, 0)
+        # bots.search_log and its views were removed; the payloads keep the searches
+        assert c.execute("select count(*) from research_enrichments where firm_id = %s and payload ? 'searches'", (fid,)).fetchone()[0] == 2
         st = dict(c.execute("select item, status from firm_section_status where slug = %s", (slug,)).fetchall())
         assert st["board_seats"] == "missing"
 
@@ -184,7 +182,6 @@ def test_name_only_flag_is_clear_and_leaves_the_payload_alone():
         assert c.execute("select md5(payload::text) from research_enrichments where id = %s", (before[0],)).fetchone()[0] == before[1]
         rows = dict(c.execute("select n, name_only from firm_check_rows where firm_id = %s and name_only is not null order by n", (fid,)).fetchall())
         assert rows[1] == ["EU consolidated list"] and 3 not in rows
-        assert c.execute("select result, name_only from search_log_current where firm_id = %s and section = 'checks' and query = 'James Kim'", (fid,)).fetchone() == ("none", True)
         # near-match boilerplate and a surname-only line do not invent a list
         p3 = _checks(slug)
         p3["notes"] = "result recorded as 'none' — name-only near match, unconfirmed (2 name-only near match(es)). Surname-only match for Tucker, not this person."
