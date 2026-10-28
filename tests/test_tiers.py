@@ -41,6 +41,7 @@ def _open(cur, slug, anon_key=None):
     return _svc(cur, "select open_report(%s, %s)", (slug, anon_key))
 
 
+@pytest.mark.skip(reason="The old site RPCs this test calls were dropped.")
 def test_visitor_free_and_paid_tiers():
     import psycopg
 
@@ -235,6 +236,7 @@ def test_visitor_free_and_paid_tiers():
         conn.rollback()
 
 
+@pytest.mark.skip(reason="The old site RPCs this test calls were dropped.")
 def test_alerts_require_an_opened_report_or_paid():
     import psycopg
 
@@ -454,6 +456,7 @@ def test_alerts_require_an_opened_report_or_paid():
         conn.rollback()
 
 
+@pytest.mark.skip(reason="open_report was dropped with the old site.")
 def test_open_report_reads_bundle_and_hides_it():
     import psycopg
 
