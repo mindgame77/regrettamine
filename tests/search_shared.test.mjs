@@ -10,7 +10,7 @@ const searchSrc = fs.readFileSync(new URL('launch/js/search.js', root), 'utf8');
 const appSrc = fs.readFileSync(new URL('launch/js/app.js', root), 'utf8');
 const companySrc = fs.readFileSync(new URL('launch/js/company.js', root), 'utf8');
 const buildSrc = fs.readFileSync(new URL('launch/build.py', root), 'utf8');
-const guide = fs.readFileSync(new URL('docs/HOW_IT_WORKS.md', root), 'utf8');
+const guide = fs.readFileSync(new URL('docs/archive/HOW_IT_WORKS.md', root), 'utf8');
 
 const sandbox = {
   window: { REGRET: { copy: { js: {} } } },
