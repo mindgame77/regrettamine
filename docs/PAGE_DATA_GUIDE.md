@@ -29,7 +29,7 @@ These rules override the general “elsewhere online is Unconfirmed” line for 
 
 | Page part | Shown | Held or failed |
 |---|---|---|
-| Reviews | A Reddit, X, or LinkedIn post that exists, names the firm, and is copied word for word with its link. The writer says they are a founder, or the profile shows that they are. | Anonymous, with no founder claim: Unconfirmed, not shown. A dead link or a post that does not name the firm: fail. |
+| Reviews | A post on any public site (for example Reddit, X, LinkedIn, YouTube, Medium, a blog or podcast page; Alex, 2026-10-28) that exists, names the firm, and is copied word for word with its link. The writer says they are a founder, or the profile shows that they are. | Anonymous, with no founder claim: Unconfirmed, not shown. Glassdoor and other employee reviews: not used. A dead link or a post that does not name the firm: fail. |
 | News | A story on TechCrunch, Reuters, Bloomberg, Axios, the Financial Times, the Wall Street Journal, CNBC, Forbes, or The Information, when the link opens and the story names the firm. | Any other blog or unknown site: Unconfirmed, not shown. A dead link, or a story that does not name the firm: fail. |
 | Deals | The company’s own press release, or an SEC Form D. Both are level 2. The same known outlets as News are accepted. The amount and the Lead flag are filled only when that source states them. | Any other page: Unconfirmed, not shown. |
 | Lawsuits | CourtListener, PACER, or uscourts.gov. These are level 1. | Any other page: Unconfirmed, not shown. |
@@ -128,6 +128,8 @@ On the lab firms, once this is built:
 - Up to 20 people, plus Show all.
 
 A deal row has a sector column, and a column that reads round · amount · Lead. Those three are filled only when a source states them. An empty amount stays empty.
+
+Latest investments block (Alex, 2026-10-28): shows the 5 newest deals, or all of them when a firm has fewer than 5. A deal with no stated sector leaves the sector cell blank. It never reads "No data yet". The sector summary sits inside this block: pills with deal counts for the top 5 sectors (largest first), a grey "Other N" pill for the rest, and "Show all" opening the deals pop-up. Counts only, no percentages. Deals with no sector are not counted and get no pill. The pills count all of the firm's deals, not only the last 12 months. The summary is shown only when the firm has 10 or more deals in total; with fewer, it is hidden on the page and in the pop-up. The same rules apply to the pop-up header. Deals, last 12 mo is a separate number on the page: just the count of deals in the last 12 months.
 
 Soft caps per firm: 500 news, 100 LPs, 200 deals. Past the cap, new items still come in and the oldest move to an archive file. Lawsuits, regulator actions, and negative news are never archived. One alert per firm when a cap is hit. Legal items and the 10 checks have no cap and are never archived or deleted. Only confirmed LPs are shown. A lead stays hidden.
 
