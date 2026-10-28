@@ -88,7 +88,8 @@ def test_bot_upload_stays_in_bots_and_site_rpcs_still_work():
         assert any(c.startswith("lock_timeout=") for c in config)
 
         assert cur.execute("select to_regprocedure('bots.purge_old_search_log()')").fetchone()[0] is None
-        assert cur.execute("select count(*) from cron.job where jobname = 'bots-search-log-retention'").fetchone()[0] == 0
+        if cur.execute("select to_regclass('cron.job')").fetchone()[0] is not None:
+            assert cur.execute("select count(*) from cron.job where jobname = 'bots-search-log-retention'").fetchone()[0] == 0
 
         friend = cur.execute(
             "select active from bots.ingest_keys where name = 'external-friend-2026-10-23'").fetchone()
