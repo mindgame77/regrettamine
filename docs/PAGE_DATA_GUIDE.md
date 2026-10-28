@@ -470,7 +470,7 @@ The text below describes the old Overview, kept for reference until the build.
 
 ## 11. People and board seats
 
-1. Cards grouped into board, moves, and officers. Sequoia returns 15 people.
+1. Rule (Alex, 2026-10-28): only current people are shown, grouped into board and officers. The moves group is not shown. A person who left is taken off the page and archived (kept, hidden) for possible later use. News about them can still show like any news. Old note: cards grouped into board, moves, and officers. Sequoia returns 15 people.
 2. `firm_people_roles`: `person_name`, `role`, `kind`, not hidden, with a source. The older `people` and `fund_people` tables are not this section.
 3. Enricher, typically Form ADV Schedule A (officers) and board seats from filings or the firm site. The gold example uses the IAPD PDF.
 4. One person per name. Same person and kind with the same role adds the source. A different officer role is a conflict. The note guard hides Schedule A blobs.
