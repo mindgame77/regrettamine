@@ -2,7 +2,11 @@
 -- Approved by Alex 2026-10-28 09:23 PT. No export. Rollback: supabase/rollbacks/20261029010000_drop_search_log.sql
 -- check_findings, checks_from_submission and _door_key only read the payload key 'search_log', not the table: untouched.
 
-select cron.unschedule('bots-search-log-retention') where exists (select 1 from cron.job where jobname = 'bots-search-log-retention');
+do $$ begin
+  if to_regclass('cron.job') is not null then
+    perform cron.unschedule('bots-search-log-retention') where exists (select 1 from cron.job where jobname = 'bots-search-log-retention');
+  end if;
+end $$;
 
 drop trigger if exists submission_search_log on bots.research_submissions;
 drop function if exists public._submission_search_log();
