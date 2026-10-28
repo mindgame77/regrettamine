@@ -247,6 +247,7 @@ There is no written rule that a given element must come from a given site, excep
 ## 4. SEC fact pills
 
 1. Small links under the header for hero facts whose source is sec.gov, except HQ. At most 7. AUM and “fund gross assets” are labelled differently.
+   - Rules (Alex, 2026-10-28): at most 7 pills. HQ is never a pill. No two pills say the same thing. A fund (for example a newly raised fund) is never a pill. Each pill holds unique information only: if the fact is already shown anywhere else on the page, the pill does not appear.
 2. `firm_page` hero list: `firm_profile_facts` where `hero_label` is set and a `fact_sources` row exists. `company.js` `secPills` keeps only a sec.gov source.
 3. The enricher, from a Form ADV on sec.gov / adviserinfo.sec.gov. Item 5F is the assets figure the helper looks for.
 4. The fact needs a source or it is not in the hero list. The pill needs the host to be sec.gov.
