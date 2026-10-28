@@ -175,7 +175,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 |---|---|---|---|---|
 | **A9.2** | People | 10 shown + Show all | 20 | New items still come in and the oldest are archived (kept, hidden), never deleted. |
 | **A9.3** | News | Latest 10 + Show all (“The latest 10 news items, plus Show all for the rest that are still on the page.”) | 50 | When a new item comes in past 50, the oldest is archived (kept in the database, hidden), never deleted. |
-| **A9.4** | Founder reviews | 1 latest + Show all (“One latest founder review, plus Show all.”) | 50 | Tell Alex; nothing is deleted. |
+| **A9.4** | Founder reviews | 1 latest + Show all (“One latest founder review, plus Show all.”) | 50 | Oldest archived (kept, hidden), never deleted; tell Alex when a firm passes 50 (Alex, 2026-10-28). |
 | **A9.5** | Deals | 1 latest + Show all (“One latest deal, plus Show all.”) | 1,000 | New items still come in and the oldest are archived (kept, hidden), never deleted. |
 | **A9.6** | Funds | Latest fund tile + "N funds on SEC record · Show all" (“One latest fund tile, plus the line “N funds on SEC record · Show all”.”) | 100 | New items still come in and the oldest are archived (kept, hidden), never deleted. |
 | **A9.7** | LPs | Only confirmed LPs are shown (see B9) | 100 (“LPs stay at 100.”) | Every list archives the oldest past its max. |

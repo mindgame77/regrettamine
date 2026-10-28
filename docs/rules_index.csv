@@ -13,7 +13,7 @@ A1.7,A1 Source ranking,A search-results page or a chat page is not a source at a
 A1.8,A1 Source ranking,"Exception (Alex, 2026-10-28): the latest fund amount (money raised for the latest fund only) may come from an approved news outlet or another trusted site th...",in PR #227
 A2.1,A2 Sources per page part,These rules override the general “elsewhere online is Unconfirmed” line for that part only.,on main
 A2.2,A2 Sources per page part,"Limited partners (LPs) | Any trustworthy source (Alex, 2026-10-28): pension or endowment reports, public filings, approved news outlets or other sites in tru...",in PR #227
-A2.3,A2 Sources per page part,"People and interviews | People: only current people at the firm are shown; people who left are not shown, and neither are their interviews (Alex, 2026-10-28).",in PR #227
+A2.3,A2 Sources per page part,"People and interviews | People: only current people at the firm are shown; people who left are not shown, and neither are their interviews (Alex, 2026-10-28).",in PR #228
 A2.4,A2 Sources per page part,"Legal cases (display, Alex 2026-10-28) | Source: court or regulator records only (unchanged).",in PR #227
 A2.5,A2 Sources per page part,"Reviews | A post on any public site (for example Reddit, X, LinkedIn, YouTube, Medium, a blog or podcast page; Alex, 2026-10-28) that exists, names the firm,...",in PR #227
 A2.6,A2 Sources per page part,"News | A story on TechCrunch, Reuters, Bloomberg, Axios, the Financial Times, the Wall Street Journal, CNBC, Forbes, or The Information, when the link opens...",on main
@@ -55,10 +55,10 @@ A8.1,A8 Live counts,"On the 10 lab firms, the 10 check counts and pills are coun
 A8.2,A8 Live counts,"If the counting logic or ingest_settings change, the same change must rerun the backfill (select public.refresh_firm_check_pills(id) from public.firms where...",on main
 A8.3,A8 Live counts,Section counts and the activity tiles are still computed when the page is read.,on main
 A8.4,A8 Live counts,Page speed is tested automatically.,on main
-A9.1,A9 List limits and archiving (the one table),"List limits (Alex, 2026-10-28).",in PR #227
+A9.1,A9 List limits and archiving (the one table),"List limits (Alex, 2026-10-28).",in PR #228
 A9.2,A9 List limits and archiving (the one table),"People | 10 shown + Show all | 20 | New items still come in and the oldest are archived (kept, hidden), never deleted.",in PR #227
 A9.3,A9 List limits and archiving (the one table),"News | Latest 10 + Show all (“The latest 10 news items, plus Show all for the rest that are still on the page.”) | 50 | When a new item comes in past 50, the...",in PR #227
-A9.4,A9 List limits and archiving (the one table),"Founder reviews | 1 latest + Show all (“One latest founder review, plus Show all.”) | 50 | Tell Alex; nothing is deleted.",in PR #227
+A9.4,A9 List limits and archiving (the one table),"Founder reviews | 1 latest + Show all (“One latest founder review, plus Show all.”) | 50 | Oldest archived (kept, hidden), never deleted; tell Alex when a firm passes 50 (Alex, 2026-10-28).",in PR #228
 A9.5,A9 List limits and archiving (the one table),"Deals | 1 latest + Show all (“One latest deal, plus Show all.”) | 1,000 | New items still come in and the oldest are archived (kept, hidden), never deleted.",in PR #227
 A9.6,A9 List limits and archiving (the one table),"Funds | Latest fund tile + ""N funds on SEC record · Show all"" (“One latest fund tile, plus the line “N funds on SEC record · Show all”.”) | 100 | New items s...",in PR #227
 A9.7,A9 List limits and archiving (the one table),LPs | Only confirmed LPs are shown (see B9) | 100 (“LPs stay at 100.”) | Every list archives the oldest past its max.,on main
