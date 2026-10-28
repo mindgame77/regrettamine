@@ -346,4 +346,4 @@ begin
 end $function$;
 
 create trigger submission_search_log after insert on bots.research_submissions for each row execute function public._submission_search_log();
-select cron.schedule('bots-search-log-retention', '30 8 * * *', 'select bots.purge_old_search_log()');
+do $$ begin if to_regclass('cron.job') is not null then perform cron.schedule('bots-search-log-retention', '30 8 * * *', 'select bots.purge_old_search_log()'); end if; end $$;
