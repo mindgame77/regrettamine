@@ -35,8 +35,7 @@ These rules override the general “elsewhere online is Unconfirmed” line for 
 | Lawsuits | CourtListener, PACER, or uscourts.gov. These are level 1. | Any other page: Unconfirmed, not shown. |
 | People | The firm’s team page or a Form ADV. The register is level 1. The firm’s team page is level 2. LinkedIn is allowed only for that person’s own job history. | Any other LinkedIn page, or a page that is not the team page or Form ADV: Unconfirmed, not shown. |
 | Social counts | Only an account that is linked from the firm’s own website. | A count taken from anywhere else: Unconfirmed, not shown. |
-| Portfolio and sectors | The portfolio company’s own website. That is level 2. | Any other site: Unconfirmed, not shown. |
-| Deal sectors (a startup’s industry) | Any source is accepted (approved by Alex on 2026-10-28). The link must be a real page that opens and must describe that startup. A 403 or block page counts as opened, with a note. The sector is only ever the value the record gives, never invented. | A dead link, a search page, a chat page, an invented link, or a page that does not describe the startup: fail. |
+| Sectors (portfolio and deals, one rule) | Any source is accepted (approved by Alex on 2026-10-28). The link must be a real page that opens and must describe that startup. A 403 or block page counts as opened, with a note. The sector is only ever the value the record gives, never invented. | A dead link, a search page, a chat page, an invented link, or a page that does not describe the startup: fail. |
 
 ## One way in
 
