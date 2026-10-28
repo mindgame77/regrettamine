@@ -306,6 +306,9 @@ revoke all on function public.checker_purge_failures() from public, anon, authen
 do $$
 begin
   if exists (select 1 from pg_extension where extname = 'pg_cron') then
+    if exists (select 1 from cron.job where jobname = 'checker-failure-retention') then
+      perform cron.unschedule('checker-failure-retention');
+    end if;
     perform cron.schedule('checker-failure-retention', '40 8 * * *', 'select public.checker_purge_failures()');
   end if;
 end $$;
