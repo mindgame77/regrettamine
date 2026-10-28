@@ -53,3 +53,4 @@ alter table public.press_item_firms drop column if exists archived_at;
 alter table public.timeline_events drop column if exists archived_at;
 
 drop function if exists public.lab_soft_caps(boolean);
+drop function if exists public.deal_sector_12m(uuid);

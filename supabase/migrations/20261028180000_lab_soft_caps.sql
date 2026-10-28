@@ -128,7 +128,10 @@ begin
 end $$;
 revoke all on function public.lab_soft_caps(boolean) from public, anon, authenticated;
 
--- Hot deal count skips archived rows. Show all still reads every real deal, including archived ones.
+-- Archived deals stay in every count that covers all deals: the last-12-months
+-- tile, the latest-deal tile, the Show all total (firm_activity_list has no
+-- archived_at filter), and deal_sector_12m. My firms counts check pills, not
+-- deals. The archive mark does not remove a deal from those counts.
 create or replace function public._firm_activity(p_firm uuid, p_open boolean)
 returns jsonb language plpgsql stable security definer set search_path = public as $$
 declare
@@ -137,10 +140,10 @@ declare
   n_deals int; n_deals12 int; n_revs int; n_close12 int;
 begin
   select count(*), count(*) filter (where i.invested_on >= since) into n_deals, n_deals12
-    from investments i where i.firm_id = p_firm and i.data_status = 'real' and i.archived_at is null;
+    from investments i where i.firm_id = p_firm and i.data_status = 'real';
   select _activity_deal(i, c) into d0
     from investments i left join portfolio_companies c on c.id = i.company_id
-   where i.firm_id = p_firm and i.data_status = 'real' and i.archived_at is null
+   where i.firm_id = p_firm and i.data_status = 'real'
    order by i.invested_on desc nulls last, c.name limit 1;
   select count(*) into n_revs from reviews r
    where r.firm_id = p_firm and r.is_public and r.moderation_status = 'approved';
@@ -165,3 +168,16 @@ begin
     'lazy', true);
 end $$;
 revoke all on function public._firm_activity(uuid, boolean) from public, anon, authenticated;
+
+-- Future 12-month sector breakdown. Archived deals count. An empty sector is "Not stated".
+create or replace function public.deal_sector_12m(p_firm uuid)
+returns table(sector text, n int)
+language sql stable security definer set search_path = public as $$
+  select coalesce(nullif(btrim(c.sector), ''), 'Not stated') as sector, count(*)::int as n
+  from investments i
+  left join portfolio_companies c on c.id = i.company_id
+  where i.firm_id = p_firm and i.data_status = 'real' and i.invested_on >= current_date - 365
+  group by 1
+  order by 2 desc, 1;
+$$;
+revoke all on function public.deal_sector_12m(uuid) from public, anon, authenticated;

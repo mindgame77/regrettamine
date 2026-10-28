@@ -91,4 +91,59 @@ def test_cap_archives_only_the_oldest_deals_and_keeps_a_lawsuit():
         assert cur.execute(
             "select count(*) from lab_cap_alerts where firm_id = %s", (fid,)
         ).fetchone()[0] == 1
+        act = cur.execute("select _firm_activity(%s, true)", (fid,)).fetchone()[0]
+        assert act["counts"]["deals"] == 201 and act["deals_12m"] == 201
+        cur.execute("update app_settings set value = 'false' where key = 'lock_enabled'")
+        listed = cur.execute(
+            "select firm_activity_list(%s, gen_random_uuid(), 'deals')", (slug,)
+        ).fetchone()[0]
+        assert listed["status"] == "ok" and len(listed["items"]) == 201
+        conn.rollback()
+
+
+def test_archived_newest_deal_stays_in_tiles_show_all_and_sector():
+    import psycopg
+
+    with psycopg.connect(DATABASE_URL) as conn, conn.cursor() as cur:
+        slug = "arch-" + uuid.uuid4().hex[:8]
+        fid = cur.execute(
+            "insert into firms(slug, name, primary_domain, published, data_status) "
+            "values (%s, 'Archive Count', 'arch.example', true, 'real') returning id",
+            (slug,),
+        ).fetchone()[0]
+        newest = cur.execute(
+            "insert into portfolio_companies(name, sector) values ('Newest Co', 'Fintech') returning id"
+        ).fetchone()[0]
+        mid = cur.execute(
+            "insert into portfolio_companies(name, sector) values ('Mid Co', 'Health') returning id"
+        ).fetchone()[0]
+        old = cur.execute(
+            "insert into portfolio_companies(name, sector) values ('Old Co', 'Climate') returning id"
+        ).fetchone()[0]
+        blank = cur.execute(
+            "insert into portfolio_companies(name, sector) values ('Blank Co', '  ') returning id"
+        ).fetchone()[0]
+        cur.execute(
+            "insert into investments(firm_id, company_id, round_name, invested_on, data_status, archived_at) values "
+            "(%s, %s, 'Series A', current_date, 'real', now()), "
+            "(%s, %s, 'Seed', current_date - 10, 'real', now()), "
+            "(%s, %s, 'Pre-seed', current_date - 400, 'real', now()), "
+            "(%s, %s, 'Seed', current_date - 1, 'real', now())",
+            (fid, newest, fid, mid, fid, old, fid, blank),
+        )
+        act = cur.execute("select _firm_activity(%s, true)", (fid,)).fetchone()[0]
+        assert act["counts"]["deals"] == 4
+        assert act["deals_12m"] == 3
+        assert act["latest_deal"]["company"] == "Newest Co"
+        assert act["latest_deal"]["round"] == "Series A"
+        cur.execute("update app_settings set value = 'false' where key = 'lock_enabled'")
+        listed = cur.execute(
+            "select firm_activity_list(%s, gen_random_uuid(), 'deals')", (slug,)
+        ).fetchone()[0]
+        assert listed["status"] == "ok"
+        assert [row["company"] for row in listed["items"]] == ["Newest Co", "Blank Co", "Mid Co", "Old Co"]
+        sectors = dict(
+            cur.execute("select sector, n from deal_sector_12m(%s)", (fid,)).fetchall()
+        )
+        assert sectors == {"Fintech": 1, "Health": 1, "Not stated": 1}
         conn.rollback()
