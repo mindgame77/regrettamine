@@ -302,7 +302,7 @@ Rule (Alex, 2026-10-28): the latest fund amount is the money raised for the late
 
 ### 6d. Assets under management tile
 
-1. Shown on the 10 lab firms only when no fund amount is available. Label “Assets under management.”
+1. Shown on the 10 lab firms only when there is no fund amount at all, including no earlier fund that raised money (see the latest fund tile rule in 6c). Label “Assets under management.”
 2. Hero fact whose label maps to Regulatory AUM, else `firm.assets` from `_firm_assets`. The helper reads a profile fact that cites Item 5F or “regulatory AUM,” skips Schedule D gross assets, and otherwise uses `firms.aum_display` when it starts with `$`.
 3. SEC Form ADV Item 5F, via the enricher. Sequoia’s display string was set by the one-off migration to `$82.2B`.
 4. A new AUM fact must contain a digit. The helper does not keep a trailing B, M, or K.
