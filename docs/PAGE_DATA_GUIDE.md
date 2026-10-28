@@ -289,6 +289,8 @@ The strip sits above the sections. It is omitted when there is no tile, no deal,
 
 Rule (Alex, 2026-10-28): if the latest fund name is missing, the tile is not shown with an empty name. The AUM (Form ADV Item 5F) is shown instead as the fallback.
 
+Rule (Alex, 2026-10-28): the latest fund amount is the money raised for the latest fund only. Its source can be SEC Form D, an approved news outlet, or another trusted site the project uses (`trusted_source_domains`), as long as that source states the amount. The register wins any conflict.
+
 1. The newest fund that has a raised amount, with the name, the amount, and a filing link. Sequoia: Sequoia Capital Fund, L.P., $22.7B, 5 Feb 2026.
 2. First choice: `funds.raised_usd` or `funds.size_usd`, `funds.name`, `funds.closed_on`, `funds.filing_url`. On the 10 lab firms, if that amount is missing, `earlierFund` reads a Funds section line shaped “Name · $amount · date.” If that is also missing, the assets tile is used.
 3. Sequoia’s two amounts were written by the one-off migration from EDGAR Form D. Other `funds` rows: unknown, often older imports. Profile-fact fund lines: the enricher, from Form D or Form ADV.
