@@ -27,7 +27,7 @@ def test_unclaimed_submit_stays_in_holding_and_switch_on_does_not_publish():
     import psycopg
 
     with psycopg.connect(DATABASE_URL) as conn, conn.cursor() as cur:
-        assert cur.execute("select _checker_publish_on()").fetchone()[0] is False
+        assert cur.execute("select _checker_publish_on()").fetchone()[0] is True
         reg = "zz-hold-" + uuid.uuid4().hex[:8]
         cur.execute(
             "insert into research_queue (registry_id, name, priority, status, claimed_by) "

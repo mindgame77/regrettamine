@@ -77,15 +77,15 @@ def test_top_level_notes_are_kept_and_never_published():
         assert c.execute("select count(*) from checked_items(%s::jsonb)", (json.dumps({"notes": {"note": "object"}}),)).fetchone()[0] == 0
         r = _enrich(c, {"slug": slug, "notes": ["Schedule A lists 14 people", "no source URL"],
                         "sections": {"Timeline": [{"date": "2009", "event": "Founded", "source": SRC}]}})
-        assert r["notes_kept"] == 2 and r["accepted_items"] == 1 and r["on_page"] is True
+        assert r["notes_kept"] == 2 and r["accepted_items"] == 1 and r["on_page"] is False
         kept = c.execute("select item->>'note', reason from publish_checks where firm_id = %s and outcome = 'note' order by id", (fid,)).fetchall()
         assert kept == [("Schedule A lists 14 people", "note kept internal (never published)"),
                         ("no source URL", "note kept internal (never published)")]
-        assert c.execute("select count(*) from timeline_events where firm_id = %s", (fid,)).fetchone()[0] == 1
+        assert c.execute("select count(*) from timeline_events where firm_id = %s", (fid,)).fetchone()[0] == 0
         only = _enrich(c, {"slug": slug, "notes": "kept only"})
         assert only["notes_kept"] == 1 and only["accepted_items"] == 0 and only["on_page"] is False
         assert c.execute("select count(*) from publish_checks where firm_id = %s and outcome = 'note' and item->>'note' = 'kept only'", (fid,)).fetchone()[0] == 1
-        assert c.execute("select count(*) from timeline_events where firm_id = %s", (fid,)).fetchone()[0] == 1
+        assert c.execute("select count(*) from timeline_events where firm_id = %s", (fid,)).fetchone()[0] == 0
         other, oid = _firm(c, "dro")
         skipped = _enrich(c, {"slug": other, "notes": "not for this firm"})
         assert skipped["notes_kept"] == 0

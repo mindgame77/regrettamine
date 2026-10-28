@@ -2,6 +2,7 @@ Update this file after every change.
 
 One line per change: date/time PT | what changed | PR link | how to roll back.
 
+2026-10-27 11:12 PM PT | Checker is on for the 10 lab firms. Enrich for those firms stays in holding. A new `research_submissions` row runs the Checker itself. Exact copies are removed. A different value keeps the winner and saves the loser as a note. Other firms still use the Enricher. | https://github.com/mindgame77/regrettamine/pull/200 | Run `supabase/rollbacks/20261028100000_checker_on_lab.sql`. Exact copies already removed are not restored. `supabase/rollbacks/20261028070000_checker_switch.sql` is unchanged.
 2026-10-27 11:10 PM PT | A finder can submit an item for any firm without claiming it. The row stays in `bots.research_submissions`. `checker_publish` stays false, so the Enricher still publishes. When that switch is on, a lab firm's enrich row is held and is not written to a page table. | https://github.com/mindgame77/regrettamine/pull/199 | Run `supabase/rollbacks/20261028090000_finder_holding_submit.sql`.
 2026-10-27 10:46 PM PT | Sources per page part added to the rulebook. Reviews, news, deals, lawsuits, people, social counts, and portfolio sites now say which links may be shown. No code and no database change in this commit. | pull request pending | Revert this commit.
 
