@@ -234,6 +234,11 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
         return json({ error: "server error" }, 500);
       }
       if (data.error) return json({ error: data.error }, 409);
+      if (data.status === "holding") return json({ ok: valid, status: "holding", held_for_checker: true,
+        submission_id: data.submission_id, accepted_records: valid ? v.good : 0, rejected_records: v.bad,
+        errors: v.errors.slice(0, 200), source_tiers: v.tiers, warnings: v.warnings.slice(0, 200),
+        hint: valid ? "stored in holding for the Checker; not written to a page table"
+          : "not accepted (kept in holding for audit); fix ALL errors and resubmit the whole dump" }, valid ? 200 : 422);
       let lpRes: any = undefined;
       if (valid && (hasLps || body.lps_over_100 === true)) {
         const r = await db.rpc("research_store_lps", { p_id: body.registry_id, p_submission: data.submission_id,
@@ -245,9 +250,10 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
         hint: valid ? (v.tiers.needs_source ? `stored; ${v.tiers.needs_source} record(s) have no usable source: kept as needs_source (hidden until a source is added). Claim the next firm` : "stored; claim the next firm") : "not accepted (kept for audit only); fix ALL errors and resubmit the whole dump once (same registry_id, same bot_id)" }, valid ? 200 : 422);
     }
     case "enrich": {
-      // Enricher results for one firm (sections + confirm/fix/add/leads, each item one structured fact with a source URL; free text only as {note}; docs/DATA_RULES.md).
-      // Stored raw in research_enrichments. Only bot_id toxy-enricher publishes onto the page at ingest.
-      // Other bots stay in the holding tables. Never touches research_submissions.
+      // Enricher results for one firm (sections + confirm/fix/add/leads, each item one structured fact with a source URL; free text only as {note}; docs/PAGE_DATA_GUIDE.md).
+      // Stored raw in research_enrichments. While checker_publish is false, bot_id toxy-enricher still publishes at ingest.
+      // While that switch is true, a lab firm stays in holding and is not written to a page table.
+      // Other bots stay in the holding tables.
       if (!bot) return bad("bot_id required", "add a stable \"bot_id\" string (the same on every call)", "enrich");
       const en = body.enrichment;
       if (!isObj(en)) return bad("enrichment must be a JSON object", "send {\"action\":\"enrich\",\"bot_id\":\"toxy-enricher\",\"enrichment\":{...your <slug>.json...}}", "enrich");

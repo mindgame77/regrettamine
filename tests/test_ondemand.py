@@ -226,9 +226,12 @@ def test_paid_job_preempts_normal_claim_and_keeps_the_upload():
         assert cur.execute("select status, claimed_by from research_queue where registry_id = 'zz-hold'").fetchone() == ("claimed", "portal-night-bot")
         assert cur.execute("select status, claimed_by, left(last_error, 13) from research_queue where registry_id = 'zz-old'").fetchone() == (
             "queued", None, "claim expired")
-        # a stranger is still rejected; the preempted bot's dump is stored as sent and does not drop researcher 3
-        denied = _j(cur.execute("select research_submit('zz-pre1', 'toxy-researcher-1', %s, 1, true, '[]'::jsonb)", (json.dumps(PAYLOAD),)).fetchone()[0])
-        assert denied["ok"] is False and "not claimed" in denied["error"]
+        # a finder who does not hold the claim stores a holding row and does not take the claim or close the paid job
+        held = _j(cur.execute("select research_submit('zz-pre1', 'toxy-researcher-1', %s, 1, true, '[]'::jsonb)", (json.dumps(PAYLOAD),)).fetchone()[0])
+        assert held["ok"] is True and held["status"] == "holding"
+        assert cur.execute("select status, claimed_by, lane from research_queue where registry_id = 'zz-pre1'").fetchone() == (
+            "claimed", "toxy-researcher-3", "paid")
+        assert cur.execute("select status from ondemand_jobs where registry_id = 'zz-pre1'").fetchone()[0] == "in_progress"
         dump = {"firm": {"generated_at": "2026-10-25T00:38:26Z", "note": "friend dump"}, "records": []}
         raw = json.dumps(dump)
         ok = _j(cur.execute("select research_submit('zz-pre1', 'portal-night-bot', %s::jsonb, 1, true, '[]'::jsonb)", (raw,)).fetchone()[0])
