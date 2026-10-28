@@ -1,7 +1,7 @@
 -- Checker as the only publisher, behind a switch that stays OFF.
 -- checker_publish = false: the Enricher publishes at ingest, as it does today.
 -- checker_publish = true: on the 10 lab firms only, the Enricher does not publish.
---   The Checker does. Other firms stay on the Enricher path.
+--   The row is copied into research_submissions and stays there. Other firms stay on the Enricher path.
 -- Nothing is deleted. Existing news check marks are not rewritten.
 -- Failed Checker rows live in bots.checker_holding and are removed after 7 days.
 -- That job does not touch research_submissions, research_enrichments, or page tables.
@@ -313,12 +313,14 @@ begin
   end if;
 end $$;
 
--- Switch OFF: Enricher still publishes. Switch ON and a lab firm: Checker only, no Enricher publish.
+-- Switch OFF: Enricher still publishes. Switch ON and a lab firm: holding only.
+-- The row waits in research_submissions. This trigger does not write a page table.
 create or replace function public._enrichment_after_insert() returns trigger
 language plpgsql security definer set search_path = bots, public as $$
 begin
   if new.valid and new.bot_id = 'toxy-enricher' and new.firm_id is not null then
     if public._checker_publish_on() and public._lab_firm(new.firm_id) then
+      perform set_config('app.finder_holding', '1', true);
       begin
         insert into research_submissions(bot_id, registry_id, payload, record_count, valid, errors)
         values (new.bot_id, new.registry_id, new.payload, new.accepted, coalesce(new.valid, false), new.errors);
@@ -326,7 +328,6 @@ begin
         insert into checker_holding(firm_id, origin, origin_id, kind, outcome, reason, item)
         values (new.firm_id, 'enrichment', new.id, 'row', 'failure', sqlerrm, new.payload);
       end;
-      perform public.checker_publish_firm(new.firm_id, true, null);
     else
       perform promote_enrichment(new.firm_id);
     end if;
