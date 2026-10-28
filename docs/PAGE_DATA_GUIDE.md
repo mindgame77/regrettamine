@@ -287,7 +287,7 @@ The strip sits above the sections. It is omitted when there is no tile, no deal,
 
 ### 6c. Latest fund tile
 
-Latest fund tile rule (Alex, 2026-10-28). This is the one rule for the tile: rows for fund name, amount, date, and AUM point here. If there is an amount, the amount is always shown and the AUM never replaces it. Amount only: show "Latest fund" and the amount. Amount + date: show both. Amount + date + name: show all three. No amount: show the AUM instead. If there is no amount and no AUM, the tile does not show.
+Latest fund tile rule (Alex, Oct 27 2026 design note): A latest fund with an amount stays. A $0 or missing amount uses the most recent earlier fund that raised money (name, amount, date, filing link). If none did, the tile is Assets under management from the SEC/ADV figure already on the page. Neither shows nothing.
 
 Rule (Alex, 2026-10-28): the latest fund amount is the money raised for the latest fund only. Its source can be SEC Form D, an approved news outlet, or another trusted site the project uses (`trusted_source_domains`), as long as that source states the amount. The register wins any conflict.
 
