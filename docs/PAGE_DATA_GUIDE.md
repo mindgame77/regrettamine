@@ -290,7 +290,7 @@ The strip sits above the sections. It is omitted when there is no tile, no deal,
 
 ### 6c. Latest fund tile
 
-Latest fund tile rule (Alex, Oct 27 2026 design note): A latest fund with an amount stays. A $0 or missing amount uses the most recent earlier fund that raised money (name, amount, date, filing link). If none did, the tile is Assets under management from the SEC/ADV figure already on the page. Neither shows nothing.
+Latest fund tile rule (Alex, Oct 27 2026 design note): A latest fund with an amount stays. A $0 or missing amount uses the most recent earlier fund that raised money (name, amount, date, filing link). If none did, the tile is AUM from the SEC/ADV figure already on the page. Neither shows nothing.
 
 Rule (Alex, 2026-10-28): the latest fund amount is the money raised for the latest fund only. Its source can be SEC Form D, an approved news outlet, or another trusted site the project uses (`trusted_source_domains`), as long as that source states the amount. The register wins any conflict. The tile link is the sec.gov filing when the source is sec.gov. When the amount or date comes from an approved news outlet or trusted site, that page is the link instead.
 
@@ -303,7 +303,7 @@ Rule (Alex, 2026-10-28): the latest fund amount is the money raised for the late
 
 ### 6d. Assets under management tile
 
-1. Shown on the 10 lab firms only when there is no fund amount at all, including no earlier fund that raised money (see the latest fund tile rule in 6c). Label “Assets under management.”
+1. Shown on the 10 lab firms only when there is no fund amount at all, including no earlier fund that raised money (see the latest fund tile rule in 6c). Label “AUM” (Alex, 2026-10-28).
 2. Hero fact whose label maps to Regulatory AUM, else `firm.assets` from `_firm_assets`. The helper reads a profile fact that cites Item 5F or “regulatory AUM,” skips Schedule D gross assets, and otherwise uses `firms.aum_display` when it starts with `$`.
 3. SEC Form ADV Item 5F, via the enricher. Sequoia’s display string was set by the one-off migration to `$82.2B`.
 4. A new AUM fact must contain a digit. The helper does not keep a trailing B, M, or K.
