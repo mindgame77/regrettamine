@@ -42,6 +42,7 @@ A researcher (`research_submit`) can upload at most 20 dumps a minute for its ow
   or *other*. A fact with no usable source is kept but hidden (`needs_source`) until a source is added.
 * **Notes are never published.** Search logs, counts and reasoning go in `{"note": "..."}` inside a section, or in the top-level `notes` string or array of strings. The checker keeps each one (`notes_kept`) in `publish_checks` and does not put it on the page. Top-level `notes` are saved only for the 10 lab firms.
 * **Deals on the 10 lab firms.** A new timeline line that names a company, a dollar amount, and a round is also stored as an investment. The timeline row stays. Other firms are unchanged.
+* **Sequoia timeline deals.** `sequoia_timeline_deals(false)` lists the deal lines. `sequoia_timeline_deals(true)` copies them into investments. The timeline rows stay. No other firm is read.
 * **Sequoia funds.** The SEC assets figure used for Sequoia is `firms.aum_display` (`$82.2B`). Duplicate raw AUM lines and the long bot note are hidden and kept, with a backup copy. Nothing is deleted.
 * **Dates:** single dates are `YYYY`, `YYYY-MM` or `YYYY-MM-DD`. A month-only date is never padded to `-01`. Timeline ranges
   such as `May–Jul 2025` may stay as they are. Ambiguous numeric dates (e.g. 03/04/2025) are never converted automatically.
