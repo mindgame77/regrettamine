@@ -1,4 +1,6 @@
-"""Regretamin launch build: search page + one static company-page shell per firm in data/launch/*.json.
+"""Regretamin launch build: search page + one static company-page shell per lab firm.
+The default (LAB_ONLY=1) writes the 10 lab firms. LAB_ONLY=0 is the manual all-firms rollout.
+Local runs without SUPABASE_URL fall back to data/launch/*.json, still filtered to those firms.
 The shell holds no firm data beyond the name: every section is filled from the firm_page() RPC (js/company.js).
 All copy, plans and section presentation come from launch/copy.json (also handed to the JS as window.REGRET.copy).
 Output: site-launch/. Deploy to the preview with launch/deploy_preview.sh (see launch/HOW-TO-CHANGE.md).
@@ -286,12 +288,33 @@ def _rpc(fn, args):
         {'apikey': CFG['key'], 'authorization': 'Bearer ' + CFG['key'], 'content-type': 'application/json'})
     with urllib.request.urlopen(req, timeout=30) as r: return json.load(r)
 
+# The only firms a normal build writes. A full walk is LAB_ONLY=0 (the manual rollout).
+LAB_SLUGS = ('a16z', 'y-combinator', 'sequoia', 'lightspeed', 'generalcatalyst', 'plugandplay', 'accel', 'greenoaks', 'khosla-ventures', 'mio-partners')
+
+def lab_only():
+    return os.environ.get('LAB_ONLY', '1').strip().lower() not in ('0', 'false', 'no', 'all')
+
 def launch_firms():
-    """Every firm that passes the publish rule (PR #78), from firm_sitemap + firm_meta, the same RPCs the Cloudflare
-    edge uses, so both hosts build the same pages. Without SUPABASE_URL/ANON_KEY (local tests) fall back to data/launch/*.json.
-    An RPC failure fails the build rather than shipping a partial site."""
+    """Lab firms by default. With SUPABASE_URL/ANON_KEY, firm_meta for those slugs only (no sitemap walk).
+    LAB_ONLY=0 pages firm_sitemap and loads every published firm. That is the manual rollout.
+    Without the keys, read data/launch/*.json, filtered the same way. An RPC failure fails the build."""
+    only = lab_only()
     if not (CFG['url'] and CFG['key']):
-        return [json.load(open(p))['firm'] for p in sorted(glob.glob(os.path.join(ROOT, 'data', 'launch', '*.json')))]
+        firms = []
+        for p in sorted(glob.glob(os.path.join(ROOT, 'data', 'launch', '*.json'))):
+            firm = json.load(open(p))['firm']
+            if only and firm.get('slug') not in LAB_SLUGS: continue
+            firms.append(firm)
+        if not firms: raise SystemExit('launch build: no firm snapshots in data/launch')
+        return firms
+    if only:
+        firms = []
+        for slug in LAB_SLUGS:
+            rows = _rpc('firm_meta', {'p_slug': slug})
+            if rows: firms.append(rows[0])
+        missing = [s for s in LAB_SLUGS if s not in {f['slug'] for f in firms}]
+        if missing: raise SystemExit('launch build: firm_meta missing lab firms: ' + ', '.join(missing))
+        return firms
     slugs, page_n = [], 1
     while True:
         rows = _rpc('firm_sitemap', {'p_page': page_n, 'p_size': 1000})
@@ -349,6 +372,6 @@ def main():
     urls = [site] + [site + p + '/' for p in ('how-we-check', 'privacy', 'terms') if os.path.exists(os.path.join(OUT, p, 'index.html'))] + [f'{site}vc/{f}/' for f in firms]  # /full/ is noindex
     open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join(f'<url><loc>{u}</loc></url>\n' for u in urls) + '</urlset>\n')
     open(os.path.join(OUT, 'robots.txt'), 'w').write(f'User-agent: *\nAllow: /\nDisallow: /_tpl/\n\nSitemap: {site}sitemap.xml\n')
-    print('built', len(firms), 'firms ->', OUT)
+    print('built', len(firms), 'firms', '(lab)' if lab_only() else '(all)', '->', OUT)
 
 if __name__ == '__main__': main()

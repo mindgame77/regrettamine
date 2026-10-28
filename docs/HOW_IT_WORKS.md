@@ -41,7 +41,9 @@ A researcher (`research_submit`) can upload at most 20 dumps a minute for its ow
   chatbot pages are not sources. Sources are tagged *trusted* (regulators, courts, registers, sanctions lists, government)
   or *other*. A fact with no usable source is kept but hidden (`needs_source`) until a source is added.
 * **Notes are never published.** Search logs, counts and reasoning go in `{"note": "..."}` inside a section, or in the top-level `notes` string or array of strings. The checker keeps each one (`notes_kept`) in `publish_checks` and does not put it on the page. Top-level `notes` are saved only for the 10 lab firms.
+* **Deals on the 10 lab firms.** A new timeline line that names a company, a dollar amount, and a round is also stored as an investment. The timeline row stays. Other firms are unchanged.
 * **Sequoia timeline deals.** `sequoia_timeline_deals(false)` lists the deal lines. `sequoia_timeline_deals(true)` copies them into investments. The timeline rows stay. No other firm is read.
+* **Sequoia funds.** The SEC assets figure used for Sequoia is `firms.aum_display` (`$82.2B`). Duplicate raw AUM lines and the long bot note are hidden and kept, with a backup copy. Nothing is deleted.
 * **Dates:** single dates are `YYYY`, `YYYY-MM` or `YYYY-MM-DD`. A month-only date is never padded to `-01`. Timeline ranges
   such as `May–Jul 2025` may stay as they are. Ambiguous numeric dates (e.g. 03/04/2025) are never converted automatically.
 * **The checker, per item:** checks the shape and source → looks for a duplicate already on the page (a duplicate adds
@@ -49,7 +51,7 @@ A researcher (`research_submit`) can upload at most 20 dumps a minute for its ow
   the winner is chosen; which value is shown is docs/CONFLICT_RULE.md) →
   records a verdict for every item in `publish_checks` (published, merged, conflict, rejected, note, held).
 * **Leads are never public.** Leads, allegations and "fix this" requests are **held** for a person to review. They are
-  never shown and never labelled "Lead (unverified)".
+  never shown and never labelled "Lead (unverified)". On the 10 lab firms, a lead with no source is rejected, an allegation without a court or regulator document is rejected, and a conflict is copied onto `conflict_weekly`. A fix that cites sec.gov is listed there and does not overwrite the page.
 * **Add only.** Publishing only adds items or adds sources. It never resets a check back to "Not checked yet" and never
   deletes a page row.
 * **Several rows for one firm:** items are merged one by one across all of the firm's waiting rows. The newer row wins and
@@ -124,6 +126,8 @@ the ready email can go out, but the public page is filled only when `toxy-enrich
 * **Look and words** come from the repo: `launch/copy.json` (all text, section titles, order), `launch/style.css`,
   `launch/build.py` (markup) and `launch/js/*`. There is one template for every firm. On Cloudflare, `launch/functions/vc/[[path]].js`
   serves `/vc/<slug>/` for every published firm, and `launch/edge/firm.mjs` mirrors the builder (a test checks that they match).
+* **Lab-only is the default build.** `LAB_ONLY` defaults to 1. `launch/build.py` then writes static pages for the 10 lab firms only: a16z, y-combinator, sequoia, lightspeed, generalcatalyst, plugandplay, accel, greenoaks, khosla-ventures, mio-partners. With the database keys set, it calls `firm_meta` for those slugs and does not walk the full sitemap. `LAB_ONLY=0` is the all-firms build. CI uses the default. A full build and deploy runs only when the Pages workflow is started by hand with input `rollout` true, which is only for Alex saying "roll out". A push that changes only `docs/**` or markdown does not build. The changelog line for a change goes in that change's pull request.
+* **A lab deploy does not remove other firm pages.** Wrangler, run from `launch/`, uploads `launch/functions` with the static directory. The `/vc/` function renders every published firm from `firm_meta`, and `sitemap.xml.js` renders the full sitemap. Those static files are not what serves the other firms. `scripts/pages_deploy.sh` refuses to start if the function files are missing or the firm-directory count is wrong. It publishes preview first, and publishes production only after that preview still returns the non-lab firm `founders-fund` and the functions sitemap still lists its first thousand firms. `founders-fund` itself sits outside that thousand-row cap. If that check fails, production is not deployed. Deploys share the `pages` queue and are not cancelled. Each pull request has its own queue.
 * A section shows only if it is listed in `copy.json` **and** the database returned it. See launch/HOW-TO-CHANGE.md for what to edit for each kind of change.
 * **Overview, display only.** The browser hides Other names, Type, Staff, Private funds, Legal entity, Sanctions screening, and empty or "Not found" rows, strips CRD and SEC file numbers, and shows what is left as HQ, Legal name, Registration, Founded, Owners, and Recent changes. The count matches those rows. Nothing is rewritten in the database.
 
@@ -148,7 +152,7 @@ There are exactly two reference pages that show what a good page looks like: **Y
 ## 11. Where things live
 | Thing | Where |
 |---|---|
-| Code, docs, tests | GitHub `mindgame77/regrettamine` (merging to `main` deploys regretamin.com) |
+| Code, docs, tests | GitHub `mindgame77/regrettamine` (merging to `main` deploys the 10 lab firm pages to regretamin.com; a full deploy is the manual `rollout` input) |
 | Database, Edge Functions, scheduled jobs | Supabase project `sxxgvkdwgiouyqciztec` |
 | Database changes | `supabase/migrations/` (applied in name order, tested in CI on Postgres 16) |
 | Bot door | Edge Function `research-ingest` |

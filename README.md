@@ -50,7 +50,7 @@ One-time setup:
 4. GitHub → this repo → **Settings → Secrets and variables → Actions**. Add:
    - `SUPABASE_URL` — the project URL
    - `SUPABASE_ANON_KEY` — the publishable key (`sb_publishable_...`) is recommended. The legacy anon JWT also works. Both were tested against the live project and the build matched the JSON output. `SUPABASE_URL` and `SUPABASE_ANON_KEY` are set on this repo.
-5. Push to `main`. The workflow passes `SUPABASE_URL` and `SUPABASE_ANON_KEY` into `launch/build.py`, which publishes to Cloudflare. If either secret is missing, the launch build falls back to `data/launch/`.
+5. Push to `main`. The workflow passes `SUPABASE_URL` and `SUPABASE_ANON_KEY` into `launch/build.py` and publishes the 10 lab firms to Cloudflare. A full all-firms build runs only when that workflow is started by hand with `rollout` true. If either secret is missing, the launch build falls back to the lab snapshots in `data/launch/`.
 
 Anon can read published firms only. A signed-in person can insert their own watchlist rows, alert preferences, report views, and pending reviews. Writes in the Table Editor use the logged-in dashboard role, which bypasses row-level security. The anon key cannot insert or update content.
 
@@ -94,7 +94,7 @@ Do not set `published` on a row with `is_test` true. The database rejects it. `s
 
 ## Deploy
 
-Pushes to `main` run `.github/workflows/pages.yml`. The launch build is `python3 launch/build.py` (output `site-launch/`). The `cloudflare-preview` job publishes that directory to the Cloudflare Pages project `regretamin`: a preview branch, then production. Production is **https://regretamin.com/** (and `regretamin.pages.dev`). The live page check runs after that production deploy.
+Pushes to `main` run `.github/workflows/pages.yml`. The launch build is `python3 launch/build.py` (output `site-launch/`), for the 10 lab firms. Doc-only pushes are ignored. The deploy job publishes that directory to the Cloudflare Pages project `regretamin`: preview first, then production only if a non-lab firm still loads on the preview URL. Production is **https://regretamin.com/** (and `regretamin.pages.dev`). The live page check then opens the 10 lab firms. A full all-firms build is the same workflow started by hand with `rollout` true.
 
 Check a change locally before deploying:
 
