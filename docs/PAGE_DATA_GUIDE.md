@@ -137,7 +137,7 @@ Search logs and uploads that have been processed are kept 30 days. Failed holdin
 
 These are conflicts with this guide. They are not permissions.
 
-- `toxy-enricher` still publishes at ingest. This guide says only the Checker publishes.
+- `toxy-enricher` still publishes at ingest for a firm that is not one of the 10 lab firms. On those 10, enrich lands in holding and the Checker publishes.
 - The Activity Collector wrote Y Combinator investments straight into `investments`.
 - One-off migrations wrote Sequoia’s `$82.2B`, Sequoia’s 10 deals, and the news check marks.
 - Press and timeline are still two tables. The page merges some of them only in the browser.
