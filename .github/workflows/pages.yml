@@ -141,3 +141,10 @@ jobs:
           # restarts services, which took about 11 minutes on 2026-10-27. The page check is ~10s.
           npx playwright install chromium
           node scripts/check_live_reports.mjs
+      - name: Page speed (anon firm_page, lab firms, limit 2000 ms)
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        timeout-minutes: 3
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: node scripts/check_page_speed.mjs
