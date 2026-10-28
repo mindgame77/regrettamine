@@ -60,7 +60,7 @@ A researcher (`research_submit`) can upload at most 20 dumps a minute for its ow
   same rules. Anything unreadable is held with a reason. Nothing is dropped silently.
 * **News is one section on the page.** Press and timeline stay stored as they are. The page combines them into News when it draws: the same link is one card, headlines that share an event and a name within about 7 days are one card, and items dated before 2023 are left off that section. This cutoff, this link merge and this story grouping apply only to News. The same date with a different link is not, by itself, a merge.
 * **Own media:** a founder quote or press item from the firm's own site, podcast or channels is labelled "Own media" (not independent).
-* **Scores** follow docs/toxy-score-v2-rules.md (start full, lose points only for verified evidence, rates not counts).
+* **Scores** follow docs/toxy-score-v2-rules.md (start full, lose points only for verified evidence, rates not counts). The same rules, the score function, and the old `/scoring/` page are copied under `score/` from the commit just before the old website was removed. That copy is not what the live site runs.
 
 ## 5. Locked, removed and hidden items
 * **Locked** (`locked_rows`): an item a person has cleaned up or approved. Publishing never changes it, never adds a
@@ -164,3 +164,4 @@ There are exactly two reference pages that show what a good page looks like: **Y
 | Alerts | `section_count_alerts`, `section_counts` |
 | Switches | `bots.ingest_settings` (`auto_promote_enrichment` no longer gates `toxy-enricher`; that bot publishes at ingest) |
 | Detailed docs | DATA_RULES, CONFLICT_RULE, ENRICHER, SOURCE_TIERS, DEDUPE, ON_DEMAND, FIRM_REQUESTS, GOLD_EXAMPLES, data-model, toxy-score-v2-rules |
+| Old website scoring | `score/` (verbatim copy of the score function, its tests, the rules, and the old `/scoring/` page, from commit `5584274`) |
