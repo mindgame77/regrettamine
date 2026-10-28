@@ -125,6 +125,8 @@ the ready email can go out, but the public page is filled only when `toxy-enrich
 * **Look and words** come from the repo: `launch/copy.json` (all text, section titles, order), `launch/style.css`,
   `launch/build.py` (markup) and `launch/js/*`. There is one template for every firm. On Cloudflare, `launch/functions/vc/[[path]].js`
   serves `/vc/<slug>/` for every published firm, and `launch/edge/firm.mjs` mirrors the builder (a test checks that they match).
+* **Lab-only is the default build.** `LAB_ONLY` defaults to 1. `launch/build.py` then writes static pages for the 10 lab firms only: a16z, y-combinator, sequoia, lightspeed, generalcatalyst, plugandplay, accel, greenoaks, khosla-ventures, mio-partners. With the database keys set, it calls `firm_meta` for those slugs and does not walk the full sitemap. `LAB_ONLY=0` is the all-firms build. CI uses the default. A full build and deploy runs only when the Pages workflow is started by hand with input `rollout` true, which is only for Alex saying "roll out". A push that changes only `docs/**` or markdown does not build. The changelog line for a change goes in that change's pull request.
+* **A lab deploy does not remove other firm pages.** Wrangler, run from `launch/`, uploads `launch/functions` with the static directory. The `/vc/` function renders every published firm from `firm_meta`, and `sitemap.xml.js` renders the full sitemap. Those static files are not what serves the other firms. `scripts/pages_deploy.sh` refuses to start if the function files are missing or the firm-directory count is wrong. It publishes preview first, and publishes production only after that preview still returns the non-lab firm `founders-fund` and the functions sitemap still lists its first thousand firms. `founders-fund` itself sits outside that thousand-row cap. If that check fails, production is not deployed. Deploys share the `pages` queue and are not cancelled. Each pull request has its own queue.
 * A section shows only if it is listed in `copy.json` **and** the database returned it. See launch/HOW-TO-CHANGE.md for what to edit for each kind of change.
 * **Overview, display only.** The browser hides Other names, Type, Staff, Private funds, Legal entity, Sanctions screening, and empty or "Not found" rows, strips CRD and SEC file numbers, and shows what is left as HQ, Legal name, Registration, Founded, Owners, and Recent changes. The count matches those rows. Nothing is rewritten in the database.
 
@@ -149,7 +151,7 @@ There are exactly two reference pages that show what a good page looks like: **Y
 ## 11. Where things live
 | Thing | Where |
 |---|---|
-| Code, docs, tests | GitHub `mindgame77/regrettamine` (merging to `main` deploys regretamin.com) |
+| Code, docs, tests | GitHub `mindgame77/regrettamine` (merging to `main` deploys the 10 lab firm pages to regretamin.com; a full deploy is the manual `rollout` input) |
 | Database, Edge Functions, scheduled jobs | Supabase project `sxxgvkdwgiouyqciztec` |
 | Database changes | `supabase/migrations/` (applied in name order, tested in CI on Postgres 16) |
 | Bot door | Edge Function `research-ingest` |

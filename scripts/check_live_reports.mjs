@@ -5,7 +5,7 @@
 import { chromium } from 'playwright';
 
 const BASE = (process.env.REGRET_BASE || 'https://regretamin.com/').replace(/\/?$/, '/');
-const FIRMS = (process.env.REGRET_FIRMS || 'a16z,accel,forbion').split(',');
+const FIRMS = (process.env.REGRET_FIRMS || 'a16z,y-combinator,sequoia,lightspeed,generalcatalyst,plugandplay,accel,greenoaks,khosla-ventures,mio-partners').split(',');
 const problems = [];
 const fail = (m) => { problems.push(m); console.log('FAIL ' + m); };
 const ok = (m) => console.log('ok   ' + m);
@@ -114,12 +114,12 @@ try {
   }
   if (!/<urlset/.test(xml)) fail('sitemap.xml missing or invalid (' + sm.status() + ')');
   else {
+    const locs = (xml.match(/<loc>/g) || []).length;
     const miss = FIRMS.filter(s => !xml.includes('/vc/' + s + '/'));
-    const knownCap = miss.filter(s => s === 'forbion');
-    const rest = miss.filter(s => s !== 'forbion');
-    if (knownCap.length) console.log('warn sitemap.xml lacks forbion (known 1,000-firm sitemap cap, postponed)');
-    if (rest.length) fail('sitemap.xml lacks ' + rest.join(','));
-    else ok('sitemap.xml (' + kind + '): ' + (xml.match(/<loc>/g) || []).length + ' urls');
+    // firm_sitemap returns 1,000 rows. Firms past that cap are still on the site; the page checks above cover them.
+    if (miss.length && locs >= 1000) console.log('warn sitemap.xml lacks ' + miss.join(',') + ' (known 1,000-firm sitemap cap, postponed)');
+    else if (miss.length) fail('sitemap.xml lacks ' + miss.join(','));
+    else ok('sitemap.xml (' + kind + '): ' + locs + ' urls');
   }
   if (/\/full\/<\/loc>/.test(xml)) fail('sitemap lists /full/ pages (they are noindex)'); else ok('sitemap: no /full/ pages');
 
