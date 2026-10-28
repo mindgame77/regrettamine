@@ -100,6 +100,8 @@ Same-item keys: fund = fund name or SEC file number; news = normalized URL (lowe
 
 The winner is the higher source level, then the newer date, then the more complete row. Every source is kept. The losing value is saved as a note. If two values still disagree, they go to the Checker review list. Each merged item gets one entry check. The merge log is permanent. The merge backup is kept 3 days, then deleted only with Alex’s OK.
 
+On the 10 lab firms, exact copies in a home are the only rows removed. A different value stays on the page and is listed for the Checker. A side table (`regulatory_records`, `legal_matters`, `people`, `fund_people`, `founder_accounts`, `bots.firm_lps`, fund lines still in `firm_profile_facts`) is not dropped and is not copied onto the page in this pass, because that would add rows. `fact_events` stays the public fact counter. The log is `home_merge_log`. The backup is `home_merge_backup`, and it is not deleted without Alex’s OK. `firm_aliases.alias_type` is display, legal, fund entity, or old name. The page does not read it.
+
 ## Live counts
 
 Pills, section counts, tiles, and the counts on My firms are computed when the page is read. They are never stored. A stored pill that disagrees with the findings is wrong. Check 8 comes from the IAPD registration row, not from a hand-typed label.
