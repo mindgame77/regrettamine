@@ -127,7 +127,7 @@ On the lab firms, once this is built:
 - One latest deal, plus Show all.
 - One latest founder review, plus Show all.
 - The latest 10 news items, plus Show all for the rest that are still on the page.
-- Up to 20 people, plus Show all.
+- 10 people shown, plus Show all; max 20 people kept (see List limits below).
 
 List limits (Alex, 2026-10-28). Shown on the page / max kept in the system:
 - People: 10 shown + Show all; max 20. Past the max, no more are added.
