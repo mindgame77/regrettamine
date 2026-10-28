@@ -126,6 +126,14 @@ On the lab firms, once this is built:
 - The latest 10 news items, plus Show all for the rest that are still on the page.
 - Up to 20 people, plus Show all.
 
+List limits (Alex, 2026-10-28). Shown on the page / max kept in the system:
+- People: 10 shown + Show all; max 20. Past the max, no more are added.
+- News: latest 10 + Show all; max 50. When a new item comes in past 50, the oldest is archived (kept in the database, hidden), never deleted.
+- Founder reviews: 1 latest + Show all; max 50. Past 50, tell Alex; nothing is deleted.
+- Deals: 1 latest + Show all; max 1,000. Past the max, no more are added.
+- Funds: latest fund tile + "N funds on SEC record · Show all"; max 100. Past the max, no more are added.
+These replace the earlier caps (news 500, LPs 100, deals 200) where they differ.
+
 A deal row has a sector column, and a column that reads round · amount · Lead. Those three are filled only when a source states them. An empty amount stays empty.
 
 Latest investments block (Alex, 2026-10-28): shows the 1 latest deal, plus Show all (Alex, 2026-10-28: 1 for now, may increase later). A deal with no stated sector leaves the sector cell blank. It never reads "No data yet". The sector summary sits inside this block: pills with deal counts for the top 5 sectors (largest first), a grey "Other N" pill for the rest, and "Show all" opening the deals pop-up. Counts only, no percentages. Deals with no sector are not counted and get no pill. The pills count all of the firm's deals, not only the last 12 months. The summary is shown only when the firm has 10 or more deals in total; with fewer, it is hidden on the page and in the pop-up. The same rules apply to the pop-up header. Deals, last 12 mo is a separate number on the page: just the count of deals in the last 12 months.
