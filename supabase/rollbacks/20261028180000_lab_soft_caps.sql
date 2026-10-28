@@ -26,11 +26,11 @@ begin
    where i.firm_id = p_firm and i.data_status = 'real'
    order by i.invested_on desc nulls last, c.name limit 1;
   select count(*) into n_revs from reviews r
-   where r.firm_id = p_firm and r.review_type = 'founder' and r.is_public and r.moderation_status = 'approved';
+   where r.firm_id = p_firm and r.is_public and r.moderation_status = 'approved';
   select _activity_review(r, c) into r0
     from reviews r left join portfolio_companies c on c.id = r.company_id
-   where r.firm_id = p_firm and r.review_type = 'founder' and r.is_public and r.moderation_status = 'approved'
-   order by r.reviewed_on desc nulls last, r.created_at desc limit 1;
+   where r.firm_id = p_firm and r.is_public and r.moderation_status = 'approved'
+   order by (r.review_type = 'founder') desc, r.reviewed_on desc nulls last, r.created_at desc limit 1;
   select count(*) into n_close12 from funds
    where firm_id = p_firm and data_status = 'real' and closed_on >= since;
   select jsonb_build_object('name', x.name, 'raised_usd', coalesce(x.raised_usd, x.size_usd), 'target_usd', x.target_usd,
