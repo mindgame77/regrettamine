@@ -1,4 +1,9 @@
 {
-  "exported": false,
-  "firms": {}
+  "exported": true,
+  "firms": {
+    "y-combinator": {
+      "deals": "y-combinator-deals.json",
+      "archived": 611
+    }
+  }
 }
