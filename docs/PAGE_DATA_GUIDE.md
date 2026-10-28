@@ -21,6 +21,8 @@ If two sources disagree, the register wins. A firm site does not override a regi
 
 A search-results page or a chat page is not a source at any level.
 
+Exception (Alex, 2026-10-28): the latest fund amount (money raised for the latest fund only) may come from an approved news outlet or another trusted site the project uses (`trusted_source_domains`), not only from SEC Form D. That source must state the amount. It is shown, not held as Unconfirmed. If sources disagree, the SEC record wins.
+
 ## Sources per page part
 
 These rules override the general “elsewhere online is Unconfirmed” line for that part only. A dead link, a search page, or a chat page is still a failure. “Names the firm” means the copied text contains the firm’s name or short name.
