@@ -9,7 +9,7 @@ JS = (ROOT / "launch" / "js" / "company.js").read_text()
 APP = (ROOT / "launch" / "js" / "app.js").read_text()
 BUILD = (ROOT / "launch" / "build.py").read_text()
 CSS = (ROOT / "launch" / "style.css").read_text()
-RULES = (ROOT / "docs" / "DATA_RULES.md").read_text()
+RULES = (ROOT / "docs" / "archive" / "DATA_RULES.md").read_text()
 
 
 def test_sections_are_layout_a():
