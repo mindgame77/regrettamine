@@ -18,11 +18,15 @@ def test_door_rules_are_written_down():
     from pathlib import Path
     guide = Path("docs/PAGE_DATA_GUIDE.md").read_text(encoding="utf-8")
     sql = Path("supabase/migrations/20261028120000_holding_door.sql").read_text(encoding="utf-8")
+    one = Path("supabase/migrations/20261028130000_hour_cap_and_marks.sql").read_text(encoding="utf-8")
     assert "The holding door" in guide
-    assert "100 distinct firms" in guide
+    assert "starts at 100" in guide
+    assert "three times the limit" in guide
+    assert "There is no second setting" in guide
     assert "7 days" in guide and "30 days" in guide
     assert "('door_hour_cap', '100')" in sql
-    assert "('door_attack_at', '300')" in sql
+    assert "attack := cap * 3" in one
+    assert "door_attack_at" not in one.split("delete from bots.ingest_settings where key = 'door_attack_at';", 1)[-1]
     assert "interval '7 days'" in Path("supabase/migrations/20261028070000_checker_switch.sql").read_text(encoding="utf-8")
     assert "interval '30 days'" in Path("supabase/migrations/20261027010000_bots_schema.sql").read_text(encoding="utf-8")
 
@@ -35,7 +39,8 @@ def test_cap_wait_attack_duplicate_and_oldest_first():
         cur.execute("insert into ingest_keys(name, key_hash, active, bot_id) values (%s, %s, true, %s)",
                     (bot, "hash-" + bot, bot))
         cur.execute("insert into ingest_settings(key, value) values ('door_hour_cap', '1') on conflict (key) do update set value = '1'")
-        cur.execute("insert into ingest_settings(key, value) values ('door_attack_at', '3') on conflict (key) do update set value = '3'")
+        cur.execute("delete from ingest_settings where key = 'door_attack_at'")
+        cur.execute("insert into ingest_settings(key, value) values ('door_attack_at', '99')")
         ids = []
         for i, name in enumerate(("Alpha Door", "Beta Door", "Gamma Door")):
             reg = f"zz-door-{bot}-{i}"

@@ -29,6 +29,7 @@ Mockups are kept outside the repo in the design workspace (`toxybase/design/`). 
 
 | Mockup | Status | Diffs vs shipped |
 |---|---|---|
+| Sequoia checked date (`docs/design/mockups/sequoia-checked-date.html`, Oct 28 2026) | awaiting Alex | Not shipped. A small grey “checked &lt;date&gt;” sits next to the source pill. The green outline is only there to mark the new part. Example rows wear the mock badge. The live page is unchanged. |
 | Overview rows (Alex, Oct 26 2026; mockups kept on Alex's side) | SHIPPED | Display only, in the page builder. a16z shows 5 overview rows, Y Combinator shows 3. Hidden: Other names, Type, Staff, Private funds, Legal entity, Sanctions screening, empty and Not found. |
 | Firm-page hero cards removed (Alex, Oct 27 2026) | APPROVED | The row of cards under the firm name is not drawn (HQ, Staff, Investment staff, Regulatory AUM, Private funds, Founded, and the rest). The HQ city stays in the meta line. SEC fact pills stay. `firm_page().hero` is unchanged. |
 | Activity fund tile (Alex, Oct 27 2026) | APPROVED | Not rolled out. A latest fund with an amount stays. A $0 or missing amount uses the most recent earlier fund that raised money (name, amount, date, filing link). If none did, the tile is Assets under management from the SEC/ADV figure already on the page. Neither shows nothing. |

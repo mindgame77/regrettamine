@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sequoia checked date — mockup, not shipped</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<style>
+:root{--ink:#14112B;--ink2:#4D4868;--mute:#8C88A3;--line:#ECE9F5;--vio:#6C3BFF;--viobg:#F1ECFF;--sun:#FFD84D}
+*{box-sizing:border-box;margin:0}
+body{font:16px 'DM Sans',sans-serif;color:var(--ink);background:#fff}
+.banner{background:#F7F5FC;border-bottom:1px solid var(--line);padding:14px 32px;font-size:14px;color:var(--ink2)}
+.banner b{color:var(--ink)}
+.wrap{max-width:1040px;margin:0 auto;padding:28px 32px 64px}
+.top{display:flex;align-items:center;gap:14px}
+.top img{height:36px}
+h1{font:800 44px 'Bricolage Grotesque',sans-serif;letter-spacing:-1px}
+.sub{color:var(--mute);font-size:15px;margin-top:6px}
+h2{font:700 22px 'Bricolage Grotesque',sans-serif;margin:36px 0 8px}
+.note{color:var(--mute);font-size:13px;margin:0 0 8px}
+.rw{padding:11px 0;border-bottom:1px solid var(--line)}
+.rt{font-weight:700;font-size:15px;color:var(--ink)}
+.rm{font-size:12px;color:var(--mute);margin-top:4px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.sc{display:inline-block;font-size:11.5px;font-weight:700;color:var(--vio);background:var(--viobg);border-radius:99px;padding:2px 9px;text-decoration:none;white-space:nowrap}
+.src{font-size:12px;color:var(--mute);margin-top:8px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.src a{color:var(--vio);font-weight:700}
+.ckd{font-size:12px;color:var(--mute);font-weight:500}
+.new{outline:2px solid #1F8A4C;outline-offset:3px;background:#E7F6EE;border-radius:6px;padding:1px 6px}
+.ph{display:inline-block;margin-left:8px;border:1.5px dashed #C9A227;background:#FFF6D4;color:#8A5A00;font-size:11px;font-weight:700;border-radius:6px;padding:2px 7px;vertical-align:2px}
+.legend{margin-top:28px;border:1.5px solid var(--line);border-radius:16px;padding:14px 16px;font-size:14px;color:var(--ink2);max-width:640px}
+.legend i{font-style:normal}
+@media (max-width:640px){
+  .banner,.wrap{padding-left:16px;padding-right:16px}
+  h1{font-size:32px}
+}
+</style>
+</head>
+<body>
+<p class="banner"><b>Mockup only.</b> Sequoia lab page. Not on the live site. Waiting for Alex.</p>
+<main class="wrap">
+  <div class="top"><img src="../../../assets/logo/lockup-light.svg" alt="Regretamin"></div>
+  <h1>Sequoia</h1>
+  <p class="sub">Layout only. The rows below are examples.</p>
+
+  <h2>News</h2>
+  <p class="note">The grey words sit next to the source pill. Green marks the new part.</p>
+  <div class="rw">
+    <div class="rt">Example story naming the firm <span class="ph">Mock</span></div>
+    <div class="rm">
+      <span>Jan 7, 2026</span>
+      <a class="sc" href="#example-outlet">Example outlet ↗</a>
+      <span class="ckd new">checked Oct 27, 2026</span>
+    </div>
+  </div>
+  <div class="rw">
+    <div class="rt">Example second story <span class="ph">Mock</span></div>
+    <div class="rm">
+      <span>Mar 2, 2026</span>
+      <a class="sc" href="#example-outlet-2">Example outlet ↗</a>
+      <span class="ckd new">checked Oct 27, 2026</span>
+    </div>
+  </div>
+
+  <h2>Check finding</h2>
+  <p class="note">Same grey words next to the source line on a check.</p>
+  <div class="src">
+    <span>Source <a href="#example-register">Example register ↗</a></span>
+    <span class="ckd new">checked Oct 27, 2026</span>
+    <span class="ph">Mock</span>
+  </div>
+
+  <div class="legend">
+    <i class="ckd new">checked Oct 27, 2026</i>
+    is the new part. The words are grey. The green outline is only on this mockup, so the new part is easy to see. It would not ship as a status color.
+  </div>
+</main>
+</body>
+</html>
