@@ -130,18 +130,18 @@ On the lab firms, once this is built:
 - 10 people shown, plus Show all; max 20 people kept (see List limits below).
 
 List limits (Alex, 2026-10-28). Shown on the page / max kept in the system:
-- People: 10 shown + Show all; max 20. Past the max, no more are added.
+- People: 10 shown + Show all; max 20. Past the max, new items still come in and the oldest are archived (kept, hidden), never deleted.
 - News: latest 10 + Show all; max 50. When a new item comes in past 50, the oldest is archived (kept in the database, hidden), never deleted.
 - Founder reviews: 1 latest + Show all; max 50. Past 50, tell Alex; nothing is deleted.
-- Deals: 1 latest + Show all; max 1,000. Past the max, no more are added.
-- Funds: latest fund tile + "N funds on SEC record · Show all"; max 100. Past the max, no more are added.
-These replace the earlier caps (news 500, LPs 100, deals 200) where they differ.
+- Deals: 1 latest + Show all; max 1,000. Past the max, new items still come in and the oldest are archived (kept, hidden), never deleted.
+- Funds: latest fund tile + "N funds on SEC record · Show all"; max 100. Past the max, new items still come in and the oldest are archived (kept, hidden), never deleted.
+These replace the earlier soft caps. LPs stay at 100. Every list archives the oldest past its max (Alex, 2026-10-28).
 
 A deal row has a sector column, and a column that reads round · amount · Lead. Those three are filled only when a source states them. An empty amount stays empty.
 
 Latest investments block (Alex, 2026-10-28): shows the 1 latest deal, plus Show all (Alex, 2026-10-28: 1 for now, may increase later). A deal with no stated sector leaves the sector cell blank. It never reads "No data yet". The sector summary sits inside this block: pills with deal counts for the top 5 sectors (largest first), a grey "Other N" pill for the rest, and "Show all" opening the deals pop-up. Counts only, no percentages. Deals with no sector are not counted and get no pill. The pills count all of the firm's deals, not only the last 12 months. The summary is shown only when the firm has 10 or more deals in total; with fewer, it is hidden on the page and in the pop-up. The same rules apply to the pop-up header. Deals, last 12 mo is a separate number on the page: just the count of deals in the last 12 months.
 
-Soft caps per firm: 500 news, 100 LPs, 200 deals. Past the cap, new items still come in and the oldest move to an archive file. Lawsuits, regulator actions, and negative news are never archived. One alert per firm when a cap is hit. Legal items and the 10 checks have no cap and are never archived or deleted. Only confirmed LPs are shown. A lead stays hidden.
+Soft caps per firm: see List limits above (news 50, LPs 100, deals 1,000, people 20, funds 100, founder reviews 50; reviews past 50 also alert Alex). Past the cap, new items still come in and the oldest move to an archive file. Lawsuits, regulator actions, and negative news are never archived. One alert per firm when a cap is hit. Legal items and the 10 checks have no cap and are never archived or deleted. Only confirmed LPs are shown. A lead stays hidden.
 
 These caps are not a license to delete. The archive file is the copy, and the row can be shown again from Show all. For the 10 lab firms the copy is `data/lab-cap-archive/index.json` plus `lab_cap_archive`. A row past the cap is marked archived and stays in the database. Every count that covers all deals still includes archived rows, so a firm over the deal cap does not drop its shown total. That covers Deals, last 12 mo, the latest-deal tile, the Show all total, and the 12-month sector breakdown (`deal_sector_12m`). My firms shows check pills, not a deal total. `lab_cap_alerts` holds one row per firm. `lab_soft_caps` is not run until Alex says to apply it.
 
