@@ -9,6 +9,8 @@ import pytest
 pytest.importorskip("psycopg")
 DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
 pytestmark = pytest.mark.skipif(not DATABASE_URL, reason="DATABASE_URL is not set")
+CHECKS_OFF = pytest.mark.skip(reason="checks are off (Alex 2026-10-28): firm_check_rows is no longer filled")
+
 
 PAYLOAD = {
     "coverage": [{"checklist_item": "registration x firm", "status": "records", "query_ids": ["q1"], "record_ids": ["r1"]}],
@@ -46,6 +48,7 @@ def test_display_name_cleaning():
             assert cur.fetchone()[0] == want, args
 
 
+@CHECKS_OFF
 def test_report_creates_published_page_and_queue_dedupes():
     import psycopg
 

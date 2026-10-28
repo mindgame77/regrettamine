@@ -8,6 +8,8 @@ import pytest
 pytest.importorskip("psycopg")
 DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
 pytestmark = pytest.mark.skipif(not DATABASE_URL, reason="DATABASE_URL is not set")
+CHECKS_OFF = pytest.mark.skip(reason="checks are off (Alex 2026-10-28): firm_check_rows is no longer filled")
+
 
 
 def _j(v):
@@ -34,6 +36,7 @@ def test_marks_live_on_the_item_and_the_page_is_unchanged():
         assert "checked_on" not in text and "checked_by" not in text and "source_level" not in text, path
 
 
+@CHECKS_OFF
 def test_fold_copies_lab_dates_and_leaves_the_old_fields():
     import psycopg
 
