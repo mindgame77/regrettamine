@@ -233,7 +233,10 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
         if (msg.includes("rate_limited:")) return json({ error: "rate_limited: max 20 uploads per minute per bot, retry shortly" }, 429, { "retry-after": "60" });
         return json({ error: "server error" }, 500);
       }
+      if (data.error === "blocked") return json({ error: "blocked", hint: "this bot sent more than 300 distinct firms in an hour; only Alex can unblock" }, 403);
       if (data.error) return json({ error: data.error }, 409);
+      if (data.status === "duplicate") return json({ ok: true, status: "duplicate", dropped: true, hint: "exact copy dropped at the door" });
+      if (data.status === "waiting") return json({ ok: true, status: "waiting", submission_id: data.submission_id, ready_at: data.ready_at, hint: "over 100 distinct firms this hour; this one waits until the next hour" });
       if (data.status === "holding") return json({ ok: valid, status: "holding", held_for_checker: true,
         submission_id: data.submission_id, accepted_records: valid ? v.good : 0, rejected_records: v.bad,
         errors: v.errors.slice(0, 200), source_tiers: v.tiers, warnings: v.warnings.slice(0, 200),

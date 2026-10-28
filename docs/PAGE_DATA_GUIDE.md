@@ -41,6 +41,18 @@ Every bot sends into the holding area `bots.research_submissions`. That includes
 
 `bots.research_enrichments` can store a bot’s structured result. It is still holding. It is not a publish.
 
+## The holding door
+
+Only a known bot gets in, and each bot has its own key. Turning that key off stops that bot. The others keep working.
+
+A bot may send 100 distinct firms in an hour. Those are checked now. Firms 101 to 300 in that hour are kept and wait until the next hour. They are not thrown away. More than 300 distinct firms in an hour is an attack: that bot’s key is blocked, its waiting items are frozen, and Alex gets one alert. Only Alex can turn that bot back on.
+
+An exact copy is dropped at the door. It is not stored again.
+
+The Checker works the queue oldest first. A bot whose items fail more than half the time, after at least 10 checked items in a day, is paused, and Alex gets one alert.
+
+Failed holding items are kept 7 days. Processed uploads and search logs are kept 30 days.
+
 ## The Checker
 
 The Checker is the entry check and the only publisher.
