@@ -433,7 +433,7 @@ New block “Thesis”. It replaces the Overview block, which is removed from th
 2. Max 1,000 characters. Not rewritten by us.
 3. No thesis on the firm's website: the block is not shown.
 4. Door check: the link opens and is on the firm's own domain; the text is found on that page; length 1,000 characters or less.
-5. Old Overview rows are hidden, not deleted. Their facts move: HQ to the header (rows 4-6), Registration, Founded and Owners to fact pills (7 max, no repeats), legal names to legal entities. Long paragraphs are dropped from display. Backup first; nothing is deleted without Alex's "Yes, delete".
+5. Old Overview rows are hidden, not deleted. Nothing is moved from them into the header or fact pills. A fact that the header or fact pills already show from their own sources keeps showing there; an Overview-only fact is simply no longer shown. Backup first; nothing is deleted without Alex's "Yes, delete".
 6. Needs a mockup on the Sequoia lab page before building.
 
 The text below describes the old Overview, kept for reference until the build.
