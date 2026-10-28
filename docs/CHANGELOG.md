@@ -2,6 +2,8 @@ Update this file after every change.
 
 One line per change: date/time PT | what changed | PR link | how to roll back.
 
+2026-10-27 8:34 PM PT | Rules audit and page data guide, docs only. `docs/RULES_AUDIT.md` marks each rule active, old, doc-only, code-only, or in conflict, and lists a problem for every data kind. `docs/PAGE_DATA_GUIDE.md` walks each piece of the page and names the table, the source site, and the bot. No database change. | draft docs PR | Delete the two files and this line.
+
 2026-10-26 00:53:11 PT | Step 1 of the cleanup merged: promote is add-only, new research stays in the holding area unless auto-promote is on, and rows touched by a cleanup batch plus the YC, a16z, and Accel rows are locked. `public.locked_rows` exists live. The live migration clock for this apply is unknown. | https://github.com/mindgame77/regrettamine/pull/142 | unknown
 2026-10-26 00:58:43 PT | Step 2 of the cleanup merged: a removed-items list so promote paths refuse a cleaned item, with `record_removed` and a load from `cleanup_backup`. `public.removed_items` exists live. The live migration clock for this apply is unknown. | https://github.com/mindgame77/regrettamine/pull/143 | unknown
 2026-10-26 19:59:05 PT | research-ingest version 27 deployed the government-host pattern from main. No repository commit. `verify_jwt` stayed false. A keyless POST returned 401. | none | unknown
