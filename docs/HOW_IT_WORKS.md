@@ -163,4 +163,5 @@ There are exactly two reference pages that show what a good page looks like: **Y
 | Locks / removed | `locked_rows`, `removed_items` |
 | Alerts | `section_count_alerts`, `section_counts` |
 | Switches | `bots.ingest_settings` (`auto_promote_enrichment` no longer gates `toxy-enricher`; that bot publishes at ingest) |
+| Old website functions | Dropped. The launch site, edge functions, cron, and other database functions did not call them. `my_billing`, `access_tier`, `set_fund_alert_kind`, `set_watch_alert_kind`, `watch_fund`, `unwatch_fund`, and `is_admin` stay. Recreate from `supabase/rollbacks/20261028060000_drop_old_site_rpcs.sql` |
 | Detailed docs | DATA_RULES, CONFLICT_RULE, ENRICHER, SOURCE_TIERS, DEDUPE, ON_DEMAND, FIRM_REQUESTS, GOLD_EXAMPLES, data-model, toxy-score-v2-rules |

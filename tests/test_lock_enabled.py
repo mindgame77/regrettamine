@@ -89,10 +89,6 @@ def test_lock_off_returns_full_pages_and_spends_nothing():
         activity = _j(cur.fetchone())
         assert activity["status"] == "ok" and activity["items"] == []
 
-        cur.execute("select open_report('zz-lock', null)")
-        report = _j(cur.fetchone())
-        assert report["ok"] is True and "full report" in report["html"]
-
         cur.execute("select count(*) from check_events where firm_id = %s", (fid,))
         assert cur.fetchone()[0] == spent_before
         cur.execute("select count(*) from report_views where firm_id = %s", (fid,))
@@ -109,9 +105,6 @@ def test_lock_off_returns_full_pages_and_spends_nothing():
         assert locked["checks"][0]["state"] is None and locked["checks"][0]["items"] is None
         cur.execute("select firm_activity_list('zz-lock', %s, 'deals')", (anon,))
         assert _j(cur.fetchone())["status"] == "locked"
-        cur.execute("select open_report('zz-lock', null)")
-        gated = _j(cur.fetchone())
-        assert gated["ok"] is False and gated["reason"] == "anon"
         cur.execute("select count(*) from check_events where firm_id = %s", (fid,))
         assert cur.fetchone()[0] == spent_before
 

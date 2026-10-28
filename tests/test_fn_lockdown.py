@@ -32,8 +32,8 @@ LOCKED = [
 ]
 USER_ONLY = ["watch_fund(text)", "unwatch_fund(text)", "delete_my_account()"]
 PUBLIC = ["firm_page(text,uuid,boolean,text)", "firm_meta(text)", "firm_sitemap(integer,integer)", "public_site_bundle()", "bump_firm_check(text,uuid)"]
-# Old site RPCs. The functions stay. anon and authenticated cannot call them.
-REVOKED = [
+# Old site RPCs. Dropped. They are not in the database.
+DROPPED = [
     "carry_anon_views(text)",
     "fact_record_count()",
     "firm_id_for_slug(text)",
@@ -78,10 +78,9 @@ def test_internal_functions_locked():
             assert _can(cur, "authenticated", fn) in (True, None), fn
         for fn in PUBLIC:
             assert _can(cur, "anon", fn) in (True, None), fn
-        for fn in REVOKED:
-            for role in ("anon", "authenticated"):
-                assert _can(cur, role, fn) is False, (role, fn)
-            assert _can(cur, "service_role", fn) is True, fn
+        for fn in DROPPED:
+            assert _can(cur, "anon", fn) is None, fn
+            assert _can(cur, "service_role", fn) is None, fn
         for fn in KEPT:
             assert _can(cur, "authenticated", fn) is True, fn
             assert _can(cur, "service_role", fn) is True, fn
