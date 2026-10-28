@@ -45,7 +45,7 @@ Every bot sends into the holding area `bots.research_submissions`. That includes
 
 Only a known bot gets in, and each bot has its own key. Turning that key off stops that bot. The others keep working.
 
-A bot may send 100 distinct firms in an hour. Those are checked now. Firms 101 to 300 in that hour are kept and wait until the next hour. They are not thrown away. More than 300 distinct firms in an hour is an attack: that bot’s key is blocked, its waiting items are frozen, and Alex gets one alert. Only Alex can turn that bot back on.
+A bot may send as many distinct firms in an hour as the hourly limit. That limit is one setting, `door_hour_cap`. It starts at 100. Those firms are checked now. Further firms in that hour, up to three times the limit, are kept and wait until the next hour. They are not thrown away. More than three times the limit in an hour is an attack: that bot’s key is blocked, its waiting items are frozen, and Alex gets one alert. Only Alex can turn that bot back on. Changing the hourly limit changes the attack line with it. There is no second setting.
 
 An exact copy is dropped at the door. It is not stored again.
 
@@ -63,19 +63,23 @@ For each item it checks three things:
 - The link matches the item (this firm, this person, this fund, this case).
 - The source level, from the ranking above.
 
-A register or firm-site item is published with the date and checked-by **Checker**. An elsewhere-online item is held as Unconfirmed and is not shown, unless Sources per page part says that part may show it. A failure stays in holding with the reason. Failed items are kept 7 days, then removed. Nothing is re-checked unless Alex asks. The revision of social links and contact details every few months counts as that standing ask. News rows that already have a check mark stay checked. They are not re-checked in this pass.
+A register or firm-site item is published with the date and checked-by **Checker**. Those two values, and the source level, are stored on the item. They are not drawn on the page. An elsewhere-online item is held as Unconfirmed and is not shown, unless Sources per page part says that part may show it. A failure stays in holding with the reason. Failed items are kept 7 days, then removed. Nothing is re-checked unless Alex asks. The revision of social links and contact details every few months counts as that standing ask. News rows that already have a check mark stay checked. They are not re-checked in this pass.
 
 The Enricher does not publish. The Activity Collector does not write `investments` directly.
 
 ## Three marks on every item
 
-The Checker sets these once:
+The Checker sets these once, on the item itself:
 
-- **checked-on**, the date
-- **checked-by**, the name Checker
-- **source level**, 1, 2, 3, or 4
+- **checked-on**, the date (`checked_on`)
+- **checked-by**, the name Checker (`checked_by`)
+- **source level**, 1, 2, 3, or 4 (`source_level`)
 
-The page shows a small grey “checked &lt;date&gt;” next to the source pill. That grey mark needs a mockup before it is built.
+The columns are on the item tables: `press_item_firms`, `timeline_events`, `firm_check_rows`, `firm_people_roles`, `firm_profile_facts`, `firm_legal_items`, `reviews`, and `vc_source_facts`. They are not on `fact_sources`. A fact can have several source links, and press and the 10 checks do not keep the source pill in `fact_sources`.
+
+`firm_check_rows.searched_at` and the news `check_mark` stay. They are not dropped. For the 10 lab firms, a search date is copied into `checked_on`. A news row already marked `checked_correct` or `checked_wrong` copies `last_checked_at` into `checked_on`, and the source level from the link. That copy is saved first in `marks_fold_backup`. A row the Checker did not check keeps `checked_by` empty. The page still reads the old fields.
+
+`checked_on`, `checked_by`, and `source_level` are internal only. They are never shown on the live site, in any block. Alex rejected the Sequoia mockup that put a grey “checked &lt;date&gt;” next to the source pill. Do not build that.
 
 ## One home per data kind
 
