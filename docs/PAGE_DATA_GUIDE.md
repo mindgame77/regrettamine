@@ -405,10 +405,10 @@ Rule (Alex, 2026-10-28): the latest fund amount is the money raised for the late
 ### Check 8. Registration check
 
 1. “Registered with the regulator as an investment adviser, and active.”
-2. `firm_check_rows` n=8. The overview Registration line is a different element, drawn from profile facts, not from this pill.
-3. SEC IAPD / Form ADV. Enricher for the overview line. The pill itself is not updated by that publish.
-4. The overview draw shortens the sentence to “SEC-registered since <year>, active” or the exempt-reporting line. The pill does not use that sentence.
-5. Lightspeed and others can show “Not checked yet” here even when an overview registration line exists.
+2. Source: only the firm's own IAPD page on sec.gov (level 1, the register). The Overview is gone (section 8 is now Thesis), so nothing here comes from it.
+3. Stored on the check 8 row in `firm_check_rows` (n=8), set by the Checker: registered or exempt reporting, since year, active or not, SEC/CRD number, and the IAPD link.
+4. Door check: the link must be an adviserinfo.sec.gov page for that firm, and the status must be one of the fixed list (Registered, Exempt reporting, Not active).
+5. Not found on IAPD: the pill shows "Not found yet" with the search date.
 6. RULES_AUDIT 8 and 20.
 
 ### Check 9. People behind the fund
