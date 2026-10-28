@@ -36,8 +36,8 @@ or one overview/funds figure. `submit` records keep the dump-1.2 shapes (they we
 **Free text only as a note.** Anything that is not one fact - search logs, counts ("Schedule A lists 14 individuals"),
 "matches the surname", reasoning, "no source URL" - goes in `{"note": "..."}` inside a section, or in the top-level
 `notes` field. `{"note": "..."}` is one object whose only fact is the string in `note`. Top-level `notes` is either one
-string or an array of strings. Each of those is outcome `note`: `notes_kept` counts it and it is saved on
-`publish_checks`. Notes are kept for the team and never published. A blank string is skipped. The old `{"item": "..."}`
+string or an array of strings. Each of those is outcome `note`. `notes_kept` counts it, and it is saved on
+`publish_checks`, only when the firm is one of the 10 lab firms. Notes are kept for the team and never published. A blank string is skipped. The old `{"item": "..."}`
 free-text form is refused.
 
 ## 2. One checker at publish
