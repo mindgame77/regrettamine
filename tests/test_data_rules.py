@@ -131,5 +131,5 @@ def test_every_publish_path_uses_the_checker():
     assert "from checked_items(p_payload)" in sql and "people_note_guard" not in sql.split("--")[0]
     py = (ROOT / "tools" / "ingest" / "import_research.py").read_text(encoding="utf-8")
     assert "note_text(" in py and "person_name_bad(" in py
-    assert (ROOT / "docs" / "DATA_RULES.md").exists()
-    assert "DATA_RULES.md" in (ROOT / "docs" / "ENRICHER.md").read_text(encoding="utf-8")
+    assert (ROOT / "docs" / "archive" / "DATA_RULES.md").exists()
+    assert "DATA_RULES.md" in (ROOT / "docs" / "archive" / "ENRICHER.md").read_text(encoding="utf-8")

@@ -1,6 +1,6 @@
 # Archived rule docs
 
-Frozen copies of the old rule docs, taken when docs/PAGE_DATA_GUIDE.md became the only rulebook. These files are not rules. Do not edit them. The originals still sit in docs/ until the follow-up pull request removes them.
+Frozen copies of the old rule docs, taken when docs/PAGE_DATA_GUIDE.md became the only rulebook. These files are not rules. Do not edit them. The copies that used to sit next to the guide have been removed. The rulebook is docs/PAGE_DATA_GUIDE.md.
 
 - DATA_RULES.md
 - SOURCE_TIERS.md

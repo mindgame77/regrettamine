@@ -2,6 +2,8 @@ Update this file after every change.
 
 One line per change: date/time PT | what changed | PR link | how to roll back.
 
+2026-10-27 10:30 PM PT | Draft only: remove the old rule docs from docs/ after they were copied to docs/archive/. Two tests now read the archive copies so they do not look for the deleted files. The rulebook is unchanged. | https://github.com/mindgame77/regrettamine/pull/196 | Restore the ten files from docs/archive/.
+
 2026-10-27 10:22 PM PT | One rulebook. `docs/PAGE_DATA_GUIDE.md` is the only rules doc. The old rule docs are copied to `docs/archive/` and left in place with a pointer. `docs/RULES_AUDIT.md` is marked a dated record. Bot briefs point at the guide. No code and no database change. Cleanup of old bot tables stays the last step, after lab tests. | https://github.com/mindgame77/regrettamine/pull/195 | Revert this commit. The archive copies can stay.
 
 2026-10-27 8:34 PM PT | Rules audit and page data guide, docs only. `docs/RULES_AUDIT.md` marks each rule active, old, doc-only, code-only, or in conflict, and lists a problem for every data kind. `docs/PAGE_DATA_GUIDE.md` walks each piece of the page and names the table, the source site, and the bot. No database change. | https://github.com/mindgame77/regrettamine/pull/194 | Delete the two files and this line.
