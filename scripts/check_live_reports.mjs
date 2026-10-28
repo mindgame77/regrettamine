@@ -5,7 +5,7 @@
 import { chromium } from 'playwright';
 
 const BASE = (process.env.REGRET_BASE || 'https://regretamin.com/').replace(/\/?$/, '/');
-const FIRMS = (process.env.REGRET_FIRMS || 'a16z,accel,forbion').split(',');
+const FIRMS = (process.env.REGRET_FIRMS || 'a16z,y-combinator,sequoia,lightspeed,generalcatalyst,plugandplay,accel,greenoaks,khosla-ventures,mio-partners').split(',');
 const problems = [];
 const fail = (m) => { problems.push(m); console.log('FAIL ' + m); };
 const ok = (m) => console.log('ok   ' + m);

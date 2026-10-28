@@ -18,6 +18,11 @@ if [ -z "${SUPABASE_ANON_KEY:-}" ]; then
   SUPABASE_ANON_KEY=$(python3 -c "import re,sys;print(re.search(r'\"key\": \"([^\"]+)\"',open(sys.argv[1]).read()).group(1))" "$PREVIEW_DIR/index.html")
   export SUPABASE_ANON_KEY
 fi
+# Static host: there is no Pages Function here. A lab-only tree would remove the other firm pages.
+if [ "${LAB_ONLY:-1}" != "0" ]; then
+  echo "refusing: this preview is static files only. A lab-only build would remove the other firm pages. LAB_ONLY=0 is the manual rollout." >&2
+  exit 1
+fi
 python3 "$REPO/launch/build.py"
 find "$PREVIEW_DIR" -mindepth 1 -maxdepth 1 ! -name .git ! -name .nojekyll -exec rm -rf {} +
 cp -a "$REPO/site-launch/." "$PREVIEW_DIR/"
