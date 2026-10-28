@@ -115,3 +115,69 @@ def test_lab_submission_publishes_once_and_a_different_value_is_a_note():
             (fid,),
         ).fetchone()[0] >= 1
         conn.rollback()
+
+
+def test_firm_section_website_sets_the_domain_only_when_the_link_opens():
+    import psycopg
+
+    with psycopg.connect(DATABASE_URL) as conn, conn.cursor() as cur:
+        slug = "lab-web-" + uuid.uuid4().hex[:8]
+        reg = "zz-web-" + uuid.uuid4().hex[:8]
+        cur.execute("insert into research_queue (registry_id, name, priority, status) values (%s, 'Hold Lab', 5, 'submitted')", (reg,))
+        fid = cur.execute(
+            "insert into firms(slug, name, display_name, published, data_status, registry_id) "
+            "values (%s, 'Hold Lab', 'Hold Lab', true, 'real', %s) returning id",
+            (slug, reg),
+        ).fetchone()[0]
+        cur.execute(
+            "insert into ingest_settings(key, value) values ('lab_firm_slugs', %s) "
+            "on conflict (key) do update set value = case when ingest_settings.value like %s then ingest_settings.value "
+            "else coalesce(ingest_settings.value, '') || ',' || excluded.value end",
+            (slug, "%" + slug + "%"),
+        )
+        url = "https://hold.example/"
+        payload = {
+            "schema_version": "dump-1.2",
+            "firm": {"name": "Hold Lab", "firm_id": reg, "website": "https://hold.example",
+                     "primary_domain": "hold.example", "website_source_url": url},
+            "records": [], "leads": [], "search_log": [],
+            "coverage": [{"item": "website", "value": "hold.example", "status": "found",
+                          "source_url": url, "retrieved_at": "2026-10-27"}],
+            "probes": {url: True},
+        }
+        n = cur.execute("select count(*) from _checker_payload_items(%s::jsonb)", (json.dumps(payload),)).fetchone()[0]
+        assert n >= 1
+        cur.execute(
+            "insert into research_submissions(registry_id, bot_id, payload, record_count, valid) "
+            "values (%s, 'toxy-enricher', %s::jsonb, 0, true)",
+            (reg, json.dumps(payload)),
+        )
+        assert cur.execute("select primary_domain from firms where id = %s", (fid,)).fetchone()[0] == "hold.example"
+        dead = "lab-dead-" + uuid.uuid4().hex[:8]
+        dreg = "zz-dead-" + uuid.uuid4().hex[:8]
+        cur.execute("insert into research_queue (registry_id, name, priority, status) values (%s, 'Dead Lab', 5, 'submitted')", (dreg,))
+        did = cur.execute(
+            "insert into firms(slug, name, published, data_status, registry_id) "
+            "values (%s, 'Dead Lab', true, 'real', %s) returning id",
+            (dead, dreg),
+        ).fetchone()[0]
+        cur.execute(
+            "update ingest_settings set value = value || ',' || %s where key = 'lab_firm_slugs'",
+            (dead,),
+        )
+        durl = "https://dead.example/"
+        dpayload = dict(payload, firm={"name": "Dead Lab", "firm_id": dreg, "website": "https://dead.example",
+                                       "primary_domain": "dead.example", "website_source_url": durl},
+                        coverage=[{"item": "website", "value": "dead.example", "status": "found", "source_url": durl}],
+                        probes={durl: False})
+        cur.execute(
+            "insert into research_submissions(registry_id, bot_id, payload, record_count, valid) "
+            "values (%s, 'toxy-enricher', %s::jsonb, 0, true)",
+            (dreg, json.dumps(dpayload)),
+        )
+        assert cur.execute("select primary_domain from firms where id = %s", (did,)).fetchone()[0] is None
+        reason = cur.execute(
+            "select reason from checker_holding where firm_id = %s order by id desc limit 1", (did,)
+        ).fetchone()[0]
+        assert "did not open" in reason
+        conn.rollback()
