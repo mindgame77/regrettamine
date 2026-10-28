@@ -63,6 +63,36 @@ def test_free_text_is_rejected_notes_are_kept_structured_is_published():
         c.rollback()
 
 
+def test_top_level_notes_are_kept_and_never_published():
+    with _db() as c:
+        slug, fid = _firm(c, "drn")
+        c.execute("insert into ingest_settings(key, value) values ('lab_firm_slugs', %s) on conflict (key) do update set value = excluded.value", (slug,))
+        rows = c.execute(
+            "select kind, outcome, item->>'note' from checked_items(%s::jsonb) where kind = 'note' order by n",
+            (json.dumps({"notes": ["first note", "  ", {"note": "not a string"}, "second note"]}),)).fetchall()
+        assert rows == [("note", "note", "first note"), ("note", "note", "second note")]
+        one = c.execute("select outcome, item->>'note' from checked_items(%s::jsonb)",
+                        (json.dumps({"notes": "a single note"}),)).fetchall()
+        assert one == [("note", "a single note")]
+        assert c.execute("select count(*) from checked_items(%s::jsonb)", (json.dumps({"notes": {"note": "object"}}),)).fetchone()[0] == 0
+        r = _enrich(c, {"slug": slug, "notes": ["Schedule A lists 14 people", "no source URL"],
+                        "sections": {"Timeline": [{"date": "2009", "event": "Founded", "source": SRC}]}})
+        assert r["notes_kept"] == 2 and r["accepted_items"] == 1 and r["on_page"] is True
+        kept = c.execute("select item->>'note', reason from publish_checks where firm_id = %s and outcome = 'note' order by id", (fid,)).fetchall()
+        assert kept == [("Schedule A lists 14 people", "note kept internal (never published)"),
+                        ("no source URL", "note kept internal (never published)")]
+        assert c.execute("select count(*) from timeline_events where firm_id = %s", (fid,)).fetchone()[0] == 1
+        only = _enrich(c, {"slug": slug, "notes": "kept only"})
+        assert only["notes_kept"] == 1 and only["accepted_items"] == 0 and only["on_page"] is False
+        assert c.execute("select count(*) from publish_checks where firm_id = %s and outcome = 'note' and item->>'note' = 'kept only'", (fid,)).fetchone()[0] == 1
+        assert c.execute("select count(*) from timeline_events where firm_id = %s", (fid,)).fetchone()[0] == 1
+        other, oid = _firm(c, "dro")
+        skipped = _enrich(c, {"slug": other, "notes": "not for this firm"})
+        assert skipped["notes_kept"] == 0
+        assert c.execute("select count(*) from publish_checks where firm_id = %s and outcome = 'note'", (oid,)).fetchone()[0] == 0
+        c.rollback()
+
+
 def test_duplicate_merges_source_and_role_conflict_is_flagged():
     with _db() as c:
         slug, fid = _firm(c, "drm")

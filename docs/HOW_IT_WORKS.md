@@ -40,7 +40,7 @@ A researcher (`research_submit`) can upload at most 20 dumps a minute for its ow
 * **Sources:** every item needs a real link. Government sites count only for sec.gov and the courts. Search-result or
   chatbot pages are not sources. Sources are tagged *trusted* (regulators, courts, registers, sanctions lists, government)
   or *other*. A fact with no usable source is kept but hidden (`needs_source`) until a source is added.
-* **Notes are never published.** Search logs, counts and reasoning go in a `note`. Notes are kept for the team.
+* **Notes are never published.** Search logs, counts and reasoning go in `{"note": "..."}` inside a section, or in the top-level `notes` string or array of strings. The checker keeps each one (`notes_kept`) in `publish_checks` and does not put it on the page. Top-level `notes` are saved only for the 10 lab firms.
 * **Dates:** single dates are `YYYY`, `YYYY-MM` or `YYYY-MM-DD`. A month-only date is never padded to `-01`. Timeline ranges
   such as `May–Jul 2025` may stay as they are. Ambiguous numeric dates (e.g. 03/04/2025) are never converted automatically.
 * **The checker, per item:** checks the shape and source → looks for a duplicate already on the page (a duplicate adds
