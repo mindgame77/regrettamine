@@ -2,6 +2,10 @@ Update this file after every change.
 
 One line per change: date/time PT | what changed | PR link | how to roll back.
 
+2026-10-27 10:50 PM PT | Checker follows the sources-per-page-part rules. Known outlets, founder posts, court registers, Form ADV, Form D, team pages, firm-site social counts, and a portfolio company's own site are classified in `_checker_decide`. The switch stays off. | https://github.com/mindgame77/regrettamine/pull/197 | Revert this commit. `checker_publish` stays false.
+
+2026-10-27 10:46 PM PT | Sources per page part added to the rulebook. Reviews, news, deals, lawsuits, people, social counts, and portfolio sites now say which links may be shown. No code and no database change in this commit. | https://github.com/mindgame77/regrettamine/pull/198 | Revert this commit.
+
 2026-10-27 10:40 PM PT | Checker built, switch left off. `checker_publish` is false, so the Enricher still publishes. Lab dry run `checker_dry_run` rolls back. The enrich reply now names docs/PAGE_DATA_GUIDE.md. No page rows deleted. | https://github.com/mindgame77/regrettamine/pull/197 | Run `supabase/rollbacks/20261028070000_checker_switch.sql`, then re-apply `research_enrich` from `supabase/migrations/20261028010000_payload_notes.sql`.
 
 2026-10-27 10:30 PM PT | Draft only: remove the old rule docs from docs/ after they were copied to docs/archive/. Two tests now read the archive copies so they do not look for the deleted files. The rulebook is unchanged. | https://github.com/mindgame77/regrettamine/pull/196 | Restore the ten files from docs/archive/.

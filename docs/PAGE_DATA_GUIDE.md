@@ -17,9 +17,23 @@ Each fact has one source level. The level is a number.
 3. **Elsewhere online.** News, newsletters, social posts, and any other page. Level 3 is held as **Unconfirmed** and is not shown.
 4. **Nothing found.** Store “Not found yet” plus the search date. The row is kept and hidden.
 
-If two sources disagree, the register wins. A firm site does not override a register. An elsewhere-online page does not override either, and it is not shown.
+If two sources disagree, the register wins. A firm site does not override a register. An elsewhere-online page does not override either, and it is not shown, except where the table below says that page part may show it.
 
 A search-results page or a chat page is not a source at any level.
+
+## Sources per page part
+
+These rules override the general “elsewhere online is Unconfirmed” line for that part only. A dead link, a search page, or a chat page is still a failure. “Names the firm” means the copied text contains the firm’s name or short name.
+
+| Page part | Shown | Held or failed |
+|---|---|---|
+| Reviews | A Reddit, X, or LinkedIn post that exists, names the firm, and is copied word for word with its link. The writer says they are a founder, or the profile shows that they are. | Anonymous, with no founder claim: Unconfirmed, not shown. A dead link or a post that does not name the firm: fail. |
+| News | A story on TechCrunch, Reuters, Bloomberg, Axios, the Financial Times, the Wall Street Journal, CNBC, Forbes, or The Information, when the link opens and the story names the firm. | Any other blog or unknown site: Unconfirmed, not shown. A dead link, or a story that does not name the firm: fail. |
+| Deals | The company’s own press release, or an SEC Form D. Both are level 2. The same known outlets as News are accepted. The amount and the Lead flag are filled only when that source states them. | Any other page: Unconfirmed, not shown. |
+| Lawsuits | CourtListener, PACER, or uscourts.gov. These are level 1. | Any other page: Unconfirmed, not shown. |
+| People | The firm’s team page or a Form ADV. The register is level 1. The firm’s team page is level 2. LinkedIn is allowed only for that person’s own job history. | Any other LinkedIn page, or a page that is not the team page or Form ADV: Unconfirmed, not shown. |
+| Social counts | Only an account that is linked from the firm’s own website. | A count taken from anywhere else: Unconfirmed, not shown. |
+| Portfolio and sectors | The portfolio company’s own website. That is level 2. | Any other site: Unconfirmed, not shown. |
 
 ## One way in
 
@@ -37,7 +51,7 @@ For each item it checks three things:
 - The link matches the item (this firm, this person, this fund, this case).
 - The source level, from the ranking above.
 
-A register or firm-site item is published with the date and checked-by **Checker**. An elsewhere-online item is held as Unconfirmed and is not shown. A failure stays in holding with the reason. Failed items are kept 7 days, then removed. Nothing is re-checked unless Alex asks. The revision of social links and contact details every few months counts as that standing ask. News rows that already have a check mark stay checked. They are not re-checked in this pass.
+A register or firm-site item is published with the date and checked-by **Checker**. An elsewhere-online item is held as Unconfirmed and is not shown, unless Sources per page part says that part may show it. A failure stays in holding with the reason. Failed items are kept 7 days, then removed. Nothing is re-checked unless Alex asks. The revision of social links and contact details every few months counts as that standing ask. News rows that already have a check mark stay checked. They are not re-checked in this pass.
 
 The Enricher does not publish. The Activity Collector does not write `investments` directly.
 

@@ -52,4 +52,23 @@ def test_switch_is_off_and_levels_and_dry_run_roll_back():
         other = c.execute("select checker_dry_run('not-a-lab-firm')").fetchone()[0]
         other = other if isinstance(other, dict) else json.loads(other)
         assert other["error"] == "unknown firm"
+        fid = c.execute("select id from firms where slug = %s", (slug,)).fetchone()[0]
+        def decide(section, url, item, probes=None):
+            row = c.execute(
+                "select outcome, lvl, reason from _checker_decide(%s, %s, %s::jsonb, %s, null, %s::jsonb)",
+                (fid, section, json.dumps(item), url, json.dumps(probes) if probes is not None else None),
+            ).fetchone()
+            return row[0], row[1], row[2]
+        assert decide("press", "https://techcrunch.com/story", {"headline": "Checker Lab raises a fund"})[0] == "published"
+        assert decide("press", "https://example.com/blog", {"headline": "Checker Lab raises a fund"})[0] == "unconfirmed"
+        assert decide("press", "https://techcrunch.com/story", {"headline": "Someone else raises"})[0] == "failure"
+        assert decide("founders", "https://x.com/ada/status/1", {"who": "anonymous", "quote": "Checker Lab is fine"})[0] == "unconfirmed"
+        assert decide("founders", "https://www.linkedin.com/in/ada", {"who": "Ada, founder", "quote": "Checker Lab led our round"})[0] == "published"
+        assert decide("legal", "https://www.courtlistener.com/docket/1/x/", {"title": "X v Checker Lab"})[:2] == ("published", 1)
+        assert decide("people", "https://www.linkedin.com/posts/ada_x", {"name": "Ada"})[0] == "unconfirmed"
+        assert decide("people", "https://www.linkedin.com/in/ada", {"name": "Ada"})[:2] == ("published", 2)
+        assert decide("deals", "https://www.sec.gov/Archives/edgar/data/1/formd.xml", {"company": "Acme"})[:2] == ("published", 2)
+        assert decide("social", "https://x.com/checkerlab", {})[0] == "unconfirmed"
+        assert decide("social", "https://checker.example/about", {})[:2] == ("published", 2)
+        assert decide("press", "https://techcrunch.com/story", {"headline": "Checker Lab raises"}, {"https://techcrunch.com/story": False})[0] == "failure"
         c.rollback()
