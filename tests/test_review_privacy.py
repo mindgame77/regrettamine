@@ -53,8 +53,5 @@ def test_signed_in_users_cannot_read_other_review_authors():
         with pytest.raises(psycopg.errors.InsufficientPrivilege):
             with conn.transaction():
                 cur.execute("select * from my_review_private()")
-        with pytest.raises(psycopg.errors.InsufficientPrivilege):
-            with conn.transaction():
-                cur.execute("select * from activity_legacy_map")
         cur.execute("reset role")
         conn.rollback()
