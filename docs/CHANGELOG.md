@@ -2,6 +2,7 @@ Update this file after every change.
 
 One line per change: date/time PT | what changed | PR link | how to roll back.
 
+2026-10-28 2:55 AM PT | Lab search names. Legal names, fund entity names, and the firm website can be found from firm_aliases. Only a register or the firm site is copied. Checks 1 and 6 each search the legal name and the fund names on their own. Not applied. | https://github.com/mindgame77/regrettamine/pull/211 | Run `supabase/rollbacks/20261028190000_lab_search_aliases.sql`. Older aliases stay.
 2026-10-28 2:15 AM PT | Lab soft caps. News 500, confirmed LPs 100, deals 200. Oldest rows past the cap would be archived, not deleted. Archived deals stay in every deal count, including last 12 months, the latest deal, Show all, and the 12-month sector breakdown. Not applied. | https://github.com/mindgame77/regrettamine/pull/209 | Run `supabase/rollbacks/20261028180000_lab_soft_caps.sql`. `lab_cap_archive` is not deleted.
 2026-10-28 1:45 AM PT | Lab check pills and My firms tallies are computed when the page is read. Check 8 uses the IAPD row. Not applied. | https://github.com/mindgame77/regrettamine/pull/208 | Run `supabase/rollbacks/20261028170000_live_counts_lab.sql`. `live_count_backup` is not deleted.
 2026-10-28 1:22 AM PT | A held legal-matter link is found by the matter id on the log, not only by the link id. | https://github.com/mindgame77/regrettamine/pull/207 | Run `supabase/rollbacks/20261028160000_held_matter_key.sql`. `home_held_backup` is not deleted.
