@@ -266,23 +266,25 @@ def test_submit_rate_limit_rejects_the_21st_without_inserting():
         bot = "zz-rate-" + uuid.uuid4().hex[:8]
         other = bot + "-b"
         reg = "zz-rate-" + uuid.uuid4().hex[:8]
-        payload = json.dumps({"schema_version": "dump-1.2"})
         c.execute("insert into research_queue (registry_id, name, priority, status, claimed_by, claimed_at) "
                   "values (%s, 'Zz Rate Partners', 900000, 'claimed', %s, now())", (reg, bot))
-        for _ in range(20):
+        for i in range(20):
             c.execute("update research_queue set status = 'claimed', claimed_by = %s, attempts = 0, claimed_at = now() where registry_id = %s", (bot, reg))
-            got = c.execute("select research_submit(%s, %s, %s::jsonb, 1, true, '[]'::jsonb)", (reg, bot, payload)).fetchone()[0]
+            got = c.execute("select research_submit(%s, %s, %s::jsonb, 1, true, '[]'::jsonb)",
+                            (reg, bot, json.dumps({"schema_version": "dump-1.2", "n": i}))).fetchone()[0]
             assert got["ok"] is True
         assert c.execute("select count(*) from research_submissions where bot_id = %s", (bot,)).fetchone()[0] == 20
         assert c.execute("select 1 from pg_indexes where indexname = 'research_submissions_bot_received_idx'").fetchone()
         c.execute("savepoint rate")
         with pytest.raises(Exception) as ei:
             c.execute("update research_queue set status = 'claimed', claimed_by = %s, attempts = 0 where registry_id = %s", (bot, reg))
-            c.execute("select research_submit(%s, %s, %s::jsonb, 1, true, '[]'::jsonb)", (reg, bot, payload))
+            c.execute("select research_submit(%s, %s, %s::jsonb, 1, true, '[]'::jsonb)",
+                      (reg, bot, json.dumps({"schema_version": "dump-1.2", "n": 21})))
         assert "rate_limited: max 20 uploads per minute per bot, retry shortly" in str(ei.value)
         c.execute("rollback to savepoint rate")
         assert c.execute("select count(*) from research_submissions where bot_id = %s", (bot,)).fetchone()[0] == 20
         c.execute("update research_queue set status = 'claimed', claimed_by = %s, attempts = 0, claimed_at = now() where registry_id = %s", (other, reg))
-        other_ok = c.execute("select research_submit(%s, %s, %s::jsonb, 1, true, '[]'::jsonb)", (reg, other, payload)).fetchone()[0]
+        other_ok = c.execute("select research_submit(%s, %s, %s::jsonb, 1, true, '[]'::jsonb)",
+                             (reg, other, json.dumps({"schema_version": "dump-1.2", "n": "other"}))).fetchone()[0]
         assert other_ok["ok"] is True
         c.rollback()
