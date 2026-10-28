@@ -102,7 +102,7 @@ The winner is the higher source level, then the newer date, then the more comple
 
 On the 10 lab firms, exact copies in a home are the only rows removed. A different value stays on the page and is listed for the Checker. `fact_events` stays the public fact counter. The log is `home_merge_log`. The backup is `home_merge_backup`, and it is not deleted without Alex’s OK. `firm_aliases.alias_type` is display, legal, fund entity, or old name. The page does not read it.
 
-A side row that has no home is backed up, then checked once. If the Checker publishes it, the row moves into its home. If the Checker does not, the row is deleted. Only the key (the URL, or the id when there is no URL), the kind, the firm, and the reason stay on `rejected_items`. The Checker will not add that key again. That backup is `home_held_backup`. It is kept 3 days and is not deleted without Alex’s OK. The old tables themselves are not dropped.
+A side row that has no home is backed up, then checked once. If the Checker publishes it, the row moves into its home. If the Checker does not, the row is deleted. Only the key (the URL, or the id when there is no URL), the kind, the firm, and the reason stay on `rejected_items`. The Checker will not add that key again. A legal-matter link is found by the matter id stored on the held log. That backup is `home_held_backup`. It is kept 3 days and is not deleted without Alex’s OK. The old tables themselves are not dropped.
 
 ## Live counts
 
