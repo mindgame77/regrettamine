@@ -328,6 +328,7 @@ begin
         insert into checker_holding(firm_id, origin, origin_id, kind, outcome, reason, item)
         values (new.firm_id, 'enrichment', new.id, 'row', 'failure', sqlerrm, new.payload);
       end;
+      perform set_config('app.finder_holding', '', true);
     else
       perform promote_enrichment(new.firm_id);
     end if;
