@@ -12,7 +12,7 @@ This folder is a copy of the scoring logic as it stood immediately before the ol
 
 The score itself is computed only in `regrettamine/score_v2.py`. The public page `src/scoring.html` states the same rules in words. `src/js/scoring.js` does not calculate a score. It is the paid correction form on that page: search for a fund, and send a “what’s wrong” note with a source link.
 
-The database does not contain a scoring formula. `landing_funds` and `search_funds` only sorted firms that were already scored, using `list_score_exact` (the one-decimal total) and, if that was empty, the whole-number `list_score`. Those two functions were the old homepage and search. They are not the formula.
+The database does not contain a scoring formula. The twelve retired website functions were checked before they were dropped. `landing_funds` and `search_funds` only sorted firms that were already scored, using `list_score_exact` (the one-decimal total) and, if that was empty, the whole-number `list_score`. They do not apply the weights, the rate scale, or the bands. The other ten (`open_report`, `fact_record_count`, `firm_id_for_slug`, `public_firm_id`, `carry_anon_views`, `my_report_slugs`, `my_watch_slugs`, `my_watch_alerts`, `my_alert_funds`, `set_fund_alert`) do not read or write a score. Their SQL is not copied here.
 
 ## What the score measures
 
