@@ -50,6 +50,8 @@ A merge to main also deploys a Cloudflare preview branch. `launch/deploy_preview
 
 Check a change locally before deploying: `python3 launch/build.py && python3 -m http.server -d site-launch` → http://localhost:8000/
 
+That build writes the 10 lab firms (`LAB_ONLY` defaults to 1). `LAB_ONLY=0` is the all-firms rollout.
+
 ## Yearly plans
 - Billed once a year by Stripe; checks still refill **monthly**. The webhook stores `monthly_checks` and `next_refill` on `check_balances`;
   the DB cron job `regretamin-refill-yearly` (`refill_yearly_checks()`, every hour at :07) resets `paid_left` to `monthly_checks` when `next_refill` has passed.
