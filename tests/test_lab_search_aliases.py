@@ -1,4 +1,4 @@
-"""Lab search aliases: register and firm-site names are searchable. News names are not."""
+"""Lab aliases stay for checks. Search matches the name, the short name, and the website."""
 import os
 import uuid
 
@@ -17,8 +17,8 @@ def test_checked_names_are_searchable_and_each_check_keeps_its_own_list():
         other = "srcho-" + uuid.uuid4().hex[:8]
         crd = uuid.uuid4().hex[:12]
         fid = cur.execute(
-            "insert into firms(slug, name, legal_name, primary_domain, sec_crd, published, data_status) "
-            "values (%s, 'Search Lab', 'ZZ Legal Management, L.L.C.', 'zzlab.example', %s, true, 'real') returning id",
+            "insert into firms(slug, name, short_name, legal_name, primary_domain, sec_crd, published, data_status) "
+            "values (%s, 'Search Lab', 'SL', 'ZZ Legal Management, L.L.C.', 'zzlab.example', %s, true, 'real') returning id",
             (slug, crd),
         ).fetchone()[0]
         oid = cur.execute(
@@ -77,14 +77,35 @@ def test_checked_names_are_searchable_and_each_check_keeps_its_own_list():
             "select coalesce(sum(added), 0) from lab_search_aliases(false) where slug = %s", (slug,)
         ).fetchone()[0] == 0
 
+        cur.execute(
+            "insert into firm_aliases(firm_id, alias, source, alias_type) values (%s, 'SL', 'previous_display', 'old_name')",
+            (fid,),
+        )
+        assert cur.execute(
+            "select action from lab_short_name_aliases(true) where slug = %s", (slug,)
+        ).fetchone()[0] == "retype"
+        assert cur.execute(
+            "select alias_type, source from firm_aliases where firm_id = %s and alias = 'SL'", (fid,)
+        ).fetchone() == ("short_name", "firm_site")
+        cur.execute(
+            "insert into firm_aliases(firm_id, alias, source, alias_type) values (%s, 'Other Legal LLC', 'sec_legal', 'legal')",
+            (oid,),
+        )
+
         def slugs(q):
             return [r["slug"] for r in cur.execute("select firm_suggest(%s)", (q,)).fetchone()[0]]
 
-        assert slug in slugs("ZZ Legal Management")
+        assert slug in slugs("Search Lab")
+        assert slug in slugs("SL")
         assert slug in slugs("zzlab.example")
-        assert slug in slugs("ZZ Growth Fund V")
-        assert slug in slugs("ZZ Register Fund")
+        assert slug not in slugs("ZZ Legal Management")
+        assert slug not in slugs("ZZ Growth Fund V")
+        assert slug not in slugs("ZZ Register Fund")
         assert slug not in slugs("ZZ News Fund")
+        assert cur.execute(
+            "select count(*) from firm_aliases where firm_id = %s and alias_type = 'legal'", (fid,)
+        ).fetchone()[0] == 1
+        assert other in slugs("Other Legal")
 
         one = cur.execute("select alias from lab_check_search_names(%s, 1) order by alias", (fid,)).fetchall()
         six = cur.execute("select alias from lab_check_search_names(%s, 6) order by alias", (fid,)).fetchall()

@@ -85,7 +85,7 @@ The columns are on the item tables: `press_item_firms`, `timeline_events`, `firm
 
 | Kind | The one home | What gets merged in |
 |---|---|---|
-| Firm names | `firm_aliases`, with a type: display, legal, fund entity, old name, or website, plus the source | Gaps in `legal_name` |
+| Firm names | `firm_aliases`, with a type: display, short name, legal, fund entity, old name, or website, plus the source | Gaps in `legal_name` |
 | Funds | `funds` | `firm_profile_facts` where section is funds |
 | AUM | one fact, regulatory assets from Form ADV Item 5F, with the as-of year | `firms.aum_display` |
 | Deals and portfolio companies | `investments` and `portfolio_companies` | Timeline lines and collector rows that skip the Checker |
@@ -100,7 +100,7 @@ Same-item keys: fund = fund name or SEC file number; news = normalized URL (lowe
 
 The winner is the higher source level, then the newer date, then the more complete row. Every source is kept. The losing value is saved as a note. If two values still disagree, they go to the Checker review list. Each merged item gets one entry check. The merge log is permanent. The merge backup is kept 3 days, then deleted only with Alex’s OK.
 
-On the 10 lab firms, exact copies in a home are the only rows removed. A different value stays on the page and is listed for the Checker. `fact_events` stays the public fact counter. The log is `home_merge_log`. The backup is `home_merge_backup`, and it is not deleted without Alex’s OK. `firm_aliases.alias_type` is display, legal, fund entity, old name, or website. The page does not read it.
+On the 10 lab firms, exact copies in a home are the only rows removed. A different value stays on the page and is listed for the Checker. `fact_events` stays the public fact counter. The log is `home_merge_log`. The backup is `home_merge_backup`, and it is not deleted without Alex’s OK. `firm_aliases.alias_type` is display, short name, legal, fund entity, old name, or website. The page does not read it.
 
 A side row that has no home is backed up, then checked once. If the Checker publishes it, the row moves into its home. If the Checker does not, the row is deleted. Only the key (the URL, or the id when there is no URL), the kind, the firm, and the reason stay on `rejected_items`. The Checker will not add that key again. A legal-matter link is found by the matter id stored on the held log. That backup is `home_held_backup`. It is kept 3 days and is not deleted without Alex’s OK. The old tables themselves are not dropped.
 
@@ -149,9 +149,9 @@ On the 10 lab firms, check 1 and check 6 each search the legal name and each fun
 
 ## Search and new firms
 
-Search matches the display name, the legal name, fund names, and the website. Those names live on `firm_aliases` with a type. `firm_suggest` already reads aliases. There is no second search table.
+Search matches the firm name, the short name, and the website. Those names live on `firm_aliases` with a type. `firm_suggest` already reads aliases. There is no second search table.
 
-On the 10 lab firms, only a checked register value or the firm’s own domain is copied. A legal name is copied when the firm has an SEC CRD and a legal name. A fund name is copied when that fund is real and a source link is on sec.gov or on the firm’s own domain. The firm’s domain is the website alias. A news link is not copied. A label that is not a name, such as Funds or Regulatory AUM, is not copied. `lab_search_aliases` does the copy. The migration does not run it.
+On the 10 lab firms, `firm_suggest` matches the firm name, the short name, the slug, and aliases whose type is display, short name, or website. It does not match a legal name or a fund entity name. Those rows stay in `firm_aliases`. Check 1 and check 6 still read them, each on its own search. A commonly used short name is stored as type short name, source firm site. A legal name is still copied when the firm has an SEC CRD and a legal name. A fund name is still copied when that fund is real and a source link is on sec.gov or on the firm’s own domain. The firm’s domain is the website alias. A news link is not copied. A label that is not a name, such as Funds or Regulatory AUM, is not copied.
 
 A new firm is deduped by registry id first (SEC CRD, FCA, Companies House, another national regulator, or a GLEIF LEI). If there is no registry id, match on domain plus name plus HQ, and mark the firm **no registry ID**.
 
@@ -224,9 +224,9 @@ There is no written rule that a given element must come from a given site, excep
 ## 2. Search box and suggestions
 
 1. The box on the home page, the firm page, and the empty state. After a short pause it lists up to 8 firms. Choosing one opens `/vc/<slug>/`. No match offers “Request this firm.”
-2. `firm_suggest` reads `firms.display_name`, `firms.name`, `firms.short_name`, `firms.slug`, `firms.hq`, and `firm_aliases.alias`. It returns slug, display name, short name, and HQ. `launch/js/search.js` calls it.
+2. `firm_suggest` reads `firms.display_name`, `firms.name`, `firms.short_name`, `firms.slug`, and `firm_aliases.alias`. On a lab firm the alias must be type display, short name, or website. It returns slug, display name, short name, and HQ. `launch/js/search.js` calls it. The list looks the same.
 3. Names arrive when a firm is created from the queue or merged (`docs/DEDUPE.md`, `docs/FIRM_REQUESTS.md`). List builders and visitor requests fill the queue. The enricher creates the page.
-4. Only published, non-test, real, not-deleted firms. Match is a substring. A prefix ranks first. Aliases are included. Legal name is not a separate column in the search; it is searchable only if it was copied into `firm_aliases`.
+4. Only published, non-test, real, not-deleted firms. Match is a substring. A prefix ranks first. On a lab firm, a legal name or a fund entity name in `firm_aliases` is not a search hit. The short name and the website are.
 5. A deleted or unpublished firm is absent.
 6. Lab display names match `firms.name` (RULES_AUDIT 1). Sequoia has no legal name to alias (RULES_AUDIT 2). 4,025 queue rows have no `list_source` (RULES_AUDIT 23).
 
