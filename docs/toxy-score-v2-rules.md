@@ -1,3 +1,5 @@
+> Dated record, not the rulebook. The only rules are in [docs/PAGE_DATA_GUIDE.md](PAGE_DATA_GUIDE.md). Where this file disagrees with that guide, the guide wins.
+
 # Toxy Score v2: Scoring Rules
 
 Version 2, agreed Oct 2, 2026. The score runs from 0 to 100, and higher is better. It never goes below 0 or above 100.

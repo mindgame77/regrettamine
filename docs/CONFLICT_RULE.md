@@ -1,3 +1,5 @@
+> Dated record, not the rulebook. The only rules are in [docs/PAGE_DATA_GUIDE.md](PAGE_DATA_GUIDE.md). Where this file disagrees with that guide, the guide wins.
+
 # Conflict rule
 
 Approved by Alex on 2026-10-27 at about 12:12 AM PT. This applies to every bot and every data kind.

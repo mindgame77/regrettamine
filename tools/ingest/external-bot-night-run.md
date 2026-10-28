@@ -1,6 +1,8 @@
 # External bot brief: Regretamin night run (VC research → ingest API)
 
-You will research venture capital firms one at a time and upload one JSON dump per firm to an ingest API. Follow these steps exactly.
+The only rulebook is [docs/PAGE_DATA_GUIDE.md](../../docs/PAGE_DATA_GUIDE.md). Researchers, list builders, the Enricher, the Checker, the Activity Collector, and portal-night-bot follow that file. This brief is how to call the holding door. It is not a second set of data rules. Where Part B disagrees with the guide, follow the guide.
+
+You will research venture capital firms one at a time and upload one JSON dump per firm into the holding area. Follow the call steps exactly. Do not publish a page yourself.
 
 ## Step 0. Get the key (ask first)
 
@@ -69,12 +71,14 @@ curl -s -X POST "$URL" -H "x-ingest-key: $KEY" -H 'content-type: application/jso
 
 ## Step 3. Rules
 
+Data rules, source ranking, what may be shown, and the 10 checks are only in [docs/PAGE_DATA_GUIDE.md](../../docs/PAGE_DATA_GUIDE.md).
+
 - You may claim up to 300 firms per request (`count` up to 300) and run parallel copies of this loop. Claim only what you can finish within 6 hours; unfinished claims are released after 6 hours.
-- Every fact needs a source URL, a verbatim quote from that page, and the date you retrieved it. No source → no record (put it in `leads` instead).
+- Send the dump into holding. Do not write page tables, and do not treat a stored dump as published.
 - Never invent anything: names, numbers, dates, URLs or quotes. If unsure, leave it out or use `null`/`unknown`.
 - Only free, public pages. No paid, login-walled or gated sites; do not bypass paywalls.
 - Respect robots.txt and each site's terms of service. Go slowly; no bulk scraping.
-- Do not scrape commercial VC databases (Crunchbase, PitchBook, CB Insights, Tracxn, Dealroom, PrivCo, etc.). Primary sources (SEC, courts, regulators, company sites, news) are preferred.
+- Do not scrape commercial VC databases (Crunchbase, PitchBook, CB Insights, Tracxn, Dealroom, PrivCo, etc.).
 - Rate limit: 300 requests per minute on the key. On a 429, wait 60 seconds and retry.
 - Submit cap: at most 20 uploads per minute for your `bot_id`. If the reply is `rate_limited: max 20 uploads per minute per bot, retry shortly`, nothing was stored. Wait and retry that same submit.
 
@@ -96,7 +100,9 @@ When the queue is empty, the API returns 503, or you must stop, tell the user (n
 
 ---
 
-# Part B (verbatim from VC Data Dump Brief 1.2): instructions for the research agent
+# Part B (upload shape the holding door still accepts)
+
+This shape is how `research-ingest` accepts a dump today. It is not the rulebook. Source level, what is shown, and who publishes are only in [docs/PAGE_DATA_GUIDE.md](../../docs/PAGE_DATA_GUIDE.md).
 
 # Task
 

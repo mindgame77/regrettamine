@@ -1,3 +1,5 @@
+> Dated record, not the rulebook. The only rules are in [docs/PAGE_DATA_GUIDE.md](PAGE_DATA_GUIDE.md). Where this file disagrees with that guide, the guide wins.
+
 # Duplicate firm pages
 
 * `merge_firms(p_keep, p_drop, p_reason)` (service role, slugs): keeps `p_keep`, soft-deletes `p_drop` (deleted_at,

@@ -1,3 +1,5 @@
+> Dated record, not the rulebook. The only rules are in [docs/PAGE_DATA_GUIDE.md](PAGE_DATA_GUIDE.md). Where this file disagrees with that guide, the guide wins.
+
 # Request this firm
 
 When a search finds nothing, the dropdown says **No results. Request this firm →** and opens `/pending/?q=<name>`.

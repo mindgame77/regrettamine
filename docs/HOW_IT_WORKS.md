@@ -1,3 +1,5 @@
+> Dated record, not the rulebook. The only rules are in [docs/PAGE_DATA_GUIDE.md](PAGE_DATA_GUIDE.md). Where this file disagrees with that guide, the guide wins.
+
 # How Regretamin works (plain-language guide)
 
 Written 2026-10-26 for the owner. It explains the whole system end to end without code. Each part points to the
