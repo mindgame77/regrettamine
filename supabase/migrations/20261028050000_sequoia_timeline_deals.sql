@@ -7,7 +7,7 @@ returns table(company text, round_name text, amount numeric)
 language plpgsql immutable as $$
 declare m text[];
 begin
-  m := regexp_match(coalesce(p_body, ''), 'led (.+?)''s \$([0-9]+(?:\.[0-9]+)?)([BMK]) (Series [A-Z][0-9]?|funding round)', 'i');
+  m := regexp_match(coalesce(p_body, ''), 'led (.+?)''s? \$([0-9]+(?:\.[0-9]+)?)([BMK]) (Series [A-Z][0-9]?|funding round)', 'i');
   if m is null then
     m := regexp_match(coalesce(p_body, ''), '^(.+?) raised an? \$([0-9]+(?:\.[0-9]+)?)([BMK]) (Series [A-Z][0-9]?) from Sequoia', 'i');
   end if;
