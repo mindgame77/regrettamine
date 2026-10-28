@@ -2,6 +2,7 @@ Update this file after every change.
 
 One line per change: date/time PT | what changed | PR link | how to roll back.
 
+2026-10-28 2:15 AM PT | Lab soft caps. News 500, confirmed LPs 100, deals 200. Oldest rows past the cap would be archived, not deleted. Archived deals stay in every deal count, including last 12 months, the latest deal, Show all, and the 12-month sector breakdown. Not applied. | https://github.com/mindgame77/regrettamine/pull/209 | Run `supabase/rollbacks/20261028180000_lab_soft_caps.sql`. `lab_cap_archive` is not deleted.
 2026-10-28 1:45 AM PT | Lab check pills and My firms tallies are computed when the page is read. Check 8 uses the IAPD row. Not applied. | https://github.com/mindgame77/regrettamine/pull/208 | Run `supabase/rollbacks/20261028170000_live_counts_lab.sql`. `live_count_backup` is not deleted.
 2026-10-28 1:22 AM PT | A held legal-matter link is found by the matter id on the log, not only by the link id. | https://github.com/mindgame77/regrettamine/pull/207 | Run `supabase/rollbacks/20261028160000_held_matter_key.sql`. `home_held_backup` is not deleted.
 2026-10-28 1:10 AM PT | Held lab rows with no home are checked once. A pass moves into its home. A fail is deleted and the key stays on rejected_items so it cannot be added again. Backup is home_held_backup. Applied. 79 fund rows moved home. 185 failed and were deleted. All 264 are in the backup until 2026-10-31. | https://github.com/mindgame77/regrettamine/pull/206 | Run `supabase/rollbacks/20261028150000_held_cleanup.sql`. The backup table is not deleted.
