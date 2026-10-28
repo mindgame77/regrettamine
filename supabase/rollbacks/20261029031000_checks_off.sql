@@ -1,0 +1,8 @@
+-- Rollback for 20261029031000_checks_off.sql. Deleted check rows and the two backup schemas cannot be restored (no backup, owner's call).
+-- To run checks again: re-apply the previous definitions of _firm_checks, _firm_checks_compute, _firm_checks_done, apply_checks_for_firm,
+-- _apply_name_only, refresh_firm_check_pills, fold_legacy_marks, _pills_mark, _pills_flush, checks_from_upload_trg,
+-- check_request_done_trg, ensure_firm_for_registry, firm_page from earlier migrations, then recreate the triggers:
+--   create trigger checks_from_upload after insert on bots.research_submissions for each row execute function public.checks_from_upload_trg();
+--   create trigger zz_check_request_done after insert on bots.research_submissions for each row execute function public.check_request_done_trg();
+--   zz_pills_mark / zz_pills_flush on firm_check_rows, firm_legal_items, fact_sources, firm_profile_facts, firms, vc_source_facts,
+--   bots.research_submissions (see earlier migrations for exact timing clauses).

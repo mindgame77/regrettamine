@@ -4,6 +4,7 @@ Guard (straight checks, 2026-10-23): rows may also come from bot uploads (apply_
  - a snapshot with 0 facts is skipped (it would only produce nc rows), and
  - an existing non-nc row is never overwritten with nc."""
 import sys, json
+sys.exit("checks are off (Alex, 2026-10-28): firm_check_rows is no longer filled; pages show the 10 checks as a static list")
 from checks import checks
 
 q = lambda s: 'null' if s is None else "'" + str(s).replace("'", "''") + "'"

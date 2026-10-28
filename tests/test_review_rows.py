@@ -5,6 +5,7 @@ import pathlib
 import uuid
 
 import pytest
+CHECKS_OFF = pytest.mark.skip(reason="checks are off (Alex 2026-10-28): firm_check_rows is no longer filled")
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 COPY = json.loads((ROOT / "launch" / "copy.json").read_text())
@@ -28,6 +29,7 @@ DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
 
 
 @pytest.mark.skipif(not DATABASE_URL, reason="DATABASE_URL is not set")
+@CHECKS_OFF
 def test_saved_cases_fill_a_review_row_without_rewriting_rows():
     import psycopg
 
@@ -117,6 +119,7 @@ def test_saved_cases_fill_a_review_row_without_rewriting_rows():
 
 
 @pytest.mark.skipif(not DATABASE_URL, reason="DATABASE_URL is not set")
+@CHECKS_OFF
 def test_submission_findings_win_and_keep_their_source():
     import psycopg
 

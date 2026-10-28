@@ -8,6 +8,8 @@ import pytest
 pytest.importorskip("psycopg")
 DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
 pytestmark = pytest.mark.skipif(not DATABASE_URL, reason="DATABASE_URL is not set")
+CHECKS_OFF = pytest.mark.skip(reason="checks are off (Alex 2026-10-28): firm_check_rows is no longer filled")
+
 
 
 def _db():
@@ -15,6 +17,7 @@ def _db():
     return psycopg.connect(DATABASE_URL)
 
 
+@CHECKS_OFF
 def test_enrichment_promotes_without_touching_friend_rows():
     slug = "enr-" + uuid.uuid4().hex[:8]
     with _db() as c:
@@ -124,6 +127,7 @@ def _checks(slug):
     return {"slug": slug, "sections": {"Timeline": [{"date": "1983", "event": "Founded", "source": "https://www.reuters.com/a"}]}}
 
 
+@CHECKS_OFF
 def test_name_only_flag_is_clear_and_leaves_the_payload_alone():
     slug = "nmon-" + uuid.uuid4().hex[:8]
     with _db() as c:

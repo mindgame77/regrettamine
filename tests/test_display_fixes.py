@@ -8,6 +8,8 @@ import pytest
 pytest.importorskip("psycopg")
 DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
 pytestmark = pytest.mark.skipif(not DATABASE_URL, reason="DATABASE_URL is not set")
+CHECKS_OFF = pytest.mark.skip(reason="checks are off (Alex 2026-10-28): firm_check_rows is no longer filled")
+
 
 
 def _j(cur, sql, args=()):
@@ -16,6 +18,7 @@ def _j(cur, sql, args=()):
     return row if isinstance(row, dict) else json.loads(row)
 
 
+@CHECKS_OFF
 def test_header_website_assets_and_report_date_are_display_only():
     import psycopg
 

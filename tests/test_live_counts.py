@@ -6,7 +6,7 @@ import pytest
 
 pytest.importorskip("psycopg")
 DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
-pytestmark = pytest.mark.skipif(not DATABASE_URL, reason="DATABASE_URL is not set")
+pytestmark = [pytest.mark.skipif(not DATABASE_URL, reason="DATABASE_URL is not set"), pytest.mark.skip(reason="checks are off (Alex 2026-10-28): firm_check_rows is no longer filled")]
 
 
 def _page(cur, slug):
