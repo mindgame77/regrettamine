@@ -5,7 +5,7 @@
 -- fact_sources stays a link from a URL to an item. Press and the 10 checks do
 -- not keep the source pill there, and one item can have several links, so the
 -- marks sit on the item row. searched_at and check_mark stay.
--- The page does not read the new columns. The mockup is not shipped.
+-- checked_on, checked_by, and source_level are internal. No page draws them.
 -- Rollback: supabase/rollbacks/20261028130000_hour_cap_and_marks.sql
 
 create or replace function public._door_admit(p_bot text, p_id text, p_payload jsonb) returns jsonb
@@ -67,9 +67,9 @@ begin
     execute format(
       'alter table public.%I add constraint %I check (source_level is null or source_level between 1 and 4)',
       t, t || '_source_level_chk');
-    execute format($c$comment on column public.%I.checked_on is 'Date the Checker checked this item. Copied from an older date on lab firms. The page does not read this yet.'$c$, t);
-    execute format($c$comment on column public.%I.checked_by is 'Who checked this item. The Checker writes Checker. A folded older row stays empty.'$c$, t);
-    execute format($c$comment on column public.%I.source_level is '1 official register, 2 firm site or a page part that may be shown, 3 elsewhere online, 4 nothing found.'$c$, t);
+    execute format($c$comment on column public.%I.checked_on is 'Internal. Date the Checker checked this item. Copied from an older date on lab firms. Never shown on the live site.'$c$, t);
+    execute format($c$comment on column public.%I.checked_by is 'Internal. Who checked this item. The Checker writes Checker. A folded older row stays empty. Never shown on the live site.'$c$, t);
+    execute format($c$comment on column public.%I.source_level is 'Internal. 1 official register, 2 firm site or a page part that may be shown, 3 elsewhere online, 4 nothing found. Never shown on the live site.'$c$, t);
   end loop;
 end $$;
 

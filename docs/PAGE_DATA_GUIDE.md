@@ -63,7 +63,7 @@ For each item it checks three things:
 - The link matches the item (this firm, this person, this fund, this case).
 - The source level, from the ranking above.
 
-A register or firm-site item is published with the date and checked-by **Checker**. An elsewhere-online item is held as Unconfirmed and is not shown, unless Sources per page part says that part may show it. A failure stays in holding with the reason. Failed items are kept 7 days, then removed. Nothing is re-checked unless Alex asks. The revision of social links and contact details every few months counts as that standing ask. News rows that already have a check mark stay checked. They are not re-checked in this pass.
+A register or firm-site item is published with the date and checked-by **Checker**. Those two values, and the source level, are stored on the item. They are not drawn on the page. An elsewhere-online item is held as Unconfirmed and is not shown, unless Sources per page part says that part may show it. A failure stays in holding with the reason. Failed items are kept 7 days, then removed. Nothing is re-checked unless Alex asks. The revision of social links and contact details every few months counts as that standing ask. News rows that already have a check mark stay checked. They are not re-checked in this pass.
 
 The Enricher does not publish. The Activity Collector does not write `investments` directly.
 
@@ -79,7 +79,7 @@ The columns are on the item tables: `press_item_firms`, `timeline_events`, `firm
 
 `firm_check_rows.searched_at` and the news `check_mark` stay. They are not dropped. For the 10 lab firms, a search date is copied into `checked_on`. A news row already marked `checked_correct` or `checked_wrong` copies `last_checked_at` into `checked_on`, and the source level from the link. That copy is saved first in `marks_fold_backup`. A row the Checker did not check keeps `checked_by` empty. The page still reads the old fields.
 
-The page will show a small grey “checked &lt;date&gt;” next to the source pill. The mockup is `docs/design/mockups/sequoia-checked-date.html`. It is not on the live page until Alex approves it.
+`checked_on`, `checked_by`, and `source_level` are internal only. They are never shown on the live site, in any block. Alex rejected the Sequoia mockup that put a grey “checked &lt;date&gt;” next to the source pill. Do not build that.
 
 ## One home per data kind
 

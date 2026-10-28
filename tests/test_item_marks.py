@@ -18,16 +18,20 @@ def test_marks_live_on_the_item_and_the_page_is_unchanged():
     from pathlib import Path
     guide = Path("docs/PAGE_DATA_GUIDE.md").read_text(encoding="utf-8")
     sql = Path("supabase/migrations/20261028130000_hour_cap_and_marks.sql").read_text(encoding="utf-8")
-    js = Path("launch/js/company.js").read_text(encoding="utf-8")
-    mock = Path("docs/design/mockups/sequoia-checked-date.html").read_text(encoding="utf-8")
+    readme = Path("docs/design/README.md").read_text(encoding="utf-8")
     assert "not on `fact_sources`" in guide
     assert "marks_fold_backup" in guide
-    assert "awaiting Alex" in Path("docs/design/README.md").read_text(encoding="utf-8")
+    assert "internal only" in guide
+    assert "never shown on the live site" in guide
+    assert "sequoia-checked-date" not in guide
+    assert "sequoia-checked-date" not in readme
     assert "add column if not exists checked_on" in sql
     assert "drop column" not in sql
-    assert "checked_on" not in js
-    assert "checked Oct 27, 2026" in mock
-    assert "class=\"ckd new\"" in mock
+    assert list(Path("docs").rglob("sequoia-checked-date*")) == []
+    launch = Path("launch")
+    for path in list(launch.rglob("*.js")) + list(launch.rglob("*.html")) + list(launch.rglob("*.css")):
+        text = path.read_text(encoding="utf-8")
+        assert "checked_on" not in text and "checked_by" not in text and "source_level" not in text, path
 
 
 def test_fold_copies_lab_dates_and_leaves_the_old_fields():
