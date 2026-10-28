@@ -48,7 +48,7 @@ A researcher (`research_submit`) can upload at most 20 dumps a minute for its ow
   the winner is chosen; which value is shown is docs/CONFLICT_RULE.md) →
   records a verdict for every item in `publish_checks` (published, merged, conflict, rejected, note, held).
 * **Leads are never public.** Leads, allegations and "fix this" requests are **held** for a person to review. They are
-  never shown and never labelled "Lead (unverified)".
+  never shown and never labelled "Lead (unverified)". On the 10 lab firms, a lead with no source is rejected, an allegation without a court or regulator document is rejected, and a conflict is copied onto `conflict_weekly`. A fix that cites sec.gov is listed there and does not overwrite the page.
 * **Add only.** Publishing only adds items or adds sources. It never resets a check back to "Not checked yet" and never
   deletes a page row.
 * **Several rows for one firm:** items are merged one by one across all of the firm's waiting rows. The newer row wins and
