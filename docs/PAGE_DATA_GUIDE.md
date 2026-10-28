@@ -151,7 +151,7 @@ On the 10 lab firms, check 1 and check 6 each search the legal name and each fun
 
 Search matches the display name, the legal name, fund names, and the website. Those names live on `firm_aliases` with a type. `firm_suggest` already reads aliases. There is no second search table.
 
-On the 10 lab firms, only a checked register value or the firm’s own domain is copied. A legal name is copied when the firm has an SEC CRD and a legal name. A fund name is copied when that fund is real and a source link is on sec.gov or on the firm’s own domain. The firm’s domain is the website alias. A news link is not copied. A label that is not a name, such as Funds or Regulatory AUM, is not copied. `lab_search_aliases` does the copy. The migration does not run it.
+On the 10 lab firms, only a checked register value or the firm’s own domain is copied. A legal name is copied when the firm has an SEC CRD and a legal name. A fund name is copied when that fund is real and a source link is on sec.gov or on the firm’s own domain. The firm’s domain is the website alias. A news link is not copied. A label that is not a name, such as Funds or Regulatory AUM, is not copied. `lab_search_aliases(true)` copied them for the 10 lab firms. A name that was already an alias was left as it was.
 
 A new firm is deduped by registry id first (SEC CRD, FCA, Companies House, another national regulator, or a GLEIF LEI). If there is no registry id, match on domain plus name plus HQ, and mark the firm **no registry ID**.
 
