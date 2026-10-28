@@ -1,4 +1,4 @@
-"""Bot holding area lives in the bots schema. Uploads do not write firm rows or unlinked search_log rows."""
+"""Bot holding area lives in the bots schema. Uploads do not write firm rows. bots.search_log was removed (search lists stay in the payload)."""
 import json
 import os
 import uuid
@@ -22,7 +22,8 @@ def test_bot_upload_stays_in_bots_and_site_rpcs_still_work():
         assert cur.execute("select to_regclass('bots.research_submissions')").fetchone()[0] is not None
         assert cur.execute("select to_regclass('public.research_queue')").fetchone()[0] is not None
         assert cur.execute("select to_regclass('public.facts_needing_source')").fetchone()[0] is not None
-        assert cur.execute("select to_regclass('bots.search_log_current')").fetchone()[0] is not None
+        assert cur.execute("select to_regclass('bots.search_log')").fetchone()[0] is None
+        assert cur.execute("select to_regclass('bots.search_log_current')").fetchone()[0] is None
 
         cur.execute("insert into research_queue (registry_id, name, priority, status, claimed_by) "
                     "values ('zz-bot-hold', 'ZZ Bot Hold', 5, 'claimed', 'zz-bot')")
@@ -34,7 +35,6 @@ def test_bot_upload_stays_in_bots_and_site_rpcs_still_work():
         assert got["ok"] is True
         row = cur.execute("select payload from bots.research_submissions where registry_id = 'zz-bot-hold'").fetchone()
         assert row is not None and _j(row[0])["search_log"][0]["query"] == "zz bot hold"
-        assert cur.execute("select count(*) from bots.search_log where registry_id = 'zz-bot-hold'").fetchone()[0] == 0
         assert cur.execute("select count(*) from firms where registry_id = 'zz-bot-hold'").fetchone()[0] == firms_before == 0
         fid = cur.execute(
             "insert into firms (slug, name, published, data_status, registry_id, indexable) "
@@ -70,7 +70,6 @@ def test_bot_upload_stays_in_bots_and_site_rpcs_still_work():
         except psycopg.errors.InsufficientPrivilege:
             cur.execute("rollback to savepoint botw")
         cur.execute("set local role bot_writer")
-        cur.execute("insert into bots.search_log (bot_id, section, result) values ('zz-bot', 'overview', 'none')")
         cur.execute("select research_claim('zz-bot-writer', 1)")
         cur.execute("reset role")
 
@@ -88,16 +87,8 @@ def test_bot_upload_stays_in_bots_and_site_rpcs_still_work():
         assert any(c.startswith("statement_timeout=") for c in config)
         assert any(c.startswith("lock_timeout=") for c in config)
 
-        kept = cur.execute(
-            "insert into bots.search_log (bot_id, section, result, searched_at) "
-            "values ('zz-bot', 'overview', 'none', now() - interval '40 days') returning id").fetchone()[0]
-        gone = cur.execute(
-            "insert into bots.search_log (firm_id, bot_id, section, result, searched_at) "
-            "values (%s, 'zz-bot', 'overview', 'none', now() - interval '40 days') returning id",
-            (fid,)).fetchone()[0]
-        assert cur.execute("select bots.purge_old_search_log()").fetchone()[0] >= 1
-        assert cur.execute("select 1 from bots.search_log where id = %s", (kept,)).fetchone() is not None
-        assert cur.execute("select 1 from bots.search_log where id = %s", (gone,)).fetchone() is None
+        assert cur.execute("select to_regprocedure('bots.purge_old_search_log()')").fetchone()[0] is None
+        assert cur.execute("select count(*) from cron.job where jobname = 'bots-search-log-retention'").fetchone()[0] == 0
 
         friend = cur.execute(
             "select active from bots.ingest_keys where name = 'external-friend-2026-10-23'").fetchone()
