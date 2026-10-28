@@ -67,7 +67,9 @@ if [ "${nloc:-0}" -lt 100 ]; then
   echo "refusing production: functions sitemap listed ${nloc:-0} firms" >&2
   exit 1
 fi
-listed=$(grep -oE '/vc/[a-z0-9-]+/' <<<"$child" | head -1 | sed 's#/vc/##;s#/##')
+listed=$(grep -oE -m 1 '/vc/[a-z0-9-]+/' <<<"$child" || true)
+listed=${listed#/vc/}
+listed=${listed%/}
 if [ -z "$listed" ]; then
   echo "refusing production: could not read a sitemap firm" >&2
   exit 1
