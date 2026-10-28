@@ -41,6 +41,7 @@ A researcher (`research_submit`) can upload at most 20 dumps a minute for its ow
   chatbot pages are not sources. Sources are tagged *trusted* (regulators, courts, registers, sanctions lists, government)
   or *other*. A fact with no usable source is kept but hidden (`needs_source`) until a source is added.
 * **Notes are never published.** Search logs, counts and reasoning go in `{"note": "..."}` inside a section, or in the top-level `notes` string or array of strings. The checker keeps each one (`notes_kept`) in `publish_checks` and does not put it on the page. Top-level `notes` are saved only for the 10 lab firms.
+* **Deals on the 10 lab firms.** A new timeline line that names a company, a dollar amount, and a round is also stored as an investment. The timeline row stays. Other firms are unchanged.
 * **Sequoia funds.** The SEC assets figure used for Sequoia is `firms.aum_display` (`$82.2B`). Duplicate raw AUM lines and the long bot note are hidden and kept, with a backup copy. Nothing is deleted.
 * **Dates:** single dates are `YYYY`, `YYYY-MM` or `YYYY-MM-DD`. A month-only date is never padded to `-01`. Timeline ranges
   such as `May–Jul 2025` may stay as they are. Ambiguous numeric dates (e.g. 03/04/2025) are never converted automatically.
@@ -49,7 +50,7 @@ A researcher (`research_submit`) can upload at most 20 dumps a minute for its ow
   the winner is chosen; which value is shown is docs/CONFLICT_RULE.md) →
   records a verdict for every item in `publish_checks` (published, merged, conflict, rejected, note, held).
 * **Leads are never public.** Leads, allegations and "fix this" requests are **held** for a person to review. They are
-  never shown and never labelled "Lead (unverified)".
+  never shown and never labelled "Lead (unverified)". On the 10 lab firms, a lead with no source is rejected, an allegation without a court or regulator document is rejected, and a conflict is copied onto `conflict_weekly`. A fix that cites sec.gov is listed there and does not overwrite the page.
 * **Add only.** Publishing only adds items or adds sources. It never resets a check back to "Not checked yet" and never
   deletes a page row.
 * **Several rows for one firm:** items are merged one by one across all of the firm's waiting rows. The newer row wins and
