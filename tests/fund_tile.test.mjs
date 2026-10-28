@@ -83,6 +83,7 @@ const sequoiaFunds = {
   items: [
     { label: 'Assets under management', value: '$82.2B · form_adv_raum', src: [{ label: 'SEC IAPD', url: ADV }] },
     { label: 'Funds', value: 'Item 5F regulatory AUM $82,165,771,068; Schedule D lists 60 private funds.', src: [{ label: 'SEC IAPD', url: ADV }] },
+    { label: 'Funds', value: 'Regulatory AUM (Form ADV Item 5F) · $106.5B · 2026-09-01', src: [{ label: 'SEC IAPD', url: ADV }] },
     { label: 'Funds', value: 'Sequoia Capital Fund, L.P. · $22.7B · 2026-02-05', src: [{ label: 'SEC EDGAR', url: EDGAR }] },
     { label: 'Funds', value: 'Sequoia Capital Fund Feeder, L.P. · $7.0B · 2026-02-05', src: [{ label: 'SEC EDGAR', url: 'https://www.sec.gov/Archives/edgar/data/1906966/feeder' }] },
     { label: 'Funds', value: 'Sequoia Capital DIV-2026 Principals Fund · 2026-09-28', src: [] },

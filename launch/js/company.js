@@ -959,7 +959,7 @@
       const parts = text.split(/\s*·\s*/).map(p => p.trim()).filter(Boolean);
       if (parts.length < 2) return;
       const name = parts[0];
-      if (!name || /^\$/.test(name) || /^item\s/i.test(name)) return;
+      if (!name || /^\$/.test(name) || /regulatory aum|assets under management|\baum\b|item\s*5|form adv|gross asset/i.test(name)) return;
       let amount = '', date = '';
       parts.slice(1).forEach(p => {
         if (!amount) { const a = amountText(p); if (a && amountNumber(a) > 0) amount = a; }
