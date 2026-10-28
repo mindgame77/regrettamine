@@ -1,6 +1,7 @@
 -- Part-by-part source rules from docs/PAGE_DATA_GUIDE.md "Sources per page part".
 -- The switch checker_publish stays false. This only changes how a dry run, or a later
 -- flip, classifies an item. Existing rows are still not rewritten.
+-- Rollback: supabase/rollbacks/20261028070000_checker_switch.sql also drops these helpers.
 
 create or replace function public._host_is(p_url text, p_dom text) returns boolean
 language sql immutable as $$

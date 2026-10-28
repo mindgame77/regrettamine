@@ -37,6 +37,12 @@ end $$;
 
 drop function if exists public.checker_dry_run(text, jsonb);
 drop function if exists public.checker_publish_firm(uuid, boolean, jsonb);
+-- Part-source helpers from 20261028080000. Harmless if that migration was never applied.
+drop function if exists public._checker_decide(uuid, text, jsonb, text, integer, jsonb);
+drop function if exists public._names_firm(uuid, text);
+drop function if exists public._known_outlet(text);
+drop function if exists public._court_register(text);
+drop function if exists public._host_is(text, text);
 drop function if exists public._checker_write(uuid, text, jsonb, text, smallint, int);
 drop function if exists public._checker_exists(uuid, text, jsonb, text);
 drop function if exists public._checker_check_n(text, text);
