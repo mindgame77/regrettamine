@@ -287,7 +287,7 @@ The strip sits above the sections. It is omitted when there is no tile, no deal,
 
 ### 6c. Latest fund tile
 
-Rule (Alex, 2026-10-28): if the latest fund name is missing, the tile is not shown with an empty name. The AUM (Form ADV Item 5F) is shown instead as the fallback.
+Latest fund tile rule (Alex, 2026-10-28). This is the one rule for the tile: rows for fund name, amount, and date point here. Rank: amount first, date second, name third. The tile shows a fund only as amount + date + name, or amount + date. Any other combination (for example a date alone, or an amount and name with no date) shows the AUM (Form ADV Item 5F) instead. If there is no AUM either, the tile does not show.
 
 Rule (Alex, 2026-10-28): the latest fund amount is the money raised for the latest fund only. Its source can be SEC Form D, an approved news outlet, or another trusted site the project uses (`trusted_source_domains`), as long as that source states the amount. The register wins any conflict.
 
