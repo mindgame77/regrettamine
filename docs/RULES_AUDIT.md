@@ -1,3 +1,5 @@
+> Dated record, 2026-10-27. This is not the rulebook. The only rules are in [docs/PAGE_DATA_GUIDE.md](PAGE_DATA_GUIDE.md). This file records what the rules and the live lab data looked like on that date.
+
 # Rules audit
 
 Read-only inventory, 2026-10-27. No rows were changed. Live counts are the 10 lab firms (a16z, Y Combinator, Sequoia, Lightspeed, General Catalyst, Plug and Play, Accel, Greenoaks, Khosla Ventures, MIO Partners) unless a count says otherwise.

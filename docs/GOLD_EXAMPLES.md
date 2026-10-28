@@ -1,3 +1,5 @@
+> Dated record, not the rulebook. The only rules are in [docs/PAGE_DATA_GUIDE.md](PAGE_DATA_GUIDE.md). Where this file disagrees with that guide, the guide wins.
+
 # Gold examples for bots
 
 There are exactly two gold examples (the target look): https://regretamin.com/vc/y-combinator/

@@ -1,10 +1,147 @@
 # Page data guide
 
-What the visitor sees, where that number comes from, and which bot collected it. Read-only. Measured 2026-10-27.
+This is the only rulebook. Researchers, list builders, the Enricher, the Checker, the Activity Collector, and the friend’s portal bots follow this file and no other rules doc. `docs/RULES_AUDIT.md` is a dated record of 2026-10-27. Files in `docs/archive/` are frozen copies of the old rule docs. They are not rules.
+
+Scope until Alex says “roll out”: the 10 lab firms only (a16z, y-combinator, sequoia, lightspeed, generalcatalyst, plugandplay, accel, greenoaks, khosla-ventures, mio-partners).
+
+Work order: build the Checker and the one home per kind, test on the lab firms, and only then clean up old bot tables. Cleanup is the last step, not the first.
+
+The page snapshot further down describes what the live site drew on 2026-10-27. Where that snapshot disagrees with the rules in this section, the rules here win. The code has not been changed to match yet.
+
+## Source ranking
+
+Each fact has one source level. The level is a number.
+
+1. **Official register.** SEC IAPD and Form ADV (including Item 5F), EDGAR Form D, a court record (CourtListener, PACER, uscourts.gov), a regulator (SEC, FINRA, FCA), a sanctions or screening register used inside its own check, GLEIF, Companies House, or another national registry. Level 1 is **Verified**. It may be shown.
+2. **The firm’s own website.** The firm’s domain, not a search page and not a social post. Level 2 may be shown, and it is labelled as the firm’s own site.
+3. **Elsewhere online.** News, newsletters, social posts, and any other page. Level 3 is held as **Unconfirmed** and is not shown.
+4. **Nothing found.** Store “Not found yet” plus the search date. The row is kept and hidden.
+
+If two sources disagree, the register wins. A firm site does not override a register. An elsewhere-online page does not override either, and it is not shown.
+
+A search-results page or a chat page is not a source at any level.
+
+## One way in
+
+Every bot sends into the holding area `bots.research_submissions`. That includes researchers, list builders, portal-night-bot, the Activity Collector, the Enricher when it is only finding facts, and visitor requests. There is no side door. No hand fix. No one-off migration that writes a page table.
+
+`bots.research_enrichments` can store a bot’s structured result. It is still holding. It is not a publish.
+
+## The Checker
+
+The Checker is the entry check and the only publisher.
+
+For each item it checks three things:
+
+- The link is real. It is not a search or chat page, and it opens.
+- The link matches the item (this firm, this person, this fund, this case).
+- The source level, from the ranking above.
+
+A register or firm-site item is published with the date and checked-by **Checker**. An elsewhere-online item is held as Unconfirmed and is not shown. A failure stays in holding with the reason. Failed items are kept 7 days, then removed. Nothing is re-checked unless Alex asks. The revision of social links and contact details every few months counts as that standing ask. News rows that already have a check mark stay checked. They are not re-checked in this pass.
+
+The Enricher does not publish. The Activity Collector does not write `investments` directly.
+
+## Three marks on every item
+
+The Checker sets these once:
+
+- **checked-on**, the date
+- **checked-by**, the name Checker
+- **source level**, 1, 2, 3, or 4
+
+The page shows a small grey “checked &lt;date&gt;” next to the source pill. That grey mark needs a mockup before it is built.
+
+## One home per data kind
+
+| Kind | The one home | What gets merged in |
+|---|---|---|
+| Firm names | `firm_aliases`, with a type: display, legal, fund entity, or old name, plus the source | Gaps in `legal_name` |
+| Funds | `funds` | `firm_profile_facts` where section is funds |
+| AUM | one fact, regulatory assets from Form ADV Item 5F, with the as-of year | `firms.aum_display` |
+| Deals and portfolio companies | `investments` and `portfolio_companies` | Timeline lines and collector rows that skip the Checker |
+| News | one news item per normalized URL | `press_items` and `timeline_events` |
+| Legal | `firm_legal_items` (this feeds checks 4, 6, and 7) | `regulatory_records` and `legal_matters` |
+| People | `firm_people_roles` | `people` and `fund_people` |
+| Reviews | `reviews` | Leftover `founder_accounts` |
+| LPs | `firm_profile_facts` section `lps`, confirmed only | `bots.firm_lps` (holding until a confirmed row is published) |
+| The 10 checks | `firm_check_rows` plus the findings in `vc_source_facts` | Stored pill text that does not match the findings |
+
+Same-item keys: fund = fund name or SEC file number; news = normalized URL (lower case, no scheme, no `www.`, no query, no hash, no trailing slash); person = name plus kind; legal = case number or file number; LP = firm plus lowercased institution name; deal = firm plus company plus round.
+
+The winner is the higher source level, then the newer date, then the more complete row. Every source is kept. The losing value is saved as a note. If two values still disagree, they go to the Checker review list. Each merged item gets one entry check. The merge log is permanent. The merge backup is kept 3 days, then deleted only with Alex’s OK.
+
+## Live counts
+
+Pills, section counts, tiles, and the counts on My firms are computed when the page is read. They are never stored. A stored pill that disagrees with the findings is wrong. Check 8 comes from the IAPD registration row, not from a hand-typed label.
+
+## What the page shows
+
+On the lab firms, once this is built:
+
+- One latest fund tile, plus the line “N funds on SEC record · Show all”.
+- One latest deal, plus Show all.
+- One latest founder review, plus Show all.
+- The latest 10 news items, plus Show all for the rest that are still on the page.
+- Up to 20 people, plus Show all.
+
+A deal row has a sector column, and a column that reads round · amount · Lead. Those three are filled only when a source states them. An empty amount stays empty.
+
+Soft caps per firm: 500 news, 100 LPs, 200 deals. Past the cap, new items still come in and the oldest move to an archive file. Lawsuits, regulator actions, and negative news are never archived. One alert per firm when a cap is hit. Legal items and the 10 checks have no cap and are never archived or deleted. Only confirmed LPs are shown. A lead stays hidden.
+
+These caps are not a license to delete. The archive file is the copy, and the row can be shown again from Show all.
+
+## The 10 checks
+
+There are exactly 10 checks. They are never merged with each other, and their searches are never merged.
+
+| # | Check | What it is |
+|---|---|---|
+| 1 | Sanctions | Lists of people and companies you cannot do business with |
+| 2 | Terrorism financing lists | Lists tied to funding terrorism |
+| 3 | Export and investment restrictions | Trade and investment bans |
+| 4 | Financial regulator actions | Fines, bans, and charges |
+| 5 | Money laundering penalties | Anti-money-laundering enforcement |
+| 6 | US court records | Federal and state cases |
+| 7 | Court records worldwide | Cases outside the United States |
+| 8 | Registration check | Investment-adviser registration, from the register |
+| 9 | People behind the fund | Partners and owners, each checked against the lists above |
+| 10 | Political ties | Government or political roles |
+
+OpenSanctions is only one source, and only inside checks 1, 2, and 10. It is not a source for the other checks, and it does not replace a register those checks have of their own. Checks 3, 4, 5, 6, 7, 8, and 9 keep their own searches. A same-name hit that is not the same person is not a finding.
+
+## Search and new firms
+
+Search matches the display name, the legal name, fund names, and the website. Those names live on `firm_aliases` with a type. `firm_suggest` already reads aliases. There is no second search table.
+
+A new firm is deduped by registry id first (SEC CRD, FCA, Companies House, another national regulator, or a GLEIF LEI). If there is no registry id, match on domain plus name plus HQ, and mark the firm **no registry ID**.
+
+## How long rows are kept
+
+Search logs and uploads that have been processed are kept 30 days. Failed holding items are kept 7 days. The merge log is kept. Legal items and the 10 checks are not deleted by a retention job.
+
+## What the live code still does
+
+These are conflicts with this guide. They are not permissions.
+
+- `toxy-enricher` still publishes at ingest. This guide says only the Checker publishes.
+- The Activity Collector wrote Y Combinator investments straight into `investments`.
+- One-off migrations wrote Sequoia’s `$82.2B`, Sequoia’s 10 deals, and the news check marks.
+- Press and timeline are still two tables. The page merges some of them only in the browser.
+- `bots.firm_lps` and `firm_profile_facts` both hold LP names. Confirmed LPs on the profile table are the page home.
+- Pills and some counts are stored. This guide says they are computed.
+- The ingest reply still names `docs/DATA_RULES.md`. That string is code, not a rule.
+- `docs/data-model.md` still describes `legal_matters` and a score on the page. It is not a rulebook.
+- There is no prompt file for the Activity Collector or the list builders except this guide and `docs/BOTS.md`.
+
+---
+
+# Page snapshot, 2026-10-27
+
+This snapshot is what the live page returned that day. It is not a second set of rules.
 
 The live firm page is filled in the browser. `firm_page` returns the payload. `launch/js/company.js` draws it. `launch/copy.json` holds the labels. A fetch of `https://regretamin.com/vc/sequoia/` returns the shell; the figures below are from calling `firm_page('sequoia')` and `firm_page` field lists, plus the a16z counts from the same tables.
 
-Problem numbers point at `docs/RULES_AUDIT.md`.
+The problem numbers point at the dated record `docs/RULES_AUDIT.md`.
 
 ## What Sequoia’s payload contains
 

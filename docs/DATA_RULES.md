@@ -1,3 +1,5 @@
+> Dated record, not the rulebook. The only rules are in [docs/PAGE_DATA_GUIDE.md](PAGE_DATA_GUIDE.md). Where this file disagrees with that guide, the guide wins.
+
 # Data rules (all bots, all data kinds)
 
 Approved by Alex on 2026-10-25. This applies to every bot that sends data: the researchers (`submit`), the list builders
