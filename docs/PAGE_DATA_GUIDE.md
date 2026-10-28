@@ -108,6 +108,8 @@ A side row that has no home is backed up, then checked once. If the Checker publ
 
 Pills, section counts, tiles, and the counts on My firms are computed when the page is read. They are never stored. A stored pill that disagrees with the findings is wrong. Check 8 comes from the IAPD registration row, not from a hand-typed label.
 
+On the 10 lab firms, `firm_page` and `my_firms` compute the check pill from the findings the page lists. Check 8 uses the IAPD registration row. Section counts and the activity tiles were already computed on read, and that stays. A firm that is not one of the 10 still reads the stored pill. The old lab pill and the current score are copied to `live_count_backup` before the stored count text is cleared and the current score is unmarked. That backup is kept 3 days and is not deleted without Alex’s OK. The state column stays, because it cannot be empty. The lab page does not read it.
+
 ## What the page shows
 
 On the lab firms, once this is built:
