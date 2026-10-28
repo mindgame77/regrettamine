@@ -107,7 +107,7 @@ A side row that has no home is backed up, then checked once. If the Checker publ
 
 ## Live counts
 
-On the 10 lab firms, the 10 check counts and pills are counted once and saved, in `firm_check_pills`. They are counted again, and saved, only when the Checker publishes new data to that firm (a trigger on the data the checks read marks the firm and recounts it once). If no data changed, nothing is recounted. Pages only read the saved counts. `firm_page` reads them. `my_firms` still counts its pill when it is read, and must be switched to the saved counts. Check 8 comes from the IAPD registration row, not from a hand-typed label.
+On the 10 lab firms, the 10 check counts and pills are counted once and saved, in `firm_check_pills`. They are counted again, and saved, only when the Checker publishes new data to that firm (a trigger on the data the checks read marks the firm and recounts it once). If no data changed, nothing is recounted. Pages only read the saved counts. `firm_page` (pills and the checks-done number) and `my_firms` (the My firms pill) read them and never recount. Check 8 comes from the IAPD registration row, not from a hand-typed label.
 
 If the counting logic or `ingest_settings` change, the same change must rerun the backfill (`select public.refresh_firm_check_pills(id) from public.firms where public._lab_firm(id);`) for every affected firm. Finder bots never touch the counts. Only the Checker's publishing, or that backfill, changes them.
 
