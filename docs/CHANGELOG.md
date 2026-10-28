@@ -2,6 +2,8 @@ Update this file after every change.
 
 One line per change: date/time PT | what changed | PR link | how to roll back.
 
+2026-10-27 10:40 PM PT | Checker built, switch left off. `checker_publish` is false, so the Enricher still publishes. Lab dry run `checker_dry_run` rolls back. The enrich reply now names docs/PAGE_DATA_GUIDE.md. No page rows deleted. | pull request pending | Run `supabase/rollbacks/20261028070000_checker_switch.sql`, then re-apply `research_enrich` from `supabase/migrations/20261028010000_payload_notes.sql`.
+
 2026-10-27 10:30 PM PT | Draft only: remove the old rule docs from docs/ after they were copied to docs/archive/. Two tests now read the archive copies so they do not look for the deleted files. The rulebook is unchanged. | https://github.com/mindgame77/regrettamine/pull/196 | Restore the ten files from docs/archive/.
 
 2026-10-27 10:22 PM PT | One rulebook. `docs/PAGE_DATA_GUIDE.md` is the only rules doc. The old rule docs are copied to `docs/archive/` and left in place with a pointer. `docs/RULES_AUDIT.md` is marked a dated record. Bot briefs point at the guide. No code and no database change. Cleanup of old bot tables stays the last step, after lab tests. | https://github.com/mindgame77/regrettamine/pull/195 | Revert this commit. The archive copies can stay.
