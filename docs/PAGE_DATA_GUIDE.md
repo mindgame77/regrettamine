@@ -291,7 +291,7 @@ The strip sits above the sections. It is omitted when there is no tile, no deal,
 
 Latest fund tile rule (Alex, Oct 27 2026 design note): A latest fund with an amount stays. A $0 or missing amount uses the most recent earlier fund that raised money (name, amount, date, filing link). If none did, the tile is Assets under management from the SEC/ADV figure already on the page. Neither shows nothing.
 
-Rule (Alex, 2026-10-28): the latest fund amount is the money raised for the latest fund only. Its source can be SEC Form D, an approved news outlet, or another trusted site the project uses (`trusted_source_domains`), as long as that source states the amount. The register wins any conflict.
+Rule (Alex, 2026-10-28): the latest fund amount is the money raised for the latest fund only. Its source can be SEC Form D, an approved news outlet, or another trusted site the project uses (`trusted_source_domains`), as long as that source states the amount. The register wins any conflict. The tile link is the sec.gov filing when the source is sec.gov. When the amount or date comes from an approved news outlet or trusted site, that page is the link instead.
 
 1. The newest fund that has a raised amount, with the name, the amount, and a filing link. Sequoia: Sequoia Capital Fund, L.P., $22.7B, 5 Feb 2026.
 2. First choice: `funds.raised_usd` or `funds.size_usd`, `funds.name`, `funds.closed_on`, `funds.filing_url`. On the 10 lab firms, if that amount is missing, `earlierFund` reads a Funds section line shaped “Name · $amount · date.” If that is also missing, the assets tile is used.
