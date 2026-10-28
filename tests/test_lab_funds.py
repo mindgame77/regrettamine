@@ -12,4 +12,5 @@ def test_sequoia_fund_cleanup_hides_and_keeps_a_backup():
     assert "hidden = true" in sql
     assert "cleanup_backup" in sql
     assert "$82.2B" in sql
+    assert "slug = 'sequoia'" in sql
     assert "delete from" not in back.lower()
