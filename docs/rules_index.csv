@@ -160,7 +160,7 @@ B9.1,B9 Limited partners,One card per LP name.,on main
 B9.2,B9 Limited partners,firm_profile_facts section = lps.,on main
 B9.3,B9 Limited partners,"Profile rows: the enricher, from public filings and LP reports (the gold example says so; the exact site is whatever URL was sent).",on main
 B9.4,B9 Limited partners,"Profile: name required, type optional, source required.",on main
-B9.5,B9 Limited partners,A lead value is relabelled “Not confirmed” and still shown.,on main
+B9.5,B9 Limited partners,A lead (LP named only by a weaker source) is not shown,on main
 B9.6,B9 Limited partners,RULES_AUDIT 22.,on main
 B9.7,B9 Limited partners,Only confirmed LPs are shown.,on main
 B9.8,B9 Limited partners,"Shown count, max kept, and archiving: see the list limits table in A9.",in PR #227

@@ -347,7 +347,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **B9.2** `firm_profile_facts` `section = lps`. Label is the institution. Value is the type, fund, amount, and status text. `bots.firm_lps` is not read.
 - **B9.3** Profile rows: the enricher, from public filings and LP reports (the gold example says so; the exact site is whatever URL was sent). Bot rows: a researcher dump, often pensions and Form D related parties. Exact registry for each Accel LP: the row’s `source_url`. Not re-fetched for this guide.
 - **B9.4** Profile: name required, type optional, source required. Bot table: name, status confirmed or lead, URL, type from a fixed list, cap 100, unique on name plus fund.
-- **B9.5** A lead value is relabelled “Not confirmed” and still shown. No source, or hidden, drops the row.
+- **B9.5** A lead (an LP named only by a weaker source, held as Unconfirmed) is not shown; see B9.7. No source, or hidden, drops the row. (Alex, 2026-10-28)
 - **B9.6** RULES_AUDIT 22. 33 names are in both homes. Accel’s Adams Street row is the example.
 - **B9.7** Only confirmed LPs are shown. A lead stays hidden.
 - **B9.8** Shown count, max kept, and archiving: see the list limits table in [A9](#a9). LP sources: [A2](#a2).
