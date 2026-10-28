@@ -390,7 +390,7 @@ Rule (Alex, 2026-10-28): the latest fund amount is the money raised for the late
 2. Pill: `firm_check_rows` n=6. Detail: `vc_source_facts` legal matters for the firm, and `firm_legal_items` group `case`. Status words (active, terminated, settled) are read in `company.js` `caseStatus`.
 3. CourtListener, PACER, uscourts.gov. The enricher sets group `case` when the source host is one of those, plus Justia, Law360, and Casetext.
 4. Leads are held. The legal key dedupes on a case number and misses a “Lead” prefix.
-5. A count with no itemized rows says details are coming and links a CourtListener search of the legal name.
+5. Rule (Alex, 2026-10-28): a count with no itemized rows shows nothing on the page, and no CourtListener search link is shown (a search page is not a source). The count or news story stays with the Checker as a lead to look up. Cases show only once each has its own court or regulator link. News about a lawsuit can still show in News with its article link. Old note: a count with no itemized rows said details are coming and linked a CourtListener search of the legal name.
 6. RULES_AUDIT 7.
 
 ### Check 7. Court records worldwide
