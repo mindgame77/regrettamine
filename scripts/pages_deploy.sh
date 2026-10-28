@@ -59,9 +59,22 @@ if ! grep -q '<sitemapindex' <<<"$sm"; then
   echo "refusing production: preview sitemap is not the functions sitemap index" >&2
   exit 1
 fi
+# firm_sitemap returns 1,000 rows per file. founders-fund is outside that cap, so the
+# page check above is what proves it survived. The file itself must still be the big index.
 child=$(curl -fsS --retry 5 --retry-delay 3 --retry-all-errors "$url/sitemaps/firms-1.xml")
-if ! grep -q "/vc/$PROBE/" <<<"$child"; then
-  echo "refusing production: sitemap does not list non-lab firm $PROBE" >&2
+nloc=$(grep -c '<loc>' <<<"$child" || true)
+if [ "${nloc:-0}" -lt 100 ]; then
+  echo "refusing production: functions sitemap listed ${nloc:-0} firms" >&2
+  exit 1
+fi
+listed=$(grep -oE '/vc/[a-z0-9-]+/' <<<"$child" | head -1 | sed 's#/vc/##;s#/##')
+if [ -z "$listed" ]; then
+  echo "refusing production: could not read a sitemap firm" >&2
+  exit 1
+fi
+listed_html=$(curl -fsS --retry 5 --retry-delay 3 --retry-all-errors "$url/vc/$listed/")
+if ! grep -q "data-firm=\"$listed\"" <<<"$listed_html"; then
+  echo "refusing production: preview did not serve sitemap firm $listed" >&2
   exit 1
 fi
 
