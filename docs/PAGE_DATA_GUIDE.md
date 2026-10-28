@@ -426,7 +426,19 @@ Rule (Alex, 2026-10-28): the latest fund amount is the money raised for the late
 5. Stored pill. a16z is Worth knowing from the hand migration.
 6. RULES_AUDIT 20.
 
-## 8. Overview
+## 8. Thesis (replaces Overview; Alex, 2026-10-28)
+
+New block “Thesis”. It replaces the Overview block, which is removed from the page. Same design as the old Overview block.
+1. Holds the firm's investment thesis (what they invest in and why), copied word for word from the firm's own website. No other source: not news, LinkedIn, SEC or any other site. Source level 2. The link to that website page is always kept and shown.
+2. Max 1,000 characters. Not rewritten by us.
+3. No thesis on the firm's website: the block is not shown.
+4. Door check: the link opens and is on the firm's own domain; the text is found on that page; length 1,000 characters or less.
+5. Old Overview rows are hidden, not deleted. Their facts move: HQ to the header (rows 4-6), Registration, Founded and Owners to fact pills (7 max, no repeats), legal names to legal entities. Long paragraphs are dropped from display. Backup first; nothing is deleted without Alex's "Yes, delete".
+6. Needs a mockup on the Sequoia lab page before building.
+
+The text below describes the old Overview, kept for reference until the build.
+
+## 8a. Overview (old, being removed)
 
 1. Rows in a fixed order: HQ, Legal name, Registration, Founded, Owners, Recent changes, then anything else that was not hidden. Sequoia returns 4 overview items before that rewrite.
 2. `firm_profile_facts` where `section = overview`, not hidden, with a source. `company.js` `overviewRows` rewrites them while drawing.
