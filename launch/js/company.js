@@ -1006,10 +1006,12 @@
   const CUR = { USD: '$', EUR: '€', GBP: '£' };
   const dealAmt = (a, c) => { const n = Number(a), s = CUR[String(c || 'USD').toUpperCase()]; if (a == null || !isFinite(n) || n <= 0 || !s) return '';
     const t = (v, k) => String(+v.toFixed(k)); return s + (n >= 1e9 ? t(n / 1e9, 1) + 'B' : n >= 1e6 ? t(n / 1e6, 2) + 'M' : t(n / 1e3, 1) + 'K'); };
+  // Lab round cell: the stored round name without its notes (bracketed asides, text after ';'). The stored value is not rewritten.
+  const labRound = (r) => roundName(r).replace(/\s*\([^()]*\)/g, '').split(';')[0].replace(/[\s,]+$/, '').trim();
   function dealRows(ds, lab) {
     const src = (u) => u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(hostOf(u)) + ' ↗</a>' : '<span></span>';
     if (lab) return '<div class="adl"><div class="ad adh s5"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_sector) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
-      + ds.map(d => { const u = safeUrl(d.url), r = [roundName(d.round), dealAmt(d.amount, d.currency), d.lead ? AC.lead : ''].filter(Boolean).join(' · ');
+      + ds.map(d => { const u = safeUrl(d.url), r = [labRound(d.round), dealAmt(d.amount, d.currency), d.lead ? AC.lead : ''].filter(Boolean).join(' · ');
         return '<div class="ad s5"><b>' + esc(d.company || '') + '</b>' + (d.sector ? '<span class="arty">' + esc(d.sector) + '</span>' : '<span class="nd">' + esc(AC.no_data) + '</span>')
           + '<span>' + esc(r) + '</span><span>' + esc(fdate(d.date) || '') + '</span>' + src(u) + '</div>'; }).join('') + '</div>';
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
