@@ -2,7 +2,7 @@ Update this file after every change.
 
 One line per change: date/time PT | what changed | PR link | how to roll back.
 
-2026-10-27 11:10 PM PT | A finder can submit an item for any firm without claiming it. The row stays in `bots.research_submissions`. `checker_publish` stays false, so the Enricher still publishes. When that switch is on, a lab firm's enrich row is held and is not written to a page table. | pull request pending | Run `supabase/rollbacks/20261028090000_finder_holding_submit.sql`.
+2026-10-27 11:10 PM PT | A finder can submit an item for any firm without claiming it. The row stays in `bots.research_submissions`. `checker_publish` stays false, so the Enricher still publishes. When that switch is on, a lab firm's enrich row is held and is not written to a page table. | https://github.com/mindgame77/regrettamine/pull/199 | Run `supabase/rollbacks/20261028090000_finder_holding_submit.sql`.
 2026-10-27 10:46 PM PT | Sources per page part added to the rulebook. Reviews, news, deals, lawsuits, people, social counts, and portfolio sites now say which links may be shown. No code and no database change in this commit. | pull request pending | Revert this commit.
 
 2026-10-27 10:30 PM PT | Draft only: remove the old rule docs from docs/ after they were copied to docs/archive/. Two tests now read the archive copies so they do not look for the deleted files. The rulebook is unchanged. | https://github.com/mindgame77/regrettamine/pull/196 | Restore the ten files from docs/archive/.

@@ -44,6 +44,7 @@ begin
          where j.registry_id = q.registry_id and j.status in ('queued', 'in_progress'))
     );
   if q.status in ('claimed', 'queued') and (v_holder or v_prior) then
+    perform set_config('app.finder_holding', '', true);
     insert into research_submissions (registry_id, bot_id, payload, record_count, valid, errors)
       values (p_id, p_bot, p_payload, p_count, p_valid, p_errors)
       returning id into s_id;
@@ -66,10 +67,17 @@ begin
     return jsonb_build_object('ok', false, 'submission_id', s_id, 'status', q.status, 'attempts', q.attempts);
   end if;
   -- Not the claim holder. Store the item for the Checker. Do not take the claim and do not write a page.
+  -- Clear the flag after the insert so a later claimed submit in this transaction still closes its job.
   perform set_config('app.finder_holding', '1', true);
-  insert into research_submissions (registry_id, bot_id, payload, record_count, valid, errors)
-    values (p_id, p_bot, p_payload, p_count, p_valid, p_errors)
-    returning id into s_id;
+  begin
+    insert into research_submissions (registry_id, bot_id, payload, record_count, valid, errors)
+      values (p_id, p_bot, p_payload, p_count, p_valid, p_errors)
+      returning id into s_id;
+  exception when others then
+    perform set_config('app.finder_holding', '', true);
+    raise;
+  end;
+  perform set_config('app.finder_holding', '', true);
   return jsonb_build_object('ok', coalesce(p_valid, false), 'submission_id', s_id, 'status', 'holding', 'held_for_checker', true);
 end $$;
 
@@ -179,6 +187,7 @@ begin
             using new.firm_id, 'enrichment', new.id, 'row', 'failure', sqlerrm, new.payload;
         end if;
       end;
+      perform set_config('app.finder_holding', '', true);
     else
       perform promote_enrichment(new.firm_id);
     end if;
