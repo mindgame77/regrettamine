@@ -931,6 +931,9 @@
       return '<a class="sc" href="' + esc(src.url) + '" target="_blank" rel="noopener">' + esc(t) + '</a>'; }).filter(Boolean).slice(0, 7).join('').replace(/^(.+)$/, '<span class="secp">$1</span>');
   }
   const tile = (lab, big, sub, cls) => '<div class="att ' + cls + '"><small>' + esc(lab) + '</small><b>' + big + '</b><span>' + sub + '</span></div>';
+  // The new fund box is live only on these firms. Other pages keep the previous tile.
+  const LAB_FIRMS = { a16z: 1, 'y-combinator': 1, sequoia: 1, lightspeed: 1, generalcatalyst: 1, plugandplay: 1, accel: 1, greenoaks: 1, 'khosla-ventures': 1, 'mio-partners': 1 };
+  const labFirm = (P) => !!(P.firm && LAB_FIRMS[P.firm.slug]);
   // A fund line already on the page: "Name · $22.7B · 2026-02-05". AUM sentences and $0 lines are not funds.
   const amountText = (part) => { const m = String(part || '').trim().match(/^(\$[0-9][0-9,]*(?:\.[0-9]+)?(?:\s*[BMK])?)$/i); return m ? m[1].replace(/\s+/g, '') : ''; };
   const amountNumber = (text) => { const m = String(text || '').replace(/,/g, '').match(/^\$([0-9]*\.?[0-9]+)([BMK])?$/i); if (!m) return 0;
@@ -1071,21 +1074,25 @@
       tiles.push('<div class="att aon"><i></i><div><b>' + esc(AC.active) + '</b><span>' + esc(ld) + '</span><em>' + esc(sub) + '</em></div></div>');
     }
     if (A.deals_12m > 0) tiles.push(tile(AC.deals_12m, esc(A.deals_12m), '', 'amt'));
-    // A fund with an amount raised stays the Latest fund tile. A $0 or missing amount is skipped.
-    // The next most recent fund that did raise money (already on the funds section) takes the tile.
-    // Only when no fund raised money does the tile show the firm's assets under management.
+    // A fund with an amount raised stays the Latest fund tile. On the 10 lab firms, a $0 or missing
+    // amount is skipped for the next fund that raised money, then for assets under management.
+    // Every other firm keeps the previous tile. The script is shared, so the limit is the slug.
     const raised = f && money(f.raised_usd);
     if (raised) {
       const u = safeUrl(f.url);
       const sub = esc(fundName(f.name)) + ' · ' + esc(fmt(AC.raised, { amount: raised })) + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(AC.filing) + ' ↗</a>' : '');
       tiles.push(tile(AC.fund, esc(raised), sub, 'afd'));
-    } else {
+    } else if (labFirm(P)) {
       const prev = earlierFund(P);
       if (prev) tiles.push(raisedFundTile(prev));
       else {
         const aum = aumTile(P);
         if (aum) tiles.push(aum);
       }
+    } else if (f) {
+      const u = safeUrl(f.url);
+      const sub = esc(fundName(f.name)) + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(AC.filing) + ' ↗</a>' : '');
+      tiles.push(tile(AC.fund, '<span class="asm">' + esc(fundName(f.name)) + '</span>', sub, 'afd'));
     }
     if (!tiles.length && !d0 && !r0) return '';
     let h = '<section class="actv" aria-label="' + esc(AC.reviews) + '">' + (tiles.length ? '<div class="ats" style="grid-template-columns:repeat(' + tiles.length + ',1fr)">' + tiles.join('') + '</div>' : '');

@@ -140,14 +140,24 @@ test('when no fund raised money the tile is assets under management, and nothing
   assert.match(fund, />SEC IAPD ↗<\/a>/);
   assert.doesNotMatch(fund, /DIV-2026|Latest fund|Sequoia Capital Fund|class="asm"|\$1\.0B/);
   const fromAssets = paint({
-    firm: { name: 'Plain', slug: 'plain', assets: '$82,165,771,068' },
+    firm: { name: 'Lightspeed', slug: 'lightspeed', assets: '$82,165,771,068' },
     activity: {},
   });
   assert.match(tile(fromAssets), /<small>Assets under management<\/small><b>\$82\.17B<\/b>/);
   const none = paint({
-    firm: { name: 'Plain', slug: 'plain' },
+    firm: { name: 'Greenoaks', slug: 'greenoaks' },
     activity: { latest_fund: { name: 'Empty Fund, L.P.', raised_usd: 0 } },
   });
   assert.equal(tile(none), '');
   assert.doesNotMatch(none, /Empty Fund|Assets under management|Latest fund/);
+  const other = paint({
+    firm: { name: 'Other', slug: 'other-firm', assets: '$82,165,771,068' },
+    hero: [{ label: 'Regulatory AUM', value: '$82.2B', src: [{ label: 'SEC IAPD', url: ADV }] }],
+    sections: [sequoiaFunds],
+    activity: { latest_fund: { name: 'Other Fund, L.P.', raised_usd: null } },
+  });
+  const old = tile(other);
+  assert.match(old, /<small>Latest fund<\/small><b><span class="asm">Other Fund<\/span><\/b>/);
+  assert.match(old, /<span>Other Fund<\/span>/);
+  assert.doesNotMatch(old, /Assets under management|\$22\.7B|\$82\.2B/);
 });
