@@ -107,9 +107,13 @@ A side row that has no home is backed up, then checked once. If the Checker publ
 
 ## Live counts
 
-Pills, section counts, tiles, and the counts on My firms are computed when the page is read. They are never stored. A stored pill that disagrees with the findings is wrong. Check 8 comes from the IAPD registration row, not from a hand-typed label.
+On the 10 lab firms, the 10 check counts and pills are counted once and saved, in `firm_check_pills`. They are counted again, and saved, only when the Checker publishes new data to that firm (a trigger on the data the checks read marks the firm and recounts it once). If no data changed, nothing is recounted. Pages only read the saved counts. `firm_page` reads them. `my_firms` still counts its pill when it is read, and must be switched to the saved counts. Check 8 comes from the IAPD registration row, not from a hand-typed label.
 
-On the 10 lab firms, `firm_page` and `my_firms` compute the check pill from the findings the page lists. Check 8 uses the IAPD registration row. Section counts and the activity tiles were already computed on read, and that stays. A firm that is not one of the 10 still reads the stored pill. The old lab pill and the current score are copied to `live_count_backup` before the stored count text is cleared and the current score is unmarked. That backup is kept 3 days and is not deleted without Alex’s OK. The state column stays, because it cannot be empty. The lab page does not read it.
+If the counting logic or `ingest_settings` change, the same change must rerun the backfill (`select public.refresh_firm_check_pills(id) from public.firms where public._lab_firm(id);`) for every affected firm. Finder bots never touch the counts. Only the Checker's publishing, or that backfill, changes them.
+
+Section counts and the activity tiles are still computed when the page is read. A firm that is not one of the 10 still reads the old stored pill. The old lab pill and score copied to `live_count_backup` are kept 3 days and are not deleted without Alex’s OK.
+
+Page speed is tested automatically. After each deploy, CI times the anon `firm_page` call for the 10 lab firms (`scripts/check_page_speed.mjs`, in a rolled-back call that records nothing) and fails if any firm takes more than 2000 ms.
 
 ## What the page shows
 
