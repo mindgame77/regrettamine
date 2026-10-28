@@ -736,9 +736,18 @@
    "aum": "Assets under management",
    "latest_deal": "The latest deal",
    "h_company": "Company",
+   "h_sector": "Sector",
    "h_round": "Round",
    "h_date": "Date",
    "h_source": "Source",
+   "lead": "Lead",
+   "no_data": "No data yet",
+   "other": "Other",
+   "sector_share": "Sector share, last 12 months",
+   "n_deals": [
+    "{n} deal",
+    "{n} deals"
+   ],
    "reviews": "What people say",
    "types": {
     "founder": "Founder",

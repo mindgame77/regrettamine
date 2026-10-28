@@ -445,4 +445,7 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 .arf a{margin-left:auto;font-size:13px;color:var(--vio);text-decoration:none;font-weight:600}.arf a span{color:var(--mute);font-weight:400}
 .ash{margin-top:10px;background:none;border:0;padding:0;font:700 14px 'DM Sans';color:var(--vio);cursor:pointer}
 .amd{padding:0}.amh{display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid var(--line)}.amh b{font:800 20px 'Bricolage Grotesque'}.amh .x{order:2;margin-left:auto}.amb{padding:18px 22px}.amb .arv:last-child{margin-bottom:0}
-@media (max-width:760px){.ats{grid-template-columns:1fr!important}.ad{grid-template-columns:1fr 1fr}.adh{display:none}.actv{padding:16px}}
+/* Lab deals: Sector + Round · Amount · Lead columns, sector share bar in Show all deals */
+.ad.s5{grid-template-columns:1.5fr 1.2fr 1.6fr 1fr 1.2fr}.ad .arty{font-size:10.5px;font-weight:700;line-height:1.5;padding:0 8px;border-radius:999px;border:1px solid currentColor;white-space:nowrap;color:var(--ink2);justify-self:start}.nd{color:var(--mute);font-size:13.5px}
+.ssh{border-radius:16px;padding:16px 18px;margin:0 0 18px;border:1.5px solid var(--line)}.ssn{margin:6px 0 8px}.sstk{display:flex;height:14px;border-radius:999px;overflow:hidden}.sstk i{display:block}.sleg{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:13px;color:var(--ink2)}.sleg span{display:inline-flex;align-items:center;gap:6px}.sleg b{width:9px;height:9px;border-radius:3px;display:inline-block}
+@media (max-width:760px){.ad.s5{grid-template-columns:1fr 1fr}.ats{grid-template-columns:1fr!important}.ad{grid-template-columns:1fr 1fr}.adh{display:none}.actv{padding:16px}}

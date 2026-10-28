@@ -1002,11 +1002,29 @@
     const sub = u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(src.label || AC.filing || 'Filing') + ' ↗</a>' : '';
     return tile(AC.aum || 'Assets under management', esc(value), sub, 'afd');
   }
-  function dealRows(ds) {
+  // Lab firms: Sector and one Round · Amount · Lead column. Amount and Lead only when stored; no sector reads "No data yet".
+  const CUR = { USD: '$', EUR: '€', GBP: '£' };
+  const dealAmt = (a, c) => { const n = Number(a), s = CUR[String(c || 'USD').toUpperCase()]; if (a == null || !isFinite(n) || n <= 0 || !s) return '';
+    const t = (v, k) => String(+v.toFixed(k)); return s + (n >= 1e9 ? t(n / 1e9, 1) + 'B' : n >= 1e6 ? t(n / 1e6, 2) + 'M' : t(n / 1e3, 1) + 'K'); };
+  function dealRows(ds, lab) {
+    const src = (u) => u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(hostOf(u)) + ' ↗</a>' : '<span></span>';
+    if (lab) return '<div class="adl"><div class="ad adh s5"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_sector) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
+      + ds.map(d => { const u = safeUrl(d.url), r = [roundName(d.round), dealAmt(d.amount, d.currency), d.lead ? AC.lead : ''].filter(Boolean).join(' · ');
+        return '<div class="ad s5"><b>' + esc(d.company || '') + '</b>' + (d.sector ? '<span class="arty">' + esc(d.sector) + '</span>' : '<span class="nd">' + esc(AC.no_data) + '</span>')
+          + '<span>' + esc(r) + '</span><span>' + esc(fdate(d.date) || '') + '</span>' + src(u) + '</div>'; }).join('') + '</div>';
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + ds.map(d => { const u = safeUrl(d.url);
         return '<div class="ad"><b>' + esc(d.company || '') + '</b><span>' + esc(roundName(d.round)) + '</span><span>' + esc(fdate(d.date) || '') + '</span>'
-          + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(hostOf(u)) + ' ↗</a>' : '<span></span>') + '</div>'; }).join('') + '</div>';
+          + src(u) + '</div>'; }).join('') + '</div>';
+  }
+  // Top of the lab "Show all deals" popup: stored sector_12m from firm_page (top 10 + Other), only past 10 deals in 12 months.
+  const SEC_COLORS = ['#1d4ed8', '#0891b2', '#7c3aed', '#ea580c', '#ca8a04', '#db2777', '#059669', '#4f46e5', '#be123c', '#0d9488'];
+  function sectorShare(S) {
+    if (!S || !(S.n > 10) || !Array.isArray(S.top)) return '';
+    const items = S.top.slice(0, 10).map((x, i) => [x.s, x.n, SEC_COLORS[i]]).concat(S.other > 0 ? [[AC.other, S.other, 'var(--mute)']] : []);
+    return '<div class="ssh"><b class="apt">' + esc(AC.sector_share) + '</b><div class="nd ssn">' + esc(pl(AC.n_deals, S.n)) + '</div><div class="sstk">'
+      + items.map(x => '<i style="flex:' + Number(x[1]) + ';background:' + x[2] + '"></i>').join('') + '</div><div class="sleg">'
+      + items.map(x => '<span><b style="background:' + x[2] + '"></b>' + esc(x[0]) + ' ' + esc(x[1]) + '</span>').join('') + '</div></div>';
   }
   // "What people say": source icon (inline SVG, Simple Icons 16.36 / LinkedIn mark from Simple Icons 10.4, CC0;
   // no image files, no hotlinking) or a letter badge, plus an outlined type pill from the review's stored type.
@@ -1060,7 +1078,7 @@
     try {
       const d = await window.RegretActList(L.slug, L.kind);
       if (d && d.status === 'ok' && Array.isArray(d.items) && ov._lazy === L) {
-        box.innerHTML = L.kind === 'deals' ? dealRows(d.items) : d.items.map(revCard).join(''); ov._lazy = null;
+        box.innerHTML = L.kind === 'deals' ? (L.head || '') + dealRows(d.items, L.lab) : d.items.map(revCard).join(''); ov._lazy = null;
       }
     } finally { ov._busy = false; }
   });
@@ -1096,12 +1114,13 @@
     }
     if (!tiles.length && !d0 && !r0) return '';
     let h = '<section class="actv" aria-label="' + esc(AC.reviews) + '">' + (tiles.length ? '<div class="ats" style="grid-template-columns:repeat(' + tiles.length + ',1fr)">' + tiles.join('') + '</div>' : '');
-    if (d0) h += '<div class="aps"><b class="apt">' + esc(AC.latest_deal) + '</b>' + dealRows([d0]) + (n.deals > 1 ? showAll(P, 'deals', n.deals) : '') + '</div>';
+    if (d0) h += '<div class="aps"><b class="apt">' + esc(AC.latest_deal) + '</b>' + dealRows([d0], labFirm(P)) + (n.deals > 1 ? showAll(P, 'deals', n.deals) : '') + '</div>';
     if (r0) h += '<div class="aps arvs"><h2>' + esc(AC.reviews) + '</h2>' + revCard(r0) + (n.reviews > 1 ? showAll(P, 'revs', n.reviews) : '') + '</div>';
     // firm_page sends only the first slice (A.lazy); the full list loads once when "Show all" opens (firm_activity_list).
     const full = (k, list, n) => !A.lazy && Array.isArray(list) && list.length > 1 ? list : (n > 1 ? null : undefined);
     const fd = full('deals', A.deals, n.deals), fr = full('revs', A.reviews, n.reviews);
-    if (P.open && fd !== undefined) actModal('actdeals', fmt(AC.deals_title, { n: fd ? fd.length : n.deals, firm }), fd ? dealRows(fd) : '', !fd && { slug: P.firm.slug, kind: 'deals' });
+    const lab = labFirm(P), sh = lab ? sectorShare(A.sector_12m) : '';
+    if (P.open && fd !== undefined) actModal('actdeals', fmt(AC.deals_title, { n: fd ? fd.length : n.deals, firm }), fd ? sh + dealRows(fd, lab) : sh, !fd && { slug: P.firm.slug, kind: 'deals', lab, head: sh });
     if (P.open && fr !== undefined) actModal('actrevs', fmt(AC.reviews_title, { n: fr ? fr.length : n.reviews, firm }), fr ? fr.map(revCard).join('') : '', !fr && { slug: P.firm.slug, kind: 'revs' });
     return h + '</section>';
   }
