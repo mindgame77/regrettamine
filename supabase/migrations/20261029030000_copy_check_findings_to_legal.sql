@@ -101,13 +101,13 @@ insert into _chk_copy values
 ('6beff219-5f66-4b66-b976-498565828e0c','bmo-family-office','regulator','Written agreement with parent Bank of Montreal and BMO Financial Corp on BSA/AML compliance of U.S. operations (parent-level, not the…',null,'Closed','closed','Written agreement with parent Bank of Montreal and BMO Financial Corp on BSA/AML compliance of U.S. operations (parent-level, not the adviser)','cap:writtenagreementwithparentbankofmontrealandbmofinancialcorponbsaamlcomplianceofusoperationsparentlevelnotthe','https://www.federalreserve.gov/newsevents/press/enforcement/enf20130517a1.pdf','federalreserve.gov'),
 ('6beff219-5f66-4b66-b976-498565828e0c','bmo-family-office','case','Predecessor myCFO was implicated in a 2002 federal tax-shelter investigation',null,'Closed','adjudicated','Predecessor myCFO was implicated in a 2002 federal tax-shelter investigation; an AAA arbitration ruled against myCFO in July 2005; Bank of Montreal''s Harris unit had bought part of MyCFO in 2002','cap:predecessormycfowasimplicatedina2002federaltaxshelterinvestigation','https://en.wikipedia.org/wiki/Harris_myCFO','Wikipedia');
 with ins as (
-  insert into public.firm_legal_items (id, firm_id, grp, title, year_label, state, status_label, note, sort_order, hidden, stable_key)
+  insert into public.firm_legal_items (id, firm_id, grp, title, year_label, state, status_label, note, sort_order, hidden)
   select md5('check-copy:' || c.firm_id || ':' || c.url || ':' || c.title)::uuid, c.firm_id, c.grp, c.title, c.year_label, c.state,
          c.status_label, c.note,
-         1000 + row_number() over (partition by c.firm_id order by c.year_label desc nulls last, c.title)::int, false, c.stable_key
-    from _chk_copy c
+         1000 + row_number() over (partition by c.firm_id order by c.year_label desc nulls last, c.title)::int, false
+    from (select distinct on (firm_id, public._legal_key(title)) * from _chk_copy order by firm_id, public._legal_key(title), url) c
     join public.firms f on f.id = c.firm_id and f.deleted_at is null
-   where not exists (select 1 from public.firm_legal_items l where l.firm_id = c.firm_id and l.stable_key = c.stable_key)
+   where not exists (select 1 from public.firm_legal_items l where l.firm_id = c.firm_id and l.stable_key = public._legal_key(c.title))
   on conflict (id) do nothing
   returning id, firm_id)
 select count(*) from ins;
