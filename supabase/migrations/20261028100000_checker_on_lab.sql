@@ -97,6 +97,20 @@ begin
   delete from firm_profile_facts r using ranked x where r.id = x.id and x.rn > 1;
   get diagnostics d = row_count; n := n + d;
   with ranked as (
+    select id,
+           first_value(id) over (
+             partition by public._norm_txt(body), coalesce(source_urls[1], '')
+             order by id) keeper,
+           row_number() over (
+             partition by public._norm_txt(body), coalesce(source_urls[1], '')
+             order by id) rn
+      from reviews
+     where firm_id = p_firm and coalesce(body, '') <> ''
+  )
+  update founder_accounts fa set moved_to_review = r.keeper
+    from ranked r
+   where fa.moved_to_review = r.id and r.rn > 1;
+  with ranked as (
     select id, row_number() over (
              partition by public._norm_txt(body), coalesce(source_urls[1], '')
              order by id) rn
