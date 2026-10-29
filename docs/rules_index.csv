@@ -198,7 +198,6 @@ B11.2,B11 Legal and regulatory section,"firm_legal_items, not hidden, with a sou
 B11.3,B11 Legal and regulatory section,Allowed sources: see A2.4.,"on main"
 B11.4,B11 Legal and regulatory section,Title required.,on main
 B11.5,B11 Legal and regulatory section,Hidden or unsourced rows are omitted.,on main
-B11.6,B11 Legal and regulatory section,Past problems: Lead copy of a case shown; regulator actions in three places.,on main
 B11.7,B11 Legal and regulatory section,"Legal items: up to 100 kept per firm; past 100 the oldest are archived (stored, hidden): see A9.20 (Alex, 2026-10-28).","on main"
 B12.1,B12 News,"One list, newest first, since 2023.",on main
 B12.2,B12 News,Press: press_items plus press_item_firms where check_mark = checked_correct and the URL is non-empty.,on main
@@ -285,7 +284,6 @@ C4.2,C4 Financial regulator actions,Pill: firm_check_rows n=4.,on main
 C4.3,C4 Financial regulator actions,"Count only from firm_legal_items regulator rows (SEC, FINRA, FCA, DOJ, CFTC) with official links; recounted each fresh run.",on main
 C4.4,C4 Financial regulator actions,A new allegation needs a court or regulator document on the 10 lab firms or it is rejected.,on main
 C4.5,C4 Financial regulator actions,"vc_source_facts regulator facts and regulatory_records retired in the new database move (A14); no deletion without 'Yes, delete'.",on main
-C4.6,C4 Financial regulator actions,Past problem: regulator actions in three places; pill and section disagreed.,on main
 C5.1,C5 Money laundering penalties,Anti-money-laundering fines.,on main
 C5.2,C5 Money laundering penalties,firm_check_rows n=5.,on main
 C5.3,C5 Money laundering penalties,"Level 1 sources: FinCEN, OFAC civil penalties, SEC litigation releases, FINRA, CFTC, UK FCA, BaFin, MAS, FINTRAC, AUSTRAC.",on main
@@ -310,7 +308,6 @@ C8.2,C8 Registration check,"Source: only the firm's own IAPD page on sec.gov (le
 C8.3,C8 Registration check,"Saved from the latest on-demand run; the pill follows C8.5. Set only after it passes the registration check (C8.4).",on main
 C8.4,C8 Registration check,"Door check: the link must be an adviserinfo.sec.gov page for that firm, and the status must be one of the fixed list (Registered, Exempt reporting, Not active).",on main
 C8.5,C8 Registration check,"Check 8 only (Alex, 2026-10-28): a US firm found on IAPD is Clear (registration line + link); a US firm not found is ""Not on the list""; a non-US firm (from H...",on main
-C8.6,C8 Registration check,Past problems: pill Not checked yet despite a record; pills stored not counted.,on main
 C9.1,C9 People behind the fund,"Partners and owners, each checked against the lists above.",on main
 C9.2,C9 People behind the fund,firm_check_rows n=9.,on main
 C9.3,C9 People behind the fund,"Find people: IAPD/ADV A-B, Form D, Companies House, GLEIF, EU registers (level 1), team page (level 2). Screen: checks 1,2,3,10 registers, BrokerCheck, IAPD, SEC litigation releases, OpenSanctions (extra).",on main
@@ -396,7 +393,7 @@ R5.33,R5 Old notes,From C1.3: Which bot ran them for a given Clear pill: unknown
 R5.34,R5 Old notes,From C1.6: Five lab firms are Clear with 0 `sanctions_checks` rows. Accel is one.,on main
 R5.35,R5 Old notes,From C2.3: Unknown which bot last set the lab pills.,on main
 R5.36,R5 Old notes,From C4.1: a16z’s stored count is “1 open probe.”,on main
-R5.37,R5 Old notes,From C4.6: MIO’s pill says 2 actions while `regulatory_records` is 0.,on main
+R5.37,R5 Old notes,From C4: MIO’s pill says 2 actions while `regulatory_records` is 0.,on main
 R5.38,R5 Old notes,From C7.3: Unknown bot for the stored pills.,on main
 R5.39,R5 Old notes,From C9.3: Unknown which bot screened them.,on main
 R5.40,R5 Old notes,From C9.6: Accel’s Schedule A sentences were hidden as people and did not become a check.,on main
