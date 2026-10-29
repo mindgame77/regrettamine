@@ -1,5 +1,6 @@
-"""Fix 5: a new SEC adviser summary is not stored. The five rows already on the lab firms stay.
-A real regulator action, the Form ADV link, and the check 8 registration line still go in."""
+"""Fix 5: a new SEC adviser summary is not stored.
+A real regulator action, the Form ADV link, and the check 8 registration line still go in.
+The five rows that were already stored were deleted after Alex said yes (t2894u). The export keeps the copy."""
 import json
 import os
 from pathlib import Path
@@ -144,6 +145,12 @@ def test_scripts_name_the_five_rows_and_the_migration_does_not_delete_them():
     assert "delete from public.firm_legal_items" not in mig
     backup = (ROOT / "supabase/rollbacks/20261029320000_fix5_sec_summary_backup.sql").read_text()
     delete = (ROOT / "supabase/rollbacks/20261029320000_fix5_sec_summary_delete_restore.sql").read_text()
+    export = (ROOT / "supabase/rollbacks/20261029320000_fix5_sec_summary_export.json").read_text()
     for i in KEEP:
-        assert i in backup and i in delete
-    assert "not run" in backup.lower() and "not run" in delete.lower()
+        assert i in backup and i in delete and i in export
+    assert "create schema" not in backup.lower()
+    assert "t2894u" in delete.lower()
+    assert "raise exception" not in delete.lower()
+    assert "0423628e-8b51-5095-a1a0-86409ff438ee" in delete
+    assert "disable trigger sec_summary_guard" in delete.lower()
+    assert delete.strip().endswith("rollback;")
