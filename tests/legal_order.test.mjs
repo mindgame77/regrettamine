@@ -98,3 +98,8 @@ test('settlement terms show only for Settled cases that state them', () => {
 test('a case without a court or regulator link is not shown', () => {
   assert.doesNotMatch(page([row('No link', '2024', 'Active', { src: [] })]), /id="legal"/);
 });
+
+test('a lone "D." is not shown as a court', () => {
+  const L = legal(page([row('X v. Example Capital', '2020', 'Closed', { role: 'Defendant', note: 'Court: D. something' })]));
+  assert.doesNotMatch(L, /· D\. ·|>D\.</);
+});
