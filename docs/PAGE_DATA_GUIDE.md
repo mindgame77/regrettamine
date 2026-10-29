@@ -332,7 +332,16 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **B6e.6** RULES_AUDIT 12 and 13.
 - **B6e.7** Shown count, max kept, and archiving for deals: see [A9.5](#a9).
 - **B6e.8** A deal row has a sector column, and a column that reads round · amount · Lead. Those three are filled only when a source states them. An empty amount stays empty.
-- **B6e.9** Latest investments block (Alex, 2026-10-28): shown count per [A9.5](#a9). A deal with no stated sector leaves the sector cell blank. It never reads "No data yet". The sector summary sits inside this block: pills with deal counts for the top 5 sectors (largest first), a grey "Other N" pill for the rest, and "Show all" opening the deals pop-up. Counts only, no percentages. Deals with no sector are not counted and get no pill. The pills count all of the firm's deals, not only the last 12 months. The summary is shown only when the firm has 10 or more deals in total; with fewer, it is hidden on the page and in the pop-up. The same rules apply to the pop-up header. Deals, last 12 mo is a separate number on the page: just the count of deals in the last 12 months. Sector pill limit: [A9.17](#a9) (Alex, 2026-10-28).
+- **B6e.9** Latest investments block (Alex, 2026-10-28). Its rules, one per line:
+  - **B6e.9.1** Shown count: per [A9.5](#a9).
+  - **B6e.9.2** A deal with no stated sector leaves the sector cell blank, never "No data yet".
+  - **B6e.9.3** The sector summary sits inside this block: pills with deal counts for the top 5 sectors (largest first), a grey "Other N" pill for the rest, and "Show all" opening the deals pop-up. Sector pill limit: [A9.17](#a9).
+  - **B6e.9.4** Counts only, no percentages.
+  - **B6e.9.5** Deals with no sector are not counted and get no pill.
+  - **B6e.9.6** The pills count all of the firm's deals, not only the last 12 months.
+  - **B6e.9.7** The summary shows only when the firm has 10 or more deals in total; with fewer, it is hidden on the page and in the pop-up. The same rules apply to the pop-up header.
+  - **B6e.9.8** "Deals, last 12 mo" is a separate number on the page: just the count of deals in the last 12 months.
+  - **B6e.9.9** A sector name is at most 2 words and 25 characters (Alex, 2026-10-28). Longer names are mapped to a short standard name.
 - **B6e.10** Sector pills: no data that has passed its check means the block is hidden from users (no empty box, no "No data" text). It appears by itself once data passes. (Alex, 2026-10-28)
 
 <a id="b7"></a>

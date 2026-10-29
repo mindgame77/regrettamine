@@ -152,7 +152,16 @@ B6e.5,"B6e Latest deal, and “Show all”",The block is omitted when there is n
 B6e.6,"B6e Latest deal, and “Show all”",RULES_AUDIT 12 and 13.,on main
 B6e.7,"B6e Latest deal, and “Show all”",Deals shown/max/archiving: see A9.5.,in PR #228
 B6e.8,"B6e Latest deal, and “Show all”","A deal row has a sector column, and a column that reads round · amount · Lead.",on main
-B6e.9,"B6e Latest deal, and “Show all”","Latest investments block (Alex, 2026-10-28): shows the 1 latest deal, plus Show all (Alex, 2026-10-28: 1 for now, may increase later).",in PR #228
+B6e.9,"B6e Latest deal, and “Show all”","Latest investments block (Alex, 2026-10-28), split into B6e.9.1 to B6e.9.9.",in PR #228
+B6e.9.1,"B6e Latest deal, and “Show all”",Shown count: per A9.5.,in PR #228
+B6e.9.2,"B6e Latest deal, and “Show all”","A deal with no stated sector leaves the sector cell blank, never ""No data yet"".",in PR #228
+B6e.9.3,"B6e Latest deal, and “Show all”","Top 5 sector pills with deal counts plus a grey ""Other N"" pill and Show all; limit per A9.17.",in PR #228
+B6e.9.4,"B6e Latest deal, and “Show all”","Counts only, no percentages.",in PR #228
+B6e.9.5,"B6e Latest deal, and “Show all”",Deals with no sector are not counted and get no pill.,in PR #228
+B6e.9.6,"B6e Latest deal, and “Show all”","Pills count all of the firm's deals, not only the last 12 months.",in PR #228
+B6e.9.7,"B6e Latest deal, and “Show all”","Summary shows only with 10 or more deals in total, on the page and in the pop-up.",in PR #228
+B6e.9.8,"B6e Latest deal, and “Show all”","""Deals, last 12 mo"" is a separate count of deals in the last 12 months.",in PR #228
+B6e.9.9,"B6e Latest deal, and “Show all”","A sector name is at most 2 words and 25 characters (Alex, 2026-10-28).",in PR #228
 B6e.10,"B6e Latest deal, and “Show all”","Sector pills: no data that has passed its check means the block is hidden from users (no empty box, no ""No data"" text).",in PR #228
 B7.1,"B7 Thesis (replaces Overview; Alex, 2026-10-28)",New block “Thesis”.,in PR #228
 B7.2,"B7 Thesis (replaces Overview; Alex, 2026-10-28)","Holds the firm's investment thesis (what they invest in and why), copied word for word from the firm's own website.",in PR #227
