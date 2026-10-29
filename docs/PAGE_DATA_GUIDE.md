@@ -518,7 +518,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 | [C9](#c9) | People behind the fund | Partners and owners, each checked against the lists in C1, C2, C3 and C10 |
 | [C10](#c10) | Political ties | Government or political roles |
 
-- **C0.2** OpenSanctions is only one source, and only inside checks 1, 2, and 10. It is not a source for the other checks, and it does not replace a register those checks have of their own. Checks 3, 4, 5, 6, 7, 8, and 9 keep their own searches. A same-name hit that is not the same person is not a finding.
+- **C0.2** OpenSanctions is only one source, and only inside checks 1, 2, and 10. It is not a source for the other checks, and it does not replace a register those checks have of their own. Checks 3, 4, 5, 6, 7, 8, and 9 keep their own searches. In checks 1 and 2 it is listed as extra in C1.3 and C2.3. A same-name hit that is not the same person is not a finding.
 - **C0.3** On the 10 lab firms, check 1 and check 6 each search the legal name and each fund entity name. Each check calls `lab_check_search_names` with its own number. They do not share one search. The website is not one of those queries.
 
 The checks table on the page (snapshot 2026-10-27):
@@ -533,9 +533,17 @@ The checks table on the page (snapshot 2026-10-27):
 <a id="c1"></a>
 ## C1. Sanctions
 
-- **C1.1** “Government lists of people and companies you can’t do business with.” The muted line says “Searched government sanctions lists.” It does not name OFAC SDN.
+- **C1.1** “Government lists of people and companies you can’t do business with.” The muted line names the sites that were searched, for example “Searched OFAC, UK sanctions list, EU sanctions map, UN list.” (changed by Alex, 2026-10-28)
 - **C1.2** Pill: `firm_check_rows` n=1. A screening row, if any, is `sanctions_checks` or a `vc_source_facts` row whose field is `sanctions`. The page does not join those itself; it shows whatever was stored on the pill and in `firm_details`.
-- **C1.3** Intended sources, from `docs/SOURCE_TIERS.md`: OFAC, `sanctionssearch.ofac.treas.gov`, treasury.gov, the UK sanctions list, `sanctionsmap.eu`, the UN list. The enricher is told not to file a same-name hit as a legal item.
+- **C1.3** Fixed sources for check 1 (all level 1, official registers), searched by name for the firm, its funds and its people:
+  - OFAC Sanctions List Search: `https://sanctionssearch.ofac.treas.gov/`
+  - OFAC (treasury.gov) Sanctions List Service / SDN list: `https://ofac.treasury.gov/sanctions-list-service`
+  - UK sanctions list: `https://www.gov.uk/government/publications/the-uk-sanctions-list` (search: `https://search-uk-sanctions-list.service.gov.uk/`)
+  - EU Sanctions Map: `https://www.sanctionsmap.eu/`
+  - UN Security Council Consolidated List: `https://main.un.org/securitycouncil/en/content/un-sc-consolidated-list`
+  - Extra only, not a register: OpenSanctions `https://www.opensanctions.org/` (see [C0.2](#c0)).
+  No other site counts for check 1. The enricher is told not to file a same-name hit as a legal item.
+- **C1.7** A site that checks 1 and 2 share (OFAC, UN, EU) is searched once per name. The one result counts for both checks.
 - **C1.4** A same-name hit stays Clear and adds the muted sentence from `copy.json` `name_only`. There is no required list name.
 - **C1.5** The pill shows the stored state. Nobody rechecks it when `sanctions_checks` is empty.
 - **C1.6** RULES_AUDIT 6.
@@ -543,9 +551,16 @@ The checks table on the page (snapshot 2026-10-27):
 <a id="c2"></a>
 ## C2. Terrorism financing lists
 
-- **C2.1** “Lists of people and groups linked to funding terrorism.”
+- **C2.1** “Lists of people and groups linked to funding terrorism.” The muted line names the sites that were searched, for example “Searched OFAC SDN (SDGT), US State Dept FTO list, UN list, EU terrorist list, UK proscribed groups.”
 - **C2.2** `firm_check_rows` n=2. Detail, when present, is a `vc_source_facts` field `terrorism_lists`.
-- **C2.3** No written list of sites beyond “government lists.”
+- **C2.3** Fixed sources for check 2 (all level 1, official registers):
+  - OFAC SDN list, entries tagged `[SDGT]`: `https://sanctionssearch.ofac.treas.gov/`
+  - US State Dept Foreign Terrorist Organizations: `https://www.state.gov/foreign-terrorist-organizations`
+  - UN Security Council Consolidated List (ISIL (Da'esh) and Al-Qaida part): `https://main.un.org/securitycouncil/en/sanctions/1267`
+  - EU terrorist list (Common Position 2001/931/CFSP): `https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02001E0931-20250722`
+  - UK proscribed terrorist groups: `https://www.gov.uk/government/publications/proscribed-terror-groups-or-organisations--2`
+  - Extra only, not a register: OpenSanctions `https://www.opensanctions.org/`.
+  Shared sites follow [C1.7](#c1).
 - **C2.4** No required fields beyond the pill row.
 - **C2.5** Same as [C1.5](#c1).
 - **C2.6** Same gap as RULES_AUDIT 20: the pill is not recomputed.
@@ -555,7 +570,8 @@ The checks table on the page (snapshot 2026-10-27):
 
 - **C3.1** Trade and investment bans. The enricher doc uses ITAR / the DTC debarred list as the example for a name-only hit on this check.
 - **C3.2** `firm_check_rows` n=3. Detail field `export_restrictions`.
-- **C3.3** `trade.gov` is the example in `docs/ENRICHER.md`. No written rule that it must be that site.
+- **C3.3** Fixed source for check 3 (level 1): the US trade.gov Consolidated Screening List, `https://www.trade.gov/consolidated-screening-list`, searched at `https://www.trade.gov/data-visualization/csl-search`. No other site counts for check 3.
+- **C3.7** Page: a match shows a Review pill with the list name and a link to it. No match shows Clear plus the search date, with no action. A same-name hit that is not the same company stays Clear with a short grey note.
 - **C3.4** Name-only hits stay Clear.
 - **C3.5** Same as [C1.5](#c1).
 - **C3.6** RULES_AUDIT 20.
