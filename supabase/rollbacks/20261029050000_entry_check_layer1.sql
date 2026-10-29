@@ -7,10 +7,14 @@ drop function if exists public._entry_check(bigint, text, text, jsonb);
 drop function if exists public._entry_duplicate(bigint, text, text, jsonb);
 drop function if exists public._entry_check_reasons(jsonb, text);
 drop function if exists public._entry_level(jsonb, jsonb);
-drop function if exists public._entry_date_ok(text);
+drop function if exists public._entry_fix_payload(jsonb);
+drop function if exists public._entry_fix_dates(jsonb);
+drop function if exists public._entry_is_date_key(text);
+drop function if exists public._entry_norm_date(text);
 drop function if exists public._entry_status_bad(jsonb);
 drop function if exists public._entry_section(text, text);
 alter table bots.research_submissions
+  drop column if exists entry_notes,
   drop column if exists entry_link_open_pending,
   drop column if exists entry_check_at,
   drop column if exists entry_check;

@@ -73,11 +73,35 @@ def test_3_duplicate_of_earlier_upload(cur):
     assert "duplicate of an earlier upload" in check(cur, p)
 
 
-def test_4_date_format(cur):
-    assert "bad date format" in check(cur, payload(rec(as_of="12/31/2025")))
-    assert "bad date format" in check(cur, payload(rec(as_of="2025-02-30")))
-    assert check(cur, payload(rec(as_of="2025"))) == "Accepted"
-    assert "bad date format" in check(cur, payload(rec(field="lawsuits", value={"filed_at": "March 2024"})))
+def norm(c, d):
+    return c.execute("select public._entry_norm_date(%s)", (d,)).fetchone()[0]
+
+
+def test_4_dates_normalized_not_rejected(cur):
+    assert norm(cur, "Oct 5, 2026") == "2026-10-05"
+    assert norm(cur, "10/05/2026") == "2026-10-05"
+    assert norm(cur, "5 October 2026") == "2026-10-05"
+    assert norm(cur, "2026-10-05T12:30:00Z") == "2026-10-05"
+    assert norm(cur, "October 2026") == "2026-10"
+    assert norm(cur, "2026-1") == "2026-01"
+    assert norm(cur, "2026") == "2026"
+    assert norm(cur, "2025-02-30") is None
+    assert norm(cur, "soon") is None
+    assert check(cur, payload(rec(as_of="12/31/2025"))) == "Accepted"
+    assert check(cur, payload(rec(field="lawsuits", value={"filed_at": "March-ish 2024"}))) == "Accepted"
+
+
+def fix(c, p):
+    return c.execute("select public._entry_fix_payload(%s::jsonb)", (json.dumps(p),)).fetchone()[0]
+
+
+def test_4_fix_payload_dates(cur):
+    out = fix(cur, payload(rec(as_of="Oct 5, 2026", published_at="not a date"),
+                           rec(field="lawsuits", value={"filed_at": "5 October 2026", "date": "??"})))
+    r0, r1 = out["payload"]["records"]
+    assert r0["as_of"] == "2026-10-05" and r0["sources"][0]["published_at"] is None
+    assert r1["value"]["filed_at"] == "2026-10-05" and r1["value"]["date"] is None
+    assert out["notes"] == ["2 dates unreadable, cleared"]
 
 
 def test_5_status_words(cur):
@@ -90,10 +114,14 @@ def test_5_status_words(cur):
     assert check(cur, payload(rec(field="people", value={"name": "A", "status": "current"}))) == "Accepted"
 
 
-def test_6_a9_limits(cur):
+def test_6_a9_limits_archive_extras(cur):
     people = [rec(url=f"https://examplevc.com/team/{i}", tier="T2", field="people", value={"name": f"P{i}"})
-              for i in range(21)]
-    assert "people over the A9 limit (21 > 20)" in check(cur, payload(*people))
+              for i in range(23)]
+    assert check(cur, payload(*people)) == "Accepted"
+    out = fix(cur, payload(*people))
+    flags = [r.get("archived") for r in out["payload"]["records"]]
+    assert flags[:20] == [None] * 20 and flags[20:] == [True] * 3
+    assert out["notes"] == ["3 items over the A9 limit archived"]
     thesis = rec(url="https://examplevc.com/about", tier="T2", field="thesis", value="x" * 1001)
     assert "thesis over 1,000 characters (A9.19)" in check(cur, payload(thesis))
 
@@ -116,6 +144,12 @@ def test_trigger_sets_result_and_link_flag(cur):
                       "('vc-test-entry-3', 'test-bot', %s::jsonb) returning entry_check, entry_link_open_pending",
                       (json.dumps(payload(rec(value="Other"))),)).fetchone()
     assert row == ("Accepted", True)
+    bad_date = rec(value="Third", as_of="sometime")
+    row = cur.execute("insert into bots.research_submissions(registry_id, bot_id, payload) values "
+                      "('vc-test-entry-5', 'test-bot', %s::jsonb) returning entry_check, entry_notes, payload",
+                      (json.dumps(payload(bad_date)),)).fetchone()
+    assert row[0] == "Accepted" and row[1] == ["1 date unreadable, cleared"]
+    assert row[2]["records"][0]["as_of"] is None
 
 
 def test_purge_after_30_days(cur):
@@ -128,7 +162,7 @@ def test_purge_after_30_days(cur):
 
 
 def test_server_only_grants(cur):
-    for fn in ("public._entry_check(bigint,text,text,jsonb)", "public._entry_duplicate(bigint,text,text,jsonb)",
+    for fn in ("public._entry_check(bigint,text,text,jsonb)", "public._entry_fix_payload(jsonb)", "public._entry_duplicate(bigint,text,text,jsonb)",
                "bots.entry_check_purge()", "bots.entry_check_trg()"):
         for role in ("anon", "authenticated"):
             assert not cur.execute("select has_function_privilege(%s, %s, 'execute')", (role, fn)).fetchone()[0], (role, fn)

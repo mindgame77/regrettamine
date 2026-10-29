@@ -1,6 +1,8 @@
 -- Entry check, Layer 1 (step A of the approved 'entry check' plan; Alex, 2026-10-28; rules A4.6, A4.7).
 -- Instant database checks on every row a bot uploads into bots.research_submissions (the holding door, A3.1).
--- Each new row gets entry_check = 'Accepted' or 'Rejected: <reason>[; <reason>...]'. Internal only, never shown;
+-- Each new row gets entry_check = 'Accepted' or 'Rejected: <reason>[; <reason>...]', plus internal entry_notes from
+-- fix-ups that never reject: dates normalized (unreadable ones cleared) and items past the A9 limit archived.
+-- Internal only, never shown;
 -- the result is cleared after 30 days (bots.entry_check_purge, A4.6).
 -- This does NOT publish anything and does NOT turn the 10 checks back on (20261029031000_checks_off stays).
 -- Not possible inside a trigger: opening the link over HTTP. Rows get entry_link_open_pending = true so the Checker
@@ -13,7 +15,10 @@
 alter table bots.research_submissions
   add column if not exists entry_check text,
   add column if not exists entry_check_at timestamptz,
-  add column if not exists entry_link_open_pending boolean;
+  add column if not exists entry_link_open_pending boolean,
+  add column if not exists entry_notes text[];
+comment on column bots.research_submissions.entry_notes is
+  'A4.7 internal notes from the fix-ups (e.g. 1 date unreadable, cleared; 3 items over the A9 limit archived). Never shown. Cleared after 30 days.';
 comment on column bots.research_submissions.entry_check is
   'A4.6 door-check result: Accepted or Rejected: <reason>. Internal only, never shown. Cleared after 30 days.';
 comment on column bots.research_submissions.entry_link_open_pending is
@@ -36,16 +41,112 @@ create or replace function public._entry_status_bad(p_f jsonb)
       then 'case type not on the fixed list (Fraud, Contract, Employment, Securities, Regulator action, IP)'
     end $$;
 
--- ISO date YYYY, YYYY-MM or YYYY-MM-DD (A13.2), and a real calendar date.
-create or replace function public._entry_date_ok(p text)
- returns boolean language plpgsql immutable set search_path = public, extensions as $$
+-- Date normalization (A13.2; Alex 2026-10-28: a bad date never rejects an item). Returns YYYY-MM-DD, YYYY-MM or
+-- YYYY, or null when the text can't be read. Handles ISO dates and timestamps, MM/DD/YYYY, 'Oct 5, 2026',
+-- '5 October 2026', 'October 2026', 'Oct 2026'.
+create or replace function public._entry_norm_date(p text)
+ returns text language plpgsql immutable set search_path = public, extensions as $$
+declare t text := btrim(regexp_replace(coalesce(p, ''), '\s+', ' ', 'g')); m text[];
 begin
-  if p is null or btrim(p) = '' then return true; end if;
-  if btrim(p) ~ '^\d{4}$' then return true; end if;
-  if btrim(p) ~ '^\d{4}-\d{2}$' then perform (btrim(p) || '-01')::date; return true; end if;
-  if btrim(p) ~ '^\d{4}-\d{2}-\d{2}([T ][0-9:.]+(Z|[+-]\d{2}(:?\d{2})?)?)?$' then perform left(btrim(p), 10)::date; return true; end if;
-  return false;
-exception when others then return false;
+  if t = '' then return null; end if;
+  if t ~ '^\d{4}$' then return t; end if;
+  if t ~ '^\d{4}-\d{1,2}$' then
+    m := regexp_match(t, '^(\d{4})-(\d{1,2})$');
+    return to_char(make_date(m[1]::int, m[2]::int, 1), 'YYYY-MM');
+  end if;
+  m := regexp_match(t, '^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})([T ].*)?$');
+  if m is not null then return to_char(make_date(m[1]::int, m[2]::int, m[3]::int), 'YYYY-MM-DD'); end if;
+  m := regexp_match(t, '^(\d{1,2})/(\d{1,2})/(\d{4})$');  -- US MM/DD/YYYY (A13.1)
+  if m is not null then return to_char(make_date(m[3]::int, m[1]::int, m[2]::int), 'YYYY-MM-DD'); end if;
+  m := regexp_match(t, '^([A-Za-z]{3,9})\.? (\d{1,2})(st|nd|rd|th)?,? (\d{4})$');  -- Oct 5, 2026
+  if m is not null then return to_char(to_date(left(m[1], 3) || ' ' || m[2] || ' ' || m[4], 'Mon DD YYYY'), 'YYYY-MM-DD'); end if;
+  m := regexp_match(t, '^(\d{1,2})(st|nd|rd|th)? ([A-Za-z]{3,9})\.?,? (\d{4})$');  -- 5 October 2026
+  if m is not null then return to_char(to_date(left(m[3], 3) || ' ' || m[1] || ' ' || m[4], 'Mon DD YYYY'), 'YYYY-MM-DD'); end if;
+  m := regexp_match(t, '^([A-Za-z]{3,9})\.?,? (\d{4})$');  -- October 2026
+  if m is not null then return to_char(to_date(left(m[1], 3) || ' 1 ' || m[2], 'Mon DD YYYY'), 'YYYY-MM'); end if;
+  return null;
+exception when others then return null;
+end $$;
+
+-- Is this key a date field? (as_of, published_at, date, filed, closed, *_date, *_at, *_on)
+create or replace function public._entry_is_date_key(k text)
+ returns boolean language sql immutable set search_path = public, extensions as $$
+  select coalesce(k, '') ~* '^(as_of|date|filed|closed)$|_(date|at|on)$' $$;
+
+-- Normalize every date field in one object. Unreadable dates become null; o_cleared counts them.
+create or replace function public._entry_fix_dates(p_obj jsonb, out o_obj jsonb, out o_cleared int)
+ language plpgsql immutable set search_path = public, extensions as $$
+declare e record; v text;
+begin
+  o_obj := p_obj; o_cleared := 0;
+  if jsonb_typeof(p_obj) <> 'object' then return; end if;
+  for e in select key, value from jsonb_each(p_obj) where jsonb_typeof(value) = 'string' and public._entry_is_date_key(key) loop
+    v := public._entry_norm_date(e.value #>> '{}');
+    if v is null then
+      if btrim(e.value #>> '{}') <> '' then o_cleared := o_cleared + 1; end if;
+      o_obj := jsonb_set(o_obj, array[e.key], 'null'::jsonb);
+    elsif v is distinct from e.value #>> '{}' then
+      o_obj := jsonb_set(o_obj, array[e.key], to_jsonb(v));
+    end if;
+  end loop;
+end $$;
+
+-- Fix-ups that never reject (Alex 2026-10-28): normalize dates (checks 4) and archive items past the A9 limit
+-- (check 6). Returns {"payload": <fixed payload>, "notes": [internal notes]}. Items past the limit keep their place
+-- in the upload with "archived": true (kept, hidden, never deleted; A9.1). The first items up to the limit are kept.
+create or replace function public._entry_fix_payload(p jsonb)
+ returns jsonb language plpgsql stable set search_path = public, extensions as $$
+declare
+  caps jsonb := '{"people":20,"press":50,"news":50,"timeline":50,"founders":50,"deals":1000,"funds":100,"lps":100,"legal":100,"interviews":10}';
+  out_p jsonb := p; recs jsonb; rec jsonb; i int; sec text; cnt jsonb := '{}'; arch int := 0; cleared int := 0;
+  fx record; src jsonb; k text; j int; arr jsonb; notes text[] := '{}';
+begin
+  if p is null or jsonb_typeof(p) <> 'object' then return jsonb_build_object('payload', p, 'notes', '[]'::jsonb); end if;
+  if jsonb_typeof(p->'records') = 'array' then
+    recs := p->'records';
+    for i in 0 .. jsonb_array_length(recs) - 1 loop
+      rec := recs->i;
+      if jsonb_typeof(rec) <> 'object' then continue; end if;
+      select * into fx from public._entry_fix_dates(rec); rec := fx.o_obj; cleared := cleared + fx.o_cleared;
+      if jsonb_typeof(rec->'value') = 'object' then
+        select * into fx from public._entry_fix_dates(rec->'value'); rec := jsonb_set(rec, '{value}', fx.o_obj); cleared := cleared + fx.o_cleared;
+      end if;
+      if jsonb_typeof(rec->'sources') = 'array' then
+        src := '[]';
+        for j in 0 .. jsonb_array_length(rec->'sources') - 1 loop
+          select * into fx from public._entry_fix_dates(rec->'sources'->j); src := src || jsonb_build_array(fx.o_obj); cleared := cleared + fx.o_cleared;
+        end loop;
+        rec := jsonb_set(rec, '{sources}', src);
+      end if;
+      sec := public._entry_section(case rec->>'field_path'
+          when 'people' then 'people' when 'peopleMoves' then 'people' when 'funds' then 'funds' when 'latestRaise' then 'funds'
+          when 'limitedPartners' then 'lps' when 'portfolio' then 'deals' when 'lawsuits' then 'legal'
+          when 'regulatoryActions' then 'legal' when 'sanctions' then 'legal' when 'controversies' then 'legal'
+          when 'posts' then 'founders' when 'reviews' then 'founders' else 'overview' end, rec->>'field_path');
+      cnt := jsonb_set(cnt, array[sec], to_jsonb(coalesce((cnt->>sec)::int, 0) + 1));
+      if caps ? sec and (cnt->>sec)::int > (caps->>sec)::int then rec := rec || '{"archived": true}'; arch := arch + 1; end if;
+      recs := jsonb_set(recs, array[i::text], rec);
+    end loop;
+    out_p := jsonb_set(out_p, '{records}', recs);
+  end if;
+  if jsonb_typeof(p->'sections') = 'object' then
+    for k in select jsonb_object_keys(p->'sections') loop
+      arr := out_p->'sections'->k;
+      if jsonb_typeof(arr) <> 'array' then continue; end if;
+      sec := public._entry_section(k, k);
+      for j in 0 .. jsonb_array_length(arr) - 1 loop
+        select * into fx from public._entry_fix_dates(arr->j); cleared := cleared + fx.o_cleared;
+        if caps ? sec and j + 1 > (caps->>sec)::int and jsonb_typeof(fx.o_obj) = 'object' then
+          fx.o_obj := fx.o_obj || '{"archived": true}'; arch := arch + 1;
+        end if;
+        arr := jsonb_set(arr, array[j::text], fx.o_obj);
+      end loop;
+      out_p := jsonb_set(out_p, array['sections', k], arr);
+    end loop;
+  end if;
+  if cleared > 0 then notes := notes || format('%s date%s unreadable, cleared', cleared, case when cleared > 1 then 's' else '' end); end if;
+  if arch > 0 then notes := notes || format('%s item%s over the A9 limit archived', arch, case when arch > 1 then 's' else '' end); end if;
+  return jsonb_build_object('payload', out_p, 'notes', to_jsonb(notes));
 end $$;
 
 -- Source level 1-3 (A1): an explicit source_level / level, or the bot tier T1-T3.
@@ -64,15 +165,13 @@ create or replace function public._entry_section(p_section text, p_field_path te
               when lower(coalesce(p_field_path, '')) = 'interviews' then 'interviews'
               else p_section end $$;
 
--- Pure checks 1, 2, 4, 5, 6, 7 on one payload. p_firm_dom is the firm's own domain (for check 7).
+-- Rejecting checks 1, 2, 5, 7 (and the A9.19 thesis length) on one payload. p_firm_dom is the firm's own domain (for check 7).
 create or replace function public._entry_check_reasons(p jsonb, p_firm_dom text)
  returns text[] language plpgsql stable set search_path = public, extensions as $$
 declare
   r text[] := '{}';
-  it record; recs jsonb; rec jsonb; lvl int; d text; sec text; cnt jsonb := '{}'; k text;
+  it record; recs jsonb; rec jsonb; lvl int; sec text;
   dom text := nullif(regexp_replace(lower(coalesce(p_firm_dom, '')), '^www\.', ''), '');
-  -- A9 max kept per firm (A9.2-A9.7, A9.15, A9.20).
-  caps jsonb := '{"people":20,"press":50,"news":50,"timeline":50,"founders":50,"deals":1000,"funds":100,"lps":100,"legal":100,"interviews":10}';
 begin
   if p is null or jsonb_typeof(p) <> 'object' then return array['empty or unreadable upload']; end if;
   recs := case when jsonb_typeof(p->'records') = 'array' then p->'records' else '[]'::jsonb end;
@@ -84,7 +183,6 @@ begin
   for it in select * from public._checker_payload_items(p) loop
     rec := case when it.n >= 1 and jsonb_typeof(p->'records') = 'array' then recs->(it.n - 1) else null end;
     sec := public._entry_section(it.section, rec->>'field_path');
-    cnt := jsonb_set(cnt, array[sec], to_jsonb(coalesce((cnt->>sec)::int, 0) + 1));
     -- 1) link present and well-formed http(s)
     if it.url is null or btrim(it.url) = '' then
       r := r || 'no source link'::text;
@@ -98,13 +196,7 @@ begin
     if lvl is null then r := r || 'no source level'::text;
     elsif lvl not between 1 and 3 then r := r || ('source level ' || lvl || ' is not 1 to 3')::text;
     end if;
-    -- 4) date format
-    for d in select x from unnest(array[rec->>'as_of', rec->'sources'->0->>'published_at']) x
-             union all
-             select e.value #>> '{}' from jsonb_each(case when jsonb_typeof(it.f) = 'object' then it.f else '{}' end) e
-              where jsonb_typeof(e.value) = 'string' and e.key ~* '(^|_)(date|filed|closed)$|_(at|on)$' loop
-      if not public._entry_date_ok(d) then r := r || ('bad date format: ' || left(d, 40))::text; end if;
-    end loop;
+    -- 4) dates: never rejected; normalized or cleared by _entry_fix_payload.
     -- 5) status words
     if it.section = 'legal' and public._entry_status_bad(it.f) is not null then r := r || public._entry_status_bad(it.f); end if;
     -- 6b) thesis max 1,000 characters (A9.19)
@@ -119,12 +211,7 @@ begin
     end if;
   end loop;
 
-  -- 6) A9 limits per list in one upload
-  for k in select jsonb_object_keys(cnt) loop
-    if caps ? k and (cnt->>k)::int > (caps->>k)::int then
-      r := r || format('%s over the A9 limit (%s > %s)', k, cnt->>k, caps->>k);
-    end if;
-  end loop;
+  -- 6) A9 list limits: never rejected; extra items archived by _entry_fix_payload.
 
   return (select coalesce(array_agg(x order by o), '{}') from (select x, min(o) o from unnest(r) with ordinality u(x, o) group by x) s);
 end $$;
@@ -170,10 +257,16 @@ end $$;
 
 create or replace function bots.entry_check_trg()
  returns trigger language plpgsql security definer set search_path = public, extensions as $$
+declare fx jsonb;
 begin
   perform bots.apply_limits();
   begin
+    -- Duplicate key from the payload as sent, so an exact copy still matches after the fix-ups below.
+    new.door_key := coalesce(new.door_key, public._door_key(new.registry_id, new.payload));
     new.entry_check := public._entry_check(new.id, new.registry_id, new.bot_id, new.payload);
+    fx := public._entry_fix_payload(new.payload);
+    new.payload := fx->'payload';
+    new.entry_notes := nullif(array(select jsonb_array_elements_text(fx->'notes')), '{}');
   exception when others then
     new.entry_check := 'Rejected: entry check error';  -- never block the upload itself
   end;
@@ -191,7 +284,7 @@ create or replace function bots.entry_check_purge()
  returns integer language plpgsql security definer set search_path = public, extensions as $$
 declare n integer;
 begin
-  update bots.research_submissions set entry_check = null, entry_link_open_pending = null
+  update bots.research_submissions set entry_check = null, entry_link_open_pending = null, entry_notes = null
    where entry_check is not null and entry_check_at < now() - interval '30 days';
   get diagnostics n = row_count;
   return n;
@@ -200,7 +293,10 @@ end $$;
 -- A14.6 grants: server only.
 revoke all on function public._entry_section(text, text) from public, anon, authenticated;
 revoke all on function public._entry_status_bad(jsonb) from public, anon, authenticated;
-revoke all on function public._entry_date_ok(text) from public, anon, authenticated;
+revoke all on function public._entry_norm_date(text) from public, anon, authenticated;
+revoke all on function public._entry_is_date_key(text) from public, anon, authenticated;
+revoke all on function public._entry_fix_dates(jsonb) from public, anon, authenticated;
+revoke all on function public._entry_fix_payload(jsonb) from public, anon, authenticated;
 revoke all on function public._entry_level(jsonb, jsonb) from public, anon, authenticated;
 revoke all on function public._entry_check_reasons(jsonb, text) from public, anon, authenticated;
 revoke all on function public._entry_duplicate(bigint, text, text, jsonb) from public, anon, authenticated;
