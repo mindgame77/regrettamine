@@ -47,7 +47,7 @@ def lab(cur):
 
 def submit(cur, reg, url, probes, door=None):
     p = {"firm": {"name": "StepB Lab", "primary_domain": "stepb.example"},
-         "records": [{"field_path": "hq", "value": "Los Angeles", "as_of": "2025-12-31",
+         "records": [{"field_path": "founded", "value": "2012", "as_of": "2025-12-31",
                       "sources": [{"url": url, "tier": "T1", "published_at": "2026-02-25"}]}],
          "probes": probes}
     return cur.execute("insert into bots.research_submissions(valid, registry_id, bot_id, payload, door_status) "

@@ -48,12 +48,12 @@ def test_blocked_rows_routed_or_logged():
         fid = _firm(cur)
         cur.execute("insert into firm_profile_facts (firm_id, section, label, value) values (%s, 'funds', 'Regulatory AUM', 'RAUM 160,242,886,816 USD')", (fid,))
         cur.execute("insert into firm_profile_facts (firm_id, section, label, hero_label, hero_value, value) values (%s, 'funds', 'Fund gross assets', null, null, 'Fund I · gross assets $7.8B')", (fid,))
-        cur.execute("insert into firm_profile_facts (firm_id, section, label, value) values (%s, 'overview', 'Headquarters', 'NYC')", (fid,))
+        cur.execute("insert into firm_profile_facts (firm_id, section, label, value) values (%s, 'overview', 'Founded', '2012')", (fid,))
         cur.execute("insert into vc_source_facts (firm_id, fact_type, section, value, data_status) values (%s, 'fund_fact', 'checks', %s, 'real')",
                     (fid, json.dumps({"field": "regulatory_aum", "value": "RAUM 1,000,000,000 USD"})))
         cur.execute("insert into list_items (firm_id, group_key, name, value, note) values (%s, 'facts', 'Regulatory AUM', '$45.50B', 'short form')", (fid,))
         cur.execute("insert into timeline_events (firm_id, date_label, kind, body) values (%s, '2026', 'aum', 'AUM: $5B')", (fid,))
-        # Only the HQ card is stored.
+        # Only the Founded card is stored. Headquarters is no longer a profile card (fix 7).
         assert _one(cur, "select count(*) from firm_profile_facts where firm_id = %s", (fid,)) == 1
         for t in ("vc_source_facts", "list_items", "timeline_events"):
             assert _one(cur, f"select count(*) from {t} where firm_id = %s", (fid,)) == 0, t
@@ -76,9 +76,9 @@ def test_existing_rows_kept_and_editable():
         cur.execute("update firm_profile_facts set value = 'edited', hero_label = 'Regulatory AUM' where id = %s", (rid,))
         assert _one(cur, "select value from firm_profile_facts where id = %s", (rid,)) == "edited"
         # Relabelling a normal row into AUM is blocked.
-        hq = _one(cur, "insert into firm_profile_facts (firm_id, section, label, value) values (%s, 'overview', 'Headquarters', 'NYC') returning id", (fid,))
+        hq = _one(cur, "insert into firm_profile_facts (firm_id, section, label, value) values (%s, 'overview', 'Founded', '2012') returning id", (fid,))
         cur.execute("update firm_profile_facts set label = 'AUM' where id = %s", (hq,))
-        assert _one(cur, "select label from firm_profile_facts where id = %s", (hq,)) == "Headquarters"
+        assert _one(cur, "select label from firm_profile_facts where id = %s", (hq,)) == "Founded"
         c.rollback()
 
 
