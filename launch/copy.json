@@ -651,7 +651,10 @@
    "all_title": "{n} legal items · {firm}",
    "vs": "vs. ",
    "filed": "Filed {y}",
-   "closed": "Closed {y}"
+   "closed": "Closed {y}",
+   "_summary_note": "Case summary under the pills (Alex 2026-10-29): date in the site date style, then the source link.",
+   "summary_date": "Summary {d}",
+   "summary_source": "Source: {site}"
   },
   "people": {
    "board": "Board seats",

@@ -206,10 +206,12 @@ def build(sub, kept, lps, brand, slug):
         else: grp = 'context'
         title = v.get('caption') or v.get('event_anchor') or v.get('regulator') or r['entity']['name']
         year = str(v.get('filed_at') or v.get('event_date') or v.get('date') or '')[:4] or None
-        note = v.get('summary') or v.get('allegation')
+        cs = bool(v.get('case_summary') and v.get('summary') and v.get('summary_source_url'))
+        note = v.get('allegation') if cs else v.get('summary') or v.get('allegation')
         add('firm_legal_items', r['record_id'], dict(grp=grp, title=clip(title, 160), year_label=year, role=human(v.get('firm_role')) or (v.get('named_as') and 'Named'),
             state=state, status_label={'adjudicated': 'Adjudicated', 'alleged': 'Alleged', 'reported': 'Reported', 'self_reported': 'Self-reported'}[r['certainty']],
-            tone='g', note=clip(note, 700), sort_order=order), r['sources'])
+            tone='g', note=clip(note, 700), sort_order=order,
+            **(dict(summary=v['summary'], summary_date=v.get('summary_date'), summary_source_url=v['summary_source_url'], summary_by='research') if cs else {})), r['sources'])
         d = v.get('filed_at') or v.get('event_date') or v.get('date')
         if d: add('timeline_events', 'ev' + r['record_id'], dict(date_label=str(d)[:10], kind='Case filed' if grp == 'case' else 'Regulator' if grp == 'regulator' else 'Reported',
                   body=clip(title, 200), sort_order=order), r['sources'])
@@ -252,7 +254,7 @@ def firm_sql(sub, brand, slug, rows, p):
     by = {}
     for t, i, c, ss in rows: by.setdefault(t, []).append((i, c, ss))
     for t, items in by.items():
-        cols = list(items[0][1])
+        cols = list(dict.fromkeys(k for _, c, _ in items for k in c))  # union: a legal row may carry the summary fields
         out.append(f"insert into {t} (id, firm_id, {', '.join(cols)}) values " + ',\n'.join(
             f"({q(i)}, {q(fid)}, " + ', '.join(q(c.get(k)) for k in cols) + ')' for i, c, _ in items) + ';')
         fs = [(i, u, d, n) for i, _, ss in items for n, (u, _, d) in enumerate(ss)]

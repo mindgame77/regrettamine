@@ -404,7 +404,9 @@
     const cy = status && status !== 'Active' ? (String(x.status || '').match(/(19|20)\d{2}/) || all.match(/\b(?:terminated|closed|dismissed|settled)\s+(?:on\s+)?((?:19|20)\d{2})/i) || [])[0] : '';
     const filedY = filed ? String(filed).match(/(19|20)\d{2}/)[0] : '', closedY = cy ? String(cy).match(/(19|20)\d{2}/)[0] : '';
     const sm = status === 'Settled' ? String(x.note || '').match(/[^.]*\bsettle[^.]*\$\s?[\d.,]+\s*(?:[MBK]\b|million|billion)?[^.]*\.?/i) : null;
-    return { title: nice(title), status, side, topic, other, court, filed: filedY, closed: closedY, settlement: sm ? sm[0].trim() : '', src: x.src || [] };
+    const su = safeUrl(x.summary_url), sx = String(x.summary || '').replace(/\s+/g, ' ').trim();
+    const summary = su && sx ? { text: sx.length > 300 ? sx.slice(0, 300).trimEnd() : sx, date: x.summary_date || '', url: su } : null;
+    return { title: nice(title), status, side, topic, other, court, filed: filedY, closed: closedY, settlement: sm ? sm[0].trim() : '', src: x.src || [], summary };
   }
   function legalCases(items) {
     return (items || []).map(legalCase).filter(c => c && (c.src || []).some(s => safeUrl(s.url)))
@@ -419,7 +421,18 @@
     return '<div class="rw lg' + (act ? ' lg-act' : '') + '"><div class="rt">' + esc(c.title) + '</div>'
       + (c.settlement ? '<div class="rn lg-set">' + esc(c.settlement) + '</div>' : '')
       + (line ? '<div class="rn">' + line + '</div>' : '')
-      + '<div class="rm">' + [lpill(c.status, act), lpill(c.side), lpill(c.topic), chips(c.src)].filter(Boolean).join(' ') + '</div></div>';
+      + '<div class="rm">' + [lpill(c.status, act), lpill(c.side), lpill(c.topic), chips(c.src)].filter(Boolean).join(' ') + '</div>'
+      + legalSummary(c.summary) + '</div>';
+  }
+  // Case summary under the pills (firm_legal_items.summary, <= 300 chars, written from its court/regulator record),
+  // then its date (site date style, RegretDate) and the source link. No summary or no source link: nothing is drawn.
+  function legalSummary(sm) {
+    if (!sm || !sm.text || !safeUrl(sm.url)) return '';
+    const host = String(sm.url).replace(/^https?:\/\//i, '').replace(/^www\./i, '').split(/[/?#]/)[0];
+    const d = sm.date ? fdate(sm.date) : '';
+    return '<div class="lsum"><p class="lsum-t">' + esc(sm.text) + '</p><div class="lsm">'
+      + (d ? '<span>' + esc(fmt(LG.summary_date || 'Summary {d}', { d })) + '</span>' : '')
+      + '<a href="' + esc(safeUrl(sm.url)) + '" target="_blank" rel="noopener">' + esc(fmt(LG.summary_source || 'Source: {site}', { site: host })) + ' ↗</a></div></div>';
   }
   const LEGAL_MAX = 10;
   function legalHtml(items, P) {

@@ -72,3 +72,16 @@ for (const [label, recs, want] of [
   assertEquals(sent.p_valid, false);
   assert(r.body.errors.some((e: string) => e.includes(want)), JSON.stringify(r.body.errors));
 });
+
+Deno.test("legal case summary: trimmed at 300, dropped (case kept) without a source link", async () => {
+  const r = await submit([rec("c1", "lawsuits", { caption: "A v. B", status: "Active", summary: "x".repeat(350), summary_source_url: "https://www.courtlistener.com/docket/1/a/" }),
+    rec("c2", "lawsuits", { caption: "C v. D", status: "Active", summary: "no link", summary_date: "2026-10-29" }),
+    rec("c3", "lawsuits", { caption: "E v. F", status: "Closed", summary: "old free-text note" })]);
+  assertEquals(r.status, 200, JSON.stringify(r.body));
+  const v = sent.p_payload.records.map((x: any) => x.value);
+  assertEquals(v[0].summary.length, 300);
+  assertEquals(v[0].summary_date, "2026-10-28");
+  assertEquals([v[1].summary, v[1].summary_source_url], [undefined, undefined]);
+  assertEquals(v[2].summary, "old free-text note");
+  assert(JSON.stringify(r.body).includes("no source link"));
+});
