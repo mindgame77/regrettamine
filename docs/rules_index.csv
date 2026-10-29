@@ -248,7 +248,7 @@ B18.5,B18 Elements that are easy to look for and are not on the page,bots.firm_l
 C0.1,C0 How the checks work,There are exactly 10 checks.,on main
 C0.2,C0 How the checks work,"OpenSanctions is only one source, and only inside checks 1, 2, and 10; listed as extra in C1.3 and C2.3.","edited in this PR (Alex, 2026-10-28)"
 C0.3,C0 How the checks work,"On the 10 lab firms, check 1 and check 6 each search the legal name and each fund entity name.",on main
-C0.4,C0 How the checks work,"A table: number, title, pill, what was found, date searched.",on main
+C0.4,C0 How the checks work,"A table: number, title, pill, what was found, date searched. Check 8 pills: US found = Clear + registration line and link; US not found = Not on the list; non-US by HQ = grey pill, SEC register doesn't apply.","edited in this PR (Alex, 2026-10-28)"
 C0.5,C0 How the checks work,"firm_check_rows: n, title, descr, state, count_label, searched_at.",on main
 C0.6,C0 How the checks work,"Titles were inserted when the firm was created, or by the hand migration 20261023230000_sync_checks_all_launch_firms.sql.",on main
 C0.7,C0 How the checks work,A new firm’s pills are nc.,on main
@@ -301,7 +301,7 @@ C7.5,C7 Court records worldwide,Stored pill.,on main
 C7.6,C7 Court records worldwide,RULES_AUDIT 20.,on main
 C8.1,C8 Registration check,"“Registered with the regulator as an investment adviser, and active.”",on main
 C8.2,C8 Registration check,"Source: only the firm's own IAPD page on sec.gov (level 1, the register).",on main
-C8.3,C8 Registration check,"Stored on the check 8 row in firm_check_rows (n=8), set only after it passes the registration check (C8.4); The Checker runs this check today; automatic chec...",on main
+C8.3,C8 Registration check,"Saved from the latest on-demand run; the pill follows C8.5. Set only after it passes the registration check (C8.4).","edited in this PR (Alex, 2026-10-28)"
 C8.4,C8 Registration check,"Door check: the link must be an adviserinfo.sec.gov page for that firm, and the status must be one of the fixed list (Registered, Exempt reporting, Not active).",on main
 C8.5,C8 Registration check,"Check 8 only (Alex, 2026-10-28): a US firm found on IAPD is Clear (registration line + link); a US firm not found is ""Not on the list""; a non-US firm (from H...",on main
 C8.6,C8 Registration check,RULES_AUDIT 8 and 20.,on main

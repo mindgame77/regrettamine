@@ -522,7 +522,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **C0.3** On the 10 lab firms, check 1 and check 6 each search the legal name and each fund entity name. Each check calls `lab_check_search_names` with its own number. They do not share one search. The website is not one of those queries.
 
 The checks table on the page (snapshot 2026-10-27):
-- **C0.4** A table: number, title, pill, what was found, date searched. A row opens the findings. Pills are Clear, Review, Worth knowing, or Not checked yet. For check 8 the states are in C8.5 (Alex, 2026-10-28). A stored `red` is drawn as Review. While a bot holds the claim, the first unfinished row says “Checking” and the rest say “Waiting.”
+- **C0.4** A table: number, title, pill, what was found, date searched. A row opens the findings. Pills are Clear, Review, Worth knowing, or Not checked yet. For check 8 the states are in C8.5 (Alex, 2026-10-28): a US firm found = Clear with the registration line and link; a US firm not found = “Not on the list”; a non-US firm (by HQ country) = grey pill with the note “SEC register doesn't apply: firm is based outside the US”. A stored `red` is drawn as Review. While a bot holds the claim, the first unfinished row says “Checking” and the rest say “Waiting.”
 - **C0.5** `firm_check_rows`: `n`, `title`, `descr`, `state`, `count_label`, `searched_at`. Findings on an open page are `firm_page` `checks[].items`, backed by `firm_details` (`vc_source_facts`) and, when those are missing, the check’s itemized findings. Name-only hits are `checks[].name_only`.
 - **C0.6** Titles were inserted when the firm was created, or by the hand migration `20261023230000_sync_checks_all_launch_firms.sql`. Evidence, when it exists, came from researcher dumps into `vc_source_facts` (SEC, courts, sanctions lists). New dumps no longer copy onto this table.
 - **C0.7** A new firm’s pills are `nc`. `launch/checks.py` can derive a pill and is not what the page runs. Name-only text is excluded inside `firm_details`.
@@ -621,7 +621,7 @@ The checks table on the page (snapshot 2026-10-27):
 
 - **C8.1** “Registered with the regulator as an investment adviser, and active.”
 - **C8.2** Source: only the firm's own IAPD page on sec.gov (level 1, the register). The Overview is gone (replaced by Thesis, [B7](#b7)), so nothing here comes from it.
-- **C8.3** Stored on the check 8 row in `firm_check_rows` (n=8), set only after it passes the registration check (C8.4); The Checker runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28): registered or exempt reporting, since year, active or not, SEC/CRD number, and the IAPD link.
+- **C8.3** Saved from the latest on-demand run; the pill follows C8.5. Set only after it passes the registration check (C8.4); The Checker runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28): registered or exempt reporting, since year, active or not, SEC/CRD number, and the IAPD link.
 - **C8.4** Door check: the link must be an adviserinfo.sec.gov page for that firm, and the status must be one of the fixed list (Registered, Exempt reporting, Not active).
 - **C8.5** Check 8 only (Alex, 2026-10-28): a US firm found on IAPD is Clear (registration line + link); a US firm not found is "Not on the list"; a non-US firm (from HQ country) gets a grey pill with the note "SEC register doesn't apply: firm is based outside the US", not counted for or against.
 - **C8.6** RULES_AUDIT 8 and 20.
