@@ -717,7 +717,6 @@ Nothing in this part is a rule.
 - **R1.4** One-off migrations wrote Sequoia’s `$82.2B`, Sequoia’s 10 deals, and the news check marks.
 - **R1.5** Press and timeline are still two tables. The page merges some of them only in the browser.
 - **R1.6** `bots.firm_lps` and `firm_profile_facts` both hold LP names. Confirmed LPs on the profile table are the page home.
-- **R1.7** Pills and some counts are stored. This guide says they are computed.
 - **R1.8** The ingest reply still names `docs/DATA_RULES.md`. That string is code, not a rule.
 - **R1.9** `docs/data-model.md` still describes `legal_matters` and a score on the page. It is not a rulebook.
 - **R1.10** There is no prompt file for the Activity Collector or the list builders except this guide and `docs/BOTS.md`.

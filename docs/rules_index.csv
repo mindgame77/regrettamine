@@ -330,7 +330,6 @@ R1.3,R1 What the live code still does,The Activity Collector wrote Y Combinator 
 R1.4,R1 What the live code still does,"One-off migrations wrote Sequoia’s $82.2B, Sequoia’s 10 deals, and the news check marks.",on main
 R1.5,R1 What the live code still does,Press and timeline are still two tables.,on main
 R1.6,R1 What the live code still does,bots.firm_lps and firm_profile_facts both hold LP names.,on main
-R1.7,R1 What the live code still does,Pills and some counts are stored.,on main
 R1.8,R1 What the live code still does,The ingest reply still names docs/DATA_RULES.md.,on main
 R1.9,R1 What the live code still does,docs/data-model.md still describes legal_matters and a score on the page.,on main
 R1.10,R1 What the live code still does,There is no prompt file for the Activity Collector or the list builders except this guide and docs/BOTS.md.,on main
