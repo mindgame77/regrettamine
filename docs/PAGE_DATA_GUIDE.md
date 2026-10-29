@@ -529,6 +529,9 @@ The checks table on the page (snapshot 2026-10-27):
 - **C0.8** The table shows on the summary view. “Not checked yet” has no “nothing found” line. The date shows only when `searched_at` is set.
 - **C0.9** RULES_AUDIT 20 and 16.
 - **C0.10** Parked for the checks review, not changed now (Alex, 2026-10-28): A8.1 (lab pills recounted on publish) vs the C1.5–C10.5 "stored pill" lines, and C7.1 (a non-party mention can be the count; resolved in C7.1, Alex, 2026-10-28).
+- **C0.11** One date searched per check (Alex, 2026-10-28): the time of that check's last run. It is the only date; `searched_at` and `checked_on` are one value, not two.
+- **C0.12** Saved results (Alex, 2026-10-28): each check saves, per firm, its last result: the sites searched, the date, and what was found. The next run searches only for what is new since that date, where the site allows a date filter. Sanctions data files (OFAC, UN, EU, UK, CSL) are downloaded and searched in full on every run. Earlier matches are rechecked for their current status. The page shows the result plus “Checked on [date]”.
+- **C0.13** Old `vc_source_facts` rows (Alex, 2026-10-28): check rows (sanctions, legal, regulatory, SEC CRD, legal entities) that have a real source link become each firm's starting saved result ([C0.12](#c0)). Profile rows (board seats, funds, partner moves, press, media reach, founder experience, portfolio) move to the matching profile sections in the new database move ([A14](#a14)). “Needs proof” rows stay hidden until proven. Test and superseded rows are deleted only after Alex's “Yes, delete” on an exact list ([A14.5](#a14)).
 
 <a id="c1"></a>
 ## C1. Sanctions

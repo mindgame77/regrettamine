@@ -255,6 +255,9 @@ C0.7,C0 How the checks work,A new firm’s pills are nc.,on main
 C0.8,C0 How the checks work,The table shows on the summary view.,on main
 C0.9,C0 How the checks work,RULES_AUDIT 20 and 16.,on main
 C0.10,C0 How the checks work,"Parked for the checks review, not changed now (Alex, 2026-10-28): A8.1 (lab pills recounted on publish) vs the C1.5–C10.5 ""stored pill"" lines, and C7.1 (a no...",on main
+C0.11,C0 How the checks work,"One date searched per check = time of the last run (searched_at and checked_on are one value).","added in this PR (Alex, 2026-10-28)"
+C0.12,C0 How the checks work,"Each check saves its last result per firm (sites, date, findings); next run searches only what is new where a date filter exists; sanctions data files searched in full each run; earlier matches rechecked; page shows result plus Checked on [date].","added in this PR (Alex, 2026-10-28)"
+C0.13,C0 How the checks work,"Old vc_source_facts: sourced check rows become the starting saved result; profile rows move to profile sections (A14); needs-proof rows stay hidden; test and superseded rows deleted only after Yes, delete on an exact list.","added in this PR (Alex, 2026-10-28)"
 C1.1,C1 Sanctions,The muted line names the sites that were searched.,"edited in this PR (Alex, 2026-10-28)"
 C1.2,C1 Sanctions,Pill: firm_check_rows n=1.,on main
 C1.3,C1 Sanctions,"Fixed check 1 sources: OFAC search, OFAC/treasury.gov, UK sanctions list, sanctionsmap.eu, UN consolidated list; OpenSanctions extra only.","edited in this PR (Alex, 2026-10-28)"
