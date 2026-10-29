@@ -110,11 +110,12 @@ def test_lab_submission_publishes_once_and_a_different_value_is_a_note():
             "where pf.firm_id = %s and p.url = %s",
             (fid, item["url"]),
         ).fetchone()[0]
-        assert headline == longer["headline"]
+        # A4.7 (entry check): the same news link again is 'duplicate of a published news item', so it never
+        # reaches the Checker (A5.5) and the published headline stays. Needs Alex: this replaces the older A7.12 merge here.
+        assert headline == item["headline"]
         assert cur.execute(
-            "select count(*) from publish_checks where firm_id = %s and bot_id = 'checker' and outcome = 'note'",
-            (fid,),
-        ).fetchone()[0] >= 1
+            "select entry_check from research_submissions where registry_id = %s order by id desc limit 1", (reg,)
+        ).fetchone()[0].startswith("Rejected: duplicate of a published news item")
         conn.rollback()
 
 
