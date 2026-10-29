@@ -110,10 +110,10 @@ test('pageSecs draws News from press and timeline and does not draw those sectio
     ],
   };
   const secs = pageSecs(P);
-  assert.equal(secs.map(s => s.key).join('|'), 'overview|news|lps');
+  assert.equal(secs.map(s => s.key).join('|'), 'news|lps');
+  assert.equal(secs[0].count, 1);
+  assert.equal(secs[0].items[0].tag, 'Court');
   assert.equal(secs[1].count, 1);
-  assert.equal(secs[1].items[0].tag, 'Court');
-  assert.equal(secs[2].count, 1);
 });
 
 const A16Z = { name: 'Andreessen Horowitz', short_name: 'a16z', sec_name: 'AH Capital Management, L.L.C.' };

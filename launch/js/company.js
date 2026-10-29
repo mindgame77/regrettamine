@@ -249,6 +249,7 @@
   // Hidden: Other names, Type, Staff, Private funds, Legal entity, Sanctions screening, empty, and "Not found".
   // Legal entity is kept only as the Registration line when that row is missing and the entity text holds the status.
   const OV_LINE = COPY.overview_line || {};
+  const TH = COPY.thesis || {};
   const LEGAL_SUFFIX = /\b(l\.?l\.?c\.?|l\.?l\.?p\.?|l\.?p\.?|inc\.?|ltd\.?|corp\.?|plc|gmbh|s\.?a\.?r?\.?l\.?|a\.?g\.?|b\.?v\.?|n\.?v\.?|ulc|pte\.?|pty\.?|icav)\b/i;
   function ovSlot(label) {
     const l = String(label || '').replace(/\s+/g, ' ').trim().toLowerCase();
@@ -432,6 +433,7 @@
   }
   // Open-state renderers, keyed by copy.json sections[].renderer. The section is the third argument (LP grouping).
   const R = {
+    thesis: (items) => '<p class="pth">' + esc(items[0] ? items[0].value : '') + '</p>',
     facts: (it, P, s) => '<div class="rws">' + (s && s.key === 'lps' ? groupLps(it) : it.map(factRow).join('')) + '</div>',
     checks: (it, P) => checkRows(P),
     legal: (it, P) => legalHtml(it, P),
@@ -814,11 +816,12 @@
         if (!n) return null;
         s.count = n;
       }
+      // Overview is not drawn any more (Alex, 2026-10-29). Its slot shows the thesis: the overview item labelled 'thesis'
+      // (entry_check_layer1 caps it at 1,000 characters). No thesis: no section, chip or nav entry.
       if (s.key === 'overview') {
-        const items = overviewRows(s.items || []);
-        if (!items.length) return null;
-        s.items = items;
-        s.count = items.length;
+        const t = (s.items || []).find(x => x && String(x.label || '').trim().toLowerCase() === 'thesis' && String(x.value == null ? '' : x.value).trim());
+        if (!t) return null;
+        return Object.assign(s, { key: 'thesis', title: TH.title || 'Thesis', subtitle: '', renderer: 'thesis', items: [{ value: String(t.value).trim() }], count: 1, nocount: true });
       }
       return s;
     }).filter(Boolean);
@@ -852,18 +855,18 @@
     const toc = [];
     secs.forEach(s => {
       toc.push(s);
-      if (s.key === 'overview' && P.checks && P.checks.length) toc.push({ key: 'check-summary', title: COPY.summary, count: P.checks.length });
+      if (s.key === 'thesis' && P.checks && P.checks.length) toc.push({ key: 'check-summary', title: COPY.summary, count: P.checks.length });
     });
-    if (P.checks && P.checks.length && !secs.some(s => s.key === 'overview')) toc.unshift({ key: 'check-summary', title: COPY.summary, count: P.checks.length });
-    if (main.querySelector('.spl')) main.querySelector('.spl').innerHTML = secs.map(s => '<a class="spp" href="#' + esc(s.key) + '">' + esc(s.title) + ' <em>' + s.count + '</em></a>').join('');
-    if (tocEl) tocEl.innerHTML = '<b>' + COPY.toc + '</b>' + toc.map(s => '<a href="#' + esc(s.key) + '">' + esc(s.title) + ' <span>' + s.count + '</span></a>').join('');
+    if (P.checks && P.checks.length && !secs.some(s => s.key === 'thesis')) toc.unshift({ key: 'check-summary', title: COPY.summary, count: P.checks.length });
+    if (main.querySelector('.spl')) main.querySelector('.spl').innerHTML = secs.map(s => '<a class="spp" href="#' + esc(s.key) + '">' + esc(s.title) + (s.nocount ? '' : ' <em>' + s.count + '</em>') + '</a>').join('');
+    if (tocEl) tocEl.innerHTML = '<b>' + COPY.toc + '</b>' + toc.map(s => '<a href="#' + esc(s.key) + '">' + esc(s.title) + (s.nocount ? '' : ' <span>' + s.count + '</span>') + '</a>').join('');
     let body = '';
     secs.forEach(s => {
-      body += '<section id="' + esc(s.key) + '" class="ps"><h2>' + esc(s.title) + ' <em class="pc2">' + s.count + '</em></h2><p class="psub">' + esc(s.subtitle || '') + '</p>'
+      body += '<section id="' + esc(s.key) + '" class="ps"><h2>' + esc(s.title) + (s.nocount ? '' : ' <em class="pc2">' + s.count + '</em>') + '</h2>' + (s.subtitle ? '<p class="psub">' + esc(s.subtitle) + '</p>' : '')
         + (R[s.renderer] || R.facts)(s.items || [], P, s) + '</section>';
-      if (s.key === 'overview') body += checkSummaryHtml(P);
+      if (s.key === 'thesis') body += checkSummaryHtml(P);
     });
-    if (!secs.some(s => s.key === 'overview')) body = checkSummaryHtml(P) + body;
+    if (!secs.some(s => s.key === 'thesis')) body = checkSummaryHtml(P) + body;
     const pmain = main.querySelector('.pmain'); if (pmain) pmain.innerHTML = body;
     if (tocEl) spy(main);
     const lc = main.querySelector('#lockcard');

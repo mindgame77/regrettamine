@@ -88,7 +88,7 @@
   }
  },
  "sections": {
-  "_note": "Company page sections, in display order. renderer = facts | legal | news | founders | people (js/company.js). Check summary is drawn by the page after Overview and is not a section. Remove an entry to hide a section. The DB only supplies the data per key.",
+  "_note": "Company page sections, in display order. renderer = facts | legal | news | founders | people (js/company.js). Check summary is drawn by the page after Thesis (or first when there is none) and is not a section. The overview key is drawn only as Thesis (its item labelled thesis); other overview rows are not shown (Alex, 2026-10-29). Remove an entry to hide a section. The DB only supplies the data per key.",
   "list": [
    {
     "key": "overview",
@@ -624,6 +624,7 @@
  },
  "company": {
   "toc": "On this page",
+  "thesis": { "_note": "Full report Thesis section (replaces Overview, Alex 2026-10-29). Text is the overview item labelled thesis; heading, chip and nav use title.", "title": "Thesis" },
   "gate": {
    "title": "Check with 1 credit",
    "sub": "See all 10 check results and the full record for {firm}. One credit opens both pages.",
