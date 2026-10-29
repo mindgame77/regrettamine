@@ -22,7 +22,7 @@ def test_url_label():
 
         def label(url):
             cur.execute("delete from funds where firm_id = %s", (fid,))
-            cur.execute("insert into funds (firm_id, name, raised_usd, closed_on, filing_url, data_status) values (%s, 'ZZ F', 1, '2026-01-01', %s, 'real')", (fid, url))
+            cur.execute("insert into funds (firm_id, name, raised_usd, raised_currency, closed_on, filing_url, data_status) values (%s, 'ZZ F', 1, 'USD', '2026-01-01', %s, 'real')", (fid, url))
             cur.execute("select _firm_activity(%s, true)->'latest_fund'", (fid,))
             return cur.fetchone()[0].get("url_label")
 

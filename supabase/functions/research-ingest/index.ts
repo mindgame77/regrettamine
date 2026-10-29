@@ -69,7 +69,31 @@ function legalSummary(o: any, today: string): string[] {
   return w;
 }
 // Shape checks for one record value by field_path; may normalize the value in place.
+// A15.8: money is the full number plus a currency (key suffix like _usd/_eur, or value.currency). Never short forms.
+const MONEY_PATHS = ["funds", "latestRaise", "aum"];
+const ISO_SUFFIX = /(?:^|_)(usd|eur|gbp|jpy|chf|cad|aud|cny|hkd|sgd|inr|sek|nok|dkk|krw|brl|ils|nzd|zar|mxn)$/i;
+const MONEY_WORD = /^(amount|size|raised|target|aum|raum|gav|offering|offering_amount|total_offering|total_sold)$/i;
+function moneyChecks(path: string, o: Record<string, unknown>): string[] {
+  if (!MONEY_PATHS.includes(path)) return [];
+  const e: string[] = [];
+  for (const [k, x] of Object.entries(o)) {
+    const iso = ISO_SUFFIX.test(k);
+    if (!iso && !MONEY_WORD.test(k)) continue;
+    if (x == null) continue;
+    if (typeof x === "string") { if (/\d/.test(x)) e.push(`${path} ${k} is a short form ("${x.slice(0, 20)}"): save the full number, e.g. 14000000000 (A15.8)`); continue; }
+    if (typeof x !== "number") { e.push(`${path} ${k} must be a full number (A15.8)`); continue; }
+    if (x > 0 && x < 1000) { e.push(`${path} ${k} ${x} looks like a short form: save the full number, e.g. 14000000000 (A15.8)`); continue; }
+    if (!Number.isFinite(x) || x < 0 || !Number.isInteger(x)) { e.push(`${path} ${k} must be a positive whole number (A15.8)`); continue; }
+    if (x > 0 && !iso && !(typeof o.currency === "string" && /^[A-Za-z]{3}$/.test(o.currency)))
+      e.push(`${path} ${k} has no currency: use a key like ${k}_usd or set currency (3-letter code) (A15.8)`);
+  }
+  return e;
+}
 function valueChecks(r: any): string[] {
+  const e = valueChecksBase(r);
+  return isObj(r.value) ? [...e, ...moneyChecks(r.field_path, r.value)] : e;
+}
+function valueChecksBase(r: any): string[] {
   const v = r.value;
   if (r.field_path === "thesis") {
     if (isObj(v) && typeof (v as any).text === "string") r.value = (v as any).text;

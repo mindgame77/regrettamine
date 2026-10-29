@@ -58,14 +58,15 @@ def import_funds(cur, path):
     for row in rows(path):
         cur.execute(
             """
-            insert into funds (id, firm_id, name, vintage, size_usd, status, vehicle_kind, notes)
-            values (%s, %s, %s, %s, %s, %s, %s, %s)
+            insert into funds (id, firm_id, name, vintage, size_usd, size_currency, status, vehicle_kind, notes)
+            values (%s, %s, %s, %s, %s, case when %s::numeric is null then null else 'USD' end, %s, %s, %s)
             """,
             (
                 str(uuid.uuid4()),
                 firm_id(cur, row["firm_slug"]),
                 row["name"],
                 row.get("vintage") or None,
+                row.get("size_usd") or None,
                 row.get("size_usd") or None,
                 row.get("status") or None,
                 row.get("vehicle_kind") or None,

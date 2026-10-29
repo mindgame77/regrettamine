@@ -22,8 +22,8 @@ def test_latest_fund_needs_a_real_date():
             return None if v is None else v.get("name")
 
         # Undated rows (with or without an amount) never make a latest fund.
-        cur.execute("""insert into funds (firm_id, name, raised_usd, data_status) values
-                       (%s, 'ZZ Big Undated', 900000000, 'real'), (%s, 'ZZ Bare', null, 'real')""", (fid, fid))
+        cur.execute("""insert into funds (firm_id, name, raised_usd, raised_currency, data_status) values
+                       (%s, 'ZZ Big Undated', 900000000, 'USD', 'real'), (%s, 'ZZ Bare', null, null, 'real')""", (fid, fid))
         assert latest() is None
         # A vintage counts as a date.
         cur.execute("insert into funds (firm_id, name, vintage, data_status) values (%s, 'ZZ Vintage 2024', 2024, 'real')", (fid,))

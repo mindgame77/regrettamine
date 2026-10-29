@@ -53,3 +53,9 @@ test('no unit: plain dollars still formatted; words that are not units are ignor
   assert.equal(aumFigure(''), '');
   assert.equal(aumFigure('no figure'), '');
 });
+
+test('A15.8: a builder-formatted amount in another currency is kept as is', () => {
+  assert.equal(aumFigure('€13.2M'), '€13.2M');
+  assert.equal(aumFigure('CHF 12M'), 'CHF 12M');
+  assert.equal(aumFigure('$14B'), '$14B');
+});
