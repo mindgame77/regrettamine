@@ -1032,6 +1032,9 @@
     const u = [[1e9, 'B'], [1e6, 'M'], [1e3, 'K']].find(x => n >= x[0]);
     return u ? '$' + String(+(n / u[0]).toFixed(n / u[0] >= 100 ? 0 : 2)) + u[1] : '$' + n; };
   const hostOf = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return ''; } };
+  // B6c.1/B6c.8/A1.8: a fund link names its real source. sec.gov is a Filing; else the stored outlet or trusted page name; else the host.
+  const srcName = (u, label) => { const h = hostOf(u); if (/(^|\.)sec\.gov$/i.test(h)) return AC.filing || 'Filing';
+    return String(label || '').trim() || h || AC.filing || 'Filing'; };
   const roundName = (r) => String(r || '').replace(/^stage tag:\s*/i, '');
   const fundName = (n) => String(n || '').replace(/,?\s*L\.?\s?P\.?$/i, '').trim();
   // SEC facts from the hero list, as linked pills (not cards). HQ is the plain city text in the meta line.
@@ -1091,7 +1094,7 @@
     const when = fund.date ? (fdate(fund.date) || fund.date) : '';
     const sub = esc(fund.name) + ' · ' + esc(fmt(AC.raised, { amount: fund.amount }))
       + (when ? ' · ' + esc(when) : '')
-      + (fund.url ? ' · <a href="' + esc(fund.url) + '" target="_blank" rel="noopener">' + esc(AC.filing) + ' ↗</a>' : '');
+      + (fund.url ? ' · <a href="' + esc(fund.url) + '" target="_blank" rel="noopener">' + esc(srcName(fund.url)) + ' ↗</a>' : '');
     return tile(AC.fund, esc(fund.amount), sub, 'afd');
   }
   function aumFigure(raw) {
@@ -1221,7 +1224,7 @@
     const raised = f && money(f.raised_usd);
     if (raised) {
       const u = safeUrl(f.url);
-      const sub = esc(fundName(f.name)) + ' · ' + esc(fmt(AC.raised, { amount: raised })) + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(AC.filing) + ' ↗</a>' : '');
+      const sub = esc(fundName(f.name)) + ' · ' + esc(fmt(AC.raised, { amount: raised })) + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(srcName(u, f.url_label)) + ' ↗</a>' : '');
       tiles.push(tile(AC.fund, esc(raised), sub, 'afd'));
     } else if (labFirm(P)) {
       const prev = earlierFund(P);
@@ -1232,7 +1235,7 @@
       }
     } else if (f) {
       const u = safeUrl(f.url);
-      const sub = esc(fundName(f.name)) + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(AC.filing) + ' ↗</a>' : '');
+      const sub = esc(fundName(f.name)) + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(srcName(u, f.url_label)) + ' ↗</a>' : '');
       tiles.push(tile(AC.fund, '<span class="asm">' + esc(fundName(f.name)) + '</span>', sub, 'afd'));
     }
     // A9.6: "N funds on SEC record · Show all" inside the fund tile. Show all opens the same popup as Show all deals.

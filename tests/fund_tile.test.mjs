@@ -100,7 +100,7 @@ test('a latest fund that raised money stays the Latest fund tile', () => {
   const fund = tile(html);
   assert.match(fund, /<small>Latest fund<\/small><b>\$8\.5B<\/b>/);
   assert.match(fund, /a16z Growth Fund V · \$8\.5B raised · <a href="https:\/\/a16z\.com\/expanding-the-a16z-growth-fund-and-platform\/"/);
-  assert.match(fund, />Filing ↗<\/a>/);
+  assert.match(fund, />a16z\.com ↗<\/a>/);
   assert.doesNotMatch(fund, /Feb 5, 2026|Aug 31, 2026|Assets under management|Sequoia Capital Fund/);
 });
 
