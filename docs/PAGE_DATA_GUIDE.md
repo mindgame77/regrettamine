@@ -702,7 +702,7 @@ Nothing in this part is a rule.
 - **R1.6** `bots.firm_lps` and `firm_profile_facts` both hold LP names. Confirmed LPs on the profile table are the page home.
 - **R1.8** The ingest reply still names `docs/DATA_RULES.md`. That string is code, not a rule.
 - **R1.9** `docs/data-model.md` still describes `legal_matters` and a score on the page. It is not a rulebook.
-- **R1.10** There is no prompt file for the Activity Collector or the list builders except this guide and `docs/BOTS.md`.
+- **R1.10** There is no prompt file for the Activity Collector or the list builders except this guide and the bot research guide (https://docs.google.com/document/d/1gESJoiTdJ9xuV0UWL11AtUTJ60ItUG0v03Fsup1zkkw/edit).
 
 <a id="r2"></a>
 ## R2. Page snapshot, 2026-10-27
