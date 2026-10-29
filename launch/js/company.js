@@ -1138,19 +1138,31 @@
   function secSrc(src) {
     return (src || []).find(c => /(^|\.)sec\.gov\//i.test((safeUrl(c && c.url) || '').replace(/^https?:\/\//i, '').replace(/\/.*/, '/')));
   }
-  // Fix 4 (B6d.6): AUM and Fund assets come only from the stored firm fields (P.firm.money), each with its
-  // Form ADV link. No link, or a link that is not a Form ADV page (DEF 14A, press), means no tile.
+  // Fix 4 (B6d.6) + fix 4b: AUM and Fund assets come only from the stored firm fields (P.firm.money).
+  // Fund assets need a Form ADV link. AUM needs a Form ADV link, else the firm's own site, else a level 3
+  // link (a DEF 14A, or a press release or news on another site). Source level and source date are not drawn.
   const advUrl = (u) => { const v = safeUrl(u) || '';
     return /^https:\/\/([a-z0-9-]+\.)*adviserinfo\.sec\.gov(\/|$)|^https:\/\/(www\.)?sec\.gov\/[^?#]*(form-?adv|\/adv[-_/]|iapd)/i.test(v)
       && !/def[ _-]?14a|press[ _-]?release|\/news\/|\/newsroom\/|\/litigation\//i.test(v) ? v : ''; };
-  function moneyTile(m, label) {
-    const u = m && advUrl(m.url);
+  const firmHost = (website) => { const raw = String(website || '').trim();
+    return hostOf(/^https?:\/\//i.test(raw) ? raw : (raw ? 'https://' + raw : '')); };
+  const NEWS_HOST = /(^|\.)(techcrunch\.com|reuters\.com|bloomberg\.com|axios\.com|ft\.com|wsj\.com|cnbc\.com|forbes\.com|theinformation\.com)$/i;
+  const aumUrl = (u, website) => { const v = safeUrl(u) || '';
+    if (!/^https:\/\//i.test(v)) return '';
+    if (advUrl(v)) return v;
+    const h = hostOf(v), d = firmHost(website);
+    if (h && d && (h === d || h.endsWith('.' + d))) return v;
+    if (/def[ _-]?14a/i.test(v) || /press[ _-]?release/i.test(v) || NEWS_HOST.test(h)) return v;
+    return ''; };
+  function moneyTile(m, label, accept) {
+    const u = m && accept(m.url);
     if (!m || !m.display || !u) return '';
-    const sub = '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(AC.filing || 'Filing') + '>' + esc(capL(AC.filing || 'Filing')) + ' ↗</a>';
+    const name = srcName(u);
+    const sub = '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(name) + '>' + esc(capL(name)) + ' ↗</a>';
     return tile(label, esc(m.display), sub, 'afd');
   }
-  const aumTile = (P) => moneyTile(P.firm && P.firm.money && P.firm.money.aum, AC.aum || 'Assets under management');
-  const fundAssetsTile = (P) => moneyTile(P.firm && P.firm.money && P.firm.money.fund_assets, AC.fund_assets || 'Fund assets');
+  const aumTile = (P) => moneyTile(P.firm && P.firm.money && P.firm.money.aum, AC.aum || 'Assets under management', (u) => aumUrl(u, P.firm && P.firm.website));
+  const fundAssetsTile = (P) => moneyTile(P.firm && P.firm.money && P.firm.money.fund_assets, AC.fund_assets || 'Fund assets', advUrl);
   // Lab firms: Sector and one Round · Amount · Lead column. Amount and Lead only when stored; no sector reads "No data yet".
   const CUR = { USD: '$', EUR: '€', GBP: '£' };
   const dealAmt = (a, c) => { const n = Number(a), s = CUR[String(c || 'USD').toUpperCase()]; if (a == null || !isFinite(n) || n <= 0 || !s) return '';

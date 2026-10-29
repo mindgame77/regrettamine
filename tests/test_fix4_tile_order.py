@@ -22,11 +22,12 @@ def test_adv_source_ok(url, ok):
         assert c.execute("select public._adv_source_ok(%s)", (url,)).fetchone()[0] is ok
 
 
-def test_non_adv_link_rejected_by_constraint():
+def test_fund_assets_still_reject_a_def14a_link():
     with psycopg.connect(DATABASE_URL) as c, c.cursor() as cur:
         cur.execute("insert into firms (slug, name, published, data_status) values ('zz-f4', 'ZZ F4', true, 'real')")
+        cur.execute("update firms set aum_source_url = 'https://www.sec.gov/Archives/def14a.htm' where slug = 'zz-f4'")
         with pytest.raises(psycopg.errors.CheckViolation):
-            cur.execute("update firms set aum_amount = 1000000000, aum_currency = 'USD', aum_source_url = 'https://www.sec.gov/Archives/def14a.htm' where slug = 'zz-f4'")
+            cur.execute("update firms set fund_assets_source_url = 'https://www.sec.gov/Archives/def14a.htm' where slug = 'zz-f4'")
         c.rollback()
 
 
