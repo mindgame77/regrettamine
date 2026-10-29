@@ -148,9 +148,12 @@
   const ncStrip = (t) => String(t == null ? '' : t).replace(LEAD_PRE, '');
   const ncValue = (t) => { const s = String(t == null ? '' : t); if (LEAD_TAG.test(s)) return s.replace(LEAD_TAG, NC);
     return LEAD_PRE.test(s) ? s.replace(LEAD_PRE, '') + ' · ' + NC : s; };
+  // Capped link label (launch/js/dates.js RegretLabel): visible text ends in '..' past the cap; full text in title + aria-label.
+  const capL = (s) => window.RegretLabel ? window.RegretLabel.cap(s) : String(s || '');
+  const fullA = (full, extra) => { full = String(full || '').trim(); return capL(full) === full ? '' : ' title="' + esc(full) + '" aria-label="' + esc(full + (extra || '')) + '"'; };
   const ncPill = '<span class="cs cs-cl">' + esc(NC) + '</span> ';
-  const chips = (src) => '<div class="scs">' + (src || []).map(s => { const u = safeUrl(s.url); const t = esc(s.label) + (s.date ? ' · ' + esc(fdate(s.date)) : '') + ' ↗';
-    return u ? '<a class="sc" href="' + esc(u) + '" target="_blank" rel="noopener">' + t + '</a>' : ''; }).join('') + '</div>';
+  const chips = (src) => '<div class="scs">' + (src || []).map(s => { const u = safeUrl(s.url); const d = s.date ? ' · ' + fdate(s.date) : '', t = esc(capL(s.label)) + esc(d) + ' ↗';
+    return u ? '<a class="sc" href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(s.label, d) + '>' + t + '</a>' : ''; }).join('') + '</div>';
   const pill = (st) => { const p = PILL[st] || PILL.nc; return '<span class="pill ' + p[0] + '"><i></i>' + p[1] + '</span>'; };
   // A person card's name is a short fact about one person. Bot research notes (ADV Schedule A summaries, "Bot people records",
   // Form D related-person lists, anything with a URL or over 300 characters) are hidden in the DB; never draw one as a card either.
@@ -174,7 +177,7 @@
     const y = shownYear(f);
     const head = f.case ? '<b>' + esc(f.case) + '</b>' + (y ? ' · ' + esc(y) : '') + '<br>' : '';
     const u = safeUrl(f.url), st = caseStatus(f);
-    const src = (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(f.label || COPY.source) + ' ↗</a>' : esc(f.label || '')) + (f.date ? ' · ' + COPY.retrieved + esc(fdate(f.date)) : '');
+    const src = (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(f.label) + '>' + esc(capL(f.label || COPY.source)) + ' ↗</a>' : esc(capL(f.label || ''))) + (f.date ? ' · ' + COPY.retrieved + esc(fdate(f.date)) : '');
     const p = st === 'active' ? '<span class="cs cs-act">Active</span>' : st === 'closed' ? '<span class="cs cs-cl">Closed</span>' : '';
     return '<div class="fct' + (st === 'active' ? ' act' : '') + '">' + p + (f.needs_proof ? '<span class="np">Needs proof</span>' : '') + head + esc(who) + esc(f.text) + '<div class="src">' + src + '</div></div>';
   }
@@ -994,7 +997,7 @@
   function sourceHtml(x, para) {
     const u = safeUrl(x.url), label = sourceText(x);
     if (!u || !label) return '';
-    const a = '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(label) + ' ↗</a>';
+    const a = '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(label) + '>' + esc(capL(label)) + ' ↗</a>';
     return para ? '<p>' + esc(T.source) + ' ' + a + '</p>' : '<div class="src">' + esc(T.source) + ' ' + a + '</div>';
   }
   function courtSearch(P) {
@@ -1110,7 +1113,7 @@
     const when = fund.date ? (fdate(fund.date) || fund.date) : '';
     const sub = esc(fund.name) + ' · ' + esc(fmt(AC.raised, { amount: fund.amount }))
       + (when ? ' · ' + esc(when) : '')
-      + (fund.url ? ' · <a href="' + esc(fund.url) + '" target="_blank" rel="noopener">' + esc(srcName(fund.url)) + ' ↗</a>' : '');
+      + (fund.url ? ' · <a href="' + esc(fund.url) + '" target="_blank" rel="noopener"' + fullA(srcName(fund.url)) + '>' + esc(capL(srcName(fund.url))) + ' ↗</a>' : '');
     return tile(AC.fund, esc(fund.amount), sub, 'afd');
   }
   function aumFigure(raw) {
@@ -1136,7 +1139,7 @@
     if (!value) value = aumFigure(P.firm && P.firm.assets);
     if (!value) return '';
     const u = src && safeUrl(src.url);
-    const sub = u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(src.label || AC.filing || 'Filing') + ' ↗</a>' : '';
+    const sub = u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(src.label) + '>' + esc(capL(src.label || AC.filing || 'Filing')) + ' ↗</a>' : '';
     return tile(AC.aum || 'Assets under management', esc(value), sub, 'afd');
   }
   // Lab firms: Sector and one Round · Amount · Lead column. Amount and Lead only when stored; no sector reads "No data yet".
@@ -1146,7 +1149,7 @@
   // Lab round cell: the stored round name without its notes (bracketed asides, text after ';'). The stored value is not rewritten.
   const labRound = (r) => roundName(r).replace(/\s*\([^()]*\)/g, '').split(';')[0].replace(/[\s,]+$/, '').trim();
   function dealRows(ds, lab) {
-    const src = (u) => u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(hostOf(u)) + ' ↗</a>' : '<span></span>';
+    const src = (u) => u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(hostOf(u)) + '>' + esc(capL(hostOf(u))) + ' ↗</a>' : '<span></span>';
     if (lab) return '<div class="adl"><div class="ad adh s5"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_sector) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + ds.map(d => { const u = safeUrl(d.url), r = [labRound(d.round), dealAmt(d.amount, d.currency), d.lead ? AC.lead : ''].filter(Boolean).join(' · ');
         return '<div class="ad s5"><b>' + esc(d.company || '') + '</b>' + (d.sector ? '<span class="arty">' + esc(d.sector) + '</span>' : '<span class="nd">' + esc(AC.no_data) + '</span>')
@@ -1200,7 +1203,7 @@
     const who = r.author || (r.role ? '' : AC.anon), meta = [who && r.role && r.role.indexOf(who) === 0 ? r.role.slice(who.length).replace(/^[\s,]+/, '') : r.role, r.company, roundName(r.round)].filter(Boolean).join(' · ');
     const chipsR = Object.keys(R).filter(k => r.ratings && r.ratings[k]).map(k => '<span class="arc"><span>' + esc(R[k]) + '</span><i>' + '●'.repeat(r.ratings[k]) + '<em>' + '●'.repeat(Math.max(0, 5 - r.ratings[k])) + '</em></i></span>').join('');
     return '<div class="arv"><div class="arh">' + srcBadge(hostOf(u)) + (who ? '<b>' + esc(who) + '</b>' : '') + typePill(r.type) + (meta ? '<span>' + esc(meta) + '</span>' : '') + '<span class="ard">' + esc(fdate(r.date) || '') + '</span></div>'
-      + '<p>“' + esc(r.body || '') + '”</p><div class="arf">' + chipsR + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"><span>' + esc(AC.source) + '</span> ' + esc(hostOf(u)) + ' ↗</a>' : '') + '</div></div>';
+      + '<p>“' + esc(r.body || '') + '”</p><div class="arf">' + chipsR + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(hostOf(u)) + '><span>' + esc(AC.source) + '</span> ' + esc(capL(hostOf(u))) + ' ↗</a>' : '') + '</div></div>';
   }
   const showAll = (P, kind, n) => '<button type="button" class="ash"' + (P.open ? ' data-open="act' + kind + '"' : ' data-gate') + '>' + esc(pl(kind === 'deals' ? AC.all_deals : AC.all_reviews, n)) + ' ↓</button>';
   function actModal(id, title, inner, lazy) {
@@ -1245,7 +1248,7 @@
     const raised = f && money(f.raised_usd);
     if (raised) {
       const u = safeUrl(f.url);
-      const sub = esc(fundName(f.name)) + ' · ' + esc(fmt(AC.raised, { amount: raised })) + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(srcName(u, f.url_label)) + ' ↗</a>' : '');
+      const sub = esc(fundName(f.name)) + ' · ' + esc(fmt(AC.raised, { amount: raised })) + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(srcName(u, f.url_label)) + '>' + esc(capL(srcName(u, f.url_label))) + ' ↗</a>' : '');
       tiles.push(tile(AC.fund, esc(raised), sub, 'afd'));
     } else if (labFirm(P)) {
       const prev = earlierFund(P);
@@ -1256,7 +1259,7 @@
       }
     } else if (f) {
       const u = safeUrl(f.url);
-      const sub = esc(fundName(f.name)) + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(srcName(u, f.url_label)) + ' ↗</a>' : '');
+      const sub = esc(fundName(f.name)) + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(srcName(u, f.url_label)) + '>' + esc(capL(srcName(u, f.url_label))) + ' ↗</a>' : '');
       tiles.push(tile(AC.fund, '<span class="asm">' + esc(fundName(f.name)) + '</span>', sub, 'afd'));
     }
     // A9.6: "N funds on SEC record · Show all" inside the fund tile. Show all opens the same popup as Show all deals.
