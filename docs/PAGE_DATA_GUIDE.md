@@ -20,6 +20,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
   - [A12. Shared checks list](#a12)
   - [A13. Dates shown on the page](#a13)
   - [A14. New database move](#a14)
+  - [A15. Data intake rules (all data types)](#a15)
 - [B. The page](#b)
   - [B1. Site logo and wordmark](#b1)
   - [B2. Search box and suggestions](#b2)
@@ -249,6 +250,15 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 - **A14.5** Every deletion still needs Alex’s explicit 'Yes, delete' on an exact list (Alex, 2026-10-28).
 - **A14.6** `bots.checker_holding` is server-only: RLS is on with no policies on purpose, so only the server (service role) reads or writes it. Do not add a policy. Database functions in `public` that run as owner (security definer) must have a fixed search path, and only the functions on the allowlist in `tests/test_function_security.py` may be run by logged-out users (Alex, 2026-10-28).
 - **A14.7** Planned, not built (Alex, 2026-10-28). In the new database, all old data goes through the entry check ([A4.7](#a4)) like a new upload, and every item with no date gets the import day's date ([A13.2](#a13)).
+
+<a id="a15"></a>
+## A15. Data intake rules (all data types)
+
+- **A15.1** Adding: a bot can only upload a new kind of data once the rulebook names its field, where it's allowed to come from, and its source level.
+- **A15.2** Checking: the Checker has to approve every upload before the page can show it. The page never reads a raw upload directly.
+- **A15.3** Path: each new kind of data gets its own Checker path. It never falls back to another block's save.
+- **A15.4** Storing: a newer approved value replaces the shown one, and the old value stays in history with its date and source.
+- **A15.5** Missing: if there's no approved value, the item is hidden. We never show an empty value or a guessed one.
 
 <a id="b"></a>
 # B. The page
