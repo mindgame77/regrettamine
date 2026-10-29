@@ -26,7 +26,7 @@ def cur():
             c.rollback()
 
 
-def rec(url="https://www.sec.gov/Archives/edgar/data/1/x.htm", tier="T1", field="hq", value="Los Angeles",
+def rec(url="https://www.sec.gov/Archives/edgar/data/1/x.htm", tier="T1", field="founded", value="2012",
         as_of="2025-12-31", published_at="2026-02-25"):
     src = {"tier": tier, "published_at": published_at}
     if url is not None:

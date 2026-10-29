@@ -185,7 +185,6 @@ def test_route_uses_the_conflict_rule():
     with psycopg.connect(DATABASE_URL) as c, c.cursor() as cur:
         fid = _firm(cur, "zz-f7-r")
         reg = "zz-f7-reg"
-        cur.execute("update firms set registry_id = %s where id = %s", (reg, fid))
         cur.execute(
             "insert into research_queue (registry_id, name, priority, status) values (%s, 'ZZ F7', 1, 'submitted')",
             (reg,),
