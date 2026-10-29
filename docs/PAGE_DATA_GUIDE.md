@@ -259,6 +259,8 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 - **A15.3** Path: each new kind of data gets its own Checker path. It never falls back to another block's save.
 - **A15.4** Storing: a newer approved value replaces the shown one, and the old value stays in history with its date and source.
 - **A15.5** Missing: if there's no approved value, the item is hidden. We never show an empty value or a guessed one.
+- **A15.6** Rounded counts: if a platform only shows a rounded follower count (like YouTube's "20.1K"), the bot uploads it marked as rounded. The page shows it the same way as other counts, and an exact count replaces it once one is found.
+- **A15.7** Regional accounts: a firm's regional account (like LightspeedIndia) counts only if the firm's own website links to it. It's stored marked as regional, with its region, and shows as a separate pill labelled with the region, for example "X · India".
 
 <a id="b"></a>
 # B. The page
