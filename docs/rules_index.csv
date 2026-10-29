@@ -19,7 +19,7 @@ A2.5,A2 Sources per page part,"Reviews | A post on any public site (for example 
 A2.6,A2 Sources per page part,"News | A story on TechCrunch, Reuters, Bloomberg, Axios, the Financial Times, the Wall Street Journal, CNBC, Forbes, or The Information, when the link opens...",in PR #228
 A2.7,A2 Sources per page part,"Deals | An SEC Form D (level 1) or the firm’s press release (level 2) (Alex, 2026-10-28).",in PR #228
 A2.8,A2 Sources per page part,"Lawsuits | Merged into A2.4 (Alex, 2026-10-28): same allowed sources (CourtListener, PACER, uscourts.gov, a regulator (SEC, FINRA, FCA), Justia, Law360, or C...",in PR #228
-A2.9,A2 Sources per page part,People | The firm’s team page or a Form ADV.,on main
+A2.9,A2 Sources per page part,People | The firm’s team page or a Form ADV.,removed (duplicate of A2.3)
 A2.10,A2 Sources per page part,Social counts | Only an account that is linked from the firm’s own website.,on main
 A2.11,A2 Sources per page part,"Sectors (portfolio and deals, one rule) | Any source is accepted (approved by Alex on 2026-10-28).",in PR #227
 A3.1,A3 One way in,Every bot sends into the holding area bots.research_submissions.,on main
@@ -28,10 +28,10 @@ A4.1,A4 The holding door,"Only a known bot gets in, and each bot has its own key
 A4.2,A4 The holding door,A bot may send as many distinct firms in an hour as the hourly limit.,on main
 A4.3,A4 The holding door,An exact copy is dropped at the door.,on main
 A4.4,A4 The holding door,"The entry check works the queue oldest first (The Checker runs this check today; automatic checks, when built, run the same check.) (Alex, 2026-10-28).",in PR #228
-A4.5,A4 The holding door,Failed holding items are kept 7 days.,on main
+A4.5,A4 The holding door,Retention: see A11.1.,in PR #228
 A5.1,A5 The Checker,The entry check is the only way an item is published.,in PR #228
 A5.2,A5 The Checker,For each item it checks three things:,on main
-A5.3,A5 The Checker,A register or firm-site item is published with the date and checked-by Checker.,on main
+A5.3,A5 The Checker,A register or firm-site item is published with the date and checked-by Checker.,in PR #228
 A5.4,A5 The Checker,The Enricher does not publish (fixes: A12.3); the Activity Collector does not write investments directly (A12.4).,in PR #228
 A6.1,A6 Three marks on every item,"The entry check sets these once, on the item itself (The Checker runs this check today; automatic checks, when built, run the same check.) (Alex, 2026-10-28):",in PR #228
 A6.2,A6 Three marks on every item,"The columns are on the item tables: press_item_firms, timeline_events, firm_check_rows, firm_people_roles, firm_profile_facts, firm_legal_items, reviews, and...",on main
@@ -59,15 +59,15 @@ A9.1,A9 List limits and archiving (the one table),"List limits (Alex, 2026-10-28
 A9.2,A9 List limits and archiving (the one table),"People | 10 shown + Show all | 20 | New items still come in and the oldest are archived (kept, hidden), never deleted.",in PR #227
 A9.3,A9 List limits and archiving (the one table),"News | Latest 10 + Show all (“The latest 10 news items, plus Show all for the rest that are still on the page.”) | 50 | When a new item comes in past 50, the...",in PR #227
 A9.4,A9 List limits and archiving (the one table),"Founder reviews | 1 latest + Show all (“One latest founder review, plus Show all.”) | 50 | Oldest archived (kept, hidden), never deleted; tell Alex when a firm passes 50 (Alex, 2026-10-28).",in PR #228
-A9.5,A9 List limits and archiving (the one table),"Deals | 1 latest + Show all (“One latest deal, plus Show all.”) | 1,000 | New items still come in and the oldest are archived (kept, hidden), never deleted.",in PR #227
+A9.5,A9 List limits and archiving (the one table),"Deals | 1 latest + Show all (“One latest deal, plus Show all.”) | 1,000 | New items still come in and the oldest are archived (kept, hidden), never deleted.",in PR #228
 A9.6,A9 List limits and archiving (the one table),"Funds | Latest fund tile + ""N funds on SEC record · Show all"" (“One latest fund tile, plus the line “N funds on SEC record · Show all”.”) | 100 | New items s...",in PR #227
 A9.7,A9 List limits and archiving (the one table),LPs | Only confirmed LPs are shown (see B9) | 100 (“LPs stay at 100.”) | Every list archives the oldest past its max.,on main
 A9.8,A9 List limits and archiving (the one table),"Legal items, lawsuits, regulator actions, negative news, the 10 checks | Legal: 10 shown + Show all (A2.4) (Alex, 2026-10-28) | No cap for legal items and th...",in PR #228
-A9.9,A9 List limits and archiving (the one table),These replace the earlier soft caps.,in PR #227
-A9.10,A9 List limits and archiving (the one table),"Soft caps per firm: see List limits above (news 50, LPs 100, deals 1,000, people 20, funds 100, founder reviews 50; reviews past 50 also alert Alex).",in PR #227
-A9.11,A9 List limits and archiving (the one table),"Lawsuits, regulator actions, and negative news are never archived.",on main
+A9.9,A9 List limits and archiving (the one table),These replace the earlier soft caps.,removed (duplicate of A9 table)
+A9.10,A9 List limits and archiving (the one table),"Soft caps per firm: see List limits above (news 50, LPs 100, deals 1,000, people 20, funds 100, founder reviews 50; reviews past 50 also alert Alex).",removed (duplicate of A9 table)
+A9.11,A9 List limits and archiving (the one table),"Lawsuits, regulator actions, and negative news are never archived.",removed (duplicate of A9.8)
 A9.12,A9 List limits and archiving (the one table),One alert per firm when a cap is hit.,on main
-A9.13,A9 List limits and archiving (the one table),Legal items and the 10 checks have no cap and are never archived or deleted.,on main
+A9.13,A9 List limits and archiving (the one table),Legal items and the 10 checks have no cap and are never archived or deleted.,removed (duplicate of A9.8)
 A9.14,A9 List limits and archiving (the one table),These caps are not a license to delete.,on main
 A10.1,A10 Search and new firms,"Search matches the firm name, the short name, and the website.",on main
 A10.2,A10 Search and new firms,"On the 10 lab firms, firm_suggest matches the firm name, the short name, the slug, and aliases whose type is display, short name, or website.",on main
@@ -85,9 +85,9 @@ B1.4,B1 Site logo and wordmark,No data rule.,on main
 B1.5,B1 Site logo and wordmark,Always shown.,on main
 B1.6,B1 Site logo and wordmark,No problem found (RULES_AUDIT 5).,on main
 B2.1,B2 Search box and suggestions,"The box on the home page, the firm page, and the empty state.",on main
-B2.2,B2 Search box and suggestions,"firm_suggest reads firms.display_name, firms.name, firms.short_name, firms.slug, and firm_aliases.alias.",on main
+B2.2,B2 Search box and suggestions,What firm_suggest reads and matches: see A10.,in PR #228
 B2.3,B2 Search box and suggestions,"Names arrive when a firm is created from the queue or merged (docs/DEDUPE.md, docs/FIRM_REQUESTS.md).",on main
-B2.4,B2 Search box and suggestions,"Only published, non-test, real, not-deleted firms.",on main
+B2.4,B2 Search box and suggestions,"Only published, non-test, real, not-deleted firms.",in PR #228
 B2.5,B2 Search box and suggestions,A deleted or unpublished firm is absent.,on main
 B2.6,B2 Search box and suggestions,Lab display names match firms.name (RULES_AUDIT 1).,on main
 B2.7,B2 Search box and suggestions,Search matching and new-firm rules: see A10.,on main
@@ -131,8 +131,8 @@ B6c.4,B6c Latest fund tile,The tile skips a $0 amount.,on main
 B6c.5,B6c Latest fund tile,"Other firms, outside the 10, still show a fund with no amount.",on main
 B6c.6,B6c Latest fund tile,RULES_AUDIT 10.,on main
 B6c.7,B6c Latest fund tile,"Latest fund tile rule (Alex, Oct 27 2026 design note): A latest fund with an amount stays.",in PR #227
-B6c.8,B6c Latest fund tile,"Rule (Alex, 2026-10-28): the latest fund amount is the money raised for the latest fund only.",in PR #227
-B6c.9,B6c Latest fund tile,"On the lab firms, once this is built: one latest fund tile, plus the line “N funds on SEC record · Show all”.",in PR #227
+B6c.8,B6c Latest fund tile,"Latest fund tile link is the filing, or the news/trusted page the amount came from; amount source: A1.8.",in PR #228
+B6c.9,B6c Latest fund tile,Funds shown/max/archiving: see A9.6; amount source A1.8.,in PR #228
 B6d.1,B6d Assets under management tile,"Shown on the 10 lab firms only when there is no fund amount at all, including no earlier fund that raised money (see the latest fund tile rule in 6c).",in PR #227
 B6d.2,B6d Assets under management tile,"Hero fact whose label maps to Regulatory AUM, else firm.assets from _firm_assets.",on main
 B6d.3,B6d Assets under management tile,"SEC Form ADV Item 5F, via the enricher.",on main
@@ -145,9 +145,9 @@ B6e.3,"B6e Latest deal, and “Show all”","Lab timeline regex, the Sequoia cop
 B6e.4,"B6e Latest deal, and “Show all”",data_status = real.,on main
 B6e.5,"B6e Latest deal, and “Show all”",The block is omitted when there is no deal.,on main
 B6e.6,"B6e Latest deal, and “Show all”",RULES_AUDIT 12 and 13.,on main
-B6e.7,"B6e Latest deal, and “Show all”","On the lab firms, once this is built: one latest deal, plus Show all.",in PR #227
+B6e.7,"B6e Latest deal, and “Show all”",Deals shown/max/archiving: see A9.5.,in PR #228
 B6e.8,"B6e Latest deal, and “Show all”","A deal row has a sector column, and a column that reads round · amount · Lead.",on main
-B6e.9,"B6e Latest deal, and “Show all”","Latest investments block (Alex, 2026-10-28): shows the 1 latest deal, plus Show all (Alex, 2026-10-28: 1 for now, may increase later).",in PR #227
+B6e.9,"B6e Latest deal, and “Show all”","Latest investments block (Alex, 2026-10-28): shows the 1 latest deal, plus Show all (Alex, 2026-10-28: 1 for now, may increase later).",in PR #228
 B7.1,"B7 Thesis (replaces Overview; Alex, 2026-10-28)",New block “Thesis”.,in PR #227
 B7.2,"B7 Thesis (replaces Overview; Alex, 2026-10-28)","Holds the firm's investment thesis (what they invest in and why), copied word for word from the firm's own website.",in PR #227
 B7.3,"B7 Thesis (replaces Overview; Alex, 2026-10-28)","Max 1,000 characters.",in PR #227
@@ -168,7 +168,7 @@ B9.3,B9 Limited partners,"Profile rows: the enricher, from public filings and LP
 B9.4,B9 Limited partners,"Profile: name required, type optional, source required.",on main
 B9.5,B9 Limited partners,A lead (LP named only by a weaker source) is not shown,in PR #228
 B9.6,B9 Limited partners,RULES_AUDIT 22.,on main
-B9.7,B9 Limited partners,Only confirmed LPs are shown.,on main
+B9.7,B9 Limited partners,Only confirmed LPs are shown.,removed (duplicate of B9.5)
 B9.8,B9 Limited partners,"Shown count, max kept, and archiving: see the list limits table in A9.",in PR #227
 B10.1,B10 People and board seats,"Rule (Alex, 2026-10-28): only current people are shown, grouped into board and officers.",in PR #227
 B10.2,B10 People and board seats,"firm_people_roles: person_name, role, kind, not hidden, with a source.",on main
