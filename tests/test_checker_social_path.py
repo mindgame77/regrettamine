@@ -69,7 +69,9 @@ def test_rerun_real_payloads_publish(cur, sid, n):
     assert rep["ran"] is True, rep
     assert rep["failure"] == 0, rep["reasons"]
     social = [r for r in sub["payload"]["records"] if r["field_path"] == "socialAccounts"]
-    shown = [r for r in social if r["value"]["platform"] in ("x", "linkedin")]
+    plats = ("x", "linkedin") + (("substack",) if cur.execute(
+        "select position('substack' in prosrc) > 0 from pg_proc where proname = '_checker_social'").fetchone()[0] else ())
+    shown = [r for r in social if r["value"]["platform"] in plats]
     # published = the shown social accounts (+ the Website item, new in this empty test firm)
     assert rep["published"] >= len(shown), rep["reasons"]
     assert [x for x in rep["reasons"] if x["section"] == "social"] == [

@@ -40,3 +40,11 @@ test('no data, unknown platform or bad url: nothing drawn', () => {
   assert.equal(socialPills({ firm: { social: [{ platform: 'myspace', url: 'https://myspace.com/a', followers: 5 },
     { platform: 'x', url: 'javascript:alert(1)', followers: 5 }, { platform: 'x', url: 'https://x.com/a', followers: null }] } }), '');
 });
+
+test('substack pill: orange logo, name from copy.json, rounded count', () => {
+  const html = socialPills({ firm: { social: [{ platform: 'substack', url: 'https://a16z.substack.com', followers: 280000 }] } });
+  assert.equal((html.match(/<a class="sc soc"/g) || []).length, 1);
+  assert.match(html, /href="https:\/\/a16z\.substack\.com"[^>]*aria-label="Substack: 280K" title="Substack"><svg[^>]*aria-hidden="true"[^>]*><path fill="#FF6719"/);
+  assert.match(html, /<b>280K<\/b><\/a>$/);
+  assert.equal(copy.company.header.social.names.substack, 'Substack');
+});

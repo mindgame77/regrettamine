@@ -706,7 +706,7 @@
     "_note": "Social pills under the meta line: follower count only, accounts linked from the firm's own website (firm_page.firm.social). No data: no row.",
     "row": "Social accounts",
     "aria": "{platform}: {count}",
-    "names": {"linkedin": "LinkedIn", "x": "X", "instagram": "Instagram", "youtube": "YouTube", "tiktok": "TikTok"}
+    "names": {"linkedin": "LinkedIn", "x": "X", "instagram": "Instagram", "youtube": "YouTube", "tiktok": "TikTok", "substack": "Substack"}
    }
   },
   "searched_on": "Searched {date}",
