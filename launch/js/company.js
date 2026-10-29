@@ -1138,17 +1138,19 @@
   function secSrc(src) {
     return (src || []).find(c => /(^|\.)sec\.gov\//i.test((safeUrl(c && c.url) || '').replace(/^https?:\/\//i, '').replace(/\/.*/, '/')));
   }
-  function aumTile(P) {
-    const hero = Array.isArray(P.hero) ? P.hero : [];
-    const hit = hero.find(h => h && h.value && assetLabel(h.label, h.value) === (HCOPY.regulatory_aum || 'Regulatory AUM'));
-    let value = hit ? aumFigure(hit.value) : '';
-    const src = hit ? (secSrc(hit.src) || (hit.src || []).find(c => safeUrl(c && c.url))) : null;
-    if (!value) value = aumFigure(P.firm && P.firm.assets);
-    if (!value) return '';
-    const u = src && safeUrl(src.url);
-    const sub = u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(src.label) + '>' + esc(capL(src.label || AC.filing || 'Filing')) + ' ↗</a>' : '';
-    return tile(AC.aum || 'Assets under management', esc(value), sub, 'afd');
+  // Fix 4 (B6d.6): AUM and Fund assets come only from the stored firm fields (P.firm.money), each with its
+  // Form ADV link. No link, or a link that is not a Form ADV page (DEF 14A, press), means no tile.
+  const advUrl = (u) => { const v = safeUrl(u) || '';
+    return /^https:\/\/([a-z0-9-]+\.)*adviserinfo\.sec\.gov(\/|$)|^https:\/\/(www\.)?sec\.gov\/[^?#]*(form-?adv|\/adv[-_/]|iapd)/i.test(v)
+      && !/def[ _-]?14a|press[ _-]?release|\/news\/|\/newsroom\/|\/litigation\//i.test(v) ? v : ''; };
+  function moneyTile(m, label) {
+    const u = m && advUrl(m.url);
+    if (!m || !m.display || !u) return '';
+    const sub = '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(AC.filing || 'Filing') + '>' + esc(capL(AC.filing || 'Filing')) + ' ↗</a>';
+    return tile(label, esc(m.display), sub, 'afd');
   }
+  const aumTile = (P) => moneyTile(P.firm && P.firm.money && P.firm.money.aum, AC.aum || 'Assets under management');
+  const fundAssetsTile = (P) => moneyTile(P.firm && P.firm.money && P.firm.money.fund_assets, AC.fund_assets || 'Fund assets');
   // Lab firms: Sector and one Round · Amount · Lead column. Amount and Lead only when stored; no sector reads "No data yet".
   const CUR = { USD: '$', EUR: '€', GBP: '£' };
   const dealAmt = (a, c) => { const n = Number(a), s = CUR[String(c || 'USD').toUpperCase()]; if (a == null || !isFinite(n) || n <= 0 || !s) return '';
@@ -1260,15 +1262,13 @@
     } else if (labFirm(P)) {
       const prev = earlierFund(P);
       if (prev) tiles.push(raisedFundTile(prev));
-      else {
-        const aum = aumTile(P);
-        if (aum) tiles.push(aum);
-      }
     } else if (f) {
       const u = safeUrl(f.url);
       const sub = esc(fundName(f.name)) + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(srcName(u, f.url_label)) + '>' + esc(capL(srcName(u, f.url_label))) + ' ↗</a>' : '');
       tiles.push(tile(AC.fund, '<span class="asm">' + esc(fundName(f.name)) + '</span>', sub, 'afd'));
     }
+    // B6d.6 (lab firms): after the fund tile, AUM, then Fund assets. Each only when stored with its Form ADV link.
+    if (labFirm(P)) [aumTile(P), fundAssetsTile(P)].forEach(t => { if (t) tiles.push(t); });
     // A9.6: "N funds on SEC record · Show all" inside the fund tile. Show all opens the same popup as Show all deals.
     const fs = A.funds_sec, fsn = fs && Number(fs.n) > 0 ? Number(fs.n) : 0;
     const ti = tiles.findIndex(t => t.indexOf('att afd') > -1);
