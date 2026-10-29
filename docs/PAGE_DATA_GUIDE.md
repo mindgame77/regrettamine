@@ -20,6 +20,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
   - [A12. Shared checks list](#a12)
   - [A13. Dates shown on the page](#a13)
   - [A14. New database move](#a14)
+  - [A15. Maps](#a15)
 - [B. The page](#b)
   - [B1. Site logo and wordmark](#b1)
   - [B2. Search box and suggestions](#b2)
@@ -62,6 +63,13 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
   - [R3. Who collects what (snapshot 2026-10-27)](#r3)
   - [R4. Overview (old, being removed)](#r4)
   - [R5. Old notes](#r5)
+
+## Maps
+
+- [Website data map](maps/website_data_map.png) (source: `maps/website_data_map.mmd`)
+- [Checks map](maps/checks_map.png) (source: `maps/checks_map.mmd`)
+
+The maps must match the rules ([A15.1](#a15)).
 
 <a id="p"></a>
 ## P. About this file
@@ -235,6 +243,11 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 - **A14.4** Row 49: the remaining founder accounts move into reviews ([A7.8](#a7)); any that cannot move may be removed (Alex, 2026-10-28).
 - **A14.5** Every deletion still needs Alex’s explicit 'Yes, delete' on an exact list (Alex, 2026-10-28).
 - **A14.6** `bots.checker_holding` is server-only: RLS is on with no policies on purpose, so only the server (service role) reads or writes it. Do not add a policy. Database functions in `public` that run as owner (security definer) must have a fixed search path, and only the functions on the allowlist in `tests/test_function_security.py` may be run by logged-out users (Alex, 2026-10-28).
+
+<a id="a15"></a>
+## A15. Maps
+
+- **A15.1** The website data map and checks map in `docs/maps/` must match the rules. Any PR that changes a rule shown on a map updates the map in the same PR (Alex, 2026-10-28).
 
 <a id="b"></a>
 # B. The page

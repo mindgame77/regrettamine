@@ -1,0 +1,58 @@
+%%{init: {"flowchart": {"curve": "linear", "nodeSpacing": 25, "rankSpacing": 80}, "themeVariables": {"fontSize": "22px"}}}%%
+flowchart LR
+  subgraph S1[1 Founder asks]
+    LEG["Yellow = new system"]:::y
+    F(["Founder asks:<br/>paid check"]):::y
+    REF["Not done in 24h:<br/>automatic refund"]:::y
+  end
+  subgraph S2[2 Run checks]
+    RUN["Run on demand"]:::y
+    NEW["Search only new<br/>since last date"]:::y
+    SF["Sanctions lists:<br/>searched in full"]:::y
+  end
+  subgraph S3[3 The 10 checks]
+    C1[1 Sanctions]
+    C2[2 Terrorism financing lists]
+    C3[3 Export and investment restrictions]
+    C4["4 Financial regulator actions<br/>legal-item regulator rows only"]:::y
+    C5[5 Money laundering penalties]
+    C6[6 US court records]
+    C7[7 Court records worldwide]
+    C8[8 Registration check]
+    C9["9 People behind the fund<br/>+ OpenSanctions"]:::y
+    C10[10 Political ties]
+  end
+  subgraph S4[4 Saved result]
+    SAVE[("Per check: what was found<br/>+ date searched")]:::y
+    RM["Removed: old regulator stores,<br/>second date per check"]:::rm
+  end
+  subgraph S5[5 Publish]
+    PUB["Pills recounted<br/>on publish"]:::y
+  end
+  subgraph S6[6 VC page checks table]
+    T1["Each row: Result pill ·<br/>What was found · Date searched"]
+    P1["Clear"]
+    P2["Review - links to record"]
+    P3["Not checked yet"]
+    EX["e.g. 'Nothing found'<br/>'2 cases found'"]
+  end
+  LEG ~~~ RUN
+  F --> RUN
+  REF ~~~ RUN
+  RUN --> NEW
+  RUN --> SF
+  SF --> C1
+  NEW --> C1 & C2 & C3 & C4 & C5 & C6 & C7 & C8 & C9 & C10
+  C1 & C2 & C3 & C4 & C5 & C6 & C7 & C8 & C9 & C10 --> SAVE
+  C10 ~~~ RM
+  SAVE --> PUB --> T1
+  T1 --> P1 & P2 & P3
+  PUB ~~~ EX
+  classDef y fill:#FFE066,stroke:#b38f00,stroke-width:3px,color:#222
+  classDef rm fill:#f2f2f2,stroke:#999,stroke-width:2px,color:#777,stroke-dasharray:6 4
+  style S1 fill:#fff,stroke:#999
+  style S2 fill:#fff,stroke:#999
+  style S3 fill:#fff,stroke:#999
+  style S4 fill:#fff,stroke:#999
+  style S5 fill:#fff,stroke:#999
+  style S6 fill:#fff,stroke:#999
