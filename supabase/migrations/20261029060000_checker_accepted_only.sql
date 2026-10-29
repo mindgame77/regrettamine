@@ -1,0 +1,178 @@
+-- Step B of the entry check plan (Layer 2, Alex 2026-10-28): the Checker takes only rows whose entry check is
+-- 'Accepted'. Rejected (or never-checked) rows never reach it. For a row flagged entry_link_open_pending the
+-- Checker first opens every source link: one that does not open rejects the whole row with
+-- 'Rejected: link does not open'; if all open, the flag is cleared. Then the meaning check runs as before.
+-- The publish switch (ingest_settings.checker_publish) and the 10 checks are not changed here.
+-- Rollback: supabase/rollbacks/20261029060000_checker_accepted_only.sql
+
+create or replace function public._checker_entry_gate(p_id bigint, p_probes jsonb default null)
+returns jsonb
+language plpgsql
+security definer
+set search_path = bots, public, extensions
+as $$
+declare sub bots.research_submissions; probes jsonb; u text; ok boolean; unknown boolean := false;
+begin
+  select * into sub from research_submissions where id = p_id;
+  if sub.id is null then return jsonb_build_object('ran', false, 'reason', 'no such row'); end if;
+  if sub.entry_check is distinct from 'Accepted' then
+    return jsonb_build_object('ran', false, 'reason', 'entry check not Accepted', 'entry_check', sub.entry_check);
+  end if;
+  if not coalesce(sub.entry_link_open_pending, false) then return null; end if;
+  probes := coalesce(p_probes, sub.payload->'probes');
+  for u in select distinct it.url from public._checker_payload_items(sub.payload) it where it.url is not null loop
+    ok := public._checker_link_opens(u, probes);
+    if ok is null then
+      unknown := true;
+    elsif not ok then
+      update research_submissions
+         set entry_check = 'Rejected: link does not open', entry_check_at = now(), entry_link_open_pending = false
+       where id = p_id;
+      return jsonb_build_object('ran', false, 'reason', 'link does not open', 'url', u);
+    end if;
+  end loop;
+  if unknown then return jsonb_build_object('ran', false, 'reason', 'link not opened yet'); end if;
+  update research_submissions set entry_link_open_pending = false where id = p_id;
+  return null;
+end $$;
+
+CREATE OR REPLACE FUNCTION public.checker_publish_submission(p_id bigint, p_probes jsonb DEFAULT NULL::jsonb)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'bots', 'public'
+AS $function$
+declare sub bots.research_submissions; fid uuid; it record; lvl smallint; ncheck int; outcome text; reason text;
+  pub int := 0; skip int := 0; fail int := 0; unconf int := 0; merged int := 0; noted int := 0;
+  probes jsonb; gate jsonb; host text; claimed text; opened boolean; website boolean;
+begin
+  select * into sub from research_submissions where id = p_id;
+  if sub.id is null or not public._checker_publish_on() then
+    return jsonb_build_object('ran', false);
+  end if;
+  -- Step B (A5.5): only rows the entry check Accepted; flagged links are opened first.
+  gate := public._checker_entry_gate(sub.id, p_probes);
+  if gate is not null then return gate; end if;
+  select * into sub from research_submissions where id = p_id;
+  select f.id into fid from firms f
+   where f.deleted_at is null and f.registry_id = coalesce(public._registry_target(sub.registry_id), sub.registry_id)
+   order by f.published desc limit 1;
+  if fid is null or not public._lab_firm(fid) then
+    return jsonb_build_object('ran', false, 'reason', 'not a lab firm');
+  end if;
+  probes := coalesce(p_probes, sub.payload->'probes');
+  for it in select * from public._checker_payload_items(sub.payload) loop
+    begin
+      claimed := null;
+      website := it.section = 'overview' and lower(coalesce(it.f->>'label', '')) in ('website', 'primary_domain');
+      if website then
+        host := public._dom(it.url);
+        claimed := public._checker_host(it.f->>'value');
+        if public.source_tier(it.url) is null then
+          lvl := null; outcome := 'failure'; reason := 'link is not real (missing, not http, or a search/chat page)';
+        elsif host is null or claimed is null or not (host = claimed or host like '%.' || claimed) then
+          lvl := null; outcome := 'failure'; reason := 'link does not match the firm';
+        else
+          opened := public._checker_link_opens(it.url, probes);
+          if opened is null then
+            lvl := null; outcome := 'failure'; reason := 'link was not opened';
+          elsif not opened then
+            lvl := null; outcome := 'failure'; reason := 'link did not open';
+          else
+            lvl := 2; outcome := 'published'; reason := null;
+          end if;
+        end if;
+      else
+        ncheck := public._checker_check_n(it.section, it.url);
+        select d.lvl, d.outcome, d.reason into lvl, outcome, reason
+          from public._checker_decide(fid, it.section, it.f, it.url, ncheck, probes) d;
+      end if;
+      if outcome = 'published' then
+        select p.outcome, p.reason into outcome, reason
+          from public._checker_place(fid, it.section, it.f, it.url, lvl, ncheck, sub.id) p;
+      end if;
+      if website and outcome in ('published', 'merged', 'skipped') and claimed is not null then
+        update firms set primary_domain = claimed
+         where id = fid and (primary_domain is null or lower(primary_domain) = claimed);
+      end if;
+    exception when others then
+      outcome := 'failure'; reason := sqlerrm;
+    end;
+    if outcome = 'published' then pub := pub + 1;
+    elsif outcome = 'merged' then merged := merged + 1;
+    elsif outcome = 'note' then noted := noted + 1;
+    elsif outcome = 'skipped' then skip := skip + 1;
+    elsif outcome = 'unconfirmed' then unconf := unconf + 1;
+    else fail := fail + 1; end if;
+    if outcome in ('failure', 'unconfirmed') then
+      insert into checker_holding(firm_id, origin, origin_id, kind, url, outcome, reason, item)
+      values (fid, 'submission', sub.id, it.section, it.url,
+              case when outcome = 'unconfirmed' then 'unconfirmed' else 'failure' end, reason, it.f);
+    end if;
+  end loop;
+  return jsonb_build_object('ran', true, 'firm_id', fid, 'published', pub, 'merged', merged, 'note', noted,
+    'skipped', skip, 'unconfirmed', unconf, 'failure', fail);
+end $function$;
+
+CREATE OR REPLACE FUNCTION public.checker_drain(p_limit integer DEFAULT 10)
+ RETURNS integer
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'bots', 'public'
+AS $function$
+declare r record; report jsonb; n int := 0; lim int := greatest(1, least(coalesce(p_limit, 10), 50));
+begin
+  update research_submissions set door_status = 'ready'
+   where door_status = 'waiting' and ready_at <= now();
+  for r in
+    select s.id, s.bot_id from research_submissions s
+     where s.door_status = 'ready' and s.checked_at is null and s.entry_check = 'Accepted'
+       and exists (
+         select 1 from firms f
+          where f.deleted_at is null and public._lab_firm(f.id)
+            and f.registry_id = coalesce(public._registry_target(s.registry_id), s.registry_id))
+     order by s.received_at, s.id
+     limit lim
+     for update skip locked
+  loop
+    report := public.checker_publish_submission(r.id);
+    if report->>'reason' = 'link not opened yet' then continue; end if;  -- stays ready; retried next run
+    update research_submissions set checked_at = now(), door_status = 'checked', checker_report = report where id = r.id;
+    perform public._door_fail_rate(r.bot_id);
+    n := n + 1;
+  end loop;
+  return n;
+end $function$;
+
+CREATE OR REPLACE FUNCTION public.checker_on_submission()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'bots', 'public'
+AS $function$
+declare report jsonb;
+begin
+  if not public._checker_publish_on() then return null; end if;
+  begin
+    if new.door_status is null then
+      if new.entry_check is distinct from 'Accepted' then return null; end if;  -- A5.5
+      report := public.checker_publish_submission(new.id);
+      if report->>'reason' = 'link not opened yet' then return null; end if;
+      update research_submissions set checked_at = now(), checker_report = report where id = new.id;
+      perform public._door_fail_rate(new.bot_id);
+    elsif new.door_status = 'ready' then
+      perform public.checker_drain(10);
+    end if;
+  exception when others then
+    insert into checker_holding(firm_id, origin, origin_id, kind, outcome, reason, item)
+    values (null, 'submission', new.id, 'row', 'failure', sqlerrm, new.payload);
+  end;
+  return null;
+end $function$;
+
+-- A14.6: server only.
+revoke all on function public._checker_entry_gate(bigint, jsonb) from public, anon, authenticated;
+grant execute on function public._checker_entry_gate(bigint, jsonb) to service_role;
+revoke all on function public.checker_publish_submission(bigint, jsonb) from public, anon, authenticated;
+revoke all on function public.checker_drain(integer) from public, anon, authenticated;
+revoke all on function public.checker_on_submission() from public, anon, authenticated;
