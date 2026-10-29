@@ -79,8 +79,9 @@ def test_lab_submission_publishes_once_and_a_different_value_is_a_note():
         item = {
             "outlet": "TechCrunch", "headline": "Hold Lab raises a fund",
             "url": "https://techcrunch.com/2026/10/28/hold-lab", "date": "2026-10-28", "snippet": "Hold Lab raised",
+            "tier": "T3",
         }
-        payload = json.dumps({"sections": {"Press coverage": [item]}})
+        payload = json.dumps({"sections": {"Press coverage": [item]}, "probes": {item["url"]: True}})
         cur.execute(
             "insert into research_submissions(registry_id, bot_id, payload, record_count, valid) values (%s, 'toxy-enricher', %s::jsonb, 1, true)",
             (reg, payload),
@@ -109,11 +110,12 @@ def test_lab_submission_publishes_once_and_a_different_value_is_a_note():
             "where pf.firm_id = %s and p.url = %s",
             (fid, item["url"]),
         ).fetchone()[0]
-        assert headline == longer["headline"]
+        # A4.7 (entry check): the same news link again is 'duplicate of a published news item', so it never
+        # reaches the Checker (A5.5) and the published headline stays. Needs Alex: this replaces the older A7.12 merge here.
+        assert headline == item["headline"]
         assert cur.execute(
-            "select count(*) from publish_checks where firm_id = %s and bot_id = 'checker' and outcome = 'note'",
-            (fid,),
-        ).fetchone()[0] >= 1
+            "select entry_check from research_submissions where registry_id = %s order by id desc limit 1", (reg,)
+        ).fetchone()[0].startswith("Rejected: duplicate of a published news item")
         conn.rollback()
 
 
@@ -176,8 +178,8 @@ def test_firm_section_website_sets_the_domain_only_when_the_link_opens():
             (dreg, json.dumps(dpayload)),
         )
         assert cur.execute("select primary_domain from firms where id = %s", (did,)).fetchone()[0] is None
-        reason = cur.execute(
-            "select reason from checker_holding where firm_id = %s order by id desc limit 1", (did,)
-        ).fetchone()[0]
-        assert "did not open" in reason
+        # A5.5: a flagged link that does not open rejects the whole upload before the Checker's item checks.
+        assert cur.execute(
+            "select entry_check from research_submissions where registry_id = %s order by id desc limit 1", (dreg,)
+        ).fetchone()[0] == "Rejected: link does not open"
         conn.rollback()

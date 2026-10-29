@@ -57,7 +57,8 @@ def test_cap_wait_attack_duplicate_and_oldest_first():
                     "else coalesce(ingest_settings.value, '') || ',' || excluded.value end",
                     (slug, "%" + slug + "%"),
                 )
-            payload = json.dumps({"firm": {"name": name, "website_source_url": f"https://{slug}.example/"}, "records": []})
+            payload = json.dumps({"firm": {"name": name, "website_source_url": f"https://{slug}.example/"}, "records": [],
+                                  "probes": {f"https://{slug}.example/": True}})
             got = _j(cur.execute(
                 "select research_submit(%s, %s, %s::jsonb, 0, true, '[]'::jsonb)",
                 (reg, bot, payload),
@@ -74,7 +75,8 @@ def test_cap_wait_attack_duplicate_and_oldest_first():
         assert again["status"] == "holding"
         copy = _j(cur.execute(
             "select research_submit(%s, %s, %s::jsonb, 0, true, '[]'::jsonb)",
-            (ids[0][0], bot, json.dumps({"firm": {"name": "Alpha Door", "website_source_url": f"https://door-{bot}-0.example/"}, "records": []})),
+            (ids[0][0], bot, json.dumps({"firm": {"name": "Alpha Door", "website_source_url": f"https://door-{bot}-0.example/"}, "records": [],
+                                    "probes": {f"https://door-{bot}-0.example/": True}})),
         ).fetchone()[0])
         assert copy["status"] == "duplicate" and copy["dropped"] is True
         reg4 = f"zz-door-{bot}-3"
