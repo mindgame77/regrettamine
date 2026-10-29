@@ -18,6 +18,8 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
   - [A10. Search and new firms](#a10)
   - [A11. How long rows are kept](#a11)
   - [A12. Shared checks list](#a12)
+  - [A13. Dates shown on the page](#a13)
+  - [A14. New database move](#a14)
 - [B. The page](#b)
   - [B1. Site logo and wordmark](#b1)
   - [B2. Search box and suggestions](#b2)
@@ -95,10 +97,10 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 | **A2.3** | People and interviews | People: only current people at the firm are shown; people who left are not shown, and neither are their interviews (Alex, 2026-10-28). Each current person may have up to 10 interviews: YouTube videos or press coverage, shown as link + headline. The 10 shown are the ones with the most views (YouTube); press coverage, which has no view count, comes after, newest first. More than 10: the rest are stored, not shown. The link must open and show that person. Design comes later, mockup first. People sources: the firm’s team page or a Form ADV. The register is level 1. The firm’s team page is level 2. LinkedIn is allowed only for that person’s own job history. | A dead link, a page that does not show that person, or a person who left: not shown. Any other LinkedIn page: not used. For people’s names and roles only, a page that is not the team page or Form ADV is Unconfirmed, not shown; interviews from YouTube or the press stay allowed as above (Alex, 2026-10-28). |
 | **A2.4** | Legal cases (display, Alex 2026-10-28) | Source (Alex, 2026-10-28): CourtListener, PACER, uscourts.gov, a regulator (SEC, FINRA, FCA), Justia, Law360, or Casetext; a link is required. Each case shows pills: status (Active, Closed, Settled, Dismissed), side (Defendant or Plaintiff), and what it is about (fixed list: Fraud, Contract, Employment, Securities, Regulator action, IP). Also: other party, filed year (and closed year if any), court or regulator (e.g. SEC, N.D. Cal.), and the required link. A Settled case also shows the settlement terms (for example the amount) when the court or regulator record states them; otherwise nothing is added. The page shows 10 legal items (cases and regulator actions), active first, then the rest by most recent, plus Show all (Alex, 2026-10-28). This replaces "last 2". A legal mention or context row about an existing case is attached to that case as an extra link (for example "In the news: Reuters"); it is not its own row and is not counted. A mention with no matching case is not shown; it stays as a lead for the check. Show all opens every case. No cases at all: the section is not shown, no empty message. | No link from the allowed legal sources: not shown. |
 | **A2.5** | Reviews | A post on any public site (for example Reddit, X, LinkedIn, YouTube, Medium, a blog or podcast page; Alex, 2026-10-28) that exists, names the firm, and is copied word for word with its link. The writer says they are a founder, or the profile shows that they are. | Anonymous, with no founder claim: Unconfirmed, not shown. Glassdoor and other employee reviews: not used. A dead link or a post that does not name the firm: fail. |
-| **A2.6** | News | A story on TechCrunch, Reuters, Bloomberg, Axios, the Financial Times, the Wall Street Journal, CNBC, Forbes, or The Information, when the link opens and the story names the firm. | The firm’s own site posts or blog: never shown in News (Alex, 2026-10-28). Any other blog or unknown site: Unconfirmed, not shown. A dead link, or a story that does not name the firm: fail. |
+| **A2.6** | News | A story on TechCrunch, Reuters, Bloomberg, Axios, the Financial Times, the Wall Street Journal, CNBC, Forbes, or The Information, when the link opens and the story names the firm. Every news item is shown only after it passes the news check ([B12.6](#b12)) (Alex, 2026-10-28). | The firm’s own site posts or blog: never shown in News (Alex, 2026-10-28). Any other blog or unknown site: Unconfirmed, not shown. A dead link, or a story that does not name the firm: fail. |
 | **A2.7** | Deals | An SEC Form D (level 1) or the firm’s press release (level 2) (Alex, 2026-10-28). The same known outlets as News are accepted. The amount and the Lead flag are filled only when that source states them. | Any other page: Unconfirmed, not shown. |
 | **A2.8** | Lawsuits | Merged into A2.4: allowed sources are the list in [A2.4](#a2) only (Alex, 2026-10-28). CourtListener, PACER, uscourts.gov and regulators are level 1. | Any other page: Unconfirmed, not shown. |
-| **A2.10** | Social counts | Only an account that is linked from the firm’s own website. | A count taken from anywhere else: Unconfirmed, not shown. |
+| **A2.10** | Social counts | Social follower counts for LinkedIn, X, YouTube, Instagram and TikTok (Alex, 2026-10-28): only the account linked from the firm’s own website (level 2). Stored as a number plus the date read; refreshed every 3 months. Display: [B3.8](#b3). | A count taken from anywhere else: Unconfirmed, not shown. |
 | **A2.11** | Sectors (portfolio and deals, one rule) | Any source is accepted (approved by Alex on 2026-10-28). The link must be a real page that opens and must describe that startup. A 403 or block page counts as opened, with a note. The sector is only ever the value the record gives, never invented. | A dead link, a search page, a chat page, an invented link, or a page that does not describe the startup: fail. |
 | **A2.12** | Funds | SEC filings (Form D, Form ADV), else an approved news outlet or a trusted site (per [A1.8](#a1)). The link is kept. (Alex, 2026-10-28) | Any other page: Unconfirmed, not shown. |
 | **A2.13** | Header HQ | The firm’s IAPD record, else the firm’s own website. (Alex, 2026-10-28) | Any other page: not used for HQ. |
@@ -119,6 +121,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 - **A4.3** An exact copy is dropped at the door. It is not stored again.
 - **A4.4** The entry check works the queue oldest first (The Checker runs this check today; automatic checks, when built, run the same check.) (Alex, 2026-10-28). A bot whose items fail more than half the time, after at least 10 checked items in a day, is paused, and Alex gets one alert.
 - **A4.5** Retention of failed holding items, processed uploads and search logs: see [A11.1](#a11).
+- **A4.6** Each upload stores an internal door-check result, 'Accepted' or 'Rejected' plus the reason (e.g. 'Rejected: no source link'). It is kept 30 days, the same as uploads ([A11.1](#a11)). Internal only, never shown (Alex, 2026-10-28).
 
 <a id="a5"></a>
 ## A5. The Checker
@@ -141,6 +144,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 - **A6.2** The columns are on the item tables: `press_item_firms`, `timeline_events`, `firm_check_rows`, `firm_people_roles`, `firm_profile_facts`, `firm_legal_items`, `reviews`, and `vc_source_facts`. They are not on `fact_sources`. A fact can have several source links, and press and the 10 checks do not keep the source pill in `fact_sources`.
 - **A6.3** `firm_check_rows.searched_at` and the news `check_mark` stay. They are not dropped. For the 10 lab firms, a search date is copied into `checked_on`. A news row already marked `checked_correct` or `checked_wrong` copies `last_checked_at` into `checked_on`, and the source level from the link. That copy is saved first in `marks_fold_backup`. A row the Checker did not check keeps `checked_by` empty. The page still reads the old fields.
 - **A6.4** `checked_on`, `checked_by`, and `source_level` are internal only. They are never shown on the live site, in any block. Alex rejected the Sequoia mockup that put a grey “checked &lt;date&gt;” next to the source pill. Do not build that.
+- **A6.5** A6 stays as is. Missing checked date, check and level on old items are filled by the new-database rerun ([A14.1](#a14)), not by a backfill now (Alex, 2026-10-28).
 
 <a id="a7"></a>
 ## A7. One home per data kind
@@ -151,7 +155,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 | **A7.2** | Funds | `funds` | `firm_profile_facts` where section is funds |
 | **A7.3** | AUM | one fact: the SEC Form ADV figure (Item 5F regulatory assets, with the as-of year) first; if there is none (e.g. non-US firms), the AUM stated on the firm’s own website (level 2), with a link to that page; if neither exists, no AUM and the tile is hidden (Alex, 2026-10-28) | Other AUM values are not used as a fallback |
 | **A7.4** | Deals and portfolio companies | `investments` and `portfolio_companies` | Timeline lines and collector rows that skip the Checker |
-| **A7.5** | News | one news item per normalized URL | `press_items` and `timeline_events` |
+| **A7.5** | News | one news item per normalized URL; timeline events are merged into News as one list, same check and limits ([B12.10](#b12)) (Alex, 2026-10-28) | `press_items` and `timeline_events` |
 | **A7.6** | Legal | `firm_legal_items` (this feeds checks 4, 6, and 7) | `regulatory_records` and `legal_matters` |
 | **A7.7** | People | `firm_people_roles` | `people` and `fund_people` |
 | **A7.8** | Reviews | `reviews` | Leftover `founder_accounts` |
@@ -193,6 +197,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 | **A9.19** | Thesis | Max 1,000 characters (B7.3) | 1,000 characters | — (Alex, 2026-10-28) |
 - **A9.12** One alert per firm when a cap is hit.
 - **A9.14** These caps are not a license to delete. The archive file is the copy, and the row can be shown again from Show all. For the 10 lab firms the copy is `data/lab-cap-archive/index.json` plus `lab_cap_archive`. A row past the cap is marked archived and stays in the database. Every count that covers all deals still includes archived rows, so a firm over the deal cap does not drop its shown total. That covers Deals, last 12 mo, the latest-deal tile, the Show all total, and the sector pills, which count all deals ([B6e.9.6](#b6e)) (Alex, 2026-10-28). My firms shows check pills, not a deal total. `lab_cap_alerts` holds one row per firm. `lab_soft_caps` is not run until Alex says to apply it.
+- **A9.21** The archive job for every list in the A9 table is built as part of the new database ([A14](#a14)) (Alex, 2026-10-28).
 
 <a id="a10"></a>
 ## A10. Search and new firms
@@ -214,6 +219,21 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 - **A12.3** A fix passes the fix check (the new source is at the same level or higher (A1), and the old value is archived, never deleted) before it replaces a value. The Enricher runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28)
 - **A12.4** A deal or fund passes the activity check (it has a source link; the amount and lead are shown only when that source states them) before it is shown. The Activity Collector runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28)
 - **A12.5** An item shown on the live page passes the page check (it follows its rulebook rule: source link present, limits from A9, hidden items stay hidden). The Tester runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28)
+
+<a id="a13"></a>
+## A13. Dates shown on the page
+
+- **A13.1** Every date shown on the page uses US format MM/DD/YYYY, for example 01/07/2026, for news, timeline, deals, reviews and legal (Alex, 2026-10-28).
+- **A13.2** Internal storage may stay ISO (YYYY-MM-DD); only the display uses MM/DD/YYYY (Alex, 2026-10-28).
+
+<a id="a14"></a>
+## A14. New database move
+
+- **A14.1** During the new-database move, the old copies are retired. The rerun also runs the checks on stored items that were never checked ([B12.9](#b12)) and fills missing marks ([A6.5](#a6)) (Alex, 2026-10-28).
+- **A14.2** Row 47: the 5 fund lines in the old profile copy are backed up and merged into `funds` ([A7.2](#a7)) (Alex, 2026-10-28).
+- **A14.3** Row 48: confirmed LP holding rows move into LPs ([A7.9](#a7)); the rest are retired (Alex, 2026-10-28).
+- **A14.4** Row 49: the remaining founder accounts move into reviews ([A7.8](#a7)); any that cannot move may be removed (Alex, 2026-10-28).
+- **A14.5** Every deletion still needs Alex’s explicit 'Yes, delete' on an exact list (Alex, 2026-10-28).
 
 <a id="b"></a>
 # B. The page
@@ -251,6 +271,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **B3.5** The header shows whenever the page loads. Hero cards (staff, founded, AUM as cards) were removed and are not drawn.
 - **B3.6** Legal name gaps: RULES_AUDIT 2. Slug: no problem (RULES_AUDIT 4).
 - **B3.7** Sources for HQ, website and founded year: [A2.13–A2.15](#a2) (Alex, 2026-10-28).
+- **B3.8** Social follower counts ([A2.10](#a2)): a platform logo with its count is shown only for platforms where we have a firm-linked account; platforms without a link are not shown. The design waits for an approved mockup, so the counts are stored and hidden until then (Alex, 2026-10-28).
 
 <a id="b4"></a>
 ## B4. SEC fact pills
@@ -412,6 +433,8 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **B12.6** News is shown only after it passes the news check (the link opens, the story names the firm, the outlet is an outside source from the A2.6 list). The Checker runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28). RULES_AUDIT 14.
 - **B12.7** On the lab firms, once this is built: the latest news items, plus Show all for the rest that are still on the page. Shown count, max kept, and archiving: see the list limits table in [A9](#a9).
 - **B12.8** News: no data that has passed its check means the block is hidden from users (no empty box, no "No data" text). It appears by itself once data passes. (Alex, 2026-10-28)
+- **B12.9** Any stored news item not yet checked (for example 33 of 65 for the lab firms, as of 2026-10-27) is checked in the new-database rerun ([A14.1](#a14)) and hidden until it passes the news check (Alex, 2026-10-28).
+- **B12.10** Timeline events merge into News as one list: one item per normalized link ([A7.11](#a7)), the same news check (B12.6) and the same limits ([A9.3](#a9)). Duplicate links are dropped (Alex, 2026-10-28).
 
 <a id="b13"></a>
 ## B13. What founders say, and the review cards

@@ -16,10 +16,10 @@ A2.2,A2 Sources per page part,"Limited partners (LPs) | Any trustworthy source (
 A2.3,A2 Sources per page part,"People and interviews | People: only current people at the firm are shown; people who left are not shown, and neither are their interviews (Alex, 2026-10-28)...","on main"
 A2.4,A2 Sources per page part,"Legal cases (display, Alex 2026-10-28) | Source (Alex, 2026-10-28): CourtListener, PACER, uscourts.gov, a regulator (SEC, FINRA, FCA), Justia, Law360, or Cas...",on main
 A2.5,A2 Sources per page part,"Reviews | A post on any public site (for example Reddit, X, LinkedIn, YouTube, Medium, a blog or podcast page; Alex, 2026-10-28) that exists, names the firm,...",on main
-A2.6,A2 Sources per page part,"News | A story on TechCrunch, Reuters, Bloomberg, Axios, the Financial Times, the Wall Street Journal, CNBC, Forbes, or The Information, when the link opens...",on main
+A2.6,A2 Sources per page part,"News | A story on TechCrunch, Reuters, Bloomberg, Axios, the Financial Times, the Wall Street Journal, CNBC, Forbes, or The Information, when the link opens... Every news item is shown only after it passes the news check (B12.6) (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
 A2.7,A2 Sources per page part,"Deals | An SEC Form D (level 1) or the firm’s press release (level 2) (Alex, 2026-10-28).",on main
 A2.8,A2 Sources per page part,"Lawsuits | Merged into A2.4: allowed sources are the list in A2.4 only (Alex, 2026-10-28). CourtListener, PACER, uscourts.gov and regulators are level 1. | A...","on main"
-A2.10,A2 Sources per page part,Social counts | Only an account that is linked from the firm’s own website.,on main
+A2.10,A2 Sources per page part,"Social counts | Social follower counts for LinkedIn, X, YouTube, Instagram and TikTok (Alex, 2026-10-28): only the account linked from the firm’s own website (level 2). Stored as a number plus the date read; refreshed every 3 months. Display: B3.8.","edited in this PR (Alex, 2026-10-28)"
 A2.11,A2 Sources per page part,"Sectors (portfolio and deals, one rule) | Any source is accepted (approved by Alex on 2026-10-28).",on main
 A2.12,A2 Sources per page part,"Funds | SEC filings (Form D, Form ADV), else an approved news outlet or a trusted site (per A1.8).",on main
 A2.13,A2 Sources per page part,"Header HQ | The firm’s IAPD record, else the firm’s own website.",on main
@@ -44,7 +44,7 @@ A7.1,A7 One home per data kind,"Firm names | firm_aliases, with a type: display,
 A7.2,A7 One home per data kind,Funds | funds | firm_profile_facts where section is funds,on main
 A7.3,A7 One home per data kind,"AUM | one fact: the SEC Form ADV figure (Item 5F regulatory assets, with the as-of year) first; if there is none (e.g. non-US firms), the AUM stated on the f...","on main"
 A7.4,A7 One home per data kind,Deals and portfolio companies | investments and portfolio_companies | Timeline lines and collector rows that skip the Checker,on main
-A7.5,A7 One home per data kind,News | one news item per normalized URL | press_items and timeline_events,on main
+A7.5,A7 One home per data kind,"News | one news item per normalized URL; timeline events are merged into News as one list, same check and limits (B12.10) (Alex, 2026-10-28) | press_items and timeline_events","edited in this PR (Alex, 2026-10-28)"
 A7.6,A7 One home per data kind,"Legal | firm_legal_items (this feeds checks 4, 6, and 7) | regulatory_records and legal_matters",on main
 A7.7,A7 One home per data kind,People | firm_people_roles | people and fund_people,on main
 A7.8,A7 One home per data kind,Reviews | reviews | Leftover founder_accounts,on main
@@ -394,3 +394,16 @@ R5.39,R5 Old notes,From C9.3: Unknown which bot screened them.,on main
 R5.40,R5 Old notes,From C9.6: Accel’s Schedule A sentences were hidden as people and did not become a check.,on main
 R5.41,R5 Old notes,From C10.3: Unknown bot.,on main
 R5.42,R5 Old notes,From C10.5: a16z is Worth knowing from the hand migration.,on main
+A4.6,A4 The holding door,"Each upload stores an internal door-check result, 'Accepted' or 'Rejected' plus the reason (e.g. 'Rejected: no source link'). It is kept 30 days, the same as uploads (A11.1). Internal only, never shown (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
+A6.5,A6 Three marks on every item,"A6 stays as is. Missing checked date, check and level on old items are filled by the new-database rerun (A14.1), not by a backfill now (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
+A9.21,A9 List limits and archiving (the one table),"The archive job for every list in the A9 table is built as part of the new database (A14) (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
+B3.8,B3 Firm header,"Social follower counts (A2.10): a platform logo with its count is shown only for platforms where we have a firm-linked account; platforms without a link are not shown. The design waits for an approved mockup, so the counts are stored and hidden until then (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
+B12.9,B12 News,"Any stored news item not yet checked (for example 33 of 65 for the lab firms, as of 2026-10-27) is checked in the new-database rerun (A14.1) and hidden until it passes the news check (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
+B12.10,B12 News,"Timeline events merge into News as one list: one item per normalized link (A7.11), the same news check (B12.6) and the same limits (A9.3). Duplicate links are dropped (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
+A13.1,A13 Dates shown on the page,"Every date shown on the page uses US format MM/DD/YYYY, for example 01/07/2026, for news, timeline, deals, reviews and legal (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
+A13.2,A13 Dates shown on the page,"Internal storage may stay ISO (YYYY-MM-DD); only the display uses MM/DD/YYYY (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
+A14.1,A14 New database move,"During the new-database move, the old copies are retired. The rerun also runs the checks on stored items that were never checked (B12.9) and fills missing marks (A6.5) (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
+A14.2,A14 New database move,"Row 47: the 5 fund lines in the old profile copy are backed up and merged into funds (A7.2) (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
+A14.3,A14 New database move,"Row 48: confirmed LP holding rows move into LPs (A7.9); the rest are retired (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
+A14.4,A14 New database move,"Row 49: the remaining founder accounts move into reviews (A7.8); any that cannot move may be removed (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
+A14.5,A14 New database move,"Every deletion still needs Alex’s explicit 'Yes, delete' on an exact list (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
