@@ -44,5 +44,6 @@ def test_only_level2_accounts():
         page = c.execute("select public.firm_page((select slug from firms where id = %s), gen_random_uuid(), false, null)->'firm'->'social'", (fid,)).fetchone()[0]
         c.rollback()
     got = [(a["platform"], a["url"], int(a["followers"])) for a in out]
-    assert got == [("linkedin", "https://www.linkedin.com/company/t", 412345), ("x", "https://x.com/t", 133093)]
+    # raw socialAccounts uploads are never read (20261029220000): only the Checker-approved level-2 fact shows
+    assert got == [("x", "https://x.com/t", 133093)]
     assert page == out
