@@ -583,6 +583,7 @@
   "my_firms": {
    "_note": "My firms page (/account/firms/, js/app.js drawFirms). Results = firm_check_rows display labels: Clear (clear, nf), Review (review, red), Worth knowing (wk).",
    "h1": "My firms",
+   "refund_note": "Not finished in 24 hours · 1 credit refunded",
    "title": "My firms",
    "sub": "Firms you’ve saved and firms you’ve checked. A check is 1 credit and opens the full report; reopening is free.",
    "tabs": [

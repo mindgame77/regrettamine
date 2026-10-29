@@ -217,12 +217,15 @@
     $('#frows').innerHTML = rows.map(r => {
       const url = ROOT + 'vc/' + encodeURIComponent(r.slug) + '/';
       const pill = (k, c) => r[k] ? '<span class="mp ' + c + '"><i></i>' + r[k] + ' ' + esc(F[k]) + '</span>' : '';
-      const res = !r.checked ? '<span class="nc">' + esc(F.not_checked) + '</span>' : r.clear == null ? '<span class="nc">—</span>'
+      // 24 h auto-refund (my_firms.refunded_at): the note replaces the results and the row offers Check again.
+      const refunded = r.checked && !!r.refunded_at;
+      const res = refunded ? '<span class="nc rfn">' + esc(F.refund_note) + '</span>'
+        : !r.checked ? '<span class="nc">' + esc(F.not_checked) + '</span>' : r.clear == null ? '<span class="nc">—</span>'
         : '<span class="pls">' + pill('clear', 'c') + pill('review', 'r') + pill('wk', 'w') + '</span>';
       return '<div class="mfr"><button type="button" class="star' + (r.saved ? ' on' : '') + '" data-star="' + esc(r.slug) + '" aria-pressed="' + !!r.saved + '" aria-label="' + fmt(r.saved ? T.unsave : T.save, { name: esc(r.name) }) + '">' + (r.saved ? '★' : '☆') + '</button>'
         + '<span class="nm3"><a href="' + esc(url) + '"><b>' + esc(r.name) + '</b></a>' + (r.hq ? '<small>' + esc(r.hq) + '</small>' : '') + '</span>'
         + '<span class="dt">' + (r.checked ? esc(fmtDate(r.checked_at)) : '—') + '</span>' + res
-        + (r.checked ? '<a class="btn o" href="' + esc(url) + '">' + esc(F.open) + '</a>' : '<button type="button" class="btn" data-check="' + esc(r.slug) + '">' + esc(F.check) + '</button>') + '</div>';
+        + (r.checked && !refunded ? '<a class="btn o" href="' + esc(url) + '">' + esc(F.open) + '</a>' : '<button type="button" class="btn" data-check="' + esc(r.slug) + '">' + esc(F.check) + '</button>') + '</div>';
     }).join('');
   }
   if ($('#myfirms')) {
