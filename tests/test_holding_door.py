@@ -57,7 +57,8 @@ def test_cap_wait_attack_duplicate_and_oldest_first():
                     "else coalesce(ingest_settings.value, '') || ',' || excluded.value end",
                     (slug, "%" + slug + "%"),
                 )
-            payload = json.dumps({"firm": {"name": name, "website_source_url": f"https://{slug}.example/"}, "records": []})
+            payload = json.dumps({"firm": {"name": name, "website_source_url": f"https://{slug}.example/"}, "records": [],
+                                  "probes": {f"https://{slug}.example/": True}})
             got = _j(cur.execute(
                 "select research_submit(%s, %s, %s::jsonb, 0, true, '[]'::jsonb)",
                 (reg, bot, payload),
