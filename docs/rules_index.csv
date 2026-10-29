@@ -384,4 +384,4 @@ A14.2,A14 New database move,"Row 47: the 5 fund lines in the old profile copy ar
 A14.3,A14 New database move,"Row 48: confirmed LP holding rows move into LPs (A7.9); the rest are retired (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
 A14.4,A14 New database move,"Row 49: the remaining founder accounts move into reviews (A7.8); any that cannot move may be removed (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
 A14.5,A14 New database move,"Every deletion still needs Alex’s explicit 'Yes, delete' on an exact list (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
-A14.6,A14 New database move,"bots.checker_holding is server-only (RLS on, no policies on purpose). Owner-run public functions need a fixed search path; only allowlisted ones are open to logged-out users (Alex, 2026-10-28).",proposed (PR)
+A14.6,A14 New database move,"bots.checker_holding is server-only (RLS on, no policies on purpose). Owner-run public functions need a fixed search path; only allowlisted ones are open to logged-out users (Alex, 2026-10-28).",on main
