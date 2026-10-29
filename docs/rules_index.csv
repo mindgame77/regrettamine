@@ -36,7 +36,7 @@ A5.1,A5 The Checker,The entry check is the only way an item is published.,on mai
 A5.2,A5 The Checker,For each item it checks three things:,on main
 A5.3,A5 The Checker,A register or firm-site item is published with the date and checked-by Checker.,on main
 A5.4,A5 The Checker,The Enricher does not publish (fixes: A12.3); the Activity Collector does not write investments directly (A12.4).,on main
-A5.5,A5 The Checker,"Takes only uploads the entry check Accepted; rejected ones never reach it. Flagged links are opened first: one that does not open sets 'Rejected: link does not open', otherwise the flag is cleared. Then the meaning check as before.",proposed (PR)
+A5.5,A5 The Checker,"Takes only uploads the entry check Accepted; rejected ones never reach it. Flagged links are opened first: one that does not open sets 'Rejected: link does not open', otherwise the flag is cleared. Then the meaning check as before.",on main
 A6.1,A6 Three marks on every item,"The entry check sets these once, on the item itself (The Checker runs this check today; automatic checks, when built, run the same check.) (Alex, 2026-10-28):",on main
 A6.2,A6 Three marks on every item,"The columns are on the item tables: press_item_firms, timeline_events, firm_check_rows, firm_people_roles, firm_profile_facts, firm_legal_items, reviews, and...",on main
 A6.3,A6 Three marks on every item,firm_check_rows.searched_at and the news check_mark stay.,on main
