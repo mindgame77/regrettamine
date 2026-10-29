@@ -121,7 +121,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 - **A4.3** An exact copy is dropped at the door. It is not stored again.
 - **A4.4** The entry check works the queue oldest first (The Checker runs this check today; automatic checks, when built, run the same check.) (Alex, 2026-10-28). A bot whose items fail more than half the time, after at least 10 checked items in a day, is paused, and Alex gets one alert.
 - **A4.5** Retention of failed holding items, processed uploads and search logs: see [A11.1](#a11).
-- **A4.6** Each upload stores an internal door-check result, 'OK' or 'Not OK' plus the reason. It is kept 30 days, the same as uploads ([A11.1](#a11)). Internal only, never shown (Alex, 2026-10-28).
+- **A4.6** Each upload stores an internal door-check result, 'Accepted' or 'Rejected' plus the reason (e.g. 'Rejected: no source link'). It is kept 30 days, the same as uploads ([A11.1](#a11)). Internal only, never shown (Alex, 2026-10-28).
 
 <a id="a5"></a>
 ## A5. The Checker

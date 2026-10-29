@@ -394,7 +394,7 @@ R5.39,R5 Old notes,From C9.3: Unknown which bot screened them.,on main
 R5.40,R5 Old notes,From C9.6: Accel’s Schedule A sentences were hidden as people and did not become a check.,on main
 R5.41,R5 Old notes,From C10.3: Unknown bot.,on main
 R5.42,R5 Old notes,From C10.5: a16z is Worth knowing from the hand migration.,on main
-A4.6,A4 The holding door,"Each upload stores an internal door-check result, 'OK' or 'Not OK' plus the reason. It is kept 30 days, the same as uploads (A11.1). Internal only, never shown (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
+A4.6,A4 The holding door,"Each upload stores an internal door-check result, 'Accepted' or 'Rejected' plus the reason (e.g. 'Rejected: no source link'). It is kept 30 days, the same as uploads (A11.1). Internal only, never shown (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
 A6.5,A6 Three marks on every item,"A6 stays as is. Missing checked date, check and level on old items are filled by the new-database rerun (A14.1), not by a backfill now (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
 A9.21,A9 List limits and archiving (the one table),"The archive job for every list in the A9 table is built as part of the new database (A14) (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
 B3.8,B3 Firm header,"Social follower counts (A2.10): a platform logo with its count is shown only for platforms where we have a firm-linked account; platforms without a link are not shown. The design waits for an approved mockup, so the counts are stored and hidden until then (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
