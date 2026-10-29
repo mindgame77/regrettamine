@@ -85,6 +85,50 @@
     const link = siteLink(P);
     return bits.join(' · ') + (link ? (bits.length ? ' · ' : '') + link : '');
   }
+  // Social pills under the meta line (firm_page.firm.social; only accounts linked from the firm's own site).
+  // Count only, compact, at most 3 significant digits, half up: 412345 -> 412K, 4230 -> 4.23K. No data: no row.
+  const SOC = HCOPY.social || {};
+  const SOC_SVG = {
+    linkedin: '<path fill="#0A66C2" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/>',
+    x: '<path fill="#000" d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.4l-5.8-7.58-6.63 7.58H.48l8.6-9.83L0 1.15h7.59l5.24 6.93 6.07-6.93zm-1.29 19.5h2.04L6.48 3.24H4.3l13.31 17.41z"/>',
+    instagram: '<path fill="#E4405F" d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.72 3.72 0 0 1-1.38-.9 3.72 3.72 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63a5.88 5.88 0 0 0-2.13 1.38A5.88 5.88 0 0 0 .63 4.14C.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.13a5.88 5.88 0 0 0 2.13 1.38c.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56a5.88 5.88 0 0 0 2.13-1.38 5.88 5.88 0 0 0 1.38-2.13c.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91a5.88 5.88 0 0 0-1.38-2.13A5.88 5.88 0 0 0 19.86.63C19.1.33 18.22.13 16.95.07 15.67.01 15.26 0 12 0zm0 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.41-11.85a1.44 1.44 0 1 0 0 2.88 1.44 1.44 0 0 0 0-2.88z"/>',
+    youtube: '<path fill="#FF0000" d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81z"/><path fill="#fff" d="M9.55 15.57V8.43L15.82 12l-6.27 3.57z"/>',
+    tiktok: '<path fill="#000" d="M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>'
+  };
+  function compactCount(v) {
+    if (v === null || v === undefined || v === "") return "";
+    const n = Math.floor(Number(v));
+    if (!isFinite(n) || n < 0) return '';
+    if (n < 1000) return String(n);
+    const units = [[1e9, 'B'], [1e6, 'M'], [1e3, 'K']];
+    let i = units.findIndex(u => n >= u[0]);
+    for (;;) {
+      const x = n / units[i][0], dp = x >= 100 ? 0 : x >= 10 ? 1 : 2, f = Math.pow(10, dp);
+      const r = Math.floor(x * f + 0.5 + 1e-9) / f;
+      if (r >= 1000 && i > 0) { i--; continue; }
+      return String(r) + units[i][1];
+    }
+  }
+  function socialPills(P) {
+    const list = ((P.firm || {}).social || []).filter(a => a && SOC_SVG[a.platform] && /^https:\/\//i.test(a.url || '') && compactCount(a.followers) !== '');
+    if (!list.length) return '';
+    return list.map(a => {
+      const name = (SOC.names || {})[a.platform] || a.platform, c = compactCount(a.followers);
+      const aria = (SOC.aria || '{platform}: {count}').replace('{platform}', name).replace('{count}', c);
+      return '<a class="sc soc" href="' + esc(a.url) + '" target="_blank" rel="noopener" aria-label="' + esc(aria) + '" title="' + esc(name) + '">' +
+        '<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + SOC_SVG[a.platform] + '</svg><b>' + esc(c) + '</b></a>';
+    }).join('');
+  }
+  function paintSocial(main, P) {
+    const meta = main.querySelector('.ph .m');
+    let row = main.querySelector('.ph .socp');
+    const html = meta ? socialPills(P) : '';
+    if (!html) { if (row) row.remove(); return; }
+    if (!row) { row = document.createElement('div'); row.className = 'secp socp'; meta.insertAdjacentElement('afterend', row); }
+    row.setAttribute('aria-label', SOC.row || 'Social accounts');
+    row.setAttribute('role', 'group');
+    row.innerHTML = html;
+  }
   function setFirmName(main, name) {
     if (!name) return;
     const h1 = main.querySelector('.ph h1');
@@ -791,6 +835,7 @@
     if (tocEl) tocEl.style.display = ''; if (lk) lk.style.display = '';
     const meta = main.querySelector('.m'); if (meta) meta.innerHTML = metaLine(P);
     paintActivity(main, P);
+    paintSocial(main, P);
     if (csum) { csum.hidden = true; csum.innerHTML = ''; }
     if (!P.open) {
       if (main.querySelector('.spl')) main.querySelector('.spl').innerHTML = '';
@@ -902,6 +947,7 @@
       if (meta) meta.innerHTML = esc(CK.sources[0]) + ' <b>' + esc(CK.sources[1]) + '</b>' + (link ? ' · ' + link : '');
     } else if (meta) meta.innerHTML = metaLine(P);
     paintActivity(main, P);
+    paintSocial(main, P);
     const list = main.querySelector('.list'); if (list) list.innerHTML = P.open ? ctable(P, checking, curN) : P.unchecked ? ctable(P, false, 0) + gate(P, '') : gate(P, ghost(P));
     const fn = main.querySelector('.rgt-n'), ft = pageSecs(P).reduce((a, s) => a + (s.count || 0), 0);
     if (fn && ft) { fn.textContent = ft; fn.hidden = false; }
@@ -1216,5 +1262,5 @@
     view.total = full.total; view.head = full.head;
     return view;
   }
-  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows, setFirmName };
+  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows, setFirmName, compactCount, socialPills };
 })();
