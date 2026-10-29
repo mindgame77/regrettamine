@@ -57,13 +57,13 @@ def test_blocked_rows_routed_or_logged():
         assert _one(cur, "select count(*) from firm_profile_facts where firm_id = %s", (fid,)) == 1
         for t in ("vc_source_facts", "list_items", "timeline_events"):
             assert _one(cur, f"select count(*) from {t} where firm_id = %s", (fid,)) == 0, t
-        # The clean full number went to the one home; the later one did not overwrite it.
-        assert cur.execute("select aum_amount, aum_currency from firms where id = %s", (fid,)).fetchone() == (160242886816, "USD")
+        # Fix 4b: these rows have no source link, so the number is not copied. The rows are still not stored.
+        assert cur.execute("select aum_amount, aum_currency from firms where id = %s", (fid,)).fetchone() == (None, None)
         assert _one(cur, "select fund_assets_amount from firms where id = %s", (fid,)) is None  # per-fund gross assets never routed
         log = cur.execute("select table_name, routed_to, reason from money_home_blocked where firm_id = %s order by id", (fid,)).fetchall()
         assert [x[0] for x in log] == ["firm_profile_facts", "firm_profile_facts", "vc_source_facts", "list_items", "timeline_events"]
-        assert log[0][1] == "firms.aum_amount" and all("One home per field (fix 3)" in x[2] for x in log)
-        assert "kept the existing value" in log[2][2] and "no full number" in log[3][2]
+        assert log[0][1] is None and all("One home per field (fix 3)" in x[2] for x in log)
+        assert "no acceptable source" in log[0][2] and "no full number" in log[3][2]
         c.rollback()
 
 

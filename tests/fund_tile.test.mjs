@@ -145,11 +145,39 @@ test('B6d.6 (fix 4): lab tiles are latest fund, then AUM, then Fund assets, from
     activity: {},
   });
   assert.equal(tile(old), '');
-  // A DEF 14A or a press release is never the link: no tile.
-  for (const url of ['https://www.sec.gov/Archives/edgar/data/1/000/def14a.htm', 'https://greenoaks.com/press-release/fund', 'https://example.com/x']) {
-    const bad = paint({ firm: { name: 'Greenoaks', slug: 'greenoaks', money: { aum: { display: '$1B', url }, fund_assets: { display: '$2B', url } } }, activity: {} });
-    assert.doesNotMatch(bad, /Assets under management|Fund assets/, url);
-  }
+  // Any other host is not a link. A DEF 14A or a press release is an AUM link only, never Fund assets.
+  const otherHost = paint({ firm: { name: 'Greenoaks', slug: 'greenoaks', money: { aum: { display: '$1B', url: 'https://example.com/x' }, fund_assets: { display: '$2B', url: 'https://example.com/x' } } }, activity: {} });
+  assert.doesNotMatch(otherHost, /Assets under management|Fund assets/);
+  const level3 = paint({ firm: { name: 'Greenoaks', slug: 'greenoaks', money: { aum: { display: '$1B', url: 'https://www.sec.gov/Archives/edgar/data/1/000/def14a.htm' }, fund_assets: { display: '$2B', url: 'https://www.sec.gov/Archives/edgar/data/1/000/def14a.htm' } } }, activity: {} });
+  assert.match(level3, /<small>Assets under management<\/small><b>\$1B<\/b>/);
+  assert.match(level3, />Filing ↗<\/a>/);
+  assert.doesNotMatch(level3, /Fund assets/);
+  const press = paint({ firm: { name: 'Greenoaks', slug: 'greenoaks', money: { aum: { display: '$1B', url: 'https://news.example/press-release/fund' }, fund_assets: { display: '$2B', url: 'https://news.example/press-release/fund' } } }, activity: {} });
+  assert.match(press, /Assets under management/);
+  assert.match(press, />news\.example ↗<\/a>/);
+  assert.doesNotMatch(press, /Fund assets/);
+  // Fix 4b: AUM may use the firm's own site. Fund assets stay on a Form ADV link. The level is not drawn.
+  const firmAum = paint({
+    firm: { name: 'Greenoaks', slug: 'greenoaks', website: 'https://www.greenoaks.com/', money: { aum: { display: '$5B', url: 'https://blog.greenoaks.com/aum' }, fund_assets: { display: '$2B', url: 'https://greenoaks.com/aum' } } },
+    activity: {},
+  });
+  assert.match(firmAum, /<small>Assets under management<\/small><b>\$5B<\/b>/);
+  assert.match(firmAum, /href="https:\/\/blog\.greenoaks\.com\/aum"/);
+  assert.match(firmAum, />blog\.greenoaks\.com ↗<\/a>/);
+  assert.doesNotMatch(firmAum, /Fund assets|source level|source date/);
+  const advStill = paint({
+    firm: { name: 'Greenoaks', slug: 'greenoaks', website: 'https://greenoaks.com/', money: { aum: { display: '$5B', url: ADV }, fund_assets: { display: '$2B', url: ADV } } },
+    activity: {},
+  });
+  assert.match(advStill, /Assets under management/);
+  assert.match(advStill, /Fund assets/);
+  assert.match(advStill, />Filing ↗<\/a>/);
+  const news = paint({ firm: { name: 'Greenoaks', slug: 'greenoaks', website: 'https://greenoaks.com/', money: { aum: { display: '$1B', url: 'https://techcrunch.com/2026/01/01/raises' }, fund_assets: { display: '$2B', url: 'https://techcrunch.com/2026/01/01/raises' } } }, activity: {} });
+  assert.match(news, /<small>Assets under management<\/small><b>\$1B<\/b>/);
+  assert.match(news, />techcrunch\.com ↗<\/a>/);
+  assert.doesNotMatch(news, /Fund assets|source level/);
+  const notNews = paint({ firm: { name: 'Greenoaks', slug: 'greenoaks', website: 'https://greenoaks.com/', money: { aum: { display: '$1B', url: 'https://example.com/aum' }, fund_assets: { display: '$2B', url: 'https://example.com/aum' } } }, activity: {} });
+  assert.doesNotMatch(notNews, /Assets under management|Fund assets/);
   // No fund and no stored AUM/Fund assets: nothing.
   const none = paint({ firm: { name: 'Mio', slug: 'mio-partners' }, activity: { latest_fund: { name: 'Empty Fund, L.P.', raised_usd: 0 } } });
   assert.equal(tile(none), '');
