@@ -352,7 +352,7 @@
     const vs = title.match(/^(.+?)\s+v\.?\s+(.+?)(?:\s*[,(]|$)/);
     const other = vs && side ? (side === 'Defendant' ? vs[1] : vs[2]).trim() : '';
     const cm = all.match(/\bCourt:\s*([^.;]+\.[^.;]*?\.?)(?=\s|$)/) || all.match(COURT);
-    const court = cm ? (cm[1] || cm[0]).replace(/\.+$/, '.').trim() : '';
+    const cv = cm ? (cm[1] || cm[0]).replace(/\.+$/, '.').trim() : '', court = cv.replace(/\W/g, '').length >= 2 ? cv : '';
     const filed = (String(x.year || '').match(/(19|20)\d{2}/) || all.match(/\bfiled\s+((?:19|20)\d{2})/i) || [])[0];
     const cy = status && status !== 'Active' ? (String(x.status || '').match(/(19|20)\d{2}/) || all.match(/\b(?:terminated|closed|dismissed|settled)\s+(?:on\s+)?((?:19|20)\d{2})/i) || [])[0] : '';
     const filedY = filed ? String(filed).match(/(19|20)\d{2}/)[0] : '', closedY = cy ? String(cy).match(/(19|20)\d{2}/)[0] : '';
