@@ -419,7 +419,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **B11.3** Allowed sources: see [A2.4](#a2). Court hosts and Justia, Law360, Casetext become `case`. sec.gov, FINRA, and the FCA become `regulator`. Anything else becomes `context`, which is never its own row (B11.1) (Alex, 2026-10-28).
 - **B11.4** Title required. An allegation is held. Lab allegations need a court or regulator URL.
 - **B11.5** Hidden or unsourced rows are omitted. “Lead” in the title is not a hide rule.
-- **B11.6** RULES_AUDIT 7 and 8.
+- **B11.6** Past problems (audit): a “Lead” copy of a case showed next to the public case; regulator actions were stored in three places that did not match.
 - **B11.7** Legal items: up to 100 kept per firm; past 100 the oldest are archived (stored, hidden): see [A9.20](#a9) (Alex, 2026-10-28). Case display rules: [A2](#a2).
 
 <a id="b12"></a>
@@ -474,7 +474,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **B16.1** Account shows the plan, credits left, and renewal. My firms lists saved and checked firms with HQ and pills; pill counts: see [A8.1](#a8). It does not show a score or a legal name.
 - **B16.2** `my_account` reads `check_balances` (plan, free left, paid left, period end). `my_firms` reads `watchlist`, `check_events`, `firms.name`, `firms.short_name`, `firms.hq`, and counts from `firm_check_rows`.
 - **B16.3** Credits come from signup, Stripe, and the yearly refill cron. Saved firms are the visitor’s watchlist. Checked firms are spend events.
-- **B16.4** The yearly refill runs hourly. Lapsed plans are downgraded hourly. The on-demand tick refunds a paid check that is not done in 24 hours.
+- **B16.4** The yearly refill runs hourly. Lapsed plans are downgraded hourly. If a paid check is not finished within 24 hours, the founder's credit is refunded automatically (Alex, 2026-10-28).
 - **B16.5** These pages require a signed-in session. Firm facts are not repeated here.
 - **B16.6** `my_firms` uses `firms.name`, which matches `display_name` on all 10 lab firms (RULES_AUDIT 1 and C12b). The on-demand doc still describes a locked page (RULES_AUDIT K5).
 
@@ -596,7 +596,7 @@ The checks table on the page (snapshot 2026-10-27):
 - **C4.3** (Alex, 2026-10-28) The count comes only from `firm_legal_items` rows whose group is `regulator` (SEC, FINRA, FCA, DOJ, CFTC), each with an official regulator link. It is recounted on each fresh run.
 - **C4.4** A new allegation needs a court or regulator document on the 10 lab firms or it is rejected.
 - **C4.5** (Alex, 2026-10-28) The other two stores (`vc_source_facts` regulator facts and `regulatory_records`) are retired in the new database move ([A14](#a14)). Nothing is deleted without Alex's 'Yes, delete'.
-- **C4.6** RULES_AUDIT 8.
+- **C4.6** Past problem (audit): regulator actions were stored in three places that did not match, so the pill and the legal section disagreed.
 
 <a id="c5"></a>
 ## C5. Money laundering penalties
@@ -671,7 +671,7 @@ The checks table on the page (snapshot 2026-10-27):
 - **C8.3** Saved from the latest on-demand run; the pill follows C8.5. Set only after it passes the registration check (C8.4); The Checker runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28): registered or exempt reporting, since year, active or not, SEC/CRD number, and the IAPD link.
 - **C8.4** Door check: the link must be an adviserinfo.sec.gov page for that firm, and the status must be one of the fixed list (Registered, Exempt reporting, Not active).
 - **C8.5** Check 8 only (Alex, 2026-10-28): a US firm found on IAPD is Clear (registration line + link); a US firm not found is "Not on the list"; a non-US firm (from HQ country) gets a grey pill with the note "SEC register doesn't apply: firm is based outside the US", not counted for or against.
-- **C8.6** RULES_AUDIT 8 and 20.
+- **C8.6** Past problems (audit): a registration pill stayed “Not checked yet” while the firm had a regulatory record; pills were stored, not counted from the evidence.
 
 <a id="c9"></a>
 ## C9. People behind the fund
