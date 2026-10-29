@@ -453,3 +453,7 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 /* Legal & regulatory rows (A2.4): an Active case's whole row is highlighted (approved mockup 01-legal-cases-v2). */
 .rw.lg .rm{display:flex;flex-wrap:wrap;align-items:center;gap:6px 0}.rw.lg .scs{display:inline-flex;flex-wrap:wrap;gap:6px}
 .rw.lg-act{background:var(--revbg);border-left:4px solid var(--rev);border-radius:6px;padding-left:14px;padding-right:14px;border-bottom-color:transparent;margin-bottom:2px}.rw.lg-act .rt{color:var(--rev)}
+/* Social pills under the firm meta line (firm_page.firm.social): the existing .sc pill with the platform logo and count */
+.ph .socp{max-height:none}.socp .sc.soc{display:inline-flex;align-items:center;gap:6px}.socp .sc.soc b{font-weight:700}
+.socp .sc.soc:hover{text-decoration:underline}.socp .sc.soc:focus-visible{outline:2px solid var(--vio);outline-offset:2px}.socp svg{flex:none;display:block}
+@media (max-width:640px){.socp .sc.soc{padding:4px 10px}}

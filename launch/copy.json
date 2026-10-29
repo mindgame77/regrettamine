@@ -695,7 +695,13 @@
    "regulatory_aum": "Regulatory AUM",
    "fund_gross": "Fund gross assets",
    "assets": "Regulatory AUM",
-   "missing": "Not found in public records"
+   "missing": "Not found in public records",
+   "social": {
+    "_note": "Social pills under the meta line: follower count only, accounts linked from the firm's own website (firm_page.firm.social). No data: no row.",
+    "row": "Social accounts",
+    "aria": "{platform}: {count}",
+    "names": {"linkedin": "LinkedIn", "x": "X", "instagram": "Instagram", "youtube": "YouTube", "tiktok": "TikTok"}
+   }
   },
   "searched_on": "Searched {date}",
   "searched_nc": "Not checked yet.",
