@@ -61,8 +61,8 @@ def test_firm_page_draws_no_hero_cards():
     assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-2000:]
 
 
-def test_overview_rows_for_yc_and_a16z():
-    r = subprocess.run(["node", "--test", "tests/overview_display.test.mjs"], cwd=ROOT, capture_output=True, text=True)
+def test_thesis_replaces_overview():
+    r = subprocess.run(["node", "--test", "tests/thesis_section.test.mjs"], cwd=ROOT, capture_output=True, text=True)
     assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-2000:]
 
 
