@@ -196,7 +196,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 | **A9.18** | SEC fact pills | At most 7 (B4.1) | — | — (Alex, 2026-10-28) |
 | **A9.19** | Thesis | Max 1,000 characters (B7.3) | 1,000 characters | — (Alex, 2026-10-28) |
 - **A9.12** One alert per firm when a cap is hit.
-- **A9.14** These caps are not a license to delete. The archive file is the copy, and the row can be shown again from Show all. For the 10 lab firms the copy is `data/lab-cap-archive/index.json` plus `lab_cap_archive`. A row past the cap is marked archived and stays in the database. Every count that covers all deals still includes archived rows, so a firm over the deal cap does not drop its shown total. That covers Deals, last 12 mo, the latest-deal tile, the Show all total, and the sector pills, which count all deals ([B6e.9.6](#b6e)) (Alex, 2026-10-28). My firms shows check pills, not a deal total. `lab_cap_alerts` holds one row per firm. `lab_soft_caps` is not run until Alex says to apply it.
+- **A9.14** These caps are not a license to delete. The archive file is the copy, and the row can be shown again from Show all. For the 10 lab firms the copy is `data/lab-cap-archive/index.json` plus `lab_cap_archive`. A row past the cap is marked archived and stays in the database. Every count that covers all deals still includes archived rows, so a firm over the deal cap does not drop its shown total. That covers Deals, last 12 mo, the latest-deal tile, the Show all total, and the sector pills, which count all deals ([B6e.9.6](#b6e)) (Alex, 2026-10-28). My firms shows check pills, not a deal total; pill counts: see [A8.1](#a8). `lab_cap_alerts` holds one row per firm. `lab_soft_caps` is not run until Alex says to apply it.
 - **A9.21** The archive job for every list in the A9 table is built as part of the new database ([A14](#a14)) (Alex, 2026-10-28).
 
 <a id="a10"></a>
@@ -471,7 +471,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 <a id="b16"></a>
 ## B16. Account, credits, and My firms
 
-- **B16.1** Account shows the plan, credits left, and renewal. My firms lists saved and checked firms with HQ and pill counts. It does not show a score or a legal name.
+- **B16.1** Account shows the plan, credits left, and renewal. My firms lists saved and checked firms with HQ and pills; pill counts: see [A8.1](#a8). It does not show a score or a legal name.
 - **B16.2** `my_account` reads `check_balances` (plan, free left, paid left, period end). `my_firms` reads `watchlist`, `check_events`, `firms.name`, `firms.short_name`, `firms.hq`, and counts from `firm_check_rows`.
 - **B16.3** Credits come from signup, Stripe, and the yearly refill cron. Saved firms are the visitor’s watchlist. Checked firms are spend events.
 - **B16.4** The yearly refill runs hourly. Lapsed plans are downgraded hourly. The on-demand tick refunds a paid check that is not done in 24 hours.
