@@ -79,7 +79,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 - **A1.2** **Official register.** SEC IAPD and Form ADV (including Item 5F), EDGAR Form D, a court record (CourtListener, PACER, uscourts.gov), a regulator (SEC, FINRA, FCA), a sanctions or screening register used inside its own check, GLEIF, Companies House, or another national registry. Level 1 is **Verified**. It may be shown.
 - **A1.3** **The firm’s own website.** The firm’s domain, not a search page and not a social post. Level 2 may be shown, and it is labelled as the firm’s own site.
 - **A1.4** **Elsewhere online.** News, newsletters, social posts, and any other page. Level 3 is held as **Unconfirmed** and is not shown.
-- **A1.5** **Nothing found.** Store “Not found yet” plus the search date. The row is kept and hidden.
+- **A1.5** **Nothing found.** Level 4 is **Nothing found**: store “Not found yet” plus the search date. The row is kept and hidden. Levels 1–4 match [A6.1](#a6) (Alex, 2026-10-28).
 - **A1.6** If two sources disagree, the register wins. A firm site does not override a register. An elsewhere-online page does not override either, and it is not shown, except where the table in [A2](#a2) says that page part may show it.
 - **A1.7** A search-results page or a chat page is not a source at any level.
 - **A1.8** Exception (Alex, 2026-10-28): the latest fund amount (money raised for the latest fund only) may come from an approved news outlet or another trusted site the project uses (`trusted_source_domains`), not only from SEC Form D. That source must state the amount. It is shown, not held as Unconfirmed. If sources disagree, the SEC record wins.
@@ -92,12 +92,12 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 | Rule |  Page part | Shown | Held or failed |
 |---|---|---|---|
 | **A2.2** | Limited partners (LPs) | Any trustworthy source (Alex, 2026-10-28): pension or endowment reports, public filings, approved news outlets or other sites in `trusted_source_domains`. The link must open and name the LP and the firm or fund. The link is kept. Shown as one line per LP: name and the total amount across all its funds with this firm that we have, for example "CalPERS · $150M (3 funds)". The fund count in brackets is shown only when the LP is in 2 or more funds; with 1 fund, no brackets. An amount only when a source states it, else just the name. No type, year or status on the page. Status (confirmed or lead) is kept in the system only (Alex, 2026-10-28). | Junk, anonymous or untrusted sites, a dead link, or a page that does not name both: fail. |
-| **A2.3** | People and interviews | People: only current people at the firm are shown; people who left are not shown, and neither are their interviews (Alex, 2026-10-28). Each current person may have up to 10 interviews: YouTube videos or press coverage, shown as link + headline. The 10 shown are the ones with the most views (YouTube); press coverage, which has no view count, comes after, newest first. More than 10: the rest are stored, not shown. The link must open and show that person. Design comes later, mockup first. People sources: the firm’s team page or a Form ADV. The register is level 1. The firm’s team page is level 2. LinkedIn is allowed only for that person’s own job history. | A dead link, a page that does not show that person, or a person who left: not shown. Any other LinkedIn page, or a page that is not the team page or Form ADV: Unconfirmed, not shown. |
+| **A2.3** | People and interviews | People: only current people at the firm are shown; people who left are not shown, and neither are their interviews (Alex, 2026-10-28). Each current person may have up to 10 interviews: YouTube videos or press coverage, shown as link + headline. The 10 shown are the ones with the most views (YouTube); press coverage, which has no view count, comes after, newest first. More than 10: the rest are stored, not shown. The link must open and show that person. Design comes later, mockup first. People sources: the firm’s team page or a Form ADV. The register is level 1. The firm’s team page is level 2. LinkedIn is allowed only for that person’s own job history. | A dead link, a page that does not show that person, or a person who left: not shown. Any other LinkedIn page: not used. For people’s names and roles only, a page that is not the team page or Form ADV is Unconfirmed, not shown; interviews from YouTube or the press stay allowed as above (Alex, 2026-10-28). |
 | **A2.4** | Legal cases (display, Alex 2026-10-28) | Source (Alex, 2026-10-28): CourtListener, PACER, uscourts.gov, a regulator (SEC, FINRA, FCA), Justia, Law360, or Casetext; a link is required. Each case shows pills: status (Active, Closed, Settled, Dismissed), side (Defendant or Plaintiff), and what it is about (fixed list: Fraud, Contract, Employment, Securities, Regulator action, IP). Also: other party, filed year (and closed year if any), court or regulator (e.g. SEC, N.D. Cal.), and the required link. A Settled case also shows the settlement terms (for example the amount) when the court or regulator record states them; otherwise nothing is added. The page shows 10 legal items (cases and regulator actions), active first, then the rest by most recent, plus Show all (Alex, 2026-10-28). This replaces "last 2". A legal mention or context row about an existing case is attached to that case as an extra link (for example "In the news: Reuters"); it is not its own row and is not counted. A mention with no matching case is not shown; it stays as a lead for the check. Show all opens every case. No cases at all: the section is not shown, no empty message. | No link from the allowed legal sources: not shown. |
 | **A2.5** | Reviews | A post on any public site (for example Reddit, X, LinkedIn, YouTube, Medium, a blog or podcast page; Alex, 2026-10-28) that exists, names the firm, and is copied word for word with its link. The writer says they are a founder, or the profile shows that they are. | Anonymous, with no founder claim: Unconfirmed, not shown. Glassdoor and other employee reviews: not used. A dead link or a post that does not name the firm: fail. |
 | **A2.6** | News | A story on TechCrunch, Reuters, Bloomberg, Axios, the Financial Times, the Wall Street Journal, CNBC, Forbes, or The Information, when the link opens and the story names the firm. | The firm’s own site posts or blog: never shown in News (Alex, 2026-10-28). Any other blog or unknown site: Unconfirmed, not shown. A dead link, or a story that does not name the firm: fail. |
 | **A2.7** | Deals | An SEC Form D (level 1) or the firm’s press release (level 2) (Alex, 2026-10-28). The same known outlets as News are accepted. The amount and the Lead flag are filled only when that source states them. | Any other page: Unconfirmed, not shown. |
-| **A2.8** | Lawsuits | Merged into A2.4 (Alex, 2026-10-28): same allowed sources (CourtListener, PACER, uscourts.gov, a regulator (SEC, FINRA, FCA), Justia, Law360, or Casetext; a link is required). CourtListener, PACER, uscourts.gov and regulators are level 1. | Any other page: Unconfirmed, not shown. |
+| **A2.8** | Lawsuits | Merged into A2.4: allowed sources are the list in [A2.4](#a2) only (Alex, 2026-10-28). CourtListener, PACER, uscourts.gov and regulators are level 1. | Any other page: Unconfirmed, not shown. |
 | **A2.10** | Social counts | Only an account that is linked from the firm’s own website. | A count taken from anywhere else: Unconfirmed, not shown. |
 | **A2.11** | Sectors (portfolio and deals, one rule) | Any source is accepted (approved by Alex on 2026-10-28). The link must be a real page that opens and must describe that startup. A 403 or block page counts as opened, with a note. The sector is only ever the value the record gives, never invented. | A dead link, a search page, a chat page, an invented link, or a page that does not describe the startup: fail. |
 | **A2.12** | Funds | SEC filings (Form D, Form ADV), else an approved news outlet or a trusted site (per [A1.8](#a1)). The link is kept. (Alex, 2026-10-28) | Any other page: Unconfirmed, not shown. |
@@ -149,7 +149,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 |---|---|---|---|
 | **A7.1** | Firm names | `firm_aliases`, with a type: display, short name, legal, fund entity, old name, or website, plus the source | Gaps in `legal_name` |
 | **A7.2** | Funds | `funds` | `firm_profile_facts` where section is funds |
-| **A7.3** | AUM | one fact, regulatory assets from Form ADV Item 5F, with the as-of year | `firms.aum_display` |
+| **A7.3** | AUM | one fact: the SEC Form ADV figure (Item 5F regulatory assets, with the as-of year) first; if there is none (e.g. non-US firms), the AUM stated on the firm’s own website (level 2), with a link to that page; if neither exists, no AUM and the tile is hidden (Alex, 2026-10-28) | Other AUM values are not used as a fallback |
 | **A7.4** | Deals and portfolio companies | `investments` and `portfolio_companies` | Timeline lines and collector rows that skip the Checker |
 | **A7.5** | News | one news item per normalized URL | `press_items` and `timeline_events` |
 | **A7.6** | Legal | `firm_legal_items` (this feeds checks 4, 6, and 7) | `regulatory_records` and `legal_matters` |
@@ -174,7 +174,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 <a id="a9"></a>
 ## A9. List limits and archiving (the one table)
 
-- **A9.1** List limits (Alex, 2026-10-28). Shown on the page / max kept in the system: Every Part B block points here instead of restating these numbers. These replace the earlier soft caps.
+- **A9.1** List limits (Alex, 2026-10-28). Shown on the page / max kept in the system: Every Part B block points here instead of restating these numbers. These replace the earlier soft caps. Every list archives its oldest items past its limit (kept, hidden, never deleted); the only exception is the 10 checks (A9.8) (Alex, 2026-10-28).
 
 | Rule | List | Shown on the page | Max kept | Past the max |
 |---|---|---|---|---|
@@ -184,14 +184,15 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 | **A9.5** | Deals | 1 latest + Show all (“One latest deal, plus Show all.”) | 1,000 | 1 for now, may increase later (Alex, 2026-10-28). New items still come in and the oldest are archived (kept, hidden), never deleted. |
 | **A9.6** | Funds | Latest fund tile + "N funds on SEC record · Show all" (“One latest fund tile, plus the line “N funds on SEC record · Show all”.”) | 100 | New items still come in and the oldest are archived (kept, hidden), never deleted. |
 | **A9.7** | LPs | Only confirmed LPs are shown (see B9) | 100 (“LPs stay at 100.”) | Every list archives the oldest past its max. |
-| **A9.8** | Legal items, lawsuits, regulator actions, negative news, the 10 checks | Legal: 10 shown + Show all (A2.4) (Alex, 2026-10-28) | No cap for legal items and the 10 checks | Lawsuits, regulator actions, and negative news are never archived. Legal items and the 10 checks have no cap and are never archived or deleted. |
+| **A9.8** | The 10 checks | Per Part C | No cap | Never archived. Checks will be run fresh on demand when a user presses or pays; details come in the later checks review (Alex, 2026-10-28). |
+| **A9.20** | Legal items (cases and regulator actions) | 10 shown + Show all (A2.4) | 100 per firm | Past 100, the oldest go to the archive (stored, hidden), never deleted (Alex, 2026-10-28). |
 | **A9.15** | Interviews (per current person) | Up to 10, most viewed first (A2.3); not shown until the design is approved (B10.8) | 10 | The rest are stored, not shown. (Alex, 2026-10-28) |
 | **A9.16** | Search suggestions | Up to 8 firms (B2.1) | — | — (Alex, 2026-10-28) |
 | **A9.17** | Sector pills | Top 5 sectors + a grey "Other N" pill, only when the firm has 10 or more deals (B6e.9) | — | — (Alex, 2026-10-28) |
-| **A9.18** | SEC fact pills | At most 7 (B4.1.1) | — | — (Alex, 2026-10-28) |
+| **A9.18** | SEC fact pills | At most 7 (B4.1) | — | — (Alex, 2026-10-28) |
 | **A9.19** | Thesis | Max 1,000 characters (B7.3) | 1,000 characters | — (Alex, 2026-10-28) |
 - **A9.12** One alert per firm when a cap is hit.
-- **A9.14** These caps are not a license to delete. The archive file is the copy, and the row can be shown again from Show all. For the 10 lab firms the copy is `data/lab-cap-archive/index.json` plus `lab_cap_archive`. A row past the cap is marked archived and stays in the database. Every count that covers all deals still includes archived rows, so a firm over the deal cap does not drop its shown total. That covers Deals, last 12 mo, the latest-deal tile, the Show all total, and the 12-month sector breakdown (`deal_sector_12m`). My firms shows check pills, not a deal total. `lab_cap_alerts` holds one row per firm. `lab_soft_caps` is not run until Alex says to apply it.
+- **A9.14** These caps are not a license to delete. The archive file is the copy, and the row can be shown again from Show all. For the 10 lab firms the copy is `data/lab-cap-archive/index.json` plus `lab_cap_archive`. A row past the cap is marked archived and stays in the database. Every count that covers all deals still includes archived rows, so a firm over the deal cap does not drop its shown total. That covers Deals, last 12 mo, the latest-deal tile, the Show all total, and the sector pills, which count all deals ([B6e.9.6](#b6e)) (Alex, 2026-10-28). My firms shows check pills, not a deal total. `lab_cap_alerts` holds one row per firm. `lab_soft_caps` is not run until Alex says to apply it.
 
 <a id="a10"></a>
 ## A10. Search and new firms
@@ -235,7 +236,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **B2.1** The box on the home page, the firm page, and the empty state. After a short pause it lists up to 8 firms. Choosing one opens `/vc/<slug>/`. No match offers “Request this firm.” Limit: [A9.16](#a9) (Alex, 2026-10-28).
 - **B2.2** What `firm_suggest` reads and matches: see [A10](#a10). It returns slug, display name, short name, and HQ. `launch/js/search.js` calls it. The list looks the same.
 - **B2.3** Names arrive when a firm is created from the queue or merged (`docs/DEDUPE.md`, `docs/FIRM_REQUESTS.md`). List builders and visitor requests fill the queue. The enricher creates the page.
-- **B2.4** Only published, non-test, real, not-deleted firms. Match is a substring. A prefix ranks first. Which names are a search hit: see [A10](#a10).
+- **B2.4** Only published, non-test, real, not-deleted firms. Match is a substring. A prefix ranks first.
 - **B2.5** A deleted or unpublished firm is absent.
 - **B2.6** Lab display names match `firms.name` (RULES_AUDIT 1). Sequoia has no legal name to alias (RULES_AUDIT 2).
 - **B2.7** Search matching and new-firm rules: see [A10](#a10).
@@ -254,9 +255,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 <a id="b4"></a>
 ## B4. SEC fact pills
 
-- **B4.1** Small links under the header for hero facts whose source is sec.gov, except HQ. At most 7. AUM and “fund gross assets” are labelled differently. No AUM pill when the B6d AUM tile shows it (Alex, 2026-10-28).
-  - **B4.1.1** Rules (Alex, 2026-10-28): at most 7 pills. HQ is never a pill. No two pills say the same thing. A fund (for example a newly raised fund) is never a pill. Each pill holds unique information only: if the fact is already shown anywhere else on the page, the pill does not appear. No AUM pill when the B6d AUM tile shows it (Alex, 2026-10-28). Limit: [A9.18](#a9) (Alex, 2026-10-28).
-  - **B4.1.2** Note (Alex, 2026-10-28): SEC fact pills are up for a full review; more pills may be dropped.
+- **B4.1** Small links under the header for hero facts whose source is sec.gov. Rules (one rule (Alex, 2026-10-28)): at most 7 pills. HQ is never a pill. A fund (for example a newly raised fund) is never a pill. No two pills say the same thing, and no pill for any info already shown elsewhere on the page (e.g. no AUM pill when the B6d AUM tile shows it). AUM and “fund gross assets” are labelled differently. Pills are flagged for a full review later; more may be dropped. Limit: [A9.18](#a9).
 - **B4.2** `firm_page` hero list: `firm_profile_facts` where `hero_label` is set and a `fact_sources` row exists. `company.js` `secPills` keeps only a sec.gov source.
 - **B4.3** The enricher, from a Form ADV on sec.gov / adviserinfo.sec.gov. Item 5F is the assets figure the helper looks for.
 - **B4.4** The fact needs a source or it is not in the hero list. The pill needs the host to be sec.gov.
@@ -315,10 +314,10 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 ### B6d. Assets under management tile
 
 - **B6d.1** Shown on the 10 lab firms only when there is no fund amount at all, including no earlier fund that raised money (see the latest fund tile rule in [B6c.7](#b6c)). Label “AUM” (Alex, 2026-10-28).
-- **B6d.2** Hero fact whose label maps to Regulatory AUM, else `firm.assets` from `_firm_assets`. The helper reads a profile fact that cites Item 5F or “regulatory AUM,” skips Schedule D gross assets, and otherwise uses `firms.aum_display` when it starts with `$`.
+- **B6d.2** AUM source order per [A7.3](#a7) (Alex, 2026-10-28): the SEC Form ADV figure first (hero fact whose label maps to Regulatory AUM, or a profile fact that cites Item 5F or “regulatory AUM”; Schedule D gross assets are skipped). If there is none (e.g. non-US firms), the AUM stated on the firm’s own website (level 2), with a link to that page. If neither exists, the tile is hidden.
 - **B6d.3** SEC Form ADV Item 5F, via the enricher.
 - **B6d.4** A new AUM fact must contain a digit. The helper does not keep a trailing B, M, or K.
-- **B6d.5** Hidden when both the hero and the helper are empty.
+- **B6d.5** Hidden when neither a Form ADV figure nor a firm-website AUM exists (B6d.2) (Alex, 2026-10-28).
 - **B6d.6** RULES_AUDIT 11.
 
 <a id="b6e"></a>
@@ -394,13 +393,13 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 <a id="b11"></a>
 ## B11. Legal and regulatory section
 
-- **B11.1** Shown per A2.4: 10 legal items (cases and regulator actions), active first, then the rest by most recent, plus Show all. Each row has a title, a year, a status, and source pills. Context rows are not their own rows: a mention about an existing case is an extra link on that case; one with no matching case is not shown and stays a lead for the check (Alex, 2026-10-28).
+- **B11.1** Sources and display per [A2.4](#a2) (the source list lives only there (Alex, 2026-10-28)): 10 legal items (cases and regulator actions), active first, then the rest by most recent, plus Show all. Each row has a title, a year, a status, and source pills. Context rows are not their own rows: a mention about an existing case is an extra link on that case; one with no matching case is not shown and stays a lead for the check (Alex, 2026-10-28).
 - **B11.2** `firm_legal_items`, not hidden, with a source. Group, title, year, status, note. This is separate from the 10-check details.
-- **B11.3** Allowed sources: see A2.4. Court hosts and Justia, Law360, Casetext become `case`. sec.gov, FINRA, and the FCA become `regulator`. Anything else becomes `context`, which is never its own row (B11.1) (Alex, 2026-10-28).
+- **B11.3** Allowed sources: see [A2.4](#a2). Court hosts and Justia, Law360, Casetext become `case`. sec.gov, FINRA, and the FCA become `regulator`. Anything else becomes `context`, which is never its own row (B11.1) (Alex, 2026-10-28).
 - **B11.4** Title required. An allegation is held. Lab allegations need a court or regulator URL.
 - **B11.5** Hidden or unsourced rows are omitted. “Lead” in the title is not a hide rule.
 - **B11.6** RULES_AUDIT 7 and 8.
-- **B11.7** Legal items are never archived: see [A9](#a9). Case display rules: [A2](#a2).
+- **B11.7** Legal items: up to 100 kept per firm; past 100 the oldest are archived (stored, hidden): see [A9.20](#a9) (Alex, 2026-10-28). Case display rules: [A2](#a2).
 
 <a id="b12"></a>
 ## B12. News
@@ -563,7 +562,7 @@ The checks table on the page (snapshot 2026-10-27):
 
 - **C6.1** Federal and state cases. Active cases sort first in the detail.
 - **C6.2** Pill: `firm_check_rows` n=6. Detail: `vc_source_facts` legal matters for the firm, and `firm_legal_items` group `case`. Status words (active, terminated, settled) are read in `company.js` `caseStatus`.
-- **C6.3** CourtListener, PACER, uscourts.gov, a regulator (SEC, FINRA, FCA), Justia, Law360, or Casetext; a link is required (Alex, 2026-10-28). The case group is set when the source host is one of those.
+- **C6.3** Allowed sources: the list in [A2.4](#a2); a link is required (Alex, 2026-10-28). The case group is set when the source host is one of those.
 - **C6.4** Leads are held. The legal key dedupes on a case number and misses a “Lead” prefix.
 - **C6.5** Rule (Alex, 2026-10-28): a count with no itemized rows shows nothing on the page, and no CourtListener search link is shown (a search page is not a source). The count or news story stays as a lead for the check (Alex, 2026-10-28). Cases show only once each has its own court or regulator link. News about a lawsuit can still show in News with its article link.
 - **C6.6** RULES_AUDIT 7.
