@@ -1,0 +1,230 @@
+[
+ {
+  "id": 5353,
+  "registry_id": "vc-004028",
+  "payload": {
+   "firm": {
+    "name": "a16z",
+    "firm_id": "vc-004028",
+    "website": "https://www.a16z.com/",
+    "generated_at": "2026-10-29T08:40:00-07:00"
+   },
+   "leads": [],
+   "records": [
+    {
+     "value": {
+      "url": "https://x.com/a16z",
+      "platform": "x",
+      "followers": 1103343,
+      "found_on_url": "https://www.a16z.com/",
+      "followers_read_at": "2026-10-29",
+      "linked_from_firm_site": true
+     },
+     "entity": {
+      "id": "vc-004028",
+      "name": "a16z",
+      "type": "firm"
+     },
+     "sources": [
+      {
+       "url": "https://www.a16z.com/",
+       "tier": "T1",
+       "quote": "href=\"https://x.com/a16z\"",
+       "retrieved_at": "2026-10-29"
+      },
+      {
+       "url": "https://x.com/a16z",
+       "tier": "T2",
+       "quote": "X API public_metrics followers_count 1103343",
+       "retrieved_at": "2026-10-29"
+      }
+     ],
+     "certainty": "reported",
+     "query_ids": [
+      "q1",
+      "q2"
+     ],
+     "record_id": "a16z-social-1",
+     "field_path": "socialAccounts"
+    },
+    {
+     "value": {
+      "url": "https://www.linkedin.com/company/a16z",
+      "platform": "linkedin",
+      "followers": 781524,
+      "found_on_url": "https://www.a16z.com/",
+      "followers_read_at": "2026-10-29",
+      "linked_from_firm_site": true
+     },
+     "entity": {
+      "id": "vc-004028",
+      "name": "a16z",
+      "type": "firm"
+     },
+     "sources": [
+      {
+       "url": "https://www.a16z.com/",
+       "tier": "T1",
+       "quote": "href=\"https://www.linkedin.com/company/a16z/\"",
+       "retrieved_at": "2026-10-29"
+      },
+      {
+       "url": "https://www.linkedin.com/company/a16z",
+       "tier": "T2",
+       "quote": "781,524 followers",
+       "retrieved_at": "2026-10-29"
+      }
+     ],
+     "certainty": "reported",
+     "query_ids": [
+      "q1",
+      "q2"
+     ],
+     "record_id": "a16z-social-2",
+     "field_path": "socialAccounts"
+    },
+    {
+     "value": {
+      "url": "https://a16z.substack.com",
+      "platform": "substack",
+      "followers": 280000,
+      "found_on_url": "https://www.a16z.com/",
+      "followers_read_at": "2026-10-29",
+      "linked_from_firm_site": true
+     },
+     "entity": {
+      "id": "vc-004028",
+      "name": "a16z",
+      "type": "firm"
+     },
+     "sources": [
+      {
+       "url": "https://www.a16z.com/",
+       "tier": "T1",
+       "quote": "href=\"https://a16z.substack.com\"",
+       "retrieved_at": "2026-10-29"
+      },
+      {
+       "url": "https://a16z.substack.com",
+       "tier": "T2",
+       "quote": "280,000 subscribers",
+       "retrieved_at": "2026-10-29"
+      }
+     ],
+     "certainty": "reported",
+     "query_ids": [
+      "q1",
+      "q2"
+     ],
+     "record_id": "a16z-social-3",
+     "field_path": "socialAccounts"
+    }
+   ],
+   "coverage": [
+    {
+     "item": "socialAccounts",
+     "note": "3 firm accounts linked from https://www.a16z.com/; followers read 2026-10-29",
+     "value": "3 accounts",
+     "status": "found"
+    }
+   ],
+   "search_log": [
+    {
+     "site": "a16z.com",
+     "query": "social links on firm homepage",
+     "result": "3 uploaded",
+     "query_id": "q1",
+     "searched_at": "2026-10-29T08:40:00-07:00"
+    },
+    {
+     "site": "platform pages / X API",
+     "query": "follower counts",
+     "result": "read",
+     "query_id": "q2",
+     "searched_at": "2026-10-29T08:40:00-07:00"
+    }
+   ],
+   "schema_version": "dump-1.2"
+  },
+  "entry_check": "Accepted",
+  "valid": true
+ },
+ {
+  "id": 5354,
+  "registry_id": "vc-000029",
+  "payload": {
+   "firm": {
+    "name": "Y Combinator",
+    "firm_id": "vc-000029",
+    "website": "https://www.ycombinator.com/",
+    "generated_at": "2026-10-29T08:40:00-07:00"
+   },
+   "leads": [],
+   "records": [
+    {
+     "value": {
+      "url": "https://twitter.com/ycombinator",
+      "platform": "x",
+      "followers": 1662038,
+      "found_on_url": "https://www.ycombinator.com/",
+      "followers_read_at": "2026-10-29",
+      "linked_from_firm_site": true
+     },
+     "entity": {
+      "id": "vc-000029",
+      "name": "Y Combinator",
+      "type": "firm"
+     },
+     "sources": [
+      {
+       "url": "https://www.ycombinator.com/",
+       "tier": "T1",
+       "quote": "href=\"https://twitter.com/ycombinator\"",
+       "retrieved_at": "2026-10-29"
+      },
+      {
+       "url": "https://x.com/ycombinator",
+       "tier": "T2",
+       "quote": "X API public_metrics followers_count 1662038",
+       "retrieved_at": "2026-10-29"
+      }
+     ],
+     "certainty": "reported",
+     "query_ids": [
+      "q1",
+      "q2"
+     ],
+     "record_id": "y-combinator-social-1",
+     "field_path": "socialAccounts"
+    }
+   ],
+   "coverage": [
+    {
+     "item": "socialAccounts",
+     "note": "1 firm accounts linked from https://www.ycombinator.com/; followers read 2026-10-29",
+     "value": "1 accounts",
+     "status": "found"
+    }
+   ],
+   "search_log": [
+    {
+     "site": "ycombinator.com",
+     "query": "social links on firm homepage",
+     "result": "1 uploaded",
+     "query_id": "q1",
+     "searched_at": "2026-10-29T08:40:00-07:00"
+    },
+    {
+     "site": "platform pages / X API",
+     "query": "follower counts",
+     "result": "read",
+     "query_id": "q2",
+     "searched_at": "2026-10-29T08:40:00-07:00"
+    }
+   ],
+   "schema_version": "dump-1.2"
+  },
+  "entry_check": "Accepted",
+  "valid": true
+ }
+]
