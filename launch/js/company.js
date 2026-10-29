@@ -321,14 +321,74 @@
   function orderLegal(xs) {
     return xs.filter(x => x.title || x.head || x.note).slice().sort((a, b) => (legalStatus(a) === 'Active' ? 0 : 1) - (legalStatus(b) === 'Active' ? 0 : 1) || yearNum(b) - yearNum(a));
   }
+
+  // Legal & regulatory (PAGE_DATA_GUIDE A2.4, B11): one list of cases and regulator actions where the firm is a party.
+  // Read from firm_legal_items (firm_page legal items: grp, head, year, role, state, status, note, src). Old status words are
+  // mapped to the fixed list (Active, Closed, Settled, Dismissed). Side, topic, other party, court and closed year are shown
+  // only when the stored row states them; nothing is guessed. Leads, non-party filers and context rows are not rows.
+  const LG = COPY.legal || {};
+  const TOPICS = ['Fraud', 'Contract', 'Employment', 'Securities', 'Regulator action', 'IP'];
+  const COURT = /\b(?:[NSEWCM]\.\s?D\.\s?(?:N\.\s?Y\.|[A-Z][a-z]{1,5}\.(?:\s?[A-Z][a-z]{0,4}\.)?)|D\.\s?(?:N\.J\.|Del\.|Mass\.|Colo\.|Md\.|Minn\.|Or\.|Ariz\.|Nev\.|Utah|Conn\.)|Del\.\s?Ch\.|Delaware (?:Court of )?Chancery|\d{1,2}(?:st|nd|rd|th) Cir\.|TTAB|SEC|FINRA|FCA|CFTC)(?![\w])/;
+  function legalWord(x) {
+    const lab = String(x.status || '').toLowerCase(), st = x.state || '';
+    if (/\bsettle/.test(lab)) return 'Settled';
+    if (/\bdismiss/.test(lab)) return 'Dismissed';
+    if (st === 'Active' || /^\s*(open|active|pending|ongoing)\b/.test(lab)) return 'Active';
+    if (st === 'Closed' || /\b(closed|terminated|adjudicated|judgment|resolved|affirmed)\b/.test(lab)) return 'Closed';
+    return '';
+  }
+  function legalCase(x) {
+    if (x.grp !== 'case' && x.grp !== 'regulator') return null;
+    const title = String(x.title || x.head || '');
+    if (!title || x.state === 'Unverified' || isLeadTag(x.status) || LEAD_PRE.test(title)) return null;
+    if (/non-party|not a party|non-defendant/i.test(title + ' ' + (x.status || ''))) return null;
+    const status = legalWord(x);
+    if (x.grp === 'regulator' && !status) return null; // a register summary ("disclosure flag N", "None found") is not an action
+    const all = title + ' ' + (x.note || '');
+    const r = String(x.role || '').trim().toLowerCase(), rm = all.match(/\brole:\s*(defendant|plaintiff)\b/i);
+    const side = r === 'defendant' || r === 'plaintiff' ? r[0].toUpperCase() + r.slice(1) : rm ? rm[1][0].toUpperCase() + rm[1].slice(1).toLowerCase() : '';
+    const tw = String(x.about || x.case_type || '').trim().toLowerCase();
+    const topic = TOPICS.find(t => t.toLowerCase() === tw) || '';
+    const vs = title.match(/^(.+?)\s+v\.?\s+(.+?)(?:\s*[,(]|$)/);
+    const other = vs && side ? (side === 'Defendant' ? vs[1] : vs[2]).trim() : '';
+    const cm = all.match(/\bCourt:\s*([^.;]+\.[^.;]*?\.?)(?=\s|$)/) || all.match(COURT);
+    const court = cm ? (cm[1] || cm[0]).replace(/\.+$/, '.').trim() : '';
+    const filed = (String(x.year || '').match(/(19|20)\d{2}/) || all.match(/\bfiled\s+((?:19|20)\d{2})/i) || [])[0];
+    const cy = status && status !== 'Active' ? (String(x.status || '').match(/(19|20)\d{2}/) || all.match(/\b(?:terminated|closed|dismissed|settled)\s+(?:on\s+)?((?:19|20)\d{2})/i) || [])[0] : '';
+    const filedY = filed ? String(filed).match(/(19|20)\d{2}/)[0] : '', closedY = cy ? String(cy).match(/(19|20)\d{2}/)[0] : '';
+    const sm = status === 'Settled' ? String(x.note || '').match(/[^.]*\bsettle[^.]*\$\s?[\d.,]+\s*(?:[MBK]\b|million|billion)?[^.]*\.?/i) : null;
+    return { title: nice(title), status, side, topic, other, court, filed: filedY, closed: closedY, settlement: sm ? sm[0].trim() : '', src: x.src || [] };
+  }
+  function legalCases(items) {
+    return (items || []).map(legalCase).filter(c => c && (c.src || []).some(s => safeUrl(s.url)))
+      .map((c, i) => Object.assign(c, { _i: i }))
+      .sort((a, b) => (a.status === 'Active' ? 0 : 1) - (b.status === 'Active' ? 0 : 1) || (+b.filed || 0) - (+a.filed || 0) || a._i - b._i);
+  }
+  const lpill = (t, act) => t ? '<span class="cs ' + (act ? 'cs-act' : 'cs-cl') + '">' + esc(t) + '</span>' : '';
+  function legalRow(c) {
+    const act = c.status === 'Active';
+    const when = [c.filed ? fmt(LG.filed || 'Filed {y}', { y: c.filed }) : '', c.closed ? fmt(LG.closed || 'Closed {y}', { y: c.closed }) : ''].filter(Boolean).join(' · ');
+    const line = [c.other ? (LG.vs || 'vs. ') + c.other : '', c.court, when].filter(Boolean).map(esc).join(' · ');
+    return '<div class="rw lg' + (act ? ' lg-act' : '') + '"><div class="rt">' + esc(c.title) + '</div>'
+      + (c.settlement ? '<div class="rn lg-set">' + esc(c.settlement) + '</div>' : '')
+      + (line ? '<div class="rn">' + line + '</div>' : '')
+      + '<div class="rm">' + [lpill(c.status, act), lpill(c.side), lpill(c.topic), chips(c.src)].filter(Boolean).join(' ') + '</div></div>';
+  }
+  const LEGAL_MAX = 10;
+  function legalHtml(items, P) {
+    const cs = legalCases(items);
+    let h = '<div class="rws">' + cs.slice(0, LEGAL_MAX).map(legalRow).join('') + '</div>';
+    if (cs.length > LEGAL_MAX) {
+      h += '<button type="button" class="ash" data-open="actlegal">' + esc(pl(LG.all || ['Show all {n} legal item', 'Show all {n} legal items'], cs.length)) + ' ↓</button>';
+      if (typeof actModal === 'function' && typeof document !== 'undefined' && document.body) actModal('actlegal', fmt(LG.all_title || '{n} legal items · {firm}', { n: cs.length, firm: (P && P.firm && P.firm.name) || '' }), '<div class="rws">' + cs.map(legalRow).join('') + '</div>');
+    }
+    return h;
+  }
   // Open-state renderers, keyed by copy.json sections[].renderer. The section is the third argument (LP grouping).
   const R = {
     facts: (it, P, s) => '<div class="rws">' + (s && s.key === 'lps' ? groupLps(it) : it.map(factRow).join('')) + '</div>',
     checks: (it, P) => checkRows(P),
-    legal: (it) => group(it, 'grp', COPY.legal, xs => '<div class="rws">' + orderLegal(xs).map(x => {
-      const note = [x.role, x.note].filter(Boolean).map(nice).join(' · ');
-      return row(nice(ncStrip(x.title || x.head || '')), shownYear(x) || x.year || '', legalStatus(x), x.src, note);
-    }).join('') + '</div>'),
+    legal: (it, P) => legalHtml(it, P),
     press: (it) => '<div class="pgr">' + it.map(x => card(x, true)).join('') + '</div>',
     news: (it) => '<div class="pgr">' + it.map(x => card(x, true)).join('') + '</div>',
     founders: (it) => '<div class="rws">' + it.map(x => row(nice(ncStrip(x.head || '')), x.date, '', x.src, x.snippet ? nice(x.snippet) : '')).join('') + '</div>',
@@ -703,6 +763,11 @@
       if (c.key === 'news') return Object.assign({}, c, { count: newsItems.length, items: newsItems, teaser: (newsItems[0] && newsItems[0].head) || '' });
       const s = Object.assign({}, byKey[c.key], c);
       if (s.key === 'lps') { const n = new Set((s.items || []).map(x => x.label)).size; if (n) s.count = n; }
+      if (s.key === 'legal') {
+        const n = legalCases(s.items).length;
+        if (!n) return null;
+        s.count = n;
+      }
       if (s.key === 'overview') {
         const items = overviewRows(s.items || []);
         if (!items.length) return null;

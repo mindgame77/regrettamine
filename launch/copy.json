@@ -645,7 +645,12 @@
    "case": "Cases",
    "regulator": "Regulators",
    "context": "Context",
-   "contextSub": "The firm itself is not a party in these."
+   "contextSub": "The firm itself is not a party in these.",
+   "all": ["Show all {n} legal item", "Show all {n} legal items"],
+   "all_title": "{n} legal items · {firm}",
+   "vs": "vs. ",
+   "filed": "Filed {y}",
+   "closed": "Closed {y}"
   },
   "people": {
    "board": "Board seats",
