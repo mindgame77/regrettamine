@@ -85,3 +85,17 @@ Deno.test("legal case summary: trimmed at 300, dropped (case kept) without a sou
   assertEquals(v[2].summary, "old free-text note");
   assert(JSON.stringify(r.body).includes("no source link"));
 });
+
+Deno.test("socialAccounts rounded / regional markers (A15.6, A15.7)", async () => {
+  let n = 0;
+  const soc = (v: Record<string, unknown>) => rec("s" + (++n), "socialAccounts", { platform: "x", url: "https://x.com/a", followers: 5, linked_from_firm_site: true, ...v });
+  const ok = await submit([soc({ rounded: true }), soc({ regional: true, region: " India " })]);
+  assertEquals(ok.status, 200, JSON.stringify(ok.body));
+  assert(JSON.stringify(sent).includes('"region":"India"'), JSON.stringify(sent));
+  for (const [v, msg] of [[{ rounded: "yes" }, "social rounded must be true or false"],
+                          [{ regional: true }, "regional social account needs region"],
+                          [{ region: "India" }, "social region needs regional true"]] as const) {
+    const r = await submit([soc(v as Record<string, unknown>)]);
+    assert(JSON.stringify(r.body).includes(msg), JSON.stringify(r.body));
+  }
+});

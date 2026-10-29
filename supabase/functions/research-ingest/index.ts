@@ -93,6 +93,13 @@ function valueChecks(r: any): string[] {
     if (typeof o.url !== "string" || !URL_OK.test(o.url)) e.push("social account needs url");
     if (o.followers != null && typeof o.followers !== "number") e.push("social followers must be a number");
     if (o.linked_from_firm_site !== true) e.push("social account must be linked from the firm's own website (set linked_from_firm_site true)");
+    // A15.6 / A15.7: optional markers. rounded = the platform only shows a rounded count; regional + region = a regional account.
+    if (o.rounded != null && typeof o.rounded !== "boolean") e.push("social rounded must be true or false");
+    if (o.regional != null && typeof o.regional !== "boolean") e.push("social regional must be true or false");
+    if (o.region != null && (typeof o.region !== "string" || !o.region.trim() || o.region.trim().length > 40)) e.push("social region must be a short text (1-40 characters)");
+    if (o.regional === true && (typeof o.region !== "string" || !o.region.trim())) e.push("regional social account needs region");
+    if (o.region != null && o.regional !== true) e.push("social region needs regional true");
+    if (typeof o.region === "string") o.region = o.region.trim();
     return e;
   }
   return [];
