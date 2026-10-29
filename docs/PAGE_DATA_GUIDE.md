@@ -208,6 +208,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 - **A12.2** A research bot's item passes the submission check (it has a source link, a source level (A1) and the three marks (A6), and it goes through the holding door (A4)). Researchers 1–3 runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28)
 - **A12.3** A fix passes the fix check (the new source is at the same level or higher (A1), and the old value is archived, never deleted) before it replaces a value. The Enricher runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28)
 - **A12.4** A deal or fund passes the activity check (it has a source link; the amount and lead are shown only when that source states them) before it is shown. The Activity Collector runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28)
+- **A12.5** An item shown on the live page passes the page check (it follows its rulebook rule: source link present, limits from A9, hidden items stay hidden). The Tester runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28)
 
 <a id="b"></a>
 # B. The page

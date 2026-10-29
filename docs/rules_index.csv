@@ -77,6 +77,7 @@ A12.1,A12 Shared checks list,"New-firm check: only a real VC, growth, PE or hedg
 A12.2,A12 Shared checks list,"Submission check: every research-bot item has a source link, a source level and the three marks, and goes through the holding door.",in PR #228
 A12.3,A12 Shared checks list,"Fix check: a fix replaces a value only from a source at the same level or higher; the old value is archived, never deleted.",in PR #228
 A12.4,A12 Shared checks list,Activity check: a deal or fund is shown only with a source link; amount and lead only when that source states them.,in PR #228
+A12.5,A12 Shared checks list,"Page check: every item on the live page follows its rulebook rule (source link, A9 limits, hidden stays hidden).",in PR #228
 B1.1,B1 Site logo and wordmark,The Regretamin lockup in the corner.,on main
 B1.2,B1 Site logo and wordmark,A static file.,on main
 B1.3,B1 Site logo and wordmark,Designed asset.,on main
