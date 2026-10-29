@@ -25,14 +25,18 @@ def test_funds_sec_count_and_list():
             ("ZZ Fund I", 100000000, "2025-01-02", "https://www.sec.gov/Archives/a", None, "real"),
             ("ZZ Fund II", None, None, None, "{https://news.example/x,https://reports.adviserinfo.sec.gov/r.pdf}", "real"),
             ("ZZ News Fund", 5, "2026-01-01", "https://news.example/y", None, "real"),
-            ("Funds", None, None, "https://www.sec.gov/Archives/b", None, "real"),
-            ("Regulatory AUM", None, None, "https://www.sec.gov/Archives/c", None, "real"),
             ("ZZ Sample Fund", 1, None, "https://www.sec.gov/Archives/d", None, "needs_proof"),
             ("ZZ Fake", 1, None, "https://evilsec.gov.example/x", None, "real"),
         ]
         for name, amt, d, url, srcs, st in rows:
             cur.execute("""insert into funds (firm_id, name, raised_usd, closed_on, filing_url, source_urls, data_status)
                            values (%s, %s, %s, %s, %s, %s::text[], %s)""", (fid, name, amt, d, url, srcs, st))
+        # Fix 1: heading labels can no longer be stored as fund rows at all.
+        for name in ("Funds", "Regulatory AUM"):
+            with pytest.raises(psycopg.errors.CheckViolation):
+                with conn.transaction():
+                    cur.execute("insert into funds (firm_id, name, filing_url, data_status) values (%s, %s, %s, 'real')",
+                                (fid, name, "https://www.sec.gov/Archives/b"))
         a = act(True)["funds_sec"]
         assert a["n"] == 2
         assert [x["name"] for x in a["items"]] == ["ZZ Fund I", "ZZ Fund II"]
