@@ -358,6 +358,7 @@ Items .1 to .5 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **B6d.3** SEC Form ADV Item 5F, via the enricher.
 - **B6d.4** A new AUM fact must contain a digit. The helper does not keep a trailing B, M, or K.
 - **B6d.5** Hidden when neither a Form ADV figure nor a firm-website AUM exists (B6d.2) (Alex, 2026-10-28).
+- **B6d.6** The tile order is the latest fund, then AUM, then Fund assets (SEC fund gross assets, labelled 'Fund assets', never 'AUM', with a link to the SEC filing). If none of the three exists, nothing is shown. (Alex, 2026-10-29)
 
 <a id="b6e"></a>
 ### B6e. Latest deal, and “Show all”
