@@ -1123,6 +1123,8 @@
   }
   function aumFigure(raw) {
     const s = String(raw || '');
+    // A15.8: the page builder already formatted a stored amount in another currency ('€13.2M', 'CHF 12M').
+    if (/^(?:[€£¥]|[A-Z]{3} )[0-9]+(?:\.[0-9]+)?[TBMK]?$/.test(s)) return s;
     // Unit written as a letter or a word: '$18.27B', '$18.27 billion', '$400 mn', '$900 thousand'. The digits stay as written.
     const unit = s.match(/\$([0-9][0-9,]*(?:\.[0-9]+)?)\s*(trillion|billion|bn|million|mn|mm|thousand|[TBMK])\b/i);
     if (unit) {
@@ -1234,7 +1236,7 @@
   function fundRows(fs) {
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_fund) + '</span><span>' + esc(AC.h_amount) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + fs.map(x => { const u = safeUrl(x.url);
-        return '<div class="ad"><b>' + esc(fundName(x.name)) + '</b><span>' + esc(money(x.raised_usd)) + '</span><span>' + esc(fdate(x.date) || '') + '</span>'
+        return '<div class="ad"><b>' + esc(fundName(x.name)) + '</b><span>' + esc(x.raised_display || money(x.raised_usd)) + '</span><span>' + esc(fdate(x.date) || '') + '</span>'
           + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(AC.filing) + ' ↗</a>' : '<span></span>') + '</div>'; }).join('') + '</div>';
   }
   function activity(P) {
@@ -1250,7 +1252,7 @@
     // A fund with an amount raised stays the Latest fund tile. On the 10 lab firms, a $0 or missing
     // amount is skipped for the next fund that raised money, then for assets under management.
     // Every other firm keeps the previous tile. The script is shared, so the limit is the slug.
-    const raised = f && money(f.raised_usd);
+    const raised = f && (f.raised_display || money(f.raised_usd));
     if (raised) {
       const u = safeUrl(f.url);
       const sub = esc(fundName(f.name)) + ' · ' + esc(fmt(AC.raised, { amount: raised })) + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(srcName(u, f.url_label)) + '>' + esc(capL(srcName(u, f.url_label))) + ' ↗</a>' : '');

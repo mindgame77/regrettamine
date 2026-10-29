@@ -29,8 +29,8 @@ def test_funds_sec_count_and_list():
             ("ZZ Fake", 1, None, "https://evilsec.gov.example/x", None, "real"),
         ]
         for name, amt, d, url, srcs, st in rows:
-            cur.execute("""insert into funds (firm_id, name, raised_usd, closed_on, filing_url, source_urls, data_status)
-                           values (%s, %s, %s, %s, %s, %s::text[], %s)""", (fid, name, amt, d, url, srcs, st))
+            cur.execute("""insert into funds (firm_id, name, raised_usd, raised_currency, closed_on, filing_url, source_urls, data_status)
+                           values (%s, %s, %s, case when %s::numeric is null then null else 'USD' end, %s, %s, %s::text[], %s)""", (fid, name, amt, amt, d, url, srcs, st))
         # Fix 1: heading labels can no longer be stored as fund rows at all.
         for name in ("Funds", "Regulatory AUM"):
             with pytest.raises(psycopg.errors.CheckViolation):

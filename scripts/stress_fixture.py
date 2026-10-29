@@ -92,11 +92,11 @@ def insert_stress(conn):
         )
         cur.executemany(
             """
-            insert into funds (id, firm_id, name, vintage, size_usd, status, vehicle_kind, sort_order)
-            values (%s, %s, %s, %s, %s, %s, %s, %s)
+            insert into funds (id, firm_id, name, vintage, size_usd, size_currency, status, vehicle_kind, sort_order)
+            values (%s, %s, %s, %s, %s, case when %s::numeric is null then null else 'USD' end, %s, %s, %s)
             """,
             [
-                (fund_ids[i], firm_id, vehicle["name"], vehicle["vintage"], vehicle["size"], vehicle["status"], vehicle["kind"], i)
+                (fund_ids[i], firm_id, vehicle["name"], vehicle["vintage"], vehicle["size"], vehicle["size"], vehicle["status"], vehicle["kind"], i)
                 for i, vehicle in enumerate(vehicles)
             ],
         )

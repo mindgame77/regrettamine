@@ -99,3 +99,21 @@ Deno.test("socialAccounts rounded / regional markers (A15.6, A15.7)", async () =
     assert(JSON.stringify(r.body).includes(msg), JSON.stringify(r.body));
   }
 });
+
+Deno.test("A15.8 money: full number plus currency accepted", async () => {
+  const r = await submit([rec("m1", "funds", { name: "F I", size_usd: 14000000000, target_usd: 0 }),
+    rec("m2", "latestRaise", { amount: 13200000, currency: "EUR", offering_usd: "Indefinite" }),
+    rec("m3", "aum", { amount_usd: 1e9, basis: "form_adv_raum" })]);
+  assertEquals(r.status, 200, JSON.stringify(r.body));
+});
+
+Deno.test("A15.8 money: short forms and missing currency rejected", async () => {
+  for (const [v, word] of [[{ name: "F", size_usd: 106.5 }, "short form"], [{ name: "F", raised_usd: "$82.2B" }, "short form"],
+    [{ name: "F", amount: 14000000000 }, "no currency"], [{ name: "F", amount: 5e9, currency: "dollars" }, "no currency"],
+    [{ name: "F", size_usd: 1.5e9 + 0.5 }, "whole number"], [{ name: "F", target_usd: { value: 1 } }, "full number"],
+    [{ name: "F", aum: 0.13, currency: "USD" }, "short form"]] as [Record<string, unknown>, string][]) {
+    const r = await submit([rec("m", "funds", v)]);
+    assertEquals(r.status, 422, JSON.stringify(v));
+    assert(JSON.stringify(r.body).includes(word), JSON.stringify(r.body));
+  }
+});

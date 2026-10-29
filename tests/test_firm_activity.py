@@ -31,8 +31,8 @@ def test_activity_key_live_and_private():
                        values (%s, %s, 'Seed', current_date - 3, '{https://zz.example/news}', 'real')""", (fid, cid))
         cur.execute("""insert into investments (firm_id, company_id, round_name, invested_on, data_status)
                        values (%s, %s, 'Pre-seed', current_date - 500, 'real')""", (fid, cid))
-        cur.execute("""insert into funds (firm_id, name, raised_usd, close_status, closed_on, filing_url, data_status)
-                       values (%s, 'ZZ Fund I', 1710000000, 'raised', current_date - 30, 'https://www.sec.gov/x', 'real')""", (fid,))
+        cur.execute("""insert into funds (firm_id, name, raised_usd, raised_currency, close_status, closed_on, filing_url, data_status)
+                       values (%s, 'ZZ Fund I', 1710000000, 'USD', 'raised', current_date - 30, 'https://www.sec.gov/x', 'real')""", (fid,))
         cur.execute("insert into auth.users (id, email) values (gen_random_uuid(), 'act@x.test') returning id")
         uid = cur.fetchone()[0]
         cur.execute("""insert into reviews (firm_id, company_id, body, profile_id, linkedin_url, author_name, review_type,
