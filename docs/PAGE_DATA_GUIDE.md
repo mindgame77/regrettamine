@@ -518,7 +518,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 | [C9](#c9) | People behind the fund | Partners and owners, each checked against the lists in C1, C2, C3 and C10 |
 | [C10](#c10) | Political ties | Government or political roles |
 
-- **C0.2** OpenSanctions is only one source, and only inside checks 1, 2, and 10. It is not a source for the other checks, and it does not replace a register those checks have of their own. Checks 3, 4, 5, 6, 7, 8, and 9 keep their own searches. In checks 1 and 2 it is listed as extra in C1.3 and C2.3. A same-name hit that is not the same person is not a finding.
+- **C0.2** OpenSanctions is only one source, and only inside checks 1, 2, 9, and 10. It is not a source for the other checks, and it does not replace a register those checks have of their own. Checks 3, 4, 5, 6, 7, and 8 keep their own searches. In checks 1, 2, and 9 it is listed as extra in C1.3, C2.3, and C9.3. A same-name hit that is not the same person is not a finding.
 - **C0.3** On the 10 lab firms, check 1 and check 6 each search the legal name and each fund entity name. Each check calls `lab_check_search_names` with its own number. They do not share one search. The website is not one of those queries.
 
 The checks table on the page (snapshot 2026-10-27):
@@ -678,7 +678,7 @@ The checks table on the page (snapshot 2026-10-27):
 
 - **C9.1** Partners and owners, each checked against the lists in [C1](#c1), [C2](#c2), [C3](#c3) and [C10](#c10).
 - **C9.2** `firm_check_rows` n=9. Detail field `people_screen`, or a legal fact whose entity starts with `partner:`.
-- **C9.3** Where to find the people (Alex, 2026-10-28): SEC IAPD / Form ADV Schedules A and B (level 1), EDGAR Form D related persons (level 1), UK Companies House officers (level 1), GLEIF (level 1), EU business registers via e-Justice (level 1), the firm's own team page (level 2). Where to screen each person: the level 1 registers of checks [1](#c1), [2](#c2), [3](#c3) and [10](#c10), plus FINRA BrokerCheck `https://brokercheck.finra.org/`, SEC IAPD individual search `https://adviserinfo.sec.gov/`, and SEC litigation releases `https://www.sec.gov/enforcement-litigation/litigation-releases`.
+- **C9.3** Where to find the people (Alex, 2026-10-28): SEC IAPD / Form ADV Schedules A and B (level 1), EDGAR Form D related persons (level 1), UK Companies House officers (level 1), GLEIF (level 1), EU business registers via e-Justice (level 1), the firm's own team page (level 2). Where to screen each person: the level 1 registers of checks [1](#c1), [2](#c2), [3](#c3) and [10](#c10), plus FINRA BrokerCheck `https://brokercheck.finra.org/`, SEC IAPD individual search `https://adviserinfo.sec.gov/`, and SEC litigation releases `https://www.sec.gov/enforcement-litigation/litigation-releases`. Extra only, not a register: OpenSanctions `https://www.opensanctions.org/`, searched for each person (Alex, 2026-10-28; see [C0.2](#c0)).
 - **C9.7** Check 9 runs its own search for each person on those same registers (Alex, 2026-10-28). It does not reuse the firm-level results of checks 1, 2, 3 or 10.
 - **C9.4** A person publish checks the name. It does not set this pill.
 - **C9.5** Stored pill.

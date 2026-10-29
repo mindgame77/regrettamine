@@ -246,7 +246,7 @@ B18.3,B18 Elements that are easy to look for and are not on the page,OFAC SDN na
 B18.4,B18 Elements that are easy to look for and are not on the page,OpenCorporates.,on main
 B18.5,B18 Elements that are easy to look for and are not on the page,bots.firm_lps and regulatory_records and legal_matters.,on main
 C0.1,C0 How the checks work,There are exactly 10 checks.,on main
-C0.2,C0 How the checks work,"OpenSanctions is only one source, and only inside checks 1, 2, and 10; listed as extra in C1.3 and C2.3.","edited in this PR (Alex, 2026-10-28)"
+C0.2,C0 How the checks work,"OpenSanctions is only one source, and only inside checks 1, 2, 9, and 10; listed as extra in C1.3, C2.3, and C9.3.","edited in this PR (Alex, 2026-10-28)"
 C0.3,C0 How the checks work,"On the 10 lab firms, check 1 and check 6 each search the legal name and each fund entity name.",on main
 C0.4,C0 How the checks work,"A table: number, title, pill, what was found, date searched. Check 8 pills: US found = Clear + registration line and link; US not found = Not on the list; non-US by HQ = grey pill, SEC register doesn't apply.","edited in this PR (Alex, 2026-10-28)"
 C0.5,C0 How the checks work,"firm_check_rows: n, title, descr, state, count_label, searched_at.",on main
@@ -313,7 +313,7 @@ C8.5,C8 Registration check,"Check 8 only (Alex, 2026-10-28): a US firm found on 
 C8.6,C8 Registration check,RULES_AUDIT 8 and 20.,on main
 C9.1,C9 People behind the fund,"Partners and owners, each checked against the lists above.",on main
 C9.2,C9 People behind the fund,firm_check_rows n=9.,on main
-C9.3,C9 People behind the fund,"Find people: IAPD/ADV A-B, Form D, Companies House, GLEIF, EU registers (level 1), team page (level 2). Screen: checks 1,2,3,10 registers, BrokerCheck, IAPD, SEC litigation releases.","edited in this PR (Alex, 2026-10-28)"
+C9.3,C9 People behind the fund,"Find people: IAPD/ADV A-B, Form D, Companies House, GLEIF, EU registers (level 1), team page (level 2). Screen: checks 1,2,3,10 registers, BrokerCheck, IAPD, SEC litigation releases, OpenSanctions (extra).","edited in this PR (Alex, 2026-10-28)"
 C9.4,C9 People behind the fund,A person publish checks the name.,on main
 C9.5,C9 People behind the fund,Stored pill.,on main
 C9.6,C9 People behind the fund,RULES_AUDIT 9 and 20.,on main

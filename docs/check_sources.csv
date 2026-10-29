@@ -71,6 +71,7 @@ Check #,Check name,Site,URL,Country,Level,Status,From friend doc,Loads
 9,People behind the fund,FINRA BrokerCheck,https://brokercheck.finra.org/,US,1,In rulebook,yes,OK
 9,People behind the fund,SEC litigation releases,https://www.sec.gov/enforcement-litigation/litigation-releases,US,1,In rulebook,yes,Blocked
 9,People behind the fund,Firm's own team page,(firm website),—,2,In rulebook,yes,—
+9,People behind the fund,OpenSanctions (extra),https://www.opensanctions.org/,Global,extra,In rulebook,no,OK
 10,Political ties / PEP,OpenSanctions PEPs,https://www.opensanctions.org/datasets/peps/,Global,extra,In rulebook,no,OK
 10,Political ties / PEP,FEC individual contributions,https://www.fec.gov/data/receipts/individual-contributions/,US,1,In rulebook,yes,OK
 10,Political ties / PEP,LDA lobbying,https://lda.gov/system/public/,US,1,In rulebook,yes,OK
