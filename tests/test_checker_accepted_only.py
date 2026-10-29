@@ -90,3 +90,11 @@ def test_drain_takes_only_accepted(cur):
     assert row(cur, bad[0])[2:] == (False, "ready")
     r = row(cur, dead[0])
     assert r[0] == "Rejected: link does not open" and r[3] == "checked"
+
+
+def test_sections_shape_keeps_source_level(cur):
+    p = {"sections": {"Press coverage": [{"outlet": "TechCrunch", "headline": "X raises", "url": "https://techcrunch.com/2026/10/28/x-zz",
+                                          "date": "2026-10-28", "snippet": "X raised", "tier": "T3"}]}}
+    assert cur.execute("select public._entry_check(null, 'zz-sec', 'test-bot', %s::jsonb)", (json.dumps(p),)).fetchone()[0] == "Accepted"
+    del p["sections"]["Press coverage"][0]["tier"]
+    assert "no source level" in cur.execute("select public._entry_check(null, 'zz-sec', 'test-bot', %s::jsonb)", (json.dumps(p),)).fetchone()[0]
