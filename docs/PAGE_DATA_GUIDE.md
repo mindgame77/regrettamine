@@ -100,6 +100,10 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 | **A2.8** | Lawsuits | Merged into A2.4 (Alex, 2026-10-28): same allowed sources (CourtListener, PACER, uscourts.gov, a regulator (SEC, FINRA, FCA), Justia, Law360, or Casetext; a link is required). CourtListener, PACER, uscourts.gov and regulators are level 1. | Any other page: Unconfirmed, not shown. |
 | **A2.10** | Social counts | Only an account that is linked from the firm’s own website. | A count taken from anywhere else: Unconfirmed, not shown. |
 | **A2.11** | Sectors (portfolio and deals, one rule) | Any source is accepted (approved by Alex on 2026-10-28). The link must be a real page that opens and must describe that startup. A 403 or block page counts as opened, with a note. The sector is only ever the value the record gives, never invented. | A dead link, a search page, a chat page, an invented link, or a page that does not describe the startup: fail. |
+| **A2.12** | Funds | SEC filings (Form D, Form ADV), else an approved news outlet or a trusted site (per [A1.8](#a1)). The link is kept. (Alex, 2026-10-28) | Any other page: Unconfirmed, not shown. |
+| **A2.13** | Header HQ | The firm’s IAPD record, else the firm’s own website. (Alex, 2026-10-28) | Any other page: not used for HQ. |
+| **A2.14** | Header website | The firm’s own site, checked that it opens and belongs to the firm. (Alex, 2026-10-28) | A site that does not open or does not belong to the firm: not shown. |
+| **A2.15** | Founded year | The firm’s own site or a company register (a US state registry, Companies House). The link is kept. Stored in `firms.founded_year`; not shown until a header mockup is approved. The SEC registration date is not the founded year. (Alex, 2026-10-28) | Any other source, or the SEC registration date: not used. |
 
 <a id="a3"></a>
 ## A3. One way in
@@ -181,6 +185,11 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 | **A9.6** | Funds | Latest fund tile + "N funds on SEC record · Show all" (“One latest fund tile, plus the line “N funds on SEC record · Show all”.”) | 100 | New items still come in and the oldest are archived (kept, hidden), never deleted. |
 | **A9.7** | LPs | Only confirmed LPs are shown (see B9) | 100 (“LPs stay at 100.”) | Every list archives the oldest past its max. |
 | **A9.8** | Legal items, lawsuits, regulator actions, negative news, the 10 checks | Legal: 10 shown + Show all (A2.4) (Alex, 2026-10-28) | No cap for legal items and the 10 checks | Lawsuits, regulator actions, and negative news are never archived. Legal items and the 10 checks have no cap and are never archived or deleted. |
+| **A9.15** | Interviews (per current person) | Up to 10, most viewed first (A2.3); not shown until the design is approved (B10.8) | 10 | The rest are stored, not shown. (Alex, 2026-10-28) |
+| **A9.16** | Search suggestions | Up to 8 firms (B2.1) | — | — (Alex, 2026-10-28) |
+| **A9.17** | Sector pills | Top 5 sectors + a grey "Other N" pill, only when the firm has 10 or more deals (B6e.9) | — | — (Alex, 2026-10-28) |
+| **A9.18** | SEC fact pills | At most 7 (B4.1.1) | — | — (Alex, 2026-10-28) |
+| **A9.19** | Thesis | Max 1,000 characters (B7.3) | 1,000 characters | — (Alex, 2026-10-28) |
 - **A9.12** One alert per firm when a cap is hit.
 - **A9.14** These caps are not a license to delete. The archive file is the copy, and the row can be shown again from Show all. For the 10 lab firms the copy is `data/lab-cap-archive/index.json` plus `lab_cap_archive`. A row past the cap is marked archived and stays in the database. Every count that covers all deals still includes archived rows, so a firm over the deal cap does not drop its shown total. That covers Deals, last 12 mo, the latest-deal tile, the Show all total, and the 12-month sector breakdown (`deal_sector_12m`). My firms shows check pills, not a deal total. `lab_cap_alerts` holds one row per firm. `lab_soft_caps` is not run until Alex says to apply it.
 
@@ -223,7 +232,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 <a id="b2"></a>
 ## B2. Search box and suggestions
 
-- **B2.1** The box on the home page, the firm page, and the empty state. After a short pause it lists up to 8 firms. Choosing one opens `/vc/<slug>/`. No match offers “Request this firm.”
+- **B2.1** The box on the home page, the firm page, and the empty state. After a short pause it lists up to 8 firms. Choosing one opens `/vc/<slug>/`. No match offers “Request this firm.” Limit: [A9.16](#a9) (Alex, 2026-10-28).
 - **B2.2** What `firm_suggest` reads and matches: see [A10](#a10). It returns slug, display name, short name, and HQ. `launch/js/search.js` calls it. The list looks the same.
 - **B2.3** Names arrive when a firm is created from the queue or merged (`docs/DEDUPE.md`, `docs/FIRM_REQUESTS.md`). List builders and visitor requests fill the queue. The enricher creates the page.
 - **B2.4** Only published, non-test, real, not-deleted firms. Match is a substring. A prefix ranks first. Which names are a search hit: see [A10](#a10).
@@ -240,12 +249,13 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **B3.4** No written rule that HQ must be a city from IAPD. The queue stores `hq_city`, `state`, and `country`.
 - **B3.5** The header shows whenever the page loads. Hero cards (staff, founded, AUM as cards) were removed and are not drawn.
 - **B3.6** Legal name gaps: RULES_AUDIT 2. Slug: no problem (RULES_AUDIT 4).
+- **B3.7** Sources for HQ, website and founded year: [A2.13–A2.15](#a2) (Alex, 2026-10-28).
 
 <a id="b4"></a>
 ## B4. SEC fact pills
 
 - **B4.1** Small links under the header for hero facts whose source is sec.gov, except HQ. At most 7. AUM and “fund gross assets” are labelled differently. No AUM pill when the B6d AUM tile shows it (Alex, 2026-10-28).
-  - **B4.1.1** Rules (Alex, 2026-10-28): at most 7 pills. HQ is never a pill. No two pills say the same thing. A fund (for example a newly raised fund) is never a pill. Each pill holds unique information only: if the fact is already shown anywhere else on the page, the pill does not appear. No AUM pill when the B6d AUM tile shows it (Alex, 2026-10-28).
+  - **B4.1.1** Rules (Alex, 2026-10-28): at most 7 pills. HQ is never a pill. No two pills say the same thing. A fund (for example a newly raised fund) is never a pill. Each pill holds unique information only: if the fact is already shown anywhere else on the page, the pill does not appear. No AUM pill when the B6d AUM tile shows it (Alex, 2026-10-28). Limit: [A9.18](#a9) (Alex, 2026-10-28).
   - **B4.1.2** Note (Alex, 2026-10-28): SEC fact pills are up for a full review; more pills may be dropped.
 - **B4.2** `firm_page` hero list: `firm_profile_facts` where `hero_label` is set and a `fact_sources` row exists. `company.js` `secPills` keeps only a sec.gov source.
 - **B4.3** The enricher, from a Form ADV on sec.gov / adviserinfo.sec.gov. Item 5F is the assets figure the helper looks for.
@@ -322,14 +332,15 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **B6e.6** RULES_AUDIT 12 and 13.
 - **B6e.7** Shown count, max kept, and archiving for deals: see [A9.5](#a9).
 - **B6e.8** A deal row has a sector column, and a column that reads round · amount · Lead. Those three are filled only when a source states them. An empty amount stays empty.
-- **B6e.9** Latest investments block (Alex, 2026-10-28): shown count per [A9.5](#a9). A deal with no stated sector leaves the sector cell blank. It never reads "No data yet". The sector summary sits inside this block: pills with deal counts for the top 5 sectors (largest first), a grey "Other N" pill for the rest, and "Show all" opening the deals pop-up. Counts only, no percentages. Deals with no sector are not counted and get no pill. The pills count all of the firm's deals, not only the last 12 months. The summary is shown only when the firm has 10 or more deals in total; with fewer, it is hidden on the page and in the pop-up. The same rules apply to the pop-up header. Deals, last 12 mo is a separate number on the page: just the count of deals in the last 12 months.
+- **B6e.9** Latest investments block (Alex, 2026-10-28): shown count per [A9.5](#a9). A deal with no stated sector leaves the sector cell blank. It never reads "No data yet". The sector summary sits inside this block: pills with deal counts for the top 5 sectors (largest first), a grey "Other N" pill for the rest, and "Show all" opening the deals pop-up. Counts only, no percentages. Deals with no sector are not counted and get no pill. The pills count all of the firm's deals, not only the last 12 months. The summary is shown only when the firm has 10 or more deals in total; with fewer, it is hidden on the page and in the pop-up. The same rules apply to the pop-up header. Deals, last 12 mo is a separate number on the page: just the count of deals in the last 12 months. Sector pill limit: [A9.17](#a9) (Alex, 2026-10-28).
+- **B6e.10** Sector pills: no data that has passed its check means the block is hidden from users (no empty box, no "No data" text). It appears by itself once data passes. (Alex, 2026-10-28)
 
 <a id="b7"></a>
 ## B7. Thesis (replaces Overview; Alex, 2026-10-28)
 
 - **B7.1** New block “Thesis”. It replaces the Overview block, which is removed from the page. Same design as the old Overview block ([R4](#r4)).
 - **B7.2** Holds the firm's investment thesis (what they invest in and why), copied word for word from the firm's own website. No other source: not news, LinkedIn, SEC or any other site. Source level 2. The link to that website page is always kept and shown.
-- **B7.3** Max 1,000 characters. Not rewritten by us.
+- **B7.3** Max 1,000 characters. Not rewritten by us. Limit: [A9.19](#a9) (Alex, 2026-10-28).
 - **B7.4** No thesis on the firm's website: the block is not shown.
 - **B7.5** Door check: the link opens and is on the firm's own domain; the text is found on that page; length 1,000 characters or less.
 - **B7.6** Old Overview rows are hidden, not deleted. Nothing is moved from them into the header or fact pills. A fact that the header or fact pills already show from their own sources keeps showing there; an Overview-only fact is simply no longer shown. Backup first; nothing is deleted without Alex's "Yes, delete".
@@ -344,7 +355,8 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **B8.4** Name required. Amount, when present, is a number. Dedupe is the fund name or the fund key.
 - **B8.5** Hidden rows and rows with no source are omitted. Sequoia’s raw Item 5F lines were hidden by the one-off migration.
 - **B8.6** RULES_AUDIT 10.
-- **B8.7** Shown count, max kept, and archiving: see the list limits table in [A9](#a9).
+- **B8.7** Shown count, max kept, and archiving: see the list limits table in [A9](#a9). Sources: [A2.12](#a2) (Alex, 2026-10-28).
+- **B8.8** Funds: no data that has passed its check means the block is hidden from users (no empty box, no "No data" text). It appears by itself once data passes. (Alex, 2026-10-28)
 
 <a id="b9"></a>
 ## B9. Limited partners
@@ -367,6 +379,8 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **B10.5** Hidden rows are omitted. The browser also refuses note-like text.
 - **B10.6** RULES_AUDIT 9. Greenoaks still shows “Board seat: Neil Mehta…”.
 - **B10.7** On the lab firms, once this is built: people shown plus Show all. Shown count, max kept, and archiving: see the list limits table in [A9](#a9). People sources: [A2](#a2).
+- **B10.8** Interviews are stored up to 10 per person (link + headline, most viewed first, see [A2.3](#a2) and [A9.15](#a9)). Where they appear (on the page or on a tap on a person) is decided with the design, mockup first; they are not shown until it is approved. (Alex, 2026-10-28)
+- **B10.9** People: no data that has passed its check means the block is hidden from users (no empty box, no "No data" text). It appears by itself once data passes. (Alex, 2026-10-28)
 
 <a id="b11"></a>
 ## B11. Legal and regulatory section
@@ -389,6 +403,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **B12.5** `checked_wrong` and `not_checked` stay stored and are not drawn. Dates before 2023 are not drawn. The firm’s own site posts and blog are not shown; there is no “Own media” label (Alex, 2026-10-28).
 - **B12.6** News is shown only after it passes the news check (the link opens, the story names the firm, the outlet is an outside source from the A2.6 list). The Checker runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28). RULES_AUDIT 14. 13 lab links are in both tables. The lab marks were set by `20261027221100_news_one_list_data.sql`, not by a bot.
 - **B12.7** On the lab firms, once this is built: the latest news items, plus Show all for the rest that are still on the page. Shown count, max kept, and archiving: see the list limits table in [A9](#a9).
+- **B12.8** News: no data that has passed its check means the block is hidden from users (no empty box, no "No data" text). It appears by itself once data passes. (Alex, 2026-10-28)
 
 <a id="b13"></a>
 ## B13. What founders say, and the review cards
@@ -400,6 +415,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **B13.5** A founder quote is shown only after it passes the founder review check (the link opens, it names the firm, it is quoted word for word, the writer is a founder). The Checker runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28). Pending, non-public, or non-founder rows are not drawn.
 - **B13.6** RULES_AUDIT 19. Khosla has 4 stored and 0 shown.
 - **B13.7** On the lab firms, once this is built: one latest founder review, plus Show all. Shown count, max kept, and archiving: see the list limits table in [A9](#a9).
+- **B13.8** Founder reviews: no data that has passed its check means the block is hidden from users (no empty box, no "No data" text). It appears by itself once data passes. (Alex, 2026-10-28)
 
 <a id="b14"></a>
 ## B14. Source pills
