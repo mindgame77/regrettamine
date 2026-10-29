@@ -126,4 +126,6 @@ begin
 end $function$
 ;
 
+revoke all on function public._firm_money_tiles(uuid) from public, anon, authenticated;
+
 delete from public.firm_page_cache where firm_id in (select id from public.firms where public._lab_firm(id));
