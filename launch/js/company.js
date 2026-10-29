@@ -83,7 +83,9 @@
     const firm = P.firm || {};
     const bits = [firm.hq, firm.short_name].filter(Boolean).map(x => esc(nice(x)));
     const link = siteLink(P);
-    return bits.join(' · ') + (link ? (bits.length ? ' · ' : '') + link : '');
+    const y = Number(firm.founded_year);
+    const fy = Number.isInteger(y) && y > 1000 && y <= new Date().getFullYear() ? esc((HCOPY.founded || 'Founded {y}').replace('{y}', String(y))) : '';
+    return [bits.join(' · '), link, fy].filter(Boolean).join(' · ');
   }
   // Social pills under the meta line (firm_page.firm.social; only accounts linked from the firm's own site).
   // Count only, compact, at most 3 significant digits, half up: 412345 -> 412K, 4230 -> 4.23K. No data: no row.
@@ -1262,5 +1264,5 @@
     view.total = full.total; view.head = full.head;
     return view;
   }
-  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows, setFirmName, compactCount, socialPills };
+  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows, setFirmName, compactCount, socialPills, metaLine };
 })();
