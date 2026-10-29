@@ -21,20 +21,24 @@ If two sources disagree, the register wins. A firm site does not override a regi
 
 A search-results page or a chat page is not a source at any level.
 
+Exception (Alex, 2026-10-28): the latest fund amount (money raised for the latest fund only) may come from an approved news outlet or another trusted site the project uses (`trusted_source_domains`), not only from SEC Form D. That source must state the amount. It is shown, not held as Unconfirmed. If sources disagree, the SEC record wins.
+
 ## Sources per page part
 
 These rules override the general “elsewhere online is Unconfirmed” line for that part only. A dead link, a search page, or a chat page is still a failure. “Names the firm” means the copied text contains the firm’s name or short name.
 
 | Page part | Shown | Held or failed |
 |---|---|---|
-| Reviews | A Reddit, X, or LinkedIn post that exists, names the firm, and is copied word for word with its link. The writer says they are a founder, or the profile shows that they are. | Anonymous, with no founder claim: Unconfirmed, not shown. A dead link or a post that does not name the firm: fail. |
+| Limited partners (LPs) | Any trustworthy source (Alex, 2026-10-28): pension or endowment reports, public filings, approved news outlets or other sites in `trusted_source_domains`. The link must open and name the LP and the firm or fund. The link is kept. Shown as one line per LP: name and the total amount across all its funds with this firm that we have, for example "CalPERS · $150M (3 funds)". The fund count in brackets is shown only when the LP is in 2 or more funds; with 1 fund, no brackets. An amount only when a source states it, else just the name. No type or year on the page. | Junk, anonymous or untrusted sites, a dead link, or a page that does not name both: fail. |
+| People and interviews | People: only current people at the firm are shown; people who left are not shown, and neither are their interviews (Alex, 2026-10-28). Each current person may have up to 10 interviews: YouTube videos or press coverage, shown as link + headline. The 10 shown are the ones with the most views (YouTube); press coverage, which has no view count, comes after, newest first. More than 10: the rest are stored, not shown. The link must open and show that person. Design comes later, mockup first. | A dead link, a page that does not show that person, or a person who left: not shown. |
+| Legal cases (display, Alex 2026-10-28) | Source: court or regulator records only (unchanged). Each case shows pills: status (Active, Closed, Settled, Dismissed), side (Defendant or Plaintiff), and what it is about (fixed list: Fraud, Contract, Employment, Securities, Regulator action, IP). Also: other party, filed year (and closed year if any), court or regulator (e.g. SEC, N.D. Cal.), and the required link. A Settled case also shows the settlement terms (for example the amount) when the court or regulator record states them; otherwise nothing is added. Page shows the last 2 active cases; if there are no active cases, the last 2 cases of any status. Show all opens every case. No cases at all: the section is not shown, no empty message. | No court or regulator link: not shown. |
+| Reviews | A post on any public site (for example Reddit, X, LinkedIn, YouTube, Medium, a blog or podcast page; Alex, 2026-10-28) that exists, names the firm, and is copied word for word with its link. The writer says they are a founder, or the profile shows that they are. | Anonymous, with no founder claim: Unconfirmed, not shown. Glassdoor and other employee reviews: not used. A dead link or a post that does not name the firm: fail. |
 | News | A story on TechCrunch, Reuters, Bloomberg, Axios, the Financial Times, the Wall Street Journal, CNBC, Forbes, or The Information, when the link opens and the story names the firm. | Any other blog or unknown site: Unconfirmed, not shown. A dead link, or a story that does not name the firm: fail. |
 | Deals | The company’s own press release, or an SEC Form D. Both are level 2. The same known outlets as News are accepted. The amount and the Lead flag are filled only when that source states them. | Any other page: Unconfirmed, not shown. |
 | Lawsuits | CourtListener, PACER, or uscourts.gov. These are level 1. | Any other page: Unconfirmed, not shown. |
 | People | The firm’s team page or a Form ADV. The register is level 1. The firm’s team page is level 2. LinkedIn is allowed only for that person’s own job history. | Any other LinkedIn page, or a page that is not the team page or Form ADV: Unconfirmed, not shown. |
 | Social counts | Only an account that is linked from the firm’s own website. | A count taken from anywhere else: Unconfirmed, not shown. |
-| Portfolio and sectors | The portfolio company’s own website. That is level 2. | Any other site: Unconfirmed, not shown. |
-| Deal sectors (a startup’s industry) | Any source is accepted (approved by Alex on 2026-10-28). The link must be a real page that opens and must describe that startup. A 403 or block page counts as opened, with a note. The sector is only ever the value the record gives, never invented. | A dead link, a search page, a chat page, an invented link, or a page that does not describe the startup: fail. |
+| Sectors (portfolio and deals, one rule) | Any source is accepted (approved by Alex on 2026-10-28). The link must be a real page that opens and must describe that startup. A 403 or block page counts as opened, with a note. The sector is only ever the value the record gives, never invented. | A dead link, a search page, a chat page, an invented link, or a page that does not describe the startup: fail. |
 
 ## One way in
 
@@ -123,11 +127,21 @@ On the lab firms, once this is built:
 - One latest deal, plus Show all.
 - One latest founder review, plus Show all.
 - The latest 10 news items, plus Show all for the rest that are still on the page.
-- Up to 20 people, plus Show all.
+- 10 people shown, plus Show all; max 20 people kept (see List limits below).
+
+List limits (Alex, 2026-10-28). Shown on the page / max kept in the system:
+- People: 10 shown + Show all; max 20. Past the max, new items still come in and the oldest are archived (kept, hidden), never deleted.
+- News: latest 10 + Show all; max 50. When a new item comes in past 50, the oldest is archived (kept in the database, hidden), never deleted.
+- Founder reviews: 1 latest + Show all; max 50. Past 50, tell Alex; nothing is deleted.
+- Deals: 1 latest + Show all; max 1,000. Past the max, new items still come in and the oldest are archived (kept, hidden), never deleted.
+- Funds: latest fund tile + "N funds on SEC record · Show all"; max 100. Past the max, new items still come in and the oldest are archived (kept, hidden), never deleted.
+These replace the earlier soft caps. LPs stay at 100. Every list archives the oldest past its max (Alex, 2026-10-28).
 
 A deal row has a sector column, and a column that reads round · amount · Lead. Those three are filled only when a source states them. An empty amount stays empty.
 
-Soft caps per firm: 500 news, 100 LPs, 200 deals. Past the cap, new items still come in and the oldest move to an archive file. Lawsuits, regulator actions, and negative news are never archived. One alert per firm when a cap is hit. Legal items and the 10 checks have no cap and are never archived or deleted. Only confirmed LPs are shown. A lead stays hidden.
+Latest investments block (Alex, 2026-10-28): shows the 1 latest deal, plus Show all (Alex, 2026-10-28: 1 for now, may increase later). A deal with no stated sector leaves the sector cell blank. It never reads "No data yet". The sector summary sits inside this block: pills with deal counts for the top 5 sectors (largest first), a grey "Other N" pill for the rest, and "Show all" opening the deals pop-up. Counts only, no percentages. Deals with no sector are not counted and get no pill. The pills count all of the firm's deals, not only the last 12 months. The summary is shown only when the firm has 10 or more deals in total; with fewer, it is hidden on the page and in the pop-up. The same rules apply to the pop-up header. Deals, last 12 mo is a separate number on the page: just the count of deals in the last 12 months.
+
+Soft caps per firm: see List limits above (news 50, LPs 100, deals 1,000, people 20, funds 100, founder reviews 50; reviews past 50 also alert Alex). Past the cap, new items still come in and the oldest move to an archive file. Lawsuits, regulator actions, and negative news are never archived. One alert per firm when a cap is hit. Legal items and the 10 checks have no cap and are never archived or deleted. Only confirmed LPs are shown. A lead stays hidden.
 
 These caps are not a license to delete. The archive file is the copy, and the row can be shown again from Show all. For the 10 lab firms the copy is `data/lab-cap-archive/index.json` plus `lab_cap_archive`. A row past the cap is marked archived and stays in the database. Every count that covers all deals still includes archived rows, so a firm over the deal cap does not drop its shown total. That covers Deals, last 12 mo, the latest-deal tile, the Show all total, and the 12-month sector breakdown (`deal_sector_12m`). My firms shows check pills, not a deal total. `lab_cap_alerts` holds one row per firm. `lab_soft_caps` is not run until Alex says to apply it.
 
@@ -247,6 +261,7 @@ There is no written rule that a given element must come from a given site, excep
 ## 4. SEC fact pills
 
 1. Small links under the header for hero facts whose source is sec.gov, except HQ. At most 7. AUM and “fund gross assets” are labelled differently.
+   - Rules (Alex, 2026-10-28): at most 7 pills. HQ is never a pill. No two pills say the same thing. A fund (for example a newly raised fund) is never a pill. Each pill holds unique information only: if the fact is already shown anywhere else on the page, the pill does not appear.
 2. `firm_page` hero list: `firm_profile_facts` where `hero_label` is set and a `fact_sources` row exists. `company.js` `secPills` keeps only a sec.gov source.
 3. The enricher, from a Form ADV on sec.gov / adviserinfo.sec.gov. Item 5F is the assets figure the helper looks for.
 4. The fact needs a source or it is not in the hero list. The pill needs the host to be sec.gov.
@@ -286,6 +301,10 @@ The strip sits above the sections. It is omitted when there is no tile, no deal,
 
 ### 6c. Latest fund tile
 
+Latest fund tile rule (Alex, Oct 27 2026 design note): A latest fund with an amount stays. A $0 or missing amount uses the most recent earlier fund that raised money (name, amount, date, filing link). If none did, the tile is AUM from the SEC/ADV figure already on the page. Neither shows nothing.
+
+Rule (Alex, 2026-10-28): the latest fund amount is the money raised for the latest fund only. Its source can be SEC Form D, an approved news outlet, or another trusted site the project uses (`trusted_source_domains`), as long as that source states the amount. The register wins any conflict. The tile link is the sec.gov filing when the source is sec.gov. When the amount or date comes from an approved news outlet or trusted site, that page is the link instead.
+
 1. The newest fund that has a raised amount, with the name, the amount, and a filing link. Sequoia: Sequoia Capital Fund, L.P., $22.7B, 5 Feb 2026.
 2. First choice: `funds.raised_usd` or `funds.size_usd`, `funds.name`, `funds.closed_on`, `funds.filing_url`. On the 10 lab firms, if that amount is missing, `earlierFund` reads a Funds section line shaped “Name · $amount · date.” If that is also missing, the assets tile is used.
 3. Sequoia’s two amounts were written by the one-off migration from EDGAR Form D. Other `funds` rows: unknown, often older imports. Profile-fact fund lines: the enricher, from Form D or Form ADV.
@@ -295,7 +314,7 @@ The strip sits above the sections. It is omitted when there is no tile, no deal,
 
 ### 6d. Assets under management tile
 
-1. Shown on the 10 lab firms only when no fund amount is available. Label “Assets under management.”
+1. Shown on the 10 lab firms only when there is no fund amount at all, including no earlier fund that raised money (see the latest fund tile rule in 6c). Label “AUM” (Alex, 2026-10-28).
 2. Hero fact whose label maps to Regulatory AUM, else `firm.assets` from `_firm_assets`. The helper reads a profile fact that cites Item 5F or “regulatory AUM,” skips Schedule D gross assets, and otherwise uses `firms.aum_display` when it starts with `$`.
 3. SEC Form ADV Item 5F, via the enricher. Sequoia’s display string was set by the one-off migration to `$82.2B`.
 4. A new AUM fact must contain a digit. The helper does not keep a trailing B, M, or K.
@@ -371,7 +390,7 @@ The strip sits above the sections. It is omitted when there is no tile, no deal,
 2. Pill: `firm_check_rows` n=6. Detail: `vc_source_facts` legal matters for the firm, and `firm_legal_items` group `case`. Status words (active, terminated, settled) are read in `company.js` `caseStatus`.
 3. CourtListener, PACER, uscourts.gov. The enricher sets group `case` when the source host is one of those, plus Justia, Law360, and Casetext.
 4. Leads are held. The legal key dedupes on a case number and misses a “Lead” prefix.
-5. A count with no itemized rows says details are coming and links a CourtListener search of the legal name.
+5. Rule (Alex, 2026-10-28): a count with no itemized rows shows nothing on the page, and no CourtListener search link is shown (a search page is not a source). The count or news story stays with the Checker as a lead to look up. Cases show only once each has its own court or regulator link. News about a lawsuit can still show in News with its article link. Old note: a count with no itemized rows said details are coming and linked a CourtListener search of the legal name.
 6. RULES_AUDIT 7.
 
 ### Check 7. Court records worldwide
@@ -386,10 +405,10 @@ The strip sits above the sections. It is omitted when there is no tile, no deal,
 ### Check 8. Registration check
 
 1. “Registered with the regulator as an investment adviser, and active.”
-2. `firm_check_rows` n=8. The overview Registration line is a different element, drawn from profile facts, not from this pill.
-3. SEC IAPD / Form ADV. Enricher for the overview line. The pill itself is not updated by that publish.
-4. The overview draw shortens the sentence to “SEC-registered since <year>, active” or the exempt-reporting line. The pill does not use that sentence.
-5. Lightspeed and others can show “Not checked yet” here even when an overview registration line exists.
+2. Source: only the firm's own IAPD page on sec.gov (level 1, the register). The Overview is gone (section 8 is now Thesis), so nothing here comes from it.
+3. Stored on the check 8 row in `firm_check_rows` (n=8), set by the Checker: registered or exempt reporting, since year, active or not, SEC/CRD number, and the IAPD link.
+4. Door check: the link must be an adviserinfo.sec.gov page for that firm, and the status must be one of the fixed list (Registered, Exempt reporting, Not active).
+5. Not found on IAPD: the pill shows "Not found yet" with the search date.
 6. RULES_AUDIT 8 and 20.
 
 ### Check 9. People behind the fund
@@ -410,7 +429,19 @@ The strip sits above the sections. It is omitted when there is no tile, no deal,
 5. Stored pill. a16z is Worth knowing from the hand migration.
 6. RULES_AUDIT 20.
 
-## 8. Overview
+## 8. Thesis (replaces Overview; Alex, 2026-10-28)
+
+New block “Thesis”. It replaces the Overview block, which is removed from the page. Same design as the old Overview block.
+1. Holds the firm's investment thesis (what they invest in and why), copied word for word from the firm's own website. No other source: not news, LinkedIn, SEC or any other site. Source level 2. The link to that website page is always kept and shown.
+2. Max 1,000 characters. Not rewritten by us.
+3. No thesis on the firm's website: the block is not shown.
+4. Door check: the link opens and is on the firm's own domain; the text is found on that page; length 1,000 characters or less.
+5. Old Overview rows are hidden, not deleted. Nothing is moved from them into the header or fact pills. A fact that the header or fact pills already show from their own sources keeps showing there; an Overview-only fact is simply no longer shown. Backup first; nothing is deleted without Alex's "Yes, delete".
+6. Needs a mockup on the Sequoia lab page before building.
+
+The text below describes the old Overview, kept for reference until the build.
+
+## 8a. Overview (old, being removed)
 
 1. Rows in a fixed order: HQ, Legal name, Registration, Founded, Owners, Recent changes, then anything else that was not hidden. Sequoia returns 4 overview items before that rewrite.
 2. `firm_profile_facts` where `section = overview`, not hidden, with a source. `company.js` `overviewRows` rewrites them while drawing.
@@ -439,7 +470,7 @@ The strip sits above the sections. It is omitted when there is no tile, no deal,
 
 ## 11. People and board seats
 
-1. Cards grouped into board, moves, and officers. Sequoia returns 15 people.
+1. Rule (Alex, 2026-10-28): only current people are shown, grouped into board and officers. The moves group is not shown. A person who left is taken off the page and archived (kept, hidden) for possible later use. News about them can still show like any news. Old note: cards grouped into board, moves, and officers. Sequoia returns 15 people.
 2. `firm_people_roles`: `person_name`, `role`, `kind`, not hidden, with a source. The older `people` and `fund_people` tables are not this section.
 3. Enricher, typically Form ADV Schedule A (officers) and board seats from filings or the firm site. The gold example uses the IAPD PDF.
 4. One person per name. Same person and kind with the same role adds the source. A different officer role is a conflict. The note guard hides Schedule A blobs.
