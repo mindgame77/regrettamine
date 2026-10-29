@@ -100,5 +100,5 @@ def test_not_linked_is_skipped_with_reason(cur):
     sub["payload"]["records"][0]["value"]["linked_from_firm_site"] = False
     fid, rep, reg = run(cur, sub)
     assert rep["failure"] == 0
-    assert any(x["reason"] == "skipped, published via _firm_social" for x in rep["reasons"])
+    assert any(x["reason"] == "skipped: not linked from the firm's site, not shown" for x in rep["reasons"])
     assert cur.execute("select count(*) from vc_source_facts where firm_id = %s", (fid,)).fetchone()[0] == 0
