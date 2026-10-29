@@ -55,8 +55,8 @@ A7.11,A7 One home per data kind,"Same-item keys: fund = fund name or SEC file nu
 A7.12,A7 One home per data kind,"The winner is the higher source level, then the newer date, then the more complete row.",on main
 A7.13,A7 One home per data kind,"On the 10 lab firms, exact copies in a home are the only rows removed.",on main
 A7.14,A7 One home per data kind,"A side row that has no home is backed up, then checked once.",on main
-A7.15,A7 One home per data kind,"A7.12 wins for a cut-off headline: same news link, new headline is the full version (published ends in an ellipsis or is a prefix, new is longer). Accepted, published headline updated, note 'headline completed'. Other same-link news is still a duplicate (A4.7).",proposed (PR)
-A8.1,A8 Live counts,"On the 10 lab firms, the 10 check counts and pills are counted once and saved, in firm_check_results (was firm_check_pills); a Checker publish recounts that firm (only when checks_on).",proposed (PR)
+A7.15,A7 One home per data kind,"A7.12 wins for a cut-off headline: same news link, new headline is the full version (published ends in an ellipsis or is a prefix, new is longer). Accepted, published headline updated, note 'headline completed'. Other same-link news is still a duplicate (A4.7).",on main
+A8.1,A8 Live counts,"On the 10 lab firms, the 10 check counts and pills are counted once and saved, in firm_check_results (was firm_check_pills); a Checker publish recounts that firm (only when checks_on).",on main
 A8.2,A8 Live counts,"If the counting logic or ingest_settings change, the same change must rerun the backfill (select public.refresh_firm_check_results(id) from public.firms where...",on main
 A8.3,A8 Live counts,Section counts and the activity tiles are still computed when the page is read.,on main
 A8.4,A8 Live counts,Page speed is tested automatically.,on main
@@ -389,3 +389,4 @@ A14.3,A14 New database move,"Row 48: confirmed LP holding rows move into LPs (A7
 A14.4,A14 New database move,"Row 49: the remaining founder accounts move into reviews (A7.8); any that cannot move may be removed (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
 A14.5,A14 New database move,"Every deletion still needs Alex’s explicit 'Yes, delete' on an exact list (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
 A14.6,A14 New database move,"bots.checker_holding is server-only (RLS on, no policies on purpose). Owner-run public functions need a fixed search path; only allowlisted ones are open to logged-out users (Alex, 2026-10-28).",on main
+A14.7,A14 New database move,"In the new database, all old data goes through the entry check (A4.7), and items with no date get the import day's date (Alex, 2026-10-28).",planned (not built)
