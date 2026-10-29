@@ -234,6 +234,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 - **A14.3** Row 48: confirmed LP holding rows move into LPs ([A7.9](#a7)); the rest are retired (Alex, 2026-10-28).
 - **A14.4** Row 49: the remaining founder accounts move into reviews ([A7.8](#a7)); any that cannot move may be removed (Alex, 2026-10-28).
 - **A14.5** Every deletion still needs Alex’s explicit 'Yes, delete' on an exact list (Alex, 2026-10-28).
+- **A14.6** `bots.checker_holding` is server-only: RLS is on with no policies on purpose, so only the server (service role) reads or writes it. Do not add a policy. Database functions in `public` that run as owner (security definer) must have a fixed search path, and only the functions on the allowlist in `tests/test_function_security.py` may be run by logged-out users (Alex, 2026-10-28).
 
 <a id="b"></a>
 # B. The page
