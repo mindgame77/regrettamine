@@ -17,6 +17,9 @@ def cur():
     with psycopg.connect(DATABASE_URL) as c:
         if c.execute("select to_regprocedure('public._entry_check(bigint,text,text,jsonb)')").fetchone()[0] is None:
             pytest.skip("entry check migration not applied")
+        for n in range(1, 7):
+            c.execute("insert into research_queue (registry_id, name, priority, status) values (%s, 'Entry Test', 999999, 'submitted') "
+                      "on conflict (registry_id) do nothing", (f"vc-test-entry-{n}",))
         try:
             yield c
         finally:
@@ -123,7 +126,13 @@ def test_6_a9_limits_archive_extras(cur):
     assert flags[:20] == [None] * 20 and flags[20:] == [True] * 3
     assert out["notes"] == ["3 items over the A9 limit archived"]
     thesis = rec(url="https://examplevc.com/about", tier="T2", field="thesis", value="x" * 1001)
-    assert "thesis over 1,000 characters (A9.19)" in check(cur, payload(thesis))
+    assert check(cur, payload(thesis)) == "Accepted"
+    row = cur.execute("insert into bots.research_submissions(valid, registry_id, bot_id, payload) values "
+                      "(true, 'vc-test-entry-6', 'test-bot', %s::jsonb) returning entry_check, entry_notes, payload",
+                      (json.dumps(payload(thesis)),)).fetchone()
+    assert row[0] == "Accepted" and row[1] == ["thesis cut to 1,000 characters"]
+    v = [r for r in row[2]["records"] if r["field_path"] == "thesis"][0]["value"]
+    assert len(v) == 1000 and v.endswith("...")
 
 
 def test_7_no_news_from_firm_site(cur):

@@ -1,7 +1,7 @@
 -- Entry check, Layer 1 (step A of the approved 'entry check' plan; Alex, 2026-10-28; rules A4.6, A4.7).
 -- Instant database checks on every row a bot uploads into bots.research_submissions (the holding door, A3.1).
 -- Each new row gets entry_check = 'Accepted' or 'Rejected: <reason>[; <reason>...]', plus internal entry_notes from
--- fix-ups that never reject: dates normalized (unreadable ones cleared) and items past the A9 limit archived.
+-- fix-ups that never reject: dates normalized (unreadable ones cleared) and items past the A9 limit archived; a thesis over 1,000 characters cut to 1,000 ending '...'.
 -- Internal only, never shown;
 -- the result is cleared after 30 days (bots.entry_check_purge, A4.6).
 -- This does NOT publish anything and does NOT turn the 10 checks back on (20261029031000_checks_off stays).
@@ -99,7 +99,7 @@ create or replace function public._entry_fix_payload(p jsonb)
 declare
   caps jsonb := '{"people":20,"press":50,"news":50,"timeline":50,"founders":50,"deals":1000,"funds":100,"lps":100,"legal":100,"interviews":10}';
   out_p jsonb := p; recs jsonb; rec jsonb; i int; sec text; cnt jsonb := '{}'; arch int := 0; cleared int := 0;
-  fx record; src jsonb; k text; j int; arr jsonb; notes text[] := '{}';
+  fx record; src jsonb; k text; j int; arr jsonb; notes text[] := '{}'; cut int := 0;
 begin
   if p is null or jsonb_typeof(p) <> 'object' then return jsonb_build_object('payload', p, 'notes', '[]'::jsonb); end if;
   if jsonb_typeof(p->'records') = 'array' then
@@ -117,6 +117,10 @@ begin
           select * into fx from public._entry_fix_dates(rec->'sources'->j); src := src || jsonb_build_array(fx.o_obj); cleared := cleared + fx.o_cleared;
         end loop;
         rec := jsonb_set(rec, '{sources}', src);
+      end if;
+      if lower(coalesce(rec->>'field_path', '')) = 'thesis' and jsonb_typeof(rec->'value') = 'string'
+         and length(rec->>'value') > 1000 then
+        rec := jsonb_set(rec, '{value}', to_jsonb(left(rec->>'value', 997) || '...')); cut := cut + 1;
       end if;
       sec := public._entry_section(case rec->>'field_path'
           when 'people' then 'people' when 'peopleMoves' then 'people' when 'funds' then 'funds' when 'latestRaise' then 'funds'
@@ -136,6 +140,10 @@ begin
       sec := public._entry_section(k, k);
       for j in 0 .. jsonb_array_length(arr) - 1 loop
         select * into fx from public._entry_fix_dates(arr->j); cleared := cleared + fx.o_cleared;
+        if jsonb_typeof(fx.o_obj) = 'object' and lower(coalesce(fx.o_obj->>'label', k)) = 'thesis'
+           and jsonb_typeof(fx.o_obj->'value') = 'string' and length(fx.o_obj->>'value') > 1000 then
+          fx.o_obj := jsonb_set(fx.o_obj, '{value}', to_jsonb(left(fx.o_obj->>'value', 997) || '...')); cut := cut + 1;
+        end if;
         if caps ? sec and j + 1 > (caps->>sec)::int and jsonb_typeof(fx.o_obj) = 'object' then
           fx.o_obj := fx.o_obj || '{"archived": true}'; arch := arch + 1;
         end if;
@@ -146,6 +154,7 @@ begin
   end if;
   if cleared > 0 then notes := notes || format('%s date%s unreadable, cleared', cleared, case when cleared > 1 then 's' else '' end); end if;
   if arch > 0 then notes := notes || format('%s item%s over the A9 limit archived', arch, case when arch > 1 then 's' else '' end); end if;
+  if cut > 0 then notes := notes || 'thesis cut to 1,000 characters'::text; end if;
   return jsonb_build_object('payload', out_p, 'notes', to_jsonb(notes));
 end $$;
 
@@ -165,7 +174,7 @@ create or replace function public._entry_section(p_section text, p_field_path te
               when lower(coalesce(p_field_path, '')) = 'interviews' then 'interviews'
               else p_section end $$;
 
--- Rejecting checks 1, 2, 5, 7 (and the A9.19 thesis length) on one payload. p_firm_dom is the firm's own domain (for check 7).
+-- Rejecting checks 1, 2, 5, 7 on one payload. p_firm_dom is the firm's own domain (for check 7).
 create or replace function public._entry_check_reasons(p jsonb, p_firm_dom text)
  returns text[] language plpgsql stable set search_path = public, extensions as $$
 declare
@@ -199,11 +208,7 @@ begin
     -- 4) dates: never rejected; normalized or cleared by _entry_fix_payload.
     -- 5) status words
     if it.section = 'legal' and public._entry_status_bad(it.f) is not null then r := r || public._entry_status_bad(it.f); end if;
-    -- 6b) thesis max 1,000 characters (A9.19)
-    if lower(coalesce(it.f->>'label', rec->>'field_path', '')) = 'thesis'
-       and length(coalesce(it.f->>'value', '')) > 1000 then
-      r := r || 'thesis over 1,000 characters (A9.19)'::text;
-    end if;
+    -- 6b) thesis over 1,000 characters (A9.19): never rejected; cut by _entry_fix_payload.
     -- 7) no news from the firm's own site
     if sec in ('press', 'news', 'timeline') and dom is not null and it.url is not null
        and (public._dom(it.url) = dom or public._dom(it.url) like '%.' || dom) then
