@@ -24,3 +24,12 @@ def test_rulebook_has_headline_completed():
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     guide = open(os.path.join(root, "docs", "PAGE_DATA_GUIDE.md"), encoding="utf-8").read()
     assert "'headline completed'" in guide
+
+
+def test_headline_update_waits_for_links_to_open():
+    import pathlib
+    m = (pathlib.Path(__file__).resolve().parents[1] / "supabase" / "migrations" / "20261029075000_headline_after_link_opens.sql").read_text()
+    trg = m[m.index("function bots.entry_check_trg()"):m.index("function public._checker_entry_gate(")]
+    gate = m[m.index("function public._checker_entry_gate("):]
+    assert "_entry_complete_headlines" not in trg
+    assert "_entry_complete_headlines" in gate
