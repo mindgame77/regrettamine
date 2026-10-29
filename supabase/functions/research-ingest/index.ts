@@ -24,7 +24,8 @@ const json = (b: unknown, status = 200, extra: Record<string, string> = {}) =>
 const REQUIRED: Record<string, string[]> = { status: ["action"], gaps: ["action"], claim: ["action", "bot_id"], claim_gap: ["action", "bot_id"],
   submit: ["action", "bot_id", "registry_id", "dump", "(optional) lps", "(optional) lps_over_100"],
   enrich: ["action", "bot_id", "enrichment {slug or registry_id, sections, confirm, fix, add, leads, notes, (optional) searches}"], fail: ["action", "bot_id", "registry_id", "reason"], sources: ["action"], firm_requests: ["action", "(optional) limit"], needs_source: ["action", "(optional) registry_id, slug, limit"],
-  add_source: ["action", "bot_id", "submission_id", "record_id", "url", "(optional) quote"], skip: ["action", "bot_id", "registry_id", "reason"] };
+  add_source: ["action", "bot_id", "submission_id", "record_id", "url", "(optional) quote"], skip: ["action", "bot_id", "registry_id", "reason"],
+  my_results: ["action", "(optional) days 1-30", "(optional) limit 1-30"] };
 const bad = (error: string, hint: string, action?: string) =>
   json({ error, hint, required_fields: action && REQUIRED[action] ? REQUIRED[action] : REQUIRED }, 400);
 const sha256 = async (s: string) => [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)))]
@@ -149,6 +150,16 @@ async function withFeedback(res: Response, bot: string): Promise<Response> {
   } catch { return res; }
 }
 
+// Entry check (A4.6): the bot that sent an upload may read its result. Additive fields; a read failure gives nulls.
+const NO_ENTRY = { entry_check: null, entry_notes: null, entry_check_at: null };
+async function entryOf(id: unknown): Promise<Record<string, unknown>> {
+  if (!Number.isInteger(id)) return { ...NO_ENTRY };
+  try {
+    const { data, error } = await db.rpc("research_entry_result", { p_sub: id });
+    if (error || !isObj(data)) return { ...NO_ENTRY };
+    return { entry_check: data.entry_check ?? null, entry_notes: data.entry_notes ?? null, entry_check_at: data.entry_check_at ?? null };
+  } catch { return { ...NO_ENTRY }; }
+}
 Deno.serve(async (req) => {
   // one log line per request: action, bot_id, status (never the key)
   const meta = { action: "", bot: "", authed: false };
@@ -173,6 +184,7 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
     return json({ error: "unauthorized" }, 401);
   }
   meta.authed = true;
+  const keyId: string | null = typeof auth.key_id === "string" ? auth.key_id : null;
   let body: any;
   if (req.method === "GET") {
     // read-only GET: ?action=status | gaps (&registry_id=&limit=&bot_id=). Never accepts the key in the query string.
@@ -181,8 +193,8 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       "remove the key from the query string and send it in header x-ingest-key (or Authorization: Bearer <key>)");
     body = Object.fromEntries(u.searchParams);
     meta.action = String(body.action ?? ""); meta.bot = String(body.bot_id ?? "").slice(0, 100);
-    if (body.action !== "status" && body.action !== "gaps") return bad("GET supports only action=status or action=gaps",
-      "use ?action=status or ?action=gaps; claim, submit, fail, skip and claim_gap need POST with a JSON body");
+    if (body.action !== "status" && body.action !== "gaps" && body.action !== "my_results") return bad("GET supports only action=status, action=gaps or action=my_results",
+      "use ?action=status, ?action=gaps or ?action=my_results; claim, submit, fail, skip and claim_gap need POST with a JSON body");
   } else {
     const raw = await req.text();
     if (raw.length > MAX_BYTES) return json({ error: `payload too large (${raw.length} bytes, max ${MAX_BYTES})` }, 413);
@@ -236,12 +248,12 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       if (data.error === "blocked") return json({ error: "blocked", hint: "this bot went past three times its hourly firm limit; only Alex can unblock" }, 403);
       if (data.error) return json({ error: data.error }, 409);
       if (data.status === "duplicate") return json({ ok: true, status: "duplicate", dropped: true, hint: "exact copy dropped at the door" });
-      if (data.status === "waiting") return json({ ok: true, status: "waiting", submission_id: data.submission_id, ready_at: data.ready_at, hint: "past the hourly firm limit; this one waits until the next hour" });
+      if (data.status === "waiting") return json({ ok: true, status: "waiting", submission_id: data.submission_id, ready_at: data.ready_at, hint: "past the hourly firm limit; this one waits until the next hour", ...(await entryOf(data.submission_id)) });
       if (data.status === "holding") return json({ ok: valid, status: "holding", held_for_checker: true,
         submission_id: data.submission_id, accepted_records: valid ? v.good : 0, rejected_records: v.bad,
         errors: v.errors.slice(0, 200), source_tiers: v.tiers, warnings: v.warnings.slice(0, 200),
         hint: valid ? "stored in holding for the Checker; not written to a page table"
-          : "not accepted (kept in holding for audit); fix ALL errors and resubmit the whole dump" }, valid ? 200 : 422);
+          : "not accepted (kept in holding for audit); fix ALL errors and resubmit the whole dump", ...(await entryOf(data.submission_id)) }, valid ? 200 : 422);
       let lpRes: any = undefined;
       if (valid && (hasLps || body.lps_over_100 === true)) {
         const r = await db.rpc("research_store_lps", { p_id: body.registry_id, p_submission: data.submission_id,
@@ -250,7 +262,7 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       }
       return json({ ok: valid, ...(lpRes !== undefined ? { lps: lpRes } : {}), status: data.status, attempts: data.attempts ?? null, accepted_records: valid ? v.good : 0,
         rejected_records: v.bad, errors: v.errors.slice(0, 200), source_tiers: v.tiers, warnings: v.warnings.slice(0, 200),
-        hint: valid ? (v.tiers.needs_source ? `stored; ${v.tiers.needs_source} record(s) have no usable source: kept as needs_source (hidden until a source is added). Claim the next firm` : "stored; claim the next firm") : "not accepted (kept for audit only); fix ALL errors and resubmit the whole dump once (same registry_id, same bot_id)" }, valid ? 200 : 422);
+        hint: valid ? (v.tiers.needs_source ? `stored; ${v.tiers.needs_source} record(s) have no usable source: kept as needs_source (hidden until a source is added). Claim the next firm` : "stored; claim the next firm") : "not accepted (kept for audit only); fix ALL errors and resubmit the whole dump once (same registry_id, same bot_id)", submission_id: data.submission_id ?? null, ...(await entryOf(data.submission_id)) }, valid ? 200 : 422);
     }
     case "enrich": {
       // Enricher results for one firm (sections + confirm/fix/add/leads, each item one structured fact with a source URL; free text only as {note}; docs/PAGE_DATA_GUIDE.md).
@@ -329,7 +341,20 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       if (error) return json({ error: "server error" }, 500);
       return data.error ? json({ error: data.error }, 409) : json(data);
     }
-    default: return bad("action must be claim | submit | enrich | fail | skip | status | gaps | claim_gap | sources | needs_source | add_source | firm_requests",
+    case "my_results": {
+      // Identity comes only from the ingest key (bots.ingest_keys.bot_id); body.bot_id is ignored here.
+      if (!keyId) return json({ error: "server error" }, 500);
+      const d = Number(body.days ?? 30), n = Number(body.limit ?? 30);
+      if (!Number.isInteger(d) || d < 1 || d > 30) return bad("days must be 1-30", "omit days (defaults to 30) or send an integer 1-30", "my_results");
+      if (!Number.isInteger(n) || n < 1 || n > 30) return bad("limit must be 1-30", "omit limit (defaults to 30) or send an integer 1-30", "my_results");
+      const { data, error } = await db.rpc("research_my_results", { p_key: keyId, p_days: d, p_limit: n });
+      if (error || !isObj(data)) return json({ error: "server error" }, 500);
+      if (data.ok !== true) return json({ error: data.error ?? "this key is not linked to a bot" }, 403);
+      const results = Array.isArray(data.results) ? data.results : [];
+      return json({ bot_id: data.bot_id, days: data.days, count: results.length, results,
+        hint: "your own uploads only. entry_check is Accepted or Rejected: <reasons>; entry_notes are fix-ups that did not reject. Results are cleared after 30 days" });
+    }
+    default: return bad("action must be claim | submit | enrich | fail | skip | status | gaps | claim_gap | sources | needs_source | add_source | firm_requests | my_results",
       'set "action" to one of the listed values; start with {"action":"status","bot_id":"your-bot"}');
   }
 }

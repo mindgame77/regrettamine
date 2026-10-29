@@ -55,6 +55,7 @@ A7.11,A7 One home per data kind,"Same-item keys: fund = fund name or SEC file nu
 A7.12,A7 One home per data kind,"The winner is the higher source level, then the newer date, then the more complete row.",on main
 A7.13,A7 One home per data kind,"On the 10 lab firms, exact copies in a home are the only rows removed.",on main
 A7.14,A7 One home per data kind,"A side row that has no home is backed up, then checked once.",on main
+A7.15,A7 One home per data kind,"A7.12 wins for a cut-off headline: same news link, new headline is the full version (published ends in an ellipsis or is a prefix, new is longer). Accepted, published headline updated, note 'headline completed'. Other same-link news is still a duplicate (A4.7).",proposed (PR)
 A8.1,A8 Live counts,"On the 10 lab firms, the 10 check counts and pills are counted once and saved, in firm_check_results (was firm_check_pills); a Checker publish recounts that firm (only when checks_on).",proposed (PR)
 A8.2,A8 Live counts,"If the counting logic or ingest_settings change, the same change must rerun the backfill (select public.refresh_firm_check_results(id) from public.firms where...",on main
 A8.3,A8 Live counts,Section counts and the activity tiles are still computed when the page is read.,on main
@@ -372,7 +373,7 @@ R5.39,R5 Old notes,From C9.3: Unknown which bot screened them.,on main
 R5.40,R5 Old notes,From C9: Accel’s Schedule A sentences were hidden as people and did not become a check.,on main
 R5.41,R5 Old notes,From C10.3: Unknown bot.,on main
 R5.42,R5 Old notes,From C10.5: a16z is Worth knowing from the hand migration.,on main
-A4.6,A4 The holding door,"Each upload stores an internal door-check result, 'Accepted' or 'Rejected' plus the reason (e.g. 'Rejected: no source link'). It is kept 30 days, the same as uploads (A11.1). Internal only, never shown (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
+A4.6,A4 The holding door,"Each upload stores an internal door-check result, 'Accepted' or 'Rejected' plus the reason (e.g. 'Rejected: no source link'). It is kept 30 days, the same as uploads (A11.1). Visible only to the bot that sent it; never shown to site users (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
 A4.7,A4 The holding door,"Entry check Layer 1: a trigger marks every upload Accepted or Rejected with reasons (link, level 1-3, duplicate, fixed status words, no firm-site news). Dates are normalized (unreadable ones cleared, noted), items past the A9 limit archived (noted) and a thesis over 1,000 characters cut to 1,000 ending '...' (noted); none of these rejects. No publish, no 10 checks.",on main
 A4.8,A4 The holding door,"A trigger cannot open a link: Accepted rows are flagged for the Checker's opens check. Result and notes cleared after 30 days. Server only (A14.6).",on main
 A6.5,A6 Three marks on every item,"A6 stays as is. Missing checked date, check and level on old items are filled by the new-database rerun (A14.1), not by a backfill now (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
