@@ -2,13 +2,13 @@ rule_id,section,short_rule_in_plain_words,status
 P.1,P About this file,This is the only rulebook.,on main
 P.2,P About this file,"Scope until Alex says “roll out”: the 10 lab firms only (a16z, y-combinator, sequoia, lightspeed, generalcatalyst, plugandplay, accel, greenoaks, khosla-vent...",on main
 P.3,P About this file,"Work order: build the Checker and the one home per kind, test on the lab firms, and only then clean up old bot tables.",on main
-P.4,P About this file,The page snapshot further down describes what the live site drew on 2026-10-27.,on main
+P.4,P About this file,The page snapshot further down describes what the live site drew on 2026-10-27.,in PR #228
 A1.1,A1 Source ranking,Each fact has one source level.,on main
 A1.2,A1 Source ranking,Official register.,on main
 A1.3,A1 Source ranking,The firm’s own website.,on main
 A1.4,A1 Source ranking,Elsewhere online.,on main
 A1.5,A1 Source ranking,Nothing found.,on main
-A1.6,A1 Source ranking,"If two sources disagree, the register wins.",on main
+A1.6,A1 Source ranking,"If two sources disagree, the register wins.",in PR #228
 A1.7,A1 Source ranking,A search-results page or a chat page is not a source at any level.,on main
 A1.8,A1 Source ranking,"Exception (Alex, 2026-10-28): the latest fund amount (money raised for the latest fund only) may come from an approved news outlet or another trusted site th...",in PR #227
 A2.1,A2 Sources per page part,These rules override the general “elsewhere online is Unconfirmed” line for that part only.,on main
@@ -30,7 +30,7 @@ A4.3,A4 The holding door,An exact copy is dropped at the door.,on main
 A4.4,A4 The holding door,"The entry check works the queue oldest first (The Checker runs this check today; automatic checks, when built, run the same check.) (Alex, 2026-10-28).",in PR #228
 A4.5,A4 The holding door,Retention: see A11.1.,in PR #228
 A5.1,A5 The Checker,The entry check is the only way an item is published.,in PR #228
-A5.2,A5 The Checker,For each item it checks three things:,on main
+A5.2,A5 The Checker,For each item it checks three things:,in PR #228
 A5.3,A5 The Checker,A register or firm-site item is published with the date and checked-by Checker.,in PR #228
 A5.4,A5 The Checker,The Enricher does not publish (fixes: A12.3); the Activity Collector does not write investments directly (A12.4).,in PR #228
 A6.1,A6 Three marks on every item,"The entry check sets these once, on the item itself (The Checker runs this check today; automatic checks, when built, run the same check.) (Alex, 2026-10-28):",in PR #228
@@ -93,7 +93,7 @@ B2.6,B2 Search box and suggestions,Lab display names match firms.name (RULES_AUD
 B2.7,B2 Search box and suggestions,Search matching and new-firm rules: see A10.,on main
 B3.1,B3 Firm header,"The large name, then a meta line: HQ, short name, and the website.",on main
 B3.2,B3 Firm header,"firm_page builds firm.name from coalesce(display_name, name), firm.sec_name from coalesce(legal_name, name), firm.short_name, firm.hq from firm_hq_format, fi...",on main
-B3.3,B3 Firm header,HQ and the website start on the queue row (list builder or request).,on main
+B3.3,B3 Firm header,HQ and the website start on the queue row (list builder or request).,in PR #228
 B3.4,B3 Firm header,No written rule that HQ must be a city from IAPD.,on main
 B3.5,B3 Firm header,The header shows whenever the page loads.,on main
 B3.6,B3 Firm header,Legal name gaps: RULES_AUDIT 2.,on main
@@ -104,7 +104,7 @@ B4.2,B4 SEC fact pills,firm_page hero list: firm_profile_facts where hero_label 
 B4.3,B4 SEC fact pills,"The enricher, from a Form ADV on sec.gov / adviserinfo.sec.gov.",on main
 B4.4,B4 SEC fact pills,The fact needs a source or it is not in the hero list.,on main
 B4.5,B4 SEC fact pills,Hidden when the hero list is empty or no source is sec.gov.,on main
-B4.6,B4 SEC fact pills,The assets helper can drop the unit (RULES_AUDIT 11).,on main
+B4.6,B4 SEC fact pills,The assets helper can drop the unit (RULES_AUDIT 11).,in PR #228
 B5.1,B5 Score bar,The visitor does not see a score.,on main
 B5.2,B5 Score bar,"score_results (current row), score_inputs, and score_result_parts still exist.",on main
 B5.3,B5 Score bar,Unknown for the stored rows.,on main
@@ -120,7 +120,7 @@ B6a.5,B6a “Active” tile,The tile is absent when both counts are zero.,on mai
 B6a.6,B6a “Active” tile,RULES_AUDIT 12.,on main
 B6b.1,B6b Deals in the last 12 months,A count.,on main
 B6b.2,B6b Deals in the last 12 months,investments where invested_on is within 365 days and data_status = real.,on main
-B6b.3,B6b Deals in the last 12 months,Same as 6a.,on main
+B6b.3,B6b Deals in the last 12 months,Same as 6a.,in PR #228
 B6b.4,B6b Deals in the last 12 months,No required fields beyond the row existing.,on main
 B6b.5,B6b Deals in the last 12 months,The tile is omitted when the count is 0.,on main
 B6b.6,B6b Deals in the last 12 months,RULES_AUDIT 12.,on main
@@ -133,7 +133,7 @@ B6c.6,B6c Latest fund tile,RULES_AUDIT 10.,on main
 B6c.7,B6c Latest fund tile,"Latest fund tile rule (Alex, Oct 27 2026 design note): A latest fund with an amount stays.",in PR #227
 B6c.8,B6c Latest fund tile,"Latest fund tile link is the filing, or the news/trusted page the amount came from; amount source: A1.8.",in PR #228
 B6c.9,B6c Latest fund tile,Funds shown/max/archiving: see A9.6; amount source A1.8.,in PR #228
-B6d.1,B6d Assets under management tile,"Shown on the 10 lab firms only when there is no fund amount at all, including no earlier fund that raised money (see the latest fund tile rule in 6c).",in PR #227
+B6d.1,B6d Assets under management tile,"Shown on the 10 lab firms only when there is no fund amount at all, including no earlier fund that raised money (see the latest fund tile rule in 6c).",in PR #228
 B6d.2,B6d Assets under management tile,"Hero fact whose label maps to Regulatory AUM, else firm.assets from _firm_assets.",on main
 B6d.3,B6d Assets under management tile,"SEC Form ADV Item 5F, via the enricher.",on main
 B6d.4,B6d Assets under management tile,A new AUM fact must contain a digit.,on main
@@ -148,7 +148,7 @@ B6e.6,"B6e Latest deal, and “Show all”",RULES_AUDIT 12 and 13.,on main
 B6e.7,"B6e Latest deal, and “Show all”",Deals shown/max/archiving: see A9.5.,in PR #228
 B6e.8,"B6e Latest deal, and “Show all”","A deal row has a sector column, and a column that reads round · amount · Lead.",on main
 B6e.9,"B6e Latest deal, and “Show all”","Latest investments block (Alex, 2026-10-28): shows the 1 latest deal, plus Show all (Alex, 2026-10-28: 1 for now, may increase later).",in PR #228
-B7.1,"B7 Thesis (replaces Overview; Alex, 2026-10-28)",New block “Thesis”.,in PR #227
+B7.1,"B7 Thesis (replaces Overview; Alex, 2026-10-28)",New block “Thesis”.,in PR #228
 B7.2,"B7 Thesis (replaces Overview; Alex, 2026-10-28)","Holds the firm's investment thesis (what they invest in and why), copied word for word from the firm's own website.",in PR #227
 B7.3,"B7 Thesis (replaces Overview; Alex, 2026-10-28)","Max 1,000 characters.",in PR #227
 B7.4,"B7 Thesis (replaces Overview; Alex, 2026-10-28)",No thesis on the firm's website: the block is not shown.,in PR #227
@@ -170,7 +170,7 @@ B9.5,B9 Limited partners,A lead (LP named only by a weaker source) is not shown,
 B9.6,B9 Limited partners,RULES_AUDIT 22.,on main
 B9.7,B9 Limited partners,Only confirmed LPs are shown.,removed (duplicate of B9.5)
 B9.8,B9 Limited partners,"Shown count, max kept, and archiving: see the list limits table in A9.",in PR #227
-B10.1,B10 People and board seats,"Rule (Alex, 2026-10-28): only current people are shown, grouped into board and officers.",in PR #227
+B10.1,B10 People and board seats,"Rule (Alex, 2026-10-28): only current people are shown, grouped into board and officers.",in PR #228
 B10.2,B10 People and board seats,"firm_people_roles: person_name, role, kind, not hidden, with a source.",on main
 B10.3,B10 People and board seats,"Enricher, typically Form ADV Schedule A (officers) and board seats from filings or the firm site.",on main
 B10.4,B10 People and board seats,One person per name.,on main
@@ -247,13 +247,13 @@ C2.1,C2 Terrorism financing lists,“Lists of people and groups linked to fundin
 C2.2,C2 Terrorism financing lists,firm_check_rows n=2.,on main
 C2.3,C2 Terrorism financing lists,No written list of sites beyond “government lists.” Unknown which bot last set the lab pills.,on main
 C2.4,C2 Terrorism financing lists,No required fields beyond the pill row.,on main
-C2.5,C2 Terrorism financing lists,Same as check 1.,on main
+C2.5,C2 Terrorism financing lists,Same as check 1.,in PR #228
 C2.6,C2 Terrorism financing lists,Same gap as RULES_AUDIT 20: the pill is not recomputed.,on main
 C3.1,C3 Export and investment restrictions,Trade and investment bans.,on main
 C3.2,C3 Export and investment restrictions,firm_check_rows n=3.,on main
 C3.3,C3 Export and investment restrictions,trade.gov is the example in docs/ENRICHER.md.,on main
 C3.4,C3 Export and investment restrictions,Name-only hits stay Clear.,on main
-C3.5,C3 Export and investment restrictions,Same as check 1.,on main
+C3.5,C3 Export and investment restrictions,Same as check 1.,in PR #228
 C3.6,C3 Export and investment restrictions,RULES_AUDIT 20.,on main
 C4.1,C4 Financial regulator actions,"“Fines, bans and charges from financial regulators.” a16z’s stored count is “1 open probe.”",on main
 C4.2,C4 Financial regulator actions,Pill: firm_check_rows n=4.,on main
@@ -280,12 +280,12 @@ C7.4,C7 Court records worldwide,No extra validation.,on main
 C7.5,C7 Court records worldwide,Stored pill.,on main
 C7.6,C7 Court records worldwide,RULES_AUDIT 20.,on main
 C8.1,C8 Registration check,"“Registered with the regulator as an investment adviser, and active.”",on main
-C8.2,C8 Registration check,"Source: only the firm's own IAPD page on sec.gov (level 1, the register).",in PR #227
+C8.2,C8 Registration check,"Source: only the firm's own IAPD page on sec.gov (level 1, the register).",in PR #228
 C8.3,C8 Registration check,"Stored on the check 8 row in firm_check_rows (n=8), set only after it passes the registration check (C8.4); The Checker runs this check today; automatic chec...",in PR #228
 C8.4,C8 Registration check,"Door check: the link must be an adviserinfo.sec.gov page for that firm, and the status must be one of the fixed list (Registered, Exempt reporting, Not active).",in PR #227
 C8.5,C8 Registration check,"Check 8 only (Alex, 2026-10-28): a US firm found on IAPD is Clear (registration line + link); a US firm not found is ""Not on the list""; a non-US firm (from H...",in PR #228
 C8.6,C8 Registration check,RULES_AUDIT 8 and 20.,on main
-C9.1,C9 People behind the fund,"Partners and owners, each checked against the lists above.",on main
+C9.1,C9 People behind the fund,"Partners and owners, each checked against the lists above.",in PR #228
 C9.2,C9 People behind the fund,firm_check_rows n=9.,on main
 C9.3,C9 People behind the fund,"The people themselves are Form ADV Schedule A, via the enricher, into firm_people_roles.",on main
 C9.4,C9 People behind the fund,A person publish checks the name.,on main
@@ -334,3 +334,5 @@ R4.4,"R4 Overview (old, being removed)","Enricher, from Form ADV and the firm’
 R4.5,"R4 Overview (old, being removed)","One label, one value, one source.",on main
 R4.6,"R4 Overview (old, being removed)","Hidden labels: Other names, Type, Staff, Private funds, Legal entity, Sanctions screening, empty, “Not found.” A row with no source is not returned.",on main
 R4.7,"R4 Overview (old, being removed)",RULES_AUDIT 15.,on main
+R5.1,R5 Old notes,"Old note from B10.1: people cards grouped into board, moves, and officers.",in PR #228
+R5.2,R5 Old notes,Old note from C6.5: a count with no rows linked a CourtListener search.,in PR #228

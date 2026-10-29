@@ -59,6 +59,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
   - [R2. Page snapshot, 2026-10-27](#r2)
   - [R3. Who collects what (snapshot 2026-10-27)](#r3)
   - [R4. Overview (old, being removed)](#r4)
+  - [R5. Old notes](#r5)
 
 <a id="p"></a>
 ## P. About this file
@@ -66,7 +67,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 - **P.1** This is the only rulebook. Researchers, list builders, the Enricher, the Checker, the Activity Collector, and the friend’s portal bots follow this file and no other rules doc. `docs/RULES_AUDIT.md` is a dated record of 2026-10-27. Files in `docs/archive/` are frozen copies of the old rule docs. They are not rules.
 - **P.2** Scope until Alex says “roll out”: the 10 lab firms only (a16z, y-combinator, sequoia, lightspeed, generalcatalyst, plugandplay, accel, greenoaks, khosla-ventures, mio-partners).
 - **P.3** Work order: build the Checker and the one home per kind, test on the lab firms, and only then clean up old bot tables. Cleanup is the last step, not the first.
-- **P.4** The page snapshot further down describes what the live site drew on 2026-10-27. Where that snapshot disagrees with the rules in this section, the rules here win. The code has not been changed to match yet.
+- **P.4** The snapshot items (.1 to .6 in Parts B and C) describe what the live site drew on 2026-10-27. Where a snapshot item disagrees with the rules in Part A, the rules in Part A win. The code has not been changed to match yet.
 
 <a id="a"></a>
 # A. How data comes in
@@ -79,7 +80,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 - **A1.3** **The firm’s own website.** The firm’s domain, not a search page and not a social post. Level 2 may be shown, and it is labelled as the firm’s own site.
 - **A1.4** **Elsewhere online.** News, newsletters, social posts, and any other page. Level 3 is held as **Unconfirmed** and is not shown.
 - **A1.5** **Nothing found.** Store “Not found yet” plus the search date. The row is kept and hidden.
-- **A1.6** If two sources disagree, the register wins. A firm site does not override a register. An elsewhere-online page does not override either, and it is not shown, except where the table below says that page part may show it.
+- **A1.6** If two sources disagree, the register wins. A firm site does not override a register. An elsewhere-online page does not override either, and it is not shown, except where the table in [A2](#a2) says that page part may show it.
 - **A1.7** A search-results page or a chat page is not a source at any level.
 - **A1.8** Exception (Alex, 2026-10-28): the latest fund amount (money raised for the latest fund only) may come from an approved news outlet or another trusted site the project uses (`trusted_source_domains`), not only from SEC Form D. That source must state the amount. It is shown, not held as Unconfirmed. If sources disagree, the SEC record wins.
 
@@ -122,8 +123,8 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 - **A5.2** For each item it checks three things:
   - The link is real. It is not a search or chat page, and it opens.
   - The link matches the item (this firm, this person, this fund, this case).
-  - The source level, from the ranking above.
-- **A5.3** A register or firm-site item is published with the date and checked-by **Checker**. Those two values, and the source level, are stored on the item. They are not drawn on the page. An elsewhere-online item is held as Unconfirmed and is not shown, unless Sources per page part says that part may show it. A failure stays in holding with the reason; how long: see [A11.1](#a11). Nothing is re-checked unless Alex asks. The revision of social links and contact details every few months counts as that standing ask. News rows that already have a check mark stay checked. They are not re-checked in this pass.
+  - The source level, from the ranking in [A1](#a1).
+- **A5.3** A register or firm-site item is published with the date and checked-by **Checker**. Those two values, and the source level, are stored on the item. They are not drawn on the page. An elsewhere-online item is held as Unconfirmed and is not shown, unless Sources per page part ([A2](#a2)) says that part may show it. A failure stays in holding with the reason; how long: see [A11.1](#a11). Nothing is re-checked unless Alex asks. The revision of social links and contact details every few months counts as that standing ask. News rows that already have a check mark stay checked. They are not re-checked in this pass.
 - **A5.4** The Enricher does not publish; its fixes pass the fix check, A12.3 (Alex, 2026-10-28). The Activity Collector does not write `investments` directly; its deals and funds pass the activity check, A12.4 (Alex, 2026-10-28).
 
 <a id="a6"></a>
@@ -235,7 +236,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 
 - **B3.1** The large name, then a meta line: HQ, short name, and the website. Sequoia shows “Sequoia Capital” and “Menlo Park, CA.”
 - **B3.2** `firm_page` builds `firm.name` from `coalesce(display_name, name)`, `firm.sec_name` from `coalesce(legal_name, name)`, `firm.short_name`, `firm.hq` from `firm_hq_format`, `firm.website` from the primary domain, `firm.assets` from `_firm_assets`. The meta line in `company.js` `metaLine` prints HQ, short name, and the website. It does not print the legal name.
-- **B3.3** HQ and the website start on the queue row (list builder or request). The enricher can publish an overview fact labelled Headquarters. Display name is cleaned by `firm_display_name` when the page is created.
+- **B3.3** HQ and the website start on the queue row (list builder or request). (Snapshot, Overview now removed: the enricher could publish an overview fact labelled Headquarters.) Display name is cleaned by `firm_display_name` when the page is created.
 - **B3.4** No written rule that HQ must be a city from IAPD. The queue stores `hq_city`, `state`, and `country`.
 - **B3.5** The header shows whenever the page loads. Hero cards (staff, founded, AUM as cards) were removed and are not drawn.
 - **B3.6** Legal name gaps: RULES_AUDIT 2. Slug: no problem (RULES_AUDIT 4).
@@ -250,7 +251,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **B4.3** The enricher, from a Form ADV on sec.gov / adviserinfo.sec.gov. Item 5F is the assets figure the helper looks for.
 - **B4.4** The fact needs a source or it is not in the hero list. The pill needs the host to be sec.gov.
 - **B4.5** Hidden when the hero list is empty or no source is sec.gov.
-- **B4.6** The assets helper can drop the unit (RULES_AUDIT 11). Overview paragraphs can still contain a CRD that these pills do not show (RULES_AUDIT 15).
+- **B4.6** The assets helper can drop the unit (RULES_AUDIT 11). (Snapshot, Overview now removed: Overview paragraphs could contain a CRD that these pills do not show, RULES_AUDIT 15.)
 
 <a id="b5"></a>
 ## B5. Score bar
@@ -282,7 +283,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 
 - **B6b.1** A count. Sequoia: 10.
 - **B6b.2** `investments` where `invested_on` is within 365 days and `data_status = real`.
-- **B6b.3** Same as 6a.
+- **B6b.3** Same as [B6a.3](#b6a).
 - **B6b.4** No required fields beyond the row existing. Amount can be empty.
 - **B6b.5** The tile is omitted when the count is 0.
 - **B6b.6** RULES_AUDIT 12. Six lab firms are at 0.
@@ -303,7 +304,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 <a id="b6d"></a>
 ### B6d. Assets under management tile
 
-- **B6d.1** Shown on the 10 lab firms only when there is no fund amount at all, including no earlier fund that raised money (see the latest fund tile rule in 6c). Label “AUM” (Alex, 2026-10-28).
+- **B6d.1** Shown on the 10 lab firms only when there is no fund amount at all, including no earlier fund that raised money (see the latest fund tile rule in [B6c.7](#b6c)). Label “AUM” (Alex, 2026-10-28).
 - **B6d.2** Hero fact whose label maps to Regulatory AUM, else `firm.assets` from `_firm_assets`. The helper reads a profile fact that cites Item 5F or “regulatory AUM,” skips Schedule D gross assets, and otherwise uses `firms.aum_display` when it starts with `$`.
 - **B6d.3** SEC Form ADV Item 5F, via the enricher. Sequoia’s display string was set by the one-off migration to `$82.2B`.
 - **B6d.4** A new AUM fact must contain a digit. The helper does not keep a trailing B, M, or K.
@@ -326,7 +327,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 <a id="b7"></a>
 ## B7. Thesis (replaces Overview; Alex, 2026-10-28)
 
-- **B7.1** New block “Thesis”. It replaces the Overview block, which is removed from the page. Same design as the old Overview block.
+- **B7.1** New block “Thesis”. It replaces the Overview block, which is removed from the page. Same design as the old Overview block ([R4](#r4)).
 - **B7.2** Holds the firm's investment thesis (what they invest in and why), copied word for word from the firm's own website. No other source: not news, LinkedIn, SEC or any other site. Source level 2. The link to that website page is always kept and shown.
 - **B7.3** Max 1,000 characters. Not rewritten by us.
 - **B7.4** No thesis on the firm's website: the block is not shown.
@@ -359,7 +360,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 <a id="b10"></a>
 ## B10. People and board seats
 
-- **B10.1** Rule (Alex, 2026-10-28): only current people are shown, grouped into board and officers. The moves group is not shown. A person who left is taken off the page and archived (kept, hidden) for possible later use. News about them can still show like any news. Old note: cards grouped into board, moves, and officers. Sequoia returns 15 people.
+- **B10.1** Rule (Alex, 2026-10-28): only current people are shown, grouped into board and officers. The moves group is not shown. A person who left is taken off the page and archived (kept, hidden) for possible later use. News about them can still show like any news.
 - **B10.2** `firm_people_roles`: `person_name`, `role`, `kind`, not hidden, with a source. The older `people` and `fund_people` tables are not this section.
 - **B10.3** Enricher, typically Form ADV Schedule A (officers) and board seats from filings or the firm site. The gold example uses the IAPD PDF.
 - **B10.4** One person per name. Same person and kind with the same role adds the source. A different officer role is a conflict. The note guard hides Schedule A blobs.
@@ -467,7 +468,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 | [C6](#c6) | US court records | Federal and state cases |
 | [C7](#c7) | Court records worldwide | Cases outside the United States |
 | [C8](#c8) | Registration check | Investment-adviser registration, from the register |
-| [C9](#c9) | People behind the fund | Partners and owners, each checked against the lists above |
+| [C9](#c9) | People behind the fund | Partners and owners, each checked against the lists in C1, C2, C3 and C10 |
 | [C10](#c10) | Political ties | Government or political roles |
 
 - **C0.2** OpenSanctions is only one source, and only inside checks 1, 2, and 10. It is not a source for the other checks, and it does not replace a register those checks have of their own. Checks 3, 4, 5, 6, 7, 8, and 9 keep their own searches. A same-name hit that is not the same person is not a finding.
@@ -499,7 +500,7 @@ The checks table on the page (snapshot 2026-10-27):
 - **C2.2** `firm_check_rows` n=2. Detail, when present, is a `vc_source_facts` field `terrorism_lists`.
 - **C2.3** No written list of sites beyond “government lists.” Unknown which bot last set the lab pills.
 - **C2.4** No required fields beyond the pill row.
-- **C2.5** Same as check 1.
+- **C2.5** Same as [C1.5](#c1).
 - **C2.6** Same gap as RULES_AUDIT 20: the pill is not recomputed.
 
 <a id="c3"></a>
@@ -509,7 +510,7 @@ The checks table on the page (snapshot 2026-10-27):
 - **C3.2** `firm_check_rows` n=3. Detail field `export_restrictions`.
 - **C3.3** `trade.gov` is the example in `docs/ENRICHER.md`. No written rule that it must be that site.
 - **C3.4** Name-only hits stay Clear.
-- **C3.5** Same as check 1.
+- **C3.5** Same as [C1.5](#c1).
 - **C3.6** RULES_AUDIT 20.
 
 <a id="c4"></a>
@@ -539,7 +540,7 @@ The checks table on the page (snapshot 2026-10-27):
 - **C6.2** Pill: `firm_check_rows` n=6. Detail: `vc_source_facts` legal matters for the firm, and `firm_legal_items` group `case`. Status words (active, terminated, settled) are read in `company.js` `caseStatus`.
 - **C6.3** CourtListener, PACER, uscourts.gov, a regulator (SEC, FINRA, FCA), Justia, Law360, or Casetext; a link is required (Alex, 2026-10-28). The case group is set when the source host is one of those.
 - **C6.4** Leads are held. The legal key dedupes on a case number and misses a “Lead” prefix.
-- **C6.5** Rule (Alex, 2026-10-28): a count with no itemized rows shows nothing on the page, and no CourtListener search link is shown (a search page is not a source). The count or news story stays as a lead for the check (Alex, 2026-10-28). Cases show only once each has its own court or regulator link. News about a lawsuit can still show in News with its article link. Old note: a count with no itemized rows said details are coming and linked a CourtListener search of the legal name.
+- **C6.5** Rule (Alex, 2026-10-28): a count with no itemized rows shows nothing on the page, and no CourtListener search link is shown (a search page is not a source). The count or news story stays as a lead for the check (Alex, 2026-10-28). Cases show only once each has its own court or regulator link. News about a lawsuit can still show in News with its article link.
 - **C6.6** RULES_AUDIT 7.
 
 <a id="c7"></a>
@@ -556,7 +557,7 @@ The checks table on the page (snapshot 2026-10-27):
 ## C8. Registration check
 
 - **C8.1** “Registered with the regulator as an investment adviser, and active.”
-- **C8.2** Source: only the firm's own IAPD page on sec.gov (level 1, the register). The Overview is gone (section 8 is now Thesis), so nothing here comes from it.
+- **C8.2** Source: only the firm's own IAPD page on sec.gov (level 1, the register). The Overview is gone (replaced by Thesis, [B7](#b7)), so nothing here comes from it.
 - **C8.3** Stored on the check 8 row in `firm_check_rows` (n=8), set only after it passes the registration check (C8.4); The Checker runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28): registered or exempt reporting, since year, active or not, SEC/CRD number, and the IAPD link.
 - **C8.4** Door check: the link must be an adviserinfo.sec.gov page for that firm, and the status must be one of the fixed list (Registered, Exempt reporting, Not active).
 - **C8.5** Check 8 only (Alex, 2026-10-28): a US firm found on IAPD is Clear (registration line + link); a US firm not found is "Not on the list"; a non-US firm (from HQ country) gets a grey pill with the note "SEC register doesn't apply: firm is based outside the US", not counted for or against.
@@ -565,7 +566,7 @@ The checks table on the page (snapshot 2026-10-27):
 <a id="c9"></a>
 ## C9. People behind the fund
 
-- **C9.1** Partners and owners, each checked against the lists above.
+- **C9.1** Partners and owners, each checked against the lists in [C1](#c1), [C2](#c2), [C3](#c3) and [C10](#c10).
 - **C9.2** `firm_check_rows` n=9. Detail field `people_screen`, or a legal fact whose entity starts with `partner:`.
 - **C9.3** The people themselves are Form ADV Schedule A, via the enricher, into `firm_people_roles`. The screening of those people is a different store. Unknown which bot screened them.
 - **C9.4** A person publish checks the name. It does not set this pill.
@@ -645,3 +646,9 @@ What Sequoia’s payload contains:
 - **R4.5** One label, one value, one source. Headquarters, Founded, and Regulatory AUM conflict instead of duplicating when the value differs. Notes and over-long text are rejected for new items.
 - **R4.6** Hidden labels: Other names, Type, Staff, Private funds, Legal entity, Sanctions screening, empty, “Not found.” A row with no source is not returned.
 - **R4.7** RULES_AUDIT 15. The label `Overview` is not hidden. Eight lab firms have 3 such paragraphs each.
+
+<a id="r5"></a>
+## R5. Old notes
+
+- **R5.1** Old note (was in B10.1): cards grouped into board, moves, and officers. Sequoia returns 15 people.
+- **R5.2** Old note (was in C6.5): a count with no itemized rows said details are coming and linked a CourtListener search of the legal name.
