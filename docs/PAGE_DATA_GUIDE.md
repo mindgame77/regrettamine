@@ -17,6 +17,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
   - [A9. List limits and archiving (the one table)](#a9)
   - [A10. Search and new firms](#a10)
   - [A11. How long rows are kept](#a11)
+  - [A12. Shared checks list](#a12)
 - [B. The page](#b)
   - [B1. Site logo and wordmark](#b1)
   - [B2. Search box and suggestions](#b2)
@@ -109,7 +110,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 <a id="a4"></a>
 ## A4. The holding door
 
-- **A4.1** Only a known bot gets in, and each bot has its own key. Turning that key off stops that bot. The others keep working.
+- **A4.1** Only a known bot gets in, and each bot has its own key. Turning that key off stops that bot. The others keep working. Research bot submissions pass the submission check, A12.2 (Alex, 2026-10-28).
 - **A4.2** A bot may send as many distinct firms in an hour as the hourly limit. That limit is one setting, `door_hour_cap`. It starts at 100. Those firms are checked now. Further firms in that hour, up to three times the limit, are kept and wait until the next hour. They are not thrown away. More than three times the limit in an hour is an attack: that bot’s key is blocked, its waiting items are frozen, and Alex gets one alert. Only Alex can turn that bot back on. Changing the hourly limit changes the attack line with it. There is no second setting.
 - **A4.3** An exact copy is dropped at the door. It is not stored again.
 - **A4.4** The entry check works the queue oldest first (The Checker runs this check today; automatic checks, when built, run the same check.) (Alex, 2026-10-28). A bot whose items fail more than half the time, after at least 10 checked items in a day, is paused, and Alex gets one alert.
@@ -124,7 +125,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
   - The link matches the item (this firm, this person, this fund, this case).
   - The source level, from the ranking above.
 - **A5.3** A register or firm-site item is published with the date and checked-by **Checker**. Those two values, and the source level, are stored on the item. They are not drawn on the page. An elsewhere-online item is held as Unconfirmed and is not shown, unless Sources per page part says that part may show it. A failure stays in holding with the reason. Failed items are kept 7 days, then removed. Nothing is re-checked unless Alex asks. The revision of social links and contact details every few months counts as that standing ask. News rows that already have a check mark stay checked. They are not re-checked in this pass.
-- **A5.4** The Enricher does not publish. The Activity Collector does not write `investments` directly.
+- **A5.4** The Enricher does not publish; its fixes pass the fix check, A12.3 (Alex, 2026-10-28). The Activity Collector does not write `investments` directly; its deals and funds pass the activity check, A12.4 (Alex, 2026-10-28).
 
 <a id="a6"></a>
 ## A6. Three marks on every item
@@ -199,6 +200,14 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 ## A11. How long rows are kept
 
 - **A11.1** Search logs and uploads that have been processed are kept 30 days. Failed holding items are kept 7 days. The merge log is kept. Legal items and the 10 checks are not deleted by a retention job.
+
+<a id="a12"></a>
+## A12. Shared checks list
+
+- **A12.1** A new firm passes the new-firm check (it is a real VC, growth, PE or hedge fund firm with a working website, and it is not already in the queue) before it is added to the queue. List Builders (all regions) runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28)
+- **A12.2** A research bot's item passes the submission check (it has a source link, a source level (A1) and the three marks (A6), and it goes through the holding door (A4)). Researchers 1–3 runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28)
+- **A12.3** A fix passes the fix check (the new source is at the same level or higher (A1), and the old value is archived, never deleted) before it replaces a value. The Enricher runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28)
+- **A12.4** A deal or fund passes the activity check (it has a source link; the amount and lead are shown only when that source states them) before it is shown. The Activity Collector runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28)
 
 <a id="b"></a>
 # B. The page
