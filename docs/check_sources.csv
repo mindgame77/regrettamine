@@ -1,0 +1,83 @@
+Check #,Check name,Site,URL,Country,Level,Status,From friend doc,Loads
+1,Sanctions,OFAC Sanctions List Search,https://sanctionssearch.ofac.treas.gov/,US,1,In rulebook,yes,OK
+1,Sanctions,OFAC Sanctions List Service,https://ofac.treasury.gov/sanctions-list-service,US,1,In rulebook,yes,OK
+1,Sanctions,UK sanctions list,https://www.gov.uk/government/publications/the-uk-sanctions-list,UK,1,In rulebook,yes,OK
+1,Sanctions,UK sanctions list search,https://search-uk-sanctions-list.service.gov.uk/,UK,1,In rulebook,no,OK
+1,Sanctions,EU Sanctions Map,https://www.sanctionsmap.eu/,EU,1,In rulebook,no,OK
+1,Sanctions,UN SC Consolidated List,https://main.un.org/securitycouncil/en/content/un-sc-consolidated-list,UN,1,In rulebook,yes,OK
+1,Sanctions,OpenSanctions (extra),https://www.opensanctions.org/,Global,extra,In rulebook,yes,OK
+1,Sanctions,EU financial sanctions data file,https://data.europa.eu/data/datasets/consolidated-list-of-persons-groups-and-entities-subject-to-eu-financial-sanctions,EU,1,In rulebook,no,OK
+1,Sanctions,Swiss SECO SESAM,https://www.sesam.search.admin.ch/sesam-search-web/pages/search.xhtml,Switzerland,1,In rulebook,yes,OK
+1,Sanctions,Japan MOF sanctions list,https://www.mof.go.jp/policy/international_policy/gaitame_kawase/gaitame/economic_sanctions/list.html,Japan,1,In rulebook,yes,OK
+1,Sanctions,Canada consolidated sanctions,https://www.international.gc.ca/world-monde/international_relations-relations_internationales/sanctions/consolidated-consolide.aspx,Canada,1,In rulebook,yes,No answer
+1,Sanctions,Australia DFAT consolidated list,https://www.dfat.gov.au/international-relations/security/sanctions/consolidated-list,Australia,1,In rulebook,yes,No answer
+2,Terrorism financing lists,OFAC SDN (SDGT),https://sanctionssearch.ofac.treas.gov/,US,1,In rulebook,yes,OK
+2,Terrorism financing lists,State Dept FTO list,https://www.state.gov/foreign-terrorist-organizations,US,1,In rulebook,yes,OK
+2,Terrorism financing lists,UN 1267 ISIL/Al-Qaida,https://main.un.org/securitycouncil/en/sanctions/1267,UN,1,In rulebook,yes,OK
+2,Terrorism financing lists,EU terrorist list CP 931,https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02001E0931-20250722,EU,1,In rulebook,no,OK
+2,Terrorism financing lists,UK proscribed groups,https://www.gov.uk/government/publications/proscribed-terror-groups-or-organisations--2,UK,1,In rulebook,no,OK
+2,Terrorism financing lists,OpenSanctions (extra),https://www.opensanctions.org/,Global,extra,In rulebook,yes,OK
+2,Terrorism financing lists,Australia listed terrorist orgs,https://www.nationalsecurity.gov.au/what-australia-is-doing/terrorist-organisations/listed-terrorist-organisations,Australia,1,In rulebook,no,OK
+2,Terrorism financing lists,Canada listed terrorist entities,https://www.publicsafety.gc.ca/cnt/ntnl-scrt/cntr-trrrsm/lstd-ntts/crrnt-lstd-ntts-en.aspx,Canada,1,In rulebook,no,No answer
+3,Export and investment restrictions,trade.gov Consolidated Screening List,https://www.trade.gov/consolidated-screening-list,US,1,In rulebook,yes,OK
+3,Export and investment restrictions,CSL search,https://www.trade.gov/data-visualization/csl-search,US,1,In rulebook,no,OK
+5,Money laundering penalties,FinCEN enforcement actions,https://www.fincen.gov/news-room/enforcement-actions,US,1,In rulebook,yes,OK
+5,Money laundering penalties,OFAC civil penalties,https://ofac.treasury.gov/civil-penalties-and-enforcement-information,US,1,In rulebook,yes,OK
+5,Money laundering penalties,SEC litigation releases,https://www.sec.gov/enforcement-litigation/litigation-releases,US,1,In rulebook,yes,Blocked
+5,Money laundering penalties,FINRA disciplinary actions,https://www.finra.org/rules-guidance/oversight-enforcement/finra-disciplinary-actions,US,1,In rulebook,yes,OK
+5,Money laundering penalties,CFTC enforcement actions,https://www.cftc.gov/LawRegulation/EnforcementActions/index.htm,US,1,In rulebook,yes,OK
+5,Money laundering penalties,UK FCA,https://www.fca.org.uk/,UK,1,In rulebook,yes,Blocked
+5,Money laundering penalties,BaFin,https://www.bafin.de/EN/Homepage/homepage_node.html,Germany,1,In rulebook,no,OK
+5,Money laundering penalties,MAS enforcement actions,https://www.mas.gov.sg/regulation/enforcement/enforcement-actions,Singapore,1,In rulebook,no,OK
+5,Money laundering penalties,FINTRAC penalties,https://fintrac-canafe.canada.ca/pen/4-eng,Canada,1,In rulebook,no,OK
+5,Money laundering penalties,AUSTRAC,https://www.austrac.gov.au/,Australia,1,In rulebook,no,No answer
+6,US court records,PACER,https://pacer.uscourts.gov/,US,1,In rulebook,yes,OK
+6,US court records,uscourts.gov,https://www.uscourts.gov/,US,1,In rulebook,yes,OK
+6,US court records,CourtListener,https://www.courtlistener.com/,US,1,In rulebook,yes,Blocked
+6,US court records,Justia (finder only),https://law.justia.com/,US,3,In rulebook,yes,Blocked
+6,US court records,Casetext (finder only),https://casetext.com/,US,3,In rulebook,no,OK
+6,US court records,Law360 (news only),https://www.law360.com/,US,3,In rulebook,no,OK
+6,US court records,Delaware courts,https://courts.delaware.gov/,US,1,In rulebook,yes,OK
+7,Court records outside the US,Find Case Law,https://caselaw.nationalarchives.gov.uk/,UK,1,In rulebook,yes,OK
+7,Court records outside the US,Judiciary of England and Wales,https://www.judiciary.uk/,UK,1,In rulebook,no,OK
+7,Court records outside the US,BAILII,https://www.bailii.org/,UK/Ireland,3,In rulebook,yes,OK
+7,Court records outside the US,CURIA,https://curia.europa.eu/juris/recherche.jsf?language=en,EU,1,In rulebook,no,OK
+7,Court records outside the US,e-Justice portal,https://e-justice.europa.eu/,EU,1,In rulebook,no,Blocked
+7,Court records outside the US,ECHR HUDOC,https://hudoc.echr.coe.int/,Europe,1,In rulebook,no,Blocked
+7,Court records outside the US,Rechtsprechung im Internet,https://www.rechtsprechung-im-internet.de/,Germany,1,In rulebook,no,OK
+7,Court records outside the US,Bundesgerichtshof,https://www.bundesgerichtshof.de/,Germany,1,In rulebook,no,OK
+7,Court records outside the US,Judilibre,https://www.courdecassation.fr/acces-rapide-judilibre,France,1,In rulebook,no,OK
+7,Court records outside the US,Legifrance,https://www.legifrance.gouv.fr/,France,1,In rulebook,no,Blocked
+7,Court records outside the US,Rechtspraak,https://uitspraken.rechtspraak.nl/,Netherlands,1,In rulebook,no,OK
+7,Court records outside the US,Juportal,https://juportal.be/,Belgium,1,In rulebook,no,OK
+7,Court records outside the US,Courts Service of Ireland,https://www.courts.ie/judgments,Ireland,1,In rulebook,no,OK
+7,Court records outside the US,CENDOJ,https://www.poderjudicial.es/search/indexAN.jsp,Spain,1,In rulebook,no,No answer
+7,Court records outside the US,Italgiure,https://www.italgiure.giustizia.it/sncass/,Italy,1,In rulebook,no,No answer
+7,Court records outside the US,Domstol Sweden,https://www.domstol.se/,Sweden,1,In rulebook,no,OK
+7,Court records outside the US,Domstol Norway,https://www.domstol.no/,Norway,1,In rulebook,no,OK
+7,Court records outside the US,Domstol Denmark,https://www.domstol.dk/,Denmark,1,In rulebook,no,Blocked
+7,Court records outside the US,Finlex,https://www.finlex.fi/,Finland,1,In rulebook,no,OK
+7,Court records outside the US,Swiss Federal Supreme Court,https://www.bger.ch/,Switzerland,1,In rulebook,no,No answer
+7,Court records outside the US,RIS,https://www.ris.bka.gv.at/,Austria,1,In rulebook,no,No answer
+7,Court records outside the US,CanLII,https://www.canlii.org/,Canada,3,In rulebook,no,Blocked
+7,Court records outside the US,AustLII,https://www.austlii.edu.au/,Australia,3,In rulebook,no,Blocked
+7,Court records outside the US,NZLII,https://www.nzlii.org/,New Zealand,3,In rulebook,no,Blocked
+8,Registration check,SEC IAPD,https://adviserinfo.sec.gov/,US,1,In rulebook,yes,OK
+9,People behind the fund,SEC IAPD (Form ADV Sched. A/B),https://adviserinfo.sec.gov/,US,1,In rulebook,yes,OK
+9,People behind the fund,EDGAR full-text (Form D),https://efts.sec.gov/LATEST/search-index,US,1,In rulebook,yes,OK
+9,People behind the fund,UK Companies House,https://find-and-update.company-information.service.gov.uk/,UK,1,In rulebook,yes,OK
+9,People behind the fund,GLEIF,https://search.gleif.org/,Global,1,In rulebook,yes,OK
+9,People behind the fund,EU business registers,https://e-justice.europa.eu/topics/registers-business-insolvency-land/business-registers-search-company-eu_en,EU,1,In rulebook,no,Blocked
+9,People behind the fund,FINRA BrokerCheck,https://brokercheck.finra.org/,US,1,In rulebook,yes,OK
+9,People behind the fund,SEC litigation releases,https://www.sec.gov/enforcement-litigation/litigation-releases,US,1,In rulebook,yes,Blocked
+9,People behind the fund,Firm's own team page,(firm website),—,2,In rulebook,yes,—
+9,People behind the fund,OpenSanctions (extra),https://www.opensanctions.org/,Global,extra,In rulebook,no,OK
+10,Political ties / PEP,OpenSanctions PEPs,https://www.opensanctions.org/datasets/peps/,Global,extra,In rulebook,no,OK
+10,Political ties / PEP,FEC individual contributions,https://www.fec.gov/data/receipts/individual-contributions/,US,1,In rulebook,yes,OK
+10,Political ties / PEP,LDA lobbying,https://lda.gov/system/public/,US,1,In rulebook,yes,OK
+10,Political ties / PEP,congress.gov,https://www.congress.gov/,US,1,In rulebook,yes,Blocked
+10,Political ties / PEP,CIA World Leaders,https://www.cia.gov/resources/world-leaders/,Global,1,In rulebook,no,OK
+10,Political ties / PEP,European Parliament MEPs,https://www.europarl.europa.eu/meps/en/home,EU,1,In rulebook,no,OK
+10,Political ties / PEP,UK Parliament members,https://members.parliament.uk/,UK,1,In rulebook,no,Blocked
+10,Political ties / PEP,Wikidata,https://www.wikidata.org/,Global,3,In rulebook,no,OK
+10,Political ties / PEP,EveryPolitician,https://everypolitician.org/,Global,3,In rulebook,no,OK
