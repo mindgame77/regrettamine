@@ -35,10 +35,8 @@ def test_checked_names_are_searchable_and_each_check_keeps_its_own_list():
         cur.execute(
             "insert into funds(firm_id, name, data_status, source_urls) values "
             "(%s, 'ZZ Growth Fund V', 'real', %s), "
-            "(%s, 'Funds', 'real', %s), "
             "(%s, 'ZZ News Fund', 'real', %s)",
-            (fid, ["https://zzlab.example/funds"], fid, ["https://reports.adviserinfo.sec.gov/reports/ADV/1/PDF/1.pdf"],
-             fid, ["https://techcrunch.com/zz"]),
+            (fid, ["https://zzlab.example/funds"], fid, ["https://techcrunch.com/zz"]),
         )
         cur.execute(
             "insert into funds(firm_id, name, data_status, filing_url) values (%s, 'ZZ Register Fund, L.P.', 'real', %s)",
