@@ -431,6 +431,7 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 .ats{display:grid;gap:12px}.att{border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:4px;min-width:0}
 .att small{font:700 11.5px 'DM Sans';letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}.att b{font:800 30px 'Bricolage Grotesque';color:var(--ink)}.att b .asm{font-size:19px}
 .att span{font-size:13.5px;color:var(--ink2)}.att a{color:var(--vio);font-weight:700;text-decoration:none}
+.att .afl{display:block;margin-top:6px;font-size:13px;font-weight:700;color:var(--vio)}.att .afl .ash{margin:0;font-size:13px}
 .amt{background:var(--mintbg)}.afd{background:var(--viobg)}
 .aon{background:#E7F8EE;flex-direction:row;align-items:center;gap:14px}.aon>i{width:14px;height:14px;border-radius:50%;background:#16A34A;box-shadow:0 0 0 6px #C9F0D8;flex:none}
 .aon div{display:flex;flex-direction:column;gap:2px;min-width:0}.aon b{font-size:24px;color:#0F7A3A}.aon em{font-style:normal;font-size:13px;color:var(--mute)}
