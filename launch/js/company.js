@@ -116,10 +116,14 @@
     const list = ((P.firm || {}).social || []).filter(a => a && SOC_SVG[a.platform] && /^https:\/\//i.test(a.url || '') && compactCount(a.followers) !== '');
     if (!list.length) return '';
     return list.map(a => {
-      const name = (SOC.names || {})[a.platform] || a.platform, c = compactCount(a.followers);
+      const base = (SOC.names || {})[a.platform] || a.platform, c = compactCount(a.followers);
+      // A15.7: a regional account is its own pill, labelled with its region ("X · India"). Rounded counts show like any count.
+      const region = typeof a.region === 'string' ? a.region.trim() : '';
+      const name = region ? (SOC.regional || '{platform} · {region}').replace('{platform}', base).replace('{region}', region) : base;
       const aria = (SOC.aria || '{platform}: {count}').replace('{platform}', name).replace('{count}', c);
       return '<a class="sc soc" href="' + esc(a.url) + '" target="_blank" rel="noopener" aria-label="' + esc(aria) + '" title="' + esc(name) + '">' +
-        '<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + SOC_SVG[a.platform] + '</svg><b>' + esc(c) + '</b></a>';
+        '<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + SOC_SVG[a.platform] + '</svg>' +
+        (region ? esc(region) + ' ' : '') + '<b>' + esc(c) + '</b></a>';
     }).join('');
   }
   function paintSocial(main, P) {

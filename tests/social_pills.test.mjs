@@ -48,3 +48,20 @@ test('substack pill: orange logo, name from copy.json, rounded count', () => {
   assert.match(html, /<b>280K<\/b><\/a>$/);
   assert.equal(copy.company.header.social.names.substack, 'Substack');
 });
+
+test('regional pill: same pill style, labelled with its region (A15.7); main pill unchanged', () => {
+  const main = { platform: 'x', url: 'https://twitter.com/lightspeedvp', followers: 132952 };
+  const before = socialPills({ firm: { social: [main] } });
+  const html = socialPills({ firm: { social: [main, { platform: 'x', url: 'https://twitter.com/LightspeedIndia', followers: 25873, region: 'India' }] } });
+  assert.equal((html.match(/<a class="sc soc"/g) || []).length, 2);
+  assert.ok(html.startsWith(before));
+  assert.match(html, /href="https:\/\/twitter\.com\/LightspeedIndia"[^>]*aria-label="X · India: 25.9K" title="X · India"><svg[^>]*>.*<\/svg>India <b>25.9K<\/b><\/a>$/);
+  assert.equal(copy.company.header.social.regional, '{platform} · {region}');
+});
+
+test('rounded count displays like any count (A15.6)', () => {
+  const a = socialPills({ firm: { social: [{ platform: 'youtube', url: 'https://www.youtube.com/@a16z', followers: 20100, rounded: true }] } });
+  const b = socialPills({ firm: { social: [{ platform: 'youtube', url: 'https://www.youtube.com/@a16z', followers: 20100 }] } });
+  assert.equal(a, b);
+  assert.match(a, /<b>20.1K<\/b>/);
+});
