@@ -781,6 +781,13 @@
    ],
    "deals_title": "{n} deals · {firm}",
    "reviews_title": "{n} founder reviews · {firm}",
+   "funds_sec": [
+    "{n} fund on SEC record",
+    "{n} funds on SEC record"
+   ],
+   "show_all": "Show all",
+   "h_fund": "Fund",
+   "h_amount": "Amount",
    "close": "Close",
    "ratings": {
     "honesty": "Honesty",

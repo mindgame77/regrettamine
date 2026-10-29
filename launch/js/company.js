@@ -1197,6 +1197,14 @@
       }
     } finally { ov._busy = false; }
   });
+  const fundsLine = (P, n) => '<span class="afl">' + esc(pl(AC.funds_sec, n)) + ' · <button type="button" class="ash"'
+    + (P.open ? ' data-open="actfunds" aria-haspopup="dialog"' : ' data-gate') + '>' + esc(AC.show_all) + ' ↓</button></span>';
+  function fundRows(fs) {
+    return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_fund) + '</span><span>' + esc(AC.h_amount) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
+      + fs.map(x => { const u = safeUrl(x.url);
+        return '<div class="ad"><b>' + esc(fundName(x.name)) + '</b><span>' + esc(money(x.raised_usd)) + '</span><span>' + esc(fdate(x.date) || '') + '</span>'
+          + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(AC.filing) + ' ↗</a>' : '<span></span>') + '</div>'; }).join('') + '</div>';
+  }
   function activity(P) {
     const A = P.activity, firm = P.firm.name;
     if (!A) return '';
@@ -1226,6 +1234,13 @@
       const u = safeUrl(f.url);
       const sub = esc(fundName(f.name)) + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(AC.filing) + ' ↗</a>' : '');
       tiles.push(tile(AC.fund, '<span class="asm">' + esc(fundName(f.name)) + '</span>', sub, 'afd'));
+    }
+    // A9.6: "N funds on SEC record · Show all" inside the fund tile. Show all opens the same popup as Show all deals.
+    const fs = A.funds_sec, fsn = fs && Number(fs.n) > 0 ? Number(fs.n) : 0;
+    const ti = tiles.findIndex(t => t.indexOf('att afd') > -1);
+    if (fsn && ti > -1) {
+      tiles[ti] = tiles[ti].replace(/<\/div>$/, fundsLine(P, fsn) + '</div>');
+      if (P.open && Array.isArray(fs.items)) actModal('actfunds', pl(AC.funds_sec, fsn) + ' · ' + firm, fundRows(fs.items));
     }
     if (!tiles.length && !d0 && !r0) return '';
     let h = '<section class="actv" aria-label="' + esc(AC.reviews) + '">' + (tiles.length ? '<div class="ats" style="grid-template-columns:repeat(' + tiles.length + ',1fr)">' + tiles.join('') + '</div>' : '');
@@ -1264,5 +1279,5 @@
     view.total = full.total; view.head = full.head;
     return view;
   }
-  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows, setFirmName, compactCount, socialPills, metaLine };
+  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows, setFirmName, compactCount, socialPills, metaLine, fundRows };
 })();
