@@ -39,7 +39,7 @@ A5.4,A5 The Checker,The Enricher does not publish (fixes: A12.3); the Activity C
 A6.1,A6 Three marks on every item,"The entry check sets these once, on the item itself (The Checker runs this check today; automatic checks, when built, run the same check.) (Alex, 2026-10-28):",on main
 A6.2,A6 Three marks on every item,"The columns are on the item tables: press_item_firms, timeline_events, firm_check_rows, firm_people_roles, firm_profile_facts, firm_legal_items, reviews, and...",on main
 A6.3,A6 Three marks on every item,firm_check_rows.searched_at and the news check_mark stay.,on main
-A6.4,A6 Three marks on every item,"checked_on, checked_by, and source_level are internal only.",on main
+A6.4,A6 Three marks on every item,"checked_on, checked_by, and source_level are internal only; exception: each check's result shows Checked on [date].","edited in this PR (Alex, 2026-10-28)"
 A7.1,A7 One home per data kind,"Firm names | firm_aliases, with a type: display, short name, legal, fund entity, old name, or website, plus the source | Gaps in legal_name",on main
 A7.2,A7 One home per data kind,Funds | funds | firm_profile_facts where section is funds,on main
 A7.3,A7 One home per data kind,"AUM | one fact: the SEC Form ADV figure (Item 5F regulatory assets, with the as-of year) first; if there is none (e.g. non-US firms), the AUM stated on the f...","on main"
@@ -252,7 +252,7 @@ C0.4,C0 How the checks work,"A table: number, title, pill, what was found, date 
 C0.5,C0 How the checks work,"firm_check_rows: n, title, descr, state, count_label, searched_at.",on main
 C0.6,C0 How the checks work,"Titles were inserted when the firm was created, or by the hand migration 20261023230000_sync_checks_all_launch_firms.sql.",on main
 C0.7,C0 How the checks work,A new firm’s pills are nc.,on main
-C0.8,C0 How the checks work,The table shows on the summary view.,on main
+C0.8,C0 How the checks work,"The table shows on the summary view; date shows as Checked on [date] when searched_at is set.","edited in this PR (Alex, 2026-10-28)"
 C0.9,C0 How the checks work,RULES_AUDIT 20 and 16.,on main
 C0.10,C0 How the checks work,"Parked for the checks review, not changed now (Alex, 2026-10-28): A8.1 (lab pills recounted on publish) vs the C1.5–C10.5 ""stored pill"" lines, and C7.1 (a no...",on main
 C0.11,C0 How the checks work,"One date searched per check = time of the last run (searched_at and checked_on are one value).","added in this PR (Alex, 2026-10-28)"

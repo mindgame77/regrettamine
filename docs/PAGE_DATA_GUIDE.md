@@ -143,7 +143,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
   - **source level**, 1, 2, 3, or 4 (`source_level`)
 - **A6.2** The columns are on the item tables: `press_item_firms`, `timeline_events`, `firm_check_rows`, `firm_people_roles`, `firm_profile_facts`, `firm_legal_items`, `reviews`, and `vc_source_facts`. They are not on `fact_sources`. A fact can have several source links, and press and the 10 checks do not keep the source pill in `fact_sources`.
 - **A6.3** `firm_check_rows.searched_at` and the news `check_mark` stay. They are not dropped. For the 10 lab firms, a search date is copied into `checked_on`. A news row already marked `checked_correct` or `checked_wrong` copies `last_checked_at` into `checked_on`, and the source level from the link. That copy is saved first in `marks_fold_backup`. A row the Checker did not check keeps `checked_by` empty. The page still reads the old fields.
-- **A6.4** `checked_on`, `checked_by`, and `source_level` are internal only. They are never shown on the live site, in any block. Alex rejected the Sequoia mockup that put a grey “checked &lt;date&gt;” next to the source pill. Do not build that.
+- **A6.4** `checked_on`, `checked_by`, and `source_level` are internal only. They are never shown on the live site, in any block. Alex rejected the Sequoia mockup that put a grey “checked &lt;date&gt;” next to the source pill. Do not build that. Exception (Alex, 2026-10-28): each check's result line in the checks table shows “Checked on [date]”, the check's one date searched ([C0.11](#c0), [C0.12](#c0)). Per-item dates stay hidden.
 - **A6.5** A6 stays as is. Missing checked date, check and level on old items are filled by the new-database rerun ([A14.1](#a14)), not by a backfill now (Alex, 2026-10-28).
 
 <a id="a7"></a>
@@ -526,7 +526,7 @@ The checks table on the page (snapshot 2026-10-27):
 - **C0.5** `firm_check_rows`: `n`, `title`, `descr`, `state`, `count_label`, `searched_at`. Findings on an open page are `firm_page` `checks[].items`, backed by `firm_details` (`vc_source_facts`) and, when those are missing, the check’s itemized findings. Name-only hits are `checks[].name_only`.
 - **C0.6** Titles were inserted when the firm was created, or by the hand migration `20261023230000_sync_checks_all_launch_firms.sql`. Evidence, when it exists, came from researcher dumps into `vc_source_facts` (SEC, courts, sanctions lists). New dumps no longer copy onto this table.
 - **C0.7** A new firm’s pills are `nc`. `launch/checks.py` can derive a pill and is not what the page runs. Name-only text is excluded inside `firm_details`.
-- **C0.8** The table shows on the summary view. “Not checked yet” has no “nothing found” line. The date shows only when `searched_at` is set.
+- **C0.8** The table shows on the summary view. “Not checked yet” has no “nothing found” line. The date shows only when `searched_at` is set, as “Checked on [date]” (Alex, 2026-10-28); `searched_at` is the check's one date searched ([C0.11](#c0)).
 - **C0.9** RULES_AUDIT 20 and 16.
 - **C0.10** Parked for the checks review, not changed now (Alex, 2026-10-28): A8.1 (lab pills recounted on publish) vs the C1.5–C10.5 "stored pill" lines, and C7.1 (a non-party mention can be the count; resolved in C7.1, Alex, 2026-10-28).
 - **C0.11** One date searched per check (Alex, 2026-10-28): the time of that check's last run. It is the only date; `searched_at` and `checked_on` are one value, not two.
