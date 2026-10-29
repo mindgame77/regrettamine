@@ -89,8 +89,28 @@ function moneyChecks(path: string, o: Record<string, unknown>): string[] {
   }
   return e;
 }
+// Fix 3: one home per field. AUM / RAUM / fund assets live only in the "aum" record
+// (amount_usd, raum_usd, private_fund_gav_usd, or amount + currency). The same values under other paths or labels are rejected.
+const HOME_LABEL = /^\s*((regulatory\s+)?(aum|raum)|(regulatory\s+)?assets(\s+under\s+management)?|regulatory\s+assets|(total\s+|fund\s+|private\s+fund\s+)?gross\s+assets?(\s+value)?|(total\s+)?fund\s+assets|(private\s+fund\s+)?gav|item\s+5f.*)(\s*\(.*\))?\s*$/i;
+const HOME_KEY = /^(aum|raum|regulatory_aum|regulatoryAum|assets_under_management|fund_assets|fundAssets|total_gross_assets|private_fund_gav)(_[a-z]{3})?$/i;
+function homeLabel(t: unknown): boolean {
+  return typeof t === "string" && HOME_LABEL.test(t.replace(/[_-]+/g, " ").replace(/([a-z])([A-Z])/g, "$1 $2"));
+}
+function homeChecks(r: any): string[] {
+  const p = String(r.field_path ?? "");
+  if (p === "aum") return [];
+  const hit: string[] = [];
+  if (homeLabel(p)) hit.push(p);
+  const items = Array.isArray(r.value) ? r.value : [r.value];
+  for (const o of items) {
+    if (!isObj(o)) continue;
+    for (const k of ["label", "field", "kind", "name", "hero_label", "group_key"]) if (homeLabel((o as any)[k])) hit.push(String((o as any)[k]));
+    for (const k of Object.keys(o)) if (HOME_KEY.test(k)) hit.push(k);
+  }
+  return hit.length ? [`AUM and fund assets have one home: send them only as field_path "aum" (amount_usd, raum_usd, private_fund_gav_usd, or amount + currency), not under ${p} "${hit[0].slice(0, 40)}" (fix 3)`] : [];
+}
 function valueChecks(r: any): string[] {
-  const e = valueChecksBase(r);
+  const e = [...valueChecksBase(r), ...homeChecks(r)];
   return isObj(r.value) ? [...e, ...moneyChecks(r.field_path, r.value)] : e;
 }
 function valueChecksBase(r: any): string[] {

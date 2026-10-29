@@ -26,8 +26,11 @@ def test_assets_unit(value, want):
     with psycopg.connect(DATABASE_URL) as conn, conn.cursor() as cur:
         cur.execute("insert into firms (slug, name, published, data_status) values ('zz-aum', 'ZZ Aum', true, 'real') returning id")
         fid = cur.fetchone()[0]
+        # Existing (pre fix 3) AUM cards: new ones are blocked by money_home_guard, so load this one like the seed does.
+        cur.execute("set local session_replication_role = replica")
         cur.execute("insert into firm_profile_facts (firm_id, label, value, section, sort_order) values (%s, 'AUM', %s, 'overview', 1)",
                     (fid, value))
+        cur.execute("set local session_replication_role = origin")
         cur.execute("select public._firm_assets(%s)", (fid,))
         assert cur.fetchone()[0] == want
         conn.rollback()
