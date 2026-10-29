@@ -261,6 +261,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 - **A15.5** Missing: if there's no approved value, the item is hidden. We never show an empty value or a guessed one.
 - **A15.6** Rounded counts: if a platform only shows a rounded follower count (like YouTube's "20.1K"), the bot uploads it marked as rounded. The page shows it the same way as other counts, and an exact count replaces it once one is found.
 - **A15.7** Regional accounts: a firm's regional account (like LightspeedIndia) counts only if the firm's own website links to it. It's stored marked as regional, with its region, and shows as a separate pill labelled with the region, for example "X · India".
+- **A15.8** Money amounts (latest fund and all fund amounts, AUM, Fund assets) are saved as the full number in the original currency, plus a currency code, for example 14000000000 USD or 13200000 EUR. Never shortened forms like 0.13, 106.5 or '$82.2B'. How the amount is shown (like '$14B' or '€13.2M') is decided by the page, not stored. (Alex, 2026-10-29)
 
 <a id="b"></a>
 # B. The page
