@@ -1115,8 +1115,13 @@
   }
   function aumFigure(raw) {
     const s = String(raw || '');
-    const compact = s.match(/\$[0-9][0-9,]*(?:\.[0-9]+)?\s*[BMK]\b/i);
-    if (compact) return compact[0].replace(/\s+/g, '');
+    // Unit written as a letter or a word: '$18.27B', '$18.27 billion', '$400 mn', '$900 thousand'. The digits stay as written.
+    const unit = s.match(/\$([0-9][0-9,]*(?:\.[0-9]+)?)\s*(trillion|billion|bn|million|mn|mm|thousand|[TBMK])\b/i);
+    if (unit) {
+      const w = unit[2].toLowerCase();
+      const u = w[0] === 't' && w !== 'thousand' ? 'T' : w[0] === 'b' ? 'B' : w[0] === 'm' ? 'M' : 'K';
+      return '$' + unit[1] + u;
+    }
     const dollars = s.match(/\$([0-9][0-9,]*(?:\.[0-9]+)?)/);
     return dollars ? money(Number(dollars[1].replace(/,/g, ''))) : '';
   }
@@ -1298,5 +1303,5 @@
     view.total = full.total; view.head = full.head;
     return view;
   }
-  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows, setFirmName, compactCount, socialPills, metaLine, fundRows };
+  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows, setFirmName, compactCount, socialPills, metaLine, fundRows, aumFigure };
 })();
