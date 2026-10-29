@@ -394,6 +394,7 @@ button.rgt-tab{border:0;background:transparent;cursor:pointer}
 .pls{display:flex;gap:6px;flex-wrap:wrap}.mp{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:3px 9px;font-size:12.5px;font-weight:700;white-space:nowrap}
 .mp i{width:6px;height:6px;border-radius:50%;background:currentColor}.mp.c{background:var(--mintbg);color:#0E8F5A}.mp.r{background:#FFF4CC;color:#8a6a00}.mp.w{background:var(--viobg);color:var(--vio)}
 .nc{color:var(--mute);font-size:14px}#fnone{margin:14px 4px}
+.nc.rfn{color:var(--ink2)}
 @media (max-width:760px){.tabs{flex-wrap:wrap}.tabs .srch{margin:0;width:100%}.mfr{grid-template-columns:30px 1fr auto}.mfr.h{display:none}.mfr .dt,.mfr .pls,.mfr .nc{grid-column:2/4}}
 /* Loading skeleton on /vc/<slug>/ and /full/ (build.py SK_*): grey shapes inside the real containers until js/app.js draw() removes main.ld */
 .sk{display:inline-block;vertical-align:middle;height:.9em;max-width:100%;border-radius:6px;background:linear-gradient(90deg,#ece9f4 25%,#f7f5fc 50%,#ece9f4 75%);background-size:200% 100%;animation:sk 1.4s linear infinite}
