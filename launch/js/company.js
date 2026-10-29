@@ -1272,10 +1272,13 @@
     const ti = tiles.findIndex(t => t.indexOf('att afd') > -1);
     if (fsn && ti > -1) {
       tiles[ti] = tiles[ti].replace(/<\/div>$/, fundsLine(P, fsn) + '</div>');
-      if (P.open && Array.isArray(fs.items)) actModal('actfunds', pl(AC.funds_sec, fsn) + ' · ' + firm, fundRows(fs.items));
     }
-    if (!tiles.length && !d0 && !r0) return '';
-    let h = '<section class="actv" aria-label="' + esc(AC.reviews) + '">' + (tiles.length ? '<div class="ats" style="grid-template-columns:repeat(' + tiles.length + ',1fr)">' + tiles.join('') + '</div>' : '');
+    // No tile to hang the line under (e.g. accel): the line sits on its own where the tiles would be.
+    const lone = fsn && ti < 0 && !tiles.length;
+    if (fsn && (ti > -1 || lone) && P.open && Array.isArray(fs.items)) actModal('actfunds', pl(AC.funds_sec, fsn) + ' · ' + firm, fundRows(fs.items));
+    if (!tiles.length && !d0 && !r0 && !lone) return '';
+    let h = '<section class="actv" aria-label="' + esc(AC.reviews) + '">' + (tiles.length ? '<div class="ats" style="grid-template-columns:repeat(' + tiles.length + ',1fr)">' + tiles.join('') + '</div>'
+      : lone ? '<div class="ats" style="grid-template-columns:1fr">' + fundsLine(P, fsn) + '</div>' : '');
     if (d0) h += '<div class="aps"><b class="apt">' + esc(AC.latest_deal) + '</b>' + dealRows([d0], labFirm(P)) + (n.deals > 1 ? showAll(P, 'deals', n.deals) : '') + '</div>';
     if (r0) h += '<div class="aps arvs"><h2>' + esc(AC.reviews) + '</h2>' + revCard(r0) + (n.reviews > 1 ? showAll(P, 'revs', n.reviews) : '') + '</div>';
     // firm_page sends only the first slice (A.lazy); the full list loads once when "Show all" opens (firm_activity_list).

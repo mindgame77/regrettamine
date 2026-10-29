@@ -105,9 +105,24 @@ test('one fund reads singular; locked pages get the sign-in gate and no popup', 
   assert.ok(!created.find(e => e.id === 'actfunds'));
 });
 
-test('no line with zero SEC funds or no fund tile', () => {
+test('no line with zero SEC funds', () => {
   assert.doesNotMatch(paint({ activity: { latest_fund: latest, funds_sec: { n: 0, items: [] } } }), /afl|on SEC record/);
-  assert.doesNotMatch(paint({ activity: { funds_sec: fundsSec } }), /afl|on SEC record/);
+  assert.doesNotMatch(paint({ activity: { funds_sec: { n: 0, items: [] } } }), /afl|on SEC record/);
+});
+
+test('no tile at all (accel): the line sits on its own at the top of the activity area', () => {
+  created.length = 0;
+  const html = paint({ activity: { funds_sec: fundsSec } });
+  assert.match(html, /^<section class="actv"[^>]*><div class="ats" style="grid-template-columns:1fr"><span class="afl">2 funds on SEC record · <button type="button" class="ash" data-open="actfunds" aria-haspopup="dialog">Show all ↓<\/button><\/span><\/div>/);
+  assert.doesNotMatch(html, /att afd/);
+  assert.ok(created.find(e => e.id === 'actfunds'), 'same Show all popup');
+  const locked = paint({ open: false, activity: { funds_sec: { n: 6, items: null } } });
+  assert.match(locked, /<div class="ats" style="grid-template-columns:1fr"><span class="afl">6 funds on SEC record · <button type="button" class="ash" data-gate>Show all ↓<\/button>/);
+});
+
+test('a lone line is not added when other tiles exist but no fund tile', () => {
+  const html = paint({ activity: { deals_12m: 3, funds_sec: fundsSec } });
+  assert.doesNotMatch(html, /afl|on SEC record/);
 });
 
 test('copy strings live in copy.json', () => {
