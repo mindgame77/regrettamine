@@ -105,5 +105,10 @@
     return ym[1];
   }
 
+  // Source chip / link labels site-wide: anything over LABEL_CAP characters ends in '..' (two dots); the full label goes in
+  // title and aria-label. 28 fits a 390px phone with the date and arrow on the same chip (" · Oct 23, 2026 ↗").
+  const LABEL_CAP = 28;
+  const capLabel = (s, n) => { s = String(s == null ? '' : s).trim(); n = n || LABEL_CAP; return s.length > n ? s.slice(0, n - 2).trimEnd() + '..' : s; };
+  root.RegretLabel = { cap: capLabel, CAP: LABEL_CAP };
   root.RegretDate = { format, formatWhen, stamp, caseYear, TZ };
 })(typeof window !== 'undefined' ? window : globalThis);
