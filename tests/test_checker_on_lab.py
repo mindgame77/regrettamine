@@ -100,22 +100,36 @@ def test_lab_submission_publishes_once_and_a_different_value_is_a_note():
             "where pf.firm_id = %s and p.url = %s",
             (fid, item["url"]),
         ).fetchone()[0] == 1
-        longer = dict(item, headline="Hold Lab raises a much larger fund")
+        # A7.12 (Alex, 2026-10-28): the same news link with the full version of the published headline
+        # updates the published headline and is Accepted with the note 'headline completed'.
+        longer = dict(item, headline="Hold Lab raises a fund to back AI founders")
         cur.execute(
             "insert into research_submissions(registry_id, bot_id, payload, record_count, valid) values (%s, 'toxy-enricher', %s::jsonb, 1, true)",
-            (reg, json.dumps({"sections": {"Press coverage": [longer]}})),
+            (reg, json.dumps({"sections": {"Press coverage": [longer]}, "probes": {item["url"]: True}})),
         )
         headline = cur.execute(
             "select p.headline from press_items p join press_item_firms pf on pf.press_item_id = p.id "
             "where pf.firm_id = %s and p.url = %s",
             (fid, item["url"]),
         ).fetchone()[0]
-        # A4.7 (entry check): the same news link again is 'duplicate of a published news item', so it never
-        # reaches the Checker (A5.5) and the published headline stays. Needs Alex: this replaces the older A7.12 merge here.
-        assert headline == item["headline"]
+        assert headline == longer["headline"]
+        check, notes = cur.execute(
+            "select entry_check, entry_notes from research_submissions where registry_id = %s order by id desc limit 1", (reg,)
+        ).fetchone()
+        assert check == "Accepted"
+        assert "headline completed" in (notes or [])
+        # Any other same-link news item is still a duplicate, and the headline stays.
+        other_h = dict(item, headline="Totally different words", snippet="x")
+        cur.execute(
+            "insert into research_submissions(registry_id, bot_id, payload, record_count, valid) values (%s, 'toxy-enricher', %s::jsonb, 1, true)",
+            (reg, json.dumps({"sections": {"Press coverage": [other_h]}, "probes": {item["url"]: True}})),
+        )
         assert cur.execute(
             "select entry_check from research_submissions where registry_id = %s order by id desc limit 1", (reg,)
         ).fetchone()[0].startswith("Rejected: duplicate of a published news item")
+        assert cur.execute(
+            "select p.headline from press_items p where p.url = %s", (item["url"],)
+        ).fetchone()[0] == longer["headline"]
         conn.rollback()
 
 
