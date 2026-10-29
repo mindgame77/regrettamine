@@ -11,7 +11,72 @@ const TOP_KEYS = ["schema_version", "firm", "coverage", "records", "leads", "sea
 const CERTAINTY = ["adjudicated", "reported", "alleged", "self_reported"];
 const ENTITY_TYPES = ["firm", "fund", "partner", "company", "lp", "gp_entity"];
 const FIELD_PATHS = ["hq", "founded", "aum", "legal_entities", "people", "peopleMoves", "funds", "latestRaise", "limitedPartners",
-  "portfolio", "lawsuits", "regulatoryActions", "sanctions", "controversies", "posts", "reviews", "politicalContext"];
+  "portfolio", "lawsuits", "regulatoryActions", "sanctions", "controversies", "posts", "reviews", "politicalContext",
+  "news", "thesis", "socialAccounts"];
+// Fixed legal words (docs/PAGE_DATA_GUIDE.md A2.4). Old words are mapped on arrival so old uploads keep working.
+const LEGAL_PATHS = ["lawsuits", "regulatoryActions"];
+const LEGAL_STATUS: Record<string, string> = { active: "Active", open: "Active", pending: "Active", ongoing: "Active",
+  closed: "Closed", judgment: "Closed", adjudicated: "Closed", final: "Closed", settled: "Settled", dismissed: "Dismissed" };
+const LEGAL_SIDE: Record<string, string> = { defendant: "Defendant", plaintiff: "Plaintiff" };
+const LEGAL_TOPIC: Record<string, string> = { fraud: "Fraud", contract: "Contract", employment: "Employment", securities: "Securities",
+  "regulator action": "Regulator action", regulator_action: "Regulator action", ip: "IP" };
+const SOCIAL = ["linkedin", "x", "youtube", "instagram", "tiktok", "facebook", "github", "substack", "medium"];
+const AUM_BASIS = ["form_adv_raum", "self_reported"];
+const low = (x: unknown) => typeof x === "string" ? x.trim().toLowerCase() : "";
+// Maps old legal words to the fixed words in place; returns error texts for words that cannot be mapped.
+function legalWords(v: any): string[] {
+  const e: string[] = [];
+  const st = v.status ?? v.legal_status ?? v.lawsuit_status;
+  if (st != null) {
+    const k = low(st);
+    if (k === "unknown" || k === "") { delete v.status; delete v.legal_status; delete v.lawsuit_status; }
+    else if (LEGAL_STATUS[k]) { v.status = LEGAL_STATUS[k]; delete v.legal_status; delete v.lawsuit_status; }
+    else e.push(`legal status "${st}" not allowed: use Active, Closed, Settled or Dismissed`);
+  }
+  const sd = v.side ?? v.firm_party_role;
+  if (sd != null) {
+    const k = low(sd);
+    if (LEGAL_SIDE[k]) { v.side = LEGAL_SIDE[k]; delete v.firm_party_role; }
+    else if (k === "other") e.push(`legal side "other" is not allowed: the firm must be the Defendant or the Plaintiff; leave this case out if it is neither`);
+    else e.push(`legal side "${sd}" not allowed: use Defendant or Plaintiff`);
+  }
+  const tp = v.case_type ?? v.topic;
+  if (tp != null) {
+    const k = low(tp);
+    if (LEGAL_TOPIC[k]) { v.case_type = LEGAL_TOPIC[k]; delete v.topic; }
+    else e.push(`legal topic "${tp}" not allowed: use Fraud, Contract, Employment, Securities, Regulator action or IP`);
+  }
+  return e;
+}
+// Shape checks for one record value by field_path; may normalize the value in place.
+function valueChecks(r: any): string[] {
+  const v = r.value;
+  if (r.field_path === "thesis") {
+    if (isObj(v) && typeof (v as any).text === "string") r.value = (v as any).text;
+    return typeof r.value === "string" && r.value.trim().length >= 5 ? [] : ["thesis value must be the thesis text (a string, or {text})"];
+  }
+  if (!isObj(v)) return ["value must be an object"];
+  const o: any = v;
+  if (LEGAL_PATHS.includes(r.field_path)) return legalWords(o);
+  if (r.field_path === "aum" && o.basis != null && !AUM_BASIS.includes(o.basis))
+    return [o.basis === "press" ? `aum basis "press" is no longer allowed (A7.3): use form_adv_raum or self_reported, or leave AUM out` : `aum basis must be form_adv_raum or self_reported`];
+  if (r.field_path === "news") {
+    const e: string[] = [];
+    if (typeof o.headline !== "string" || !o.headline.trim()) e.push("news needs headline");
+    if (typeof o.outlet !== "string" || !o.outlet.trim()) e.push("news needs outlet");
+    if (o.date != null && (typeof o.date !== "string" || !DATE.test(o.date))) e.push("news date must be ISO (YYYY-MM-DD)");
+    return e;
+  }
+  if (r.field_path === "socialAccounts") {
+    const e: string[] = [];
+    if (!SOCIAL.includes(low(o.platform))) e.push(`social platform must be one of ${SOCIAL.join(", ")}`); else o.platform = low(o.platform);
+    if (typeof o.url !== "string" || !URL_OK.test(o.url)) e.push("social account needs url");
+    if (o.followers != null && typeof o.followers !== "number") e.push("social followers must be a number");
+    if (o.linked_from_firm_site !== true) e.push("social account must be linked from the firm's own website (set linked_from_firm_site true)");
+    return e;
+  }
+  return [];
+}
 const DATE = /^\d{4}(-\d{2}(-\d{2}([T ][0-9:.]+(Z|[+-]\d{2}:?\d{2})?)?)?)?$/;
 const URL_OK = /^https?:\/\/[^\s/]+\.[^\s]+$/i;
 const BAD_URL = /(google\.[a-z.]+\/search|bing\.com\/search|duckduckgo\.com\/\?|grok\.com|x\.com\/i\/grok|chatgpt\.com|perplexity\.ai\/search)/i;
@@ -20,7 +85,6 @@ const CORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods
   "Access-Control-Allow-Headers": "x-ingest-key, content-type, authorization", "Access-Control-Max-Age": "86400" };
 const json = (b: unknown, status = 200, extra: Record<string, string> = {}) =>
   new Response(JSON.stringify(b), { status, headers: { ...CORS, "content-type": "application/json", ...extra } });
-// every 400 says what was wrong, how to fix it, and which fields the action needs
 const REQUIRED: Record<string, string[]> = { status: ["action"], gaps: ["action"], claim: ["action", "bot_id"], claim_gap: ["action", "bot_id"],
   submit: ["action", "bot_id", "registry_id", "dump", "(optional) lps", "(optional) lps_over_100"],
   enrich: ["action", "bot_id", "enrichment {slug or registry_id, sections, confirm, fix, add, leads, notes, (optional) searches}"], fail: ["action", "bot_id", "registry_id", "reason"], sources: ["action"], firm_requests: ["action", "(optional) limit"], needs_source: ["action", "(optional) registry_id, slug, limit"],
@@ -31,9 +95,6 @@ const bad = (error: string, hint: string, action?: string) =>
 const sha256 = async (s: string) => [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)))]
   .map((b) => b.toString(16).padStart(2, "0")).join("");
 const isObj = (v: unknown): v is Record<string, unknown> => !!v && typeof v === "object" && !Array.isArray(v);
-
-// tier of one source URL: 'trusted' when the host is an allowlisted domain (public.trusted_source_domains) or a subdomain,
-// or an official government / court host; otherwise 'other'. Mirrors public.source_tier().
 const GOV = /(\.gov|\.gov\.[a-z]{2}|\.gouv\.[a-z]{2}|\.mil|\.europa\.eu|\.gc\.ca|\.admin\.ch)$/;
 function tierOf(url: string, allow: string[]): "trusted" | "other" {
   const h = (url.toLowerCase().match(/^https?:\/\/(?:www\.)?([^/:?#\s]+)/) ?? [])[1] ?? "";
@@ -48,7 +109,6 @@ async function allowlist(): Promise<string[]> {
   if (data?.length) allowCache = { at: Date.now(), list: data.map((r: any) => r.domain) };
   return allowCache.list;
 }
-
 function validate(d: unknown, registryId: string, allow: string[] = []) {
   const errors: string[] = [], w: string[] = []; let good = 0, bad = 0;
   const tiers = { trusted: 0, other: 0, needs_source: 0 };
@@ -71,12 +131,10 @@ function validate(d: unknown, registryId: string, allow: string[] = []) {
     else if (ids.has(r.record_id)) e.push("duplicate record_id"); else ids.add(r.record_id);
     if (!FIELD_PATHS.includes(r.field_path)) e.push(`field_path "${r.field_path}" not allowed`);
     if (!isObj(r.entity) || !ENTITY_TYPES.includes((r.entity as any).type) || !(r.entity as any).name) e.push("entity {id,type,name} invalid");
-    if (!isObj(r.value)) e.push("value must be an object");
+    e.push(...valueChecks(r));
     if (!CERTAINTY.includes(r.certainty)) e.push("certainty invalid");
     if (!Array.isArray(r.query_ids)) e.push("query_ids must be an array");
     else for (const q of r.query_ids) if (!qids.has(q)) { e.push(`query_id ${q} not in search_log`); break; }
-    // Source tiers (docs/SOURCE_TIERS.md): sources never reject a record. Each usable source URL is tagged 'trusted'
-    // (allowlist / government / courts) or 'other'; a record with no usable source is kept and flagged needs_source.
     let usable = 0, trusted = false;
     (Array.isArray(r.sources) ? r.sources : []).forEach((s: any, j: number) => {
       if (!isObj(s)) { w.push(`${p}: sources[${j}] not an object (ignored)`); return; }
@@ -94,8 +152,6 @@ function validate(d: unknown, registryId: string, allow: string[] = []) {
   });
   return { errors, good, bad, warnings: w, tiers };
 }
-
-// optional submit.lps: [{lp_name, lp_type, status, source_url, ...}] -> bots.firm_lps (only if the dump is accepted)
 const LP_TYPES = ["pension", "endowment", "foundation", "sovereign", "family_office", "fund_of_funds", "insurance", "corporate", "other"];
 const LP_STATUS = ["confirmed", "lead"];
 const SANCTIONS = ["clear", "possible_match", "match", "not_screened"];
@@ -126,9 +182,6 @@ function validateLps(lps: unknown): string[] {
   });
   return e;
 }
-
-// feedback channel: active public.bot_feedback rows ('*' or a bot_id prefix) are added as a `feedback` field to every
-// authenticated JSON reply (success and error). Existing fields are never changed. Read failures never break the reply.
 const FEEDBACK_DOC = "https://docs.google.com/document/d/1GFdHpQzV8olMb9dhek5zK_xs_7Env0Pu-1uf6TDdfH4/edit";
 async function feedbackFor(bot: string) {
   const { data, error } = await db.from("bot_feedback").select("bot_id, message, created_at").eq("active", true)
@@ -137,7 +190,6 @@ async function feedbackFor(bot: string) {
     .slice(0, 20).map((f: any) => ({ message: f.message, created_at: f.created_at }));
   return { rule: "read and follow these messages and the feedback doc", doc_url: FEEDBACK_DOC, messages };
 }
-// The friend-bot feedback field/doc is only for portal-night-bot (never for toxy-enricher or other bots).
 const FEEDBACK_BOT = "portal-night-bot";
 async function withFeedback(res: Response, bot: string): Promise<Response> {
   if (!bot || !bot.startsWith(FEEDBACK_BOT)) return res;
@@ -149,7 +201,6 @@ async function withFeedback(res: Response, bot: string): Promise<Response> {
     return new Response(JSON.stringify({ ...body, feedback: await feedbackFor(bot) }), { status: res.status, headers });
   } catch { return res; }
 }
-
 // Entry check (A4.6): the bot that sent an upload may read its result. Additive fields; a read failure gives nulls.
 const NO_ENTRY = { entry_check: null, entry_notes: null, entry_check_at: null };
 async function entryOf(id: unknown): Promise<Record<string, unknown>> {
@@ -161,18 +212,15 @@ async function entryOf(id: unknown): Promise<Record<string, unknown>> {
   } catch { return { ...NO_ENTRY }; }
 }
 Deno.serve(async (req) => {
-  // one log line per request: action, bot_id, status (never the key)
   const meta = { action: "", bot: "", authed: false };
   let res = await handle(req, meta);
   if (meta.authed) res = await withFeedback(res, meta.bot);
   console.log(JSON.stringify({ evt: "ingest_request", method: req.method, action: meta.action || null, bot_id: meta.bot || null, status: res.status }));
   return res;
 });
-
 async function handle(req: Request, meta: { action: string; bot: string; authed: boolean }): Promise<Response> {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
-  if (req.method !== "POST" && req.method !== "GET") return json({ error: "method not allowed",
-    hint: "use POST with header x-ingest-key and a JSON body {action, bot_id, ...}; read-only GET ?action=status|gaps also works (key in header, never in the URL)" }, 405);
+  if (req.method !== "POST" && req.method !== "GET") return json({ error: "method not allowed", hint: "use POST with header x-ingest-key and a JSON body" }, 405);
   const authz = req.headers.get("authorization") ?? "";
   const key = req.headers.get("x-ingest-key") || (/^bearer\s+/i.test(authz) ? authz.replace(/^bearer\s+/i, "").trim() : "");
   if (!key) return json({ error: "unauthorized", hint: "send the ingest key in header x-ingest-key (or Authorization: Bearer <key>); never in the URL" }, 401);
@@ -187,20 +235,16 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
   const keyId: string | null = typeof auth.key_id === "string" ? auth.key_id : null;
   let body: any;
   if (req.method === "GET") {
-    // read-only GET: ?action=status | gaps (&registry_id=&limit=&bot_id=). Never accepts the key in the query string.
     const u = new URL(req.url);
-    if (u.searchParams.has("key") || u.searchParams.has("x-ingest-key")) return bad("key must not be in the URL",
-      "remove the key from the query string and send it in header x-ingest-key (or Authorization: Bearer <key>)");
+    if (u.searchParams.has("key") || u.searchParams.has("x-ingest-key")) return bad("key must not be in the URL", "send the key in header x-ingest-key");
     body = Object.fromEntries(u.searchParams);
     meta.action = String(body.action ?? ""); meta.bot = String(body.bot_id ?? "").slice(0, 100);
-    if (body.action !== "status" && body.action !== "gaps" && body.action !== "my_results") return bad("GET supports only action=status, action=gaps or action=my_results",
-      "use ?action=status, ?action=gaps or ?action=my_results; claim, submit, fail, skip and claim_gap need POST with a JSON body");
+    if (body.action !== "status" && body.action !== "gaps" && body.action !== "my_results") return bad("GET supports only action=status, action=gaps or action=my_results", "use ?action=status, ?action=gaps or ?action=my_results");
   } else {
     const raw = await req.text();
     if (raw.length > MAX_BYTES) return json({ error: `payload too large (${raw.length} bytes, max ${MAX_BYTES})` }, 413);
-    try { body = JSON.parse(raw); } catch { return bad("body is not valid JSON",
-      'send a JSON object with header content-type: application/json, e.g. {"action":"status","bot_id":"my-bot"}'); }
-    if (!isObj(body)) return bad("body must be a JSON object", 'e.g. {"action":"status","bot_id":"my-bot"}');
+    try { body = JSON.parse(raw); } catch { return bad("body is not valid JSON", "send a JSON object"); }
+    if (!isObj(body)) return bad("body must be a JSON object", "send a JSON object");
     meta.action = typeof body.action === "string" ? body.action.slice(0, 40) : "";
   }
   const bot = typeof body.bot_id === "string" ? body.bot_id.slice(0, 100) : "";
@@ -211,14 +255,12 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       return error ? json({ error: "server error" }, 500) : json({ counts: data });
     }
     case "claim": {
-      if (!bot) return bad("bot_id required", "add a stable \"bot_id\" string (the same on every call)", "claim");
+      if (!bot) return bad("bot_id required", "add bot_id", "claim");
       const n = Number(body.count ?? 1);
-      if (!Number.isInteger(n) || n < 1 || n > 300) return bad("count must be 1-300", "omit count (defaults to 1) or send an integer 1-300", "claim");
+      if (!Number.isInteger(n) || n < 1 || n > 300) return bad("count must be 1-300", "send an integer 1-300", "claim");
       const { data, error } = await db.rpc("research_claim", { p_bot: bot, p_count: n });
       if (error) return json({ error: "server error" }, 500);
-      const firms = (data ?? []).map((f: any) => ({ registry_id: f.registry_id, firm_id: f.registry_id, name: f.name, website: f.website,
-        country: f.country, state: f.state, hq_city: f.hq_city, sec_crd: f.sec_crd, lei: f.lei, attempts: f.attempts }));
-      // paid on-demand jobs (only toxy-researcher-3 gets them): job id, missing checks, refund deadline (docs/ON_DEMAND.md)
+      const firms = (data ?? []).map((f: any) => ({ registry_id: f.registry_id, firm_id: f.registry_id, name: f.name, website: f.website, country: f.country, state: f.state, hq_city: f.hq_city, sec_crd: f.sec_crd, lei: f.lei, attempts: f.attempts }));
       if (firms.length && bot === "toxy-researcher-3") {
         const { data: info } = await db.rpc("ondemand_job_info", { p_ids: firms.map((f: any) => f.registry_id) });
         for (const f of firms as any[]) if (info?.[f.registry_id]) Object.assign(f, info[f.registry_id]);
@@ -226,116 +268,85 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       return json({ firms, none_left: firms.length === 0 });
     }
     case "submit": {
-      if (!bot || typeof body.registry_id !== "string") return bad("bot_id and registry_id required", "send the registry_id you claimed, your bot_id, and the full dump object", "submit");
+      if (!bot || typeof body.registry_id !== "string") return bad("bot_id and registry_id required", "send registry_id, bot_id, and the dump", "submit");
       const hasLps = body.lps !== undefined && body.lps !== null;
-      if (body.lps_over_100 !== undefined && typeof body.lps_over_100 !== "boolean") return bad("lps_over_100 must be boolean",
-        "send \"lps_over_100\": true only when the firm has more than 100 LPs (then list at most 100), or omit it", "submit");
+      if (body.lps_over_100 !== undefined && typeof body.lps_over_100 !== "boolean") return bad("lps_over_100 must be boolean", "send true or omit it", "submit");
       if (hasLps) {
         const le = validateLps(body.lps);
-        if (le.length) return json({ error: "invalid lps", errors: le.slice(0, 200), hint: "nothing was stored; fix the lps entries " +
-          `(fields: ${LP_FIELDS.join(", ")}; required: lp_name, status confirmed|lead, source_url) or omit lps, then resubmit`,
-          required_fields: REQUIRED.submit }, 400);
+        if (le.length) return json({ error: "invalid lps", errors: le.slice(0, 200), hint: "fix the lps entries or omit lps", required_fields: REQUIRED.submit }, 400);
       }
       const v = validate(body.dump, body.registry_id, await allowlist());
       const valid = v.errors.length === 0;
-      const { data, error } = await db.rpc("research_submit", { p_id: body.registry_id, p_bot: bot,
-        p_payload: body.dump ?? null, p_count: v.good + v.bad, p_valid: valid, p_errors: valid ? null : v.errors.slice(0, 200) });
+      const { data, error } = await db.rpc("research_submit", { p_id: body.registry_id, p_bot: bot, p_payload: body.dump ?? null, p_count: v.good + v.bad, p_valid: valid, p_errors: valid ? null : v.errors.slice(0, 200) });
       if (error) {
         const msg = String(error.message || error.details || "");
         if (msg.includes("rate_limited:")) return json({ error: "rate_limited: max 20 uploads per minute per bot, retry shortly" }, 429, { "retry-after": "60" });
         return json({ error: "server error" }, 500);
       }
-      if (data.error === "blocked") return json({ error: "blocked", hint: "this bot went past three times its hourly firm limit; only Alex can unblock" }, 403);
       if (data.error) return json({ error: data.error }, 409);
-      if (data.status === "duplicate") return json({ ok: true, status: "duplicate", dropped: true, hint: "exact copy dropped at the door" });
-      if (data.status === "waiting") return json({ ok: true, status: "waiting", submission_id: data.submission_id, ready_at: data.ready_at, hint: "past the hourly firm limit; this one waits until the next hour", ...(await entryOf(data.submission_id)) });
-      if (data.status === "holding") return json({ ok: valid, status: "holding", held_for_checker: true,
-        submission_id: data.submission_id, accepted_records: valid ? v.good : 0, rejected_records: v.bad,
-        errors: v.errors.slice(0, 200), source_tiers: v.tiers, warnings: v.warnings.slice(0, 200),
-        hint: valid ? "stored in holding for the Checker; not written to a page table"
-          : "not accepted (kept in holding for audit); fix ALL errors and resubmit the whole dump", ...(await entryOf(data.submission_id)) }, valid ? 200 : 422);
+      if (data.status === "holding") return json({ ok: valid, status: "holding", held_for_checker: true, submission_id: data.submission_id, accepted_records: valid ? v.good : 0, rejected_records: v.bad, errors: v.errors.slice(0, 200), source_tiers: v.tiers, warnings: v.warnings.slice(0, 200), hint: valid ? "stored in holding for the Checker; not written to a page table" : "not accepted (kept in holding for audit); fix ALL errors and resubmit the whole dump", ...(await entryOf(data.submission_id)) }, valid ? 200 : 422);
       let lpRes: any = undefined;
       if (valid && (hasLps || body.lps_over_100 === true)) {
-        const r = await db.rpc("research_store_lps", { p_id: body.registry_id, p_submission: data.submission_id,
-          p_lps: hasLps ? body.lps : [], p_over_100: body.lps_over_100 === true });
+        const r = await db.rpc("research_store_lps", { p_id: body.registry_id, p_submission: data.submission_id, p_lps: hasLps ? body.lps : [], p_over_100: body.lps_over_100 === true });
         lpRes = r.error ? { ok: false, error: "lps not stored (server error); dump was stored" } : r.data;
       }
-      return json({ ok: valid, ...(lpRes !== undefined ? { lps: lpRes } : {}), status: data.status, attempts: data.attempts ?? null, accepted_records: valid ? v.good : 0,
-        rejected_records: v.bad, errors: v.errors.slice(0, 200), source_tiers: v.tiers, warnings: v.warnings.slice(0, 200),
-        hint: valid ? (v.tiers.needs_source ? `stored; ${v.tiers.needs_source} record(s) have no usable source: kept as needs_source (hidden until a source is added). Claim the next firm` : "stored; claim the next firm") : "not accepted (kept for audit only); fix ALL errors and resubmit the whole dump once (same registry_id, same bot_id)", submission_id: data.submission_id ?? null, ...(await entryOf(data.submission_id)) }, valid ? 200 : 422);
+      return json({ ok: valid, ...(lpRes !== undefined ? { lps: lpRes } : {}), status: data.status, attempts: data.attempts ?? null, accepted_records: valid ? v.good : 0, rejected_records: v.bad, errors: v.errors.slice(0, 200), source_tiers: v.tiers, warnings: v.warnings.slice(0, 200), hint: valid ? (v.tiers.needs_source ? `stored; ${v.tiers.needs_source} record(s) have no usable source: kept as needs_source (hidden until a source is added). Claim the next firm` : "stored; claim the next firm") : "not accepted (kept for audit only); fix ALL errors and resubmit the whole dump once (same registry_id, same bot_id)", submission_id: data.submission_id ?? null, ...(await entryOf(data.submission_id)) }, valid ? 200 : 422);
     }
     case "enrich": {
-      // Enricher results for one firm (sections + confirm/fix/add/leads, each item one structured fact with a source URL; free text only as {note}; docs/PAGE_DATA_GUIDE.md).
-      // Stored raw in research_enrichments. While checker_publish is false, bot_id toxy-enricher still publishes at ingest.
-      // While that switch is true, a lab firm stays in holding and is not written to a page table.
-      // Other bots stay in the holding tables.
-      if (!bot) return bad("bot_id required", "add a stable \"bot_id\" string (the same on every call)", "enrich");
+      if (!bot) return bad("bot_id required", "add bot_id", "enrich");
       const en = body.enrichment;
-      if (!isObj(en)) return bad("enrichment must be a JSON object", "send {\"action\":\"enrich\",\"bot_id\":\"toxy-enricher\",\"enrichment\":{...your <slug>.json...}}", "enrich");
-      if (typeof en.slug !== "string" && typeof en.registry_id !== "string") return bad("enrichment.slug or enrichment.registry_id required", "send the firm page slug (e.g. \"accel\") and/or its registry_id", "enrich");
-      for (const k of ["fix", "add", "leads", "confirm", "searches"]) if (k in en && !Array.isArray(en[k])) return bad(`enrichment.${k} must be an array`, "send an array (or omit it)", "enrich");
-      if ("sections" in en && !isObj(en.sections)) return bad("enrichment.sections must be an object of arrays", "e.g. {\"Press coverage\":[{outlet,date,headline,url,snippet}]}", "enrich");
+      if (!isObj(en)) return bad("enrichment must be a JSON object", "send the enrichment object", "enrich");
+      if (typeof en.slug !== "string" && typeof en.registry_id !== "string") return bad("enrichment.slug or enrichment.registry_id required", "send the slug or registry_id", "enrich");
+      for (const k of ["fix", "add", "leads", "confirm", "searches"]) if (k in en && !Array.isArray(en[k])) return bad(`enrichment.${k} must be an array`, "send an array or omit it", "enrich");
+      if ("sections" in en && !isObj(en.sections)) return bad("enrichment.sections must be an object of arrays", "send sections as an object", "enrich");
       const { data, error } = await db.rpc("research_enrich", { p_bot: bot, p_payload: en });
       if (error) return json({ error: "server error" }, 500);
       if (data.error) return json({ error: data.error }, 409);
-      return json({ ok: data.valid, ...data, hint: data.valid ? (data.on_page ? "stored and on the firm page (at least one item published or merged); rejected items (if any) list the reason, fix their source and resubmit the whole file"
-          : "stored in the holding area; nothing from this file was published or merged onto a firm page. on_page is true only for bot_id toxy-enricher after an item lands on the page")
-        : "nothing accepted: every item needs a source URL of the page itself (any site; search/chat result pages are not sources)" }, data.valid ? 200 : 422);
+      return json({ ok: data.valid, ...data, hint: data.valid ? (data.on_page ? "stored and on the firm page (at least one item published or merged); rejected items (if any) list the reason, fix their source and resubmit the whole file" : "stored in the holding area; nothing from this file was published or merged onto a firm page. on_page is true only for bot_id toxy-enricher after an item lands on the page") : "nothing accepted: every item needs a source URL of the page itself (any site; search/chat result pages are not sources)" }, data.valid ? 200 : 422);
     }
     case "sources": {
-      // the trusted-source allowlist (tier 'trusted'); any other http(s) page is accepted as tier 'other'
       const { data, error } = await db.from("trusted_source_domains").select("domain, label, kind, path_like").order("domain");
-      return error ? json({ error: "server error" }, 500) : json({ trusted: data, other: "any other http(s) page is accepted and shown as an other source",
-        never: "search or chat result pages (google/bing/duckduckgo search, grok, chatgpt, perplexity search)" });
+      return error ? json({ error: "server error" }, 500) : json({ trusted: data, other: "any other http(s) page is accepted and shown as an other source", never: "search or chat result pages (google/bing/duckduckgo search, grok, chatgpt, perplexity search)" });
     }
     case "needs_source": {
-      // Enricher queue: bot records with no usable source (hidden publicly until a source is added via add_source)
       const n = Number(body.limit ?? 100);
-      let q = db.from("facts_needing_source").select("submission_id, registry_id, slug, firm_name, record_id, field_path, checklist_item, value, received_at")
-        .order("received_at", { ascending: false }).limit(Number.isInteger(n) && n > 0 && n <= 500 ? n : 100);
+      let q = db.from("facts_needing_source").select("submission_id, registry_id, slug, firm_name, record_id, field_path, checklist_item, value, received_at").order("received_at", { ascending: false }).limit(Number.isInteger(n) && n > 0 && n <= 500 ? n : 100);
       if (typeof body.registry_id === "string") q = q.eq("registry_id", body.registry_id);
       if (typeof body.slug === "string") q = q.eq("slug", body.slug);
       const { data, error } = await q;
       return error ? json({ error: "server error" }, 500) : json({ facts: data, count: (data ?? []).length });
     }
     case "firm_requests": {
-      // List builders: firms visitors asked for (search had no results), most wanted first; no emails. docs/FIRM_REQUESTS.md
       const { data, error } = await db.rpc("firm_requests_list", { p_limit: Number.isInteger(body.limit) ? body.limit : 100 });
-      return error ? json({ error: "server error" }, 500) : json({ requests: data, count: (data ?? []).length,
-        hint: "add the firm to research_queue with the same name (or website) and it links automatically; requesters are emailed when its research lands" });
+      return error ? json({ error: "server error" }, 500) : json({ requests: data, count: (data ?? []).length, hint: "add the firm to research_queue with the same name (or website) and it links automatically" });
     }
     case "add_source": {
-      if (!bot || !Number.isInteger(body.submission_id) || typeof body.record_id !== "string" || typeof body.url !== "string")
-        return bad("bot_id, submission_id (integer), record_id and url required", "take submission_id + record_id from action needs_source; url = the page that states the fact", "add_source");
-      const { data, error } = await db.rpc("fact_add_source", { p_sub: body.submission_id, p_record: body.record_id, p_url: body.url,
-        p_quote: typeof body.quote === "string" ? body.quote : null, p_by: bot });
+      if (!bot || !Number.isInteger(body.submission_id) || typeof body.record_id !== "string" || typeof body.url !== "string") return bad("bot_id, submission_id, record_id and url required", "take them from action needs_source", "add_source");
+      const { data, error } = await db.rpc("fact_add_source", { p_sub: body.submission_id, p_record: body.record_id, p_url: body.url, p_quote: typeof body.quote === "string" ? body.quote : null, p_by: bot });
       if (error) return json({ error: "server error" }, 500);
       return json(data, data.status === "ok" ? 200 : 400);
     }
     case "fail": {
-      if (!bot || typeof body.registry_id !== "string") return bad("bot_id and registry_id required", "send the registry_id you claimed, the same bot_id, and a short reason", "fail");
+      if (!bot || typeof body.registry_id !== "string") return bad("bot_id and registry_id required", "send the registry_id and a reason", "fail");
       const { data, error } = await db.rpc("research_fail", { p_id: body.registry_id, p_bot: bot, p_reason: String(body.reason ?? "").slice(0, 2000) });
       if (error) return json({ error: "server error" }, 500);
       return data.error ? json({ error: data.error }, 409) : json(data);
     }
     case "skip": {
-      // out of scope / duplicate: marks the firm 'skipped' at once, no retries
-      if (!bot || typeof body.registry_id !== "string") return bad("bot_id and registry_id required", "send the registry_id you claimed, the same bot_id, and a reason starting with skip:", "skip");
+      if (!bot || typeof body.registry_id !== "string") return bad("bot_id and registry_id required", "send the registry_id and a reason", "skip");
       const reason = String(body.reason ?? "").slice(0, 1990);
       const { data, error } = await db.rpc("research_skip", { p_id: body.registry_id, p_bot: bot, p_reason: reason.toLowerCase().startsWith("skip:") ? reason : `skip: ${reason}` });
       if (error) return json({ error: "server error" }, 500);
       return data.error ? json({ error: data.error }, 409) : json(data);
     }
     case "gaps": {
-      // list open gaps (optionally registry_id) so a gap-fill bot researches ONLY those items
       const rid = typeof body.registry_id === "string" ? body.registry_id : null;
       const n = Number(body.limit ?? 100);
       const { data, error } = await db.rpc("research_gaps_list", { p_registry: rid, p_limit: Number.isInteger(n) ? n : 100 });
       return error ? json({ error: "server error" }, 500) : json({ gaps: data, count: (data ?? []).length });
     }
     case "claim_gap": {
-      // claims ALL open gaps of one firm (optional registry_id) and puts the firm in 'claimed' for one merged resubmit
-      if (!bot) return bad("bot_id required", "add a stable \"bot_id\" string (the same on every call)", "claim_gap");
+      if (!bot) return bad("bot_id required", "add bot_id", "claim_gap");
       const rid = typeof body.registry_id === "string" ? body.registry_id : null;
       const { data, error } = await db.rpc("research_claim_gaps", { p_bot: bot, p_registry: rid });
       if (error) return json({ error: "server error" }, 500);
@@ -354,7 +365,6 @@ async function handle(req: Request, meta: { action: string; bot: string; authed:
       return json({ bot_id: data.bot_id, days: data.days, count: results.length, results,
         hint: "your own uploads only. entry_check is Accepted or Rejected: <reasons>; entry_notes are fix-ups that did not reject. Results are cleared after 30 days" });
     }
-    default: return bad("action must be claim | submit | enrich | fail | skip | status | gaps | claim_gap | sources | needs_source | add_source | firm_requests | my_results",
-      'set "action" to one of the listed values; start with {"action":"status","bot_id":"your-bot"}');
+    default: return bad("action must be claim | submit | enrich | fail | skip | status | gaps | claim_gap | sources | needs_source | add_source | firm_requests | my_results", "set action to one of the listed values");
   }
 }
