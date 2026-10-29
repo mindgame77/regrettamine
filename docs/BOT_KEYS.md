@@ -12,14 +12,8 @@ The old shared key (`night-run-1`, linked to portal-night-bot) still works and i
    - With `DATABASE_URL` set, it writes the key file and registers the hash through `public.register_bot_key` (service role only).
    - Without it, use `--sql-only`: it writes the file and prints a `select public.register_bot_key(...)` line, which holds only the hash. Run that line as the service role (for example with Supabase execute_sql).
 2. It refuses a bad bot_id, a bot that already has an active key, or an existing key file.
-3. Tell the new bot its file path and the instructions below. Never send the key itself.
+3. Tell the new bot its file path and point it to the bot research guide (link below). Never send the key itself.
 4. To retire a key: `update bots.ingest_keys set active = false where name = 'bot-<bot_id>-<stamp>';`
 
-## Instructions for each bot
-- Your key is in `/home/box/regretamin-keys/<your bot_id>.key`. Read it at run time. Never print, log or paste it.
-- Endpoint: `https://sxxgvkdwgiouyqciztec.supabase.co/functions/v1/research-ingest`
-- Send the header `x-ingest-key: <contents of your key file>` on every request (uploads exactly as before).
-- See your own entry-check results:
-  `curl -s -X POST "$URL" -H "x-ingest-key: $(cat /home/box/regretamin-keys/<bot_id>.key)" -H 'content-type: application/json' -d '{"action":"my_results","days":7,"limit":30}'`
-  - `days` and `limit` are each 1-30.
-  - The reply has `bot_id`, `days`, `count` and `results`, and covers only your own uploads.
+## How bots use their key
+See the bot research guide: https://docs.google.com/document/d/1gESJoiTdJ9xuV0UWL11AtUTJ60ItUG0v03Fsup1zkkw/edit

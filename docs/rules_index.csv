@@ -304,7 +304,7 @@ R1.5,R1 What the live code still does,Press and timeline are still two tables.,o
 R1.6,R1 What the live code still does,bots.firm_lps and firm_profile_facts both hold LP names.,on main
 R1.8,R1 What the live code still does,The ingest reply still names docs/DATA_RULES.md.,on main
 R1.9,R1 What the live code still does,docs/data-model.md still describes legal_matters and a score on the page.,on main
-R1.10,R1 What the live code still does,There is no prompt file for the Activity Collector or the list builders except this guide and docs/BOTS.md.,on main
+R1.10,R1 What the live code still does,There is no prompt file for the Activity Collector or the list builders except this guide and the bot research guide (https://docs.google.com/document/d/1gESJoiTdJ9xuV0UWL11AtUTJ60ItUG0v03Fsup1zkkw/edit).,on main
 R2.1,"R2 Page snapshot, 2026-10-27",This snapshot is what the live page returned that day.,on main
 R2.2,"R2 Page snapshot, 2026-10-27",The live firm page is filled in the browser.,on main
 R2.4,"R2 Page snapshot, 2026-10-27",firm_page('sequoia') returned open: true (the paywall switch is off).,on main
