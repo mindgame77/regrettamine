@@ -91,7 +91,10 @@ def test_hidden_rows_skip_hero_assets_and_site_export():
     with _db() as c:
         slug, fid = _setup(c)
         fact = _one(c, "firm_profile_facts", fid)
+        # An existing (pre fix 3) AUM card: new ones are blocked by money_home_guard, so load it like the seed does.
+        c.execute("set local session_replication_role = replica")
         c.execute("update firm_profile_facts set value = 'Item 5F regulatory assets $9,999,000', hero_label = 'AUM', hero_value = '$9.9M' where id = %s", (fact,))
+        c.execute("set local session_replication_role = origin")
         assert c.execute("select _firm_assets(%s)", (fid,)).fetchone()[0] == "$9,999,000"
         c.execute("select record_removed('firm_profile_facts', %s, %s, 'test hide', 'pytest', true)", (fact,fid))
         assert c.execute("select _firm_assets(%s)", (fid,)).fetchone()[0] is None
