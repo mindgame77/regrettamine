@@ -89,13 +89,13 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 
 | Rule |  Page part | Shown | Held or failed |
 |---|---|---|---|
-| **A2.2** | Limited partners (LPs) | Any trustworthy source (Alex, 2026-10-28): pension or endowment reports, public filings, approved news outlets or other sites in `trusted_source_domains`. The link must open and name the LP and the firm or fund. The link is kept. Shown as one line per LP: name and the total amount across all its funds with this firm that we have, for example "CalPERS · $150M (3 funds)". The fund count in brackets is shown only when the LP is in 2 or more funds; with 1 fund, no brackets. An amount only when a source states it, else just the name. No type or year on the page. | Junk, anonymous or untrusted sites, a dead link, or a page that does not name both: fail. |
+| **A2.2** | Limited partners (LPs) | Any trustworthy source (Alex, 2026-10-28): pension or endowment reports, public filings, approved news outlets or other sites in `trusted_source_domains`. The link must open and name the LP and the firm or fund. The link is kept. Shown as one line per LP: name and the total amount across all its funds with this firm that we have, for example "CalPERS · $150M (3 funds)". The fund count in brackets is shown only when the LP is in 2 or more funds; with 1 fund, no brackets. An amount only when a source states it, else just the name. No type, year or status on the page. Status (confirmed or lead) is kept in the system only (Alex, 2026-10-28). | Junk, anonymous or untrusted sites, a dead link, or a page that does not name both: fail. |
 | **A2.3** | People and interviews | People: only current people at the firm are shown; people who left are not shown, and neither are their interviews (Alex, 2026-10-28). Each current person may have up to 10 interviews: YouTube videos or press coverage, shown as link + headline. The 10 shown are the ones with the most views (YouTube); press coverage, which has no view count, comes after, newest first. More than 10: the rest are stored, not shown. The link must open and show that person. Design comes later, mockup first. | A dead link, a page that does not show that person, or a person who left: not shown. |
-| **A2.4** | Legal cases (display, Alex 2026-10-28) | Source: court or regulator records only (unchanged). Each case shows pills: status (Active, Closed, Settled, Dismissed), side (Defendant or Plaintiff), and what it is about (fixed list: Fraud, Contract, Employment, Securities, Regulator action, IP). Also: other party, filed year (and closed year if any), court or regulator (e.g. SEC, N.D. Cal.), and the required link. A Settled case also shows the settlement terms (for example the amount) when the court or regulator record states them; otherwise nothing is added. Page shows the last 2 active cases; if there are no active cases, the last 2 cases of any status. Show all opens every case. No cases at all: the section is not shown, no empty message. | No court or regulator link: not shown. |
+| **A2.4** | Legal cases (display, Alex 2026-10-28) | Source (Alex, 2026-10-28): CourtListener, PACER, uscourts.gov, a regulator (SEC, FINRA, FCA), Justia, Law360, or Casetext; a link is required. Each case shows pills: status (Active, Closed, Settled, Dismissed), side (Defendant or Plaintiff), and what it is about (fixed list: Fraud, Contract, Employment, Securities, Regulator action, IP). Also: other party, filed year (and closed year if any), court or regulator (e.g. SEC, N.D. Cal.), and the required link. A Settled case also shows the settlement terms (for example the amount) when the court or regulator record states them; otherwise nothing is added. The page shows 10 legal items (cases and regulator actions), active first, then the rest by most recent, plus Show all (Alex, 2026-10-28). This replaces "last 2". A legal mention or context row about an existing case is attached to that case as an extra link (for example "In the news: Reuters"); it is not its own row and is not counted. A mention with no matching case is not shown; it stays as a lead for the check. Show all opens every case. No cases at all: the section is not shown, no empty message. | No link from the allowed legal sources: not shown. |
 | **A2.5** | Reviews | A post on any public site (for example Reddit, X, LinkedIn, YouTube, Medium, a blog or podcast page; Alex, 2026-10-28) that exists, names the firm, and is copied word for word with its link. The writer says they are a founder, or the profile shows that they are. | Anonymous, with no founder claim: Unconfirmed, not shown. Glassdoor and other employee reviews: not used. A dead link or a post that does not name the firm: fail. |
-| **A2.6** | News | A story on TechCrunch, Reuters, Bloomberg, Axios, the Financial Times, the Wall Street Journal, CNBC, Forbes, or The Information, when the link opens and the story names the firm. | Any other blog or unknown site: Unconfirmed, not shown. A dead link, or a story that does not name the firm: fail. |
-| **A2.7** | Deals | The company’s own press release, or an SEC Form D. Both are level 2. The same known outlets as News are accepted. The amount and the Lead flag are filled only when that source states them. | Any other page: Unconfirmed, not shown. |
-| **A2.8** | Lawsuits | CourtListener, PACER, or uscourts.gov. These are level 1. | Any other page: Unconfirmed, not shown. |
+| **A2.6** | News | A story on TechCrunch, Reuters, Bloomberg, Axios, the Financial Times, the Wall Street Journal, CNBC, Forbes, or The Information, when the link opens and the story names the firm. | The firm’s own site posts or blog: never shown in News (Alex, 2026-10-28). Any other blog or unknown site: Unconfirmed, not shown. A dead link, or a story that does not name the firm: fail. |
+| **A2.7** | Deals | An SEC Form D (level 1) or the firm’s press release (level 2) (Alex, 2026-10-28). The same known outlets as News are accepted. The amount and the Lead flag are filled only when that source states them. | Any other page: Unconfirmed, not shown. |
+| **A2.8** | Lawsuits | Merged into A2.4 (Alex, 2026-10-28): same allowed sources (CourtListener, PACER, uscourts.gov, a regulator (SEC, FINRA, FCA), Justia, Law360, or Casetext; a link is required). CourtListener, PACER, uscourts.gov and regulators are level 1. | Any other page: Unconfirmed, not shown. |
 | **A2.9** | People | The firm’s team page or a Form ADV. The register is level 1. The firm’s team page is level 2. LinkedIn is allowed only for that person’s own job history. | Any other LinkedIn page, or a page that is not the team page or Form ADV: Unconfirmed, not shown. |
 | **A2.10** | Social counts | Only an account that is linked from the firm’s own website. | A count taken from anywhere else: Unconfirmed, not shown. |
 | **A2.11** | Sectors (portfolio and deals, one rule) | Any source is accepted (approved by Alex on 2026-10-28). The link must be a real page that opens and must describe that startup. A 403 or block page counts as opened, with a note. The sector is only ever the value the record gives, never invented. | A dead link, a search page, a chat page, an invented link, or a page that does not describe the startup: fail. |
@@ -112,13 +112,13 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 - **A4.1** Only a known bot gets in, and each bot has its own key. Turning that key off stops that bot. The others keep working.
 - **A4.2** A bot may send as many distinct firms in an hour as the hourly limit. That limit is one setting, `door_hour_cap`. It starts at 100. Those firms are checked now. Further firms in that hour, up to three times the limit, are kept and wait until the next hour. They are not thrown away. More than three times the limit in an hour is an attack: that bot’s key is blocked, its waiting items are frozen, and Alex gets one alert. Only Alex can turn that bot back on. Changing the hourly limit changes the attack line with it. There is no second setting.
 - **A4.3** An exact copy is dropped at the door. It is not stored again.
-- **A4.4** The Checker works the queue oldest first. A bot whose items fail more than half the time, after at least 10 checked items in a day, is paused, and Alex gets one alert.
+- **A4.4** The entry check works the queue oldest first (The Checker runs this check today; automatic checks, when built, run the same check.) (Alex, 2026-10-28). A bot whose items fail more than half the time, after at least 10 checked items in a day, is paused, and Alex gets one alert.
 - **A4.5** Failed holding items are kept 7 days. Processed uploads and search logs are kept 30 days.
 
 <a id="a5"></a>
 ## A5. The Checker
 
-- **A5.1** The Checker is the entry check and the only publisher.
+- **A5.1** The entry check is the only way an item is published. An item is shown only after it passes the entry check (A5.2). The Checker runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28)
 - **A5.2** For each item it checks three things:
   - The link is real. It is not a search or chat page, and it opens.
   - The link matches the item (this firm, this person, this fund, this case).
@@ -129,7 +129,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 <a id="a6"></a>
 ## A6. Three marks on every item
 
-- **A6.1** The Checker sets these once, on the item itself:
+- **A6.1** The entry check sets these once, on the item itself (The Checker runs this check today; automatic checks, when built, run the same check.) (Alex, 2026-10-28):
   - **checked-on**, the date (`checked_on`)
   - **checked-by**, the name Checker (`checked_by`)
   - **source level**, 1, 2, 3, or 4 (`source_level`)
@@ -156,7 +156,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 - **A7.11** Same-item keys: fund = fund name or SEC file number; news = normalized URL (lower case, no scheme, no `www.`, no query, no hash, no trailing slash); person = name plus kind; legal = case number or file number; LP = firm plus lowercased institution name; deal = firm plus company plus round.
 - **A7.12** The winner is the higher source level, then the newer date, then the more complete row. Every source is kept. The losing value is saved as a note. If two values still disagree, they go to the Checker review list. Each merged item gets one entry check. The merge log is permanent. The merge backup is kept 3 days, then deleted only with Alex’s OK.
 - **A7.13** On the 10 lab firms, exact copies in a home are the only rows removed. A different value stays on the page and is listed for the Checker. `fact_events` stays the public fact counter. The log is `home_merge_log`. The backup is `home_merge_backup`, and it is not deleted without Alex’s OK. `firm_aliases.alias_type` is display, short name, legal, fund entity, old name, or website. The page does not read it.
-- **A7.14** A side row that has no home is backed up, then checked once. If the Checker publishes it, the row moves into its home. If the Checker does not, the row is deleted. Only the key (the URL, or the id when there is no URL), the kind, the firm, and the reason stay on `rejected_items`. The Checker will not add that key again. A legal-matter link is found by the matter id stored on the held log. That backup is `home_held_backup`. It is kept 3 days and is not deleted without Alex’s OK. The old tables themselves are not dropped.
+- **A7.14** A side row that has no home is backed up, then checked once. If it passes the entry check, the row moves into its home. If it does not, the row is deleted (The Checker runs this check today; automatic checks, when built, run the same check.) (Alex, 2026-10-28). Only the key (the URL, or the id when there is no URL), the kind, the firm, and the reason stay on `rejected_items`. The Checker will not add that key again. A legal-matter link is found by the matter id stored on the held log. That backup is `home_held_backup`. It is kept 3 days and is not deleted without Alex’s OK. The old tables themselves are not dropped.
 
 <a id="a8"></a>
 ## A8. Live counts
@@ -179,7 +179,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 | **A9.5** | Deals | 1 latest + Show all (“One latest deal, plus Show all.”) | 1,000 | New items still come in and the oldest are archived (kept, hidden), never deleted. |
 | **A9.6** | Funds | Latest fund tile + "N funds on SEC record · Show all" (“One latest fund tile, plus the line “N funds on SEC record · Show all”.”) | 100 | New items still come in and the oldest are archived (kept, hidden), never deleted. |
 | **A9.7** | LPs | Only confirmed LPs are shown (see B9) | 100 (“LPs stay at 100.”) | Every list archives the oldest past its max. |
-| **A9.8** | Legal items, lawsuits, regulator actions, negative news, the 10 checks | — | No cap for legal items and the 10 checks | Never archived. Legal items and the 10 checks are never archived or deleted. |
+| **A9.8** | Legal items, lawsuits, regulator actions, negative news, the 10 checks | Legal: 10 shown + Show all (A2.4) (Alex, 2026-10-28) | No cap for legal items and the 10 checks | Never archived. Legal items and the 10 checks are never archived or deleted. |
 
 - **A9.9** These replace the earlier soft caps. LPs stay at 100. Every list archives the oldest past its max (Alex, 2026-10-28).
 - **A9.10** Soft caps per firm: see List limits above (news 50, LPs 100, deals 1,000, people 20, funds 100, founder reviews 50; reviews past 50 also alert Alex). Past the cap, new items still come in and the oldest move to an archive file.
@@ -239,8 +239,9 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 <a id="b4"></a>
 ## B4. SEC fact pills
 
-- **B4.1** Small links under the header for hero facts whose source is sec.gov, except HQ. At most 7. AUM and “fund gross assets” are labelled differently.
-  - **B4.1.1** Rules (Alex, 2026-10-28): at most 7 pills. HQ is never a pill. No two pills say the same thing. A fund (for example a newly raised fund) is never a pill. Each pill holds unique information only: if the fact is already shown anywhere else on the page, the pill does not appear.
+- **B4.1** Small links under the header for hero facts whose source is sec.gov, except HQ. At most 7. AUM and “fund gross assets” are labelled differently. No AUM pill when the B6d AUM tile shows it (Alex, 2026-10-28).
+  - **B4.1.1** Rules (Alex, 2026-10-28): at most 7 pills. HQ is never a pill. No two pills say the same thing. A fund (for example a newly raised fund) is never a pill. Each pill holds unique information only: if the fact is already shown anywhere else on the page, the pill does not appear. No AUM pill when the B6d AUM tile shows it (Alex, 2026-10-28).
+  - **B4.1.2** Note (Alex, 2026-10-28): SEC fact pills are up for a full review; more pills may be dropped.
 - **B4.2** `firm_page` hero list: `firm_profile_facts` where `hero_label` is set and a `fact_sources` row exists. `company.js` `secPills` keeps only a sec.gov source.
 - **B4.3** The enricher, from a Form ADV on sec.gov / adviserinfo.sec.gov. Item 5F is the assets figure the helper looks for.
 - **B4.4** The fact needs a source or it is not in the hero list. The pill needs the host to be sec.gov.
@@ -285,8 +286,8 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 <a id="b6c"></a>
 ### B6c. Latest fund tile
 
-- **B6c.1** The newest fund that has a raised amount, with the name, the amount, and a filing link. Sequoia: Sequoia Capital Fund, L.P., $22.7B, 5 Feb 2026.
-- **B6c.2** First choice: `funds.raised_usd` or `funds.size_usd`, `funds.name`, `funds.closed_on`, `funds.filing_url`. On the 10 lab firms, if that amount is missing, `earlierFund` reads a Funds section line shaped “Name · $amount · date.” If that is also missing, the assets tile is used.
+- **B6c.1** The newest fund that has a raised amount, with the name, the amount, and a source link: the filing, or the news or trusted page the amount came from (see B6c.8) (Alex, 2026-10-28). Sequoia: Sequoia Capital Fund, L.P., $22.7B, 5 Feb 2026.
+- **B6c.2** First choice: `funds.raised_usd` or `funds.size_usd`, `funds.name`, `funds.closed_on`, `funds.filing_url` (the source link: the filing, or the news or trusted page the amount came from; see B6c.8 (Alex, 2026-10-28)). On the 10 lab firms, if that amount is missing, `earlierFund` reads a Funds section line shaped “Name · $amount · date.” If that is also missing, the assets tile is used.
 - **B6c.3** Sequoia’s two amounts were written by the one-off migration from EDGAR Form D. Other `funds` rows: unknown, often older imports. Profile-fact fund lines: the enricher, from Form D or Form ADV.
 - **B6c.4** The tile skips a $0 amount. It skips lines that look like AUM or gross assets.
 - **B6c.5** Other firms, outside the 10, still show a fund with no amount.
@@ -333,7 +334,7 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 ## B8. Firm & funds
 
 - **B8.1** One row per stored fund fact: name, amount, date, source pills. Sequoia returns 9.
-- **B8.2** `firm_profile_facts` `section = funds`. Not the `funds` table. That table feeds the activity tile.
+- **B8.2** `funds` table only (A7.2 wins) (Alex, 2026-10-28).
 - **B8.3** Enricher, from EDGAR Form D and Form ADV Schedule D. Sequoia’s tile amounts were a one-off from two Form D filings.
 - **B8.4** Name required. Amount, when present, is a number. Dedupe is the fund name or the fund key.
 - **B8.5** Hidden rows and rows with no source are omitted. Sequoia’s raw Item 5F lines were hidden by the one-off migration.
@@ -343,8 +344,8 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 <a id="b9"></a>
 ## B9. Limited partners
 
-- **B9.1** One card per LP name. Several commitments become one card with a count. Sequoia’s payload has no LP section, so the block is omitted.
-- **B9.2** `firm_profile_facts` `section = lps`. Label is the institution. Value is the type, fund, amount, and status text. `bots.firm_lps` is not read.
+- **B9.1** One line per confirmed LP: "name · $total (N funds)", the count only when 2 or more (A2.2) (Alex, 2026-10-28). No LPs: the block is omitted.
+- **B9.2** `firm_profile_facts` `section = lps`. Label is the institution. The page shows only name and total amount (A2.2); type, year and status are not shown, and status is kept in the system only (Alex, 2026-10-28). `bots.firm_lps` is not read.
 - **B9.3** Profile rows: the enricher, from public filings and LP reports (the gold example says so; the exact site is whatever URL was sent). Bot rows: a researcher dump, often pensions and Form D related parties. Exact registry for each Accel LP: the row’s `source_url`. Not re-fetched for this guide.
 - **B9.4** Profile: name required, type optional, source required. Bot table: name, status confirmed or lead, URL, type from a fixed list, cap 100, unique on name plus fund.
 - **B9.5** A lead (an LP named only by a weaker source, held as Unconfirmed) is not shown; see B9.7. No source, or hidden, drops the row. (Alex, 2026-10-28)
@@ -366,9 +367,9 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 <a id="b11"></a>
 ## B11. Legal and regulatory section
 
-- **B11.1** Rows with a title, a year, a status, and source pills. Cases, then regulator rows, then context. Sequoia returns 6.
+- **B11.1** Shown per A2.4: 10 legal items (cases and regulator actions), active first, then the rest by most recent, plus Show all. Each row has a title, a year, a status, and source pills. Context rows are not their own rows: a mention about an existing case is an extra link on that case; one with no matching case is not shown and stays a lead for the check (Alex, 2026-10-28).
 - **B11.2** `firm_legal_items`, not hidden, with a source. Group, title, year, status, note. This is separate from the 10-check details.
-- **B11.3** Enricher. Court hosts become `case`. sec.gov, FINRA, and the FCA become `regulator`. Anything else becomes `context`.
+- **B11.3** Allowed sources: see A2.4. Court hosts and Justia, Law360, Casetext become `case`. sec.gov, FINRA, and the FCA become `regulator`. Anything else becomes `context`, which is never its own row (B11.1) (Alex, 2026-10-28).
 - **B11.4** Title required. An allegation is held. Lab allegations need a court or regulator URL.
 - **B11.5** Hidden or unsourced rows are omitted. “Lead” in the title is not a hide rule.
 - **B11.6** RULES_AUDIT 7 and 8.
@@ -379,20 +380,20 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 
 - **B12.1** One list, newest first, since 2023. A card has a headline, a date, outlet pills, and a tag such as Court or Fund when the timeline item had one. Sequoia’s payload has 5 press rows and 1 timeline row. The browser may merge some of those into fewer cards. That merge is not stored.
 - **B12.2** Press: `press_items` plus `press_item_firms` where `check_mark = checked_correct` and the URL is non-empty. Timeline: `timeline_events` where `check_mark = checked_correct`, not hidden, and a source URL or a `fact_sources` link exists. `company.js` `buildNews` unions them.
-- **B12.3** Enricher. Press is an outlet story (TechCrunch, Bloomberg, Reuters, and the firm’s own post are real lab examples). Timeline is an event (a filing, a raise, a court date). The bot chooses which section. There is no classifier.
+- **B12.3** Enricher. Press is an outlet story (TechCrunch, Bloomberg, Reuters are real lab examples; the firm’s own posts are never shown in News (Alex, 2026-10-28)). Timeline is an event (a filing, a raise, a court date). The bot chooses which section. There is no classifier.
 - **B12.4** Press needs outlet, headline, and URL. Timeline needs a date and an event. Publish dedupes press by the exact URL and timeline by date plus text. It does not compare the two tables. Display normalizes the link and groups headlines that share an event word and a name within 7 days.
-- **B12.5** `checked_wrong` and `not_checked` stay stored and are not drawn. Dates before 2023 are not drawn. Own-site links are labelled “Own media.”
-- **B12.6** RULES_AUDIT 14. 13 lab links are in both tables. New rows stay off the page until a person sets `checked_correct`. The lab marks were set by `20261027221100_news_one_list_data.sql`, not by a bot.
+- **B12.5** `checked_wrong` and `not_checked` stay stored and are not drawn. Dates before 2023 are not drawn. The firm’s own site posts and blog are not shown; there is no “Own media” label (Alex, 2026-10-28).
+- **B12.6** News is shown only after it passes the news check (the link opens, the story names the firm, the outlet is an outside source from the A2.6 list). The Checker runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28). RULES_AUDIT 14. 13 lab links are in both tables. The lab marks were set by `20261027221100_news_one_list_data.sql`, not by a bot.
 - **B12.7** On the lab firms, once this is built: the latest news items, plus Show all for the rest that are still on the page. Shown count, max kept, and archiving: see the list limits table in [A9](#a9).
 
 <a id="b13"></a>
 ## B13. What founders say, and the review cards
 
-- **B13.1** Two places. A “What founders say” section is drawn when `founder_accounts` still has rows that were not moved. Sequoia has no such section. The activity strip shows the latest public founder review, and “Show all” lists the rest. Sequoia’s count is 8.
+- **B13.1** The reviews block reads the `reviews` table only (Alex, 2026-10-28). The activity strip shows the latest public founder review, and “Show all” lists the rest. Sequoia’s count is 8.
 - **B13.2** The strip reads `reviews`: author, role, company, round, body, date, ratings, source URL, type. Filter: founder, public, approved. Moved `founder_accounts` rows are excluded from the old section.
 - **B13.3** Enricher “What founders say” items are written to `reviews`. Gold examples use LinkedIn and similar posts. A visitor form can also insert a review, which starts pending. The activity collector is not documented as a review writer.
 - **B13.4** One person in `who`, a quote, a source. Same URL or same quote text merges. Own-site quotes are not called independent.
-- **B13.5** Pending, non-public, or non-founder rows are not drawn. No written owner for who approves a bot quote.
+- **B13.5** A founder quote is shown only after it passes the founder review check (the link opens, it names the firm, it is quoted word for word, the writer is a founder). The Checker runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28). Pending, non-public, or non-founder rows are not drawn.
 - **B13.6** RULES_AUDIT 19. Khosla has 4 stored and 0 shown.
 - **B13.7** On the lab firms, once this is built: one latest founder review, plus Show all. Shown count, max kept, and archiving: see the list limits table in [A9](#a9).
 
@@ -470,12 +471,13 @@ Items .1 to .6 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **C0.3** On the 10 lab firms, check 1 and check 6 each search the legal name and each fund entity name. Each check calls `lab_check_search_names` with its own number. They do not share one search. The website is not one of those queries.
 
 The checks table on the page (snapshot 2026-10-27):
-- **C0.4** A table: number, title, pill, what was found, date searched. A row opens the findings. Pills are Clear, Review, Worth knowing, or Not checked yet. A stored `red` is drawn as Review. While a bot holds the claim, the first unfinished row says “Checking” and the rest say “Waiting.”
+- **C0.4** A table: number, title, pill, what was found, date searched. A row opens the findings. Pills are Clear, Review, Worth knowing, or Not checked yet. For check 8 the states are in C8.5 (Alex, 2026-10-28). A stored `red` is drawn as Review. While a bot holds the claim, the first unfinished row says “Checking” and the rest say “Waiting.”
 - **C0.5** `firm_check_rows`: `n`, `title`, `descr`, `state`, `count_label`, `searched_at`. Findings on an open page are `firm_page` `checks[].items`, backed by `firm_details` (`vc_source_facts`) and, when those are missing, the check’s itemized findings. Name-only hits are `checks[].name_only`.
 - **C0.6** Titles were inserted when the firm was created, or by the hand migration `20261023230000_sync_checks_all_launch_firms.sql`. Evidence, when it exists, came from researcher dumps into `vc_source_facts` (SEC, courts, sanctions lists). New dumps no longer copy onto this table. No bot currently updates the pill.
 - **C0.7** A new firm’s pills are `nc`. `launch/checks.py` can derive a pill and is not what the page runs. Name-only text is excluded inside `firm_details`.
 - **C0.8** The table shows on the summary view. “Not checked yet” has no “nothing found” line. The date shows only when `searched_at` is set.
 - **C0.9** RULES_AUDIT 20 and 16.
+- **C0.10** Parked for the checks review, not changed now (Alex, 2026-10-28): A8.1 (lab pills recounted on publish) vs the C1.5–C10.5 "stored pill" lines, and C7.1 (a non-party mention can be the count).
 
 <a id="c1"></a>
 ## C1. Sanctions
@@ -532,9 +534,9 @@ The checks table on the page (snapshot 2026-10-27):
 
 - **C6.1** Federal and state cases. Active cases sort first in the detail.
 - **C6.2** Pill: `firm_check_rows` n=6. Detail: `vc_source_facts` legal matters for the firm, and `firm_legal_items` group `case`. Status words (active, terminated, settled) are read in `company.js` `caseStatus`.
-- **C6.3** CourtListener, PACER, uscourts.gov. The enricher sets group `case` when the source host is one of those, plus Justia, Law360, and Casetext.
+- **C6.3** CourtListener, PACER, uscourts.gov, a regulator (SEC, FINRA, FCA), Justia, Law360, or Casetext; a link is required (Alex, 2026-10-28). The case group is set when the source host is one of those.
 - **C6.4** Leads are held. The legal key dedupes on a case number and misses a “Lead” prefix.
-- **C6.5** Rule (Alex, 2026-10-28): a count with no itemized rows shows nothing on the page, and no CourtListener search link is shown (a search page is not a source). The count or news story stays with the Checker as a lead to look up. Cases show only once each has its own court or regulator link. News about a lawsuit can still show in News with its article link. Old note: a count with no itemized rows said details are coming and linked a CourtListener search of the legal name.
+- **C6.5** Rule (Alex, 2026-10-28): a count with no itemized rows shows nothing on the page, and no CourtListener search link is shown (a search page is not a source). The count or news story stays as a lead for the check (Alex, 2026-10-28). Cases show only once each has its own court or regulator link. News about a lawsuit can still show in News with its article link. Old note: a count with no itemized rows said details are coming and linked a CourtListener search of the legal name.
 - **C6.6** RULES_AUDIT 7.
 
 <a id="c7"></a>
@@ -552,9 +554,9 @@ The checks table on the page (snapshot 2026-10-27):
 
 - **C8.1** “Registered with the regulator as an investment adviser, and active.”
 - **C8.2** Source: only the firm's own IAPD page on sec.gov (level 1, the register). The Overview is gone (section 8 is now Thesis), so nothing here comes from it.
-- **C8.3** Stored on the check 8 row in `firm_check_rows` (n=8), set by the Checker: registered or exempt reporting, since year, active or not, SEC/CRD number, and the IAPD link.
+- **C8.3** Stored on the check 8 row in `firm_check_rows` (n=8), set only after it passes the registration check (C8.4); The Checker runs this check today; automatic checks, when built, run the same check. (Alex, 2026-10-28): registered or exempt reporting, since year, active or not, SEC/CRD number, and the IAPD link.
 - **C8.4** Door check: the link must be an adviserinfo.sec.gov page for that firm, and the status must be one of the fixed list (Registered, Exempt reporting, Not active).
-- **C8.5** Not found on IAPD: the pill shows "Not found yet" with the search date.
+- **C8.5** Check 8 only (Alex, 2026-10-28): a US firm found on IAPD is Clear (registration line + link); a US firm not found is "Not on the list"; a non-US firm (from HQ country) gets a grey pill with the note "SEC register doesn't apply: firm is based outside the US", not counted for or against.
 - **C8.6** RULES_AUDIT 8 and 20.
 
 <a id="c9"></a>
