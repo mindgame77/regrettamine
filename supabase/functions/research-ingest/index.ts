@@ -120,8 +120,21 @@ function homeChecks(r: any): string[] {
   }
   return hit.length ? [`AUM and fund assets have one home: send them only as field_path "aum" (amount_usd, raum_usd, private_fund_gav_usd, or amount + currency), not under ${p} "${hit[0].slice(0, 40)}" (fix 3)`] : [];
 }
+// Fix 7: Headquarters is city, region, and an ISO country. A free-text HQ is not a record.
+const HQ_ISO = /^(US|USA|U\.S\.|U\.S\.A\.|UNITED STATES|UNITED STATES OF AMERICA|GB|UK|U\.K\.|UNITED KINGDOM|GREAT BRITAIN|[A-Z]{2})$/;
+function hqChecks(r: any): string[] {
+  const p = String(r.field_path ?? "");
+  const label = isObj(r.value) ? String((r.value as any).label ?? (r.value as any).field ?? "") : "";
+  if (p !== "hq" && p !== "headquarters" && !/^(hq|headquarters|headquarter)$/i.test(label)) return [];
+  if (!isObj(r.value)) return ["Headquarters needs a city and an ISO country code"];
+  const city = typeof r.value.city === "string" ? r.value.city.trim() : "";
+  const country = typeof r.value.country === "string" ? r.value.country.trim().toUpperCase() : "";
+  if (!city) return ["Headquarters needs a city"];
+  if (!HQ_ISO.test(country)) return ["Headquarters needs an ISO country code"];
+  return [];
+}
 function valueChecks(r: any): string[] {
-  const e = [...valueChecksBase(r), ...homeChecks(r)];
+  const e = [...valueChecksBase(r), ...homeChecks(r), ...hqChecks(r)];
   return isObj(r.value) ? [...e, ...moneyChecks(r.field_path, r.value)] : e;
 }
 function valueChecksBase(r: any): string[] {

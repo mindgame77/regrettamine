@@ -37,7 +37,7 @@ def test_unclaimed_submit_stays_in_holding_and_switch_on_does_not_publish():
         domain_before = cur.execute("select count(*) from firms where primary_domain = 'finder-holding.example'").fetchone()[0]
         got = _j(cur.execute(
             "select research_submit(%s, 'toxy-enricher', %s::jsonb, 1, true, '[]'::jsonb)",
-            (reg, json.dumps({"records": [{"field_path": "hq", "value": "finder-holding.example"}]})),
+            (reg, json.dumps({"records": [{"field_path": "founded", "value": "2012"}]})),
         ).fetchone()[0])
         assert got["ok"] is True and got["status"] == "holding" and got["held_for_checker"] is True
         assert cur.execute(
