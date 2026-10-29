@@ -48,6 +48,26 @@ function legalWords(v: any): string[] {
   }
   return e;
 }
+// Legal case summary (Alex 2026-10-29, mockup 12-legal-summary): summary + summary_date + summary_source_url.
+// Over 300 characters is trimmed, never rejected. No summary_source_url: the summary is dropped (the case is kept).
+// A summary without summary_source_url and no other summary field stays the old free-text note (old uploads).
+const SUMMARY_MAX = 300;
+function legalSummary(o: any, today: string): string[] {
+  const w: string[] = [];
+  const has = o.summary_source_url != null || o.summary_date != null;
+  if (!has || o.summary == null) { if (has) { delete o.summary_source_url; delete o.summary_date; } return w; }
+  const text = typeof o.summary === "string" ? o.summary.replace(/\s+/g, " ").trim() : "";
+  if (!text) { delete o.summary; delete o.summary_source_url; delete o.summary_date; return ["legal summary empty (dropped)"]; }
+  if (typeof o.summary_source_url !== "string" || !URL_OK.test(o.summary_source_url) || BAD_URL.test(o.summary_source_url)) {
+    delete o.summary; delete o.summary_source_url; delete o.summary_date;
+    return ["legal summary has no source link (summary_source_url): summary rejected, case kept"];
+  }
+  if (text.length > SUMMARY_MAX) { w.push(`legal summary over ${SUMMARY_MAX} characters: trimmed`); }
+  o.summary = text.length > SUMMARY_MAX ? text.slice(0, SUMMARY_MAX).trimEnd() : text;
+  if (typeof o.summary_date !== "string" || !DATE.test(o.summary_date)) { o.summary_date = today; }
+  o.case_summary = true;
+  return w;
+}
 // Shape checks for one record value by field_path; may normalize the value in place.
 function valueChecks(r: any): string[] {
   const v = r.value;
@@ -132,6 +152,7 @@ function validate(d: unknown, registryId: string, allow: string[] = []) {
     if (!FIELD_PATHS.includes(r.field_path)) e.push(`field_path "${r.field_path}" not allowed`);
     if (!isObj(r.entity) || !ENTITY_TYPES.includes((r.entity as any).type) || !(r.entity as any).name) e.push("entity {id,type,name} invalid");
     e.push(...valueChecks(r));
+    if (!e.length && LEGAL_PATHS.includes(r.field_path) && isObj(r.value)) for (const x of legalSummary(r.value, String((d.firm && d.firm.generated_at) || new Date().toISOString()).slice(0, 10))) w.push(`${p}: ${x}`);
     if (!CERTAINTY.includes(r.certainty)) e.push("certainty invalid");
     if (!Array.isArray(r.query_ids)) e.push("query_ids must be an array");
     else for (const q of r.query_ids) if (!qids.has(q)) { e.push(`query_id ${q} not in search_log`); break; }

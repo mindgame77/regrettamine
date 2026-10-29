@@ -459,3 +459,9 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 .ph .socp{max-height:none}.socp .sc.soc{display:inline-flex;align-items:center;gap:6px}.socp .sc.soc b{font-weight:700}
 .socp .sc.soc:hover{text-decoration:underline}.socp .sc.soc:focus-visible{outline:2px solid var(--vio);outline-offset:2px}.socp svg{flex:none;display:block}
 @media (max-width:640px){.socp .sc.soc{padding:4px 10px}}
+/* Legal case summary under the pills (Alex 2026-10-29, mockup 12-legal-summary). */
+.lsum{margin-top:10px;padding:10px 12px;border-left:3px solid var(--vio);background:var(--viobg);border-radius:8px;overflow-wrap:anywhere}
+.lsum .lsum-t{margin:0;color:var(--ink);font-size:14px;line-height:1.5}
+.lsum .lsm{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:6px;font-size:12px;color:var(--ink2)}
+.lsum .lsm a{color:var(--vio);font-weight:600;text-decoration:none}
+.lsum .lsm a:hover,.lsum .lsm a:focus-visible{text-decoration:underline}
