@@ -528,7 +528,7 @@ The checks table on the page (snapshot 2026-10-27):
 - **C0.7** A new firm’s pills are `nc`. `launch/checks.py` can derive a pill and is not what the page runs. Name-only text is excluded inside `firm_details`.
 - **C0.8** The table shows on the summary view. “Not checked yet” has no “nothing found” line. The date shows only when `searched_at` is set.
 - **C0.9** RULES_AUDIT 20 and 16.
-- **C0.10** Parked for the checks review, not changed now (Alex, 2026-10-28): A8.1 (lab pills recounted on publish) vs the C1.5–C10.5 "stored pill" lines, and C7.1 (a non-party mention can be the count).
+- **C0.10** Parked for the checks review, not changed now (Alex, 2026-10-28): A8.1 (lab pills recounted on publish) vs the C1.5–C10.5 "stored pill" lines, and C7.1 (a non-party mention can be the count; resolved in C7.1, Alex, 2026-10-28).
 
 <a id="c1"></a>
 ## C1. Sanctions
@@ -544,6 +544,12 @@ The checks table on the page (snapshot 2026-10-27):
   - Extra only, not a register: OpenSanctions `https://www.opensanctions.org/` (see [C0.2](#c0)).
   No other site counts for check 1. The enricher is told not to file a same-name hit as a legal item.
 - **C1.7** A site that checks 1 and 2 share (OFAC, UN, EU) is searched once per name. The one result counts for both checks.
+- **C1.8** Extra official registers for check 1 (Alex, 2026-10-28):
+  - EU financial sanctions data file (EU, level 1): `https://data.europa.eu/data/datasets/consolidated-list-of-persons-groups-and-entities-subject-to-eu-financial-sanctions`
+  - Swiss SECO SESAM (Switzerland, level 1): `https://www.sesam.search.admin.ch/sesam-search-web/pages/search.xhtml`
+  - Japan MOF sanctions list (Japan, level 1): `https://www.mof.go.jp/policy/international_policy/gaitame_kawase/gaitame/economic_sanctions/list.html`
+  - Canada consolidated sanctions (Canada, level 1): `https://www.international.gc.ca/world-monde/international_relations-relations_internationales/sanctions/consolidated-consolide.aspx`
+  - Australia DFAT consolidated list (Australia, level 1): `https://www.dfat.gov.au/international-relations/security/sanctions/consolidated-list`
 - **C1.4** A same-name hit stays Clear and adds the muted sentence from `copy.json` `name_only`. There is no required list name.
 - **C1.5** The pill shows the stored state. Nobody rechecks it when `sanctions_checks` is empty.
 - **C1.6** RULES_AUDIT 6.
@@ -561,6 +567,9 @@ The checks table on the page (snapshot 2026-10-27):
   - UK proscribed terrorist groups: `https://www.gov.uk/government/publications/proscribed-terror-groups-or-organisations--2`
   - Extra only, not a register: OpenSanctions `https://www.opensanctions.org/`.
   Shared sites follow [C1.7](#c1).
+- **C2.7** Extra official registers for check 2 (Alex, 2026-10-28):
+  - Australia listed terrorist orgs (Australia, level 1): `https://www.nationalsecurity.gov.au/what-australia-is-doing/terrorist-organisations/listed-terrorist-organisations`
+  - Canada listed terrorist entities (Canada, level 1): `https://www.publicsafety.gc.ca/cnt/ntnl-scrt/cntr-trrrsm/lstd-ntts/crrnt-lstd-ntts-en.aspx`
 - **C2.4** No required fields beyond the pill row.
 - **C2.5** Same as [C1.5](#c1).
 - **C2.6** Same gap as RULES_AUDIT 20: the pill is not recomputed.
@@ -581,9 +590,9 @@ The checks table on the page (snapshot 2026-10-27):
 
 - **C4.1** “Fines, bans and charges from financial regulators.”
 - **C4.2** Pill: `firm_check_rows` n=4. Detail: `vc_source_facts` regulatory actions, and `firm_legal_items` whose group is `regulator` (sec.gov, FINRA, fca.org.uk). `regulatory_records` is a third table the section does not read.
-- **C4.3** SEC, FINRA, FCA, and DOJ mentions inside legal facts. Enricher for new legal items. Older facts from researcher dumps.
+- **C4.3** (Alex, 2026-10-28) The count comes only from `firm_legal_items` rows whose group is `regulator` (SEC, FINRA, FCA, DOJ, CFTC), each with an official regulator link. It is recounted on each fresh run.
 - **C4.4** A new allegation needs a court or regulator document on the 10 lab firms or it is rejected.
-- **C4.5** The pill is the stored state, not a count of regulator rows.
+- **C4.5** (Alex, 2026-10-28) The other two stores (`vc_source_facts` regulator facts and `regulatory_records`) are retired in the new database move ([A14](#a14)). Nothing is deleted without Alex's 'Yes, delete'.
 - **C4.6** RULES_AUDIT 8.
 
 <a id="c5"></a>
@@ -591,7 +600,17 @@ The checks table on the page (snapshot 2026-10-27):
 
 - **C5.1** Anti-money-laundering fines.
 - **C5.2** `firm_check_rows` n=5. Detail field `aml_penalties` or `adv_disclosures`.
-- **C5.3** Unknown site list. No written rule.
+- **C5.3** Sources for check 5, all level 1 (Alex, 2026-10-28):
+  - FinCEN enforcement actions (US, level 1): `https://www.fincen.gov/news-room/enforcement-actions`
+  - OFAC civil penalties (US, level 1): `https://ofac.treasury.gov/civil-penalties-and-enforcement-information`
+  - SEC litigation releases (US, level 1): `https://www.sec.gov/enforcement-litigation/litigation-releases`
+  - FINRA disciplinary actions (US, level 1): `https://www.finra.org/rules-guidance/oversight-enforcement/finra-disciplinary-actions`
+  - CFTC enforcement actions (US, level 1): `https://www.cftc.gov/LawRegulation/EnforcementActions/index.htm`
+  - UK FCA (UK, level 1): `https://www.fca.org.uk/`
+  - BaFin (Germany, level 1): `https://www.bafin.de/EN/Homepage/homepage_node.html`
+  - MAS enforcement actions (Singapore, level 1): `https://www.mas.gov.sg/regulation/enforcement/enforcement-actions`
+  - FINTRAC penalties (Canada, level 1): `https://fintrac-canafe.canada.ca/pen/4-eng`
+  - AUSTRAC (Australia, level 1): `https://www.austrac.gov.au/`
 - **C5.4** No extra validation.
 - **C5.5** Stored pill.
 - **C5.6** RULES_AUDIT 20.
@@ -602,6 +621,7 @@ The checks table on the page (snapshot 2026-10-27):
 - **C6.1** Federal and state cases. Active cases sort first in the detail.
 - **C6.2** Pill: `firm_check_rows` n=6. Detail: `vc_source_facts` legal matters for the firm, and `firm_legal_items` group `case`. Status words (active, terminated, settled) are read in `company.js` `caseStatus`.
 - **C6.3** Sources (Alex, 2026-10-28), same as [A2.4](#a2): level 1 = PACER `https://pacer.uscourts.gov/`, uscourts.gov `https://www.uscourts.gov/`, CourtListener `https://www.courtlistener.com/`. Level 3 Unconfirmed = Justia, Casetext (help find a case only) and Law360 (news only, may show in News). A case shows only with a level 1 court link. The case group is set when the source host is a level 1 one.
+- **C6.7** Also level 1 for check 6 (Alex, 2026-10-28): Delaware courts `https://courts.delaware.gov/` (Court of Chancery and others).
 - **C6.4** Leads are held. The legal key dedupes on a case number and misses a “Lead” prefix.
 - **C6.5** Rule (Alex, 2026-10-28): a count with no itemized rows shows nothing on the page, and no CourtListener search link is shown (a search page is not a source). The count or news story stays as a lead for the check (Alex, 2026-10-28). Cases show only once each has its own court or regulator link. News about a lawsuit can still show in News with its article link.
 - **C6.6** RULES_AUDIT 7.
@@ -609,9 +629,33 @@ The checks table on the page (snapshot 2026-10-27):
 <a id="c7"></a>
 ## C7. Court records worldwide
 
-- **C7.1** Cases outside the U.S. A non-party mention can be the count.
+- **C7.1** Cases outside the U.S. (Alex, 2026-10-28): count only cases with an official court link; [C6.5](#c6) applies. A mention where the firm is not a party is not counted (this replaces the old mention rule).
 - **C7.2** `firm_check_rows` n=7. Detail field `courts_worldwide`, plus legal facts whose text looks non-US.
-- **C7.3** No written court list.
+- **C7.3** Court sources for check 7 (Alex, 2026-10-28) (level 1 = official court site, level 3 = republisher, helps find only):
+  - Find Case Law (UK, level 1): `https://caselaw.nationalarchives.gov.uk/`
+  - Judiciary of England and Wales (UK, level 1): `https://www.judiciary.uk/`
+  - BAILII (UK/Ireland, level 3): `https://www.bailii.org/`
+  - CURIA (EU, level 1): `https://curia.europa.eu/juris/recherche.jsf?language=en`
+  - e-Justice portal (EU, level 1): `https://e-justice.europa.eu/`
+  - ECHR HUDOC (Europe, level 1): `https://hudoc.echr.coe.int/`
+  - Rechtsprechung im Internet (Germany, level 1): `https://www.rechtsprechung-im-internet.de/`
+  - Bundesgerichtshof (Germany, level 1): `https://www.bundesgerichtshof.de/`
+  - Judilibre (France, level 1): `https://www.courdecassation.fr/acces-rapide-judilibre`
+  - Legifrance (France, level 1): `https://www.legifrance.gouv.fr/`
+  - Rechtspraak (Netherlands, level 1): `https://uitspraken.rechtspraak.nl/`
+  - Juportal (Belgium, level 1): `https://juportal.be/`
+  - Courts Service of Ireland (Ireland, level 1): `https://www.courts.ie/judgments`
+  - CENDOJ (Spain, level 1): `https://www.poderjudicial.es/search/indexAN.jsp`
+  - Italgiure (Italy, level 1): `https://www.italgiure.giustizia.it/sncass/`
+  - Domstol Sweden (Sweden, level 1): `https://www.domstol.se/`
+  - Domstol Norway (Norway, level 1): `https://www.domstol.no/`
+  - Domstol Denmark (Denmark, level 1): `https://www.domstol.dk/`
+  - Finlex (Finland, level 1): `https://www.finlex.fi/`
+  - Swiss Federal Supreme Court (Switzerland, level 1): `https://www.bger.ch/`
+  - RIS (Austria, level 1): `https://www.ris.bka.gv.at/`
+  - CanLII (Canada, level 3): `https://www.canlii.org/`
+  - AustLII (Australia, level 3): `https://www.austlii.edu.au/`
+  - NZLII (New Zealand, level 3): `https://www.nzlii.org/`
 - **C7.4** No extra validation.
 - **C7.5** Stored pill.
 - **C7.6** RULES_AUDIT 20.
@@ -631,7 +675,8 @@ The checks table on the page (snapshot 2026-10-27):
 
 - **C9.1** Partners and owners, each checked against the lists in [C1](#c1), [C2](#c2), [C3](#c3) and [C10](#c10).
 - **C9.2** `firm_check_rows` n=9. Detail field `people_screen`, or a legal fact whose entity starts with `partner:`.
-- **C9.3** The people themselves are Form ADV Schedule A, via the enricher, into `firm_people_roles`. The screening of those people is a different store.
+- **C9.3** Where to find the people (Alex, 2026-10-28): SEC IAPD / Form ADV Schedules A and B (level 1), EDGAR Form D related persons (level 1), UK Companies House officers (level 1), GLEIF (level 1), EU business registers via e-Justice (level 1), the firm's own team page (level 2). Where to screen each person: the level 1 registers of checks [1](#c1), [2](#c2), [3](#c3) and [10](#c10), plus FINRA BrokerCheck `https://brokercheck.finra.org/`, SEC IAPD individual search `https://adviserinfo.sec.gov/`, and SEC litigation releases `https://www.sec.gov/enforcement-litigation/litigation-releases`.
+- **C9.7** Check 9 runs its own search for each person on those same registers (Alex, 2026-10-28). It does not reuse the firm-level results of checks 1, 2, 3 or 10.
 - **C9.4** A person publish checks the name. It does not set this pill.
 - **C9.5** Stored pill.
 - **C9.6** RULES_AUDIT 9 and 20.
@@ -641,7 +686,16 @@ The checks table on the page (snapshot 2026-10-27):
 
 - **C10.1** People at the firm who held government or political roles. Worth knowing when a hit is a partner.
 - **C10.2** `firm_check_rows` n=10. Detail field `pep`.
-- **C10.3** No written registry.
+- **C10.3** Sources for check 10 (Alex, 2026-10-28):
+  - OpenSanctions PEPs (Global, extra): `https://www.opensanctions.org/datasets/peps/`
+  - FEC individual contributions (US, level 1): `https://www.fec.gov/data/receipts/individual-contributions/`
+  - LDA lobbying (US, level 1): `https://lda.gov/system/public/`
+  - congress.gov (US, level 1): `https://www.congress.gov/`
+  - CIA World Leaders (Global, level 1): `https://www.cia.gov/resources/world-leaders/`
+  - European Parliament MEPs (EU, level 1): `https://www.europarl.europa.eu/meps/en/home`
+  - UK Parliament members (UK, level 1): `https://members.parliament.uk/`
+  - Wikidata (Global, level 3): `https://www.wikidata.org/`
+  - EveryPolitician (Global, level 3): `https://everypolitician.org/`
 - **C10.4** A surname-only line is not a name-only flag (`docs/ENRICHER.md`).
 - **C10.5** Stored pill.
 - **C10.6** RULES_AUDIT 20.
