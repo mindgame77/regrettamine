@@ -9,7 +9,7 @@ import pytest
 
 pytest.importorskip("psycopg")
 DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
-MIG = "supabase/migrations/20261029180000_checker_social_path.sql"
+MIG = "supabase/migrations/20261029190000_checker_social_path.sql"
 FIX = json.loads(Path("tests/fixtures/social_5353_5354.json").read_text(encoding="utf-8"))
 
 
@@ -17,7 +17,7 @@ def test_migration_and_rollback_exist():
     sql = Path(MIG).read_text(encoding="utf-8")
     assert "when 'socialAccounts' then 'social'" in sql
     assert "'reasons', reasons" in sql
-    assert Path("supabase/rollbacks/20261029180000_checker_social_path.sql").exists()
+    assert Path("supabase/rollbacks/20261029190000_checker_social_path.sql").exists()
 
 
 @pytest.fixture()

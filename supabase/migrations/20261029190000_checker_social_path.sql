@@ -1,5 +1,40 @@
--- Rollback for 20261029180000_checker_social_path.sql: restores the three functions as of #264 and drops the helpers.
--- Level-2 social facts written by the Checker stay (source_system = checker, external_id like checker:social:%); hide them by hand if needed.
+-- socialAccounts get their own Checker path (A2.10 / B3.8). Before this, they fell through to section "overview"
+-- and failed on firm_profile_facts.label (not null), e.g. submissions 5352-5354 on 2026-10-29.
+-- Linked from the firm's own site -> level-2 media_reach fact (like the #263 General Catalyst row).
+-- Not linked -> skipped, published via _firm_social. The Checker report now carries a "reasons" list.
+-- Rollback: supabase/rollbacks/20261029190000_checker_social_path.sql
+
+create or replace function public._checker_social_platform(p text) returns text
+language sql immutable set search_path to 'public' as $$
+  select case lower(btrim(coalesce(p, ''))) when 'twitter' then 'x' when '' then null else lower(btrim(p)) end
+$$;
+
+create or replace function public._checker_social(p_firm uuid, p_f jsonb, p_url text)
+returns table(lvl smallint, outcome text, reason text)
+language plpgsql security definer set search_path to 'bots', 'public' as $$
+declare acct text := public._checker_social_platform(p_f->>'platform'); u text := p_f->>'url';
+begin
+  if coalesce(p_f->>'linked_from_firm_site', '') <> 'true' then
+    return query select null::smallint, 'skipped'::text, 'skipped, published via _firm_social'::text; return;
+  end if;
+  if acct is null or acct not in ('linkedin', 'x', 'youtube', 'instagram', 'tiktok') then
+    return query select null::smallint, 'skipped'::text, ('skipped, platform ' || coalesce(acct, 'missing') || ' is not shown on the page')::text; return;
+  end if;
+  if u is null or u !~* '^https?://[^\s/]+\.[^\s]+$' then
+    return query select null::smallint, 'failure'::text, 'social account needs url'::text; return;
+  end if;
+  if jsonb_typeof(p_f->'followers') is distinct from 'number' then
+    return query select null::smallint, 'failure'::text, 'social followers must be a number'::text; return;
+  end if;
+  if exists (select 1 from vc_source_facts v where v.firm_id = p_firm and v.status = 'current' and v.fact_type = 'media_reach'
+               and v.source_level = 2 and v.value->>'field' = 'media_' || acct || '_followers'
+               and public._checker_url_key(coalesce(nullif(v.value->>'url', ''), v.source_url)) = public._checker_url_key(u)) then
+    return query select 2::smallint, 'skipped'::text, 'already on the page, not re-checked'::text; return;
+  end if;
+  perform public._checker_write(p_firm, 'social', p_f, p_url, 2::smallint, null);
+  return query select 2::smallint, 'published'::text, null::text;
+end $$;
+
 CREATE OR REPLACE FUNCTION public._checker_payload_items(p jsonb)
  RETURNS TABLE(n integer, section text, f jsonb, url text)
  LANGUAGE plpgsql
@@ -22,6 +57,7 @@ begin
           when 'lawsuits' then 'legal' when 'regulatoryActions' then 'legal'
           when 'sanctions' then 'legal' when 'controversies' then 'legal'
           when 'posts' then 'founders' when 'reviews' then 'founders'
+          when 'socialAccounts' then 'social'
           else 'overview' end section,
         case when jsonb_typeof(r->'value') = 'object' then r->'value'
              else jsonb_build_object('label', r->>'field_path', 'value', r->>'value') end f,
@@ -51,7 +87,7 @@ CREATE OR REPLACE FUNCTION public._checker_write(p_firm uuid, p_section text, p_
  SECURITY DEFINER
  SET search_path TO 'public'
 AS $function$
-declare rid uuid := gen_random_uuid(); key text; n int := p_check; lab boolean := public._lab_firm(p_firm);
+declare rid uuid := gen_random_uuid(); key text; n int := p_check; lab boolean := public._lab_firm(p_firm); acct text;
 begin
   key := p_section || '|' || coalesce(nullif(p_url, ''), left(p_f::text, 200));
   if p_section = 'press' then
@@ -68,6 +104,23 @@ begin
     insert into firm_people_roles(id, firm_id, kind, person_name, role, sort_order, checked_on, checked_by, source_level)
     values (rid, p_firm, coalesce(p_f->>'kind', 'officer'), left(p_f->>'name', 120), left(coalesce(p_f->>'role', ''), 300), 900,
             case when lab then now() end, case when lab then 'Checker' end, case when lab then p_level end);
+  elsif p_section = 'social' then
+    -- socialAccounts (A2.10 / B3.8): a level-2 media_reach fact like the #263 General Catalyst row. Never firm_profile_facts.
+    acct := public._checker_social_platform(p_f->>'platform');
+    key := 'social|' || coalesce(p_f->>'url', '');
+    insert into vc_source_facts(id, firm_id, fact_type, section, value, source_url, source_label, source_type, retrieved_at, data_status,
+                                source_system, external_id, checked_on, checked_by, source_level)
+    values (rid, p_firm, 'media_reach', 'media_reach',
+            jsonb_build_object('field', 'media_' || acct || '_followers',
+                               'value', (p_f->>'followers') || coalesce(' (@' || nullif(substring(p_f->>'url' from '^https?://[^/]+/(?:company/|@)?([^/?#]+)'), '') || ')', ''),
+                               'url', p_f->>'url', 'entity', 'firm', 'publisher', initcap(acct),
+                               'linked_from', coalesce(nullif(p_f->>'found_on_url', ''), p_url),
+                               'linked_checked', coalesce(p_f->>'followers_read_at', to_char(now(), 'YYYY-MM-DD')),
+                               'sheet_status', 'firm says'),
+            p_f->>'url', initcap(acct), acct,
+            coalesce((p_f->>'followers_read_at')::date::timestamptz, now()), 'real', 'checker',
+            'checker:social:' || md5(p_firm::text || '|' || acct || '|' || public._checker_url_key(p_f->>'url')),
+            case when lab then now() end, case when lab then 'Checker' end, 2);
   elsif p_section in ('overview', 'funds', 'lps') then
     insert into firm_profile_facts(id, firm_id, section, label, value, sort_order, origin, checked_on, checked_by, source_level)
     values (rid, p_firm, p_section,
@@ -114,6 +167,7 @@ AS $function$
 declare sub bots.research_submissions; fid uuid; it record; lvl smallint; ncheck int; outcome text; reason text;
   pub int := 0; skip int := 0; fail int := 0; unconf int := 0; merged int := 0; noted int := 0;
   probes jsonb; gate jsonb; host text; claimed text; opened boolean; website boolean;
+  reasons jsonb := '[]'::jsonb;
 begin
   select * into sub from research_submissions where id = p_id;
   if sub.id is null or not public._checker_publish_on() then
@@ -151,12 +205,15 @@ begin
             lvl := 2; outcome := 'published'; reason := null;
           end if;
         end if;
+      elsif it.section = 'social' then
+        ncheck := null;
+        select d.lvl, d.outcome, d.reason into lvl, outcome, reason from public._checker_social(fid, it.f, it.url) d;
       else
         ncheck := public._checker_check_n(it.section, it.url);
         select d.lvl, d.outcome, d.reason into lvl, outcome, reason
           from public._checker_decide(fid, it.section, it.f, it.url, ncheck, probes) d;
       end if;
-      if outcome = 'published' then
+      if outcome = 'published' and it.section <> 'social' then
         select p.outcome, p.reason into outcome, reason
           from public._checker_place(fid, it.section, it.f, it.url, lvl, ncheck, sub.id) p;
       end if;
@@ -173,6 +230,10 @@ begin
     elsif outcome = 'skipped' then skip := skip + 1;
     elsif outcome = 'unconfirmed' then unconf := unconf + 1;
     else fail := fail + 1; end if;
+    if outcome is distinct from 'published' and outcome is distinct from 'merged' then
+      reasons := reasons || jsonb_build_array(jsonb_build_object('section', it.section, 'url', coalesce(it.f->>'url', it.url),
+        'outcome', coalesce(outcome, 'failure'), 'reason', coalesce(reason, 'no reason given')));
+    end if;
     if outcome in ('failure', 'unconfirmed') then
       insert into checker_holding(firm_id, origin, origin_id, kind, url, outcome, reason, item)
       values (fid, 'submission', sub.id, it.section, it.url,
@@ -180,8 +241,7 @@ begin
     end if;
   end loop;
   return jsonb_build_object('ran', true, 'firm_id', fid, 'published', pub, 'merged', merged, 'note', noted,
-    'skipped', skip, 'unconfirmed', unconf, 'failure', fail);
+    'skipped', skip, 'unconfirmed', unconf, 'failure', fail, 'reasons', reasons);
 end $function$;
 
-drop function if exists public._checker_social(uuid, jsonb, text);
-drop function if exists public._checker_social_platform(text);
+revoke all on function public._checker_social(uuid, jsonb, text) from public, anon, authenticated;
