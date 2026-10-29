@@ -68,7 +68,7 @@ def test_3_duplicate_of_earlier_upload(cur):
     p = payload(rec())
     cur.execute("alter table bots.research_submissions disable trigger user")
     cur.execute("alter table bots.research_submissions enable trigger aa_entry_check")
-    cur.execute("insert into bots.research_submissions(registry_id, bot_id, payload) values (%s, 'test-bot', %s::jsonb)",
+    cur.execute("insert into bots.research_submissions(registry_id, bot_id, payload, valid) values (%s, 'test-bot', %s::jsonb, true)",
                 ("vc-test-entry-1", json.dumps(p)))
     assert "duplicate of an earlier upload" in check(cur, p)
 
@@ -136,17 +136,17 @@ def test_7_no_news_from_firm_site(cur):
 def test_trigger_sets_result_and_link_flag(cur):
     cur.execute("alter table bots.research_submissions disable trigger user")
     cur.execute("alter table bots.research_submissions enable trigger aa_entry_check")
-    row = cur.execute("insert into bots.research_submissions(registry_id, bot_id, payload) values "
-                      "('vc-test-entry-2', 'test-bot', %s::jsonb) returning entry_check, entry_check_at is not null, "
+    row = cur.execute("insert into bots.research_submissions(valid, registry_id, bot_id, payload) values "
+                      "(true, 'vc-test-entry-2', 'test-bot', %s::jsonb) returning entry_check, entry_check_at is not null, "
                       "entry_link_open_pending", (json.dumps(payload(rec(url=None))),)).fetchone()
     assert row[0].startswith("Rejected: no source link") and row[1] and row[2] is False
-    row = cur.execute("insert into bots.research_submissions(registry_id, bot_id, payload) values "
-                      "('vc-test-entry-3', 'test-bot', %s::jsonb) returning entry_check, entry_link_open_pending",
+    row = cur.execute("insert into bots.research_submissions(valid, registry_id, bot_id, payload) values "
+                      "(true, 'vc-test-entry-3', 'test-bot', %s::jsonb) returning entry_check, entry_link_open_pending",
                       (json.dumps(payload(rec(value="Other"))),)).fetchone()
     assert row == ("Accepted", True)
     bad_date = rec(value="Third", as_of="sometime")
-    row = cur.execute("insert into bots.research_submissions(registry_id, bot_id, payload) values "
-                      "('vc-test-entry-5', 'test-bot', %s::jsonb) returning entry_check, entry_notes, payload",
+    row = cur.execute("insert into bots.research_submissions(valid, registry_id, bot_id, payload) values "
+                      "(true, 'vc-test-entry-5', 'test-bot', %s::jsonb) returning entry_check, entry_notes, payload",
                       (json.dumps(payload(bad_date)),)).fetchone()
     assert row[0] == "Accepted" and row[1] == ["1 date unreadable, cleared"]
     assert row[2]["records"][0]["as_of"] is None
@@ -154,8 +154,8 @@ def test_trigger_sets_result_and_link_flag(cur):
 
 def test_purge_after_30_days(cur):
     cur.execute("alter table bots.research_submissions disable trigger user")
-    rid = cur.execute("insert into bots.research_submissions(registry_id, bot_id, payload, entry_check, entry_check_at) "
-                      "values ('vc-test-entry-4', 'test-bot', '{}'::jsonb, 'Accepted', now() - interval '31 days') "
+    rid = cur.execute("insert into bots.research_submissions(registry_id, bot_id, payload, entry_check, entry_check_at, valid) "
+                      "values ('vc-test-entry-4', 'test-bot', '{}'::jsonb, 'Accepted', now() - interval '31 days', true) "
                       "returning id").fetchone()[0]
     assert cur.execute("select bots.entry_check_purge()").fetchone()[0] >= 1
     assert cur.execute("select entry_check from bots.research_submissions where id = %s", (rid,)).fetchone()[0] is None
