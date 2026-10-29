@@ -1,0 +1,61 @@
+%%{init: {"flowchart": {"curve": "linear", "nodeSpacing": 30, "rankSpacing": 70}, "themeVariables": {"fontSize": "22px"}}}%%
+flowchart LR
+  subgraph S1[1 Sources]
+    LEG["Yellow = new system"]:::y
+    SRC1[Official registers]
+    SRC2[Firm website]
+    SRC3[News sites]
+    SRC4[Courts and regulators]
+    SRC5[Sanctions lists]
+  end
+  subgraph S2[2 Collectors]
+    FB[Friend bots]
+    RB[Research bots]
+  end
+  subgraph S3[3 Instant database checks]
+    L1["Every upload checked:<br/>link, date, duplicates"]:::y
+    REJ["Rejected: reason"]:::y
+    ACC["Accepted"]:::y
+  end
+  subgraph S4[4 Checker bot, then publish]
+    CB["Meaning check:<br/>source says it?"]:::y
+    EN[Enricher publishes]
+  end
+  subgraph S5[5 Database]
+    D1[(Firm and people)]
+    D2[(Funds and deals)]
+    D3[(LPs - one table)]:::y
+    D4[(News - press only)]:::y
+    D5[(Legal and regulator)]:::y
+    D6[(Check results + date)]:::y
+    RM["Removed: old LP copy, timeline news copy,<br/>old regulator stores, scores"]:::rm
+  end
+  subgraph S6[6 VC page]
+    V1[Header]
+    V2[Funds and LPs]
+    V3[News]
+    V4[Legal]
+    V5["Checks: one 'Checked on' line<br/>Clear / Review pills"]:::y
+  end
+  SRC1 & SRC2 & SRC3 & SRC4 & SRC5 --> RB
+  LEG ~~~ FB
+  FB & RB --> L1
+  L1 --> REJ
+  L1 --> ACC
+  ACC --> CB
+  CB --> EN
+  EN --> D1 & D2 & D3 & D4 & D5 & D6
+  CB ~~~ RM
+  D1 --> V1
+  D2 & D3 --> V2
+  D4 --> V3
+  D5 --> V4
+  D6 --> V5
+  classDef y fill:#FFE066,stroke:#b38f00,stroke-width:3px,color:#222
+  classDef rm fill:#f2f2f2,stroke:#999,stroke-width:2px,color:#777,stroke-dasharray:6 4
+  style S1 fill:#fff,stroke:#999
+  style S2 fill:#fff,stroke:#999
+  style S3 fill:#fff,stroke:#999
+  style S4 fill:#fff,stroke:#999
+  style S5 fill:#fff,stroke:#999
+  style S6 fill:#fff,stroke:#999
