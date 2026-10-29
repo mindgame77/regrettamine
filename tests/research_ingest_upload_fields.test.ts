@@ -34,7 +34,7 @@ Deno.test("old-format upload still accepted, old legal words mapped", async () =
   const r = await submit([rec("r1", "hq", { city: "LA" }),
     rec("r2", "lawsuits", { caption: "A v. B", status: "open", firm_party_role: "defendant" }),
     rec("r3", "lawsuits", { caption: "C v. D", status: "judgment", firm_party_role: "plaintiff" }),
-    rec("r4", "regulatoryActions", { regulator: "SEC", status: "adjudicated" }),
+    rec("r4", "regulatoryActions", { regulator: "SEC", status: "adjudicated", title: "SEC order IA-5079" }),
     rec("r5", "lawsuits", { caption: "E v. F", status: "unknown" }),
     rec("r6", "aum", { amount_usd: 1e9, basis: "form_adv_raum" })]);
   assertEquals(r.status, 200, JSON.stringify(r.body));
@@ -63,6 +63,7 @@ for (const [label, recs, want] of [
   ["bad status", [rec("x", "lawsuits", { status: "appeal" })], "use Active, Closed, Settled or Dismissed"],
   ["bad topic", [rec("x", "lawsuits", { case_type: "tax" })], "use Fraud, Contract, Employment, Securities, Regulator action or IP"],
   ["aum press", [rec("x", "aum", { amount_usd: 5, basis: "press" })], 'aum basis "press" is no longer allowed'],
+  ["sec adviser summary", [rec("x", "regulatoryActions", { title: "IAPD/FINRA firm IA disclosure flag = N. Registered investment adviser EXAMPLE, SEC 801-1, which counts as Clear. Item 5F regulatory AUM $1." })], "SEC adviser summary is not stored (fix 5)"],
   ["social not linked", [rec("x", "socialAccounts", { platform: "x", url: "https://x.com/t" })], "linked from the firm's own website"],
   ["news no headline", [rec("x", "news", { outlet: "Reuters" })], "news needs headline"],
   ["thesis empty", [rec("x", "thesis", 3)], "thesis value must be the thesis text"],

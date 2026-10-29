@@ -24,6 +24,17 @@ const SOCIAL = ["linkedin", "x", "youtube", "instagram", "tiktok", "facebook", "
 const AUM_BASIS = ["form_adv_raum", "self_reported"];
 const low = (x: unknown) => typeof x === "string" ? x.trim().toLowerCase() : "";
 // Maps old legal words to the fixed words in place; returns error texts for words that cannot be mapped.
+// Fix 5: the IAPD adviser summary is not a regulator action. A real action still comes through.
+const SEC_SUMMARY = /iapd\/finra firm ia disclosure flag|sec adviser summary/i;
+function secSummaryText(o: any): string {
+  return ["title", "summary", "caption", "regulator", "name"].map((k) => o?.[k]).filter((x) => typeof x === "string").join(" ");
+}
+function secSummaryCheck(path: string, o: any): string[] {
+  if (path !== "regulatoryActions") return [];
+  const t = secSummaryText(o);
+  const hit = SEC_SUMMARY.test(t) || (/disclosure flag/i.test(t) && /registered investment adviser/i.test(t));
+  return hit ? ["SEC adviser summary is not stored (fix 5). The IAPD summary row is not a regulator action. The Form ADV link and the check 8 registration line stay."] : [];
+}
 function legalWords(v: any): string[] {
   const e: string[] = [];
   const st = v.status ?? v.legal_status ?? v.lawsuit_status;
@@ -121,7 +132,7 @@ function valueChecksBase(r: any): string[] {
   }
   if (!isObj(v)) return ["value must be an object"];
   const o: any = v;
-  if (LEGAL_PATHS.includes(r.field_path)) return legalWords(o);
+  if (LEGAL_PATHS.includes(r.field_path)) return [...legalWords(o), ...secSummaryCheck(r.field_path, o)];
   if (r.field_path === "aum" && o.basis != null && !AUM_BASIS.includes(o.basis))
     return [o.basis === "press" ? `aum basis "press" is no longer allowed (A7.3): use form_adv_raum or self_reported, or leave AUM out` : `aum basis must be form_adv_raum or self_reported`];
   if (r.field_path === "news") {
