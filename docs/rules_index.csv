@@ -2,47 +2,47 @@ rule_id,section,short_rule_in_plain_words,status
 P.1,P About this file,This is the only rulebook.,on main
 P.2,P About this file,"Scope until Alex says “roll out”: the 10 lab firms only (a16z, y-combinator, sequoia, lightspeed, generalcatalyst, plugandplay, accel, greenoaks, khosla-vent...",on main
 P.3,P About this file,"Work order: build the Checker and the one home per kind, test on the lab firms, and only then clean up old bot tables.",on main
-P.4,P About this file,The page snapshot further down describes what the live site drew on 2026-10-27.,in PR #228
+P.4,P About this file,"The snapshot items (.1 to .6 in Parts B and C) describe what the live site drew on 2026-10-27. Where a snapshot item disagrees with the rules in Part A, the ...",on main
 A1.1,A1 Source ranking,Each fact has one source level.,on main
 A1.2,A1 Source ranking,Official register.,on main
 A1.3,A1 Source ranking,The firm’s own website.,on main
 A1.4,A1 Source ranking,Elsewhere online.,on main
-A1.5,A1 Source ranking,Nothing found.,on main
-A1.6,A1 Source ranking,"If two sources disagree, the register wins.",in PR #228
+A1.5,A1 Source ranking,Nothing found. Level 4 is Nothing found: store “Not found yet” plus the search date.,"edited in this PR (Alex, 2026-10-28)"
+A1.6,A1 Source ranking,"If two sources disagree, the register wins.",on main
 A1.7,A1 Source ranking,A search-results page or a chat page is not a source at any level.,on main
-A1.8,A1 Source ranking,"Exception (Alex, 2026-10-28): the latest fund amount (money raised for the latest fund only) may come from an approved news outlet or another trusted site th...",in PR #227
+A1.8,A1 Source ranking,"Exception (Alex, 2026-10-28): the latest fund amount (money raised for the latest fund only) may come from an approved news outlet or another trusted site th...",on main
 A2.1,A2 Sources per page part,These rules override the general “elsewhere online is Unconfirmed” line for that part only.,on main
-A2.2,A2 Sources per page part,"Limited partners (LPs) | Any trustworthy source (Alex, 2026-10-28): pension or endowment reports, public filings, approved news outlets or other sites in tru...",in PR #228
-A2.3,A2 Sources per page part,"People and interviews | People: only current people at the firm are shown; people who left are not shown, and neither are their interviews (Alex, 2026-10-28).",in PR #228
-A2.4,A2 Sources per page part,"Legal cases (display, Alex 2026-10-28) | Source (Alex, 2026-10-28): CourtListener, PACER, uscourts.gov, a regulator (SEC, FINRA, FCA), Justia, Law360, or Cas...",in PR #228
-A2.5,A2 Sources per page part,"Reviews | A post on any public site (for example Reddit, X, LinkedIn, YouTube, Medium, a blog or podcast page; Alex, 2026-10-28) that exists, names the firm,...",in PR #227
-A2.6,A2 Sources per page part,"News | A story on TechCrunch, Reuters, Bloomberg, Axios, the Financial Times, the Wall Street Journal, CNBC, Forbes, or The Information, when the link opens...",in PR #228
-A2.7,A2 Sources per page part,"Deals | An SEC Form D (level 1) or the firm’s press release (level 2) (Alex, 2026-10-28).",in PR #228
-A2.8,A2 Sources per page part,"Lawsuits | Merged into A2.4 (Alex, 2026-10-28): same allowed sources (CourtListener, PACER, uscourts.gov, a regulator (SEC, FINRA, FCA), Justia, Law360, or C...",in PR #228
+A2.2,A2 Sources per page part,"Limited partners (LPs) | Any trustworthy source (Alex, 2026-10-28): pension or endowment reports, public filings, approved news outlets or other sites in tru...",on main
+A2.3,A2 Sources per page part,"People and interviews | People: only current people at the firm are shown; people who left are not shown, and neither are their interviews (Alex, 2026-10-28)...","edited in this PR (Alex, 2026-10-28)"
+A2.4,A2 Sources per page part,"Legal cases (display, Alex 2026-10-28) | Source (Alex, 2026-10-28): CourtListener, PACER, uscourts.gov, a regulator (SEC, FINRA, FCA), Justia, Law360, or Cas...",on main
+A2.5,A2 Sources per page part,"Reviews | A post on any public site (for example Reddit, X, LinkedIn, YouTube, Medium, a blog or podcast page; Alex, 2026-10-28) that exists, names the firm,...",on main
+A2.6,A2 Sources per page part,"News | A story on TechCrunch, Reuters, Bloomberg, Axios, the Financial Times, the Wall Street Journal, CNBC, Forbes, or The Information, when the link opens...",on main
+A2.7,A2 Sources per page part,"Deals | An SEC Form D (level 1) or the firm’s press release (level 2) (Alex, 2026-10-28).",on main
+A2.8,A2 Sources per page part,"Lawsuits | Merged into A2.4: allowed sources are the list in A2.4 only (Alex, 2026-10-28). CourtListener, PACER, uscourts.gov and regulators are level 1. | A...","edited in this PR (Alex, 2026-10-28)"
 A2.10,A2 Sources per page part,Social counts | Only an account that is linked from the firm’s own website.,on main
-A2.11,A2 Sources per page part,"Sectors (portfolio and deals, one rule) | Any source is accepted (approved by Alex on 2026-10-28).",in PR #227
-A2.12,A2 Sources per page part,"Funds | SEC filings (Form D, Form ADV), else an approved news outlet or a trusted site (per A1.8).",in PR #228
-A2.13,A2 Sources per page part,"Header HQ | The firm’s IAPD record, else the firm’s own website.",in PR #228
-A2.14,A2 Sources per page part,"Header website | The firm’s own site, checked that it opens and belongs to the firm.",in PR #228
-A2.15,A2 Sources per page part,"Founded year | The firm’s own site or a company register (a US state registry, Companies House).",in PR #228
+A2.11,A2 Sources per page part,"Sectors (portfolio and deals, one rule) | Any source is accepted (approved by Alex on 2026-10-28).",on main
+A2.12,A2 Sources per page part,"Funds | SEC filings (Form D, Form ADV), else an approved news outlet or a trusted site (per A1.8).",on main
+A2.13,A2 Sources per page part,"Header HQ | The firm’s IAPD record, else the firm’s own website.",on main
+A2.14,A2 Sources per page part,"Header website | The firm’s own site, checked that it opens and belongs to the firm.",on main
+A2.15,A2 Sources per page part,"Founded year | The firm’s own site or a company register (a US state registry, Companies House).",on main
 A3.1,A3 One way in,Every bot sends into the holding area bots.research_submissions.,on main
 A3.2,A3 One way in,bots.research_enrichments can store a bot’s structured result.,on main
-A4.1,A4 The holding door,"Only a known bot gets in, and each bot has its own key. Submissions: see A12.2.",in PR #228
+A4.1,A4 The holding door,"Only a known bot gets in, and each bot has its own key. Submissions: see A12.2.",on main
 A4.2,A4 The holding door,A bot may send as many distinct firms in an hour as the hourly limit.,on main
 A4.3,A4 The holding door,An exact copy is dropped at the door.,on main
-A4.4,A4 The holding door,"The entry check works the queue oldest first (The Checker runs this check today; automatic checks, when built, run the same check.) (Alex, 2026-10-28).",in PR #228
-A4.5,A4 The holding door,Retention: see A11.1.,in PR #228
-A5.1,A5 The Checker,The entry check is the only way an item is published.,in PR #228
-A5.2,A5 The Checker,For each item it checks three things:,in PR #228
-A5.3,A5 The Checker,A register or firm-site item is published with the date and checked-by Checker.,in PR #228
-A5.4,A5 The Checker,The Enricher does not publish (fixes: A12.3); the Activity Collector does not write investments directly (A12.4).,in PR #228
-A6.1,A6 Three marks on every item,"The entry check sets these once, on the item itself (The Checker runs this check today; automatic checks, when built, run the same check.) (Alex, 2026-10-28):",in PR #228
+A4.4,A4 The holding door,"The entry check works the queue oldest first (The Checker runs this check today; automatic checks, when built, run the same check.) (Alex, 2026-10-28).",on main
+A4.5,A4 The holding door,Retention: see A11.1.,on main
+A5.1,A5 The Checker,The entry check is the only way an item is published.,on main
+A5.2,A5 The Checker,For each item it checks three things:,on main
+A5.3,A5 The Checker,A register or firm-site item is published with the date and checked-by Checker.,on main
+A5.4,A5 The Checker,The Enricher does not publish (fixes: A12.3); the Activity Collector does not write investments directly (A12.4).,on main
+A6.1,A6 Three marks on every item,"The entry check sets these once, on the item itself (The Checker runs this check today; automatic checks, when built, run the same check.) (Alex, 2026-10-28):",on main
 A6.2,A6 Three marks on every item,"The columns are on the item tables: press_item_firms, timeline_events, firm_check_rows, firm_people_roles, firm_profile_facts, firm_legal_items, reviews, and...",on main
 A6.3,A6 Three marks on every item,firm_check_rows.searched_at and the news check_mark stay.,on main
 A6.4,A6 Three marks on every item,"checked_on, checked_by, and source_level are internal only.",on main
 A7.1,A7 One home per data kind,"Firm names | firm_aliases, with a type: display, short name, legal, fund entity, old name, or website, plus the source | Gaps in legal_name",on main
 A7.2,A7 One home per data kind,Funds | funds | firm_profile_facts where section is funds,on main
-A7.3,A7 One home per data kind,"AUM | one fact, regulatory assets from Form ADV Item 5F, with the as-of year | firms.aum_display",on main
+A7.3,A7 One home per data kind,"AUM | one fact: the SEC Form ADV figure (Item 5F regulatory assets, with the as-of year) first; if there is none (e.g. non-US firms), the AUM stated on the f...","edited in this PR (Alex, 2026-10-28)"
 A7.4,A7 One home per data kind,Deals and portfolio companies | investments and portfolio_companies | Timeline lines and collector rows that skip the Checker,on main
 A7.5,A7 One home per data kind,News | one news item per normalized URL | press_items and timeline_events,on main
 A7.6,A7 One home per data kind,"Legal | firm_legal_items (this feeds checks 4, 6, and 7) | regulatory_records and legal_matters",on main
@@ -53,63 +53,62 @@ A7.10,A7 One home per data kind,The 10 checks | firm_check_rows plus the finding
 A7.11,A7 One home per data kind,"Same-item keys: fund = fund name or SEC file number; news = normalized URL (lower case, no scheme, no www., no query, no hash, no trailing slash); person = n...",on main
 A7.12,A7 One home per data kind,"The winner is the higher source level, then the newer date, then the more complete row.",on main
 A7.13,A7 One home per data kind,"On the 10 lab firms, exact copies in a home are the only rows removed.",on main
-A7.14,A7 One home per data kind,"A side row that has no home is backed up, then checked once.",in PR #228
+A7.14,A7 One home per data kind,"A side row that has no home is backed up, then checked once.",on main
 A8.1,A8 Live counts,"On the 10 lab firms, the 10 check counts and pills are counted once and saved, in firm_check_pills.",on main
 A8.2,A8 Live counts,"If the counting logic or ingest_settings change, the same change must rerun the backfill (select public.refresh_firm_check_pills(id) from public.firms where...",on main
 A8.3,A8 Live counts,Section counts and the activity tiles are still computed when the page is read.,on main
 A8.4,A8 Live counts,Page speed is tested automatically.,on main
-A9.1,A9 List limits and archiving (the one table),"List limits (Alex, 2026-10-28).",in PR #228
-A9.2,A9 List limits and archiving (the one table),"People | 10 shown + Show all | 20 | New items still come in and the oldest are archived (kept, hidden), never deleted.",in PR #227
-A9.3,A9 List limits and archiving (the one table),"News | Latest 10 + Show all (“The latest 10 news items, plus Show all for the rest that are still on the page.”) | 50 | When a new item comes in past 50, the...",in PR #227
-A9.4,A9 List limits and archiving (the one table),"Founder reviews | 1 latest + Show all (“One latest founder review, plus Show all.”) | 50 | Oldest archived (kept, hidden), never deleted; tell Alex when a firm passes 50 (Alex, 2026-10-28).",in PR #228
-A9.5,A9 List limits and archiving (the one table),"Deals | 1 latest + Show all (“One latest deal, plus Show all.”) | 1,000 | New items still come in and the oldest are archived (kept, hidden), never deleted.",in PR #228
-A9.6,A9 List limits and archiving (the one table),"Funds | Latest fund tile + ""N funds on SEC record · Show all"" (“One latest fund tile, plus the line “N funds on SEC record · Show all”.”) | 100 | New items s...",in PR #227
+A9.1,A9 List limits and archiving (the one table),"List limits (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
+A9.2,A9 List limits and archiving (the one table),"People | 10 shown + Show all | 20 | New items still come in and the oldest are archived (kept, hidden), never deleted.",on main
+A9.3,A9 List limits and archiving (the one table),"News | Latest 10 + Show all (“The latest 10 news items, plus Show all for the rest that are still on the page.”) | 50 | When a new item comes in past 50, the...",on main
+A9.4,A9 List limits and archiving (the one table),"Founder reviews | 1 latest + Show all (“One latest founder review, plus Show all.”) | 50 | Oldest archived (kept, hidden), never deleted; tell Alex when a firm passes 50 (Alex, 2026-10-28).",on main
+A9.5,A9 List limits and archiving (the one table),"Deals | 1 latest + Show all (“One latest deal, plus Show all.”) | 1,000 | New items still come in and the oldest are archived (kept, hidden), never deleted.",on main
+A9.6,A9 List limits and archiving (the one table),"Funds | Latest fund tile + ""N funds on SEC record · Show all"" (“One latest fund tile, plus the line “N funds on SEC record · Show all”.”) | 100 | New items s...",on main
 A9.7,A9 List limits and archiving (the one table),LPs | Only confirmed LPs are shown (see B9) | 100 (“LPs stay at 100.”) | Every list archives the oldest past its max.,on main
-A9.8,A9 List limits and archiving (the one table),"Legal items, lawsuits, regulator actions, negative news, the 10 checks | Legal: 10 shown + Show all (A2.4) (Alex, 2026-10-28) | No cap for legal items and th...",in PR #228
-A9.15,A9 List limits and archiving (the one table),"Interviews (per current person) | Up to 10, most viewed first (A2.3); not shown until the design is approved (B10.8) | 10 | The rest are stored, not shown.",in PR #228
-A9.16,A9 List limits and archiving (the one table),"Search suggestions | Up to 8 firms (B2.1) | — | — (Alex, 2026-10-28)",in PR #228
-A9.17,A9 List limits and archiving (the one table),"Sector pills | Top 5 sectors + a grey ""Other N"" pill, only when the firm has 10 or more deals (B6e.9) | — | — (Alex, 2026-10-28)",in PR #228
-A9.18,A9 List limits and archiving (the one table),"SEC fact pills | At most 7 (B4.1.1) | — | — (Alex, 2026-10-28)",in PR #228
-A9.19,A9 List limits and archiving (the one table),"Thesis | Max 1,000 characters (B7.3) | 1,000 characters | — (Alex, 2026-10-28)",in PR #228
+A9.8,A9 List limits and archiving (the one table),The 10 checks | Per Part C | No cap | Never archived. Checks will be run fresh on demand when a user presses or pays; details come in the later checks review...,"edited in this PR (Alex, 2026-10-28)"
+A9.20,A9 List limits and archiving (the one table),"Legal items (cases and regulator actions) | 10 shown + Show all (A2.4) | 100 per firm | Past 100, the oldest go to the archive (stored, hidden), never delete...","edited in this PR (Alex, 2026-10-28)"
+A9.15,A9 List limits and archiving (the one table),"Interviews (per current person) | Up to 10, most viewed first (A2.3); not shown until the design is approved (B10.8) | 10 | The rest are stored, not shown.",on main
+A9.16,A9 List limits and archiving (the one table),"Search suggestions | Up to 8 firms (B2.1) | — | — (Alex, 2026-10-28)",on main
+A9.17,A9 List limits and archiving (the one table),"Sector pills | Top 5 sectors + a grey ""Other N"" pill, only when the firm has 10 or more deals (B6e.9) | — | — (Alex, 2026-10-28)",on main
+A9.18,A9 List limits and archiving (the one table),"SEC fact pills | At most 7 (B4.1) | — | — (Alex, 2026-10-28)","edited in this PR (Alex, 2026-10-28)"
+A9.19,A9 List limits and archiving (the one table),"Thesis | Max 1,000 characters (B7.3) | 1,000 characters | — (Alex, 2026-10-28)",on main
 A9.12,A9 List limits and archiving (the one table),One alert per firm when a cap is hit.,on main
-A9.14,A9 List limits and archiving (the one table),These caps are not a license to delete.,on main
+A9.14,A9 List limits and archiving (the one table),These caps are not a license to delete.,"edited in this PR (Alex, 2026-10-28)"
 A10.1,A10 Search and new firms,"Search matches the firm name, the short name, and the website.",on main
 A10.2,A10 Search and new firms,"On the 10 lab firms, firm_suggest matches the firm name, the short name, the slug, and aliases whose type is display, short name, or website.",on main
 A10.3,A10 Search and new firms,"A new firm is deduped by registry id first (SEC CRD, FCA, Companies House, another national regulator, or a GLEIF LEI).",on main
 A11.1,A11 How long rows are kept,Search logs and uploads that have been processed are kept 30 days.,on main
-A12.1,A12 Shared checks list,"New-firm check: only a real VC, growth, PE or hedge fund firm with a working website, not already queued, is added to the queue.",in PR #228
-A12.2,A12 Shared checks list,"Submission check: every research-bot item has a source link, a source level and the three marks, and goes through the holding door.",in PR #228
-A12.3,A12 Shared checks list,"Fix check: a fix replaces a value only from a source at the same level or higher; the old value is archived, never deleted.",in PR #228
-A12.4,A12 Shared checks list,Activity check: a deal or fund is shown only with a source link; amount and lead only when that source states them.,in PR #228
-A12.5,A12 Shared checks list,"Page check: every item on the live page follows its rulebook rule (source link, A9 limits, hidden stays hidden).",in PR #228
+A12.1,A12 Shared checks list,"New-firm check: only a real VC, growth, PE or hedge fund firm with a working website, not already queued, is added to the queue.",on main
+A12.2,A12 Shared checks list,"Submission check: every research-bot item has a source link, a source level and the three marks, and goes through the holding door.",on main
+A12.3,A12 Shared checks list,"Fix check: a fix replaces a value only from a source at the same level or higher; the old value is archived, never deleted.",on main
+A12.4,A12 Shared checks list,Activity check: a deal or fund is shown only with a source link; amount and lead only when that source states them.,on main
+A12.5,A12 Shared checks list,"Page check: every item on the live page follows its rulebook rule (source link, A9 limits, hidden stays hidden).",on main
 B1.1,B1 Site logo and wordmark,The Regretamin lockup in the corner.,on main
 B1.2,B1 Site logo and wordmark,A static file.,on main
 B1.3,B1 Site logo and wordmark,Designed asset.,on main
 B1.4,B1 Site logo and wordmark,No data rule.,on main
 B1.5,B1 Site logo and wordmark,Always shown.,on main
 B1.6,B1 Site logo and wordmark,No problem found (RULES_AUDIT 5).,on main
-B2.1,B2 Search box and suggestions,"The box on the home page, the firm page, and the empty state.",in PR #228
-B2.2,B2 Search box and suggestions,What firm_suggest reads and matches: see A10.,in PR #228
+B2.1,B2 Search box and suggestions,"The box on the home page, the firm page, and the empty state.",on main
+B2.2,B2 Search box and suggestions,What firm_suggest reads and matches: see A10.,on main
 B2.3,B2 Search box and suggestions,"Names arrive when a firm is created from the queue or merged (docs/DEDUPE.md, docs/FIRM_REQUESTS.md).",on main
-B2.4,B2 Search box and suggestions,"Only published, non-test, real, not-deleted firms.",in PR #228
+B2.4,B2 Search box and suggestions,"Only published, non-test, real, not-deleted firms.","edited in this PR (Alex, 2026-10-28)"
 B2.5,B2 Search box and suggestions,A deleted or unpublished firm is absent.,on main
 B2.6,B2 Search box and suggestions,Lab display names match firms.name (RULES_AUDIT 1).,on main
 B2.7,B2 Search box and suggestions,Search matching and new-firm rules: see A10.,on main
 B3.1,B3 Firm header,"The large name, then a meta line: HQ, short name, and the website.",on main
 B3.2,B3 Firm header,"firm_page builds firm.name from coalesce(display_name, name), firm.sec_name from coalesce(legal_name, name), firm.short_name, firm.hq from firm_hq_format, fi...",on main
-B3.3,B3 Firm header,HQ and the website start on the queue row (list builder or request).,in PR #228
+B3.3,B3 Firm header,HQ and the website start on the queue row (list builder or request).,on main
 B3.4,B3 Firm header,No written rule that HQ must be a city from IAPD.,on main
 B3.5,B3 Firm header,The header shows whenever the page loads.,on main
 B3.6,B3 Firm header,Legal name gaps: RULES_AUDIT 2.,on main
-B3.7,B3 Firm header,"Sources for HQ, website and founded year: A2.13–A2.15 (Alex, 2026-10-28).",in PR #228
-B4.1,B4 SEC fact pills,"Small links under the header for hero facts whose source is sec.gov, except HQ.",in PR #228
-B4.1.1,B4 SEC fact pills,"Rules (Alex, 2026-10-28): at most 7 pills.",in PR #228
-B4.1.2,B4 SEC fact pills,"Note (Alex, 2026-10-28): SEC fact pills are up for a full review; more pills may be dropped.",in PR #228
+B3.7,B3 Firm header,"Sources for HQ, website and founded year: A2.13–A2.15 (Alex, 2026-10-28).",on main
+B4.1,B4 SEC fact pills,Small links under the header for hero facts whose source is sec.gov.,"edited in this PR (Alex, 2026-10-28)"
 B4.2,B4 SEC fact pills,firm_page hero list: firm_profile_facts where hero_label is set and a fact_sources row exists.,on main
 B4.3,B4 SEC fact pills,"The enricher, from a Form ADV on sec.gov / adviserinfo.sec.gov.",on main
 B4.4,B4 SEC fact pills,The fact needs a source or it is not in the hero list.,on main
 B4.5,B4 SEC fact pills,Hidden when the hero list is empty or no source is sec.gov.,on main
-B4.6,B4 SEC fact pills,The assets helper can drop the unit (RULES_AUDIT 11).,in PR #228
+B4.6,B4 SEC fact pills,The assets helper can drop the unit (RULES_AUDIT 11).,on main
 B5.1,B5 Score bar,The visitor does not see a score.,on main
 B5.2,B5 Score bar,"score_results (current row), score_inputs, and score_result_parts still exist.",on main
 B5.3,B5 Score bar,Unknown for the stored rows.,on main
@@ -119,30 +118,30 @@ B5.6,B5 Score bar,RULES_AUDIT 21.,on main
 B6.1,B6 Activity strip,The strip sits above the sections.,on main
 B6a.1,B6a “Active” tile,A tile when the firm has a deal or a fund close in the last 365 days.,on main
 B6a.2,B6a “Active” tile,"investments.invested_on and funds.closed_on, both data_status = real.",on main
-B6a.3,B6a “Active” tile,Sequoia’s deals were copied from timeline lines (sequoia_timeline_deals).,moved to R5 (old note)
+B6a.3,B6a “Active” tile,Sequoia’s deals were copied from timeline lines (sequoia_timeline_deals).,on main
 B6a.4,B6a “Active” tile,"The 365-day window is display math, not a collect rule.",on main
 B6a.5,B6a “Active” tile,The tile is absent when both counts are zero.,on main
 B6a.6,B6a “Active” tile,RULES_AUDIT 12.,on main
 B6b.1,B6b Deals in the last 12 months,A count.,on main
 B6b.2,B6b Deals in the last 12 months,investments where invested_on is within 365 days and data_status = real.,on main
-B6b.3,B6b Deals in the last 12 months,Same as B6a.3 (now an old note in R5).,in PR #228
+B6b.3,B6b Deals in the last 12 months,Same as B6a.3 (now an old note in R5).,on main
 B6b.4,B6b Deals in the last 12 months,No required fields beyond the row existing.,on main
 B6b.5,B6b Deals in the last 12 months,The tile is omitted when the count is 0.,on main
 B6b.6,B6b Deals in the last 12 months,RULES_AUDIT 12.,on main
-B6c.1,B6c Latest fund tile,"The newest fund that has a raised amount, with the name, the amount, and a source link: the filing, or the news or trusted page the amount came from (see B6c...",in PR #228
-B6c.2,B6c Latest fund tile,"First choice: funds.raised_usd or funds.size_usd, funds.name, funds.closed_on, funds.filing_url (the source link: the filing, or the news or trusted page the...",in PR #228
-B6c.3,B6c Latest fund tile,"Profile-fact fund lines: the enricher, from Form D or Form ADV.",in PR #228
+B6c.1,B6c Latest fund tile,"The newest fund that has a raised amount, with the name, the amount, and a source link: the filing, or the news or trusted page the amount came from (see B6c...",on main
+B6c.2,B6c Latest fund tile,"First choice: funds.raised_usd or funds.size_usd, funds.name, funds.closed_on, funds.filing_url (the source link: the filing, or the news or trusted page the...",on main
+B6c.3,B6c Latest fund tile,"Profile-fact fund lines: the enricher, from Form D or Form ADV.",on main
 B6c.4,B6c Latest fund tile,The tile skips a $0 amount.,on main
 B6c.5,B6c Latest fund tile,"Other firms, outside the 10, still show a fund with no amount.",on main
 B6c.6,B6c Latest fund tile,RULES_AUDIT 10.,on main
-B6c.7,B6c Latest fund tile,"Latest fund tile rule (Alex, Oct 27 2026 design note): A latest fund with an amount stays.",in PR #227
-B6c.8,B6c Latest fund tile,"Latest fund tile link is the filing, or the news/trusted page the amount came from; amount source: A1.8.",in PR #228
-B6c.9,B6c Latest fund tile,Funds shown/max/archiving: see A9.6; amount source A1.8.,in PR #228
-B6d.1,B6d Assets under management tile,"Shown on the 10 lab firms only when there is no fund amount at all, including no earlier fund that raised money (see the latest fund tile rule in 6c).",in PR #228
-B6d.2,B6d Assets under management tile,"Hero fact whose label maps to Regulatory AUM, else firm.assets from _firm_assets.",on main
+B6c.7,B6c Latest fund tile,"Latest fund tile rule (Alex, Oct 27 2026 design note): A latest fund with an amount stays.",on main
+B6c.8,B6c Latest fund tile,"Latest fund tile link is the filing, or the news/trusted page the amount came from; amount source: A1.8.",on main
+B6c.9,B6c Latest fund tile,Funds shown/max/archiving: see A9.6; amount source A1.8.,on main
+B6d.1,B6d Assets under management tile,"Shown on the 10 lab firms only when there is no fund amount at all, including no earlier fund that raised money (see the latest fund tile rule in 6c).",on main
+B6d.2,B6d Assets under management tile,"AUM source order per A7.3 (Alex, 2026-10-28): the SEC Form ADV figure first (hero fact whose label maps to Regulatory AUM, or a profile fact that cites Item ...","edited in this PR (Alex, 2026-10-28)"
 B6d.3,B6d Assets under management tile,"SEC Form ADV Item 5F, via the enricher.",on main
 B6d.4,B6d Assets under management tile,A new AUM fact must contain a digit.,on main
-B6d.5,B6d Assets under management tile,Hidden when both the hero and the helper are empty.,on main
+B6d.5,B6d Assets under management tile,"Hidden when neither a Form ADV figure nor a firm-website AUM exists (B6d.2) (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
 B6d.6,B6d Assets under management tile,RULES_AUDIT 11.,on main
 B6e.1,"B6e Latest deal, and “Show all”","Company, round, date, and source host.",on main
 B6e.2,"B6e Latest deal, and “Show all”",investments joined to portfolio_companies.name.,on main
@@ -150,73 +149,73 @@ B6e.3,"B6e Latest deal, and “Show all”","Lab timeline regex, the Sequoia cop
 B6e.4,"B6e Latest deal, and “Show all”",data_status = real.,on main
 B6e.5,"B6e Latest deal, and “Show all”",The block is omitted when there is no deal.,on main
 B6e.6,"B6e Latest deal, and “Show all”",RULES_AUDIT 12 and 13.,on main
-B6e.7,"B6e Latest deal, and “Show all”",Deals shown/max/archiving: see A9.5.,in PR #228
+B6e.7,"B6e Latest deal, and “Show all”",Deals shown/max/archiving: see A9.5.,on main
 B6e.8,"B6e Latest deal, and “Show all”","A deal row has a sector column, and a column that reads round · amount · Lead.",on main
-B6e.9,"B6e Latest deal, and “Show all”","Latest investments block (Alex, 2026-10-28), split into B6e.9.1 to B6e.9.9.",in PR #228
-B6e.9.1,"B6e Latest deal, and “Show all”",Shown count: per A9.5.,in PR #228
-B6e.9.2,"B6e Latest deal, and “Show all”","A deal with no stated sector leaves the sector cell blank, never ""No data yet"".",in PR #228
-B6e.9.3,"B6e Latest deal, and “Show all”","Top 5 sector pills with deal counts plus a grey ""Other N"" pill and Show all; limit per A9.17.",in PR #228
-B6e.9.4,"B6e Latest deal, and “Show all”","Counts only, no percentages.",in PR #228
-B6e.9.5,"B6e Latest deal, and “Show all”",Deals with no sector are not counted and get no pill.,in PR #228
-B6e.9.6,"B6e Latest deal, and “Show all”","Pills count all of the firm's deals, not only the last 12 months.",in PR #228
-B6e.9.7,"B6e Latest deal, and “Show all”","Summary shows only with 10 or more deals in total, on the page and in the pop-up.",in PR #228
-B6e.9.8,"B6e Latest deal, and “Show all”","""Deals, last 12 mo"" is a separate count of deals in the last 12 months.",in PR #228
-B6e.9.9,"B6e Latest deal, and “Show all”","A sector name is at most 2 words and 25 characters (Alex, 2026-10-28).",in PR #228
-B6e.10,"B6e Latest deal, and “Show all”","Sector pills: no data that has passed its check means the block is hidden from users (no empty box, no ""No data"" text).",in PR #228
-B7.1,"B7 Thesis (replaces Overview; Alex, 2026-10-28)",New block “Thesis”.,in PR #228
-B7.2,"B7 Thesis (replaces Overview; Alex, 2026-10-28)","Holds the firm's investment thesis (what they invest in and why), copied word for word from the firm's own website.",in PR #227
-B7.3,"B7 Thesis (replaces Overview; Alex, 2026-10-28)","Max 1,000 characters.",in PR #228
-B7.4,"B7 Thesis (replaces Overview; Alex, 2026-10-28)",No thesis on the firm's website: the block is not shown.,in PR #227
-B7.5,"B7 Thesis (replaces Overview; Alex, 2026-10-28)","Door check: the link opens and is on the firm's own domain; the text is found on that page; length 1,000 characters or less.",in PR #227
-B7.6,"B7 Thesis (replaces Overview; Alex, 2026-10-28)","Old Overview rows are hidden, not deleted.",in PR #227
-B7.7,"B7 Thesis (replaces Overview; Alex, 2026-10-28)",Needs a mockup on the Sequoia lab page before building.,in PR #227
+B6e.9,"B6e Latest deal, and “Show all”","Latest investments block (Alex, 2026-10-28), split into B6e.9.1 to B6e.9.9.",on main
+B6e.9.1,"B6e Latest deal, and “Show all”",Shown count: per A9.5.,on main
+B6e.9.2,"B6e Latest deal, and “Show all”","A deal with no stated sector leaves the sector cell blank, never ""No data yet"".",on main
+B6e.9.3,"B6e Latest deal, and “Show all”","Top 5 sector pills with deal counts plus a grey ""Other N"" pill and Show all; limit per A9.17.",on main
+B6e.9.4,"B6e Latest deal, and “Show all”","Counts only, no percentages.",on main
+B6e.9.5,"B6e Latest deal, and “Show all”",Deals with no sector are not counted and get no pill.,on main
+B6e.9.6,"B6e Latest deal, and “Show all”","Pills count all of the firm's deals, not only the last 12 months.",on main
+B6e.9.7,"B6e Latest deal, and “Show all”","Summary shows only with 10 or more deals in total, on the page and in the pop-up.",on main
+B6e.9.8,"B6e Latest deal, and “Show all”","""Deals, last 12 mo"" is a separate count of deals in the last 12 months.",on main
+B6e.9.9,"B6e Latest deal, and “Show all”","A sector name is at most 2 words and 25 characters (Alex, 2026-10-28).",on main
+B6e.10,"B6e Latest deal, and “Show all”","Sector pills: no data that has passed its check means the block is hidden from users (no empty box, no ""No data"" text).",on main
+B7.1,"B7 Thesis (replaces Overview; Alex, 2026-10-28)",New block “Thesis”.,on main
+B7.2,"B7 Thesis (replaces Overview; Alex, 2026-10-28)","Holds the firm's investment thesis (what they invest in and why), copied word for word from the firm's own website.",on main
+B7.3,"B7 Thesis (replaces Overview; Alex, 2026-10-28)","Max 1,000 characters.",on main
+B7.4,"B7 Thesis (replaces Overview; Alex, 2026-10-28)",No thesis on the firm's website: the block is not shown.,on main
+B7.5,"B7 Thesis (replaces Overview; Alex, 2026-10-28)","Door check: the link opens and is on the firm's own domain; the text is found on that page; length 1,000 characters or less.",on main
+B7.6,"B7 Thesis (replaces Overview; Alex, 2026-10-28)","Old Overview rows are hidden, not deleted.",on main
+B7.7,"B7 Thesis (replaces Overview; Alex, 2026-10-28)",Needs a mockup on the Sequoia lab page before building.,on main
 B8.1,B8 Firm & funds,"One row per stored fund fact: name, amount, date, source pills.",on main
-B8.2,B8 Firm & funds,"funds table only (A7.2 wins) (Alex, 2026-10-28).",in PR #228
+B8.2,B8 Firm & funds,"funds table only (A7.2 wins) (Alex, 2026-10-28).",on main
 B8.3,B8 Firm & funds,"Enricher, from EDGAR Form D and Form ADV Schedule D.",on main
 B8.4,B8 Firm & funds,Name required.,on main
 B8.5,B8 Firm & funds,Hidden rows and rows with no source are omitted.,on main
 B8.6,B8 Firm & funds,RULES_AUDIT 10.,on main
-B8.7,B8 Firm & funds,"Shown count, max kept, and archiving: see the list limits table in A9.",in PR #228
-B8.8,B8 Firm & funds,"Funds: no data that has passed its check means the block is hidden from users (no empty box, no ""No data"" text).",in PR #228
-B9.1,B9 Limited partners,"One line per confirmed LP: ""name · $total (N funds)"", the count only when 2 or more (A2.2) (Alex, 2026-10-28).",in PR #228
-B9.2,B9 Limited partners,firm_profile_facts section = lps.,in PR #228
+B8.7,B8 Firm & funds,"Shown count, max kept, and archiving: see the list limits table in A9.",on main
+B8.8,B8 Firm & funds,"Funds: no data that has passed its check means the block is hidden from users (no empty box, no ""No data"" text).",on main
+B9.1,B9 Limited partners,"One line per confirmed LP: ""name · $total (N funds)"", the count only when 2 or more (A2.2) (Alex, 2026-10-28).",on main
+B9.2,B9 Limited partners,firm_profile_facts section = lps.,on main
 B9.3,B9 Limited partners,"Profile rows: the enricher, from public filings and LP reports (the gold example says so; the exact site is whatever URL was sent).",on main
 B9.4,B9 Limited partners,"Profile: name required, type optional, source required.",on main
-B9.5,B9 Limited partners,A lead (LP named only by a weaker source) is not shown,in PR #228
+B9.5,B9 Limited partners,A lead (LP named only by a weaker source) is not shown,on main
 B9.6,B9 Limited partners,RULES_AUDIT 22.,on main
-B9.8,B9 Limited partners,"Shown count, max kept, and archiving: see the list limits table in A9.",in PR #227
-B10.1,B10 People and board seats,"Rule (Alex, 2026-10-28): only current people are shown, grouped into board and officers.",in PR #228
+B9.8,B9 Limited partners,"Shown count, max kept, and archiving: see the list limits table in A9.",on main
+B10.1,B10 People and board seats,"Rule (Alex, 2026-10-28): only current people are shown, grouped into board and officers.",on main
 B10.2,B10 People and board seats,"firm_people_roles: person_name, role, kind, not hidden, with a source.",on main
 B10.3,B10 People and board seats,"Enricher, typically Form ADV Schedule A (officers) and board seats from filings or the firm site.",on main
 B10.4,B10 People and board seats,One person per name.,on main
 B10.5,B10 People and board seats,Hidden rows are omitted.,on main
 B10.6,B10 People and board seats,RULES_AUDIT 9.,on main
-B10.7,B10 People and board seats,"On the lab firms, once this is built: people shown plus Show all.",in PR #227
-B10.8,B10 People and board seats,"Interviews are stored up to 10 per person (link + headline, most viewed first, see A2.3 and A9.15).",in PR #228
-B10.9,B10 People and board seats,"People: no data that has passed its check means the block is hidden from users (no empty box, no ""No data"" text).",in PR #228
-B11.1,B11 Legal and regulatory section,"Shown per A2.4: 10 legal items (cases and regulator actions), active first, then the rest by most recent, plus Show all.",in PR #228
+B10.7,B10 People and board seats,"On the lab firms, once this is built: people shown plus Show all.",on main
+B10.8,B10 People and board seats,"Interviews are stored up to 10 per person (link + headline, most viewed first, see A2.3 and A9.15).",on main
+B10.9,B10 People and board seats,"People: no data that has passed its check means the block is hidden from users (no empty box, no ""No data"" text).",on main
+B11.1,B11 Legal and regulatory section,"Sources and display per A2.4 (the source list lives only there (Alex, 2026-10-28)): 10 legal items (cases and regulator actions), active first, then the rest...","edited in this PR (Alex, 2026-10-28)"
 B11.2,B11 Legal and regulatory section,"firm_legal_items, not hidden, with a source.",on main
-B11.3,B11 Legal and regulatory section,Allowed sources: see A2.4.,in PR #228
+B11.3,B11 Legal and regulatory section,Allowed sources: see A2.4.,"edited in this PR (Alex, 2026-10-28)"
 B11.4,B11 Legal and regulatory section,Title required.,on main
 B11.5,B11 Legal and regulatory section,Hidden or unsourced rows are omitted.,on main
 B11.6,B11 Legal and regulatory section,RULES_AUDIT 7 and 8.,on main
-B11.7,B11 Legal and regulatory section,Legal items are never archived: see A9.,on main
+B11.7,B11 Legal and regulatory section,"Legal items: up to 100 kept per firm; past 100 the oldest are archived (stored, hidden): see A9.20 (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
 B12.1,B12 News,"One list, newest first, since 2023.",on main
 B12.2,B12 News,Press: press_items plus press_item_firms where check_mark = checked_correct and the URL is non-empty.,on main
-B12.3,B12 News,Enricher.,in PR #228
+B12.3,B12 News,Enricher.,on main
 B12.4,B12 News,"Press needs outlet, headline, and URL.",on main
-B12.5,B12 News,checked_wrong and not_checked stay stored and are not drawn.,in PR #228
-B12.6,B12 News,"News is shown only after it passes the news check (the link opens, the story names the firm, the outlet is an outside source from the A2.6 list).",in PR #228
-B12.7,B12 News,"On the lab firms, once this is built: the latest news items, plus Show all for the rest that are still on the page.",in PR #227
-B12.8,B12 News,"News: no data that has passed its check means the block is hidden from users (no empty box, no ""No data"" text).",in PR #228
-B13.1,"B13 What founders say, and the review cards","The reviews block reads the reviews table only (Alex, 2026-10-28).",in PR #228
+B12.5,B12 News,checked_wrong and not_checked stay stored and are not drawn.,on main
+B12.6,B12 News,"News is shown only after it passes the news check (the link opens, the story names the firm, the outlet is an outside source from the A2.6 list).",on main
+B12.7,B12 News,"On the lab firms, once this is built: the latest news items, plus Show all for the rest that are still on the page.",on main
+B12.8,B12 News,"News: no data that has passed its check means the block is hidden from users (no empty box, no ""No data"" text).",on main
+B13.1,"B13 What founders say, and the review cards","The reviews block reads the reviews table only (Alex, 2026-10-28).",on main
 B13.2,"B13 What founders say, and the review cards","The strip reads reviews: author, role, company, round, body, date, ratings, source URL, type.",on main
 B13.3,"B13 What founders say, and the review cards",Enricher “What founders say” items are written to reviews.,on main
 B13.4,"B13 What founders say, and the review cards","One person in who, a quote, a source.",on main
-B13.5,"B13 What founders say, and the review cards","A founder quote is shown only after it passes the founder review check (the link opens, it names the firm, it is quoted word for word, the writer is a founder).",in PR #228
+B13.5,"B13 What founders say, and the review cards","A founder quote is shown only after it passes the founder review check (the link opens, it names the firm, it is quoted word for word, the writer is a founder).",on main
 B13.6,"B13 What founders say, and the review cards",RULES_AUDIT 19.,on main
-B13.7,"B13 What founders say, and the review cards","On the lab firms, once this is built: one latest founder review, plus Show all.",in PR #227
-B13.8,"B13 What founders say, and the review cards","Founder reviews: no data that has passed its check means the block is hidden from users (no empty box, no ""No data"" text).",in PR #228
+B13.7,"B13 What founders say, and the review cards","On the lab firms, once this is built: one latest founder review, plus Show all.",on main
+B13.8,"B13 What founders say, and the review cards","Founder reviews: no data that has passed its check means the block is hidden from users (no empty box, no ""No data"" text).",on main
 B14.1,B14 Source pills,"The grey links under a row: label, date, and the URL.",on main
 B14.2,B14 Source pills,"fact_sources joined to sources, via _src.",on main
 B14.3,B14 Source pills,"Whatever URL the bot sent, if it passed the source filter.",on main
@@ -249,13 +248,13 @@ B18.5,B18 Elements that are easy to look for and are not on the page,bots.firm_l
 C0.1,C0 How the checks work,There are exactly 10 checks.,on main
 C0.2,C0 How the checks work,"OpenSanctions is only one source, and only inside checks 1, 2, and 10.",on main
 C0.3,C0 How the checks work,"On the 10 lab firms, check 1 and check 6 each search the legal name and each fund entity name.",on main
-C0.4,C0 How the checks work,"A table: number, title, pill, what was found, date searched.",in PR #228
+C0.4,C0 How the checks work,"A table: number, title, pill, what was found, date searched.",on main
 C0.5,C0 How the checks work,"firm_check_rows: n, title, descr, state, count_label, searched_at.",on main
 C0.6,C0 How the checks work,"Titles were inserted when the firm was created, or by the hand migration 20261023230000_sync_checks_all_launch_firms.sql.",on main
 C0.7,C0 How the checks work,A new firm’s pills are nc.,on main
 C0.8,C0 How the checks work,The table shows on the summary view.,on main
 C0.9,C0 How the checks work,RULES_AUDIT 20 and 16.,on main
-C0.10,C0 How the checks work,"Parked for the checks review, not changed now (Alex, 2026-10-28): A8.1 (lab pills recounted on publish) vs the C1.5–C10.5 ""stored pill"" lines, and C7.1 (a no...",in PR #228
+C0.10,C0 How the checks work,"Parked for the checks review, not changed now (Alex, 2026-10-28): A8.1 (lab pills recounted on publish) vs the C1.5–C10.5 ""stored pill"" lines, and C7.1 (a no...",on main
 C1.1,C1 Sanctions,“Government lists of people and companies you can’t do business with.” The muted line says “Searched government sanctions lists.” It does not name OFAC SDN.,on main
 C1.2,C1 Sanctions,Pill: firm_check_rows n=1.,on main
 C1.3,C1 Sanctions,"Intended sources, from docs/SOURCE_TIERS.md: OFAC, sanctionssearch.ofac.treas.gov, treasury.gov, the UK sanctions list, sanctionsmap.eu, the UN list.",on main
@@ -266,15 +265,15 @@ C2.1,C2 Terrorism financing lists,“Lists of people and groups linked to fundin
 C2.2,C2 Terrorism financing lists,firm_check_rows n=2.,on main
 C2.3,C2 Terrorism financing lists,No written list of sites beyond “government lists.” Unknown which bot last set the lab pills.,on main
 C2.4,C2 Terrorism financing lists,No required fields beyond the pill row.,on main
-C2.5,C2 Terrorism financing lists,Same as check 1.,in PR #228
+C2.5,C2 Terrorism financing lists,Same as check 1.,on main
 C2.6,C2 Terrorism financing lists,Same gap as RULES_AUDIT 20: the pill is not recomputed.,on main
 C3.1,C3 Export and investment restrictions,Trade and investment bans.,on main
 C3.2,C3 Export and investment restrictions,firm_check_rows n=3.,on main
 C3.3,C3 Export and investment restrictions,trade.gov is the example in docs/ENRICHER.md.,on main
 C3.4,C3 Export and investment restrictions,Name-only hits stay Clear.,on main
-C3.5,C3 Export and investment restrictions,Same as check 1.,in PR #228
+C3.5,C3 Export and investment restrictions,Same as check 1.,on main
 C3.6,C3 Export and investment restrictions,RULES_AUDIT 20.,on main
-C4.1,C4 Financial regulator actions,"“Fines, bans and charges from financial regulators.”",in PR #228
+C4.1,C4 Financial regulator actions,"“Fines, bans and charges from financial regulators.”",on main
 C4.2,C4 Financial regulator actions,Pill: firm_check_rows n=4.,on main
 C4.3,C4 Financial regulator actions,"SEC, FINRA, FCA, and DOJ mentions inside legal facts.",on main
 C4.4,C4 Financial regulator actions,A new allegation needs a court or regulator document on the 10 lab firms or it is rejected.,on main
@@ -288,9 +287,9 @@ C5.5,C5 Money laundering penalties,Stored pill.,on main
 C5.6,C5 Money laundering penalties,RULES_AUDIT 20.,on main
 C6.1,C6 US court records,Federal and state cases.,on main
 C6.2,C6 US court records,Pill: firm_check_rows n=6.,on main
-C6.3,C6 US court records,"CourtListener, PACER, uscourts.gov, a regulator (SEC, FINRA, FCA), Justia, Law360, or Casetext; a link is required (Alex, 2026-10-28).",in PR #228
+C6.3,C6 US court records,"Allowed sources: the list in A2.4; a link is required (Alex, 2026-10-28).","edited in this PR (Alex, 2026-10-28)"
 C6.4,C6 US court records,Leads are held.,on main
-C6.5,C6 US court records,"Rule (Alex, 2026-10-28): a count with no itemized rows shows nothing on the page, and no CourtListener search link is shown (a search page is not a source).",in PR #228
+C6.5,C6 US court records,"Rule (Alex, 2026-10-28): a count with no itemized rows shows nothing on the page, and no CourtListener search link is shown (a search page is not a source).",on main
 C6.6,C6 US court records,RULES_AUDIT 7.,on main
 C7.1,C7 Court records worldwide,Cases outside the U.S.,on main
 C7.2,C7 Court records worldwide,firm_check_rows n=7.,on main
@@ -299,12 +298,12 @@ C7.4,C7 Court records worldwide,No extra validation.,on main
 C7.5,C7 Court records worldwide,Stored pill.,on main
 C7.6,C7 Court records worldwide,RULES_AUDIT 20.,on main
 C8.1,C8 Registration check,"“Registered with the regulator as an investment adviser, and active.”",on main
-C8.2,C8 Registration check,"Source: only the firm's own IAPD page on sec.gov (level 1, the register).",in PR #228
-C8.3,C8 Registration check,"Stored on the check 8 row in firm_check_rows (n=8), set only after it passes the registration check (C8.4); The Checker runs this check today; automatic chec...",in PR #228
-C8.4,C8 Registration check,"Door check: the link must be an adviserinfo.sec.gov page for that firm, and the status must be one of the fixed list (Registered, Exempt reporting, Not active).",in PR #227
-C8.5,C8 Registration check,"Check 8 only (Alex, 2026-10-28): a US firm found on IAPD is Clear (registration line + link); a US firm not found is ""Not on the list""; a non-US firm (from H...",in PR #228
+C8.2,C8 Registration check,"Source: only the firm's own IAPD page on sec.gov (level 1, the register).",on main
+C8.3,C8 Registration check,"Stored on the check 8 row in firm_check_rows (n=8), set only after it passes the registration check (C8.4); The Checker runs this check today; automatic chec...",on main
+C8.4,C8 Registration check,"Door check: the link must be an adviserinfo.sec.gov page for that firm, and the status must be one of the fixed list (Registered, Exempt reporting, Not active).",on main
+C8.5,C8 Registration check,"Check 8 only (Alex, 2026-10-28): a US firm found on IAPD is Clear (registration line + link); a US firm not found is ""Not on the list""; a non-US firm (from H...",on main
 C8.6,C8 Registration check,RULES_AUDIT 8 and 20.,on main
-C9.1,C9 People behind the fund,"Partners and owners, each checked against the lists above.",in PR #228
+C9.1,C9 People behind the fund,"Partners and owners, each checked against the lists above.",on main
 C9.2,C9 People behind the fund,firm_check_rows n=9.,on main
 C9.3,C9 People behind the fund,"The people themselves are Form ADV Schedule A, via the enricher, into firm_people_roles.",on main
 C9.4,C9 People behind the fund,A person publish checks the name.,on main
@@ -346,58 +345,52 @@ R3.7,R3 Who collects what (snapshot 2026-10-27),Friend’s portal-night-bot | Ca
 R3.8,R3 Who collects what (snapshot 2026-10-27),"One-off migrations | Sequoia’s $82.2B, Sequoia’s 10 deals, press and timeline check marks.",on main
 R3.9,R3 Who collects what (snapshot 2026-10-27),"Sites the rules name: sec.gov (IAPD / Form ADV, including Item 5F, and EDGAR Form D), CourtListener, PACER, uscourts.gov, FINRA, the FCA, OFAC and sanctionss...",on main
 R3.10,R3 Who collects what (snapshot 2026-10-27),"There is no written rule that a given element must come from a given site, except the source filter (sec.gov and courts for government hosts; search pages re...",on main
-R4.1,"R4 Overview (old, being removed)","The text below describes the old Overview, kept for reference until the build.",in PR #227
+R4.1,"R4 Overview (old, being removed)","The text below describes the old Overview, kept for reference until the build.",on main
 R4.2,"R4 Overview (old, being removed)","Rows in a fixed order: HQ, Legal name, Registration, Founded, Owners, Recent changes, then anything else that was not hidden.",on main
 R4.3,"R4 Overview (old, being removed)","firm_profile_facts where section = overview, not hidden, with a source.",on main
 R4.4,"R4 Overview (old, being removed)","Enricher, from Form ADV and the firm’s own pages.",on main
 R4.5,"R4 Overview (old, being removed)","One label, one value, one source.",on main
 R4.6,"R4 Overview (old, being removed)","Hidden labels: Other names, Type, Staff, Private funds, Legal entity, Sanctions screening, empty, “Not found.” A row with no source is not returned.",on main
 R4.7,"R4 Overview (old, being removed)",RULES_AUDIT 15.,on main
-R5.1,R5 Old notes,"Old note from B10.1: people cards grouped into board, moves, and officers.",in PR #228
-R5.2,R5 Old notes,Old note from C6.5: a count with no rows linked a CourtListener search.,in PR #228
-R5.3,R5 Old notes,"From B2.6: 4,025 queue rows have no `list_source` (RULES_AUDIT 23).",in PR #228
-R5.4,R5 Old notes,"From B3.1: Sequoia shows “Sequoia Capital” and “Menlo Park, CA.”",in PR #228
-R5.5,R5 Old notes,"From B3.3: (Snapshot, Overview now removed: the enricher could publish an overview fact labelled Headquarters.)",in PR #228
-R5.6,R5 Old notes,"From B4.6: (Snapshot, Overview now removed: Overview paragraphs could contain a CRD that these pills do not show, RULES_AUDIT 15.)",in PR #228
-R5.7,R5 Old notes,"From B5.6: Five lab firms have a stored current score, including a16z.",in PR #228
-R5.8,R5 Old notes,From B6a.1: Sequoia is active.,in PR #228
-R5.9,R5 Old notes,"From B6a.3: Sequoia’s deals were copied from timeline lines (`sequoia_timeline_deals`). Other deals: unknown, except Y Combinator’s activity collector.",in PR #228
-R5.10,R5 Old notes,From B6b.1: Sequoia: 10.,in PR #228
-R5.11,R5 Old notes,From B6b.6: Six lab firms are at 0.,in PR #228
-R5.12,R5 Old notes,"From B6c.1: Sequoia: Sequoia Capital Fund, L.P., $22.7B, 5 Feb 2026.",in PR #228
-R5.13,R5 Old notes,"From B6c.3: Sequoia’s two amounts were written by the one-off migration from EDGAR Form D. Other `funds` rows: unknown, often older imports.",in PR #228
-R5.14,R5 Old notes,From B6c.6: Lightspeed has 64 fund rows and 4 profile lines. Accel has profile lines and no `funds` row.,in PR #228
-R5.15,R5 Old notes,From B6d.3: Sequoia’s display string was set by the one-off migration to `$82.2B`.,in PR #228
-R5.16,R5 Old notes,From B6d.6: Four lab firms have a null helper result. Greenoaks returns `$18.27`.,in PR #228
-R5.17,R5 Old notes,From B6e.1: Sequoia’s latest is Blacksmith.,in PR #228
-R5.18,R5 Old notes,From B6e.1: Sequoia has 10.,in PR #228
-R5.19,R5 Old notes,"From B6e.5: The lock is off, so it is open.",in PR #228
-R5.20,R5 Old notes,From B8.1: Sequoia returns 9.,in PR #228
-R5.21,R5 Old notes,From B8.3: Sequoia’s tile amounts were a one-off from two Form D filings.,in PR #228
-R5.22,R5 Old notes,From B8.5: Sequoia’s raw Item 5F lines were hidden by the one-off migration.,in PR #228
-R5.23,R5 Old notes,From B9.3: Exact registry for each Accel LP: the row’s `source_url`. Not re-fetched for this guide.,in PR #228
-R5.24,R5 Old notes,From B9.6: 33 names are in both homes. Accel’s Adams Street row is the example.,in PR #228
-R5.25,R5 Old notes,From B10.6: Greenoaks still shows “Board seat: Neil Mehta…”.,in PR #228
-R5.26,R5 Old notes,From B12.1: Sequoia’s payload has 5 press rows and 1 timeline row.,in PR #228
-R5.27,R5 Old notes,"From B12.6: 13 lab links are in both tables. The lab marks were set by `20261027221100_news_one_list_data.sql`, not by a bot.",in PR #228
-R5.28,R5 Old notes,From B13.1: Sequoia’s count is 8.,in PR #228
-R5.29,R5 Old notes,From B13.6: Khosla has 4 stored and 0 shown.,in PR #228
-R5.30,R5 Old notes,"From B16.4: The lock is off, so opening a lab page does not spend a credit.",in PR #228
-R5.31,R5 Old notes,From B17.2: Live value `false`.,in PR #228
-R5.32,R5 Old notes,From C0.6: No bot currently updates the pill.,in PR #228
-R5.33,R5 Old notes,From C1.3: Which bot ran them for a given Clear pill: unknown.,in PR #228
-R5.34,R5 Old notes,From C1.6: Five lab firms are Clear with 0 `sanctions_checks` rows. Accel is one.,in PR #228
-R5.35,R5 Old notes,From C2.3: Unknown which bot last set the lab pills.,in PR #228
-R5.36,R5 Old notes,From C4.1: a16z’s stored count is “1 open probe.”,in PR #228
-R5.37,R5 Old notes,From C4.6: MIO’s pill says 2 actions while `regulatory_records` is 0.,in PR #228
-R5.38,R5 Old notes,From C7.3: Unknown bot for the stored pills.,in PR #228
-R5.39,R5 Old notes,From C9.3: Unknown which bot screened them.,in PR #228
-R5.40,R5 Old notes,From C9.6: Accel’s Schedule A sentences were hidden as people and did not become a check.,in PR #228
-R5.41,R5 Old notes,From C10.3: Unknown bot.,in PR #228
-R5.42,R5 Old notes,From C10.5: a16z is Worth knowing from the hand migration.,in PR #228
-A2.9,A2 Sources per page part,People | The firm’s team page or a Form ADV.,removed (duplicate of A2.3)
-A9.9,A9 List limits and archiving (the one table),These replace the earlier soft caps.,removed (duplicate of A9 table)
-A9.10,A9 List limits and archiving (the one table),"Soft caps per firm: see List limits above (news 50, LPs 100, deals 1,000, people 20, funds 100, founder reviews 50; reviews past 50 also alert Alex).",removed (duplicate of A9 table)
-A9.11,A9 List limits and archiving (the one table),"Lawsuits, regulator actions, and negative news are never archived.",removed (duplicate of A9.8)
-A9.13,A9 List limits and archiving (the one table),Legal items and the 10 checks have no cap and are never archived or deleted.,removed (duplicate of A9.8)
-B9.7,B9 Limited partners,Only confirmed LPs are shown.,removed (duplicate of B9.5)
+R5.1,R5 Old notes,"Old note from B10.1: people cards grouped into board, moves, and officers.",on main
+R5.2,R5 Old notes,Old note from C6.5: a count with no rows linked a CourtListener search.,on main
+R5.3,R5 Old notes,"From B2.6: 4,025 queue rows have no `list_source` (RULES_AUDIT 23).",on main
+R5.4,R5 Old notes,"From B3.1: Sequoia shows “Sequoia Capital” and “Menlo Park, CA.”",on main
+R5.5,R5 Old notes,"From B3.3: (Snapshot, Overview now removed: the enricher could publish an overview fact labelled Headquarters.)",on main
+R5.6,R5 Old notes,"From B4.6: (Snapshot, Overview now removed: Overview paragraphs could contain a CRD that these pills do not show, RULES_AUDIT 15.)",on main
+R5.7,R5 Old notes,"From B5.6: Five lab firms have a stored current score, including a16z.",on main
+R5.8,R5 Old notes,From B6a.1: Sequoia is active.,on main
+R5.9,R5 Old notes,"From B6a.3: Sequoia’s deals were copied from timeline lines (`sequoia_timeline_deals`). Other deals: unknown, except Y Combinator’s activity collector.",on main
+R5.10,R5 Old notes,From B6b.1: Sequoia: 10.,on main
+R5.11,R5 Old notes,From B6b.6: Six lab firms are at 0.,on main
+R5.12,R5 Old notes,"From B6c.1: Sequoia: Sequoia Capital Fund, L.P., $22.7B, 5 Feb 2026.",on main
+R5.13,R5 Old notes,"From B6c.3: Sequoia’s two amounts were written by the one-off migration from EDGAR Form D. Other `funds` rows: unknown, often older imports.",on main
+R5.14,R5 Old notes,From B6c.6: Lightspeed has 64 fund rows and 4 profile lines. Accel has profile lines and no `funds` row.,on main
+R5.15,R5 Old notes,From B6d.3: Sequoia’s display string was set by the one-off migration to `$82.2B`.,on main
+R5.16,R5 Old notes,From B6d.6: Four lab firms have a null helper result. Greenoaks returns `$18.27`.,on main
+R5.17,R5 Old notes,From B6e.1: Sequoia’s latest is Blacksmith.,on main
+R5.18,R5 Old notes,From B6e.1: Sequoia has 10.,on main
+R5.19,R5 Old notes,"From B6e.5: The lock is off, so it is open.",on main
+R5.20,R5 Old notes,From B8.1: Sequoia returns 9.,on main
+R5.21,R5 Old notes,From B8.3: Sequoia’s tile amounts were a one-off from two Form D filings.,on main
+R5.22,R5 Old notes,From B8.5: Sequoia’s raw Item 5F lines were hidden by the one-off migration.,on main
+R5.23,R5 Old notes,From B9.3: Exact registry for each Accel LP: the row’s `source_url`. Not re-fetched for this guide.,on main
+R5.24,R5 Old notes,From B9.6: 33 names are in both homes. Accel’s Adams Street row is the example.,on main
+R5.25,R5 Old notes,From B10.6: Greenoaks still shows “Board seat: Neil Mehta…”.,on main
+R5.26,R5 Old notes,From B12.1: Sequoia’s payload has 5 press rows and 1 timeline row.,on main
+R5.27,R5 Old notes,"From B12.6: 13 lab links are in both tables. The lab marks were set by `20261027221100_news_one_list_data.sql`, not by a bot.",on main
+R5.28,R5 Old notes,From B13.1: Sequoia’s count is 8.,on main
+R5.29,R5 Old notes,From B13.6: Khosla has 4 stored and 0 shown.,on main
+R5.30,R5 Old notes,"From B16.4: The lock is off, so opening a lab page does not spend a credit.",on main
+R5.31,R5 Old notes,From B17.2: Live value `false`.,on main
+R5.32,R5 Old notes,From C0.6: No bot currently updates the pill.,on main
+R5.33,R5 Old notes,From C1.3: Which bot ran them for a given Clear pill: unknown.,on main
+R5.34,R5 Old notes,From C1.6: Five lab firms are Clear with 0 `sanctions_checks` rows. Accel is one.,on main
+R5.35,R5 Old notes,From C2.3: Unknown which bot last set the lab pills.,on main
+R5.36,R5 Old notes,From C4.1: a16z’s stored count is “1 open probe.”,on main
+R5.37,R5 Old notes,From C4.6: MIO’s pill says 2 actions while `regulatory_records` is 0.,on main
+R5.38,R5 Old notes,From C7.3: Unknown bot for the stored pills.,on main
+R5.39,R5 Old notes,From C9.3: Unknown which bot screened them.,on main
+R5.40,R5 Old notes,From C9.6: Accel’s Schedule A sentences were hidden as people and did not become a check.,on main
+R5.41,R5 Old notes,From C10.3: Unknown bot.,on main
+R5.42,R5 Old notes,From C10.5: a16z is Worth knowing from the hand migration.,on main
