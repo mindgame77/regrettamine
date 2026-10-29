@@ -1,5 +1,5 @@
 -- Upload fix (Alex 2026-10-28): firm uploads may carry news, thesis and socialAccounts records (edge function v32);
--- legal words: old words are mapped (open/pending -> Active, judgment/adjudicated -> Closed, unknown = no status),
+-- legal words: old words are mapped (open -> Active, judgment/adjudicated -> Closed, unknown = no status),
 -- firm_party_role is read as the side, side "other" is rejected with a clear reason; AUM basis "press" is rejected (A7.3).
 -- Additive: only the two entry-check helpers change. Rollback: supabase/rollbacks/20261029110000_upload_fields_legal_words.sql
 
@@ -15,7 +15,7 @@ as $function$
            lower(btrim(coalesce(p_f->>'about', p_f->>'case_type', p_f->>'topic', ''))) tp
     where jsonb_typeof(p_f) = 'object')
   select case
-    when w.st not in ('', 'unknown', 'active', 'open', 'pending', 'ongoing', 'closed', 'judgment', 'adjudicated', 'final', 'settled', 'dismissed')
+    when w.st not in ('', 'unknown', 'active', 'open', 'closed', 'judgment', 'adjudicated', 'settled', 'dismissed')
       then 'status word not on the fixed list (Active, Closed, Settled, Dismissed)'
     when w.sd = 'other'
       then 'side "other" is not allowed: the firm must be the Defendant or the Plaintiff'

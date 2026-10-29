@@ -15,8 +15,8 @@ const FIELD_PATHS = ["hq", "founded", "aum", "legal_entities", "people", "people
   "news", "thesis", "socialAccounts"];
 // Fixed legal words (docs/PAGE_DATA_GUIDE.md A2.4). Old words are mapped on arrival so old uploads keep working.
 const LEGAL_PATHS = ["lawsuits", "regulatoryActions"];
-const LEGAL_STATUS: Record<string, string> = { active: "Active", open: "Active", pending: "Active", ongoing: "Active",
-  closed: "Closed", judgment: "Closed", adjudicated: "Closed", final: "Closed", settled: "Settled", dismissed: "Dismissed" };
+const LEGAL_STATUS: Record<string, string> = { active: "Active", open: "Active",
+  closed: "Closed", judgment: "Closed", adjudicated: "Closed", settled: "Settled", dismissed: "Dismissed" };
 const LEGAL_SIDE: Record<string, string> = { defendant: "Defendant", plaintiff: "Plaintiff" };
 const LEGAL_TOPIC: Record<string, string> = { fraud: "Fraud", contract: "Contract", employment: "Employment", securities: "Securities",
   "regulator action": "Regulator action", regulator_action: "Regulator action", ip: "IP" };
