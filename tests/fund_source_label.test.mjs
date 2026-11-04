@@ -82,15 +82,15 @@ const link = (html) => (tile(html).match(/<a [^>]*>([^<]*)<\/a>/) || [])[1];
 const fund = (url, label) => ({ activity: { latest_fund: { name: 'ZZ Fund', raised_usd: 9000000000, date: '2026-01-01', url, url_label: label } } });
 
 test('sec.gov is a Filing even with a label', () => {
-  assert.equal(link(paint(fund(EDGAR, 'SEC'))), 'Filing ↗');
-  assert.equal(link(paint(fund('https://reports.adviserinfo.sec.gov/x.pdf'))), 'Filing ↗');
+  assert.equal(link(paint(fund(EDGAR, 'SEC'))), 'Filing');
+  assert.equal(link(paint(fund('https://reports.adviserinfo.sec.gov/x.pdf'))), 'Filing');
 });
 test('a news link names the outlet', () => {
-  assert.equal(link(paint(fund('https://www.reuters.com/x', 'Reuters'))), 'Reuters ↗');
+  assert.equal(link(paint(fund('https://www.reuters.com/x', 'Reuters'))), 'Reuters');
 });
 test('no stored name falls back to the host, never to Filing', () => {
-  assert.equal(link(paint(fund('https://www.davispolk.com/x', null))), 'davispolk.com ↗');
-  assert.equal(link(paint(fund('https://evilsec.gov.example/x', '  '))), 'evilsec.gov.example ↗');
+  assert.equal(link(paint(fund('https://www.davispolk.com/x', null))), 'davispolk.com');
+  assert.equal(link(paint(fund('https://evilsec.gov.example/x', '  '))), 'evilsec.gov.example');
 });
 test('a fund with no amount is not drawn', () => {
   const html = paint({ firm: { name: 'ZZ', slug: 'zz-not-lab' }, activity: { latest_fund: { name: 'ZZ Fund', url: 'https://fintechobserver.com/x', url_label: 'Fintech Observer' } } });

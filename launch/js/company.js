@@ -189,7 +189,7 @@
   const capL = (s) => window.RegretLabel ? window.RegretLabel.cap(s) : String(s || '');
   const fullA = (full, extra) => { full = String(full || '').trim(); return capL(full) === full ? '' : ' title="' + esc(full) + '" aria-label="' + esc(full + (extra || '')) + '"'; };
   const ncPill = '<span class="cs cs-cl">' + esc(NC) + '</span> ';
-  const chips = (src) => '<div class="scs">' + (src || []).map(s => { const u = safeUrl(s.url); const d = s.date ? ' · ' + fdate(s.date) : '', t = esc(capL(s.label)) + esc(d) + ' ↗';
+  const chips = (src) => '<div class="scs">' + (src || []).map(s => { const u = safeUrl(s.url); const d = s.date ? ' · ' + fdate(s.date) : '', t = esc(capL(s.label)) + esc(d);
     return u ? '<a class="sc" href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(s.label, d) + '>' + t + '</a>' : ''; }).join('') + '</div>';
   const pill = (st) => { const p = PILL[st === 'red' ? 'review' : st] || PILL.nc; return '<span class="pill ' + p[0] + '"><i></i>' + p[1] + '</span>'; };
   // A person card's name is a short fact about one person. Bot research notes (ADV Schedule A summaries, "Bot people records",
@@ -214,7 +214,7 @@
     const y = shownYear(f);
     const head = f.case ? '<b>' + esc(f.case) + '</b>' + (y ? ' · ' + esc(y) : '') + '<br>' : '';
     const u = safeUrl(f.url), st = caseStatus(f);
-    const src = (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(f.label) + '>' + esc(capL(f.label || COPY.source)) + ' ↗</a>' : esc(capL(f.label || ''))) + (f.date ? ' · ' + COPY.retrieved + esc(fdate(f.date)) : '');
+    const src = (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(f.label) + '>' + esc(capL(f.label || COPY.source)) + '</a>' : esc(capL(f.label || ''))) + (f.date ? ' · ' + COPY.retrieved + esc(fdate(f.date)) : '');
     const p = st === 'active' ? '<span class="cs cs-act">Active</span>' : st === 'closed' ? '<span class="cs cs-cl">Closed</span>' : '';
     return '<div class="fct' + (st === 'active' ? ' act' : '') + '">' + p + (f.needs_proof ? '<span class="np">Needs proof</span>' : '') + head + esc(who) + esc(f.text) + '<div class="src">' + src + '</div></div>';
   }
@@ -540,7 +540,7 @@
       + (sum ? '<p class="arsm"><span class="k">' + esc(AC.summary || 'Summary') + '</span> <b>' + esc(sum) + '</b></p>' : '')
       + (quote ? '<p class="aq">“' + esc(quote) + '”</p>' : (!sum && head ? '<p class="aq">' + esc(head) + '</p>' : ''))
       + '<p class="arat">' + esc(who) + (year ? (who ? ' · ' : '') + esc(year) : '')
-      + (u ? ((who || year) ? ' · ' : '') + '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(capL(AC.source || 'Source')) + ' ↗</a>' : '')
+      + (u ? ((who || year) ? ' · ' : '') + '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(capL(AC.source || 'Source')) + '</a>' : '')
       + '</p></div>';
   }
   function founderBlock(it, P) {
@@ -1113,7 +1113,7 @@
   function sourceHtml(x, para) {
     const u = safeUrl(x.url), label = sourceText(x);
     if (!u || !label) return '';
-    const a = '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(label) + '>' + esc(capL(label)) + ' ↗</a>';
+    const a = '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(label) + '>' + esc(capL(label)) + '</a>';
     return para ? '<p>' + esc(T.source) + ' ' + a + '</p>' : '<div class="src">' + esc(T.source) + ' ' + a + '</div>';
   }
   function courtSearch(P) {
@@ -1284,7 +1284,7 @@
     const when = fund.date ? (fdate(fund.date) || fund.date) : '';
     const sub = esc(fund.name) + ' · ' + esc(fmt(AC.raised, { amount: fund.amount }))
       + (when ? ' · ' + esc(when) : '')
-      + (fund.url ? ' · <a href="' + esc(fund.url) + '" target="_blank" rel="noopener"' + fullA(srcName(fund.url)) + '>' + esc(capL(srcName(fund.url))) + ' ↗</a>' : '');
+      + (fund.url ? ' · <a href="' + esc(fund.url) + '" target="_blank" rel="noopener"' + fullA(srcName(fund.url)) + '>' + esc(capL(srcName(fund.url))) + '</a>' : '');
     return tile(AC.fund, esc(fund.amount), sub, 'afd');
   }
   function aumFigure(raw) {
@@ -1324,7 +1324,7 @@
     const u = m && accept(m.url);
     if (!m || !m.display || !u) return '';
     const name = srcName(u);
-    const sub = '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(name) + '>' + esc(capL(name)) + ' ↗</a>';
+    const sub = '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(name) + '>' + esc(capL(name)) + '</a>';
     return tile(label, esc(m.display), sub, 'afd');
   }
   const aumTile = (P) => moneyTile(P.firm && P.firm.money && P.firm.money.aum, AC.aum || 'Assets under management', (u) => aumUrl(u, P.firm && P.firm.website));
@@ -1416,7 +1416,7 @@
       + (sum && sum.length <= 150 ? '<p class="arsm"><span class="k">' + esc(AC.summary || 'Summary') + '</span> <b>' + esc(sum) + '</b></p>' : '')
       + (r.body ? '<p class="aq">“' + esc(r.body) + '”</p>' : '')
       + '<p class="arat">' + (who ? '— ' + esc(who) : '') + (year ? (who ? ' · ' : '') + esc(year) : '')
-      + (u ? ((who || year) ? ' · ' : '') + '<a href="' + esc(u) + '" target="_blank" rel="noopener"><span>' + esc(AC.source) + '</span> ' + esc(capL(hostOf(u))) + ' ↗</a>' : '')
+      + (u ? ((who || year) ? ' · ' : '') + '<a href="' + esc(u) + '" target="_blank" rel="noopener"><span>' + esc(AC.source) + '</span> ' + esc(capL(hostOf(u))) + '</a>' : '')
       + '</p></div>';
   }
   const showAll = (P, kind, n) => '<button type="button" class="ash"' + (P.open ? ' data-open="act' + kind + '"' : ' data-gate') + '>' + esc(pl(kind === 'deals' ? AC.all_deals : AC.all_reviews, n)) + ' ↓</button>';
@@ -1453,7 +1453,7 @@
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_fund) + '</span><span>' + esc(AC.h_amount) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + fs.map(x => { const u = safeUrl(x.url);
         return '<div class="ad"><b>' + esc(fundName(x.name)) + '</b><span>' + esc(x.announced ? x.raised_display : clampMoney(x.raised_display || money(x.raised_usd))) + '</span><span>' + esc(yearOf(x.date)) + '</span>'
-          + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(x.announced ? AC.src_link : AC.filing) + ' ↗</a>' : '<span></span>') + '</div>'; }).join('') + '</div>';
+          + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(x.announced ? AC.src_link : AC.filing) + '</a>' : '<span></span>') + '</div>'; }).join('') + '</div>';
   }
   // v4: the funds pop-up lists newest first; undated funds keep their order at the end.
   function newestFirst(fs) {
@@ -1493,7 +1493,7 @@
     const year = yearOf(fund.date);
     const fresh = underYears(fund.date, 3);
     const u = fund.announced ? '' : fund.url; // announced total: no link on the tile (rows in the pop-up keep Source)
-    const link = u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(srcName(u, fund.label)) + '>' + esc(capL(srcName(u, fund.label))) + ' ↗</a>' : '';
+    const link = u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(srcName(u, fund.label)) + '>' + esc(capL(srcName(u, fund.label))) + '</a>' : '';
     const sub = esc(fund.name) + ' · ' + esc(fmt(AC.raised, { amount: fund.amount })) + (year ? ' · ' + esc(year) : '') + link;
     return tile(AC.fund, esc(fund.amount), sub, fresh === false ? 'afd afr' : 'afd afg');
   }
@@ -1511,7 +1511,7 @@
     const own = !adv && site && (hostOf(u) === site || hostOf(u).endsWith('.' + site));
     const when = moneyDate(m);
     const name = srcName(u);
-    const link = '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(name) + '>' + esc(capL(name)) + ' ↗</a>';
+    const link = '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(name) + '>' + esc(capL(name)) + '</a>';
     const sub = adv ? esc(AC.aum_sec || 'SEC Form ADV') + (when ? ' · ' + esc(when) : '') + ' · ' + link
       : own ? (when ? esc(when) + ' · ' : '') + link
       : esc(AC.reported_by_news || 'Reported by news') + ' · ' + link;
