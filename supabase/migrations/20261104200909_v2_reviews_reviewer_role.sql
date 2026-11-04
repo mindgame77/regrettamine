@@ -1,3 +1,9 @@
+-- The v2 schema is not created by repo migrations; on a database without v2_reviews (CI) this is a no-op.
+-- Applied to production via Supabase as v2_reviews_reviewer_role (20261104200909).
+do $mig$
+begin
+  if to_regclass('public.v2_reviews') is null then raise notice 'v2 schema missing, skipped'; return; end if;
+  execute $mx$
 alter table public.v2_reviews
   add column if not exists reviewer_role varchar(120),
   add column if not exists reviewer_company varchar(160),
@@ -120,3 +126,7 @@ begin
        'funds_announced',json_build_object('n',jsonb_array_length(fa),'latest',fal,'items',fa),
        'funds_sec',json_build_object('n',jsonb_array_length(funds),'items',funds),'funds_closed_12m',(select count(*) from jsonb_array_elements(funds) e where e->>'date' >= (current_date-365)::text)));
 end $function$;
+
+$mx$;
+end
+$mig$;
