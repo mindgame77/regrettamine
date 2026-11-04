@@ -18,7 +18,7 @@ test('long labels end in two dots and stay within the cap', () => {
   assert.equal(cap('OCERS investment report ab  cdefg'), 'OCERS investment report ab..'); // trailing space trimmed before '..'
 });
 test('every source link in company.js goes through capL with a full-text title', () => {
-  const links = js.split('\n').filter(l => l.includes('↗</a>') || l.includes("' ↗';"));
-  for (const l of links) if (!/Source: \{site\}|AC\.filing\) \+ ' ↗/.test(l)) assert.match(l, /capL\(/, l.trim().slice(0, 120));
+  const links = js.split('\n').filter(l => (l.includes('rel="noopener"') && l.includes("</a>'") && !/class="(co|pih)"/.test(l) && !l.includes('esc(host) +') && !l.includes("+ t + '</a>'")) || l.includes('t = esc(capL(s.label))'));
+  for (const l of links) if (!/Source: \{site\}|AC\.filing\) \+ '<\/a>|AC\.src_link/.test(l)) assert.match(l, /capL\(/, l.trim().slice(0, 120));
   assert.match(js, /' title="' \+ esc\(full\) \+ '" aria-label="'/);
 });
