@@ -1452,8 +1452,8 @@
   function fundRows(fs) {
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_fund) + '</span><span>' + esc(AC.h_amount) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + fs.map(x => { const u = safeUrl(x.url);
-        return '<div class="ad"><b>' + esc(fundName(x.name)) + '</b><span>' + esc(clampMoney(x.raised_display || money(x.raised_usd))) + '</span><span>' + esc(yearOf(x.date)) + '</span>'
-          + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(AC.filing) + ' ↗</a>' : '<span></span>') + '</div>'; }).join('') + '</div>';
+        return '<div class="ad"><b>' + esc(fundName(x.name)) + '</b><span>' + esc(x.announced ? x.raised_display : clampMoney(x.raised_display || money(x.raised_usd))) + '</span><span>' + esc(yearOf(x.date)) + '</span>'
+          + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(x.announced ? AC.source : AC.filing) + ' ↗</a>' : '<span></span>') + '</div>'; }).join('') + '</div>';
   }
   // v4: the funds pop-up lists newest first; undated funds keep their order at the end.
   function newestFirst(fs) {
@@ -1476,11 +1476,18 @@
     if (!amount) return null;
     return { name: f.name, amount: amount, date: f.date || (f.vintage ? String(f.vintage) : ''), url: safeUrl(f.url) || '', label: f.url_label || '' };
   }
+  function ann(L) {
+    const u = safeUrl(L.url);
+    return L.total_display && u && Number(L.n) > 0 ? { name: pl(AC.announced_fund, Number(L.n)), amount: L.total_display, date: L.date || '', url: u, label: AC.source } : null;
+  }
   function pickFund(P) {
     const a = fundFromActivity(P.activity && P.activity.latest_fund);
     const e0 = earlierFund(P);
     const e = e0 && e0.amount ? { name: e0.name, amount: clampMoney(e0.amount), date: e0.date || '', url: e0.url || '', label: '' } : null;
-    return [a, e].filter(Boolean).sort((x, y) => String(y.date || '').localeCompare(String(x.date || '')))[0] || null;
+    // The firm's own fund announcement (activity.funds_announced.latest) competes on date with the filed funds.
+    const L = P.activity && P.activity.funds_announced && P.activity.funds_announced.latest;
+    const n = L ? ann(L) : null;
+    return [a, e, n].filter(Boolean).sort((x, y) => String(y.date || '').localeCompare(String(x.date || '')))[0] || null;
   }
   function fundCard(fund) {
     const year = yearOf(fund.date);
@@ -1534,7 +1541,10 @@
     // No tile to hang the line under (e.g. accel): the line sits on its own where the tiles would be.
     const lone = fsn && ti < 0 && !tiles.length;
     if (fsn && ti > -1) tiles[ti] = tiles[ti].replace('<div class="att afd', '<div data-fundtile class="att afd');
-    if (fsn && (ti > -1 || lone) && P.open && Array.isArray(fs.items)) actModal('actfunds', pl(AC.funds_sec, fsn) + ' · ' + firm, fundRows(newestFirst(fs.items)));
+    if (fsn && (ti > -1 || lone) && P.open && Array.isArray(fs.items)) {
+      const an = A.funds_announced, anI = an && Array.isArray(an.items) ? an.items.map(x => Object.assign({}, x, { announced: true })) : [];
+      actModal('actfunds', pl(AC.funds_sec, fsn) + (anI.length ? ' · ' + fmt(AC.funds_announced, { n: anI.length }) : '') + ' · ' + firm, fundRows(newestFirst(anI.concat(fs.items))));
+    }
     if (!tiles.length && !d0 && !r0 && !lone) return '';
     let h = '<section class="actv" aria-label="' + esc(AC.reviews) + '">' + (tiles.length ? '<div class="ats" style="grid-template-columns:repeat(' + tiles.length + ',1fr)">' + tiles.join('') + '</div>'
       : lone ? '<div class="ats" style="grid-template-columns:1fr">' + fundsLine(P, fsn) + '</div>' : '');
