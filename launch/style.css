@@ -431,6 +431,7 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 .secp.hpills{max-height:none;overflow:visible;gap:8px}
 .hp{display:inline-flex;align-items:center;background:#F1F0F5;color:#3a3550;border:0;border-radius:999px;padding:5px 12px;font:600 13px 'DM Sans';text-decoration:none;cursor:pointer}
 .hp:hover{background:#E7E5EF}
+.secp.hpills .hp{margin:0;max-width:none}
 .sv.apply{margin-left:8px;text-decoration:none}
 .pcard.pjoin{background:#E7F8EE;border-color:transparent}.pcard.pleft{background:#FDE8E4;border-color:transparent}
 .pcard .psince{font-weight:700}.pcard.pjoin .psince{color:#0F7A3A}.pcard.pleft .psince{color:#C4281C}
