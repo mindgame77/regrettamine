@@ -480,3 +480,6 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 .lsum .lsm a{color:var(--vio);font-weight:600;text-decoration:none}
 .lsum .lsm a:hover,.lsum .lsm a:focus-visible{text-decoration:underline}
 .rw.lpl .rm{margin-top:0}.att[data-fundtile]{cursor:pointer}
+/* Sector share design A on the main page (Alex 2026-11-04): no border, 6px bar, deal as one line. Scoped to .ssa so the Show all deals pop-up box is unchanged. */
+.ssa .ssh{border:0;border-radius:0;padding:0;margin:0}.ssa .ssn{display:none}.ssa .sstk{height:6px}
+.ssa .sdl{margin-top:12px;font-size:13.5px;color:var(--ink2)}.ssa .sdl b{color:var(--ink)}.ssa .sdl a{color:var(--vio);font-weight:600;text-decoration:none}

@@ -1516,7 +1516,14 @@
     if (!tiles.length && !d0 && !r0 && !lone) return '';
     let h = '<section class="actv" aria-label="' + esc(AC.reviews) + '">' + (tiles.length ? '<div class="ats" style="grid-template-columns:repeat(' + tiles.length + ',1fr)">' + tiles.join('') + '</div>'
       : lone ? '<div class="ats" style="grid-template-columns:1fr">' + fundsLine(P, fsn) + '</div>' : '');
-    if (d0) h += '<div class="aps"><b class="apt">' + esc(AC.latest_deal) + '</b>' + dealRows([d0], labFirm(P)) + (n.deals > 1 ? showAll(P, 'deals', n.deals) : '') + '</div>';
+    // Design A (Alex 2026-11-04): lab firms with a sector share show it borderless on the main page, the latest deal as one
+    // text line, then Show all. No sector data: the unchanged "The latest deal" block.
+    const shA = labFirm(P) ? sectorShare(A.sector_12m) : '';
+    if (shA) { const u0 = d0 && safeUrl(d0.url);
+      const dl = d0 ? '<div class="sdl"><b>' + esc(d0.company || '') + '</b>' + [labRound(d0.round), dealAmt(d0.amount, d0.currency), d0.lead ? AC.lead : '', fdate(d0.date) || ''].filter(Boolean).map(t => ' · ' + esc(t)).join('')
+        + (u0 ? ' · <a href="' + esc(u0) + '" target="_blank" rel="noopener"' + fullA(hostOf(u0)) + '>' + esc(capL(hostOf(u0))) + ' ↗</a>' : '') + '</div>' : '';
+      h += '<div class="aps ssa">' + shA + dl + (n.deals > 1 ? showAll(P, 'deals', n.deals) : '') + '</div>';
+    } else if (d0) h += '<div class="aps"><b class="apt">' + esc(AC.latest_deal) + '</b>' + dealRows([d0], labFirm(P)) + (n.deals > 1 ? showAll(P, 'deals', n.deals) : '') + '</div>';
     const revs = (!A.lazy && Array.isArray(A.reviews) && A.reviews.length) ? A.reviews.slice(0, 3) : (r0 ? [r0] : []);
     if (revs.length) h += '<div class="aps arvs"><h2>' + esc(AC.reviews) + '</h2>' + revs.map(revCard).join('') + (n.reviews > revs.length ? showAll(P, 'revs', n.reviews) : '') + '</div>';
     // firm_page sends only the first slice (A.lazy); the full list loads once when "Show all" opens (firm_activity_list).
