@@ -1407,19 +1407,29 @@
   }
   const TYPE_PILL = { founder: 'tf', employee: 'te', portfolio: 'tp', company: 'tc', firm_voice: 'tv', aggregator: 'ta' };
   const typePill = (t) => { const T = AC.types || {}, k = t || 'founder'; return T[k] ? '<span class="arty ' + (TYPE_PILL[k] || '') + '">' + esc(T[k]) + '</span>' : ''; };
+  // A2 compact card: the summary is the quote (bold, in quotes); one grey line "— Name, Role of Company · year · site".
+  // Role and company come from v2_reviews (G5: shown only when sourced); a blank one is left out.
+  function reviewerLine(r) {
+    const name = String(r.author || '').trim();
+    let role = String(r.role || '').trim();
+    if (role && name && role.indexOf(name) === 0) role = role.slice(name.length).replace(/^[\s,]+/, '');
+    const company = String(r.company || '').trim();
+    const rc = role && company ? role + ' of ' + company : (role || company);
+    return [name, rc].filter(Boolean).join(', ');
+  }
   function revCard(r) {
     const u = safeUrl(r.url);
-    const who = [r.author, r.role && r.author && String(r.role).indexOf(r.author) === 0 ? String(r.role).slice(r.author.length).replace(/^[\s,]+/, '') : r.role, r.company].filter(Boolean).join(', ');
+    const who = reviewerLine(r);
     const year = yearOf(r.date);
     const sum = String(r.summary || '').trim();
-    return '<div class="arv ' + toneName(r) + '">'
-      + (sum && sum.length <= 150 ? '<p class="arsm"><span class="k">' + esc(AC.summary || 'Summary') + '</span> <b>' + esc(sum) + '</b></p>' : '')
-      + (r.body ? '<p class="aq">“' + esc(r.body) + '”</p>' : '')
+    const text = (sum && sum.length <= 150 ? sum : String(r.body || '').trim()).replace(/^[“"]+|[”"]+$/g, '').replace(/\.$/, '');
+    return '<div class="arv ac2 ' + toneName(r) + '">'
+      + (text ? '<p class="arsm"><b>“' + esc(text) + '”</b></p>' : '')
       + '<p class="arat">' + (who ? '— ' + esc(who) : '') + (year ? (who ? ' · ' : '') + esc(year) : '')
-      + (u ? ((who || year) ? ' · ' : '') + '<a href="' + esc(u) + '" target="_blank" rel="noopener"><span>' + esc(AC.source) + '</span> ' + esc(capL(hostOf(u))) + '</a>' : '')
+      + (u ? ((who || year) ? ' · ' : '') + '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(capL(hostOf(u))) + '</a>' : '')
       + '</p></div>';
   }
-  const showAll = (P, kind, n) => '<button type="button" class="ash"' + (P.open ? ' data-open="act' + kind + '"' : ' data-gate') + '>' + esc(pl(kind === 'deals' ? AC.all_deals : AC.all_reviews, n)) + ' ↓</button>';
+  const showAll = (P, kind, n) => '<button type="button" class="ash"' + (P.open ? ' data-open="act' + kind + '"' : ' data-gate') + '>' + esc(pl(kind === 'deals' ? AC.all_deals : AC.all_reviews, n)) + (kind === 'deals' ? ' ↓' : '') + '</button>';
   function actModal(id, title, inner, lazy) {
     let ov = document.getElementById(id);
     if (!ov) { ov = document.createElement('div'); ov.className = 'ov tall'; ov.id = id; ov.hidden = true; document.body.appendChild(ov); }

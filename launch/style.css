@@ -488,3 +488,6 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 .ssa .sdl{margin-top:12px;font-size:13.5px;color:var(--ink2)}.ssa .sdl b{color:var(--ink)}.ssa .sdl a{color:var(--vio);font-weight:600;text-decoration:none}
 .ad a.co,.sdl a.co{color:inherit;font-weight:inherit;text-decoration:none}.ad a.co:hover,.sdl a.co:hover{text-decoration:underline}
 .ad a.co,.sdl a.co{color:var(--vio)}
+
+/* A2 compact founder review cards */
+.arv.ac2{padding:10px 14px;margin-bottom:8px;border-radius:12px}.arv.ac2 .arsm{margin:0;font-size:15px;line-height:1.45}.arv.ac2 .arsm b{font-weight:700}.arv.ac2 .arat{margin:2px 0 0}
