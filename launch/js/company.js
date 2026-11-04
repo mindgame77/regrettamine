@@ -1335,15 +1335,19 @@
     const t = (v, k) => String(+v.toFixed(k)); return s + (n >= 1e9 ? t(n / 1e9, 1) + 'B' : n >= 1e6 ? t(n / 1e6, 2) + 'M' : t(n / 1e3, 1) + 'K'); };
   // Lab round cell: the stored round name without its notes (bracketed asides, text after ';'). The stored value is not rewritten.
   const labRound = (r) => roundName(r).replace(/\s*\([^()]*\)/g, '').split(';')[0].replace(/[\s,]+$/, '').trim();
+  // Company name links to the startup's own website (deal.website_url, else https://<domain>); plain text when neither.
+  // Same pattern as press headlines (.pih): ink color, underline on hover, new tab.
+  const coSite = (d) => safeUrl(d && (d.website_url || (d.domain ? 'https://' + String(d.domain).replace(/^https?:\/\//i, '').replace(/\/.*$/, '') : '')));
+  const coName = (d) => { const w = coSite(d), t = esc((d && d.company) || ''); return w && t ? '<a class="co" href="' + esc(w) + '" target="_blank" rel="noopener">' + t + '</a>' : t; };
   function dealRows(ds, lab) {
     const src = (u) => u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(hostOf(u)) + '>' + esc(capL(hostOf(u))) + ' ↗</a>' : '<span></span>';
     if (lab) return '<div class="adl"><div class="ad adh s5"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_sector) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + ds.map(d => { const u = safeUrl(d.url), r = [labRound(d.round), dealAmt(d.amount, d.currency), d.lead ? AC.lead : ''].filter(Boolean).join(' · ');
-        return '<div class="ad s5"><b>' + esc(d.company || '') + '</b>' + (d.sector ? '<span class="arty"' + ' style="color:' + (SECTOR_COLORS[String(d.sector).trim()] || 'var(--mute)') + '"' + '>' + esc(d.sector) + '</span>' : '<span></span>')
+        return '<div class="ad s5"><b>' + coName(d) + '</b>' + (d.sector ? '<span class="arty"' + ' style="color:' + (SECTOR_COLORS[String(d.sector).trim()] || 'var(--mute)') + '"' + '>' + esc(d.sector) + '</span>' : '<span></span>')
           + '<span>' + esc(r) + '</span><span>' + esc(fdate(d.date) || '') + '</span>' + src(u) + '</div>'; }).join('') + '</div>';
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + ds.map(d => { const u = safeUrl(d.url);
-        return '<div class="ad"><b>' + esc(d.company || '') + '</b><span>' + esc(roundName(d.round)) + '</span><span>' + esc(fdate(d.date) || '') + '</span>'
+        return '<div class="ad"><b>' + coName(d) + '</b><span>' + esc(roundName(d.round)) + '</span><span>' + esc(fdate(d.date) || '') + '</span>'
           + src(u) + '</div>'; }).join('') + '</div>';
   }
   // Sector share (PAGE_DATA_GUIDE B6e.9/A9.17, with Alex's 2026-11-04 change to B6e.9.5): stored sector_12m from firm_page.
@@ -1538,7 +1542,7 @@
     // text line, then Show all. No sector data: the unchanged "The latest deal" block.
     const shA = labFirm(P) ? sectorShare(A) : '';
     if (shA) { const u0 = d0 && safeUrl(d0.url);
-      const dl = d0 ? '<div class="sdl"><b>' + esc(d0.company || '') + '</b>' + [labRound(d0.round), dealAmt(d0.amount, d0.currency), d0.lead ? AC.lead : '', fdate(d0.date) || ''].filter(Boolean).map(t => ' · ' + esc(t)).join('')
+      const dl = d0 ? '<div class="sdl"><b>' + coName(d0) + '</b>' + [labRound(d0.round), dealAmt(d0.amount, d0.currency), d0.lead ? AC.lead : '', fdate(d0.date) || ''].filter(Boolean).map(t => ' · ' + esc(t)).join('')
         + (u0 ? ' · <a href="' + esc(u0) + '" target="_blank" rel="noopener"' + fullA(hostOf(u0)) + '>' + esc(capL(hostOf(u0))) + ' ↗</a>' : '') + '</div>' : '';
       h += '<div class="aps ssa">' + shA + dl + (n.deals > 1 ? showAll(P, 'deals', n.deals) : '') + '</div>';
     } else if (d0) h += '<div class="aps"><b class="apt">' + esc(AC.latest_deal) + '</b>' + dealRows([d0], labFirm(P)) + (n.deals > 1 ? showAll(P, 'deals', n.deals) : '') + '</div>';
