@@ -1453,7 +1453,7 @@
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_fund) + '</span><span>' + esc(AC.h_amount) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + fs.map(x => { const u = safeUrl(x.url);
         return '<div class="ad"><b>' + esc(fundName(x.name)) + '</b><span>' + esc(x.announced ? x.raised_display : clampMoney(x.raised_display || money(x.raised_usd))) + '</span><span>' + esc(yearOf(x.date)) + '</span>'
-          + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(x.announced ? AC.source : AC.filing) + ' ↗</a>' : '<span></span>') + '</div>'; }).join('') + '</div>';
+          + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(x.announced ? AC.src_link : AC.filing) + ' ↗</a>' : '<span></span>') + '</div>'; }).join('') + '</div>';
   }
   // v4: the funds pop-up lists newest first; undated funds keep their order at the end.
   function newestFirst(fs) {
@@ -1478,7 +1478,7 @@
   }
   function ann(L) {
     const u = safeUrl(L.url);
-    return L.total_display && u && Number(L.n) > 0 ? { name: pl(AC.announced_fund, Number(L.n)), amount: L.total_display, date: L.date || '', url: u, label: AC.source } : null;
+    return L.total_display && u && Number(L.n) > 0 ? { name: pl(AC.announced_fund, Number(L.n)), amount: L.total_display, date: L.date || '', url: u, label: AC.src_link } : null;
   }
   function pickFund(P) {
     const a = fundFromActivity(P.activity && P.activity.latest_fund);
