@@ -1339,19 +1339,37 @@
     const src = (u) => u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(hostOf(u)) + '>' + esc(capL(hostOf(u))) + ' ↗</a>' : '<span></span>';
     if (lab) return '<div class="adl"><div class="ad adh s5"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_sector) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + ds.map(d => { const u = safeUrl(d.url), r = [labRound(d.round), dealAmt(d.amount, d.currency), d.lead ? AC.lead : ''].filter(Boolean).join(' · ');
-        return '<div class="ad s5"><b>' + esc(d.company || '') + '</b>' + (d.sector ? '<span class="arty">' + esc(d.sector) + '</span>' : '<span class="nd">' + esc(AC.no_data) + '</span>')
+        return '<div class="ad s5"><b>' + esc(d.company || '') + '</b>' + (d.sector ? '<span class="arty"' + (SEC_MAP ? ' style="color:' + (SEC_MAP[String(d.sector).trim()] || 'var(--mute)') + '"' : '') + '>' + esc(d.sector) + '</span>' : '<span></span>')
           + '<span>' + esc(r) + '</span><span>' + esc(fdate(d.date) || '') + '</span>' + src(u) + '</div>'; }).join('') + '</div>';
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + ds.map(d => { const u = safeUrl(d.url);
         return '<div class="ad"><b>' + esc(d.company || '') + '</b><span>' + esc(roundName(d.round)) + '</span><span>' + esc(fdate(d.date) || '') + '</span>'
           + src(u) + '</div>'; }).join('') + '</div>';
   }
-  // Top of the lab "Show all deals" popup: stored sector_12m from firm_page (top 10 + Other), only past 10 deals in 12 months.
-  const SEC_COLORS = ['#1d4ed8', '#0891b2', '#7c3aed', '#ea580c', '#ca8a04', '#db2777', '#059669', '#4f46e5', '#be123c', '#0d9488'];
-  function sectorShare(S) {
-    if (!S || !(S.n > 10) || !Array.isArray(S.top)) return '';
-    const items = S.top.slice(0, 10).map((x, i) => [x.s, x.n, SEC_COLORS[i]]).concat(S.other > 0 ? [[AC.other, S.other, 'var(--mute)']] : []);
-    return '<div class="ssh"><b class="apt">' + esc(AC.sector_share) + '</b><div class="nd ssn">' + esc(pl(AC.n_deals, S.n)) + '</div><div class="sstk">'
+  // Sector share (PAGE_DATA_GUIDE B6e.9/A9.17, with Alex's 2026-11-04 change to B6e.9.5): stored sector_12m from firm_page.
+  // Top 5 sectors by deal count in color, largest first, then ONE grey "Other N" holding every other sector, the real
+  // "Other" tag AND deals with no sector, so the total equals all deals in the last 12 months. Shown at 10+ deals.
+  // One fixed color per sector (v2_sector names), same on the bar, legend and deal pills. No red/green (no good/bad meaning); picked for a CIELAB distance of 24+ between any two and from grey.
+  // Sectors outside a firm's top 5, the "Other" tag and deals with no sector render grey (var(--mute)).
+  const SECTOR_COLORS = {
+    'AI models': '#2409aa', 'AI agents': '#a542d7', 'Fintech': '#2525f4', 'Health': '#f425af', 'Bio': '#f425f4',
+    'Climate & Energy': '#164069', 'Consumer': '#da620b', 'Enterprise software': '#287fbd', 'Developer tools': '#695b16',
+    'Security': '#161669', 'Crypto': '#0b50da', 'Hardware & Robotics': '#793606', 'Mobility': '#258cf4', 'Real estate': '#098faa',
+    'Education': '#790649', 'Media & Gaming': '#931f8a', 'Food & Agriculture': '#aa8f09', 'Other': 'var(--mute)'
+  };
+  // One color per sector across the page: set by sectorShare (top 5 = their bar color, anything else grey), read by dealRows pills.
+  let SEC_MAP = null;
+  function sectorShare(A) {
+    SEC_MAP = null;
+    const S = A && A.sector_12m, total = Number(S && S.n) || 0;
+    if (!S || total < 10 || !Array.isArray(S.top)) return '';
+    const isOther = (s) => s.toLowerCase() === String(AC.other || 'Other').toLowerCase();
+    const named = S.top.map(x => [String((x && x.s) || '').trim(), Number(x && x.n) || 0]).filter(x => x[0] && x[1] > 0 && !isOther(x[0]))
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+    const top = named.slice(0, 5), rest = total - top.reduce((t, x) => t + x[1], 0), tagged = total;
+    SEC_MAP = {}; top.forEach((x, i) => { SEC_MAP[x[0]] = SECTOR_COLORS[x[0]] || 'var(--mute)'; });
+    const items = top.map(x => [x[0], x[1], SECTOR_COLORS[x[0]] || 'var(--mute)']).concat(rest > 0 ? [[AC.other, rest, 'var(--mute)']] : []);
+    return '<div class="ssh"><b class="apt">' + esc(AC.sector_share) + '</b><div class="nd ssn">' + esc(pl(AC.n_deals, tagged)) + '</div><div class="sstk">'
       + items.map(x => '<i style="flex:' + Number(x[1]) + ';background:' + x[2] + '"></i>').join('') + '</div><div class="sleg">'
       + items.map(x => '<span><b style="background:' + x[2] + '"></b>' + esc(x[0]) + ' ' + esc(x[1]) + '</span>').join('') + '</div></div>';
   }
@@ -1518,7 +1536,7 @@
       : lone ? '<div class="ats" style="grid-template-columns:1fr">' + fundsLine(P, fsn) + '</div>' : '');
     // Design A (Alex 2026-11-04): lab firms with a sector share show it borderless on the main page, the latest deal as one
     // text line, then Show all. No sector data: the unchanged "The latest deal" block.
-    const shA = labFirm(P) ? sectorShare(A.sector_12m) : '';
+    const shA = labFirm(P) ? sectorShare(A) : '';
     if (shA) { const u0 = d0 && safeUrl(d0.url);
       const dl = d0 ? '<div class="sdl"><b>' + esc(d0.company || '') + '</b>' + [labRound(d0.round), dealAmt(d0.amount, d0.currency), d0.lead ? AC.lead : '', fdate(d0.date) || ''].filter(Boolean).map(t => ' · ' + esc(t)).join('')
         + (u0 ? ' · <a href="' + esc(u0) + '" target="_blank" rel="noopener"' + fullA(hostOf(u0)) + '>' + esc(capL(hostOf(u0))) + ' ↗</a>' : '') + '</div>' : '';
@@ -1529,7 +1547,7 @@
     // firm_page sends only the first slice (A.lazy); the full list loads once when "Show all" opens (firm_activity_list).
     const full = (k, list, n) => !A.lazy && Array.isArray(list) && list.length > 1 ? list : (n > 1 ? null : undefined);
     const fd = full('deals', A.deals, n.deals), fr = full('revs', A.reviews, n.reviews);
-    const lab = labFirm(P), sh = lab ? sectorShare(A.sector_12m) : '';
+    const lab = labFirm(P), sh = lab ? sectorShare(A) : '';
     if (P.open && fd !== undefined) actModal('actdeals', fmt(AC.deals_title, { n: fd ? fd.length : n.deals, firm }), fd ? sh + dealRows(fd, lab) : sh, !fd && { slug: P.firm.slug, kind: 'deals', lab, head: sh });
     if (P.open && fr !== undefined) actModal('actrevs', fmt(AC.reviews_title, { n: fr ? fr.length : n.reviews, firm }), fr ? fr.map(revCard).join('') : '', !fr && { slug: P.firm.slug, kind: 'revs' });
     return h + '</section>';
