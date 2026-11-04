@@ -74,7 +74,7 @@ function paint(extra) {
 }
 
 function tile(html) {
-  const m = html.match(/<div class="att afd">([\s\S]*?)<\/div>/);
+  const m = html.match(/<div class="att afd[^"]*">([\s\S]*?)<\/div>/);
   return m ? m[0] : '';
 }
 
@@ -94,7 +94,7 @@ test('the line sits inside the fund tile and Show all opens the existing popup w
   const ov = created.find(e => e.id === 'actfunds');
   assert.ok(ov, 'popup made');
   assert.match(ov.innerHTML, /role="dialog" aria-modal="true" aria-label="2 funds on SEC record · Sequoia Capital"/);
-  assert.match(ov.innerHTML, /<b>Sequoia Capital Fund<\/b><span>\$22\.7B<\/span><span>Feb 5, 2026<\/span><a href="https:\/\/www\.sec\.gov\/Archives\/edgar\/data\/1906948\/[^"]+" target="_blank" rel="noopener">Filing ↗<\/a>/);
+  assert.match(ov.innerHTML, /<b>Sequoia Capital Fund<\/b><span>\$22\.7B<\/span><span>2026<\/span><a href="https:\/\/www\.sec\.gov\/Archives\/edgar\/data\/1906948\/[^"]+" target="_blank" rel="noopener">Filing ↗<\/a>/);
   assert.match(ov.innerHTML, /Sequoia Capital Fund Feeder<\/b><span>\$7B<\/span>/);
 });
 

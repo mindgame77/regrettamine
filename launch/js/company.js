@@ -126,14 +126,46 @@
         (region ? esc(region) + ' ' : '') + '<b>' + esc(c) + '</b></a>';
     }).join('');
   }
-  function paintSocial(main, P) {
-    const meta = main.querySelector('.ph .m');
-    let row = main.querySelector('.ph .socp');
-    const html = meta ? socialPills(P) : '';
-    if (!html) { if (row) row.remove(); return; }
-    if (!row) { row = document.createElement('div'); row.className = 'secp socp'; meta.insertAdjacentElement('afterend', row); }
-    row.setAttribute('aria-label', SOC.row || 'Social accounts');
-    row.setAttribute('role', 'group');
+  function paintSocial(main) {
+    // F11.8: follower counts are stored and not drawn until a mockup is approved.
+    const row = main && main.querySelector && main.querySelector('.socp');
+    if (row && row.remove) row.remove();
+  }
+  function headerPills(P) {
+    const firm = P.firm || {}, bits = [];
+    const email = String(firm.contact_email || '').trim();
+    const phone = String(firm.contact_phone || '').trim();
+    if (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) bits.push('<button type="button" class="hp" data-copy="' + esc(email) + '">' + esc(email) + '</button>');
+    if (phone && /[0-9]/.test(phone) && phone.length <= 40) bits.push('<button type="button" class="hp" data-copy="' + esc(phone) + '">' + esc(phone) + '</button>');
+    return bits.join('') + secPills(P);
+  }
+  function paintChrome(main, P) {
+    if (!main || !P || !P.firm) return;
+    const h1 = main.querySelector('.ph h1') || main.querySelector('h1');
+    if (h1) {
+      let apply = h1.querySelector('[data-apply-firm]');
+      const link = safeUrl(P.firm.apply_link || P.firm.apply_url || '');
+      if (link) {
+        if (!apply) {
+          apply = document.createElement('a');
+          apply.className = 'sv apply';
+          apply.setAttribute('data-apply-firm', '');
+          apply.target = '_blank';
+          apply.rel = 'noopener';
+        }
+        apply.href = link;
+        apply.textContent = (COPY.activity && COPY.activity.apply) || 'Apply';
+        const save = h1.querySelector('[data-save]');
+        if (save && save.insertAdjacentElement) save.insertAdjacentElement('afterend', apply);
+        else h1.appendChild(apply);
+      } else if (apply && apply.remove) apply.remove();
+    }
+    const meta = main.querySelector('.ph .m') || main.querySelector('.m');
+    if (!meta || !meta.insertAdjacentElement) return;
+    let row = main.querySelector('.hpills');
+    const html = headerPills(P);
+    if (!html) { if (row && row.remove) row.remove(); return; }
+    if (!row) { row = document.createElement('div'); row.className = 'secp hpills'; row.setAttribute('role', 'group'); meta.insertAdjacentElement('afterend', row); }
     row.innerHTML = html;
   }
   function setFirmName(main, name) {
@@ -159,7 +191,7 @@
   const ncPill = '<span class="cs cs-cl">' + esc(NC) + '</span> ';
   const chips = (src) => '<div class="scs">' + (src || []).map(s => { const u = safeUrl(s.url); const d = s.date ? ' · ' + fdate(s.date) : '', t = esc(capL(s.label)) + esc(d) + ' ↗';
     return u ? '<a class="sc" href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(s.label, d) + '>' + t + '</a>' : ''; }).join('') + '</div>';
-  const pill = (st) => { const p = PILL[st] || PILL.nc; return '<span class="pill ' + p[0] + '"><i></i>' + p[1] + '</span>'; };
+  const pill = (st) => { const p = PILL[st === 'red' ? 'review' : st] || PILL.nc; return '<span class="pill ' + p[0] + '"><i></i>' + p[1] + '</span>'; };
   // A person card's name is a short fact about one person. Bot research notes (ADV Schedule A summaries, "Bot people records",
   // Form D related-person lists, anything with a URL or over 300 characters) are hidden in the DB; never draw one as a card either.
   const isNoteText = (t) => { t = String(t || ''); return t.length > 300 || /schedule a individuals|bot people records|related persons|https?:\/\/|www\./i.test(t); };
@@ -452,6 +484,82 @@
     }
     return h;
   }
+  function toneName(x) {
+    const t = String((x && (x.tone || x.sentiment)) || '').toLowerCase();
+    if (/^(pos|positive|ok|green|good)$/.test(t)) return 'pos';
+    if (/^(neg|negative|red|bad)$/.test(t)) return 'neg';
+    return 'neu';
+  }
+  function isPartnerRole(role) {
+    const r = String(role || '');
+    if (/\b(associate|analyst|scout)\b/i.test(r)) return false;
+    if (/\bprincipal\b/i.test(r) && !/\bpartner\b/i.test(r)) return false;
+    return /\b(general partner|managing partner|founding partner|venture partner|operating partner|partners?|co-founder|cofounder|founders?|managing director|chairman|chair|\bgp\b)\b/i.test(r);
+  }
+  function personYears(x) {
+    const blob = [x.role, x.badge, x.note].filter(Boolean).join(' ');
+    let joined = yearOf(x.joined || x.since || x.start || x.joined_year || '');
+    let left = yearOf(x.left || x.end || x.left_year || '');
+    if (!joined) { const m = blob.match(/\b(?:partner since|since|joined(?: in)?)\s+((?:19|20)\d{2})\b/i); if (m) joined = m[1]; }
+    if (!left) { const m = blob.match(/\b(?:left(?: in)?|departed|resigned)\s+((?:19|20)\d{2})\b/i); if (m) left = m[1]; }
+    return { joined, left };
+  }
+  function partnerCard(x) {
+    const y = personYears(x);
+    let cls = 'pcard', line = '';
+    if (y.left && within12(y.left)) { cls += ' pleft'; line = fmt(AC.left_in || 'Left in {year}', { year: y.left }); }
+    else if (y.joined) { if (within12(y.joined)) cls += ' pjoin'; line = fmt(AC.partner_since || 'Partner since {year}', { year: y.joined }); }
+    const founder = !/\bfounder\b/i.test(x.role || '') && /\bfounder\b/i.test(x.badge || '') && !isLeadTag(x.badge) ? ' <em class="pfnd">' + esc(AC.founder_tag || 'Founder') + '</em>' : '';
+    return '<div class="' + cls + '"><b>' + esc(nice(x.head || '')) + founder + '</b><span>' + esc(x.role || '') + '</span>' + (line ? '<span class="psince">' + esc(line) + '</span>' : '') + chips(x.src) + '</div>';
+  }
+  function personSection(it) {
+    const items = (it || []).filter(x => x && !isNoteText(x.head));
+    const board = items.filter(x => x.kind === 'board');
+    const partners = [];
+    items.forEach(x => {
+      if (x.kind === 'board' || partners.length >= 10) return;
+      const y = personYears(x);
+      if (y.left && !within12(y.left)) return;
+      if (x.kind === 'move') {
+        if (!y.left && !y.joined && /\b(left|former|resign|depart)/i.test((x.role || '') + ' ' + (x.badge || ''))) return;
+      } else if (!isPartnerRole(x.role)) return;
+      partners.push(x);
+    });
+    const block = (title, xs) => xs.length ? '<h3>' + esc(title) + ' · ' + xs.length + '</h3><div class="pcards">' + xs.map(partnerCard).join('') + '</div>' : '';
+    return block((COPY.people && COPY.people.officer) || 'Officers', partners) + block((COPY.people && COPY.people.board) || 'Board seats', board);
+  }
+  function founderCard(x) {
+    const quote = String(x.snippet || '').trim();
+    const head = String(x.head || '').trim();
+    const sum = String(x.summary || '').trim() || (quote && head && head !== quote && head.length <= 150 ? head : '');
+    const year = yearOf(x.date);
+    const u = safeUrl(x.url) || ((x.src || []).map(s => safeUrl(s && s.url)).filter(Boolean)[0] || '');
+    const who = x.outlet || '';
+    return '<div class="arv ' + toneName(x) + '">'
+      + (sum ? '<p class="arsm"><span class="k">' + esc(AC.summary || 'Summary') + '</span> <b>' + esc(sum) + '</b></p>' : '')
+      + (quote ? '<p class="aq">“' + esc(quote) + '”</p>' : (!sum && head ? '<p class="aq">' + esc(head) + '</p>' : ''))
+      + '<p class="arat">' + esc(who) + (year ? (who ? ' · ' : '') + esc(year) : '')
+      + (u ? ((who || year) ? ' · ' : '') + '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(capL(AC.source || 'Source')) + ' ↗</a>' : '')
+      + '</p></div>';
+  }
+  function founderBlock(it, P) {
+    const rows = it || [], shown = rows.slice(0, 3);
+    let h = '<div class="arvs">' + shown.map(founderCard).join('') + '</div>';
+    if (rows.length > 3) {
+      h += '<button type="button" class="ash"' + (P && P.open ? ' data-open="actfound"' : ' data-gate') + '>' + esc(pl(AC.all_reviews, rows.length)) + ' ↓</button>';
+      if (P && P.open) actModal('actfound', fmt(AC.reviews_title, { n: rows.length, firm: (P.firm && P.firm.name) || '' }), rows.map(founderCard).join(''));
+    }
+    return h;
+  }
+  function newsBlock(it, P) {
+    const rows = it || [], shown = rows.slice(0, 5);
+    let h = '<div class="pgr">' + shown.map(x => card(x, true)).join('') + '</div>';
+    if (rows.length > 5) {
+      h += '<button type="button" class="ash"' + (P && P.open ? ' data-open="actnews"' : ' data-gate') + '>' + esc(pl(AC.all_news, rows.length)) + ' ↓</button>';
+      if (P && P.open) actModal('actnews', pl(AC.all_news, rows.length), '<div class="pgr">' + rows.map(x => card(x, true)).join('') + '</div>');
+    }
+    return h;
+  }
   // Open-state renderers, keyed by copy.json sections[].renderer. The section is the third argument (LP grouping).
   const R = {
     thesis: (items) => '<p class="pth">' + esc(items[0] ? items[0].value : '') + '</p>',
@@ -459,9 +567,9 @@
     checks: (it, P) => checkRows(P),
     legal: (it, P) => legalHtml(it, P),
     press: (it) => '<div class="pgr">' + it.map(x => card(x, true)).join('') + '</div>',
-    news: (it) => '<div class="pgr">' + it.map(x => card(x, true)).join('') + '</div>',
-    founders: (it) => '<div class="rws">' + it.map(x => row(nice(ncStrip(x.head || '')), x.date, '', x.src, x.snippet ? nice(x.snippet) : '')).join('') + '</div>',
-    people: (it) => group(it.filter(x => !isNoteText(x.head)), 'kind', COPY.people, xs => '<div class="pcards">' + xs.map(x => '<div class="pcard"><b>' + esc(nice(x.head)) + '</b>' + (x.badge ? (isLeadTag(x.badge) ? '<span class="cs cs-cl">' + esc(NC) + '</span>' : '<span class="cs cs-act">' + esc(x.badge) + '</span>') : '') + '<span>' + esc(x.role) + '</span>' + chips(x.src) + '</div>').join('') + '</div>'),
+    news: (it, P) => newsBlock(it, P),
+    founders: (it, P) => founderBlock(it, P),
+    people: (it) => personSection(it),
     timeline: (it) => {
       const rows = it.map((x, i) => ({ x, i })).sort((a, b) => {
         const sa = window.RegretDate ? window.RegretDate.stamp(a.x.date) : null, sb = window.RegretDate ? window.RegretDate.stamp(b.x.date) : null;
@@ -479,7 +587,7 @@
     const fav = !court && logo && x.logo ? '<img class="fav" src="' + esc(ROOT + x.logo) + '" alt="" width="20" height="20">' : '<span class="fav lb">' + esc((x.outlet || x.tag || '?')[0]) + '</span>';
     const tag = x.tag ? '<span class="cs cs-cl">' + esc(x.tag) + '</span>' : '';
     const note = x.outlets > 1 && COPY.outlets ? '<span class="nout">' + esc(pl(COPY.outlets, x.outlets)) + '</span>' : '';
-    return '<div class="pi"><div class="pio">' + fav + '<span>' + esc(x.outlet || '') + (host && String(x.outlet || '').split(' · ')[0].trim().toLowerCase().replace(/^www\./, '') !== host ? ' · ' + esc(host) : '') + (x.date ? ' · ' + esc(fdate(x.date) || x.date) : '') + '</span>' + tag + note + '</div>'
+    return '<div class="pi ' + toneName(x) + '"><div class="pio">' + fav + '<span>' + esc(x.outlet || '') + (host && String(x.outlet || '').split(' · ')[0].trim().toLowerCase().replace(/^www\./, '') !== host ? ' · ' + esc(host) : '') + (x.date ? ' · ' + esc(fdate(x.date) || x.date) : '') + '</span>' + tag + note + '</div>'
       + (u ? '<a class="pih" href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(x.head) + '</a>' : '<b class="pih">' + esc(x.head) + '</b>')
       + (x.snippet ? '<p class="pis">' + esc(x.snippet) + '</p>' : '') + chips(x.src) + '</div>';
   }
@@ -780,7 +888,7 @@
       const src = (x.src && x.src.length) ? x.src : [{ label: String(x.outlet || '').split(' · ')[0], date: x.date || '', url }];
       const keeper = cards.find(c => c.origin === 'press' && c.norm === norm);
       if (keeper) { addSrc(keeper, src); bumpTag(keeper, tag); return; }
-      const card = { origin: 'press', head: x.head || '', outlet: x.outlet || '', date: x.date || '', url, snippet: x.snippet || '', logo: x.logo || '', tag, norm, norms: [norm], src: [], _seen: {}, _year: newsYear(x.date) };
+      const card = { origin: 'press', head: x.head || '', outlet: x.outlet || '', date: x.date || '', url, snippet: x.snippet || '', logo: x.logo || '', tag, tone: x.tone || x.sentiment || '', norm, norms: [norm], src: [], _seen: {}, _year: newsYear(x.date) };
       addSrc(card, src);
       cards.push(card);
     });
@@ -806,7 +914,7 @@
         norms.forEach(n => { if (other.norms.indexOf(n) < 0) other.norms.push(n); });
         return;
       }
-      const card = { origin: 'timeline', head: x.body || x.head || '', outlet: (links[0] && links[0].label) || '', date: x.date || '', url: (links[0] && links[0].url) || '', snippet: '', logo: '', tag, norm: norms[0] || '', norms, src: [], _seen: {}, _year: ty };
+      const card = { origin: 'timeline', head: x.body || x.head || '', outlet: (links[0] && links[0].label) || '', date: x.date || '', url: (links[0] && links[0].url) || '', snippet: '', logo: '', tag, tone: x.tone || x.sentiment || '', norm: norms[0] || '', norms, src: [], _seen: {}, _year: ty };
       addSrc(card, links);
       cards.push(card);
     });
@@ -818,7 +926,7 @@
       if (sb == null) return -1;
       return sb - sa;
     }).map(c => {
-      const pub = { head: c.head, outlet: c.outlet, date: c.date, url: c.url, snippet: c.snippet, logo: c.logo, tag: c.tag, src: c.src, origin: c.origin };
+      const pub = { head: c.head, outlet: c.outlet, date: c.date, url: c.url, snippet: c.snippet, logo: c.logo, tag: c.tag, src: c.src, origin: c.origin, tone: c.tone || '' };
       if (c.outlets > 1) pub.outlets = c.outlets;
       return pub;
     });
@@ -862,6 +970,7 @@
     const meta = main.querySelector('.m'); if (meta) meta.innerHTML = metaLine(P);
     paintActivity(main, P);
     paintSocial(main, P);
+    paintChrome(main, P);
     if (csum) { csum.hidden = true; csum.innerHTML = ''; }
     if (!P.open) {
       if (main.querySelector('.spl')) main.querySelector('.spl').innerHTML = '';
@@ -974,6 +1083,7 @@
     } else if (meta) meta.innerHTML = metaLine(P);
     paintActivity(main, P);
     paintSocial(main, P);
+    paintChrome(main, P);
     const list = main.querySelector('.list'); if (list) list.innerHTML = P.open ? ctable(P, checking, curN) : P.unchecked ? ctable(P, false, 0) + gate(P, '') : gate(P, ghost(P));
     const fn = main.querySelector('.rgt-n'), ft = pageSecs(P).reduce((a, s) => a + (s.count || 0), 0);
     if (fn && ft) { fn.textContent = ft; fn.hidden = false; }
@@ -1012,8 +1122,22 @@
   const tpill = (st) => pill(st === 'red' ? 'review' : st);
   const cnum = (c) => { const m = /^(\d+)\s/.exec(c || ''); return m ? +m[1] : 0; };
   const sdate = (r) => window.RegretDate && r.searched_at ? window.RegretDate.format(r.searched_at) : '';
+  // C4.8: the Checks tab always lists the 10 checks. A firm with no rows (v2 pages) still shows each name and the Not checked yet pill.
+  function filledChecks(P) {
+    const defs = COPY.checks_list || [];
+    const got = Array.isArray(P.checks) ? P.checks.filter(Boolean) : [];
+    if (!defs.length) return got;
+    const by = {};
+    got.forEach(r => { if (r && r.n) by[r.n] = r; });
+    if (got.length >= defs.length && defs.every((_, i) => by[i + 1] && by[i + 1].title)) return got;
+    return defs.map((pair, i) => {
+      const n = i + 1, have = by[n];
+      if (have && have.title) return have;
+      return { n: n, title: pair[0], descr: pair[1], state: 'nc', count: null, items: null };
+    });
+  }
   function ctable(P, checking, curN) {
-    const rows = (P.checks || []).map(r => {
+    const rows = filledChecks(P).map(r => {
       const nc = r.state === 'nc' || !PILL[r.state], fnd = !nc && r.state !== 'clear' && r.state !== 'nf';
       const items = Array.isArray(r.items) ? r.items : null, n = cnum(r.count), it = r.itemized || 0;
       const res = !nc ? tpill(r.state) : !checking ? pill('nc') : r.n === curN ? '<span class="pill p-cur"><span class="sp" aria-hidden="true"></span>' + esc(CK.current) + '</span>' : '<span class="wt">' + esc(CK.waiting) + '</span>';
@@ -1054,7 +1178,40 @@
   const AC = COPY.activity || {};
   const money = (v) => { const n = Number(v); if (!isFinite(n) || n <= 0) return '';
     const u = [[1e9, 'B'], [1e6, 'M'], [1e3, 'K']].find(x => n >= x[0]);
-    return u ? '$' + String(+(n / u[0]).toFixed(n / u[0] >= 100 ? 0 : 2)) + u[1] : '$' + n; };
+    return u ? '$' + String(+(n / u[0]).toFixed(1)).replace(/\.0$/, '') + u[1] : '$' + n; };
+  function yearOf(d) { const m = String(d == null ? '' : d).match(/(?:19|20)\d{2}/); return m ? m[0] : ''; }
+  function fundStart(d) {
+    const s = String(d == null ? '' : d).trim();
+    let m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (m) return Date.UTC(+m[1], +m[2] - 1, +m[3]);
+    m = s.match(/^(\d{4})-(\d{2})$/);
+    if (m) return Date.UTC(+m[1], +m[2] - 1, 1);
+    m = s.match(/([A-Za-z]+)\.?\s+(\d{1,2}),?\s+((?:19|20)\d{2})/);
+    if (m) {
+      const mo = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11 }[m[1].slice(0, 3).toLowerCase()];
+      if (mo != null) return Date.UTC(+m[3], mo, +m[2]);
+    }
+    m = s.match(/((?:19|20)\d{2})/);
+    return m ? Date.UTC(+m[1], 0, 1) : null;
+  }
+  function underYears(d, years) {
+    const t = fundStart(d);
+    if (t == null) return null;
+    const now = new Date();
+    return t > Date.UTC(now.getUTCFullYear() - years, now.getUTCMonth(), now.getUTCDate());
+  }
+  function within12(d) {
+    const t = fundStart(d);
+    if (t == null) return false;
+    const now = new Date();
+    return t >= Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 12, now.getUTCDate());
+  }
+  function clampMoney(s) {
+    return String(s || '').replace(/(\d+)\.(\d+)([TBMK])\b/gi, (_, a, b, u) => {
+      const r = Math.round(Number(a + '.' + b) * 10) / 10;
+      return (Math.abs(r - Math.round(r)) < 1e-9 ? String(Math.round(r)) : r.toFixed(1)) + u.toUpperCase();
+    });
+  }
   const hostOf = (u) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return ''; } };
   // B6c.1/B6c.8/A1.8: a fund link names its real source. sec.gov is a Filing; else the stored outlet or trusted page name; else the host.
   const srcName = (u, label) => { const h = hostOf(u); if (/(^|\.)sec\.gov$/i.test(h)) return AC.filing || 'Filing';
@@ -1064,11 +1221,19 @@
   // SEC facts from the hero list, as linked pills (not cards). HQ is the plain city text in the meta line.
   function secPills(P) {
     const hero = (Array.isArray(P.hero) ? P.hero : []).filter(h => h && h.value && h.label !== 'HQ');
-    return hero.map(h => { const src = (h.src || []).find(c => /(^|\.)sec\.gov\//i.test((safeUrl(c.url) || '').replace(/^https?:\/\//i, '').replace(/\/.*/, '/')));
-      if (!src) return '';
-      const lab = assetLabel(h.label, h.value), v = nice(h.value), parts = String(v).split(' · ');
-      const t = /^(Assets|Regulatory AUM|AUM)$/.test(h.label) ? v + ' ' + lab.toLowerCase() : parts[0] + ' ' + lab.toLowerCase() + (parts.length > 1 ? ' · ' + parts.slice(1).join(' · ') : '');
-      return '<a class="sc" href="' + esc(src.url) + '" target="_blank" rel="noopener">' + esc(t) + '</a>'; }).filter(Boolean).slice(0, 7).join('').replace(/^(.+)$/, '<span class="secp">$1</span>');
+    const want = [[/^staff$/i, HCOPY.staff || 'Staff'], [/investment staff/i, HCOPY.investment_staff || 'Investment staff'], [/private funds?/i, HCOPY.private_funds || 'Private funds']];
+    const links = [];
+    want.forEach(([re, lab]) => {
+      if (links.length >= 3) return;
+      const h = hero.find(x => re.test(String(x.label || '').trim()));
+      if (!h) return;
+      const src = (h.src || []).find(c => /(^|\.)sec\.gov\//i.test(safeUrl(c.url) || ''));
+      if (!src) return;
+      const num = String(h.value).replace(/,/g, '').match(/\d+/);
+      if (!num || num[0] === '0') return;
+      links.push('<a class="hp" href="' + esc(src.url) + '" target="_blank" rel="noopener">' + esc(capL(lab + ' ' + num[0])) + ' ↗</a>');
+    });
+    return links.join('');
   }
   const tile = (lab, big, sub, cls) => '<div class="att ' + cls + '"><small>' + esc(lab) + '</small><b>' + big + '</b><span>' + sub + '</span></div>';
   // The new fund box is live only on these firms. Other pages keep the previous tile.
@@ -1220,11 +1385,16 @@
   const TYPE_PILL = { founder: 'tf', employee: 'te', portfolio: 'tp', company: 'tc', firm_voice: 'tv', aggregator: 'ta' };
   const typePill = (t) => { const T = AC.types || {}, k = t || 'founder'; return T[k] ? '<span class="arty ' + (TYPE_PILL[k] || '') + '">' + esc(T[k]) + '</span>' : ''; };
   function revCard(r) {
-    const u = safeUrl(r.url), R = AC.ratings || {};
-    const who = r.author || (r.role ? '' : AC.anon), meta = [who && r.role && r.role.indexOf(who) === 0 ? r.role.slice(who.length).replace(/^[\s,]+/, '') : r.role, r.company, roundName(r.round)].filter(Boolean).join(' · ');
-    const chipsR = Object.keys(R).filter(k => r.ratings && r.ratings[k]).map(k => '<span class="arc"><span>' + esc(R[k]) + '</span><i>' + '●'.repeat(r.ratings[k]) + '<em>' + '●'.repeat(Math.max(0, 5 - r.ratings[k])) + '</em></i></span>').join('');
-    return '<div class="arv"><div class="arh">' + srcBadge(hostOf(u)) + (who ? '<b>' + esc(who) + '</b>' : '') + typePill(r.type) + (meta ? '<span>' + esc(meta) + '</span>' : '') + '<span class="ard">' + esc(fdate(r.date) || '') + '</span></div>'
-      + '<p>“' + esc(r.body || '') + '”</p><div class="arf">' + chipsR + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(hostOf(u)) + '><span>' + esc(AC.source) + '</span> ' + esc(capL(hostOf(u))) + ' ↗</a>' : '') + '</div></div>';
+    const u = safeUrl(r.url);
+    const who = [r.author, r.role && r.author && String(r.role).indexOf(r.author) === 0 ? String(r.role).slice(r.author.length).replace(/^[\s,]+/, '') : r.role, r.company].filter(Boolean).join(', ');
+    const year = yearOf(r.date);
+    const sum = String(r.summary || '').trim();
+    return '<div class="arv ' + toneName(r) + '">'
+      + (sum && sum.length <= 150 ? '<p class="arsm"><span class="k">' + esc(AC.summary || 'Summary') + '</span> <b>' + esc(sum) + '</b></p>' : '')
+      + (r.body ? '<p class="aq">“' + esc(r.body) + '”</p>' : '')
+      + '<p class="arat">' + (who ? '— ' + esc(who) : '') + (year ? (who ? ' · ' : '') + esc(year) : '')
+      + (u ? ((who || year) ? ' · ' : '') + '<a href="' + esc(u) + '" target="_blank" rel="noopener"><span>' + esc(AC.source) + '</span> ' + esc(capL(hostOf(u))) + ' ↗</a>' : '')
+      + '</p></div>';
   }
   const showAll = (P, kind, n) => '<button type="button" class="ash"' + (P.open ? ' data-open="act' + kind + '"' : ' data-gate') + '>' + esc(pl(kind === 'deals' ? AC.all_deals : AC.all_reviews, n)) + ' ↓</button>';
   function actModal(id, title, inner, lazy) {
@@ -1234,6 +1404,15 @@
     ov._lazy = lazy || null;
   }
   // Fill a lazy "Show all" popup on first open. One request per popup; a failure leaves it to retry on the next open.
+  document.addEventListener('click', (e) => {
+    const b = e.target && e.target.closest && e.target.closest('.hp[data-copy]');
+    if (!b) return;
+    const v = b.getAttribute('data-copy') || '';
+    const show = () => { const old = b.textContent; b.textContent = AC.copied || 'Copied'; setTimeout(() => { if (b.textContent === (AC.copied || 'Copied')) b.textContent = old; }, 1400); };
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(v).then(show, function () {});
+    } catch (err) {}
+  });
   document.addEventListener('click', async (e) => {
     const t = e.target.closest('.ash[data-open^="act"]'), ov = t && document.getElementById(t.dataset.open);
     if (!ov || !ov._lazy || ov._busy || !window.RegretActList) return;
@@ -1250,37 +1429,68 @@
   function fundRows(fs) {
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_fund) + '</span><span>' + esc(AC.h_amount) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + fs.map(x => { const u = safeUrl(x.url);
-        return '<div class="ad"><b>' + esc(fundName(x.name)) + '</b><span>' + esc(x.raised_display || money(x.raised_usd)) + '</span><span>' + esc(fdate(x.date) || '') + '</span>'
+        return '<div class="ad"><b>' + esc(fundName(x.name)) + '</b><span>' + esc(clampMoney(x.raised_display || money(x.raised_usd))) + '</span><span>' + esc(yearOf(x.date)) + '</span>'
           + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(AC.filing) + ' ↗</a>' : '<span></span>') + '</div>'; }).join('') + '</div>';
+  }
+  function fundClosed(f) {
+    const s = String((f && (f.status || f.close_status)) || '').toLowerCase();
+    return !s || !/raising|offering|not[ _-]?closed/.test(s);
+  }
+  function fundFromActivity(f) {
+    if (!f || !fundClosed(f)) return null;
+    const amount = clampMoney(f.raised_display || money(f.raised_usd) || money(f.amount));
+    if (!amount) return null;
+    return { name: f.name, amount: amount, date: f.date || (f.vintage ? String(f.vintage) : ''), url: safeUrl(f.url) || '', label: f.url_label || '' };
+  }
+  function pickFund(P) {
+    const a = fundFromActivity(P.activity && P.activity.latest_fund);
+    const e0 = earlierFund(P);
+    const e = e0 && e0.amount ? { name: e0.name, amount: clampMoney(e0.amount), date: e0.date || '', url: e0.url || '', label: '' } : null;
+    return [a, e].filter(Boolean).sort((x, y) => String(y.date || '').localeCompare(String(x.date || '')))[0] || null;
+  }
+  function fundCard(fund) {
+    const year = yearOf(fund.date);
+    const fresh = underYears(fund.date, 3);
+    const u = fund.url;
+    const link = u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(srcName(u, fund.label)) + '>' + esc(capL(srcName(u, fund.label))) + ' ↗</a>' : '';
+    const sub = esc(fund.name) + ' · ' + esc(fmt(AC.raised, { amount: fund.amount })) + (year ? ' · ' + esc(year) : '') + link;
+    return tile(AC.fund, esc(fund.amount), sub, fresh === false ? 'afd afr' : 'afd afg');
+  }
+  function moneyDate(m) {
+    const iso = String(m && (m.date || m.source_date) || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+    return iso ? iso[2] + '/' + iso[3] + '/' + iso[1] : '';
+  }
+  function aumCard(P) {
+    const m = P.firm && P.firm.money && P.firm.money.aum;
+    const u = m && m.display && aumUrl(m.url, P.firm && P.firm.website);
+    if (!u) return '';
+    const display = clampMoney(m.display);
+    const adv = !!advUrl(u);
+    const site = firmHost(P.firm && P.firm.website);
+    const own = !adv && site && (hostOf(u) === site || hostOf(u).endsWith('.' + site));
+    const when = moneyDate(m);
+    const name = srcName(u);
+    const link = '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(name) + '>' + esc(capL(name)) + ' ↗</a>';
+    const sub = adv ? esc(AC.aum_sec || 'SEC Form ADV') + (when ? ' · ' + esc(when) : '') + ' · ' + link
+      : own ? (when ? esc(when) + ' · ' : '') + link
+      : esc(AC.reported_by_news || 'Reported by news') + ' · ' + link;
+    return tile(AC.aum || 'AUM', esc(display), sub, 'aum');
   }
   function activity(P) {
     const A = P.activity, firm = P.firm.name;
     if (!A) return '';
-    const n = A.counts || {}, d0 = A.latest_deal, r0 = A.latest_review, f = A.latest_fund, tiles = [];
-    if (A.active) {
-      const ld = d0 && d0.date ? fmt(AC.last_deal, { date: fdate(d0.date) }) : f && f.date ? fmt(AC.fund_closed, { date: fdate(f.date) }) : '';
-      const sub = d0 ? [d0.company, roundName(d0.round)].filter(Boolean).join(', ') : f ? fundName(f.name) : '';
+    const n = A.counts || {}, d0 = A.latest_deal, r0 = A.latest_review, tiles = [];
+    if (Number(A.deals_12m) > 0 || (A.deals_12m == null && A.active && d0)) {
+      const y = yearOf(d0 && d0.date);
+      const ld = y ? fmt(AC.last_deal, { date: y }) : '';
+      const sub = d0 ? [d0.company, roundName(d0.round)].filter(Boolean).join(', ') : '';
       tiles.push('<div class="att aon"><i></i><div><b>' + esc(AC.active) + '</b><span>' + esc(ld) + '</span><em>' + esc(sub) + '</em></div></div>');
     }
     if (A.deals_12m > 0) tiles.push(tile(AC.deals_12m, esc(A.deals_12m), '', 'amt'));
-    // A fund with an amount raised stays the Latest fund tile. On the 10 lab firms, a $0 or missing
-    // amount is skipped for the next fund that raised money, then for assets under management.
-    // Every other firm keeps the previous tile. The script is shared, so the limit is the slug.
-    const raised = f && (f.raised_display || money(f.raised_usd));
-    if (raised) {
-      const u = safeUrl(f.url);
-      const sub = esc(fundName(f.name)) + ' · ' + esc(fmt(AC.raised, { amount: raised })) + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(srcName(u, f.url_label)) + '>' + esc(capL(srcName(u, f.url_label))) + ' ↗</a>' : '');
-      tiles.push(tile(AC.fund, esc(raised), sub, 'afd'));
-    } else if (labFirm(P)) {
-      const prev = earlierFund(P);
-      if (prev) tiles.push(raisedFundTile(prev));
-    } else if (f) {
-      const u = safeUrl(f.url);
-      const sub = esc(fundName(f.name)) + (u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(srcName(u, f.url_label)) + '>' + esc(capL(srcName(u, f.url_label))) + ' ↗</a>' : '');
-      tiles.push(tile(AC.fund, '<span class="asm">' + esc(fundName(f.name)) + '</span>', sub, 'afd'));
-    }
-    // B6d.6 (lab firms): after the fund tile, AUM, then Fund assets. Each only when stored with its Form ADV link.
-    if (labFirm(P)) [aumTile(P), fundAssetsTile(P)].forEach(t => { if (t) tiles.push(t); });
+    // F7.8 / M1.8.3: one money tile. Latest closed fund with an amount, else AUM, else news AUM, else nothing.
+    const picked = pickFund(P);
+    if (picked) tiles.push(fundCard(picked));
+    else { const a = aumCard(P); if (a) tiles.push(a); }
     // A9.6: "N funds on SEC record · Show all" inside the fund tile. Show all opens the same popup as Show all deals.
     const fs = A.funds_sec, fsn = fs && Number(fs.n) > 0 ? Number(fs.n) : 0;
     const ti = tiles.findIndex(t => t.indexOf('att afd') > -1);
@@ -1294,7 +1504,8 @@
     let h = '<section class="actv" aria-label="' + esc(AC.reviews) + '">' + (tiles.length ? '<div class="ats" style="grid-template-columns:repeat(' + tiles.length + ',1fr)">' + tiles.join('') + '</div>'
       : lone ? '<div class="ats" style="grid-template-columns:1fr">' + fundsLine(P, fsn) + '</div>' : '');
     if (d0) h += '<div class="aps"><b class="apt">' + esc(AC.latest_deal) + '</b>' + dealRows([d0], labFirm(P)) + (n.deals > 1 ? showAll(P, 'deals', n.deals) : '') + '</div>';
-    if (r0) h += '<div class="aps arvs"><h2>' + esc(AC.reviews) + '</h2>' + revCard(r0) + (n.reviews > 1 ? showAll(P, 'revs', n.reviews) : '') + '</div>';
+    const revs = (!A.lazy && Array.isArray(A.reviews) && A.reviews.length) ? A.reviews.slice(0, 3) : (r0 ? [r0] : []);
+    if (revs.length) h += '<div class="aps arvs"><h2>' + esc(AC.reviews) + '</h2>' + revs.map(revCard).join('') + (n.reviews > revs.length ? showAll(P, 'revs', n.reviews) : '') + '</div>';
     // firm_page sends only the first slice (A.lazy); the full list loads once when "Show all" opens (firm_activity_list).
     const full = (k, list, n) => !A.lazy && Array.isArray(list) && list.length > 1 ? list : (n > 1 ? null : undefined);
     const fd = full('deals', A.deals, n.deals), fr = full('revs', A.reviews, n.reviews);
