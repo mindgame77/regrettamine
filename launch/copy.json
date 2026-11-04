@@ -756,6 +756,8 @@
    "fund": "Latest fund",
    "raised": "{amount} raised",
    "filing": "Filing",
+   "source": "Source",
+   "announced_fund": ["{n} fund announced", "{n} funds announced"],
    "aum": "AUM",
    "aum_sec": "SEC Form ADV",
    "reported_by_news": "Reported by news",
@@ -809,6 +811,7 @@
     "{n} fund on SEC record",
     "{n} funds on SEC record"
    ],
+   "funds_announced": "{n} announced",
    "show_all": "Show all",
    "h_fund": "Fund",
    "h_amount": "Amount",
