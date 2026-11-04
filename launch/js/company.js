@@ -1478,7 +1478,7 @@
   }
   function ann(L) {
     const u = safeUrl(L.url);
-    return L.total_display && u && Number(L.n) > 0 ? { name: pl(AC.announced_fund, Number(L.n)), amount: L.total_display, date: L.date || '', url: u, label: AC.src_link } : null;
+    return L.total_display && u && Number(L.n) > 0 ? { name: pl(AC.announced_fund, Number(L.n)), amount: L.total_display, date: L.date || '', url: u, label: AC.src_link, announced: true } : null;
   }
   function pickFund(P) {
     const a = fundFromActivity(P.activity && P.activity.latest_fund);
@@ -1492,7 +1492,7 @@
   function fundCard(fund) {
     const year = yearOf(fund.date);
     const fresh = underYears(fund.date, 3);
-    const u = fund.url;
+    const u = fund.announced ? '' : fund.url; // announced total: no link on the tile (rows in the pop-up keep Source)
     const link = u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(srcName(u, fund.label)) + '>' + esc(capL(srcName(u, fund.label))) + ' ↗</a>' : '';
     const sub = esc(fund.name) + ' · ' + esc(fmt(AC.raised, { amount: fund.amount })) + (year ? ' · ' + esc(year) : '') + link;
     return tile(AC.fund, esc(fund.amount), sub, fresh === false ? 'afd afr' : 'afd afg');
