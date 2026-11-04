@@ -63,9 +63,10 @@ function table(checks) {
   return list.innerHTML;
 }
 
-test('no check rows: ten named checks, each Not checked yet, no legend', () => {
+test('no check rows: ten named checks, each Not checked yet, only the C4.4 legend under the table', () => {
   for (const checks of [null, undefined, []]) {
-    const html = table(checks);
+    const full = table(checks), html = full.slice(0, full.indexOf('</table>'));
+    assert.equal((full.match(/We found nothing in the sources/g) || []).length, 1);
     assert.equal((html.match(/<tr class="crow/g) || []).length, 10, JSON.stringify(checks));
     NAMES.forEach((name, i) => {
       assert.match(html, new RegExp('id="check-' + (i + 1) + '"[\\s\\S]*<b>' + name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '</b>'));
