@@ -478,3 +478,4 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 .lsum .lsm{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:6px;font-size:12px;color:var(--ink2)}
 .lsum .lsm a{color:var(--vio);font-weight:600;text-decoration:none}
 .lsum .lsm a:hover,.lsum .lsm a:focus-visible{text-decoration:underline}
+.rw.lpl .rm{margin-top:0}.att[data-fundtile]{cursor:pointer}

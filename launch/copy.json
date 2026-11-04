@@ -131,14 +131,6 @@
     "unit_many": "people"
    },
    {
-    "key": "funds",
-    "title": "Firm & funds",
-    "subtitle": "Assets and funds from Form ADV.",
-    "renderer": "facts",
-    "unit_one": "fact",
-    "unit_many": "facts"
-   },
-   {
     "key": "lps",
     "title": "Limited partners",
     "subtitle": "Named LP commitments, each with its source.",

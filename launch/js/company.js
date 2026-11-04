@@ -282,7 +282,9 @@
       const title = nice(g.label) + (n > 1 ? ' · ' + fmt(COPY.commitments || '{n} commitments', { n }) : '');
       const seen = {}, src = [];
       g.src.forEach(s => { const id = (s.url || '') + '|' + (s.label || ''); if (!seen[id]) { seen[id] = 1; src.push(s); } });
-      return row(title, '', g.lead ? NC : '', src, g.values.map(v => nice(cleanLead(v))).filter(Boolean).join(' | '));
+      // v4 (Alex 2026-11-03): one line per LP, not a card. Name, commitments and amounts, then the source pill.
+      const line = [title].concat(g.values.map(v => nice(cleanLead(v))).filter(Boolean)).join(' · ');
+      return '<div class="rw lpl"><div class="rm">' + '<span class="rt">' + esc(line) + '</span>' + (g.lead ? ' <span class="cs cs-cl">' + esc(NC) + '</span>' : '') + ' ' + chips(src) + '</div></div>';
     }).join('');
   }
   // Overview is cleaned here, when the page draws. Stored rows are not changed, and no other section uses this.
@@ -465,14 +467,13 @@
       + legalSummary(c.summary) + '</div>';
   }
   // Case summary under the pills (firm_legal_items.summary, <= 300 chars, written from its court/regulator record),
-  // then its date (site date style, RegretDate) and the source link. No summary or no source link: nothing is drawn.
+  // then its date (site date style, RegretDate). One source per case: the pill on the status line (v4, Alex 2026-11-03).
+  // No summary or no record link: nothing is drawn.
   function legalSummary(sm) {
     if (!sm || !sm.text || !safeUrl(sm.url)) return '';
-    const host = String(sm.url).replace(/^https?:\/\//i, '').replace(/^www\./i, '').split(/[/?#]/)[0];
     const d = sm.date ? fdate(sm.date) : '';
     return '<div class="lsum"><p class="lsum-t">' + esc(sm.text) + '</p><div class="lsm">'
-      + (d ? '<span>' + esc(fmt(LG.summary_date || 'Summary {d}', { d })) + '</span>' : '')
-      + '<a href="' + esc(safeUrl(sm.url)) + '" target="_blank" rel="noopener">' + esc(fmt(LG.summary_source || 'Source: {site}', { site: host })) + ' ↗</a></div></div>';
+      + (d ? '<span>' + esc(fmt(LG.summary_date || 'Summary {d}', { d })) + '</span>' : '') + '</div></div>';
   }
   const LEGAL_MAX = 10;
   function legalHtml(items, P) {
@@ -1432,6 +1433,17 @@
         return '<div class="ad"><b>' + esc(fundName(x.name)) + '</b><span>' + esc(clampMoney(x.raised_display || money(x.raised_usd))) + '</span><span>' + esc(yearOf(x.date)) + '</span>'
           + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(AC.filing) + ' ↗</a>' : '<span></span>') + '</div>'; }).join('') + '</div>';
   }
+  // v4: the funds pop-up lists newest first; undated funds keep their order at the end.
+  function newestFirst(fs) {
+    const st = (x) => { const v = window.RegretDate && x && x.date ? window.RegretDate.stamp(x.date) : null; return v == null ? null : v; };
+    return fs.map((x, i) => ({ x, i, t: st(x) })).sort((a, b) => (a.t == null) - (b.t == null) || (b.t || 0) - (a.t || 0) || a.i - b.i).map(o => o.x);
+  }
+  // v4: clicking the Latest fund tile opens the same funds pop-up as its Show all button (links inside keep working).
+  document.addEventListener('click', (e) => {
+    const t = e.target && e.target.closest && e.target.closest('[data-fundtile]');
+    if (!t || e.target.closest('a,button')) return;
+    const b = t.querySelector('.afl .ash'); if (b) b.click();
+  });
   function fundClosed(f) {
     const s = String((f && (f.status || f.close_status)) || '').toLowerCase();
     return !s || !/raising|offering|not[ _-]?closed/.test(s);
@@ -1499,7 +1511,8 @@
     }
     // No tile to hang the line under (e.g. accel): the line sits on its own where the tiles would be.
     const lone = fsn && ti < 0 && !tiles.length;
-    if (fsn && (ti > -1 || lone) && P.open && Array.isArray(fs.items)) actModal('actfunds', pl(AC.funds_sec, fsn) + ' · ' + firm, fundRows(fs.items));
+    if (fsn && ti > -1) tiles[ti] = tiles[ti].replace('<div class="att afd', '<div data-fundtile class="att afd');
+    if (fsn && (ti > -1 || lone) && P.open && Array.isArray(fs.items)) actModal('actfunds', pl(AC.funds_sec, fsn) + ' · ' + firm, fundRows(newestFirst(fs.items)));
     if (!tiles.length && !d0 && !r0 && !lone) return '';
     let h = '<section class="actv" aria-label="' + esc(AC.reviews) + '">' + (tiles.length ? '<div class="ats" style="grid-template-columns:repeat(' + tiles.length + ',1fr)">' + tiles.join('') + '</div>'
       : lone ? '<div class="ats" style="grid-template-columns:1fr">' + fundsLine(P, fsn) + '</div>' : '');
