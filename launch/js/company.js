@@ -527,7 +527,9 @@
       partners.push(x);
     });
     const block = (title, xs) => xs.length ? '<h3>' + esc(title) + ' · ' + xs.length + '</h3><div class="pcards">' + xs.map(partnerCard).join('') + '</div>' : '';
-    return block((COPY.people && COPY.people.officer) || 'Officers', partners) + block((COPY.people && COPY.people.board) || 'Board seats', board);
+    // Board seats are kept in the data but hidden from the page (Alex 2026-11-04).
+    void board;
+    return block((COPY.people && COPY.people.officer) || 'Officers', partners);
   }
   function newsBlock(it, P) {
     const rows = it || [], shown = rows.slice(0, 5);
