@@ -1346,26 +1346,17 @@
         return '<div class="ad"><b>' + esc(d.company || '') + '</b><span>' + esc(roundName(d.round)) + '</span><span>' + esc(fdate(d.date) || '') + '</span>'
           + src(u) + '</div>'; }).join('') + '</div>';
   }
-  // Sector share (PAGE_DATA_GUIDE B6e.9, A9.17): top 5 sectors by deal count, largest first, then one grey "Other N" for the
-  // rest, the real "Other" tag included. Deals with no sector are not counted anywhere. Counts all of the firm's deals when
-  // the full list is on the page (B6e.9.6); a lazy page falls back to the stored sector_12m top list (tagged only).
-  // Shown only when the firm has 10 or more deals in total (B6e.9.7) and at least one tagged deal (B6e.10).
+  // Sector share (PAGE_DATA_GUIDE B6e.9/A9.17, with Alex's 2026-11-04 change to B6e.9.5): stored sector_12m from firm_page.
+  // Top 5 sectors by deal count in color, largest first, then ONE grey "Other N" holding every other sector, the real
+  // "Other" tag AND deals with no sector, so the total equals all deals in the last 12 months. Shown at 10+ deals.
   const SEC_COLORS = ['#1d4ed8', '#0891b2', '#7c3aed', '#ea580c', '#ca8a04'];
   function sectorShare(A) {
-    const total = Number(A && A.counts && A.counts.deals) || 0;
-    if (!A || total < 10) return '';
-    let g = null;
-    if (!A.lazy && Array.isArray(A.deals) && A.deals.length) {
-      g = {}; A.deals.forEach(d => { const s = d && String(d.sector || '').trim(); if (s) g[s] = (g[s] || 0) + 1; });
-    } else if (A.sector_12m && Array.isArray(A.sector_12m.top)) {
-      g = {}; A.sector_12m.top.forEach(x => { const s = x && String(x.s || '').trim(); if (s && Number(x.n) > 0) g[s] = (g[s] || 0) + Number(x.n); });
-    }
-    if (!g) return '';
+    const S = A && A.sector_12m, total = Number(S && S.n) || 0;
+    if (!S || total < 10 || !Array.isArray(S.top)) return '';
     const isOther = (s) => s.toLowerCase() === String(AC.other || 'Other').toLowerCase();
-    const named = Object.keys(g).filter(s => !isOther(s)).map(s => [s, g[s]]).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-    const top = named.slice(0, 5), rest = named.slice(5).reduce((t, x) => t + x[1], 0) + Object.keys(g).filter(isOther).reduce((t, s) => t + g[s], 0);
-    const tagged = named.reduce((t, x) => t + x[1], 0) + Object.keys(g).filter(isOther).reduce((t, s) => t + g[s], 0);
-    if (!tagged) return '';
+    const named = S.top.map(x => [String((x && x.s) || '').trim(), Number(x && x.n) || 0]).filter(x => x[0] && x[1] > 0 && !isOther(x[0]))
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+    const top = named.slice(0, 5), rest = total - top.reduce((t, x) => t + x[1], 0), tagged = total;
     const items = top.map((x, i) => [x[0], x[1], SEC_COLORS[i]]).concat(rest > 0 ? [[AC.other, rest, 'var(--mute)']] : []);
     return '<div class="ssh"><b class="apt">' + esc(AC.sector_share) + '</b><div class="nd ssn">' + esc(pl(AC.n_deals, tagged)) + '</div><div class="sstk">'
       + items.map(x => '<i style="flex:' + Number(x[1]) + ';background:' + x[2] + '"></i>').join('') + '</div><div class="sleg">'

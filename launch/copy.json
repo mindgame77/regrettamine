@@ -775,7 +775,7 @@
    "lead": "Lead",
    "no_data": "No data yet",
    "other": "Other",
-   "sector_share": "Sector share",
+   "sector_share": "Sector share, last 12 months",
    "n_deals": [
     "{n} deal",
     "{n} deals"
