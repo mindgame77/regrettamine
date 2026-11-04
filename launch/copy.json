@@ -756,7 +756,7 @@
    "fund": "Latest fund",
    "raised": "{amount} raised",
    "filing": "Filing",
-   "source": "Source",
+   "src_link": "Source",
    "announced_fund": ["{n} fund announced", "{n} funds announced"],
    "aum": "AUM",
    "aum_sec": "SEC Form ADV",
