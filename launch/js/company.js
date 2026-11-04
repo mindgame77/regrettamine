@@ -1141,7 +1141,14 @@
         + '<td class="kcr">' + res + '</td><td class="kcf">' + found + '</td><td class="kcd">' + (sdate(r) ? esc(sdate(r)) : '<span class="ctm">—</span>') + '</td></tr>'
         + (tog ? '<tr class="cdx" id="cdx-' + r.n + '" hidden><td></td><td colspan="4">' + d + '</td></tr>' : '');
     }).join('');
-    return '<table class="ctab"><thead><tr><th>#</th><th>' + esc(T.h_check) + '</th><th>' + esc(T.h_result) + '</th><th>' + esc(T.h_found) + '</th><th>' + esc(T.h_date) + '</th></tr></thead><tbody>' + rows + '</tbody></table>';
+    return '<table class="ctab"><thead><tr><th>#</th><th>' + esc(T.h_check) + '</th><th>' + esc(T.h_result) + '</th><th>' + esc(T.h_found) + '</th><th>' + esc(T.h_date) + '</th></tr></thead><tbody>' + rows + '</tbody></table>' + legend(P);
+  }
+  // C4.4: one small grey legend, once, under the whole Checks table (never per check, no icon). Labels are the live pill
+  // words (copy.json site.pills); text is copy.json company.table.legend. Shown once any check has a result.
+  function legend(P) {
+    const L = T.legend || [];
+    if (!L.length || !filledChecks(P).some(r => r.state && r.state !== 'nc' && PILL[r.state])) return '';
+    return '<p class="note">' + L.filter(x => PILL[x[0]]).map(x => '<b>' + esc(PILL[x[0]][1]) + ':</b> ' + esc(x[1])).join('<br>') + '</p>';
   }
   function bindTable(main) {
     main.querySelectorAll('tr.crow.tog').forEach(tr => {

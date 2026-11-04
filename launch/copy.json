@@ -817,6 +817,13 @@
   },
   "table": {
    "_note": "Checks table on /vc/<slug>/ and /full/ (js/company.js ctable). {count} is firm_check_rows.count_label, {n}/{m} are numbers. active_h and coming are [one, many]. An opened Review row lists each named case or action. A count with nothing itemized uses coming plus search_courts.",
+   "_legend_note": "C4.4: one grey legend under the Checks table, once. [pill key in site.pills, text]; label = live pill word. No Red flag line.",
+   "legend": [
+    ["clear", "We found nothing in the sources we checked on this date. It's not a guarantee."],
+    ["review", "We found a possible match that we're still confirming."],
+    ["wk", "We found something that isn't a problem but is useful to know."],
+    ["nc", "Run this check to see the result."]
+   ],
    "h_check": "Check",
    "h_result": "Result",
    "h_found": "What was found",
