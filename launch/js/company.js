@@ -1232,7 +1232,7 @@
       if (!src) return;
       const num = String(h.value).replace(/,/g, '').match(/\d+/);
       if (!num || num[0] === '0') return;
-      links.push('<a class="hp" href="' + esc(src.url) + '" target="_blank" rel="noopener">' + esc(capL(lab + ' ' + num[0])) + ' ↗</a>');
+      links.push('<a class="hp" href="' + esc(src.url) + '" target="_blank" rel="noopener">' + esc(capL(lab + ' ' + num[0])) + '</a>');
     });
     return links.join('');
   }
@@ -1340,7 +1340,7 @@
   const coSite = (d) => safeUrl(d && (d.website_url || (d.domain ? 'https://' + String(d.domain).replace(/^https?:\/\//i, '').replace(/\/.*$/, '') : '')));
   const coName = (d) => { const w = coSite(d), t = esc((d && d.company) || ''); return w && t ? '<a class="co" href="' + esc(w) + '" target="_blank" rel="noopener">' + t + '</a>' : t; };
   function dealRows(ds, lab) {
-    const src = (u) => u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(hostOf(u)) + '>' + esc(capL(hostOf(u))) + ' ↗</a>' : '<span></span>';
+    const src = (u) => u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(hostOf(u)) + '>' + esc(capL(hostOf(u))) + '</a>' : '<span></span>';
     if (lab) return '<div class="adl"><div class="ad adh s5"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_sector) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + ds.map(d => { const u = safeUrl(d.url), r = [labRound(d.round), dealAmt(d.amount, d.currency), d.lead ? AC.lead : ''].filter(Boolean).join(' · ');
         return '<div class="ad s5"><b>' + coName(d) + '</b>' + (d.sector ? '<span class="arty"' + ' style="color:' + (SECTOR_COLORS[String(d.sector).trim()] || 'var(--mute)') + '"' + '>' + esc(d.sector) + '</span>' : '<span></span>')
@@ -1553,7 +1553,7 @@
     const shA = labFirm(P) ? sectorShare(A) : '';
     if (shA) { const u0 = d0 && safeUrl(d0.url);
       const dl = d0 ? '<div class="sdl"><b>' + coName(d0) + '</b>' + [labRound(d0.round), dealAmt(d0.amount, d0.currency), d0.lead ? AC.lead : '', fdate(d0.date) || ''].filter(Boolean).map(t => ' · ' + esc(t)).join('')
-        + (u0 ? ' · <a href="' + esc(u0) + '" target="_blank" rel="noopener"' + fullA(hostOf(u0)) + '>' + esc(capL(hostOf(u0))) + ' ↗</a>' : '') + '</div>' : '';
+        + (u0 ? ' · <a href="' + esc(u0) + '" target="_blank" rel="noopener"' + fullA(hostOf(u0)) + '>' + esc(capL(hostOf(u0))) + '</a>' : '') + '</div>' : '';
       h += '<div class="aps ssa">' + shA + dl + (n.deals > 1 ? showAll(P, 'deals', n.deals) : '') + '</div>';
     } else if (d0) h += '<div class="aps"><b class="apt">' + esc(AC.latest_deal) + '</b>' + dealRows([d0], labFirm(P)) + (n.deals > 1 ? showAll(P, 'deals', n.deals) : '') + '</div>';
     const revs = (!A.lazy && Array.isArray(A.reviews) && A.reviews.length) ? A.reviews.slice(0, 3) : (r0 ? [r0] : []);
