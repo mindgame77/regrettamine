@@ -1339,7 +1339,7 @@
     const src = (u) => u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(hostOf(u)) + '>' + esc(capL(hostOf(u))) + ' ↗</a>' : '<span></span>';
     if (lab) return '<div class="adl"><div class="ad adh s5"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_sector) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + ds.map(d => { const u = safeUrl(d.url), r = [labRound(d.round), dealAmt(d.amount, d.currency), d.lead ? AC.lead : ''].filter(Boolean).join(' · ');
-        return '<div class="ad s5"><b>' + esc(d.company || '') + '</b>' + (d.sector ? '<span class="arty">' + esc(d.sector) + '</span>' : '<span></span>')
+        return '<div class="ad s5"><b>' + esc(d.company || '') + '</b>' + (d.sector ? '<span class="arty"' + (SEC_MAP ? ' style="color:' + (SEC_MAP[String(d.sector).trim()] || 'var(--mute)') + '"' : '') + '>' + esc(d.sector) + '</span>' : '<span></span>')
           + '<span>' + esc(r) + '</span><span>' + esc(fdate(d.date) || '') + '</span>' + src(u) + '</div>'; }).join('') + '</div>';
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + ds.map(d => { const u = safeUrl(d.url);
@@ -1349,15 +1349,26 @@
   // Sector share (PAGE_DATA_GUIDE B6e.9/A9.17, with Alex's 2026-11-04 change to B6e.9.5): stored sector_12m from firm_page.
   // Top 5 sectors by deal count in color, largest first, then ONE grey "Other N" holding every other sector, the real
   // "Other" tag AND deals with no sector, so the total equals all deals in the last 12 months. Shown at 10+ deals.
-  const SEC_COLORS = ['#1d4ed8', '#0891b2', '#7c3aed', '#ea580c', '#ca8a04'];
+  // One fixed color per sector (v2_sector names), same on the bar, legend and deal pills. No red/green (no good/bad meaning).
+  // Sectors outside a firm's top 5, the "Other" tag and deals with no sector render grey (var(--mute)).
+  const SECTOR_COLORS = {
+    'AI models': '#4f46e5', 'AI agents': '#0891b2', 'Fintech': '#1d4ed8', 'Health': '#db2777', 'Bio': '#9333ea',
+    'Climate & Energy': '#0369a1', 'Consumer': '#ea580c', 'Enterprise software': '#7c3aed', 'Developer tools': '#a16207',
+    'Security': '#1e3a8a', 'Crypto': '#ca8a04', 'Hardware & Robotics': '#78350f', 'Mobility': '#475569', 'Real estate': '#b45309',
+    'Education': '#0284c7', 'Media & Gaming': '#c026d3', 'Food & Agriculture': '#854d0e', 'Other': 'var(--mute)'
+  };
+  // One color per sector across the page: set by sectorShare (top 5 = their bar color, anything else grey), read by dealRows pills.
+  let SEC_MAP = null;
   function sectorShare(A) {
+    SEC_MAP = null;
     const S = A && A.sector_12m, total = Number(S && S.n) || 0;
     if (!S || total < 10 || !Array.isArray(S.top)) return '';
     const isOther = (s) => s.toLowerCase() === String(AC.other || 'Other').toLowerCase();
     const named = S.top.map(x => [String((x && x.s) || '').trim(), Number(x && x.n) || 0]).filter(x => x[0] && x[1] > 0 && !isOther(x[0]))
       .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
     const top = named.slice(0, 5), rest = total - top.reduce((t, x) => t + x[1], 0), tagged = total;
-    const items = top.map((x, i) => [x[0], x[1], SEC_COLORS[i]]).concat(rest > 0 ? [[AC.other, rest, 'var(--mute)']] : []);
+    SEC_MAP = {}; top.forEach((x, i) => { SEC_MAP[x[0]] = SECTOR_COLORS[x[0]] || 'var(--mute)'; });
+    const items = top.map(x => [x[0], x[1], SECTOR_COLORS[x[0]] || 'var(--mute)']).concat(rest > 0 ? [[AC.other, rest, 'var(--mute)']] : []);
     return '<div class="ssh"><b class="apt">' + esc(AC.sector_share) + '</b><div class="nd ssn">' + esc(pl(AC.n_deals, tagged)) + '</div><div class="sstk">'
       + items.map(x => '<i style="flex:' + Number(x[1]) + ';background:' + x[2] + '"></i>').join('') + '</div><div class="sleg">'
       + items.map(x => '<span><b style="background:' + x[2] + '"></b>' + esc(x[0]) + ' ' + esc(x[1]) + '</span>').join('') + '</div></div>';
