@@ -440,8 +440,7 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 .pcard .psince{font-weight:700}.pcard.pjoin .psince{color:#0F7A3A}.pcard.pleft .psince{color:#C4281C}
 .pcard .pfnd{font-style:normal;font-weight:600;font-size:13px;margin-left:6px;color:var(--ink2)}
 .pi.pos,.arv.pos{background:#E7F8EE;border-color:transparent}.pi.neg,.arv.neg{background:#FDE8E4;border-color:transparent}.pi.neu,.arv.neu{background:#F3F2F7;border-color:transparent}
-.arsm{font-size:15px;margin:0 0 8px;color:var(--ink)}.arsm .k{font:700 11px 'DM Sans';letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-right:6px}
-.arv .aq{margin:8px 0;padding-left:12px;border-left:3px solid #D9D6E3;color:var(--ink2);line-height:1.5}
+.arsm{font-size:15px;margin:0 0 8px;color:var(--ink)}
 .arat{color:var(--mute);font-size:13px;margin:8px 0 0}.arat a{color:var(--vio);font-weight:700;text-decoration:none}
 .pgr{grid-template-columns:repeat(3,minmax(0,1fr))}
 .hfs.actw{display:block;min-height:0}.actw[hidden]{display:none}
