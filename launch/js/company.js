@@ -1349,13 +1349,13 @@
   // Sector share (PAGE_DATA_GUIDE B6e.9/A9.17, with Alex's 2026-11-04 change to B6e.9.5): stored sector_12m from firm_page.
   // Top 5 sectors by deal count in color, largest first, then ONE grey "Other N" holding every other sector, the real
   // "Other" tag AND deals with no sector, so the total equals all deals in the last 12 months. Shown at 10+ deals.
-  // One fixed color per sector (v2_sector names), same on the bar, legend and deal pills. No red/green (no good/bad meaning).
+  // One fixed color per sector (v2_sector names), same on the bar, legend and deal pills. No red/green (no good/bad meaning); picked for a CIELAB distance of 24+ between any two and from grey.
   // Sectors outside a firm's top 5, the "Other" tag and deals with no sector render grey (var(--mute)).
   const SECTOR_COLORS = {
-    'AI models': '#4f46e5', 'AI agents': '#0891b2', 'Fintech': '#1d4ed8', 'Health': '#db2777', 'Bio': '#9333ea',
-    'Climate & Energy': '#0369a1', 'Consumer': '#ea580c', 'Enterprise software': '#7c3aed', 'Developer tools': '#a16207',
-    'Security': '#1e3a8a', 'Crypto': '#ca8a04', 'Hardware & Robotics': '#78350f', 'Mobility': '#475569', 'Real estate': '#b45309',
-    'Education': '#0284c7', 'Media & Gaming': '#c026d3', 'Food & Agriculture': '#854d0e', 'Other': 'var(--mute)'
+    'AI models': '#2409aa', 'AI agents': '#a542d7', 'Fintech': '#2525f4', 'Health': '#f425af', 'Bio': '#f425f4',
+    'Climate & Energy': '#164069', 'Consumer': '#da620b', 'Enterprise software': '#287fbd', 'Developer tools': '#695b16',
+    'Security': '#161669', 'Crypto': '#0b50da', 'Hardware & Robotics': '#793606', 'Mobility': '#258cf4', 'Real estate': '#098faa',
+    'Education': '#790649', 'Media & Gaming': '#931f8a', 'Food & Agriculture': '#aa8f09', 'Other': 'var(--mute)'
   };
   // One color per sector across the page: set by sectorShare (top 5 = their bar color, anything else grey), read by dealRows pills.
   let SEC_MAP = null;
