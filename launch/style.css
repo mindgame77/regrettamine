@@ -484,3 +484,4 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 .ssa .ssh{border:0;border-radius:0;padding:0;margin:0}.ssa .ssn{display:none}.ssa .sstk{height:6px}
 .ssa .sdl{margin-top:12px;font-size:13.5px;color:var(--ink2)}.ssa .sdl b{color:var(--ink)}.ssa .sdl a{color:var(--vio);font-weight:600;text-decoration:none}
 .ad a.co,.sdl a.co{color:inherit;font-weight:inherit;text-decoration:none}.ad a.co:hover,.sdl a.co:hover{text-decoration:underline}
+.ad a.co,.sdl a.co{color:var(--vio)}
