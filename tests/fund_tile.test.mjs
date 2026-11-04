@@ -74,7 +74,7 @@ function paint(extra) {
 }
 
 function tile(html) {
-  const m = html.match(/<div class="att afd">([\s\S]*?)<\/div>/);
+  const m = html.match(/<div class="att afd[^"]*">([\s\S]*?)<\/div>/);
   return m ? m[0] : '';
 }
 
@@ -98,10 +98,12 @@ test('a latest fund that raised money stays the Latest fund tile', () => {
     activity: { latest_fund: { name: 'a16z Growth Fund V', raised_usd: 8500000000, date: '2026-08-31', url: 'https://a16z.com/expanding-the-a16z-growth-fund-and-platform/' } },
   });
   const fund = tile(html);
+  assert.match(fund, /class="att afd afg"/);
   assert.match(fund, /<small>Latest fund<\/small><b>\$8\.5B<\/b>/);
-  assert.match(fund, /a16z Growth Fund V · \$8\.5B raised · <a href="https:\/\/a16z\.com\/expanding-the-a16z-growth-fund-and-platform\/"/);
+  assert.match(fund, /a16z Growth Fund V · \$8\.5B raised · 2026 · <a href="https:\/\/a16z\.com\/expanding-the-a16z-growth-fund-and-platform\/"/);
   assert.match(fund, />a16z\.com ↗<\/a>/);
-  assert.doesNotMatch(fund, /Feb 5, 2026|Aug 31, 2026|Assets under management|Sequoia Capital Fund/);
+  assert.doesNotMatch(html, /Assets under management|Fund assets|<small>AUM<\/small>/);
+  assert.doesNotMatch(fund, /Feb 5, 2026|Aug 31, 2026|Sequoia Capital Fund/);
 });
 
 test('a $0 or missing latest fund uses the most recent earlier fund that raised money', () => {
@@ -113,7 +115,7 @@ test('a $0 or missing latest fund uses the most recent earlier fund that raised 
     });
     const fund = tile(html);
     assert.match(fund, /<small>Latest fund<\/small><b>\$22\.7B<\/b>/);
-    assert.match(fund, /Sequoia Capital Fund, L\.P\. · \$22\.7B raised · Feb 5, 2026 · <a href="https:\/\/www\.sec\.gov\/Archives\/edgar\/data\/1906948\/000206235726000016\/0002062357-26-000016-index\.htm"/);
+    assert.match(fund, /Sequoia Capital Fund, L\.P\. · \$22\.7B raised · 2026 · <a href="https:\/\/www\.sec\.gov\/Archives\/edgar\/data\/1906948\/000206235726000016\/0002062357-26-000016-index\.htm"/);
     assert.match(fund, />Filing ↗<\/a>/);
     assert.doesNotMatch(fund, /DIV-2026|\$7\.0B|Assets under management|class="asm"/);
     assert.doesNotMatch(fund, /<b>[^<]*Sequoia Capital Fund/);
@@ -126,67 +128,68 @@ test('a $0 or missing latest fund uses the most recent earlier fund that raised 
   assert.match(tile(noLatest), /Sequoia Capital Fund, L\.P\./);
 });
 
-test('B6d.6 (fix 4): lab tiles are latest fund, then AUM, then Fund assets, from the stored firm fields with a Form ADV link', () => {
-  assert.equal(copy.company.activity.aum, 'Assets under management');
-  assert.equal(copy.company.activity.fund_assets, 'Fund assets');
-  const money = { aum: { display: '$82.17B', url: ADV }, fund_assets: { display: '$60.1B', url: ADV } };
+test('F7.8: one money tile, fund first, else AUM, never Fund assets or a second tile', () => {
+  assert.equal(copy.company.activity.aum, 'AUM');
+  const money = { aum: { display: '$82.17B', url: ADV, date: '2026-09-15' }, fund_assets: { display: '$60.1B', url: ADV } };
   const all = paint({
     firm: { name: 'Sequoia Capital', slug: 'sequoia', money },
     activity: { latest_fund: { name: 'Sequoia Fund X, L.P.', raised_usd: 1000000000, date: '2026-01-01', url: ADV } },
   });
   const order = [...all.matchAll(/<small>([^<]+)<\/small>/g)].map(m => m[1]);
-  assert.deepEqual(order.filter(x => /Latest fund|Assets under management|Fund assets/.test(x)), ['Latest fund', 'Assets under management', 'Fund assets']);
-  assert.match(all, /<small>Fund assets<\/small><b>\$60\.1B<\/b>/);
-  assert.doesNotMatch(all, /<small>AUM<\/small>|<small>Fund gross assets<\/small>/);
-  // Old sources (hero facts, firm.assets) no longer make a tile; only the stored fields do.
+  assert.deepEqual(order.filter(x => /Latest fund|AUM|Fund assets|Assets under management/.test(x)), ['Latest fund']);
+  assert.match(all, /class="att afd afg"/);
+  assert.match(all, /· 2026 ·/);
+  assert.doesNotMatch(all, /Fund assets|No SEC filings|Assets under management/);
+  const oldFund = paint({
+    firm: { name: 'Sequoia Capital', slug: 'sequoia', money },
+    activity: { latest_fund: { name: 'Sequoia Fund X, L.P.', raised_usd: 8500000000, date: '2022-02-05', url: ADV } },
+  });
+  assert.match(oldFund, /class="att afd afr"/);
+  assert.match(oldFund, /\$8\.5B raised · 2022 ·/);
   const old = paint({
     firm: { name: 'Lightspeed', slug: 'lightspeed', assets: '$82,165,771,068' },
     hero: [{ label: 'Regulatory AUM', value: '$82.2B', src: [{ label: 'SEC IAPD', url: ADV }] }],
     activity: {},
   });
   assert.equal(tile(old), '');
-  // Any other host is not a link. A DEF 14A or a press release is an AUM link only, never Fund assets.
   const otherHost = paint({ firm: { name: 'Greenoaks', slug: 'greenoaks', money: { aum: { display: '$1B', url: 'https://example.com/x' }, fund_assets: { display: '$2B', url: 'https://example.com/x' } } }, activity: {} });
-  assert.doesNotMatch(otherHost, /Assets under management|Fund assets/);
-  const level3 = paint({ firm: { name: 'Greenoaks', slug: 'greenoaks', money: { aum: { display: '$1B', url: 'https://www.sec.gov/Archives/edgar/data/1/000/def14a.htm' }, fund_assets: { display: '$2B', url: 'https://www.sec.gov/Archives/edgar/data/1/000/def14a.htm' } } }, activity: {} });
-  assert.match(level3, /<small>Assets under management<\/small><b>\$1B<\/b>/);
-  assert.match(level3, />Filing ↗<\/a>/);
-  assert.doesNotMatch(level3, /Fund assets/);
-  const press = paint({ firm: { name: 'Greenoaks', slug: 'greenoaks', money: { aum: { display: '$1B', url: 'https://news.example/press-release/fund' }, fund_assets: { display: '$2B', url: 'https://news.example/press-release/fund' } } }, activity: {} });
-  assert.match(press, /Assets under management/);
+  assert.doesNotMatch(otherHost, /<small>AUM<\/small>|Fund assets/);
+  const level3 = paint({ firm: { name: 'Greenoaks', slug: 'greenoaks', money: { aum: { display: '$1B', url: 'https://www.sec.gov/Archives/edgar/data/1/000/def14a.htm' } } }, activity: {} });
+  assert.match(level3, /<small>AUM<\/small><b>\$1B<\/b>/);
+  assert.match(level3, /Reported by news/);
+  assert.doesNotMatch(level3, /Fund assets|SEC Form ADV/);
+  const press = paint({ firm: { name: 'Greenoaks', slug: 'greenoaks', money: { aum: { display: '$1B', url: 'https://news.example/press-release/fund' } } }, activity: {} });
+  assert.match(press, /Reported by news/);
   assert.match(press, />news\.example ↗<\/a>/);
-  assert.doesNotMatch(press, /Fund assets/);
-  // Fix 4b: AUM may use the firm's own site. Fund assets stay on a Form ADV link. The level is not drawn.
   const firmAum = paint({
-    firm: { name: 'Greenoaks', slug: 'greenoaks', website: 'https://www.greenoaks.com/', money: { aum: { display: '$5B', url: 'https://blog.greenoaks.com/aum' }, fund_assets: { display: '$2B', url: 'https://greenoaks.com/aum' } } },
+    firm: { name: 'Greenoaks', slug: 'greenoaks', website: 'https://www.greenoaks.com/', money: { aum: { display: '$5B', url: 'https://blog.greenoaks.com/aum' } } },
     activity: {},
   });
-  assert.match(firmAum, /<small>Assets under management<\/small><b>\$5B<\/b>/);
+  assert.match(firmAum, /<small>AUM<\/small><b>\$5B<\/b>/);
+  assert.match(firmAum, /class="att aum"/);
   assert.match(firmAum, /href="https:\/\/blog\.greenoaks\.com\/aum"/);
-  assert.match(firmAum, />blog\.greenoaks\.com ↗<\/a>/);
-  assert.doesNotMatch(firmAum, /Fund assets|source level|source date/);
+  assert.doesNotMatch(firmAum, /SEC Form ADV|Fund assets/);
   const advStill = paint({
-    firm: { name: 'Greenoaks', slug: 'greenoaks', website: 'https://greenoaks.com/', money: { aum: { display: '$5B', url: ADV }, fund_assets: { display: '$2B', url: ADV } } },
+    firm: { name: 'Greenoaks', slug: 'greenoaks', website: 'https://greenoaks.com/', money },
     activity: {},
   });
-  assert.match(advStill, /Assets under management/);
-  assert.match(advStill, /Fund assets/);
+  assert.match(advStill, /<small>AUM<\/small><b>\$82\.2B<\/b>/);
+  assert.match(advStill, /SEC Form ADV · 09\/15\/2026 ·/);
   assert.match(advStill, />Filing ↗<\/a>/);
-  const news = paint({ firm: { name: 'Greenoaks', slug: 'greenoaks', website: 'https://greenoaks.com/', money: { aum: { display: '$1B', url: 'https://techcrunch.com/2026/01/01/raises' }, fund_assets: { display: '$2B', url: 'https://techcrunch.com/2026/01/01/raises' } } }, activity: {} });
-  assert.match(news, /<small>Assets under management<\/small><b>\$1B<\/b>/);
+  assert.doesNotMatch(advStill, /Fund assets|No SEC filings/);
+  const news = paint({ firm: { name: 'Greenoaks', slug: 'greenoaks', website: 'https://greenoaks.com/', money: { aum: { display: '$1B', url: 'https://techcrunch.com/2026/01/01/raises' } } }, activity: {} });
+  assert.match(news, /<small>AUM<\/small><b>\$1B<\/b>/);
+  assert.match(news, /Reported by news/);
   assert.match(news, />techcrunch\.com ↗<\/a>/);
-  assert.doesNotMatch(news, /Fund assets|source level/);
-  const notNews = paint({ firm: { name: 'Greenoaks', slug: 'greenoaks', website: 'https://greenoaks.com/', money: { aum: { display: '$1B', url: 'https://example.com/aum' }, fund_assets: { display: '$2B', url: 'https://example.com/aum' } } }, activity: {} });
-  assert.doesNotMatch(notNews, /Assets under management|Fund assets/);
-  // No fund and no stored AUM/Fund assets: nothing.
+  const notNews = paint({ firm: { name: 'Greenoaks', slug: 'greenoaks', website: 'https://greenoaks.com/', money: { aum: { display: '$1B', url: 'https://example.com/aum' } } }, activity: {} });
+  assert.doesNotMatch(notNews, /<small>AUM<\/small>|Fund assets/);
   const none = paint({ firm: { name: 'Mio', slug: 'mio-partners' }, activity: { latest_fund: { name: 'Empty Fund, L.P.', raised_usd: 0 } } });
   assert.equal(tile(none), '');
-  assert.doesNotMatch(none, /Empty Fund|Assets under management|Fund assets|Latest fund/);
-  // AUM alone (no fund): AUM tile, then Fund assets.
+  assert.doesNotMatch(none, /Empty Fund|Fund assets|Latest fund|No SEC filings/);
   const noFund = paint({ firm: { name: 'Accel', slug: 'accel', money }, activity: {} });
-  assert.deepEqual([...noFund.matchAll(/<small>([^<]+)<\/small>/g)].map(m => m[1]).filter(x => /Assets under management|Fund assets/.test(x)), ['Assets under management', 'Fund assets']);
-  // Not a lab firm: unchanged, no money tiles.
+  assert.deepEqual([...noFund.matchAll(/<small>([^<]+)<\/small>/g)].map(m => m[1]).filter(x => /AUM|Fund assets|Latest fund/.test(x)), ['AUM']);
   const other = paint({ firm: { name: 'Other', slug: 'other-firm', money }, activity: { latest_fund: { name: 'Other Fund, L.P.', raised_usd: null } } });
-  assert.match(tile(other), /<small>Latest fund<\/small><b><span class="asm">Other Fund<\/span><\/b>/);
-  assert.doesNotMatch(other, /Assets under management|Fund assets/);
+  assert.equal(tile(other), '');
+  assert.match(other, /<small>AUM<\/small>/);
+  assert.doesNotMatch(other, /Other Fund|Fund assets|class="asm"/);
 });

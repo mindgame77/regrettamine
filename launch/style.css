@@ -428,13 +428,25 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 /* Firm activity (firm_page.activity): SEC pills, tiles, latest deal, latest founder review */
 .kf .m{color:var(--mute);font-size:15px;margin:0;display:block}.kf .m span{background:none;padding:0;font-size:inherit;color:inherit}
 .secp{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;max-height:50px;overflow:hidden}.secp .sc{margin:0;line-height:18px}
+.secp.hpills{max-height:none;overflow:visible;gap:8px}
+.hp{display:inline-flex;align-items:center;background:#F1F0F5;color:#3a3550;border:0;border-radius:999px;padding:5px 12px;font:600 13px 'DM Sans';text-decoration:none;cursor:pointer}
+.hp:hover{background:#E7E5EF}
+.sv.apply{margin-left:8px;text-decoration:none}
+.pcard.pjoin{background:#E7F8EE;border-color:transparent}.pcard.pleft{background:#FDE8E4;border-color:transparent}
+.pcard .psince{font-weight:700}.pcard.pjoin .psince{color:#0F7A3A}.pcard.pleft .psince{color:#C4281C}
+.pcard .pfnd{font-style:normal;font-weight:600;font-size:13px;margin-left:6px;color:var(--ink2)}
+.pi.pos,.arv.pos{background:#E7F8EE;border-color:transparent}.pi.neg,.arv.neg{background:#FDE8E4;border-color:transparent}.pi.neu,.arv.neu{background:#F3F2F7;border-color:transparent}
+.arsm{font-size:15px;margin:0 0 8px;color:var(--ink)}.arsm .k{font:700 11px 'DM Sans';letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-right:6px}
+.arv .aq{margin:8px 0;padding-left:12px;border-left:3px solid #D9D6E3;color:var(--ink2);line-height:1.5}
+.arat{color:var(--mute);font-size:13px;margin:8px 0 0}.arat a{color:var(--vio);font-weight:700;text-decoration:none}
+.pgr{grid-template-columns:repeat(3,minmax(0,1fr))}
 .hfs.actw{display:block;min-height:0}.actw[hidden]{display:none}
 .actv{border:1.5px solid var(--line);border-radius:20px;padding:20px 22px;margin:18px 0 20px;display:flex;flex-direction:column;gap:22px}
 .ats{display:grid;gap:12px}.att{border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:4px;min-width:0}
 .att small{font:700 11.5px 'DM Sans';letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}.att b{font:800 30px 'Bricolage Grotesque';color:var(--ink)}.att b .asm{font-size:19px}
 .att span{font-size:13.5px;color:var(--ink2)}.att a{color:var(--vio);font-weight:700;text-decoration:none}
 .att .afl{display:block;margin-top:6px;font-size:13px;font-weight:700;color:var(--vio)}.att .afl .ash{margin:0;font-size:13px}
-.amt{background:var(--mintbg)}.afd{background:var(--viobg)}
+.amt{background:var(--mintbg)}.afd.afg{background:#E7F8EE}.afd.afr{background:#FDE8E4}.afd.afr>b,.afd.afr small{color:#C4281C}.att.aum{background:#F1F0F5}.att.aum>b{color:#3a3550}
 .aon{background:#E7F8EE;flex-direction:row;align-items:center;gap:14px}.aon>i{width:14px;height:14px;border-radius:50%;background:#16A34A;box-shadow:0 0 0 6px #C9F0D8;flex:none}
 .aon div{display:flex;flex-direction:column;gap:2px;min-width:0}.aon b{font-size:24px;color:#0F7A3A}.aon em{font-style:normal;font-size:13px;color:var(--mute)}
 .apt{font:800 20px 'Bricolage Grotesque';display:block;margin-bottom:8px}.arvs h2{font:800 20px 'Bricolage Grotesque';display:block;margin-bottom:8px}

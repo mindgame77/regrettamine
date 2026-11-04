@@ -74,7 +74,7 @@ function paint(extra) {
 }
 
 function tile(html) {
-  const m = html.match(/<div class="att afd">([\s\S]*?)<\/div>/);
+  const m = html.match(/<div class="att afd[^"]*">([\s\S]*?)<\/div>/);
   return m ? m[0] : '';
 }
 
@@ -92,7 +92,8 @@ test('no stored name falls back to the host, never to Filing', () => {
   assert.equal(link(paint(fund('https://www.davispolk.com/x', null))), 'davispolk.com ↗');
   assert.equal(link(paint(fund('https://evilsec.gov.example/x', '  '))), 'evilsec.gov.example ↗');
 });
-test('a name-only fund tile (non-lab firm) uses the same label', () => {
+test('a fund with no amount is not drawn', () => {
   const html = paint({ firm: { name: 'ZZ', slug: 'zz-not-lab' }, activity: { latest_fund: { name: 'ZZ Fund', url: 'https://fintechobserver.com/x', url_label: 'Fintech Observer' } } });
-  assert.equal(link(html), 'Fintech Observer ↗');
+  assert.equal(tile(html), '');
+  assert.doesNotMatch(html, /Fintech Observer|No SEC filings/);
 });

@@ -291,8 +291,8 @@
     "Review"
    ],
    "red": [
-    "p-red",
-    "Red flag"
+    "p-rev",
+    "Review"
    ],
    "wk": [
     "p-g",
@@ -678,6 +678,18 @@
    "Closed": "cs-cl",
    "Unverified": "cs-cl"
   },
+  "checks_list": [
+   ["Sanctions", "Government lists of people and companies you can't do business with."],
+   ["Terrorism financing lists", "Lists of people and groups linked to funding terrorism."],
+   ["Export and investment restrictions", "Trade or investment bans, e.g. deals with military-linked firms."],
+   ["Financial regulator actions", "Fines, bans and charges from financial regulators."],
+   ["Money laundering penalties", "Anti-money-laundering fines and enforcement."],
+   ["US court records", "Federal and state cases, civil and criminal."],
+   ["Court records worldwide", "Cases outside the U.S."],
+   ["Registration check", "Registered with the regulator as an investment adviser, and active."],
+   ["People behind the fund", "Partners and owners, each checked against the lists above."],
+   ["Political ties", "People at the firm who held government or political roles."]
+  ],
   "searched": {
    "1": "Searched government sanctions lists.",
    "2": "Searched terrorism financing lists.",
@@ -697,6 +709,7 @@
    "hq": "HQ",
    "staff": "Staff",
    "investment_staff": "Investment staff",
+   "private_funds": "Private funds",
    "regulatory_aum": "Regulatory AUM",
    "fund_gross": "Fund gross assets",
    "assets": "Regulatory AUM",
@@ -751,7 +764,15 @@
    "fund": "Latest fund",
    "raised": "{amount} raised",
    "filing": "Filing",
-   "aum": "Assets under management",
+   "aum": "AUM",
+   "aum_sec": "SEC Form ADV",
+   "reported_by_news": "Reported by news",
+   "partner_since": "Partner since {year}",
+   "left_in": "Left in {year}",
+   "founder_tag": "Founder",
+   "summary": "Summary",
+   "copied": "Copied",
+   "apply": "Apply ↗",
    "fund_assets": "Fund assets",
    "latest_deal": "The latest deal",
    "h_company": "Company",
@@ -767,7 +788,7 @@
     "{n} deal",
     "{n} deals"
    ],
-   "reviews": "What people say",
+   "reviews": "What founders say",
    "types": {
     "founder": "Founder",
     "employee": "Employee",
@@ -785,6 +806,10 @@
    "all_reviews": [
     "Show all {n} review",
     "Show all {n} reviews"
+   ],
+   "all_news": [
+    "Show all {n} story",
+    "Show all {n} stories"
    ],
    "deals_title": "{n} deals · {firm}",
    "reviews_title": "{n} founder reviews · {firm}",

@@ -97,7 +97,7 @@ test('the shell and the painter no longer draw hero cards', () => {
   assert.match(JS, /function metaLine\(/);
   assert.match(JS, /function assetLabel\(/);
   assert.match(JS, /function secPills\(/);
-  assert.match(JS, /class="secp"/);
+  assert.match(JS, /secp hpills/);
   assert.match(JS, /h\.label !== 'HQ'/);
 });
 
