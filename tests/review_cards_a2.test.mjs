@@ -105,9 +105,9 @@ test('the Show all pop-up uses the same A2 cards', () => {
   assert.match(m.innerHTML, /— Marty Kausas, CEO of Pylon · 2025 · /);
   assert.doesNotMatch(m.innerHTML, /class="(k|aq)"/);
 });
-test('legacy founderCard path has no SUMMARY label and no arrow', () => {
+test('old founderCard/founderBlock and SUMMARY label are gone', () => {
   const src = fs.readFileSync(new URL('../launch/js/company.js', import.meta.url), 'utf8');
-  const fc = src.slice(src.indexOf('function founderCard('), src.indexOf('function newsBlock('));
-  assert.match(fc, /return revCard\(/);
-  assert.doesNotMatch(fc, /AC\.summary|x\.summary|↓/);
+  assert.doesNotMatch(src, /founderCard|founderBlock|actfound|AC\.summary/);
+  const copy = JSON.parse(fs.readFileSync(new URL('../launch/copy.json', import.meta.url), 'utf8'));
+  assert.doesNotMatch(JSON.stringify(copy), /"summary":"Summary"/);
 });
