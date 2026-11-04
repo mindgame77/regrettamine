@@ -429,6 +429,9 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 .kf .m{color:var(--mute);font-size:15px;margin:0;display:block}.kf .m span{background:none;padding:0;font-size:inherit;color:inherit}
 .secp{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;max-height:50px;overflow:hidden}.secp .sc{margin:0;line-height:18px}
 .secp.hpills{max-height:none;overflow:visible;gap:8px}
+/* Rule (Alex 2026-11-04): header pills stay on one line on desktop/wide screens; wrap only on phones (<=640px). */
+.secp.hpills{flex-wrap:nowrap}.secp.hpills .hp{white-space:nowrap;flex:0 0 auto}
+@media (max-width:640px){.secp.hpills{flex-wrap:wrap}}
 .hp{display:inline-flex;align-items:center;background:#F1F0F5;color:#3a3550;border:0;border-radius:999px;padding:5px 12px;font:600 13px 'DM Sans';text-decoration:none;cursor:pointer}
 .hp:hover{background:#E7E5EF}
 .secp.hpills .hp{margin:0;max-width:none}
