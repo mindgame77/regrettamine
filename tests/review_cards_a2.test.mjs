@@ -1,4 +1,4 @@
-// G5.2 review cards (design A2): summary in bold quotes, "— Name, Role of Company · year · site", no ↓ on Show all.
+// G5.2 review cards (design A2): the founder's exact quote in bold quotes (no summary), "— Name, Role of Company · year · site", no ↓ on Show all.
 // node --test tests/review_cards_a2.test.mjs
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -73,16 +73,17 @@ function paint(extra) {
 
 const L = 'https://www.linkedin.com/posts/martykausas_pylons-board';
 const reviews = [
-  { author: 'Marty Kausas', role: 'CEO', company: 'Pylon', date: '2025', url: L, summary: "Pylon's board is incredible.", body: "Pylon's board is incredible", tone: 'positive' },
-  { author: 'malgorithms', role: null, company: 'Keybase', date: '2019', url: 'https://news.ycombinator.com/item?id=19563592', summary: 'a16z was excellent', body: 'x', tone: 'positive' },
-  { author: 'Ann', role: 'Founder', company: null, date: '2024', url: 'https://x.com/a/1', summary: 'Great', tone: 'positive' },
-  { author: 'Bob', date: '2023', url: 'https://x.com/b/1', summary: 'Fine', tone: 'positive' },
+  { author: 'Marty Kausas', role: 'CEO', company: 'Pylon', date: '2025', url: L, quote: "Pylon's board is incredible.", summary: 'DECOY summary must not render', tone: 'positive' },
+  { author: 'malgorithms', role: null, company: 'Keybase', date: '2019', url: 'https://news.ycombinator.com/item?id=19563592', quote: 'a16z was excellent', tone: 'positive' },
+  { author: 'Ann', role: 'Founder', company: null, date: '2024', url: 'https://x.com/a/1', quote: 'Great', tone: 'positive' },
+  { author: 'Bob', date: '2023', url: 'https://x.com/b/1', quote: 'Fine', tone: 'positive' },
 ];
 const html = paint({ activity: { reviews, latest_review: reviews[0], counts: { reviews: 6, deals: 0 } } });
 const block = html.slice(html.indexOf("<div class=\"aps arvs\">"));
 
 
-test('card shows the summary in bold quotes with no SUMMARY label and no quote line', () => {
+test('card shows only the quote in bold quotes; summary is never rendered', () => {
+  assert.doesNotMatch(block, /DECOY/);
   assert.match(block, /<p class="arsm"><b>“Pylon's board is incredible”<\/b><\/p>/);
   assert.doesNotMatch(block, /class="k"/);
   assert.doesNotMatch(block, /class="aq"/);
@@ -103,4 +104,10 @@ test('the Show all pop-up uses the same A2 cards', () => {
   assert.ok(m, 'actrevs pop-up exists');
   assert.match(m.innerHTML, /— Marty Kausas, CEO of Pylon · 2025 · /);
   assert.doesNotMatch(m.innerHTML, /class="(k|aq)"/);
+});
+test('legacy founderCard path has no SUMMARY label and no arrow', () => {
+  const src = fs.readFileSync(new URL('../launch/js/company.js', import.meta.url), 'utf8');
+  const fc = src.slice(src.indexOf('function founderCard('), src.indexOf('function newsBlock('));
+  assert.match(fc, /return revCard\(/);
+  assert.doesNotMatch(fc, /AC\.summary|x\.summary|↓/);
 });
