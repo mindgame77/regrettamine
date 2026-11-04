@@ -74,7 +74,7 @@ function paint(extra) {
 }
 
 function tile(html) {
-  const m = html.match(/<div class="att afd[^"]*">([\s\S]*?)<\/div>/);
+  const m = html.match(/<div (?:data-fundtile )?class="att afd[^"]*">([\s\S]*?)<\/div>/);
   return m ? m[0] : '';
 }
 
@@ -129,4 +129,23 @@ test('copy strings live in copy.json', () => {
   const A = copy.company.activity;
   assert.deepEqual(A.funds_sec, ['{n} fund on SEC record', '{n} funds on SEC record']);
   assert.equal(A.show_all, 'Show all');
+});
+
+test('v4: the fund tile opens the funds pop-up on click, and the pop-up lists newest first', () => {
+  created.length = 0;
+  const items = [
+    { name: 'Old Fund, L.P.', raised_usd: 1000000000, date: '2019-03-01', url: EDGAR },
+    { name: 'Undated Fund, L.P.', raised_usd: null, date: null, url: ADV },
+    { name: 'New Fund, L.P.', raised_usd: 2000000000, date: '2025-06-01', url: EDGAR },
+  ];
+  const html = paint({ activity: { latest_fund: latest, funds_sec: { n: 3, items } } });
+  assert.match(html, /<div data-fundtile class="att afd/);
+  const ov = created.find(e => e.id === 'actfunds');
+  const i = ov.innerHTML.indexOf('New Fund'), j = ov.innerHTML.indexOf('Old Fund'), k = ov.innerHTML.indexOf('Undated Fund');
+  assert.ok(i > 0 && i < j && j < k, 'newest first, undated last');
+  assert.doesNotMatch(html, /Firm &amp; funds|Firm & funds/);
+});
+
+test('v4: no Firm & funds section in the page config', () => {
+  assert.ok(!copy.sections.list.some(s => s.key === 'funds'));
 });

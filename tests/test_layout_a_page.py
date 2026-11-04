@@ -14,7 +14,7 @@ RULES = (ROOT / "docs" / "archive" / "DATA_RULES.md").read_text()
 
 def test_sections_are_layout_a():
     keys = [s["key"] for s in COPY["sections"]["list"]]
-    assert keys == ["overview", "legal", "news", "founders", "people", "funds", "lps"]
+    assert keys == ["overview", "legal", "news", "founders", "people", "lps"]
     news = COPY["sections"]["list"][2]
     assert news["title"] == "News" and news["renderer"] == "news"
     assert "checks" not in keys and "press" not in keys and "timeline" not in keys
