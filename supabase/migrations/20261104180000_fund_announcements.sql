@@ -1,141 +1,135 @@
--- Announced funds: a firm's own fund announcement (e.g. a16z "New Funds, New Era", 2024-04-16).
--- Separate from Form D rows in funds (no copies there). Returned by _firm_activity -> firm_page as activity.funds_announced.
-create table if not exists public.firm_fund_announcements (
-  id uuid primary key default gen_random_uuid(),
-  firm_id uuid not null references public.firms(id) on delete cascade,
+-- Announced funds: a firm's own fund announcement (a16z "New Funds, New Era", 2024-04-16, $7.2B across 5 funds).
+-- Kept apart from Form D rows (v2_funds); nothing is copied there. Returned by v2_firm_page (firm_page) as activity.funds_announced.
+-- Undo: /workspace/backups/20261104180000_fund_announcements_undo.sql (restores v2_firm_page, drops the table).
+-- The v2 schema is not created by repo migrations; on a database without v2_firms (CI) this is a no-op.
+do $mig$
+begin
+  if to_regclass('public.v2_firms') is null then raise notice 'v2 schema missing, skipped'; return; end if;
+    execute $m0$create table if not exists public.firm_fund_announcements (
+  id bigint generated always as identity primary key,
+  firm_id bigint not null references public.v2_firms(firm_id) on delete cascade,
   name text not null check (btrim(name) <> ''),
   amount_usd numeric not null check (amount_usd > 0),
   display text not null,
   announced_on date not null,
   url text not null check (url ~* '^https://'),
   retrieved_on date not null,
-  data_status data_status not null default 'real',
   created_at timestamptz not null default now(),
   unique (firm_id, url, name)
-);
-alter table public.firm_fund_announcements enable row level security;
-revoke all on public.firm_fund_announcements from anon, authenticated;
-
-insert into public.firm_fund_announcements (firm_id, name, amount_usd, display, announced_on, url, retrieved_on)
-select f.id, v.name, v.amt, v.disp, date '2024-04-16', 'https://a16z.com/new-funds-new-era/', date '2026-11-04'
-  from public.firms f, (values
+)$m0$;
+    execute $m1$alter table public.firm_fund_announcements enable row level security;
+revoke all on public.firm_fund_announcements from anon, authenticated$m1$;
+    execute $m2$insert into public.firm_fund_announcements (firm_id, name, amount_usd, display, announced_on, url, retrieved_on)
+select f.firm_id, v.name, v.amt, v.disp, date '2024-04-16', 'https://a16z.com/new-funds-new-era/', date '2026-11-04'
+  from public.v2_firms f, (values
   ('American Dynamism', 600000000, '$600M'),
   ('Apps', 1000000000, '$1B'),
   ('Games', 600000000, '$600M'),
   ('Infrastructure', 1250000000, '$1.25B'),
   ('Growth', 3750000000, '$3.75B')) v(name, amt, disp)
  where f.slug = 'a16z'
-on conflict (firm_id, url, name) do nothing;
-
-CREATE OR REPLACE FUNCTION public._firm_activity(p_firm uuid, p_open boolean)
- RETURNS jsonb
+on conflict (firm_id, url, name) do nothing$m2$;
+    execute $m3$CREATE OR REPLACE FUNCTION public.v2_firm_page(p_slug text)
+ RETURNS json
  LANGUAGE plpgsql
  STABLE SECURITY DEFINER
  SET search_path TO 'public'
 AS $function$
-declare
-  since date := current_date - 365;
-  d0 jsonb; r0 jsonb; fund jsonb; sec jsonb; fsec jsonb; n_fsec int;
-  fann jsonb; ann0 jsonb; n_ann int;
-  n_deals int; n_deals12 int; n_revs int; n_close12 int;
+declare f v2_firms; fid bigint; deals jsonb; d12 jsonb; funds jsonb; lf jsonb; aum v2_firm_aum; secs jsonb := '[]'; it jsonb; hq text; ct v2_firm_contacts; sp jsonb; fa jsonb; fal jsonb;
 begin
-  select count(*), count(*) filter (where i.invested_on >= since) into n_deals, n_deals12
-    from investments i where i.firm_id = p_firm and i.data_status = 'real';
-  select _activity_deal(i, c) into d0
-    from investments i left join portfolio_companies c on c.id = i.company_id
-   where i.firm_id = p_firm and i.data_status = 'real'
-   order by i.invested_on desc nulls last, c.name limit 1;
-  select count(*) into n_revs from reviews r
-   where r.firm_id = p_firm and r.is_public and r.moderation_status = 'approved';
-  select _activity_review(r, c) into r0
-    from reviews r left join portfolio_companies c on c.id = r.company_id
-   where r.firm_id = p_firm and r.is_public and r.moderation_status = 'approved'
-   order by (r.review_type = 'founder') desc, r.reviewed_on desc nulls last, r.created_at desc limit 1;
-  select count(*) into n_close12 from funds
-   where firm_id = p_firm and data_status = 'real' and closed_on >= since;
-  select jsonb_build_object('name', x.name, 'raised_usd', coalesce(x.raised_usd, x.size_usd), 'target_usd', x.target_usd,
-           'status', x.close_status, 'date', x.closed_on, 'date_precision', x.date_precision, 'vintage', x.vintage,
-           'url', coalesce(nullif(x.filing_url, ''), (select u from unnest(coalesce(x.source_urls, '{}')) u where u ~* '^https?://' limit 1)))
-           -- Fix 2 (A15.8): currency and page display only when an amount is stored (no amount = same output as before).
-           || case when coalesce(x.raised_usd, x.size_usd) is null then '{}'::jsonb else jsonb_build_object(
-                'currency', case when x.raised_usd is not null then x.raised_currency else x.size_currency end,
-                'raised_display', public._money_display(coalesce(x.raised_usd, x.size_usd),
-                                  case when x.raised_usd is not null then x.raised_currency else x.size_currency end)) end
-           || case when x.target_usd is null then '{}'::jsonb else jsonb_build_object(
-                'target_currency', x.target_currency, 'target_display', public._money_display(x.target_usd, x.target_currency)) end
-    into fund
-    from funds x where x.firm_id = p_firm and x.data_status = 'real'
-     -- Fix 1 (B6d.6): only a fund with a real date (closed_on, else vintage) can be the latest fund; a row with
-     -- no date and no amount is skipped, and with no dated fund there is no latest fund (the tile hides).
-     and (x.closed_on is not null or x.vintage is not null)
-     and not public._fund_heading_name(x.name)
-   order by coalesce(x.closed_on, make_date(x.vintage, 1, 1)) desc, x.closed_on desc nulls last, x.created_at desc, x.id limit 1;
-  -- B6c.1/B6c.8/A1.8: name the fund link's real source. sec.gov is a filing (null label; the page says "Filing").
-  -- Else the trusted page label, else the outlet name stored on real press items for that domain; else null (the page shows the host).
-  if fund is not null and fund->>'url' is not null then
-    fund := fund || jsonb_build_object('url_label', (
-      with h as (select lower(regexp_replace(coalesce(substring(fund->>'url' from '^https?://([^/:?#]+)'), ''), '^www\.', '')) host)
-      select case when h.host = '' or h.host ~ '(^|\.)sec\.gov$' then null else coalesce(
-        (select t.label from trusted_source_domains t
-          where t.path_like is null and nullif(trim(t.label), '') is not null
-            and (h.host = lower(t.domain) or h.host like '%.' || lower(t.domain))
-          order by length(t.domain) desc limit 1),
-        (select p.publisher from press_items p
-          where p.data_status = 'real' and nullif(trim(p.publisher), '') is not null
-            and lower(regexp_replace(coalesce(p.domain, ''), '^www\.', '')) = h.host
-          group by p.publisher order by count(*) desc, p.publisher limit 1)) end
-      from h));
+  fid := _v2_live_id(p_slug);
+  if fid is null then return json_build_object('status','not_found'); end if;
+  select * into f from v2_firms where firm_id=fid;
+  hq := nullif(concat_ws(', ', f.hq_city, coalesce(f.hq_state, f.hq_country)),'');
+  -- G1.1 header pills: newest current, non-archived contact row (Checker-passed = is_current)
+  select * into ct from v2_firm_contacts where firm_id=fid and is_current and not archived and not nothing_found
+   order by source_date desc nulls last, row_id desc limit 1;
+  -- G1.1: SEC Form ADV Staff / Investment staff counts (Private funds left out, per approved mockup)
+  select coalesce(jsonb_agg(jsonb_build_object('label',x.fact_label,'value',x.fact_value::text,'anchor','overview',
+      'src',_v2_src(x.source_url,x.source_date,x.source_type)) order by case x.fact_label when 'Staff' then 0 else 1 end),'[]') into sp
+    from (select distinct on (fact_label) * from v2_sec_fact_pills
+           where firm_id=fid and is_current and not archived and not nothing_found and fact_value>0
+             and fact_label in ('Staff','Investment staff')
+           order by fact_label, source_date desc nulls last, row_id desc) x;
+  deals := _v2_deals(fid);
+  select coalesce(jsonb_agg(e),'[]') into d12 from jsonb_array_elements(deals) e where e->>'date' >= (current_date - 365)::text;
+  select coalesce(jsonb_agg(jsonb_build_object('name',fund_name,'raised_usd',case when amount_currency='USD' then amount_raised end,'date',closed_on::text,'url',source_url) order by coalesce(closed_on,source_date) desc nulls last, fund_name),'[]')
+    into funds from v2_funds where firm_id=fid and is_current and not archived and not nothing_found;
+  select jsonb_build_object('name',fund_name,'raised_usd',amount_raised,'url',source_url,'date',closed_on::text) into lf
+    from v2_funds where firm_id=fid and is_current and not archived and closed_on is not null and amount_raised is not null and amount_currency='USD' order by closed_on desc limit 1;
+  -- Announced funds: the firm's own fund announcement (not Form D; kept out of v2_funds). Newest first, biggest first.
+  select coalesce(jsonb_agg(jsonb_build_object('name',a.name,'raised_usd',a.amount_usd,'raised_display',a.display,'date',a.announced_on::text,'url',a.url)
+           order by a.announced_on desc, a.amount_usd desc, a.name),'[]') into fa
+    from firm_fund_announcements a where a.firm_id=fid;
+  -- Latest announcement (one date + url) as one total for the Latest fund tile.
+  select jsonb_build_object('n',count(*),'total_usd',sum(a.amount_usd),'total_display',public._money_display(sum(a.amount_usd),'USD'),
+           'date',max(a.announced_on)::text,'url',max(a.url)) into fal
+    from firm_fund_announcements a
+   where a.firm_id=fid and (a.announced_on,a.url)=(select b.announced_on,b.url from firm_fund_announcements b where b.firm_id=fid order by b.announced_on desc,b.url limit 1)
+  having count(*)>0;
+  select * into aum from v2_firm_aum where firm_id=fid and is_current and not archived and not nothing_found order by source_date desc nulls last limit 1;
+  -- overview / thesis (F12.8): first section, no source or pill; no thesis = no section
+  if nullif(trim(coalesce(f.thesis_text,'')),'') is not null then
+    secs := secs || jsonb_build_object('key','overview','items',jsonb_build_array(jsonb_build_object('label','thesis','value',trim(f.thesis_text))));
   end if;
-  -- A9.6: funds on SEC record = real fund rows with a sec.gov source, not ADV summary rows ("Funds", "Regulatory AUM", ...).
-  -- The count is always sent; the list (newest first, at most 100) only after a credit.
-  with s as (
-    select x.name, coalesce(x.raised_usd, x.size_usd) amt,
-           case when x.raised_usd is not null then x.raised_currency else x.size_currency end cur, x.closed_on,
-           coalesce((select u from unnest(array_prepend(nullif(x.filing_url, ''), coalesce(x.source_urls, '{}'))) u
-                      where u ~* '^https?://([a-z0-9-]+\.)*sec\.gov/' limit 1), '') url
-      from funds x where x.firm_id = p_firm and x.data_status = 'real'
-       and btrim(coalesce(x.name, '')) <> ''
-       and x.name !~* '^(funds|newest funds|private funds( on file)?|regulatory aum|assets under management|fund gross assets|aum)$')
-  select count(*) filter (where url <> ''),
-         jsonb_agg(jsonb_build_object('name', name, 'raised_usd', amt, 'date', closed_on, 'url', url)
-                   || case when amt is null then '{}'::jsonb else jsonb_build_object('currency', cur, 'raised_display', public._money_display(amt, cur)) end order by closed_on desc nulls last, name)
-           filter (where url <> '')
-    into n_fsec, fsec from s;
-  if fsec is not null then select jsonb_agg(e) into fsec from (select e from jsonb_array_elements(fsec) e limit 100) z; end if;
-  -- Announced funds (firm's own announcement, not Form D): count + latest announcement total always; rows only after a credit.
-  select count(*), jsonb_agg(jsonb_build_object('name', a.name, 'raised_usd', a.amount_usd, 'raised_display', a.display,
-           'date', a.announced_on, 'url', a.url) order by a.announced_on desc, a.amount_usd desc, a.name)
-    into n_ann, fann from firm_fund_announcements a where a.firm_id = p_firm and a.data_status = 'real';
-  select jsonb_build_object('n', count(*), 'total_usd', sum(a.amount_usd), 'total_display', public._money_display(sum(a.amount_usd), 'USD'),
-           'date', max(a.announced_on), 'url', max(a.url))
-    into ann0 from firm_fund_announcements a
-   where a.firm_id = p_firm and a.data_status = 'real'
-     and (a.announced_on, a.url) = (select b.announced_on, b.url from firm_fund_announcements b
-                                     where b.firm_id = p_firm and b.data_status = 'real' order by b.announced_on desc, b.url limit 1)
-  having count(*) > 0;
-  -- Lab firms only, unlocked, more than 10 deals in 12 months: top 10 sectors plus one Other
-  -- (the rest and deals with no sector). One grouped read of the firm's own deal rows.
-  if p_open and n_deals12 > 10 and public._lab_firm(p_firm) then
-    with g as (
-      select nullif(btrim(c.sector), '') s, count(*)::int n
-        from investments i left join portfolio_companies c on c.id = i.company_id
-       where i.firm_id = p_firm and i.data_status = 'real' and i.invested_on >= since
-       group by 1),
-    r as (select s, n, row_number() over (order by n desc, s) k from g where s is not null)
-    select jsonb_build_object('n', n_deals12,
-             'top', coalesce((select jsonb_agg(jsonb_build_object('s', s, 'n', n) order by k) from r where k <= 10), '[]'),
-             'other', coalesce((select sum(n) from r where k > 10), 0) + coalesce((select n from g where s is null), 0))
-      into sec;
+  -- legal
+  select coalesce(jsonb_agg(jsonb_build_object('grp',l.item_group,'head',coalesce(l.other_party,l.regulator_name)||' v. '||f.display_name,
+      'note',concat_ws('. ',nullif(l.court,''),null),'role',l.side,'tone',null,'year',l.filed_year::text,'state',l.status,
+      'status',case when l.closed_year is not null then l.status||' '||l.closed_year end,'summary',l.case_summary,'summary_url',l.summary_source_url,'summary_date',l.summary_date::text,
+      'src',_v2_src(l.source_url,l.source_date,'CourtListener')) order by l.filed_year desc nulls last),'[]') into it
+    from v2_legal_items l where l.firm_id=fid and l.is_current and not l.archived and not l.nothing_found and not coalesce(l.lead_only,false);
+  if jsonb_array_length(it)>0 then secs := secs || jsonb_build_object('key','legal','title','Legal & regulatory','subtitle','Cases where the firm itself is a party, and regulator records.','renderer','legal','count',jsonb_array_length(it),'unit',case when jsonb_array_length(it)=1 then 'record' else 'records' end,'teaser',it->0->>'head','items',it); end if;
+  -- press
+  select coalesce(jsonb_agg(jsonb_build_object('url',n.source_url,'date',to_char(n.published_date,'Mon FMDD, YYYY'),'head',n.headline,'outlet',n.outlet,
+      'src',_v2_src(n.source_url,n.published_date,n.outlet)) order by n.published_date desc nulls last),'[]') into it
+    from v2_news_items n where n.firm_id=fid and n.is_current and not n.archived and not n.nothing_found and n.headline is not null;
+  if jsonb_array_length(it)>0 then secs := secs || jsonb_build_object('key','press','title','Press coverage','subtitle','Articles naming the firm, with the outlet and date.','renderer','press','count',jsonb_array_length(it),'unit',case when jsonb_array_length(it)=1 then 'article' else 'articles' end,'teaser',it->0->>'head','items',it); end if;
+  -- LPs (M4.8): only Checker-passed rows (is_current) that are not archived. One item per commitment;
+  -- company.js groupLps draws one line per LP name. At most 100 LP names (M4.8.2), biggest total first.
+  -- No LPs = no section (M4.8.3).
+  select coalesce(jsonb_agg(jsonb_build_object('label',c.lp_name,
+      'value',case when c.commitment_amount>0 and coalesce(c.commitment_currency,'USD')='USD' then
+        case when c.commitment_amount>=1e9 then '$'||trim(trailing '.' from trim(trailing '0' from to_char(c.commitment_amount/1e9,'FM999990.0')))||'B'
+             else '$'||trim(trailing '.' from trim(trailing '0' from to_char(c.commitment_amount/1e6,'FM999990.0')))||'M' end
+        when c.commitment_amount>0 then trim(to_char(c.commitment_amount,'FM999999999999990'))||' '||c.commitment_currency else '' end,
+      'type',c.lp_type,'fund',fu.fund_name,'year',c.commitment_year,
+      'src',_v2_src(c.source_url,c.source_date,c.source_type)) order by t.rk, c.commitment_amount desc nulls last, c.row_id),'[]') into it
+    from v2_lp_commitments c
+    join (select lower(trim(lp_name)) k, row_number() over (order by sum(coalesce(commitment_amount,0)) desc, lower(trim(lp_name))) rk
+            from v2_lp_commitments where firm_id=fid and is_current and not archived and not nothing_found group by 1) t on t.k=lower(trim(c.lp_name)) and t.rk<=100
+    left join v2_funds fu on fu.fund_id=c.fund_id
+   where c.firm_id=fid and c.is_current and not c.archived and not c.nothing_found;
+  if jsonb_array_length(it)>0 then
+    secs := secs || jsonb_build_object('key','lps','title','Limited partners','subtitle','Named LP commitments, each with its source.','renderer','facts',
+      'count',(select count(distinct lower(trim(e->>'label'))) from jsonb_array_elements(it) e),
+      'unit',case when (select count(distinct lower(trim(e->>'label'))) from jsonb_array_elements(it) e)=1 then 'LP' else 'LPs' end,'teaser',it->0->>'label','items',it);
   end if;
-  return jsonb_build_object(
-    'active', n_deals12 > 0 or n_close12 > 0, 'deals_12m', n_deals12, 'funds_closed_12m', n_close12,
-    'latest_fund', fund, 'latest_deal', d0, 'latest_review', r0,
-    'counts', jsonb_build_object('deals', n_deals, 'reviews', n_revs),
-    'deals', case when p_open then case when d0 is null then '[]'::jsonb else jsonb_build_array(d0) end end,
-    'reviews', case when p_open then case when r0 is null then '[]'::jsonb else jsonb_build_array(r0) end end,
-    'sector_12m', sec,
-    'funds_announced', jsonb_build_object('n', coalesce(n_ann, 0), 'latest', ann0, 'items', case when p_open then coalesce(fann, '[]'::jsonb) end),
-    'funds_sec', jsonb_build_object('n', coalesce(n_fsec, 0), 'items', case when p_open then coalesce(fsec, '[]'::jsonb) end),
-    'lazy', true);
+  -- people: officers + board seats merged per person
+  select coalesce(jsonb_agg(p order by ord, p->>'head'),'[]') into it from (
+    select 0 ord, jsonb_build_object('head',pe.person_name,'kind','officer','role',r.title,'src',_v2_src(r.source_url,r.source_date,r.source_type)) p
+      from v2_person_firm_roles r join v2_people pe on pe.person_id=r.person_id
+     where r.firm_id=fid and r.kind='officer' and r.is_current and not r.archived
+    union all
+    select 1, jsonb_build_object('head',pe.person_name,'kind','board',
+        'role',case when count(distinct s.startup_name)=1 then 'Board seat: ' else 'Board seats: ' end||string_agg(distinct s.startup_name,', '),
+        'src',(select coalesce(jsonb_agg(x),'[]') from (select distinct on (b2.source_url) _v2_src(b2.source_url,b2.source_date,b2.source_type)->0 x from v2_board_seats b2 where b2.person_id=pe.person_id and b2.is_current and not b2.archived limit 3) z))
+      from v2_board_seats b join v2_people pe on pe.person_id=b.person_id left join v2_startups s on s.startup_id=b.startup_id
+     where b.is_current and not b.archived and exists (select 1 from v2_person_firm_roles r where r.person_id=b.person_id and r.firm_id=fid)
+     group by pe.person_id, pe.person_name) q;
+  if jsonb_array_length(it)>0 then secs := secs || jsonb_build_object('key','people','title','People & board seats','subtitle','Officers, partner moves and board seats.','renderer','people','count',jsonb_array_length(it),'unit',case when jsonb_array_length(it)=1 then 'person' else 'people' end,'teaser',it->0->>'head','items',it); end if;
+  return json_build_object('status','ok','open',true,'unchecked',false,'done',null,'source','v2',
+    'firm',json_build_object('slug',f.slug,'name',f.display_name,'sec_name',coalesce(f.legal_name,f.display_name),'short_name',f.short_name,'hq',hq,'website',f.website_url,'assets',null,
+       'social','[]'::json,'founded_year',f.founded_year,
+       'contact_email',nullif(trim(ct.contact_email),''),'contact_phone',nullif(trim(ct.contact_phone),''),'apply_link',nullif(trim(ct.apply_link),''),
+       'money',case when aum.row_id is not null then json_build_object('aum',json_build_object('display',case when aum.aum_amount>=1e9 then '$'||trim(trailing '.' from trim(trailing '0' from to_char(aum.aum_amount/1e9,'FM999990.0')))||'B' else '$'||trim(trailing '.' from trim(trailing '0' from to_char(aum.aum_amount/1e6,'FM999990.0')))||'M' end,'url',aum.source_url,'date',aum.source_date::text,'source_label','SEC Form ADV')) else '{}'::json end),
+    'hero',(case when hq is not null then jsonb_build_array(jsonb_build_object('label','HQ','value',hq,'anchor','overview','src',_v2_src(f.hq_source->>'url',(f.hq_source->>'date')::date,'SEC IAPD'))) else '[]'::jsonb end) || sp,
+    'sections',secs,'checks','[]'::json,'queue',null,'started_at',null,'details','[]'::json,'outline',null,'ondemand',null,
+    'activity',json_build_object('lazy',false,'active',true,'deals',deals,'reviews','[]'::json,'latest_deal',deals->0,'latest_review',null,'latest_fund',lf,
+       'counts',json_build_object('deals',jsonb_array_length(deals),'reviews',0),'deals_12m',jsonb_array_length(d12),
+       'sector_12m',(select json_build_object('n',jsonb_array_length(d12),'top',coalesce((select json_agg(json_build_object('s',s,'n',n) order by n desc,s) from (select e->>'sector' s,count(*) n from jsonb_array_elements(d12) e where e->>'sector' is not null group by 1 order by 2 desc limit 10) t),'[]'),
+          'other',jsonb_array_length(d12)-coalesce((select sum(n) from (select count(*) n from jsonb_array_elements(d12) e where e->>'sector' is not null group by e->>'sector' order by 1 desc limit 10) t),0))),
+       'funds_announced',json_build_object('n',jsonb_array_length(fa),'latest',fal,'items',fa),
+       'funds_sec',json_build_object('n',jsonb_array_length(funds),'items',funds),'funds_closed_12m',(select count(*) from jsonb_array_elements(funds) e where e->>'date' >= (current_date-365)::text)));
 end $function$
-;
+$m3$;
+end $mig$;

@@ -10,6 +10,6 @@ select json_build_object(
  'context', (select coalesce(json_agg(c),'[]') from vc_context_notes c where firm_id=(select id from f) and data_status='real'),
  'aliases', (select coalesce(json_agg(json_build_object('type',alias_type,'value',value)),'[]') from vc_aliases where firm_id=(select id from f)),
  'team', (select coalesce(json_agg(json_build_object('name',person_name,'value',value,'source_url',source_url,'source_label',source_label,'retrieved_at',retrieved_at)),'[]') from vc_partner_history where firm_id=(select id from f) and data_status='real' and kind='team'),
- 'funds_announced', (select coalesce(json_agg(json_build_object('name',a.name,'amount_usd',a.amount_usd,'display',a.display,'date',a.announced_on,'url',a.url,'retrieved_on',a.retrieved_on) order by a.announced_on desc, a.amount_usd desc),'[]') from firm_fund_announcements a where a.firm_id=(select id from f) and a.data_status='real'),
+ 'funds_announced', (select coalesce(json_agg(json_build_object('name',a.name,'amount_usd',a.amount_usd,'display',a.display,'date',a.announced_on,'url',a.url,'retrieved_on',a.retrieved_on) order by a.announced_on desc, a.amount_usd desc),'[]') from firm_fund_announcements a where a.firm_id=(select firm_id from v2_firms where slug=:slug)),
  'needs_proof_count', (select (select count(*) from vc_source_facts where firm_id=(select id from f) and data_status='needs_proof') + (select count(*) from vc_context_notes where firm_id=(select id from f) and data_status='needs_proof'))
 ) as j;
