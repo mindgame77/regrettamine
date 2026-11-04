@@ -529,25 +529,16 @@
     const block = (title, xs) => xs.length ? '<h3>' + esc(title) + ' · ' + xs.length + '</h3><div class="pcards">' + xs.map(partnerCard).join('') + '</div>' : '';
     return block((COPY.people && COPY.people.officer) || 'Officers', partners) + block((COPY.people && COPY.people.board) || 'Board seats', board);
   }
+  // Legacy founders section: same A2 card as the activity block (quote only, no summary).
   function founderCard(x) {
-    const quote = String(x.snippet || '').trim();
-    const head = String(x.head || '').trim();
-    const sum = String(x.summary || '').trim() || (quote && head && head !== quote && head.length <= 150 ? head : '');
-    const year = yearOf(x.date);
     const u = safeUrl(x.url) || ((x.src || []).map(s => safeUrl(s && s.url)).filter(Boolean)[0] || '');
-    const who = x.outlet || '';
-    return '<div class="arv ' + toneName(x) + '">'
-      + (sum ? '<p class="arsm"><span class="k">' + esc(AC.summary || 'Summary') + '</span> <b>' + esc(sum) + '</b></p>' : '')
-      + (quote ? '<p class="aq">“' + esc(quote) + '”</p>' : (!sum && head ? '<p class="aq">' + esc(head) + '</p>' : ''))
-      + '<p class="arat">' + esc(who) + (year ? (who ? ' · ' : '') + esc(year) : '')
-      + (u ? ((who || year) ? ' · ' : '') + '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(capL(AC.source || 'Source')) + '</a>' : '')
-      + '</p></div>';
+    return revCard({ quote: x.snippet || x.head, author: x.author || x.outlet, role: x.role, company: x.company, date: x.date, url: u, tone: x.tone });
   }
   function founderBlock(it, P) {
     const rows = it || [], shown = rows.slice(0, 3);
     let h = '<div class="arvs">' + shown.map(founderCard).join('') + '</div>';
     if (rows.length > 3) {
-      h += '<button type="button" class="ash"' + (P && P.open ? ' data-open="actfound"' : ' data-gate') + '>' + esc(pl(AC.all_reviews, rows.length)) + ' ↓</button>';
+      h += '<button type="button" class="ash"' + (P && P.open ? ' data-open="actfound"' : ' data-gate') + '>' + esc(pl(AC.all_reviews, rows.length)) + '</button>';
       if (P && P.open) actModal('actfound', fmt(AC.reviews_title, { n: rows.length, firm: (P.firm && P.firm.name) || '' }), rows.map(founderCard).join(''));
     }
     return h;
@@ -1407,7 +1398,7 @@
   }
   const TYPE_PILL = { founder: 'tf', employee: 'te', portfolio: 'tp', company: 'tc', firm_voice: 'tv', aggregator: 'ta' };
   const typePill = (t) => { const T = AC.types || {}, k = t || 'founder'; return T[k] ? '<span class="arty ' + (TYPE_PILL[k] || '') + '">' + esc(T[k]) + '</span>' : ''; };
-  // A2 compact card: the summary is the quote (bold, in quotes); one grey line "— Name, Role of Company · year · site".
+  // A2 compact card: the founder's exact quote (bold, in quotes; no summary); one grey line "— Name, Role of Company · year · site".
   // Role and company come from v2_reviews (G5: shown only when sourced); a blank one is left out.
   function reviewerLine(r) {
     const name = String(r.author || '').trim();
@@ -1421,8 +1412,7 @@
     const u = safeUrl(r.url);
     const who = reviewerLine(r);
     const year = yearOf(r.date);
-    const sum = String(r.summary || '').trim();
-    const text = (sum && sum.length <= 150 ? sum : String(r.body || '').trim()).replace(/^[“"]+|[”"]+$/g, '').replace(/\.$/, '');
+    const text = String(r.quote || r.body || '').trim().replace(/^[“"]+|[”"]+$/g, '').replace(/\.$/, '');
     return '<div class="arv ac2 ' + toneName(r) + '">'
       + (text ? '<p class="arsm"><b>“' + esc(text) + '”</b></p>' : '')
       + '<p class="arat">' + (who ? '— ' + esc(who) : '') + (year ? (who ? ' · ' : '') + esc(year) : '')
