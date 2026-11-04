@@ -313,7 +313,10 @@ def launch_firms():
             rows = _rpc('firm_meta', {'p_slug': slug})
             if rows: firms.append(rows[0])
         missing = [s for s in LAB_SLUGS if s not in {f['slug'] for f in firms}]
-        if missing: raise SystemExit('launch build: firm_meta missing lab firms: ' + ', '.join(missing))
+        if not firms:
+            raise SystemExit('launch build: firm_meta missing lab firms: ' + ', '.join(missing))
+        if missing:
+            print('launch build: firm_meta has no published row for: ' + ', '.join(missing) + ' (building the firms it returned)')
         return firms
     slugs, page_n = [], 1
     while True:
