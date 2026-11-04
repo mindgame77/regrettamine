@@ -1339,7 +1339,7 @@
     const src = (u) => u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(hostOf(u)) + '>' + esc(capL(hostOf(u))) + ' ↗</a>' : '<span></span>';
     if (lab) return '<div class="adl"><div class="ad adh s5"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_sector) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + ds.map(d => { const u = safeUrl(d.url), r = [labRound(d.round), dealAmt(d.amount, d.currency), d.lead ? AC.lead : ''].filter(Boolean).join(' · ');
-        return '<div class="ad s5"><b>' + esc(d.company || '') + '</b>' + (d.sector ? '<span class="arty"' + (SEC_MAP ? ' style="color:' + (SEC_MAP[String(d.sector).trim()] || 'var(--mute)') + '"' : '') + '>' + esc(d.sector) + '</span>' : '<span></span>')
+        return '<div class="ad s5"><b>' + esc(d.company || '') + '</b>' + (d.sector ? '<span class="arty"' + ' style="color:' + (SECTOR_COLORS[String(d.sector).trim()] || 'var(--mute)') + '"' + '>' + esc(d.sector) + '</span>' : '<span></span>')
           + '<span>' + esc(r) + '</span><span>' + esc(fdate(d.date) || '') + '</span>' + src(u) + '</div>'; }).join('') + '</div>';
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + ds.map(d => { const u = safeUrl(d.url);
@@ -1357,7 +1357,7 @@
     'Security': '#161669', 'Crypto': '#0b50da', 'Hardware & Robotics': '#793606', 'Mobility': '#258cf4', 'Real estate': '#098faa',
     'Education': '#790649', 'Media & Gaming': '#931f8a', 'Food & Agriculture': '#aa8f09', 'Other': 'var(--mute)'
   };
-  // One color per sector across the page: set by sectorShare (top 5 = their bar color, anything else grey), read by dealRows pills.
+  // Top-5 color map set by sectorShare. Deal pills use SECTOR_COLORS for every sector (only the real "Other" tag is grey).
   let SEC_MAP = null;
   function sectorShare(A) {
     SEC_MAP = null;
