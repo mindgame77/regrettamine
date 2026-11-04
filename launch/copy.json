@@ -115,14 +115,6 @@
     "unit_many": "items"
    },
    {
-    "key": "founders",
-    "title": "What founders say",
-    "subtitle": "Accounts from founders, each with its source.",
-    "renderer": "founders",
-    "unit_one": "account",
-    "unit_many": "accounts"
-   },
-   {
     "key": "people",
     "title": "People & board seats",
     "subtitle": "Officers, partner moves and board seats.",
