@@ -556,14 +556,9 @@
     if (/^(neg|negative|red|bad)$/.test(t)) return 'neg';
     return 'neu';
   }
-  // E1: Team is only the firm's CEO and founders. v2_firm_page sends kind 'team' for those live rows.
-  // A payload that still has the older partner/officer shape keeps a founder (is_founder or badge) or a CEO title.
+  // E1: Team is only rows v2_firm_page marks kind 'team' (the firm's CEO and founders).
   function isTeamPerson(x) {
-    if (!x || isNoteText(x.head) || x.kind === 'board' || x.kind === 'move') return false;
-    if (x.kind === 'team') return true;
-    if (x.is_founder === true) return true;
-    if (/\bfounder\b/i.test(x.badge || '') && !isLeadTag(x.badge)) return true;
-    return /\bCEO\b|chief executive officer/i.test(String(x.role || ''));
+    return !!(x && x.kind === 'team' && !isNoteText(x.head));
   }
   function teamPeople(it) {
     return (it || []).filter(isTeamPerson);

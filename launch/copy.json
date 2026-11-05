@@ -649,14 +649,6 @@
    "summary_date": "Summary {d}",
    "summary_source": "Source: {site}"
   },
-  "people": {
-   "board": "Board seats",
-   "move": "Partner moves",
-   "officer": "Officers",
-   "shown": "",
-   "all": ["Show all {n} partner", "Show all {n} partners"],
-   "all_title": "{n} partners · {firm}"
-  },
   "lps": {
    "all": ["Show all {n} LP", "Show all {n} LPs"],
    "all_title": "{n} LPs · {firm}"
