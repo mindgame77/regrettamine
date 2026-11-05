@@ -50,6 +50,7 @@ test('officers are counted and board seats are not', () => {
   const s = pageSecs(page([...officers, ...board])).find(x => x.key === 'people');
   assert.equal(s.count, 3);
   assert.equal(s.title, 'People');
+  assert.equal(s.subtitle, 'Partners and officers.');
   assert.doesNotMatch(s.title + ' ' + s.subtitle, /board/i);
 });
 test('only board seats = no people section', () => {

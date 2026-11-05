@@ -117,7 +117,7 @@
    {
     "key": "people",
     "title": "People",
-    "subtitle": "Officers named in SEC filings.",
+    "subtitle": "Partners and officers.",
     "renderer": "people",
     "unit_one": "person",
     "unit_many": "people"
@@ -644,7 +644,8 @@
   "people": {
    "board": "Board seats",
    "move": "Partner moves",
-   "officer": "Officers"
+   "officer": "Officers",
+   "shown": "Partners and officers"
   },
   "commitments": "{n} commitments",
   "outlets": ["{n} outlet", "{n} outlets"],
