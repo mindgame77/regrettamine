@@ -59,6 +59,7 @@
     return window.RegretDate.caseYear(x.title || x.head || x.case || x.kind || '', x.note || x.text || '', x.year);
   };
   const HCOPY = COPY.header || {};
+  const VCOPY = COPY.videos || {};
   // Regulatory AUM and Fund gross assets stay two figures. A stored "Assets" / "AUM" label that names
   // gross assets (and not regulatory AUM) reads as Fund gross assets; any other assets figure reads as Regulatory AUM.
   function assetLabel(label, value) {
@@ -79,9 +80,18 @@
     try { host = new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return ''; }
     return host ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(host) + '</a>' : '';
   }
+  // Flag emoji from an ISO alpha-2 code (U+1F1E6 is the regional indicator for A). Anything else is unknown: no flag.
+  function countryFlag(code) {
+    const c = String(code == null ? '' : code).trim().toUpperCase();
+    if (!/^[A-Z]{2}$/.test(c)) return '';
+    return String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65, 0x1F1E6 + c.charCodeAt(1) - 65);
+  }
   function metaLine(P) {
     const firm = P.firm || {};
-    const bits = [firm.hq, firm.short_name].filter(Boolean).map(x => esc(nice(x)));
+    // The flag sits after the HQ city. US stays "City, ST". No country name. No city: no flag.
+    const flag = firm.hq ? countryFlag(firm.hq_country) : '';
+    const hq = firm.hq ? esc(nice(firm.hq)) + (flag ? ' ' + flag : '') : '';
+    const bits = [hq, firm.short_name ? esc(nice(firm.short_name)) : ''].filter(Boolean);
     const link = siteLink(P);
     const y = Number(firm.founded_year);
     const fy = Number.isInteger(y) && y > 1000 && y <= new Date().getFullYear() ? esc((HCOPY.founded || 'Founded {y}').replace('{y}', String(y))) : '';
@@ -585,6 +595,64 @@
     if (!xs.length) return '';
     return '<div class="tcards">' + xs.map(teamCard).join('') + '</div>';
   }
+  // Videos: up to 3 YouTube interviews for the firm, most views first. No YouTube id, or no rows: nothing.
+  function youtubeId(url) {
+    const u = safeUrl(url);
+    if (!u) return '';
+    let p;
+    try { p = new URL(u); } catch (e) { return ''; }
+    const host = p.hostname.replace(/^www\./, '').toLowerCase();
+    let id = '';
+    if (host === 'youtu.be') id = (p.pathname.split('/').filter(Boolean)[0] || '');
+    else if (host === 'youtube.com' || host === 'm.youtube.com' || host === 'music.youtube.com' || host === 'youtube-nocookie.com') {
+      const parts = p.pathname.split('/').filter(Boolean);
+      if (parts[0] === 'watch') id = p.searchParams.get('v') || '';
+      else if (parts.length >= 2 && /^(embed|shorts|live|v)$/.test(parts[0])) id = parts[1];
+    }
+    id = String(id).split(/[?&#]/)[0];
+    return /^[A-Za-z0-9_-]{11}$/.test(id) ? id : '';
+  }
+  function videoViews(v) {
+    if (v == null || v === '') return null;
+    const n = Number(v);
+    if (!Number.isFinite(n) || n < 0) return null;
+    return Math.floor(n);
+  }
+  function groupNum(n) {
+    return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+  function videoRows(items) {
+    return (items || []).map((x, i) => {
+      if (!x) return null;
+      const url = safeUrl(x.url || '');
+      const id = youtubeId(url);
+      const title = String(x.title == null ? '' : x.title).trim();
+      if (!url || !id || !title) return null;
+      return { url, id, title, channel: String(x.channel == null ? '' : x.channel).trim(), date: x.date || '', views: videoViews(x.views), i };
+    }).filter(Boolean).sort((a, b) => {
+      if (a.views == null && b.views == null) return a.i - b.i;
+      if (a.views == null) return 1;
+      if (b.views == null) return -1;
+      return b.views - a.views || a.i - b.i;
+    }).slice(0, 3);
+  }
+  function videoTile(x) {
+    const parts = [];
+    if (x.channel) parts.push(esc(x.channel));
+    const d = fdate(x.date);
+    if (d) parts.push(esc(d));
+    if (x.views != null) parts.push(esc(fmt(VCOPY.views || '{n} views', { n: groupNum(x.views) })));
+    const meta = parts.join(' · ');
+    return '<a class="vtile" href="' + esc(x.url) + '" target="_blank" rel="noopener">'
+      + '<img src="https://i.ytimg.com/vi/' + esc(x.id) + '/hqdefault.jpg" alt="" width="480" height="270" loading="lazy">'
+      + '<b>' + esc(x.title) + '</b>'
+      + (meta ? '<span>' + meta + '</span>' : '') + '</a>';
+  }
+  function videoSection(it) {
+    const rows = videoRows(it);
+    if (!rows.length) return '';
+    return '<div class="vgrid">' + rows.map(videoTile).join('') + '</div>';
+  }
   function newsBlock(it, P) {
     const rows = it || [], shown = rows.slice(0, 5);
     let h = '<div class="pgr">' + shown.map(x => card(x, true)).join('') + '</div>';
@@ -603,6 +671,7 @@
     press: (it) => '<div class="pgr">' + it.map(x => card(x, true)).join('') + '</div>',
     news: (it, P) => newsBlock(it, P),
     people: (it, P) => personSection(it, P),
+    videos: (it) => videoSection(it),
     timeline: (it) => {
       const rows = it.map((x, i) => ({ x, i })).sort((a, b) => {
         const sa = window.RegretDate ? window.RegretDate.stamp(a.x.date) : null, sb = window.RegretDate ? window.RegretDate.stamp(b.x.date) : null;
@@ -978,6 +1047,15 @@
         const n = teamPeople(s.items).length;
         if (!n) return null;
         s.count = n;
+        s.nocount = true;
+        s.subtitle = '';
+      }
+      // Videos: at most 3, most views first. None = no section, chip, or nav entry. No count and no source pill.
+      if (s.key === 'videos') {
+        const rows = videoRows(s.items);
+        if (!rows.length) return null;
+        s.items = rows;
+        s.count = rows.length;
         s.nocount = true;
         s.subtitle = '';
       }

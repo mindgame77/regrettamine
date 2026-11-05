@@ -491,6 +491,15 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 .tcard .tsoc-a:hover{background:#DDDBE6}
 @media (max-width:640px){.tcards{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:640px){.socp .sc.soc{padding:4px 10px}}
+/* Videos: up to 3 YouTube tiles inside the section card. No source pill. */
+.vgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px}
+.vtile{display:flex;flex-direction:column;min-width:0;color:inherit;text-decoration:none}
+.vtile img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:12px;background:#14112B;display:block}
+.vtile b{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-top:10px;color:var(--ink);font-size:15.5px;font-weight:700;line-height:1.35}
+.vtile span{display:block;margin-top:6px;color:var(--mute);font-size:13px;font-weight:400;line-height:1.4}
+.vtile:hover b{text-decoration:underline}
+.vtile:focus-visible{outline:2px solid var(--vio);outline-offset:3px;border-radius:12px}
+@media (max-width:640px){.vgrid{grid-template-columns:minmax(0,1fr);gap:22px}.vtile b{display:block;-webkit-line-clamp:unset;overflow:visible}}
 /* Legal case summary under the pills (Alex 2026-10-29, mockup 12-legal-summary). */
 .lsum{margin-top:10px;padding:10px 12px;border-left:3px solid var(--vio);background:var(--viobg);border-radius:8px;overflow-wrap:anywhere}
 .lsum .lsum-t{margin:0;color:var(--ink);font-size:14px;line-height:1.5}
