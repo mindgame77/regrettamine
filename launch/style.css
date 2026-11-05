@@ -473,7 +473,7 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 .rw.lg .rm{display:flex;flex-wrap:wrap;align-items:center;gap:6px 0}.rw.lg .scs{display:inline-flex;flex-wrap:wrap;gap:6px}
 .rw.lg-act{background:var(--revbg);border-left:4px solid var(--rev);border-radius:6px;padding-left:14px;padding-right:14px;border-bottom-color:transparent;margin-bottom:2px}.rw.lg-act .rt{color:var(--rev)}
 /* Social pills under the firm meta line (firm_page.firm.social): the existing .sc pill with the platform logo and count */
-.ph .socp{max-height:none}
+.socp{max-height:none}
 .sc.soc{display:inline-flex;align-items:center;gap:6px}.sc.soc b{font-weight:700}
 .sc.soc:hover{text-decoration:underline}.sc.soc:focus-visible{outline:2px solid var(--vio);outline-offset:2px}.sc.soc svg{flex:none;display:block}
 /* Industries and stages: grey neutral pills under the social row, above the activity cards. No source. */
@@ -485,10 +485,8 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 /* Team (E1): CEO and founders only. Same light grey rounded surface as a neutral news card. */
 .tcards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
 .tcard{background:#F3F2F7;border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:2px;min-width:0}
-.tcard b{color:var(--ink);font-size:16px;font-weight:700}
+.tcard > b{color:var(--ink);font-size:16px;font-weight:700}
 .tcard .trole{color:var(--ink2);font-size:14.5px;margin-top:2px}
-.tcard .tsoc{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.tcard .tsoc .sc{margin:0}
 @media (max-width:640px){.tcards{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:640px){.socp .sc.soc{padding:4px 10px}}
 /* Videos: up to 3 YouTube tiles inside the section card. No source pill. */

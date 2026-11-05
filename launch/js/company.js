@@ -127,7 +127,7 @@
       return String(r) + units[i][1];
     }
   }
-  function socPill(a, withName) {
+  function socPill(a) {
     if (!a || !SOC_SVG[a.platform] || !/^https:\/\//i.test(a.url || '') || compactCount(a.followers) === '') return '';
     const base = (SOC.names || {})[a.platform] || a.platform, c = compactCount(a.followers);
     const region = typeof a.region === 'string' ? a.region.trim() : '';
@@ -135,7 +135,7 @@
     const aria = (SOC.aria || '{platform}: {count}').replace('{platform}', name).replace('{count}', c);
     return '<a class="sc soc" href="' + esc(a.url) + '" target="_blank" rel="noopener" aria-label="' + esc(aria) + '" title="' + esc(name) + '">' +
       '<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + SOC_SVG[a.platform] + '</svg>' +
-      (withName ? esc(name) + ' ' : (region ? esc(region) + ' ' : '')) + '<b>' + esc(c) + '</b></a>';
+      (region ? esc(region) + ' ' : '') + '<b>' + esc(c) + '</b></a>';
   }
   function socialPills(P) {
     return ((P.firm || {}).social || []).map(a => socPill(a)).filter(Boolean).join('');
@@ -572,13 +572,13 @@
     const pills = [];
     const li = httpsHost(x.linkedin_url, /(^|\.)linkedin\.com$/i);
     const xu = httpsHost(x.x_url, /(^|\.)(x\.com|twitter\.com)$/i);
-    if (li) pills.push(socPill({ platform: 'linkedin', url: li, followers: x.linkedin_followers }, true));
-    if (xu) pills.push(socPill({ platform: 'x', url: xu, followers: x.x_followers }, true));
+    if (li) pills.push(socPill({ platform: 'linkedin', url: li, followers: x.linkedin_followers }));
+    if (xu) pills.push(socPill({ platform: 'x', url: xu, followers: x.x_followers }));
     const links = pills.filter(Boolean);
     const role = String(x.role || '').trim();
     return '<div class="tcard"><b>' + esc(x.head || '') + '</b>'
       + (role ? '<span class="trole">' + esc(role) + '</span>' : '')
-      + (links.length ? '<div class="tsoc">' + links.join('') + '</div>' : '') + '</div>';
+      + (links.length ? '<div class="secp socp">' + links.join('') + '</div>' : '') + '</div>';
   }
   function personSection(it) {
     const xs = teamPeople(it);
