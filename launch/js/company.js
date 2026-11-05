@@ -505,13 +505,14 @@
     if (!left) { const m = blob.match(/\b(?:left(?: in)?|departed|resigned)\s+((?:19|20)\d{2})\b/i); if (m) left = m[1]; }
     return { joined, left };
   }
+  // G7.8: Team cards (page and Show all pop-up) show no source pill; x.src stays in the data (Alex 2026-11-04 4:39 PM PT).
   function partnerCard(x) {
     const y = personYears(x);
     let cls = 'pcard', line = '';
     if (y.left && within12(y.left)) { cls += ' pleft'; line = fmt(AC.left_in || 'Left in {year}', { year: y.left }); }
     else if (y.joined) { if (within12(y.joined)) cls += ' pjoin'; line = fmt(AC.partner_since || 'Partner since {year}', { year: y.joined }); }
     const founder = !/\bfounder\b/i.test(x.role || '') && /\bfounder\b/i.test(x.badge || '') && !isLeadTag(x.badge) ? ' <em class="pfnd">' + esc(AC.founder_tag || 'Founder') + '</em>' : '';
-    return '<div class="' + cls + '"><b>' + esc(nice(x.head || '')) + founder + '</b><span>' + esc(x.role || '') + '</span>' + (line ? '<span class="psince">' + esc(line) + '</span>' : '') + chips(x.src) + '</div>';
+    return '<div class="' + cls + '"><b>' + esc(nice(x.head || '')) + founder + '</b><span>' + esc(x.role || '') + '</span>' + (line ? '<span class="psince">' + esc(line) + '</span>' : '') + '</div>';
   }
   // People shown on the page. Board seats are kept in the data but never shown (Alex 2026-11-04).
   // SEC Form ADV officers (kind 'officer', E2.1 source L1) are shown as listed; their titles (CLO, COO...) are not partner titles.
@@ -1608,5 +1609,5 @@
     view.total = full.total; view.head = full.head;
     return view;
   }
-  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows, setFirmName, compactCount, socialPills, metaLine, fundRows, aumFigure };
+  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows, setFirmName, compactCount, socialPills, metaLine, fundRows, aumFigure, partnerCard };
 })();
