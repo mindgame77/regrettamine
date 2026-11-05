@@ -56,9 +56,9 @@ def test_rollout_flag_selects_every_local_snapshot(monkeypatch):
 
 def test_live_check_workflow_and_deploy_guard():
     live = (ROOT / 'scripts' / 'check_live_reports.mjs').read_text()
-    m = re.search(r"REGRET_FIRMS \|\| '([^']+)'", live)
-    assert m.group(1).split(',') == list(LAB)
-    assert 'forbion' not in m.group(1)
+    assert 'REGRET_FIRMS' not in live
+    assert 'sitemap.xml' in live
+    assert 'y-combinator,sequoia' not in live
     y = (ROOT / '.github' / 'workflows' / 'pages.yml').read_text()
     assert "docs/**" in y and "'*.md'" in y and "'**/*.md'" in y
     assert 'cancel-in-progress: false' in y

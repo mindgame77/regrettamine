@@ -128,8 +128,12 @@ const STATIC = ['', 'how-we-check/', 'privacy/', 'terms/'];
 const XML = 'application/xml; charset=utf-8';
 const xmlEsc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+const rpcDown = () => new Response('Temporary error, please retry.', { status: 503, headers: { 'cache-control': 'no-store', 'retry-after': '30' } });
+
 export async function sitemapIndex({ env, fetchImpl = fetch }) {
-  const rows = await rpc(env, fetchImpl, 'firm_sitemap', { p_page: 1, p_size: 1 });
+  let rows;
+  try { rows = await rpc(env, fetchImpl, 'firm_sitemap', { p_page: 1, p_size: 1 }); }
+  catch (e) { return rpcDown(); }
   const total = rows.length ? Number(rows[0].total) : 0;
   const n = Math.max(1, Math.ceil(total / SITEMAP_SIZE));
   const locs = ['sitemaps/static.xml', ...Array.from({ length: n }, (_, i) => `sitemaps/firms-${i + 1}.xml`)];
@@ -144,7 +148,9 @@ export async function sitemapPart({ name, env, fetchImpl = fetch }) {
   else {
     const m = /^firms-([1-9][0-9]{0,4})\.xml$/.exec(name);
     if (!m) return new Response('Not found', { status: 404 });
-    const rows = await rpc(env, fetchImpl, 'firm_sitemap', { p_page: Number(m[1]), p_size: SITEMAP_SIZE });
+    let rows;
+    try { rows = await rpc(env, fetchImpl, 'firm_sitemap', { p_page: Number(m[1]), p_size: SITEMAP_SIZE }); }
+    catch (e) { return rpcDown(); }
     if (!rows.length) return new Response('Not found', { status: 404 });
     urls = rows.flatMap((r) => {
       const lm = r.updated_at ? String(r.updated_at).slice(0, 10) : null;

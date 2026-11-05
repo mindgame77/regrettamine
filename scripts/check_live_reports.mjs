@@ -5,7 +5,7 @@
 import { chromium } from 'playwright';
 
 const BASE = (process.env.REGRET_BASE || 'https://regretamin.com/').replace(/\/?$/, '/');
-const FIRMS = (process.env.REGRET_FIRMS || 'a16z,y-combinator,sequoia,lightspeed,generalcatalyst,plugandplay,accel,greenoaks,khosla-ventures,mio-partners').split(',');
+// Published firm pages are whatever the live sitemap lists. A hardcoded lab list checks firms that 404.
 const problems = [];
 const fail = (m) => { problems.push(m); console.log('FAIL ' + m); };
 const ok = (m) => console.log('ok   ' + m);
@@ -67,7 +67,13 @@ try {
         if (!g.unlocked || !g.lockHidden) errs.push('lock panel still showing');
         if (/blur\(10px\)/.test(g.blur) || g.rows) errs.push('page is blurred');
         if (body.details == null) errs.push('details missing');
-        if (!(body.checks || []).length || (body.checks || []).some(c => c.state == null)) errs.push('checks missing their results');
+        // An open page with no check rows shows the 10 names as Not checked yet (no results to be missing).
+        // A row that is returned still has to carry its result.
+        if ((body.checks || []).some(c => c.state == null)) errs.push('checks missing their results');
+        else if (!(body.checks || []).length) {
+          const shown = await page.locator('#panel-checks').textContent();
+          if (!/Not checked yet/.test(shown || '')) errs.push('no check rows and Not checked yet is not shown');
+        }
         if (view === 'full' && !(body.sections || []).length) errs.push('no sections');
         return errs.length ? fail(slug + ' ' + view + ': lock is off but ' + errs.join('; ')) : ok(slug + ' ' + view + ': lock off, unlocked, no blur, no lock panel');
       }
@@ -82,23 +88,7 @@ try {
       return errs.length ? fail(slug + ' ' + view + ': lock is on but ' + errs.join('; ')) : ok(slug + ' ' + view + ': lock on, blurred placeholder + card, response has check names only');
     } finally { page.off('response', on); }
   }
-  for (const slug of FIRMS) await checkFirm(slug, BASE + 'vc/' + slug + '/', 'summary');
-
-  // How we check
-  { const r = await page.goto(BASE + 'how-we-check/', { waitUntil: 'domcontentloaded', timeout: 45000 });
-    if (!r || r.status() !== 200) fail('how-we-check: status ' + (r && r.status()));
-    else if (!(await page.locator('nav a.on[href$="how-we-check/"]').count())) fail('how-we-check: nav link not active'); else ok('how-we-check: page and active nav link'); }
-
-  // Full pages follow the same switch. The firm name stays public either way.
-  for (const slug of FIRMS) {
-    await checkFirm(slug, BASE + 'vc/' + slug + '/full/', 'full');
-    if (/Toxy/.test(await page.content())) fail(slug + ': Toxy is still in the page');
-    const h1 = ((await page.textContent('h1').catch(() => '')) || '').trim(); if (!h1) fail(slug + ': no firm name');
-  }
-
-  // Sitemap
-  // regretamin.com (GitHub Pages) serves one <urlset>; Cloudflare serves a <sitemapindex>
-  // whose child locs use the canonical host, so fetch each child from BASE.
+  // Sitemap first: it is the published set. A broken sitemap fails here and no firm page is invented.
   const sm = await page.request.get(BASE + 'sitemap.xml');
   let xml = sm.ok() ? await sm.text() : '';
   let kind = 'urlset';
@@ -112,16 +102,25 @@ try {
     }
     xml = kids.length ? all : '';
   }
+  const FIRMS = [...new Set([...xml.matchAll(/\/vc\/([a-z0-9-]+)\//g)].map(m => m[1]))];
   if (!/<urlset/.test(xml)) fail('sitemap.xml missing or invalid (' + sm.status() + ')');
-  else {
-    const locs = (xml.match(/<loc>/g) || []).length;
-    const miss = FIRMS.filter(s => !xml.includes('/vc/' + s + '/'));
-    // firm_sitemap returns 1,000 rows. Firms past that cap are still on the site; the page checks above cover them.
-    if (miss.length && locs >= 1000) console.log('warn sitemap.xml lacks ' + miss.join(',') + ' (known 1,000-firm sitemap cap, postponed)');
-    else if (miss.length) fail('sitemap.xml lacks ' + miss.join(','));
-    else ok('sitemap.xml (' + kind + '): ' + locs + ' urls');
-  }
+  else if (!FIRMS.length) fail('sitemap lists no published firm pages');
+  else ok('sitemap.xml (' + kind + '): ' + ((xml.match(/<loc>/g) || []).length) + ' urls, ' + FIRMS.length + ' firms');
   if (/\/full\/<\/loc>/.test(xml)) fail('sitemap lists /full/ pages (they are noindex)'); else ok('sitemap: no /full/ pages');
+
+  for (const slug of FIRMS) await checkFirm(slug, BASE + 'vc/' + slug + '/', 'summary');
+
+  // How we check
+  { const r = await page.goto(BASE + 'how-we-check/', { waitUntil: 'domcontentloaded', timeout: 45000 });
+    if (!r || r.status() !== 200) fail('how-we-check: status ' + (r && r.status()));
+    else if (!(await page.locator('nav a.on[href$="how-we-check/"]').count())) fail('how-we-check: nav link not active'); else ok('how-we-check: page and active nav link'); }
+
+  // Full pages follow the same switch. The firm name stays public either way.
+  for (const slug of FIRMS) {
+    await checkFirm(slug, BASE + 'vc/' + slug + '/full/', 'full');
+    if (/Toxy/.test(await page.content())) fail(slug + ': Toxy is still in the page');
+    const h1 = ((await page.textContent('h1').catch(() => '')) || '').trim(); if (!h1) fail(slug + ': no firm name');
+  }
 
   // SEO head: summary indexable + self canonical; /full/ noindex, follow + self canonical; paywall JSON-LD on both
   for (const slug of FIRMS) for (const full of [false, true]) {

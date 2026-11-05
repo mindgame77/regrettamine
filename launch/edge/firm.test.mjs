@@ -85,6 +85,14 @@ test('full report is noindex, follow with self canonical; summary indexable; pay
   for (const h of [s, f]) assert.ok(h.includes('"isAccessibleForFree":false,"hasPart":{"@type":"WebPageElement","isAccessibleForFree":false,"cssSelector":".gveil"}'));
 });
 
+test('sitemap RPC down is 503, not an uncaught worker error', async () => {
+  const down = async () => new Response('no', { status: 401 });
+  for (const r of [await sitemapIndex({ env, fetchImpl: down }), await sitemapPart({ name: 'firms-1.xml', env, fetchImpl: down })]) {
+    assert.equal(r.status, 503);
+    assert.equal(r.headers.get('cache-control'), 'no-store');
+  }
+});
+
 test('split sitemaps', async () => {
   const idx = await (await sitemapIndex({ env, fetchImpl: db() })).text();
   assert.equal((idx.match(/<sitemap>/g) || []).length, 3); // static + 2 firm files for 12,345 firms
