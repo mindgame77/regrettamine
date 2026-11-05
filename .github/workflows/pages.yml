@@ -136,7 +136,10 @@ jobs:
         timeout-minutes: 5
         run: |
           npm init -y
-          npm install --no-save playwright@1.55.0
+          # ubuntu-latest is Ubuntu 26.04. Playwright 1.55 has no Chromium build for it, so
+          # install stopped with "Playwright does not support chromium on ubuntu26.04-x64"
+          # and this check never ran. 1.61 is the first release with Ubuntu 26.04 builds.
+          npm install --no-save playwright@1.61.0
           # The runner already has the shared libraries. --with-deps apt-upgrades them and
           # restarts services, which took about 11 minutes on 2026-10-27. The page check is ~10s.
           npx playwright install chromium
