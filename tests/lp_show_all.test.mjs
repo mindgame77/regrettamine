@@ -40,7 +40,8 @@ const names = (h) => (h.match(/<span class="rt">Endowment [A-Z]/g) || []).map(x 
 test('more than 5 LPs: first 5 in order, Show all button, full list in the shared pop-up', () => {
   const html = draw(7);
   assert.equal(names(html), 'ABCDE');
-  assert.match(html, /<button type="button" class="ash" data-open="actlps">Show all 7 LPs<\/button>/);
+  assert.match(html, /<button type="button" class="ash" data-open="actlps">Show all<\/button>/);
+  assert.doesNotMatch(html, /<p class="psub">|Named LP commitments/);
   assert.doesNotMatch(html, /[→›↗]/);
   const ov = made.actlps;
   assert.ok(ov, 'pop-up made');

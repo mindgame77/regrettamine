@@ -5,6 +5,11 @@
   const fmt = (t, o) => String(t == null ? '' : t).replace(/\{(\w+)\}/g, (_, k) => o[k]);
   const pl = (pair, n) => fmt(Array.isArray(pair) ? pair[n === 1 ? 0 : 1] : pair, { n });
   const esc = (x) => String(x == null ? '' : x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  // One Show all control for every full list. Text is exactly "Show all". Callers decide when it appears.
+  function showAllLink(open, id, extra) {
+    const label = (COPY.activity && COPY.activity.show_all) || 'Show all';
+    return '<button type="button" class="ash"' + (open ? ' data-open="' + esc(id) + '"' : ' data-gate') + (extra || '') + '>' + esc(label) + '</button>';
+  }
   // ALL-CAPS names from filings (SEC, FEC: "KUSHNER, JOSHUA GROWTH DEMOCRATS") shown in title case, display only.
   // Same rules as secTitle() in launch/edge/firm.mjs and sec_title() in launch/build.py; the stored data is unchanged.
   const SEC_KEEP = {'LLC': 'LLC', 'L.L.C.': 'L.L.C.', 'L.L.C': 'L.L.C', 'LP': 'LP', 'L.P.': 'L.P.', 'L.P': 'L.P', 'LLP': 'LLP', 'L.L.P.': 'L.L.P.',
@@ -322,7 +327,7 @@
     let h = '<div class="rws">' + rows.slice(0, 5).join('') + '</div>';
     if (rows.length > 5) {
       const LC = COPY.lps || {};
-      h += '<button type="button" class="ash"' + (P && P.open ? ' data-open="actlps"' : ' data-gate') + '>' + esc(pl(LC.all || ['Show all {n} LP', 'Show all {n} LPs'], rows.length)) + '</button>';
+      h += showAllLink(P && P.open, 'actlps');
       if (P && P.open && typeof document !== 'undefined' && document.body) actModal('actlps', fmt(LC.all_title || '{n} LPs · {firm}', { n: rows.length, firm: (P.firm && P.firm.name) || '' }), '<div class="rws">' + rows.join('') + '</div>');
     }
     return h;
@@ -540,7 +545,7 @@
     const cs = legalCases(items);
     let h = '<div class="rws">' + cs.slice(0, LEGAL_MAX).map(legalRow).join('') + '</div>';
     if (cs.length > LEGAL_MAX) {
-      h += '<button type="button" class="ash" data-open="actlegal">' + esc(pl(LG.all || ['Show all {n} legal item', 'Show all {n} legal items'], cs.length)) + '</button>';
+      h += showAllLink(true, 'actlegal');
       if (typeof actModal === 'function' && typeof document !== 'undefined' && document.body) actModal('actlegal', fmt(LG.all_title || '{n} legal items · {firm}', { n: cs.length, firm: (P && P.firm && P.firm.name) || '' }), '<div class="rws">' + cs.map(legalRow).join('') + '</div>');
     }
     return h;
@@ -659,7 +664,7 @@
     const rows = it || [], shown = rows.slice(0, NEWS_SHOWN);
     let h = '<div class="pgr">' + shown.map(x => card(x, true)).join('') + '</div>';
     if (rows.length > NEWS_SHOWN) {
-      h += '<button type="button" class="ash"' + (P && P.open ? ' data-open="actnews"' : ' data-gate') + '>' + esc(pl(AC.all_news, rows.length)) + '</button>';
+      h += showAllLink(P && P.open, 'actnews');
       if (P && P.open) actModal('actnews', pl(AC.all_news, rows.length), '<div class="pgr">' + rows.map(x => card(x, true)).join('') + '</div>');
     }
     return h;
@@ -1114,7 +1119,7 @@
     if (tocEl) tocEl.innerHTML = '<b>' + COPY.toc + '</b>' + toc.map(s => '<a href="#' + esc(s.key) + '">' + esc(s.title) + (s.nocount ? '' : ' <span>' + s.count + '</span>') + '</a>').join('');
     let body = '';
     secs.forEach(s => {
-      body += '<section id="' + esc(s.key) + '" class="ps"><h2>' + esc(s.title) + (s.nocount ? '' : ' <em class="pc2">' + s.count + '</em>') + '</h2>' + (s.subtitle ? '<p class="psub">' + esc(s.subtitle) + '</p>' : '')
+      body += '<section id="' + esc(s.key) + '" class="ps"><h2>' + esc(s.title) + (s.nocount ? '' : ' <em class="pc2">' + s.count + '</em>') + '</h2>'
         + (R[s.renderer] || R.facts)(s.items || [], P, s) + '</section>';
       if (s.key === 'thesis') body += checkSummaryHtml(P);
     });
@@ -1551,7 +1556,7 @@
       + (u ? ((who || year) ? ' · ' : '') + '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(capL(hostOf(u))) + '</a>' : '')
       + '</p></div>';
   }
-  const showAll = (P, kind, n) => '<button type="button" class="ash"' + (P.open ? ' data-open="act' + kind + '"' : ' data-gate') + '>' + esc(pl(kind === 'deals' ? AC.all_deals : AC.all_reviews, n)) + '</button>';
+  const showAll = (P, kind) => showAllLink(P.open, 'act' + kind);
   function actModal(id, title, inner, lazy) {
     let ov = document.getElementById(id);
     if (!ov) { ov = document.createElement('div'); ov.className = 'ov tall'; ov.id = id; ov.hidden = true; document.body.appendChild(ov); }
@@ -1579,8 +1584,7 @@
       }
     } finally { ov._busy = false; }
   });
-  const fundsLine = (P, n) => '<span class="afl">' + esc(pl(AC.funds_sec, n)) + ' · <button type="button" class="ash"'
-    + (P.open ? ' data-open="actfunds" aria-haspopup="dialog"' : ' data-gate') + '>' + esc(AC.show_all) + '</button></span>';
+  const fundsLine = (P, n) => '<span class="afl">' + esc(pl(AC.funds_sec, n)) + ' · ' + showAllLink(P.open, 'actfunds', P.open ? ' aria-haspopup="dialog"' : '') + '</span>';
   function fundRows(fs) {
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_fund) + '</span><span>' + esc(AC.h_amount) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + fs.map(x => { const u = safeUrl(x.url);
