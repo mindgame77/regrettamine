@@ -9,7 +9,12 @@ const root = new URL('../', import.meta.url);
 const copy = JSON.parse(fs.readFileSync(new URL('launch/copy.json', root), 'utf8'));
 const sandbox = {
   window: { REGRET: { copy } },
-  document: { addEventListener() {}, getElementById() { return null; }, createElement() { return { className: '', hidden: true }; } },
+  document: {
+    addEventListener() {},
+    getElementById() { return null; },
+    body: { appendChild() {} },
+    createElement() { return { className: '', hidden: true, innerHTML: '', appendChild() {} }; },
+  },
   console,
   URL,
 };
@@ -18,7 +23,44 @@ sandbox.globalThis = sandbox;
 vm.createContext(sandbox);
 vm.runInContext(fs.readFileSync(new URL('launch/js/dates.js', root), 'utf8'), sandbox, { filename: 'dates.js' });
 vm.runInContext(fs.readFileSync(new URL('launch/js/company.js', root), 'utf8'), sandbox, { filename: 'company.js' });
-const { buildNews, pageSecs } = sandbox.window.RegretCompany;
+const { buildNews, pageSecs, render } = sandbox.window.RegretCompany;
+
+function el() {
+  return {
+    hidden: false, innerHTML: '', textContent: '', style: {}, className: '', dataset: {},
+    classList: { toggle() {}, add() {}, remove() {} },
+    querySelector() { return null; },
+    querySelectorAll() { return []; },
+    appendChild() {},
+    setAttribute() {},
+    remove() {},
+    insertAdjacentElement() { return null; },
+  };
+}
+function mainEl() {
+  const kids = {};
+  const main = el();
+  main.querySelector = (sel) => kids[sel] || null;
+  main.set = (sel, child) => { kids[sel] = child; return child; };
+  return main;
+}
+const story = (n, date) => ({
+  head: 'Story ' + n, outlet: 'Outlet', date, url: 'https://example.com/story-' + n,
+  snippet: '', logo: '', group: '', src: [{ label: 'Outlet', date, url: 'https://example.com/story-' + n }],
+});
+function newsHtml(n) {
+  const items = [];
+  for (let i = 1; i <= n; i++) items.push(story(i, '2026-01-' + String(i).padStart(2, '0')));
+  const P = { open: true, checks: [], firm: { name: 'Andreessen Horowitz' }, sections: [{ key: 'press', items }] };
+  const main = mainEl();
+  main.set('.actw', el());
+  const pmain = main.set('.pmain', el());
+  main.set('.m', el());
+  render(main, P);
+  const html = pmain.innerHTML;
+  const block = html.slice(html.indexOf('id="news"'));
+  return { block, cards: (block.match(/class="pi /g) || []).length };
+}
 
 const press = (url, head, date, extra) => Object.assign({
   head, outlet: 'Outlet', date, url, snippet: 'snip', logo: '', group: '',
@@ -190,4 +232,22 @@ test('obviously different stories are not grouped', () => {
     outlet('https://example.com/dated', 'DOJ probes Databricks', '2026-08-18', 'Dated'),
   ], [], A16Z);
   assert.equal(undated.length, 2);
+});
+
+test('news shows the 6 newest stories and Show all only when there are more', () => {
+  const six = newsHtml(6);
+  assert.equal(six.cards, 6);
+  assert.match(six.block, /Story 6/);
+  assert.match(six.block, /Story 1/);
+  assert.ok(six.block.indexOf('Story 6') < six.block.indexOf('Story 1'));
+  assert.doesNotMatch(six.block, /Show all|data-open="actnews"|data-gate/);
+  const five = newsHtml(5);
+  assert.equal(five.cards, 5);
+  assert.doesNotMatch(five.block, /Show all/);
+  const seven = newsHtml(7);
+  assert.equal(seven.cards, 6);
+  assert.match(seven.block, /Show all 7 stories/);
+  assert.doesNotMatch(seven.block, /Story 1/);
+  assert.match(seven.block, /Story 7/);
+  assert.match(seven.block, /Story 2/);
 });
