@@ -706,6 +706,8 @@
    "assets": "Regulatory AUM",
    "missing": "Not found in public records",
    "founded": "Founded {y}",
+   "industries": "Industries",
+   "stages": "Stages",
    "social": {
     "_note": "Social pills under the meta line: follower count only, accounts linked from the firm's own website (firm_page.firm.social). No data: no row.",
     "row": "Social accounts",
