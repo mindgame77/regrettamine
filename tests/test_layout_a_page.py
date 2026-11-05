@@ -24,7 +24,7 @@ def test_sections_are_layout_a():
     assert COPY["company"]["legal"]["case"] == "Cases"
     assert COPY["company"]["legal"]["regulator"] == "Regulators"
     assert COPY["company"]["legal"]["context"] == "Context"
-    assert COPY["company"]["people"]["officer"] == "Officers"
+    assert "people" not in COPY["company"]
     assert COPY["company"]["commitments"] == "{n} commitments"
     assert COPY["company"]["outlets"] == ["{n} outlet", "{n} outlets"]
     assert COPY["company"]["summary"] == "Check summary"

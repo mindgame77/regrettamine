@@ -137,7 +137,9 @@ Work through the steps in order. Everything later depends on steps 1 and 2.
 
 **Step 1: Identity and name forms.** Open the website, Form ADV (adviserinfo.sec.gov) and EDGAR (sec.gov/cgi-bin/browse-edgar, efts.sec.gov full-text search). Cross-check legal entities in state business registries (e.g. Delaware ICIS), GLEIF LEI (search.gleif.org) and, where relevant, UK Companies House. Fill `firm.name_forms` (§5.1) and the records for `hq`, `founded`, `aum`, `legal_entities`.
 
-**Step 2: People.** Team page now and in Wayback Machine snapshots (for former members), Form ADV Schedule A, press. Produce `people` and `peopleMoves` records. These names feed every later step.
+**Step 2: People.** Save only the firm's CEO and founders, from the website or official records. These names feed every later step.
+
+Save news only when its tone is green or red. Neutral stories are not saved.
 
 **Step 3: Structured lookups.** EDGAR Form D for each vehicle (`funds`, `latestRaise`). Court dockets (CourtListener, PACER Case Locator, state portals) and regulator releases by legal name, vehicle name and each partner name: SEC litigation releases and administrative proceedings, SEC Action Lookup (individuals), FinCEN enforcement actions, OFAC civil penalties, CFTC enforcement, FINRA, CFPB, FTC, DOJ, state AGs, state securities regulators via NASAA, FCA and other non-US. Sanctions lists for the firm, entities and partners — OFAC SDN, OFAC non-SDN consolidated, US Commerce Entity List (BIS), UK, EU, UN, Switzerland SECO, Canada, Australia DFAT, Japan MOF, Singapore MAS, Hong Kong, New Zealand, France gels; OpenSanctions as a screening aggregator only (any match must be confirmed on the official list, which is what gets cited). Record clean checks as `none_found` in `coverage`. Pension and endowment reports for `limitedPartners`. Senate lobbying disclosures for `politicalContext` where relevant.
 
@@ -204,7 +206,7 @@ Most misses come from searching the wrong name. Collect every form and put it in
 | `legal[]` | Example Ventures Management, LLC | Form ADV, Form D registrant | EDGAR, courts, regulators. Not in web search: legal suffixes produce same-name noise. |
 | `former[]` | Sample Capital (until 2019) | Press, Wayback, Wikipedia | News and web |
 | `vehicles[]` | Example Ventures Fund III, L.P. | Form D | EDGAR, courts, LP reports |
-| people | Jane Doe (General Partner) | Team page, Form ADV, press | Partner-level searches, always with the firm name or "venture capital" |
+| people | Jane Doe (Cofounder and CEO) | Website or official records | Searches for the firm's CEO and founders, always with the firm name or "venture capital" |
 
 ## 5.2 Source tiers
 
@@ -338,8 +340,7 @@ One record per item. `entity.type` in the second column.
 | `founded` | firm | `year` |
 | `aum` | firm | `amount_usd`, `basis`: `form_adv_raum` \| `self_reported` \| `press` (put the date in envelope `as_of`) |
 | `legal_entities` | gp_entity / fund | `name`, `kind`: `adviser` \| `management_co` \| `gp` \| `fund` \| `feeder` \| `spv`, `cik`, `crd`, `jurisdiction`, `formed_year` |
-| `people` | partner | `name`, `title` (as written), `role`: `investing_partner` \| `leadership` \| `operating` \| `compliance_legal_finance` \| `staff` \| `advisor`, `current` (bool), `start_year`, `end_year`, `linkedin_url`, `board_seats[]` |
-| `peopleMoves` | partner | `name`, `move`: `joined` \| `left` \| `promoted` \| `role_change`, `date`, `from_org`, `to_org`, `reason_stated` (only if a source states it) |
+| `people` | partner | `name`, `title` (as written). Only the firm's CEO and founders, from the website or official records. |
 | `funds` | fund | `vehicle_name`, `cik`, `fund_type`: `main` \| `opportunity` \| `growth` \| `feeder` \| `spv` \| `other`, `vintage_year`, `target_usd`, `total_sold_usd` (Form D "Total Amount Sold"), `total_offering_usd`, `form_d_filed_at`, `investors_count` |
 | `latestRaise` | firm | `fund_name`, `amount_usd`, `announced_at`, `status`: `first_close` \| `final_close` \| `announced` |
 | `limitedPartners` | lp | `lp_name`, `lp_type`: `pension` \| `endowment` \| `foundation` \| `sovereign` \| `fund_of_funds` \| `family_office` \| `corporate` \| `individual` \| `unknown`, `fund` (vehicle name), `commitment_usd`, `year` |
@@ -386,14 +387,12 @@ Shape only. Names, numbers and URLs are invented.
       "record_id": "r002",
       "field_path": "people",
       "entity": { "id": "jane-doe", "type": "partner", "name": "Jane Doe" },
-      "value": { "name": "Jane Doe", "title": "General Partner", "role": "investing_partner",
-                 "current": true, "start_year": 2016, "end_year": null,
-                 "linkedin_url": null, "board_seats": ["Acme Robotics"] },
+      "value": { "name": "Jane Doe", "title": "Cofounder and CEO" },
       "as_of": "2026-10-15",
       "certainty": "self_reported",
       "sources": [
         { "url": "https://example-ventures.com/team",
-          "quote": "Jane Doe is a General Partner at Example Ventures, which she joined in 2016.",
+          "quote": "Jane Doe is a cofounder and CEO of Example Ventures.",
           "tier": "T2", "published_at": null, "retrieved_at": "2026-10-15",
           "body_read": true, "firm_controlled": true, "independent_root": null }
       ],

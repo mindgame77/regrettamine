@@ -1,4 +1,4 @@
-// People section: SEC Form ADV officers shown, board seats never shown or counted; nobody shown = no section.
+// Team is only kind 'team' (CEO and founders from v2_firm_page). Older officer, partner, and board rows are not shown.
 // node --test tests/people_officers.test.mjs
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -37,44 +37,40 @@ vm.createContext(sandbox);
 vm.runInContext(read('launch/js/dates.js'), sandbox, { filename: 'dates.js' });
 vm.runInContext(read('launch/js/company.js'), sandbox, { filename: 'company.js' });
 const { pageSecs } = sandbox.window.RegretCompany;
-const src = [{ url: 'https://reports.adviserinfo.sec.gov/x.pdf', label: 'SEC filing', date: '2026-03-30' }];
-const officers = [
-  { head: 'A One', kind: 'officer', role: 'Chief Legal Officer', src },
-  { head: 'B Two', kind: 'officer', role: 'Chief Operating Officer', src },
-  { head: 'C Three', kind: 'officer', role: 'Chief Compliance Officer', src },
+const team = { head: 'Marc Andreessen', kind: 'team', role: 'Cofounder and General Partner' };
+const notTeam = [
+  { head: 'Garry Tan', kind: 'officer', role: 'CEO/President', is_founder: true },
+  { head: 'Ben Horowitz', kind: 'partner', role: 'Founder', badge: 'Founder', is_founder: true },
+  { head: 'Board X', kind: 'board', role: 'Board seat: X' },
+  { head: 'Moved', kind: 'move', role: 'Joined' },
 ];
-const board = Array.from({ length: 14 }, (_, i) => ({ head: 'Board ' + i, kind: 'board', role: 'Board seats: X', src }));
 const page = (items) => ({ firm: { name: 'F' }, sections: [{ key: 'people', count: items.length, items }] });
 
-test('a CEO is shown; other officers and board seats are not', () => {
-  const ceo = { head: 'Garry Tan', kind: 'officer', role: 'CEO/President' };
-  const s = pageSecs(page([...officers, ceo, ...board])).find(x => x.key === 'people');
+test('only a kind team row is shown', () => {
+  const s = pageSecs(page([team, ...notTeam])).find(x => x.key === 'people');
   assert.equal(s.count, 1);
+  assert.equal(s.items[0].head, 'Marc Andreessen');
   assert.equal(s.title, 'Team');
   assert.equal(s.subtitle, '');
   assert.equal(s.nocount, true);
-  assert.doesNotMatch(s.title + ' ' + s.subtitle, /board/i);
 });
-test('only board seats = no people section', () => {
-  assert.equal(pageSecs(page(board)).find(x => x.key === 'people'), undefined);
-});
-test('only non-CEO officers = no people section', () => {
-  assert.equal(pageSecs(page(officers)).find(x => x.key === 'people'), undefined);
+test('officer, partner, board, and move rows leave no Team section', () => {
+  assert.equal(pageSecs(page(notTeam)).find(x => x.key === 'people'), undefined);
 });
 test('copy has no board seats wording for the section', () => {
   const c = copy.sections.list.find(x => x.key === 'people');
   assert.doesNotMatch(c.title + ' ' + c.subtitle, /board/i);
+  assert.equal(copy.company.people, undefined);
 });
 test('team section: heading Team, saved title, no count, subtitle, partner line or show all', () => {
   const { render } = sandbox.window.RegretCompany;
   const main = mainEl(), pmain = main.set('.pmain', el());
-  const ceo = { head: 'Garry Tan', kind: 'officer', role: 'CEO/President' };
-  const P = Object.assign(page([ceo]), { open: true, checks: [] });
+  const P = Object.assign(page([team]), { open: true, checks: [] });
   render(main, P);
   const h = pmain.innerHTML;
   assert.match(h, /<h2>Team<\/h2>/);
-  assert.match(h, /Garry Tan/);
-  assert.match(h, /CEO\/President/);
+  assert.match(h, /Marc Andreessen/);
+  assert.match(h, /Cofounder and General Partner/);
   assert.match(h, /class="tcards"/);
   assert.doesNotMatch(h, /pc2|Partners and officers|Partner since|Left in|Show all|class="pcards"|class="pfnd"/);
   assert.doesNotMatch(h, /<p class="psub">/);
