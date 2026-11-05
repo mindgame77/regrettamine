@@ -69,3 +69,5 @@ def test_live_check_workflow_and_deploy_guard():
     assert 'Uploading Functions bundle' in sh
     assert 'functions/vc/[[path]].js' in sh
     assert 'deploy main' in sh
+    assert '-lt 100' not in sh
+    assert "grep -q '/vc/a16z/'" in sh
