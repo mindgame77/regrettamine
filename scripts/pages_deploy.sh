@@ -72,11 +72,11 @@ if ! grep -q '<sitemapindex' <<<"$sm"; then
   echo "production deploy published (sitemap check skipped)"
   exit 0
 fi
-# firm_sitemap returns 1,000 rows per file. founders-fund is outside that cap, so the
-# page check above is what proves it survived. The file itself must still be the big index.
+# firm_sitemap lists v2_firm_live. That set is a16z today, so a one-firm index is valid.
+# An empty file, or a file that drops a16z, means the functions sitemap failed.
 child=$(curl -fsS --retry 5 --retry-delay 3 --retry-all-errors "$url/sitemaps/firms-1.xml")
 nloc=$(grep -c '<loc>' <<<"$child" || true)
-if [ "${nloc:-0}" -lt 100 ]; then
+if [ "${nloc:-0}" -lt 1 ] || ! grep -q '/vc/a16z/' <<<"$child"; then
   echo "refusing production: functions sitemap listed ${nloc:-0} firms" >&2
   exit 1
 fi
