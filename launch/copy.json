@@ -649,6 +649,10 @@
    "all": ["Show all {n} partner", "Show all {n} partners"],
    "all_title": "{n} partners · {firm}"
   },
+  "lps": {
+   "all": ["Show all {n} LP", "Show all {n} LPs"],
+   "all_title": "{n} LPs · {firm}"
+  },
   "commitments": "{n} commitments",
   "outlets": ["{n} outlet", "{n} outlets"],
   "no_facts": "No sourced facts on file for this check yet.",

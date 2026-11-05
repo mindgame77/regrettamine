@@ -267,7 +267,19 @@
     const val = nice(cleanLead(x.value));
     return row(val ? label + ': ' + val : label, '', lead ? NC : '', x.src, '');
   }
-  function groupLps(it) {
+  function groupLps(it) { return lpRows(it).join(''); }
+  // LPs (Alex 2026-11-04 4:54 PM PT): first 5 on the page; above 5, the same Show all button and pop-up as deals and reviews, same rows, same order.
+  function lpsBlock(it, P) {
+    const rows = lpRows(it);
+    let h = '<div class="rws">' + rows.slice(0, 5).join('') + '</div>';
+    if (rows.length > 5) {
+      const LC = COPY.lps || {};
+      h += '<button type="button" class="ash"' + (P && P.open ? ' data-open="actlps"' : ' data-gate') + '>' + esc(pl(LC.all || ['Show all {n} LP', 'Show all {n} LPs'], rows.length)) + '</button>';
+      if (P && P.open && typeof document !== 'undefined' && document.body) actModal('actlps', fmt(LC.all_title || '{n} LPs · {firm}', { n: rows.length, firm: (P.firm && P.firm.name) || '' }), '<div class="rws">' + rows.join('') + '</div>');
+    }
+    return h;
+  }
+  function lpRows(it) {
     const order = [], map = {};
     it.forEach(x => {
       const k = x.label || '';
@@ -285,7 +297,7 @@
       // v4 (Alex 2026-11-03): one line per LP, not a card. Name, commitments and amounts, then the source pill.
       const line = [title].concat(g.values.map(v => nice(cleanLead(v))).filter(Boolean)).join(' · ');
       return '<div class="rw lpl"><div class="rm">' + '<span class="rt">' + esc(line) + '</span>' + (g.lead ? ' <span class="cs cs-cl">' + esc(NC) + '</span>' : '') + ' ' + chips(src) + '</div></div>';
-    }).join('');
+    });
   }
   // Overview is cleaned here, when the page draws. Stored rows are not changed, and no other section uses this.
   // Hidden: Other names, Type, Staff, Private funds, Legal entity, Sanctions screening, empty, and "Not found".
@@ -561,7 +573,7 @@
   // Open-state renderers, keyed by copy.json sections[].renderer. The section is the third argument (LP grouping).
   const R = {
     thesis: (items) => '<p class="pth">' + esc(items[0] ? items[0].value : '') + '</p>',
-    facts: (it, P, s) => '<div class="rws">' + (s && s.key === 'lps' ? groupLps(it) : it.map(factRow).join('')) + '</div>',
+    facts: (it, P, s) => s && s.key === 'lps' ? lpsBlock(it, P) : '<div class="rws">' + it.map(factRow).join('') + '</div>',
     checks: (it, P) => checkRows(P),
     legal: (it, P) => legalHtml(it, P),
     press: (it) => '<div class="pgr">' + it.map(x => card(x, true)).join('') + '</div>',
