@@ -1366,12 +1366,34 @@
   // Same pattern as press headlines (.pih): ink color, underline on hover, new tab.
   const coSite = (d) => safeUrl(d && (d.website_url || (d.domain ? 'https://' + String(d.domain).replace(/^https?:\/\//i, '').replace(/\/.*$/, '') : '')));
   const coName = (d) => { const w = coSite(d), t = esc((d && d.company) || ''); return w && t ? '<a class="co" href="' + esc(w) + '" target="_blank" rel="noopener">' + t + '</a>' : t; };
+  // D2.8 / D4.8 / D4.8.1 (Alex 2026-11-04 9:21 PM PT): lab firms show one line per startup. Rounds of the same startup
+  // are grouped oldest first; lines are newest first (D1.8), by each startup's newest round. Same startup = domain, else name.
+  const dealKey = (d) => String((d && (d.domain || hostOf(coSite(d)) || d.company)) || '').toLowerCase().replace(/^www\./, '').trim();
+  const dealTime = (d) => { const t = Date.parse(String((d && d.date) || '')); return isFinite(t) ? t : -Infinity; };
+  function dealGroups(ds) {
+    const order = [], map = {};
+    (ds || []).forEach(d => { const k = dealKey(d) || ('#' + order.length); if (!map[k]) { map[k] = []; order.push(k); } map[k].push(d); });
+    const gs = order.map(k => map[k].slice().sort((a, b) => dealTime(a) - dealTime(b)));
+    const last = (g) => dealTime(g[g.length - 1]);
+    return gs.map((g, i) => ({ g, i })).sort((a, b) => (last(b.g) - last(a.g)) || (a.i - b.i)).map(x => x.g);
+  }
+  // One round: "Series A (lead) · $12M · 2026" (D3.8, D4.8). Grouped: "Seed (lead) 2024 · Series A 2026" (D4.8.1).
+  // Unknown round, amount or year is left out (D2.8). Source pills (G7.8) for every round, each source once.
+  function dealLine(g) {
+    const DL = AC.deal_line || {}, mark = DL.lead || '(lead)';
+    const part = (d, sep) => { const r = labRound(d.round), rl = d.lead ? (r ? r + ' ' + mark : mark) : r;
+      return [rl, dealAmt(d.amount, d.currency), yearOf(d.date) || ''].filter(Boolean).join(sep); };
+    const rounds = g.length > 1 ? g.map(d => part(d, ' ')).filter(Boolean) : [part(g[0], ' · ')].filter(Boolean);
+    const top = g[g.length - 1], sec = (g.slice().reverse().find(d => d.sector) || {}).sector;
+    const seen = {}, src = [];
+    g.forEach(d => { const u = safeUrl(d.url); if (u && !seen[u]) { seen[u] = 1; src.push({ label: hostOf(u), url: u }); } });
+    return '<div class="rw lpl dln"><div class="rm"><span class="rt"><b>' + coName(top) + '</b>' + rounds.map(t => ' · ' + esc(t)).join('') + '</span>'
+      + (sec ? ' <span class="arty" style="color:' + (SECTOR_COLORS[String(sec).trim()] || 'var(--mute)') + '">' + esc(sec) + '</span>' : '')
+      + ' ' + chips(src) + '</div></div>';
+  }
   function dealRows(ds, lab) {
     const src = (u) => u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(hostOf(u)) + '>' + esc(capL(hostOf(u))) + '</a>' : '<span></span>';
-    if (lab) return '<div class="adl"><div class="ad adh s5"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_sector) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
-      + ds.map(d => { const u = safeUrl(d.url), r = [labRound(d.round), dealAmt(d.amount, d.currency), d.lead ? AC.lead : ''].filter(Boolean).join(' · ');
-        return '<div class="ad s5"><b>' + coName(d) + '</b>' + (d.sector ? '<span class="arty"' + ' style="color:' + (SECTOR_COLORS[String(d.sector).trim()] || 'var(--mute)') + '"' + '>' + esc(d.sector) + '</span>' : '<span></span>')
-          + '<span>' + esc(r) + '</span><span>' + esc(fdate(d.date) || '') + '</span>' + src(u) + '</div>'; }).join('') + '</div>';
+    if (lab) return '<div class="rws">' + dealGroups(ds).map(dealLine).join('') + '</div>';
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + ds.map(d => { const u = safeUrl(d.url);
         return '<div class="ad"><b>' + coName(d) + '</b><span>' + esc(roundName(d.round)) + '</span><span>' + esc(fdate(d.date) || '') + '</span>'
@@ -1587,11 +1609,12 @@
     // Design A (Alex 2026-11-04): lab firms with a sector share show it borderless on the main page, the latest deal as one
     // text line, then Show all. No sector data: the unchanged "The latest deal" block.
     const shA = labFirm(P) ? sectorShare(A) : '';
-    if (shA) { const u0 = d0 && safeUrl(d0.url);
-      const dl = d0 ? '<div class="sdl"><b>' + coName(d0) + '</b>' + [labRound(d0.round), dealAmt(d0.amount, d0.currency), d0.lead ? AC.lead : '', fdate(d0.date) || ''].filter(Boolean).map(t => ' · ' + esc(t)).join('')
-        + (u0 ? ' · <a href="' + esc(u0) + '" target="_blank" rel="noopener"' + fullA(hostOf(u0)) + '>' + esc(capL(hostOf(u0))) + '</a>' : '') + '</div>' : '';
-      h += '<div class="aps ssa">' + shA + dl + (n.deals > 1 ? showAll(P, 'deals', n.deals) : '') + '</div>';
-    } else if (d0) h += '<div class="aps"><b class="apt">' + esc(AC.latest_deal) + '</b>' + dealRows([d0], labFirm(P)) + (n.deals > 1 ? showAll(P, 'deals', n.deals) : '') + '</div>';
+    // Lab firms: the page shows the newest startup's grouped line (all its rounds); Show all opens every line (D2.8).
+    const lab0 = labFirm(P), gs = lab0 && Array.isArray(A.deals) && A.deals.length ? dealGroups(A.deals) : null;
+    const g0 = gs ? gs[0] : (d0 ? [d0] : null), more = gs ? (gs.length > 1 || (A.lazy && n.deals > g0.length)) : n.deals > 1;
+    if (shA) {
+      h += '<div class="aps ssa">' + shA + (g0 ? '<div class="sdl">' + dealLine(g0) + '</div>' : '') + (more ? showAll(P, 'deals', n.deals) : '') + '</div>';
+    } else if (g0) h += '<div class="aps"><b class="apt">' + esc(AC.latest_deal) + '</b>' + dealRows(g0, lab0) + (more ? showAll(P, 'deals', n.deals) : '') + '</div>';
     const revs = (!A.lazy && Array.isArray(A.reviews) && A.reviews.length) ? A.reviews.slice(0, 3) : (r0 ? [r0] : []);
     if (revs.length) h += '<div class="aps arvs"><h2>' + esc(AC.reviews) + '</h2>' + revs.map(revCard).join('') + (n.reviews > revs.length ? showAll(P, 'revs', n.reviews) : '') + '</div>';
     // firm_page sends only the first slice (A.lazy); the full list loads once when "Show all" opens (firm_activity_list).

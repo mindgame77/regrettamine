@@ -773,6 +773,9 @@
    "h_date": "Date",
    "h_source": "Source",
    "lead": "Lead",
+   "deal_line": {
+    "lead": "(lead)"
+   },
    "no_data": "No data yet",
    "other": "Other",
    "sector_share": "Sector share, last 12 months",
