@@ -71,5 +71,6 @@ test('migration: partner rows with years, founders/newest/A-Z order, former filt
   assert.match(mig, /when r\.is_founder then 1 when r\.joined_year is not null then 2 \+ \(9999 - r\.joined_year\)/);
   assert.match(mig, /r\.left_year >= extract\(year from now\(\)\)::int - 1/);
   assert.match(mig, /raise exception/);
+  assert.match(mig, /to_regprocedure\('public\.v2_firm_page\(text\)'\) is null/);
   assert.match(undo, /select 1, jsonb_build_object\('head',pe\.person_name,'kind','board'/);
 });
