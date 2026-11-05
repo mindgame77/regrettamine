@@ -517,14 +517,19 @@
   // SEC Form ADV officers (kind 'officer', E2.1 source L1) are shown as listed; their titles (CLO, COO...) are not partner titles.
   function shownPeople(it) {
     const items = (it || []).filter(x => x && !isNoteText(x.head));
+    // E2.1: SEC officers kept as listed; partners and above capped at 10, no expand button.
+    // Order comes from v2_firm_page (provisional): founders, then joined_year newest first, then A-Z.
     const partners = [];
+    let nPartners = 0;
     items.forEach(x => {
-      if (x.kind === 'board' || partners.length >= 10) return;
+      if (x.kind === 'board') return;
+      if (x.kind !== 'officer' && nPartners >= 10) return;
       const y = personYears(x);
       if (y.left && !within12(y.left)) return;
       if (x.kind === 'move') {
         if (!y.left && !y.joined && /\b(left|former|resign|depart)/i.test((x.role || '') + ' ' + (x.badge || ''))) return;
       } else if (x.kind !== 'officer' && !isPartnerRole(x.role)) return;
+      if (x.kind !== 'officer') nPartners++;
       partners.push(x);
     });
     return partners;
@@ -532,7 +537,7 @@
   function personSection(it) {
     const partners = shownPeople(it);
     const block = (title, xs) => xs.length ? '<h3>' + esc(title) + ' · ' + xs.length + '</h3><div class="pcards">' + xs.map(partnerCard).join('') + '</div>' : '';
-    return block((COPY.people && COPY.people.officer) || 'Officers', partners);
+    return block((COPY.people && COPY.people.shown) || 'Partners and officers', partners);
   }
   function newsBlock(it, P) {
     const rows = it || [], shown = rows.slice(0, 5);
