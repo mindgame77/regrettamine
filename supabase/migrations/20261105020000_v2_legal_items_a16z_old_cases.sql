@@ -1,13 +1,16 @@
 -- a16z (v2 firm 2): move old public.firm_legal_items cases that pass LG1-LG3 into v2_legal_items.
 -- Each row was checked against the court record (RECAP copies of PACER filings on archive.org).
+-- The v2 schema is not created by repo migrations; on a database without v2_legal_items (CI) this is a no-op.
 -- Idempotent: a case is skipped when firm 2 already has a row with the same court.
 do $$
 declare
-  v_batch bigint := (select coalesce(max(batch_id), 0) + 1 from v2_research_submissions);
+  v_batch bigint;
   r record;
   v_sub bigint;
   v_li bigint;
 begin
+  if to_regclass('public.v2_legal_items') is null then raise notice 'v2 schema missing, skipped'; return; end if;
+  v_batch := (select coalesce(max(batch_id), 0) + 1 from v2_research_submissions);
   for r in
     select * from (values
       ('Active', 'Andrew Samuels', 2023::smallint, null::smallint, 'N.D. Cal. 3:23-cv-06492',
