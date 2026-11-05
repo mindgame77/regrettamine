@@ -515,15 +515,16 @@
   }
   // People shown on the page. Board seats are kept in the data but never shown (Alex 2026-11-04).
   // SEC Form ADV officers (kind 'officer', E2.1 source L1) are shown as listed; their titles (CLO, COO...) are not partner titles.
-  function shownPeople(it) {
+  function shownPeople(it, max) {
+    const cap = max == null ? 10 : max;
     const items = (it || []).filter(x => x && !isNoteText(x.head));
-    // E2.1: SEC officers kept as listed; partners and above capped at 10, no expand button.
+    // E2.1: SEC officers kept as listed; 10 partners and above on the page, the full current list in the Show all pop-up (Alex 2026-11-04 4:23 PM PT).
     // Order comes from v2_firm_page (provisional): founders, then joined_year newest first, then A-Z.
     const partners = [];
     let nPartners = 0;
     items.forEach(x => {
       if (x.kind === 'board') return;
-      if (x.kind !== 'officer' && nPartners >= 10) return;
+      if (x.kind !== 'officer' && nPartners >= cap) return;
       const y = personYears(x);
       if (y.left && !within12(y.left)) return;
       if (x.kind === 'move') {
@@ -534,10 +535,18 @@
     });
     return partners;
   }
-  function personSection(it) {
+  function personSection(it, P) {
     const partners = shownPeople(it);
     const block = (title, xs) => xs.length ? '<h3>' + esc(title) + ' · ' + xs.length + '</h3><div class="pcards">' + xs.map(partnerCard).join('') + '</div>' : '';
-    return block((COPY.people && COPY.people.shown) || 'Partners and officers', partners);
+    let h = block((COPY.people && COPY.people.shown) || 'Partners and officers', partners);
+    // Show all: every current partner, same order and same Partner since / Left in rules (reviews pop-up style, no arrow).
+    const all = shownPeople(it, Infinity).filter(x => x.kind !== 'officer');
+    if (all.length > partners.filter(x => x.kind !== 'officer').length) {
+      const PC = COPY.people || {};
+      h += '<button type="button" class="ash"' + (P && P.open ? ' data-open="actpeople"' : ' data-gate') + '>' + esc(pl(PC.all || ['Show all {n} partner', 'Show all {n} partners'], all.length)) + '</button>';
+      if (P && P.open && typeof document !== 'undefined' && document.body) actModal('actpeople', fmt(PC.all_title || '{n} partners · {firm}', { n: all.length, firm: (P.firm && P.firm.name) || '' }), '<div class="pcards">' + all.map(partnerCard).join('') + '</div>');
+    }
+    return h;
   }
   function newsBlock(it, P) {
     const rows = it || [], shown = rows.slice(0, 5);
@@ -556,7 +565,7 @@
     legal: (it, P) => legalHtml(it, P),
     press: (it) => '<div class="pgr">' + it.map(x => card(x, true)).join('') + '</div>',
     news: (it, P) => newsBlock(it, P),
-    people: (it) => personSection(it),
+    people: (it, P) => personSection(it, P),
     timeline: (it) => {
       const rows = it.map((x, i) => ({ x, i })).sort((a, b) => {
         const sa = window.RegretDate ? window.RegretDate.stamp(a.x.date) : null, sb = window.RegretDate ? window.RegretDate.stamp(b.x.date) : null;
