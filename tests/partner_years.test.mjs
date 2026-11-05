@@ -53,7 +53,7 @@ test('10 partners + 3 officers shown, former and board hidden, count = shown', (
   const s = pageSecs(page([...officers, gone, ...partners, ...board]));
   const p = s.find(x => x.key === 'people');
   assert.equal(p.count, 13);
-  assert.equal(p.subtitle, 'Partners and officers.');
+  assert.equal(p.subtitle, '');
 });
 test('left within 12 months is shown; left earlier is not', () => {
   const p = pageSecs(page([leftNow, gone])).find(x => x.key === 'people');

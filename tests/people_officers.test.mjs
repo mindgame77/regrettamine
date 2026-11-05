@@ -49,8 +49,8 @@ const page = (items) => ({ firm: { name: 'F' }, sections: [{ key: 'people', coun
 test('officers are counted and board seats are not', () => {
   const s = pageSecs(page([...officers, ...board])).find(x => x.key === 'people');
   assert.equal(s.count, 3);
-  assert.equal(s.title, 'People');
-  assert.equal(s.subtitle, 'Partners and officers.');
+  assert.equal(s.title, 'Team');
+  assert.equal(s.subtitle, '');
   assert.doesNotMatch(s.title + ' ' + s.subtitle, /board/i);
 });
 test('only board seats = no people section', () => {
@@ -59,4 +59,15 @@ test('only board seats = no people section', () => {
 test('copy has no board seats wording for the section', () => {
   const c = copy.sections.list.find(x => x.key === 'people');
   assert.doesNotMatch(c.title + ' ' + c.subtitle, /board/i);
+});
+test('team section: heading Team with count, no subtitle, no group heading', () => {
+  const { render } = sandbox.window.RegretCompany;
+  const main = mainEl(), pmain = main.set('.pmain', el());
+  const P = Object.assign(page(officers), { open: true, checks: [] });
+  render(main, P);
+  const h = pmain.innerHTML;
+  assert.match(h, /<h2>Team <em class="pc2">3<\/em><\/h2>/);
+  assert.doesNotMatch(h, /Partners and officers/);
+  assert.doesNotMatch(h, /<h3>[^<]*· 3<\/h3>/);
+  assert.match(h, /class="pcards"/);
 });
