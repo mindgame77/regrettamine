@@ -26,9 +26,8 @@ begin
   loop
     continue when exists (select 1 from v2_legal_items where firm_id = 2 and court = r.court);
 
-    v_sub := (select coalesce(max(submission_id), 0) + 1 from v2_research_submissions);
-    insert into v2_research_submissions (submission_id, batch_id, firm_id, bot_key_id, target_box, payload, status)
-    values (v_sub, v_batch, 2, 3, 'F20',
+    insert into v2_research_submissions (batch_id, firm_id, bot_key_id, target_box, payload, status)
+    values (v_batch, 2, 3, 'F20',
       jsonb_build_object(
         'target_table', 'v2_legal_items',
         'source_owner', 'grok-bot-a16z',
@@ -37,16 +36,17 @@ begin
           'side', 'Defendant', 'case_type', 'Securities', 'other_party', r.other_party,
           'filed_year', r.filed_year, 'closed_year', r.closed_year, 'court', r.court,
           'source_url', r.url, 'source_date', r.src_date, 'source_type', 'Court record', 'source_level', 1)),
-      'Accepted');
+      'Accepted')
+    returning submission_id into v_sub;
 
-    v_li := (select coalesce(max(legal_item_id), 0) + 1 from v2_legal_items);
-    insert into v2_legal_items (legal_item_id, row_id, source_url, source_url_norm, source_level, source_date,
+    insert into v2_legal_items (source_url, source_url_norm, source_level, source_date,
       source_date_precision, source_type, source_owner, is_current, submission_id, firm_id, item_group,
       status, side, case_type, other_party, filed_year, closed_year, court,
       case_summary, summary_date, summary_source_url, summary_source_url_norm)
-    values (v_li, (select coalesce(max(row_id), 0) + 1 from v2_legal_items), r.url, r.url, 1, r.src_date,
+    values (r.url, r.url, 1, r.src_date,
       'full date', 'Court record', 'grok-bot-a16z', true, v_sub, 2, 'case',
       r.status, 'Defendant', 'Securities', r.other_party, r.filed_year, r.closed_year, r.court,
-      left(r.summary, 300), r.src_date, r.url, r.url);
+      left(r.summary, 300), r.src_date, r.url, r.url)
+    returning legal_item_id into v_li;
   end loop;
 end $$;
