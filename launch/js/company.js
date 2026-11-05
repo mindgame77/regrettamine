@@ -513,9 +513,10 @@
     const founder = !/\bfounder\b/i.test(x.role || '') && /\bfounder\b/i.test(x.badge || '') && !isLeadTag(x.badge) ? ' <em class="pfnd">' + esc(AC.founder_tag || 'Founder') + '</em>' : '';
     return '<div class="' + cls + '"><b>' + esc(nice(x.head || '')) + founder + '</b><span>' + esc(x.role || '') + '</span>' + (line ? '<span class="psince">' + esc(line) + '</span>' : '') + chips(x.src) + '</div>';
   }
-  function personSection(it) {
+  // People shown on the page. Board seats are kept in the data but never shown (Alex 2026-11-04).
+  // SEC Form ADV officers (kind 'officer', E2.1 source L1) are shown as listed; their titles (CLO, COO...) are not partner titles.
+  function shownPeople(it) {
     const items = (it || []).filter(x => x && !isNoteText(x.head));
-    const board = items.filter(x => x.kind === 'board');
     const partners = [];
     items.forEach(x => {
       if (x.kind === 'board' || partners.length >= 10) return;
@@ -523,12 +524,14 @@
       if (y.left && !within12(y.left)) return;
       if (x.kind === 'move') {
         if (!y.left && !y.joined && /\b(left|former|resign|depart)/i.test((x.role || '') + ' ' + (x.badge || ''))) return;
-      } else if (!isPartnerRole(x.role)) return;
+      } else if (x.kind !== 'officer' && !isPartnerRole(x.role)) return;
       partners.push(x);
     });
+    return partners;
+  }
+  function personSection(it) {
+    const partners = shownPeople(it);
     const block = (title, xs) => xs.length ? '<h3>' + esc(title) + ' · ' + xs.length + '</h3><div class="pcards">' + xs.map(partnerCard).join('') + '</div>' : '';
-    // Board seats are kept in the data but hidden from the page (Alex 2026-11-04).
-    void board;
     return block((COPY.people && COPY.people.officer) || 'Officers', partners);
   }
   function newsBlock(it, P) {
@@ -919,6 +922,12 @@
       if (c.key === 'news') return Object.assign({}, c, { count: newsItems.length, items: newsItems, teaser: (newsItems[0] && newsItems[0].head) || '' });
       const s = Object.assign({}, byKey[c.key], c);
       if (s.key === 'lps') { const n = new Set((s.items || []).map(x => x.label)).size; if (n) s.count = n; }
+      // People: count only who is shown (no board seats); nobody shown = no section, chip or nav entry.
+      if (s.key === 'people') {
+        const n = shownPeople(s.items).length;
+        if (!n) return null;
+        s.count = n;
+      }
       if (s.key === 'legal') {
         const n = legalCases(s.items).length;
         if (!n) return null;
