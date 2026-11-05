@@ -653,10 +653,12 @@
     if (!rows.length) return '';
     return '<div class="vgrid">' + rows.map(videoTile).join('') + '</div>';
   }
+  // News shows the 6 newest stories. "Show all" only when there are more than 6.
+  const NEWS_SHOWN = 6;
   function newsBlock(it, P) {
-    const rows = it || [], shown = rows.slice(0, 5);
+    const rows = it || [], shown = rows.slice(0, NEWS_SHOWN);
     let h = '<div class="pgr">' + shown.map(x => card(x, true)).join('') + '</div>';
-    if (rows.length > 5) {
+    if (rows.length > NEWS_SHOWN) {
       h += '<button type="button" class="ash"' + (P && P.open ? ' data-open="actnews"' : ' data-gate') + '>' + esc(pl(AC.all_news, rows.length)) + '</button>';
       if (P && P.open) actModal('actnews', pl(AC.all_news, rows.length), '<div class="pgr">' + rows.map(x => card(x, true)).join('') + '</div>');
     }
