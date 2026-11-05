@@ -63,7 +63,10 @@ test('cards: green join, red left, years only from data, no arrows or turnover',
   const card = js.slice(js.indexOf('function partnerCard'), js.indexOf('function shownPeople'));
   assert.match(card, /pjoin/); assert.match(card, /pleft/);
   assert.doesNotMatch(card, /[↑↓→←]|turnover/i);
-  assert.doesNotMatch(js.slice(js.indexOf('function shownPeople'), js.indexOf('function newsBlock')), /Show all/);
+  const sec = js.slice(js.indexOf('function personSection'), js.indexOf('function newsBlock'));
+  assert.match(sec, /data-open="actpeople"/);
+  assert.match(sec, /shownPeople\(it, Infinity\)/);
+  assert.doesNotMatch(sec, /[↑↓→←]/);
 });
 test('migration: partner rows with years, founders/newest/A-Z order, former filtered, undo exists', () => {
   assert.match(mig, /'kind','partner'/);
@@ -73,4 +76,11 @@ test('migration: partner rows with years, founders/newest/A-Z order, former filt
   assert.match(mig, /raise exception/);
   assert.match(mig, /to_regprocedure\('public\.v2_firm_page\(text\)'\) is null/);
   assert.match(undo, /select 1, jsonb_build_object\('head',pe\.person_name,'kind','board'/);
+});
+
+test('Show all: 12 current partners -> button says 12, page still shows 10 + officers', () => {
+  const p = pageSecs(page([...officers, gone, ...partners])).find(x => x.key === 'people');
+  assert.equal(p.count, 13);
+  assert.equal(JSON.stringify(copy.company.people.all), JSON.stringify(['Show all {n} partner', 'Show all {n} partners']));
+  assert.equal(copy.company.people.all_title, '{n} partners · {firm}');
 });

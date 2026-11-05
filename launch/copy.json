@@ -645,7 +645,9 @@
    "board": "Board seats",
    "move": "Partner moves",
    "officer": "Officers",
-   "shown": "Partners and officers"
+   "shown": "Partners and officers",
+   "all": ["Show all {n} partner", "Show all {n} partners"],
+   "all_title": "{n} partners · {firm}"
   },
   "commitments": "{n} commitments",
   "outlets": ["{n} outlet", "{n} outlets"],
