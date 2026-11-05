@@ -81,6 +81,6 @@ test('migration: partner rows with years, founders/newest/A-Z order, former filt
 test('Show all: 12 current partners -> button says 12, page still shows 10 + officers', () => {
   const p = pageSecs(page([...officers, gone, ...partners])).find(x => x.key === 'people');
   assert.equal(p.count, 13);
-  assert.equal(JSON.stringify(copy.people.all), JSON.stringify(['Show all {n} partner', 'Show all {n} partners']));
-  assert.equal(copy.people.all_title, '{n} partners · {firm}');
+  assert.equal(JSON.stringify(copy.company.people.all), JSON.stringify(['Show all {n} partner', 'Show all {n} partners']));
+  assert.equal(copy.company.people.all_title, '{n} partners · {firm}');
 });
