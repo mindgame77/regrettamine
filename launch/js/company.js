@@ -126,10 +126,16 @@
         (region ? esc(region) + ' ' : '') + '<b>' + esc(c) + '</b></a>';
     }).join('');
   }
-  function paintSocial(main) {
-    // F11.8: follower counts are stored and not drawn until a mockup is approved.
-    const row = main && main.querySelector && main.querySelector('.socp');
-    if (row && row.remove) row.remove();
+  function paintSocial(main, P) {
+    // F11: social counts shown as pills under the meta line (Alex, 2026-11-04 4:56 PM PT).
+    const meta = main.querySelector('.ph .m');
+    let row = main.querySelector('.ph .socp');
+    const html = meta ? socialPills(P) : '';
+    if (!html) { if (row) row.remove(); return; }
+    if (!row) { row = document.createElement('div'); row.className = 'secp socp'; meta.insertAdjacentElement('afterend', row); }
+    row.setAttribute('aria-label', SOC.row || 'Social accounts');
+    row.setAttribute('role', 'group');
+    row.innerHTML = html;
   }
   function headerPills(P) {
     const firm = P.firm || {}, bits = [];
