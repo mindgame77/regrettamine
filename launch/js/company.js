@@ -127,19 +127,18 @@
       return String(r) + units[i][1];
     }
   }
+  function socPill(a, withName) {
+    if (!a || !SOC_SVG[a.platform] || !/^https:\/\//i.test(a.url || '') || compactCount(a.followers) === '') return '';
+    const base = (SOC.names || {})[a.platform] || a.platform, c = compactCount(a.followers);
+    const region = typeof a.region === 'string' ? a.region.trim() : '';
+    const name = region ? (SOC.regional || '{platform} · {region}').replace('{platform}', base).replace('{region}', region) : base;
+    const aria = (SOC.aria || '{platform}: {count}').replace('{platform}', name).replace('{count}', c);
+    return '<a class="sc soc" href="' + esc(a.url) + '" target="_blank" rel="noopener" aria-label="' + esc(aria) + '" title="' + esc(name) + '">' +
+      '<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + SOC_SVG[a.platform] + '</svg>' +
+      (withName ? esc(name) + ' ' : (region ? esc(region) + ' ' : '')) + '<b>' + esc(c) + '</b></a>';
+  }
   function socialPills(P) {
-    const list = ((P.firm || {}).social || []).filter(a => a && SOC_SVG[a.platform] && /^https:\/\//i.test(a.url || '') && compactCount(a.followers) !== '');
-    if (!list.length) return '';
-    return list.map(a => {
-      const base = (SOC.names || {})[a.platform] || a.platform, c = compactCount(a.followers);
-      // A15.7: a regional account is its own pill, labelled with its region ("X · India"). Rounded counts show like any count.
-      const region = typeof a.region === 'string' ? a.region.trim() : '';
-      const name = region ? (SOC.regional || '{platform} · {region}').replace('{platform}', base).replace('{region}', region) : base;
-      const aria = (SOC.aria || '{platform}: {count}').replace('{platform}', name).replace('{count}', c);
-      return '<a class="sc soc" href="' + esc(a.url) + '" target="_blank" rel="noopener" aria-label="' + esc(aria) + '" title="' + esc(name) + '">' +
-        '<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + SOC_SVG[a.platform] + '</svg>' +
-        (region ? esc(region) + ' ' : '') + '<b>' + esc(c) + '</b></a>';
-    }).join('');
+    return ((P.firm || {}).social || []).map(a => socPill(a)).filter(Boolean).join('');
   }
   function paintSocial(main, P) {
     // F11: social counts shown as pills under the meta line (Alex, 2026-11-04 4:56 PM PT).
@@ -569,22 +568,13 @@
     try { return re.test(new URL(u).hostname.replace(/^www\./, '')) ? u : ''; }
     catch (e) { return ''; }
   }
-  // Grey marks (neutral). LinkedIn and X only, and only when that URL is stored.
-  const TEAM_SVG = {
-    linkedin: '<path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/>',
-    x: '<path fill="currentColor" d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.4l-5.8-7.58-6.63 7.58H.48l8.6-9.83L0 1.15h7.59l5.24 6.93 6.07-6.93zm-1.29 19.5h2.04L6.48 3.24H4.3l13.31 17.41z"/>'
-  };
-  function teamSoc(kind, url) {
-    const name = (SOC.names || {})[kind] || kind;
-    return '<a class="tsoc-a" href="' + esc(url) + '" target="_blank" rel="noopener">'
-      + '<svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + TEAM_SVG[kind] + '</svg>' + esc(name) + '</a>';
-  }
   function teamCard(x) {
-    const links = [];
+    const pills = [];
     const li = httpsHost(x.linkedin_url, /(^|\.)linkedin\.com$/i);
     const xu = httpsHost(x.x_url, /(^|\.)(x\.com|twitter\.com)$/i);
-    if (li) links.push(teamSoc('linkedin', li));
-    if (xu) links.push(teamSoc('x', xu));
+    if (li) pills.push(socPill({ platform: 'linkedin', url: li, followers: x.linkedin_followers }, true));
+    if (xu) pills.push(socPill({ platform: 'x', url: xu, followers: x.x_followers }, true));
+    const links = pills.filter(Boolean);
     const role = String(x.role || '').trim();
     return '<div class="tcard"><b>' + esc(x.head || '') + '</b>'
       + (role ? '<span class="trole">' + esc(role) + '</span>' : '')

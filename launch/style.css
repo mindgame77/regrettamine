@@ -473,8 +473,9 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 .rw.lg .rm{display:flex;flex-wrap:wrap;align-items:center;gap:6px 0}.rw.lg .scs{display:inline-flex;flex-wrap:wrap;gap:6px}
 .rw.lg-act{background:var(--revbg);border-left:4px solid var(--rev);border-radius:6px;padding-left:14px;padding-right:14px;border-bottom-color:transparent;margin-bottom:2px}.rw.lg-act .rt{color:var(--rev)}
 /* Social pills under the firm meta line (firm_page.firm.social): the existing .sc pill with the platform logo and count */
-.ph .socp{max-height:none}.socp .sc.soc{display:inline-flex;align-items:center;gap:6px}.socp .sc.soc b{font-weight:700}
-.socp .sc.soc:hover{text-decoration:underline}.socp .sc.soc:focus-visible{outline:2px solid var(--vio);outline-offset:2px}.socp svg{flex:none;display:block}
+.ph .socp{max-height:none}
+.sc.soc{display:inline-flex;align-items:center;gap:6px}.sc.soc b{font-weight:700}
+.sc.soc:hover{text-decoration:underline}.sc.soc:focus-visible{outline:2px solid var(--vio);outline-offset:2px}.sc.soc svg{flex:none;display:block}
 /* Industries and stages: grey neutral pills under the social row, above the activity cards. No source. */
 .htags{display:flex;flex-direction:column;gap:14px;margin-top:16px}
 .htag-l{display:block;color:var(--mute);font-size:13px;font-weight:600;margin:0 0 6px}
@@ -487,9 +488,7 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 .tcard b{color:var(--ink);font-size:16px;font-weight:700}
 .tcard .trole{color:var(--ink2);font-size:14.5px;margin-top:2px}
 .tcard .tsoc{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.tcard .tsoc-a{display:inline-flex;align-items:center;gap:6px;background:#E7E5EF;color:#3a3550;border-radius:999px;padding:4px 10px;font:600 12.5px 'DM Sans',sans-serif;text-decoration:none}
-.tcard .tsoc-a svg{flex:none;display:block}
-.tcard .tsoc-a:hover{background:#DDDBE6}
+.tcard .tsoc .sc{margin:0}
 @media (max-width:640px){.tcards{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:640px){.socp .sc.soc{padding:4px 10px}}
 /* Videos: up to 3 YouTube tiles inside the section card. No source pill. */
