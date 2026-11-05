@@ -537,8 +537,8 @@
   }
   function personSection(it, P) {
     const partners = shownPeople(it);
-    const block = (title, xs) => xs.length ? '<h3>' + esc(title) + ' · ' + xs.length + '</h3><div class="pcards">' + xs.map(partnerCard).join('') + '</div>' : '';
-    let h = block((COPY.people && COPY.people.shown) || 'Partners and officers', partners);
+    const block = (title, xs) => xs.length ? (title ? '<h3>' + esc(title) + ' · ' + xs.length + '</h3>' : '') + '<div class="pcards">' + xs.map(partnerCard).join('') + '</div>' : '';
+    let h = block(COPY.people && COPY.people.shown != null ? COPY.people.shown : 'Partners and officers', partners);
     // Show all: every current partner, same order and same Partner since / Left in rules (reviews pop-up style, no arrow).
     const all = shownPeople(it, Infinity).filter(x => x.kind !== 'officer');
     if (all.length > partners.filter(x => x.kind !== 'officer').length) {

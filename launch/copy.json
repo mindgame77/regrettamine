@@ -116,8 +116,8 @@
    },
    {
     "key": "people",
-    "title": "People",
-    "subtitle": "Partners and officers.",
+    "title": "Team",
+    "subtitle": "",
     "renderer": "people",
     "unit_one": "person",
     "unit_many": "people"
@@ -645,7 +645,7 @@
    "board": "Board seats",
    "move": "Partner moves",
    "officer": "Officers",
-   "shown": "Partners and officers",
+   "shown": "",
    "all": ["Show all {n} partner", "Show all {n} partners"],
    "all_title": "{n} partners · {firm}"
   },
