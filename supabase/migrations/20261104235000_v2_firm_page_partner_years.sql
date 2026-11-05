@@ -1,7 +1,10 @@
 -- E2.1/E2.2/E4.2: firm page people include current partner rows (kind=partner) with joined_year/left_year/is_founder.
 -- Order (provisional): officers, then founders of the firm, then partners with a joined_year newest first, then the rest A-Z; board last (never shown, E3).
 -- Rows that left more than ~12 months ago are not sent (former, E4.1/E4.2) even if is_current.
+-- The v2 schema is not created by repo migrations; on a database without v2_firm_page (CI) this is a no-op.
+-- Applied to production via Supabase as v2_firm_page_partner_years (2026-11-04).
 do $m$ declare d text; n text; begin
+  if to_regprocedure('public.v2_firm_page(text)') is null then raise notice 'v2 schema missing, skipped'; return; end if;
   select pg_get_functiondef('public.v2_firm_page(text)'::regprocedure) into d;
   n := replace(d, $q$select 1, jsonb_build_object('head',pe.person_name,'kind','board',$q$, $q$select 4, jsonb_build_object('head',pe.person_name,'kind','board',$q$);
   n := replace(n, $q$where r.firm_id=fid and r.kind='officer' and r.is_current and not r.archived
