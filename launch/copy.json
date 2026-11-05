@@ -88,7 +88,7 @@
   }
  },
  "sections": {
-  "_note": "Company page sections, in display order. renderer = facts | legal | news | founders | people (js/company.js). Check summary is drawn by the page after Thesis (or first when there is none) and is not a section. The overview key is drawn only as Thesis (its item labelled thesis); other overview rows are not shown (Alex, 2026-10-29). Remove an entry to hide a section. The DB only supplies the data per key.",
+  "_note": "Company page sections, in display order. renderer = facts | legal | news | founders | people | videos (js/company.js). Check summary is drawn by the page after Thesis (or first when there is none) and is not a section. The overview key is drawn only as Thesis (its item labelled thesis); other overview rows are not shown (Alex, 2026-10-29). Remove an entry to hide a section. The DB only supplies the data per key. Videos sits after Team and before News.",
   "list": [
    {
     "key": "overview",
@@ -107,20 +107,28 @@
     "unit_many": "records"
    },
    {
-    "key": "news",
-    "title": "News",
-    "subtitle": "Articles, court events and filings, newest first. Since 2023.",
-    "renderer": "news",
-    "unit_one": "item",
-    "unit_many": "items"
-   },
-   {
     "key": "people",
     "title": "Team",
     "subtitle": "",
     "renderer": "people",
     "unit_one": "person",
     "unit_many": "people"
+   },
+   {
+    "key": "videos",
+    "title": "Videos",
+    "subtitle": "",
+    "renderer": "videos",
+    "unit_one": "video",
+    "unit_many": "videos"
+   },
+   {
+    "key": "news",
+    "title": "News",
+    "subtitle": "Articles, court events and filings, newest first. Since 2023.",
+    "renderer": "news",
+    "unit_one": "item",
+    "unit_many": "items"
    },
    {
     "key": "lps",
@@ -715,6 +723,10 @@
     "regional": "{platform} · {region}",
     "names": {"linkedin": "LinkedIn", "x": "X", "instagram": "Instagram", "youtube": "YouTube", "tiktok": "TikTok", "substack": "Substack"}
    }
+  },
+  "videos": {
+    "_note": "Videos section under Team. Up to 3 YouTube interviews, most views first. Grey line is channel, date, and view count. No source pill. No rows: no section.",
+    "views": "{n} views"
   },
   "searched_on": "Searched {date}",
   "searched_nc": "Not checked yet.",
