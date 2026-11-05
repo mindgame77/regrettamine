@@ -39,14 +39,14 @@ begin
       'Accepted')
     returning submission_id into v_sub;
 
-    insert into v2_legal_items (source_url, source_url_norm, source_level, source_date,
+    insert into v2_legal_items (source_url, source_level, source_date,
       source_date_precision, source_type, source_owner, is_current, submission_id, firm_id, item_group,
       status, side, case_type, other_party, filed_year, closed_year, court,
-      case_summary, summary_date, summary_source_url, summary_source_url_norm)
-    values (r.url, r.url, 1, r.src_date,
+      case_summary, summary_date, summary_source_url)
+    values (r.url, 1, r.src_date,
       'full date', 'Court record', 'grok-bot-a16z', true, v_sub, 2, 'case',
       r.status, 'Defendant', 'Securities', r.other_party, r.filed_year, r.closed_year, r.court,
-      left(r.summary, 300), r.src_date, r.url, r.url)
+      left(r.summary, 300), r.src_date, r.url)
     returning legal_item_id into v_li;
   end loop;
 end $$;
