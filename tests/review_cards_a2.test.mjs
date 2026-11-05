@@ -97,7 +97,8 @@ test('a blank role or company is left out', () => {
   assert.match(block, /— Ann, Founder · 2024 · /);
 });
 test('Show all reviews has no arrow', () => {
-  assert.match(block, /data-open="actrevs">Show all 6 reviews<\/button>/);
+  assert.match(block, /data-open="actrevs">Show all<\/button>/);
+  assert.doesNotMatch(block, /Show all \d|reviews<\/button>/);
 });
 test('the Show all pop-up uses the same A2 cards', () => {
   const m = created.find(e => e.id === 'actrevs');

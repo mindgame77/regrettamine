@@ -246,8 +246,14 @@ test('news shows the 6 newest stories and Show all only when there are more', ()
   assert.doesNotMatch(five.block, /Show all/);
   const seven = newsHtml(7);
   assert.equal(seven.cards, 6);
-  assert.match(seven.block, /Show all 7 stories/);
+  assert.match(seven.block, /class="ash" data-open="actnews">Show all<\/button>/);
+  assert.doesNotMatch(seven.block, /Show all \d|stories<\/button>/);
   assert.doesNotMatch(seven.block, /Story 1/);
   assert.match(seven.block, /Story 7/);
   assert.match(seven.block, /Story 2/);
+  const css = fs.readFileSync(new URL('launch/style.css', root), 'utf8');
+  const at = css.indexOf('\n.ash{');
+  const rule = css.slice(at + 1, css.indexOf('}', at) + 1);
+  assert.match(rule, /color:var\(--ink2\)/);
+  assert.doesNotMatch(rule, /--vio/);
 });

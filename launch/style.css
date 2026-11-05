@@ -461,7 +461,8 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 .arv p{margin:10px 0;line-height:1.5;color:var(--ink2);font-size:15px}.arf{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .arc{display:inline-flex;gap:6px;align-items:center;background:#F5F3FB;border-radius:99px;padding:4px 10px;font-size:12px;color:var(--ink2)}.arc i{font-style:normal;color:var(--vio);letter-spacing:1px;font-size:9px}.arc em{font-style:normal;color:#D9D4EA}
 .arf a{margin-left:auto;font-size:13px;color:var(--vio);text-decoration:none;font-weight:600}.arf a span{color:var(--mute);font-weight:400}
-.ash{margin-top:10px;background:none;border:0;padding:0;font:700 14px 'DM Sans';color:var(--vio);cursor:pointer}
+.ash{margin-top:10px;background:none;border:0;padding:0;font:400 14px 'DM Sans',sans-serif;color:var(--ink2);cursor:pointer;text-align:left}
+.ash:hover,.ash:focus-visible{text-decoration:underline}
 .amd{padding:0}.amh{display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid var(--line)}.amh b{font:800 20px 'Bricolage Grotesque'}.amh .x{order:2;margin-left:auto}.amb{padding:18px 22px}.amb .arv:last-child{margin-bottom:0}
 /* Lab deals: Sector + Round · Amount · Lead columns, sector share bar in Show all deals */
 .ad.s5{grid-template-columns:1.5fr 1.2fr 1.6fr 1fr 1.2fr}.ad .arty{font-size:10.5px;font-weight:700;line-height:1.5;padding:0 8px;border-radius:999px;border:1px solid currentColor;white-space:nowrap;color:var(--ink2);justify-self:start}.nd{color:var(--mute);font-size:13.5px}

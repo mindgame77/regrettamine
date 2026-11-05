@@ -78,7 +78,8 @@ test('caps at 10 rows and offers Show all', () => {
   const html = page(items);
   assert.equal(rows(html).length, 10);
   assert.deepEqual(rows(html).slice(0, 2).map(r => r.t), ['Case 1', 'Case 0']);
-  assert.match(legal(html), /class="ash" data-open="actlegal">Show all 13 legal items/);
+  assert.match(legal(html), /class="ash" data-open="actlegal">Show all<\/button>/);
+  assert.doesNotMatch(legal(html), /Show all \d/);
   assert.match(html, /Legal &amp; regulatory <em class="pc2">13<\/em>/);
   assert.doesNotMatch(legal(page(items.slice(0, 10))), /actlegal/);
 });
