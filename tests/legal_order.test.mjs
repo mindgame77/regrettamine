@@ -82,6 +82,7 @@ test('caps at 10 rows and offers Show all', () => {
   assert.doesNotMatch(legal(html), /Show all \d/);
   assert.match(html, /Legal &amp; regulatory <em class="pc2">13<\/em>/);
   assert.doesNotMatch(legal(page(items.slice(0, 10))), /actlegal/);
+  assert.doesNotMatch(legal(html), /<p class="psub">|Cases where the firm itself/);
 });
 
 test('settlement terms show only for Settled cases that state them', () => {

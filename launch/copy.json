@@ -93,7 +93,7 @@
    {
     "key": "overview",
     "title": "Overview",
-    "subtitle": "Registration and ownership from the firm's own filings.",
+    "subtitle": "",
     "renderer": "facts",
     "unit_one": "fact",
     "unit_many": "facts"
@@ -101,7 +101,7 @@
    {
     "key": "legal",
     "title": "Legal & regulatory",
-    "subtitle": "Cases where the firm itself is a party, and regulator records.",
+    "subtitle": "",
     "renderer": "legal",
     "unit_one": "record",
     "unit_many": "records"
@@ -125,7 +125,7 @@
    {
     "key": "news",
     "title": "News",
-    "subtitle": "Articles, court events and filings, newest first. Since 2023.",
+    "subtitle": "",
     "renderer": "news",
     "unit_one": "item",
     "unit_many": "items"
@@ -133,7 +133,7 @@
    {
     "key": "lps",
     "title": "Limited partners",
-    "subtitle": "Named LP commitments, each with its source.",
+    "subtitle": "",
     "renderer": "facts",
     "unit_one": "LP",
     "unit_many": "LPs"

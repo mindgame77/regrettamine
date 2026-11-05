@@ -1119,7 +1119,7 @@
     if (tocEl) tocEl.innerHTML = '<b>' + COPY.toc + '</b>' + toc.map(s => '<a href="#' + esc(s.key) + '">' + esc(s.title) + (s.nocount ? '' : ' <span>' + s.count + '</span>') + '</a>').join('');
     let body = '';
     secs.forEach(s => {
-      body += '<section id="' + esc(s.key) + '" class="ps"><h2>' + esc(s.title) + (s.nocount ? '' : ' <em class="pc2">' + s.count + '</em>') + '</h2>' + (s.subtitle ? '<p class="psub">' + esc(s.subtitle) + '</p>' : '')
+      body += '<section id="' + esc(s.key) + '" class="ps"><h2>' + esc(s.title) + (s.nocount ? '' : ' <em class="pc2">' + s.count + '</em>') + '</h2>'
         + (R[s.renderer] || R.facts)(s.items || [], P, s) + '</section>';
       if (s.key === 'thesis') body += checkSummaryHtml(P);
     });

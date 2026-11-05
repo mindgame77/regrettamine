@@ -251,6 +251,7 @@ test('news shows the 6 newest stories and Show all only when there are more', ()
   assert.doesNotMatch(seven.block, /Story 1/);
   assert.match(seven.block, /Story 7/);
   assert.match(seven.block, /Story 2/);
+  assert.doesNotMatch(seven.block, /<p class="psub">|Since 2023|Articles, court events/);
   const css = fs.readFileSync(new URL('launch/style.css', root), 'utf8');
   const at = css.indexOf('\n.ash{');
   const rule = css.slice(at + 1, css.indexOf('}', at) + 1);

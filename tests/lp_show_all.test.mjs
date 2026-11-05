@@ -41,7 +41,7 @@ test('more than 5 LPs: first 5 in order, Show all button, full list in the share
   const html = draw(7);
   assert.equal(names(html), 'ABCDE');
   assert.match(html, /<button type="button" class="ash" data-open="actlps">Show all<\/button>/);
-  assert.doesNotMatch(html, /Show all \d|LPs<\/button>/);
+  assert.doesNotMatch(html, /<p class="psub">|Named LP commitments/);
   assert.doesNotMatch(html, /[→›↗]/);
   const ov = made.actlps;
   assert.ok(ov, 'pop-up made');
