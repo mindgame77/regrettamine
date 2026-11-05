@@ -49,24 +49,22 @@ const leftNow = { head: 'Left Now', kind: 'partner', role: 'General Partner', jo
 const board = [{ head: 'Board X', kind: 'board', role: 'Board seat: X', src }];
 const page = (items) => ({ firm: { name: 'F' }, sections: [{ key: 'people', count: items.length, items }] });
 
-test('10 partners + 3 officers shown, former and board hidden, count = shown', () => {
-  const s = pageSecs(page([...officers, gone, ...partners, ...board]));
-  const p = s.find(x => x.key === 'people');
-  assert.equal(p.count, 13);
+test('E1: founders and a CEO are the team; partners, officers, former and board are not', () => {
+  const founders = [{ head: 'Marc Andreessen', kind: 'partner', role: 'Cofounder and General Partner', is_founder: true }];
+  const ceo = { head: 'Garry Tan', kind: 'officer', role: 'CEO/President' };
+  const p = pageSecs(page([...officers, gone, leftNow, ...partners, ...board, ...founders, ceo])).find(x => x.key === 'people');
+  assert.equal(p.count, 2);
+  assert.equal(p.title, 'Team');
   assert.equal(p.subtitle, '');
+  assert.equal(p.nocount, true);
 });
-test('left within 12 months is shown; left earlier is not', () => {
-  const p = pageSecs(page([leftNow, gone])).find(x => x.key === 'people');
-  assert.equal(p.count, 1);
+test('partners and officers with no CEO or founder leave no Team section', () => {
+  assert.equal(pageSecs(page([...officers, gone, leftNow, ...partners, ...board])).find(x => x.key === 'people'), undefined);
 });
-test('cards: green join, red left, years only from data, no arrows or turnover', () => {
-  const card = js.slice(js.indexOf('function partnerCard'), js.indexOf('function shownPeople'));
-  assert.match(card, /pjoin/); assert.match(card, /pleft/);
-  assert.doesNotMatch(card, /[↑↓→←]|turnover/i);
-  const sec = js.slice(js.indexOf('function personSection'), js.indexOf('function newsBlock'));
-  assert.match(sec, /data-open="actpeople"/);
-  assert.match(sec, /shownPeople\(it, Infinity\)/);
-  assert.doesNotMatch(sec, /[↑↓→←]/);
+test('team cards have no partner-since, left-in, founder tag, show-all, green/red or arrows', () => {
+  const sec = js.slice(js.indexOf('function isTeamPerson'), js.indexOf('function newsBlock'));
+  assert.match(sec, /function teamCard/);
+  assert.doesNotMatch(sec, /Partner since|Left in|pfnd|actpeople|pjoin|pleft|data-open|[↑↓→←]/);
 });
 test('migration: partner rows with years, founders/newest/A-Z order, former filtered, undo exists', () => {
   assert.match(mig, /'kind','partner'/);
@@ -78,9 +76,8 @@ test('migration: partner rows with years, founders/newest/A-Z order, former filt
   assert.match(undo, /select 1, jsonb_build_object\('head',pe\.person_name,'kind','board'/);
 });
 
-test('Show all: 12 current partners -> button says 12, page still shows 10 + officers', () => {
-  const p = pageSecs(page([...officers, gone, ...partners])).find(x => x.key === 'people');
-  assert.equal(p.count, 13);
-  assert.equal(JSON.stringify(copy.company.people.all), JSON.stringify(['Show all {n} partner', 'Show all {n} partners']));
-  assert.equal(copy.company.people.all_title, '{n} partners · {firm}');
+test('a kind=team row from v2_firm_page is shown as saved', () => {
+  const p = pageSecs(page([{ head: 'Marc Andreessen', kind: 'team', role: 'Cofounder and General Partner', x_url: 'https://x.com/pmarca' }])).find(x => x.key === 'people');
+  assert.equal(p.count, 1);
+  assert.equal(p.items[0].role, 'Cofounder and General Partner');
 });

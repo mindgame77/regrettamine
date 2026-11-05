@@ -1,4 +1,4 @@
-// G7.8: Team cards (page and Show all pop-up) show no source pill; other sections keep theirs.
+// Team cards show the saved name and title, LinkedIn and X only when stored, and no source pill.
 // node --test tests/team_no_source_pills.test.mjs
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -19,23 +19,34 @@ sandbox.globalThis = sandbox;
 vm.createContext(sandbox);
 vm.runInContext(read('launch/js/dates.js'), sandbox, { filename: 'dates.js' });
 vm.runInContext(js, sandbox, { filename: 'company.js' });
-const { partnerCard } = sandbox.window.RegretCompany;
+const { teamCard } = sandbox.window.RegretCompany;
 
 const src = [{ url: 'https://a16z.com/team/', label: 'Firm website', date: '2026-11-03' }];
-const sec = [{ url: 'https://reports.adviserinfo.sec.gov/x.pdf', label: 'SEC filing', date: '2026-03-30' }];
 
-test('partner card has no source pill, name and role kept', () => {
-  const h = partnerCard({ head: 'Jane Doe', kind: 'partner', role: 'General Partner', src });
-  assert.match(h, /Jane Doe/); assert.match(h, /General Partner/);
-  assert.doesNotMatch(h, /Firm website|a16z\.com|2026/);
+test('team card keeps the saved title and drops the source pill', () => {
+  const h = teamCard({ head: 'Marc Andreessen', kind: 'team', role: 'Cofounder and General Partner', src, x_url: 'https://x.com/pmarca' });
+  assert.match(h, /Marc Andreessen/);
+  assert.match(h, /Cofounder and General Partner/);
+  assert.match(h, /https:\/\/x\.com\/pmarca/);
+  assert.match(h, />X</);
+  assert.doesNotMatch(h, /linkedin/i);
+  assert.doesNotMatch(h, /Firm website|a16z\.com\/team|class="sc"|Partner since|Left in|Founder</);
 });
-test('officer card has no source pill', () => {
-  const h = partnerCard({ head: 'A One', kind: 'officer', role: 'Chief Legal Officer', src: sec });
-  assert.doesNotMatch(h, /SEC filing|adviserinfo|Mar 30/);
+test('LinkedIn and X render only when that https url is stored', () => {
+  const h = teamCard({
+    head: 'Ben Horowitz', role: 'Cofounder and General Partner',
+    linkedin_url: 'https://www.linkedin.com/in/behorowitz/', x_url: 'https://x.com/bhorowitz',
+  });
+  assert.match(h, /LinkedIn/);
+  assert.match(h, /linkedin\.com\/in\/behorowitz/);
+  assert.match(h, /x\.com\/bhorowitz/);
+  const bare = teamCard({ head: 'Garry Tan', role: 'CEO/President', linkedin_url: '', x_url: 'http://x.com/garrytan' });
+  assert.equal(bare.includes('tsoc'), false);
+  assert.match(bare, /CEO\/President/);
 });
-test('page and Show all pop-up both use partnerCard; pills kept elsewhere', () => {
+test('team section has no show-all popup and no source chips', () => {
   const ps = js.slice(js.indexOf('function personSection'), js.indexOf('function newsBlock'));
-  assert.equal((ps.match(/map\(partnerCard\)/g) || []).length, 2);
-  assert.doesNotMatch(ps, /chips\(/);
+  assert.doesNotMatch(ps, /chips\(|actpeople|data-open|Board seat/);
+  assert.match(ps, /teamCard/);
   assert.ok((js.match(/chips\(/g) || []).length > 2, 'other sections still render chips');
 });

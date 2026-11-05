@@ -174,6 +174,38 @@
     if (!row) { row = document.createElement('div'); row.className = 'secp hpills'; row.setAttribute('role', 'group'); meta.insertAdjacentElement('afterend', row); }
     row.innerHTML = html;
   }
+  // Industries and stages sit under the meta line and social row, above the activity cards.
+  // Stored text, word for word. No source pill. An empty list draws nothing, including its label.
+  // Check size is not drawn: v2_firm_check_sizes rows are archived.
+  const STAGE_ORDER = ['Pre-seed', 'Seed', 'Series A', 'Series B', 'Series C and later', 'Growth'];
+  function tagBits(list, key) {
+    return (list || []).map(x => String(x && typeof x === 'object' ? (x[key] || x.stage || x.text || '') : (x == null ? '' : x)).trim()).filter(Boolean);
+  }
+  function orderedStages(list) {
+    const items = tagBits(list, 'stage');
+    const rank = (s) => { const i = STAGE_ORDER.findIndex(x => x.toLowerCase() === s.toLowerCase()); return i < 0 ? STAGE_ORDER.length : i; };
+    return items.map((s, i) => ({ s, i, r: rank(s) })).sort((a, b) => a.r - b.r || a.i - b.i).map(x => x.s);
+  }
+  function tagHtml(P) {
+    const firm = (P && P.firm) || {};
+    const block = (label, xs) => xs.length ? '<div class="htag"><span class="htag-l">' + esc(label) + '</span><div class="secp">' + xs.map(t => '<span class="hp">' + esc(t) + '</span>').join('') + '</div></div>' : '';
+    return block(HCOPY.industries || 'Industries', tagBits(firm.industries, 'industry_text')) + block(HCOPY.stages || 'Stages', orderedStages(firm.stages));
+  }
+  function paintTags(main, P) {
+    if (!main || !main.querySelector) return;
+    const html = tagHtml(P);
+    let box = main.querySelector('.htags');
+    if (!html) { if (box && box.remove) box.remove(); return; }
+    if (!box) {
+      box = document.createElement('div');
+      box.className = 'htags';
+      const act = main.querySelector('.actw');
+      const anchor = act || main.querySelector('.ph .socp') || main.querySelector('.hpills') || main.querySelector('.ph .m') || main.querySelector('.m');
+      if (!anchor || !anchor.insertAdjacentElement) return;
+      anchor.insertAdjacentElement(act ? 'beforebegin' : 'afterend', box);
+    }
+    box.innerHTML = html;
+  }
   function setFirmName(main, name) {
     if (!name) return;
     const h1 = main.querySelector('.ph h1');
@@ -509,63 +541,49 @@
     if (/^(neg|negative|red|bad)$/.test(t)) return 'neg';
     return 'neu';
   }
-  function isPartnerRole(role) {
-    const r = String(role || '');
-    if (/\b(associate|analyst|scout)\b/i.test(r)) return false;
-    if (/\bprincipal\b/i.test(r) && !/\bpartner\b/i.test(r)) return false;
-    return /\b(general partner|managing partner|founding partner|venture partner|operating partner|partners?|co-founder|cofounder|founders?|managing director|chairman|chair|\bgp\b)\b/i.test(r);
+  // E1: Team is only the firm's CEO and founders. v2_firm_page sends kind 'team' for those live rows.
+  // A payload that still has the older partner/officer shape keeps a founder (is_founder or badge) or a CEO title.
+  function isTeamPerson(x) {
+    if (!x || isNoteText(x.head) || x.kind === 'board' || x.kind === 'move') return false;
+    if (x.kind === 'team') return true;
+    if (x.is_founder === true) return true;
+    if (/\bfounder\b/i.test(x.badge || '') && !isLeadTag(x.badge)) return true;
+    return /\bCEO\b|chief executive officer/i.test(String(x.role || ''));
   }
-  function personYears(x) {
-    const blob = [x.role, x.badge, x.note].filter(Boolean).join(' ');
-    let joined = yearOf(x.joined || x.since || x.start || x.joined_year || '');
-    let left = yearOf(x.left || x.end || x.left_year || '');
-    if (!joined) { const m = blob.match(/\b(?:partner since|since|joined(?: in)?)\s+((?:19|20)\d{2})\b/i); if (m) joined = m[1]; }
-    if (!left) { const m = blob.match(/\b(?:left(?: in)?|departed|resigned)\s+((?:19|20)\d{2})\b/i); if (m) left = m[1]; }
-    return { joined, left };
+  function teamPeople(it) {
+    return (it || []).filter(isTeamPerson);
   }
-  // G7.8: Team cards (page and Show all pop-up) show no source pill; x.src stays in the data (Alex 2026-11-04 4:39 PM PT).
-  function partnerCard(x) {
-    const y = personYears(x);
-    let cls = 'pcard', line = '';
-    if (y.left && within12(y.left)) { cls += ' pleft'; line = fmt(AC.left_in || 'Left in {year}', { year: y.left }); }
-    else if (y.joined) { if (within12(y.joined)) cls += ' pjoin'; line = fmt(AC.partner_since || 'Partner since {year}', { year: y.joined }); }
-    const founder = !/\bfounder\b/i.test(x.role || '') && /\bfounder\b/i.test(x.badge || '') && !isLeadTag(x.badge) ? ' <em class="pfnd">' + esc(AC.founder_tag || 'Founder') + '</em>' : '';
-    return '<div class="' + cls + '"><b>' + esc(nice(x.head || '')) + founder + '</b><span>' + esc(x.role || '') + '</span>' + (line ? '<span class="psince">' + esc(line) + '</span>' : '') + '</div>';
+  function httpsHost(url, re) {
+    const u = safeUrl(url);
+    if (!u || !/^https:\/\//i.test(u)) return '';
+    try { return re.test(new URL(u).hostname.replace(/^www\./, '')) ? u : ''; }
+    catch (e) { return ''; }
   }
-  // People shown on the page. Board seats are kept in the data but never shown (Alex 2026-11-04).
-  // SEC Form ADV officers (kind 'officer', E2.1 source L1) are shown as listed; their titles (CLO, COO...) are not partner titles.
-  function shownPeople(it, max) {
-    const cap = max == null ? 10 : max;
-    const items = (it || []).filter(x => x && !isNoteText(x.head));
-    // E2.1: SEC officers kept as listed; 10 partners and above on the page, the full current list in the Show all pop-up (Alex 2026-11-04 4:23 PM PT).
-    // Order comes from v2_firm_page (provisional): founders, then joined_year newest first, then A-Z.
-    const partners = [];
-    let nPartners = 0;
-    items.forEach(x => {
-      if (x.kind === 'board') return;
-      if (x.kind !== 'officer' && nPartners >= cap) return;
-      const y = personYears(x);
-      if (y.left && !within12(y.left)) return;
-      if (x.kind === 'move') {
-        if (!y.left && !y.joined && /\b(left|former|resign|depart)/i.test((x.role || '') + ' ' + (x.badge || ''))) return;
-      } else if (x.kind !== 'officer' && !isPartnerRole(x.role)) return;
-      if (x.kind !== 'officer') nPartners++;
-      partners.push(x);
-    });
-    return partners;
+  // Grey marks (neutral). LinkedIn and X only, and only when that URL is stored.
+  const TEAM_SVG = {
+    linkedin: '<path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/>',
+    x: '<path fill="currentColor" d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.4l-5.8-7.58-6.63 7.58H.48l8.6-9.83L0 1.15h7.59l5.24 6.93 6.07-6.93zm-1.29 19.5h2.04L6.48 3.24H4.3l13.31 17.41z"/>'
+  };
+  function teamSoc(kind, url) {
+    const name = (SOC.names || {})[kind] || kind;
+    return '<a class="tsoc-a" href="' + esc(url) + '" target="_blank" rel="noopener">'
+      + '<svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + TEAM_SVG[kind] + '</svg>' + esc(name) + '</a>';
   }
-  function personSection(it, P) {
-    const partners = shownPeople(it);
-    const block = (title, xs) => xs.length ? (title ? '<h3>' + esc(title) + ' · ' + xs.length + '</h3>' : '') + '<div class="pcards">' + xs.map(partnerCard).join('') + '</div>' : '';
-    let h = block(COPY.people && COPY.people.shown != null ? COPY.people.shown : 'Partners and officers', partners);
-    // Show all: every current partner, same order and same Partner since / Left in rules (reviews pop-up style, no arrow).
-    const all = shownPeople(it, Infinity).filter(x => x.kind !== 'officer');
-    if (all.length > partners.filter(x => x.kind !== 'officer').length) {
-      const PC = COPY.people || {};
-      h += '<button type="button" class="ash"' + (P && P.open ? ' data-open="actpeople"' : ' data-gate') + '>' + esc(pl(PC.all || ['Show all {n} partner', 'Show all {n} partners'], all.length)) + '</button>';
-      if (P && P.open && typeof document !== 'undefined' && document.body) actModal('actpeople', fmt(PC.all_title || '{n} partners · {firm}', { n: all.length, firm: (P.firm && P.firm.name) || '' }), '<div class="pcards">' + all.map(partnerCard).join('') + '</div>');
-    }
-    return h;
+  function teamCard(x) {
+    const links = [];
+    const li = httpsHost(x.linkedin_url, /(^|\.)linkedin\.com$/i);
+    const xu = httpsHost(x.x_url, /(^|\.)(x\.com|twitter\.com)$/i);
+    if (li) links.push(teamSoc('linkedin', li));
+    if (xu) links.push(teamSoc('x', xu));
+    const role = String(x.role || '').trim();
+    return '<div class="tcard"><b>' + esc(x.head || '') + '</b>'
+      + (role ? '<span class="trole">' + esc(role) + '</span>' : '')
+      + (links.length ? '<div class="tsoc">' + links.join('') + '</div>' : '') + '</div>';
+  }
+  function personSection(it) {
+    const xs = teamPeople(it);
+    if (!xs.length) return '';
+    return '<div class="tcards">' + xs.map(teamCard).join('') + '</div>';
   }
   function newsBlock(it, P) {
     const rows = it || [], shown = rows.slice(0, 5);
@@ -955,11 +973,13 @@
       if (c.key === 'news') return Object.assign({}, c, { count: newsItems.length, items: newsItems, teaser: (newsItems[0] && newsItems[0].head) || '' });
       const s = Object.assign({}, byKey[c.key], c);
       if (s.key === 'lps') { const n = new Set((s.items || []).map(x => x.label)).size; if (n) s.count = n; }
-      // People: count only who is shown (no board seats); nobody shown = no section, chip or nav entry.
+      // Team (E1): CEO and founders only. Nobody live = no section, chip or nav entry. Heading is "Team" with no count or subtitle.
       if (s.key === 'people') {
-        const n = shownPeople(s.items).length;
+        const n = teamPeople(s.items).length;
         if (!n) return null;
         s.count = n;
+        s.nocount = true;
+        s.subtitle = '';
       }
       if (s.key === 'legal') {
         const n = legalCases(s.items).length;
@@ -992,6 +1012,7 @@
     paintActivity(main, P);
     paintSocial(main, P);
     paintChrome(main, P);
+    paintTags(main, P);
     if (csum) { csum.hidden = true; csum.innerHTML = ''; }
     if (!P.open) {
       if (main.querySelector('.spl')) main.querySelector('.spl').innerHTML = '';
@@ -1105,6 +1126,7 @@
     paintActivity(main, P);
     paintSocial(main, P);
     paintChrome(main, P);
+    paintTags(main, P);
     const list = main.querySelector('.list'); if (list) list.innerHTML = P.open ? ctable(P, checking, curN) : P.unchecked ? ctable(P, false, 0) + gate(P, '') : gate(P, ghost(P));
     const fn = main.querySelector('.rgt-n'), ft = pageSecs(P).reduce((a, s) => a + (s.count || 0), 0);
     if (fn && ft) { fn.textContent = ft; fn.hidden = false; }
@@ -1227,12 +1249,6 @@
     if (t == null) return null;
     const now = new Date();
     return t > Date.UTC(now.getUTCFullYear() - years, now.getUTCMonth(), now.getUTCDate());
-  }
-  function within12(d) {
-    const t = fundStart(d);
-    if (t == null) return false;
-    const now = new Date();
-    return t >= Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 12, now.getUTCDate());
   }
   function clampMoney(s) {
     return String(s || '').replace(/(\d+)\.(\d+)([TBMK])\b/gi, (_, a, b, u) => {
@@ -1627,5 +1643,5 @@
     view.total = full.total; view.head = full.head;
     return view;
   }
-  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows, setFirmName, compactCount, socialPills, metaLine, fundRows, aumFigure, partnerCard };
+  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows, setFirmName, compactCount, socialPills, metaLine, fundRows, aumFigure, teamCard };
 })();

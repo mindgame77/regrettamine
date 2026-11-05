@@ -46,28 +46,36 @@ const officers = [
 const board = Array.from({ length: 14 }, (_, i) => ({ head: 'Board ' + i, kind: 'board', role: 'Board seats: X', src }));
 const page = (items) => ({ firm: { name: 'F' }, sections: [{ key: 'people', count: items.length, items }] });
 
-test('officers are counted and board seats are not', () => {
-  const s = pageSecs(page([...officers, ...board])).find(x => x.key === 'people');
-  assert.equal(s.count, 3);
+test('a CEO is shown; other officers and board seats are not', () => {
+  const ceo = { head: 'Garry Tan', kind: 'officer', role: 'CEO/President' };
+  const s = pageSecs(page([...officers, ceo, ...board])).find(x => x.key === 'people');
+  assert.equal(s.count, 1);
   assert.equal(s.title, 'Team');
   assert.equal(s.subtitle, '');
+  assert.equal(s.nocount, true);
   assert.doesNotMatch(s.title + ' ' + s.subtitle, /board/i);
 });
 test('only board seats = no people section', () => {
   assert.equal(pageSecs(page(board)).find(x => x.key === 'people'), undefined);
 });
+test('only non-CEO officers = no people section', () => {
+  assert.equal(pageSecs(page(officers)).find(x => x.key === 'people'), undefined);
+});
 test('copy has no board seats wording for the section', () => {
   const c = copy.sections.list.find(x => x.key === 'people');
   assert.doesNotMatch(c.title + ' ' + c.subtitle, /board/i);
 });
-test('team section: heading Team with count, no subtitle, no group heading', () => {
+test('team section: heading Team, saved title, no count, subtitle, partner line or show all', () => {
   const { render } = sandbox.window.RegretCompany;
   const main = mainEl(), pmain = main.set('.pmain', el());
-  const P = Object.assign(page(officers), { open: true, checks: [] });
+  const ceo = { head: 'Garry Tan', kind: 'officer', role: 'CEO/President' };
+  const P = Object.assign(page([ceo]), { open: true, checks: [] });
   render(main, P);
   const h = pmain.innerHTML;
-  assert.match(h, /<h2>Team <em class="pc2">3<\/em><\/h2>/);
-  assert.doesNotMatch(h, /Partners and officers/);
-  assert.doesNotMatch(h, /<h3>[^<]*· 3<\/h3>/);
-  assert.match(h, /class="pcards"/);
+  assert.match(h, /<h2>Team<\/h2>/);
+  assert.match(h, /Garry Tan/);
+  assert.match(h, /CEO\/President/);
+  assert.match(h, /class="tcards"/);
+  assert.doesNotMatch(h, /pc2|Partners and officers|Partner since|Left in|Show all|class="pcards"|class="pfnd"/);
+  assert.doesNotMatch(h, /<p class="psub">/);
 });
