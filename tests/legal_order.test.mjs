@@ -43,7 +43,7 @@ function page(items) {
   return pmain.innerHTML;
 }
 const legal = (html) => (html.split('id="legal"')[1] || '').split('<article ')[0];
-const rows = (html) => [...legal(html).matchAll(/class="lgline"><span class="lgt">([^<]*)<\/span>/g)].map(m => m[1]);
+const rows = (html) => [...legal(html).matchAll(/class="lgline[^"]*"><span class="lgt">([^<]*)<\/span>/g)].map(m => m[1]);
 
 test('section is hidden when there are no cases', () => {
   const html = page([row('Lead (allegation, not verified): something', '2025', 'Unverified'), { grp: 'context', title: 'Context only', src }]);
@@ -71,13 +71,15 @@ test('only Active rows are highlighted red', () => {
   assert.match(legal(html), /Example Capital v\. B/);
   assert.match(legal(html), />Defendant</);
   assert.match(legal(html), />Plaintiff</);
+  assert.match(legal(html), /class="lgline st-act"><span class="lgt">A v\. Example Capital/);
+  assert.match(legal(html), /class="lgline st-dis"><span class="lgt">Example Capital v\. B/);
 });
 
 test('caps at 10 rows and offers Show all', () => {
   const items = Array.from({ length: 13 }, (_, i) => row('Case ' + i, String(2000 + i), i < 2 ? 'Active' : 'Closed'));
   const html = page(items);
   assert.equal(rows(html).length, 13);
-  assert.equal((legal(html).match(/<div class="lgline">/g) || []).length, 3);
+  assert.equal((legal(html).match(/<div class="lgline /g) || []).length, 3);
   assert.equal((legal(html).match(/data-extra="1"/g) || []).length, 10);
   assert.deepEqual(rows(html).slice(0, 2), ['Case 1', 'Case 0']);
   assert.match(legal(html), /class="ash" data-open="actlegal">Show all<\/button>/);

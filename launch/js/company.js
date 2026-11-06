@@ -576,7 +576,8 @@
     const act = c.status === 'Active';
     const meta = [c.court ? esc(c.court) : '', c.filed ? esc(fmt(LG.filed || 'Filed {y}', { y: c.filed })) : ''].filter(Boolean).join(' · ');
     const pills = [lpill(c.status, act), lpill(c.side), lpill(c.topic)].filter(Boolean).join('');
-    return '<div class="lgline"><span class="lgt">' + esc(c.title) + '</span>'
+    const tone = c.status === 'Active' ? ' st-act' : c.status === 'Settled' ? ' st-set' : (c.status === 'Dismissed' || c.status === 'Closed') ? ' st-dis' : '';
+    return '<div class="lgline' + tone + '"><span class="lgt">' + esc(c.title) + '</span>'
       + (meta ? '<span class="lgm">' + meta + '</span>' : '')
       + (pills ? '<span class="lgp">' + pills + '</span>' : '')
       + (c.settlement ? '<div class="lg-set">' + esc(c.settlement) + '</div>' : '') + '</div>';
@@ -739,13 +740,14 @@
   function investorRows(items) {
     return (items || []).map(investorPack).filter(Boolean);
   }
-  function investorRow(x, open) {
+  function investorRow(x, open, i) {
     const IV = COPY.investors || {};
     const year = investorYear(x.published_at);
     const who = [x.investor_name, x.investor_title, year].filter(Boolean).join(' · ');
     const icon = '<a class="ipi" href="' + esc(x.source_url) + '" target="_blank" rel="noopener" aria-label="' + esc(IV.source || 'Source') + '"><svg viewBox="0 0 256 256" width="12" height="12" aria-hidden="true" fill="currentColor"><path d="' + LINK_SIMPLE + '"/></svg></a>';
     const quote = open ? '<p class="ipq">“' + esc(x.quote) + '”</p>' : '';
-    return '<div class="ipr"><p class="ips"><span class="iplab">' + esc(IV.summary || 'Summary:') + '</span> ' + esc(x.summary) + '</p><p class="ipa"><span class="ipwho">' + esc(who) + '</span>' + icon + '</p>' + quote + '</div>';
+    const band = (Number(i) % 2 === 0) ? ' ipr-a' : ' ipr-b';
+    return '<div class="ipr' + band + '"><p class="ips"><span class="iplab">' + esc(IV.summary || 'Summary:') + '</span> ' + esc(x.summary) + '</p><p class="ipa"><span class="ipwho">' + esc(who) + '</span>' + icon + '</p>' + quote + '</div>';
   }
   function investorTitle() {
     const s = (CFG.sections.list || []).find(x => x.key === 'investors');
@@ -754,10 +756,10 @@
   function investorsHtml(items, P) {
     const rows = investorRows(items);
     if (!rows.length) return '';
-    const body = rows.map((x, i) => i < INVESTORS_SHOWN ? investorRow(x, false) : markExtra(investorRow(x, false))).join('');
+    const body = rows.map((x, i) => i < INVESTORS_SHOWN ? investorRow(x, false, i) : markExtra(investorRow(x, false, i))).join('');
     const open = !!(P && P.open);
     if (open && typeof document !== 'undefined' && document.body) {
-      actModal('actinvestors', investorTitle(), '<div class="iprs">' + rows.map(x => investorRow(x, true)).join('') + '</div>');
+      actModal('actinvestors', investorTitle(), '<div class="iprs">' + rows.map((x, i) => investorRow(x, true, i)).join('') + '</div>');
     }
     return '<div class="iprs" data-fit="1">' + body + '</div>' + (rows.length > INVESTORS_SHOWN ? showAllLink(open, 'actinvestors') : '');
   }
@@ -1585,23 +1587,45 @@
     }).join('') + '</div>';
   }
   // Sector share (PAGE_DATA_GUIDE B6e.9/A9.17, with Alex's 2026-11-04 change to B6e.9.5): stored sector_12m from firm_page.
-  // Top 5 sectors by deal count in color, largest first, then ONE grey "Other N" holding every other sector, the real
+  // Top 5 sectors by deal count, largest first, then ONE "Other" holding every other sector, the real
   // "Other" tag AND deals with no sector, so the total equals all deals in the last 12 months. Shown at 10+ deals.
-  // One fixed color per sector (v2_sector names), same on the bar, legend and deal pills. No red/green (no good/bad meaning); picked for a CIELAB distance of 24+ between any two and from grey.
-  // Sectors outside a firm's top 5, the "Other" tag and deals with no sector render grey (var(--mute)).
+  // A1 palette. One hue per industry name, the same on every firm, range, chart, popup and deal row.
+  // Known v2 names are listed alphabetically against the palette order. Other is always slate.
+  // A future name uses a hash of that name only, into the 17 hues, so it does not depend on rank or firm.
+  const SECTOR_PALETTE = ['#4B2BD6', '#14D9A5', '#FFB020', '#FF5C8A', '#2EA8FF', '#8A63F5', '#18BBD4', '#FF9566', '#9EDB51', '#788BFF', '#F26C68', '#42CFC3', '#D781EF', '#E6BE45', '#3773DB', '#EC7DA8', '#77C9A1', '#A7A2C2'];
   const SECTOR_COLORS = {
-    'AI models': '#2409aa', 'AI agents': '#a542d7', 'Fintech': '#2525f4', 'Health': '#f425af', 'Bio': '#f425f4',
-    'Climate & Energy': '#164069', 'Consumer': '#da620b', 'Enterprise software': '#287fbd', 'Developer tools': '#695b16',
-    'Security': '#161669', 'Crypto': '#0b50da', 'Hardware & Robotics': '#793606', 'Mobility': '#258cf4', 'Real estate': '#098faa',
-    'Education': '#790649', 'Media & Gaming': '#931f8a', 'Food & Agriculture': '#aa8f09', 'Other': 'var(--mute)'
+    'AI agents': '#4B2BD6',
+    'AI models': '#14D9A5',
+    'Bio': '#FFB020',
+    'Climate & Energy': '#FF5C8A',
+    'Consumer': '#2EA8FF',
+    'Crypto': '#8A63F5',
+    'Developer tools': '#18BBD4',
+    'Education': '#FF9566',
+    'Enterprise software': '#9EDB51',
+    'Fintech': '#788BFF',
+    'Food & Agriculture': '#F26C68',
+    'Hardware & Robotics': '#42CFC3',
+    'Health': '#D781EF',
+    'Media & Gaming': '#E6BE45',
+    'Mobility': '#3773DB',
+    'Real estate': '#EC7DA8',
+    'Security': '#77C9A1',
+    'Other': '#A7A2C2'
   };
-  // One hue per industry name. Rank changes the order, never the color. Charts, the sector popup and deal rows all use this.
   function sectorColor(name) {
     const s = String(name || '').trim();
-    if (s && Object.prototype.hasOwnProperty.call(SECTOR_COLORS, s)) return SECTOR_COLORS[s];
-    return SECTOR_COLORS.Other || 'var(--mute)';
+    if (!s || /^other$/i.test(s)) return SECTOR_COLORS.Other;
+    if (Object.prototype.hasOwnProperty.call(SECTOR_COLORS, s)) return SECTOR_COLORS[s];
+    const found = Object.keys(SECTOR_COLORS).find(k => k.toLowerCase() === s.toLowerCase());
+    if (found) return SECTOR_COLORS[found];
+    const hues = SECTOR_PALETTE.slice(0, 17);
+    let h = 2166136261;
+    const n = s.toLowerCase();
+    for (let i = 0; i < n.length; i++) h = Math.imul(h ^ n.charCodeAt(i), 16777619);
+    return hues[(h >>> 0) % hues.length];
   }
-  // Top-5 color map set by sectorShare. Deal pills use SECTOR_COLORS for every sector (only the real "Other" tag is grey).
+  // sectorShare reads the same named colors. It does not assign a second palette.
   let SEC_MAP = null;
   function sectorShare(A) {
     SEC_MAP = null;

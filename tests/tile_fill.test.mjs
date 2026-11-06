@@ -55,11 +55,20 @@ test('legal case titles are not ellipsized', () => {
 
 test('industry color comes from the name, and the donut is a filled ring', () => {
   const { sectorColor } = sandbox.window.RegretCompany;
-  assert.equal(sectorColor('Health'), '#f425af');
-  assert.equal(sectorColor('Enterprise software'), '#287fbd');
-  assert.equal(sectorColor('Health'), sectorColor('Health'));
-  assert.equal(sectorColor('Not a real sector'), 'var(--mute)');
+  const palette = ['#4B2BD6', '#14D9A5', '#FFB020', '#FF5C8A', '#2EA8FF', '#8A63F5', '#18BBD4', '#FF9566', '#9EDB51', '#788BFF', '#F26C68', '#42CFC3', '#D781EF', '#E6BE45', '#3773DB', '#EC7DA8', '#77C9A1', '#A7A2C2'];
   const js = fs.readFileSync(new URL('launch/js/company.js', root), 'utf8');
+  palette.forEach(hex => assert.match(js, new RegExp(hex, 'i')));
+  assert.equal(sectorColor('AI agents'), '#4B2BD6');
+  assert.equal(sectorColor('Enterprise software'), '#9EDB51');
+  assert.equal(sectorColor('Health'), '#D781EF');
+  assert.equal(sectorColor('Security'), '#77C9A1');
+  assert.equal(sectorColor('Other'), '#A7A2C2');
+  assert.equal(sectorColor('other'), '#A7A2C2');
+  assert.equal(sectorColor('Health'), sectorColor('health'));
+  const future = sectorColor('Quantum widgets');
+  assert.equal(future, sectorColor('Quantum widgets'));
+  assert.notEqual(future, '#A7A2C2');
+  assert.ok(palette.slice(0, 17).includes(future));
   assert.doesNotMatch(js, /PAL\[/);
   assert.doesNotMatch(js, /stroke-dashoffset/);
   assert.match(js, /function ringSlice/);
@@ -70,7 +79,13 @@ test('LP tile has no commitment count, investors and legal drop row rules', () =
   const js = fs.readFileSync(new URL('launch/js/company.js', root), 'utf8');
   assert.doesNotMatch(js, /COPY\.commitments/);
   assert.match(js, /oneSource \? src\.slice\(0, 1\)/);
-  assert.match(css, /\.bento #investors \.ipr\{border-top:0\}/);
+  assert.match(css, /\.bento #investors \.ipr,\.ov \.ipr\{border-top:0/);
+  assert.match(css, /\.ipr-a\{background:#E4F2FF\}/);
+  assert.match(css, /\.ipr-b\{background:#F1F0F5\}/);
+  assert.match(css, /\.lgline\.st-act\{background:#FFE3DE\}/);
+  assert.match(css, /\.lgline\.st-dis\{background:#F1F0F5\}/);
+  assert.match(css, /\.lgline\.st-set\{background:#E3F8EE\}/);
+  assert.match(css, /\.ips \.iplab\{font-weight:700/);
   assert.match(css, /\.bento #lps \.lpl \.rt\{[^}]*text-overflow:ellipsis/);
   const legal = css.slice(css.indexOf('.lglines .lgline{'), css.indexOf('}', css.indexOf('.lglines .lgline{')) + 1);
   assert.match(legal, /border-bottom:0/);
