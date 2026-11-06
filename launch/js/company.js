@@ -1400,9 +1400,10 @@
   const roundName = (r) => String(r || '').replace(/^stage tag:\s*/i, '');
   const fundName = (n) => String(n || '').replace(/,?\s*L\.?\s?P\.?$/i, '').trim();
   // SEC facts from the hero list, as linked pills (not cards). HQ is the plain city text in the meta line.
+  // Staff and Investment staff are not shown. Private funds is, when the count is not zero and the link is SEC.
   function secPills(P) {
     const hero = (Array.isArray(P.hero) ? P.hero : []).filter(h => h && h.value && h.label !== 'HQ');
-    const want = [[/^staff$/i, HCOPY.staff || 'Staff'], [/investment staff/i, HCOPY.investment_staff || 'Investment staff'], [/private funds?/i, HCOPY.private_funds || 'Private funds']];
+    const want = [[/private funds?/i, HCOPY.private_funds || 'Private funds']];
     const links = [];
     want.forEach(([re, lab]) => {
       if (links.length >= 3) return;
