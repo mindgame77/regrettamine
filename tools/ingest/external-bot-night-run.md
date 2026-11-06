@@ -45,13 +45,25 @@ curl -s -X POST "$URL" -H "x-ingest-key: $KEY" -H 'content-type: application/jso
 # 200 -> {"ok":true,"status":"submitted","accepted_records":37,"rejected_records":0,"errors":[]}
 # 422 -> {"ok":false,"status":"queued","attempts":1,"rejected_records":2,"errors":["records[4] (r005): no sources ...", ...]}
 ```
-Rules the server enforces (whole dump is rejected if any fails):
+A 200 is a clean batch: those records are stored for the Checker. A 422 means the precheck rejected the invalid records before a Checker store (`accepted_records` is 0). Each `errors` line is one failed fact: its id and the reason. Record what to fix from that reason.
+
+Check each fact on its own ([A4.7](../../docs/PAGE_DATA_GUIDE.md#a4), [A5.2](../../docs/PAGE_DATA_GUIDE.md#a5), [A5.3](../../docs/PAGE_DATA_GUIDE.md#a5), [A5.5](../../docs/PAGE_DATA_GUIDE.md#a5)):
+1. Check each fact separately.
+2. Reject only the failed fact. Record its id, the reason, and what to fix.
+3. Good facts go to the Checker, which verifies the source.
+4. A dead source rejects only that fact. If the open was not attempted, that fact waits.
+5. Do not invent a status or a correction.
+6. Reject the whole upload only when it is unreadable, the bot is unknown, a safety rule fails, or it is a duplicate.
+
+The live submit still accepts a dump for the Checker only when every record in that dump passes the precheck. That function is not changed. Drop each invalid fact before the store. Resubmit only the valid facts as a clean batch. That batch is what the Checker verifies. A bad fact is never published.
+
+Shape the server still requires:
 - Top-level keys: `schema_version` (= `"dump-1.2"`), `firm`, `coverage`, `records`, `leads`, `search_log`.
 - `firm.firm_id` must equal the `registry_id` you claimed. `firm` needs `firm_id`, `name`, `website`, `generated_at`.
 - `coverage` must not be empty.
 - Every record: unique `record_id`, allowed `field_path`, `entity {id,type,name}`, `value` object, valid `certainty`, `query_ids` that exist in `search_log`, and **at least one source**.
 - Every source: real page `url` (not a search-results or chat link), verbatim `quote` (5–300 chars), ISO `retrieved_at`, `tier` T1/T2/T3, boolean `body_read` and `firm_controlled`.
-- Whole request ≤ 2 MB.
+- Whole request ≤ 2 MB. An unreadable body, an unknown bot, a safety failure, or a duplicate rejects the upload. A bad record rejects that record: leave it out of the clean batch.
 
 ### Fail (you cannot research this firm)
 ```bash
@@ -65,7 +77,7 @@ curl -s -X POST "$URL" -H "x-ingest-key: $KEY" -H 'content-type: application/jso
 1. Call `claim` with a `count` of up to 300 (only as many firms as you can finish within 6 hours). If `firms` is empty (`none_left: true`), go to Step 4.
 2. Research each claimed firm following **Part B** below. Input for Part B: `firm_id` = `registry_id`, plus `name` and `website` from the claim (also use `sec_crd`, `lei`, `hq_city`, `state`, `country` to confirm identity). The registry website can be wrong (e.g. a social profile or an unrelated site); confirm the official site yourself.
 3. Build the dump-1.2 JSON and call `submit`.
-4. If the response is 422: read every error, fix them all (remove records you cannot source; never invent a source), and resubmit **once** with the same `registry_id` and `bot_id`. If it fails again, call `fail` with a short reason and move on.
+4. If the response is 422: each error is one failed fact (id and reason). Write down what to fix. Drop that fact, or fix it from the page you read. Never invent a source, a status, or a correction. Resubmit **once**, only the valid facts, as a clean batch, with the same `registry_id` and `bot_id`. That batch is what the Checker verifies. If that resubmit is still rejected, call `fail` with the remaining ids and reasons and move on. Call `fail` immediately, and do not resubmit, when the dump is unreadable, the bot is unknown, a safety rule fails, or the upload is an exact copy of an earlier one. A duplicate record inside the batch is a failed fact: drop it and keep the valid facts.
 5. If you cannot research the firm at all (cannot identify it, everything blocked), call `fail` with the reason. Do not submit an empty or made-up dump.
 6. Go back to 1. Repeat until `claim` returns no firms.
 
@@ -106,7 +118,7 @@ This shape is how `research-ingest` accepts a dump today. It is not the rulebook
 
 # Task
 
-You are a due-diligence researcher. For **one venture capital firm**, given as `firm_id`, `name` and `website`, you will search public sources and return **one JSON document** in the exact format of §8. The document is machine-imported: every record is re-checked by opening its URL and finding the quote on the page. Records that fail are deleted, so follow the rules below exactly.
+You are a due-diligence researcher. For **one venture capital firm**, given as `firm_id`, `name` and `website`, you will search public sources and return **one JSON document** in the exact format of §8. The document is machine-imported: every record is re-checked by opening its URL and finding the quote on the page. Check each fact on its own. A fact that fails is not published; the reply names its id and the reason. Record what to fix. Resubmit only the valid facts as a clean batch. The Checker verifies those sources. A bad fact is never published.
 
 We assess VC firms for founders: who runs the firm, what it raised, what happened to the companies it backed, and whether there are lawsuits, regulatory actions or credible complaints.
 
