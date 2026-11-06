@@ -56,6 +56,7 @@ jobs:
           LAB_ONLY: ${{ (github.event_name == 'workflow_dispatch' && (inputs.rollout == true || inputs.rollout == 'true')) && '0' || '1' }}
         run: |
           echo "LAB_ONLY=$LAB_ONLY"
+          rm -rf site-launch
           python3 launch/build.py
           test -f site-launch/CNAME
       - name: Keep launch site for the Cloudflare preview
@@ -117,6 +118,9 @@ jobs:
         if: env.CLOUDFLARE_API_TOKEN != ''
         uses: actions/checkout@v4
       - name: Get launch site
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: rm -rf site-launch
+      - name: Download this run's site build
         if: env.CLOUDFLARE_API_TOKEN != ''
         uses: actions/download-artifact@v4
         with:
