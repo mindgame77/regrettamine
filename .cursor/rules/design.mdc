@@ -46,3 +46,17 @@ alwaysApply: true
 - One key per slot; every alternative text is a variant with its `when` condition (e.g. `auth.heading.{gate,page,list,pay,plans,confirm,forgot,reset}`, `verdict.headline.{clear,review,flag,no_data}`, `unlock.cta.{logged_out,free,paid}`).
 - Build tokens: `{{s:key|variant}}` in HTML/JSON, `{{sjs:key|variant}}` inside single-quoted JS strings. Runtime: `RS.t(key, variant, vars)`.
 - A field in the data model that can show different texts must say so (variant + condition). Add new variants to strings.js and the catalog lists them automatically.
+
+## Firm page tiles
+One layout for every firm. Do not redesign a tile per firm.
+
+- Keep the approved type and spacing. Desktop is two columns. Leave the phone layout as the natural stack.
+- Paired desktop tiles use the Deals announced / Videos size. Recent deals stays full width. The hero stays as it is.
+- Use normal type and row padding. Do not shrink, squeeze, clip, or overlap a row. Show only whole rows that fit. The rest stay in the existing Show all dialog. One Show all area stays reserved at the bottom.
+- Sectors, Rounds, and Deals announced share one 12 months / All time control.
+- An industry name keeps one color from the approved 18-color palette in the charts, the sector popup, and deal rows. Rank does not choose the color. Other is always slate `#A7A2C2`.
+- Team is the real people only. No filler. A social pill is the icon and the follower count, with no platform name.
+- Limited partners are one line: the name, the stored amounts, and one source. No commitment count. Show all lists every stored source.
+- What investors look for: the Summary label and the summary sentence are bold. The attribution stays regular. Rows alternate soft blue and soft gray.
+- Legal titles are complete, never ellipsized. Active is soft red, Dismissed soft gray, Settled soft green.
+- Every fact comes from the existing database. Do not invent or hardcode a firm's facts.
