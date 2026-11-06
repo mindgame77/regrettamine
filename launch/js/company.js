@@ -6,9 +6,9 @@
   const pl = (pair, n) => fmt(Array.isArray(pair) ? pair[n === 1 ? 0 : 1] : pair, { n });
   const esc = (x) => String(x == null ? '' : x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   // One Show all control for every full list. Text is exactly "Show all". Callers decide when it appears.
-  function showAllLink(open, id, extra) {
-    const label = (COPY.activity && COPY.activity.show_all) || 'Show all';
-    return '<button type="button" class="ash"' + (open ? ' data-open="' + esc(id) + '"' : ' data-gate') + (extra || '') + '>' + esc(label) + '</button>';
+  function showAllLink(open, id, extra, label) {
+    const text = label || (COPY.activity && COPY.activity.show_all) || 'Show all';
+    return '<button type="button" class="ash"' + (open ? ' data-open="' + esc(id) + '"' : ' data-gate') + (extra || '') + '>' + esc(text) + '</button>';
   }
   // ALL-CAPS names from filings (SEC, FEC: "KUSHNER, JOSHUA GROWTH DEMOCRATS") shown in title case, display only.
   // Same rules as secTitle() in launch/edge/firm.mjs and sec_title() in launch/build.py; the stored data is unchanged.
@@ -96,11 +96,10 @@
     // The flag sits after the HQ city. US stays "City, ST". No country name. No city: no flag.
     const flag = firm.hq ? countryFlag(firm.hq_country) : '';
     const hq = firm.hq ? esc(nice(firm.hq)) + (flag ? ' ' + flag : '') : '';
-    const bits = [hq, firm.short_name ? esc(nice(firm.short_name)) : ''].filter(Boolean);
     const link = siteLink(P);
     const y = Number(firm.founded_year);
     const fy = Number.isInteger(y) && y > 1000 && y <= new Date().getFullYear() ? esc((HCOPY.founded || 'Founded {y}').replace('{y}', String(y))) : '';
-    return [bits.join(' · '), link, fy].filter(Boolean).join(' · ');
+    return [hq, fy, link].filter(Boolean).join(' · ');
   }
   // Social pills under the meta line (firm_page.firm.social; only accounts linked from the firm's own site).
   // Count only, compact, at most 3 significant digits, half up: 412345 -> 412K, 4230 -> 4.23K. No data: no row.
@@ -140,16 +139,36 @@
   function socialPills(P) {
     return ((P.firm || {}).social || []).map(a => socPill(a)).filter(Boolean).join('');
   }
+  function contactBits(P) {
+    const firm = (P && P.firm) || {};
+    const email = String(firm.contact_email || '').trim();
+    let h = '';
+    if (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) h += '<button type="button" class="hp" data-copy="' + esc(email) + '">' + esc(email) + '</button>';
+    return h + secPills(P);
+  }
   function paintSocial(main, P) {
-    // F11: social counts shown as pills under the meta line (Alex, 2026-11-04 4:56 PM PT).
+    // Social counts, email and any private-funds pill sit on one row with the city line. No "More" chip.
     const meta = main.querySelector('.ph .m');
     let row = main.querySelector('.ph .socp');
-    const html = meta ? socialPills(P) : '';
+    const html = meta ? socialPills(P) + contactBits(P) : '';
     if (!html) { if (row) row.remove(); return; }
-    if (!row) { row = document.createElement('div'); row.className = 'secp socp'; meta.insertAdjacentElement('afterend', row); }
+    const anchor = main.querySelector('.ph .intro') || meta;
+    if (!row) { row = document.createElement('div'); row.className = 'secp socp'; anchor.insertAdjacentElement('afterend', row); }
+    else if (row.previousElementSibling !== anchor && anchor.insertAdjacentElement) anchor.insertAdjacentElement('afterend', row);
     row.setAttribute('aria-label', SOC.row || 'Social accounts');
     row.setAttribute('role', 'group');
     row.innerHTML = html;
+  }
+  function paintThesis(main, P) {
+    if (!main || !main.querySelector) return;
+    const sec = (P.sections || []).find(s => s && s.key === 'overview');
+    const item = sec && (sec.items || []).find(x => x && String(x.label || '').trim().toLowerCase() === 'thesis' && String(x.value == null ? '' : x.value).trim());
+    let el = main.querySelector('.ph .intro');
+    if (!item) { if (el && el.remove) el.remove(); return; }
+    const meta = main.querySelector('.ph .m');
+    if (!meta || !meta.insertAdjacentElement) return;
+    if (!el) { el = document.createElement('p'); el.className = 'intro'; meta.insertAdjacentElement('afterend', el); }
+    el.textContent = String(item.value).trim();
   }
   function headerPills(P) {
     const firm = P.firm || {}, bits = [];
@@ -180,13 +199,8 @@
         else h1.appendChild(apply);
       } else if (apply && apply.remove) apply.remove();
     }
-    const meta = main.querySelector('.ph .m') || main.querySelector('.m');
-    if (!meta || !meta.insertAdjacentElement) return;
-    let row = main.querySelector('.hpills');
-    const html = headerPills(P);
-    if (!html) { if (row && row.remove) row.remove(); return; }
-    if (!row) { row = document.createElement('div'); row.className = 'secp hpills'; row.setAttribute('role', 'group'); meta.insertAdjacentElement('afterend', row); }
-    row.innerHTML = html;
+    const old = main.querySelector('.hpills');
+    if (old && old.remove) old.remove();
   }
   // Industries and stages sit under the meta line and social row, above the activity cards.
   // Stored text, word for word. No source pill. An empty list draws nothing, including its label.
@@ -512,7 +526,7 @@
     const sm = status === 'Settled' ? String(x.note || '').match(/[^.]*\bsettle[^.]*\$\s?[\d.,]+\s*(?:[MBK]\b|million|billion)?[^.]*\.?/i) : null;
     const su = safeUrl(x.summary_url), sx = String(x.summary || '').replace(/\s+/g, ' ').trim();
     const summary = su && sx ? { text: sx.length > 300 ? sx.slice(0, 300).trimEnd() : sx, date: x.summary_date || '', url: su } : null;
-    return { title: nice(title), status, side, topic, other, court, filed: filedY, closed: closedY, settlement: sm ? sm[0].trim() : '', src: x.src || [], summary };
+    return { title: nice(title), status, side, topic, other, court, filed: filedY, closed: closedY, settlement: sm ? sm[0].trim() : '', src: x.src || [], summary, note: String(x.note || '').trim() };
   }
   function legalCases(items) {
     return (items || []).map(legalCase).filter(c => c && (c.src || []).some(s => safeUrl(s.url)))
@@ -539,13 +553,31 @@
     return '<div class="lsum"><p class="lsum-t">' + esc(sm.text) + '</p><div class="lsm">'
       + (d ? '<span>' + esc(fmt(LG.summary_date || 'Summary {d}', { d })) + '</span>' : '') + '</div></div>';
   }
-  const LEGAL_MAX = 10;
+  const LEGAL_PREVIEW = 3;
+  // One line on the card. The row is not a control. Show all opens the detail dialog.
+  function legalLine(c) {
+    const act = c.status === 'Active';
+    const meta = [c.court ? esc(c.court) : '', c.filed ? esc(fmt(LG.filed || 'Filed {y}', { y: c.filed })) : ''].filter(Boolean).join(' · ');
+    const pills = [lpill(c.status, act), lpill(c.side), lpill(c.topic)].filter(Boolean).join('');
+    return '<div class="lgline"><span class="lgt">' + esc(c.title) + '</span>'
+      + (meta ? '<span class="lgm">' + meta + '</span>' : '')
+      + (pills ? '<span class="lgp">' + pills + '</span>' : '') + '</div>';
+  }
+  function legalDetail(c) {
+    const bits = [];
+    if (c.note) bits.push('<p class="lgnote">' + esc(c.note) + '</p>');
+    if (c.summary) bits.push(legalSummary(c.summary));
+    if ((c.src || []).length) bits.push('<div class="rm">' + chips(c.src) + '</div>');
+    return '<div class="lgd">' + legalLine(c) + bits.join('') + '</div>';
+  }
   function legalHtml(items, P) {
     const cs = legalCases(items);
-    let h = '<div class="rws">' + cs.slice(0, LEGAL_MAX).map(legalRow).join('') + '</div>';
-    if (cs.length > LEGAL_MAX) {
-      h += showAllLink(true, 'actlegal');
-      if (typeof actModal === 'function' && typeof document !== 'undefined' && document.body) actModal('actlegal', fmt(LG.all_title || '{n} legal items · {firm}', { n: cs.length, firm: (P && P.firm && P.firm.name) || '' }), '<div class="rws">' + cs.map(legalRow).join('') + '</div>');
+    if (!cs.length) return '';
+    const open = !!(P && P.open);
+    let h = '<div class="lglines">' + cs.slice(0, LEGAL_PREVIEW).map(legalLine).join('') + '</div>';
+    h += showAllLink(open, 'actlegal');
+    if (open && typeof actModal === 'function' && typeof document !== 'undefined' && document.body) {
+      actModal('actlegal', (LG.title || 'Legal & regulatory'), '<div class="lgds">' + cs.map(legalDetail).join('') + '</div>');
     }
     return h;
   }
@@ -644,7 +676,7 @@
     return '<div class="vgrid">' + rows.map(videoTile).join('') + '</div>';
   }
   // News shows the 6 newest stories. "Show all" only when there are more than 6.
-  const NEWS_SHOWN = 6;
+  const NEWS_SHOWN = 3;
   function newsBlock(it, P) {
     const rows = it || [], shown = rows.slice(0, NEWS_SHOWN);
     let h = '<div class="pgr">' + shown.map(x => card(x, true)).join('') + '</div>';
@@ -659,7 +691,7 @@
   // attribution, source, and the exact quote. Rows are not controls and never expand in place.
   // The icon is Phosphor LinkSimple (launch/assets/icons/link-simple.svg), drawn at 12px.
   const LINK_SIMPLE = 'M165.66,90.34a8,8,0,0,1,0,11.32l-64,64a8,8,0,0,1-11.32-11.32l64-64A8,8,0,0,1,165.66,90.34ZM215.6,40.4a56,56,0,0,0-79.2,0L106.34,70.45a8,8,0,0,0,11.32,11.32l30.06-30a40,40,0,0,1,56.57,56.56l-30.07,30.06a8,8,0,0,0,11.31,11.32L215.6,119.6a56,56,0,0,0,0-79.2ZM138.34,174.22l-30.06,30.06a40,40,0,1,1-56.56-56.57l30.05-30.05a8,8,0,0,0-11.32-11.32L40.4,136.4a56,56,0,0,0,79.2,79.2l30.06-30.07a8,8,0,0,0-11.32-11.31Z';
-  const INVESTORS_SHOWN = 5;
+  const INVESTORS_SHOWN = 2;
   function investorYear(v) {
     const m = String(v == null ? '' : v).match(/^(\d{4})/);
     return m ? m[1] : '';
@@ -1147,6 +1179,7 @@
     if (tocEl) tocEl.style.display = ''; if (lk) lk.style.display = '';
     const meta = main.querySelector('.m'); if (meta) meta.innerHTML = metaLine(P);
     paintActivity(main, P);
+    paintThesis(main, P);
     paintSocial(main, P);
     paintChrome(main, P);
     paintTags(main, P);
@@ -1161,23 +1194,12 @@
       return { total: 0, head: () => GT.title };
     }
     const fn = main.querySelector('.rgt-n'); if (fn && total) { fn.textContent = total; fn.hidden = false; }
-    const toc = [];
-    secs.forEach(s => {
-      toc.push(s);
-      if (s.key === 'thesis' && P.checks && P.checks.length) toc.push({ key: 'check-summary', title: COPY.summary, count: P.checks.length });
-    });
-    if (P.checks && P.checks.length && !secs.some(s => s.key === 'thesis')) toc.unshift({ key: 'check-summary', title: COPY.summary, count: P.checks.length });
-    if (main.querySelector('.spl')) main.querySelector('.spl').innerHTML = secs.map(s => '<a class="spp" href="#' + esc(s.key) + '">' + esc(s.title) + (s.nocount ? '' : ' <em>' + s.count + '</em>') + '</a>').join('');
-    if (tocEl) tocEl.innerHTML = '<b>' + COPY.toc + '</b>' + toc.map(s => '<a href="#' + esc(s.key) + '">' + esc(s.title) + (s.nocount ? '' : ' <span>' + s.count + '</span>') + '</a>').join('');
-    let body = '';
-    secs.forEach(s => {
-      body += '<section id="' + esc(s.key) + '" class="ps"><h2>' + esc(s.title) + (s.nocount ? '' : ' <em class="pc2">' + s.count + '</em>') + '</h2>'
-        + (R[s.renderer] || R.facts)(s.items || [], P, s) + '</section>';
-      if (s.key === 'thesis') body += checkSummaryHtml(P);
-    });
-    if (!secs.some(s => s.key === 'thesis')) body = checkSummaryHtml(P) + body;
-    const pmain = main.querySelector('.pmain'); if (pmain) pmain.innerHTML = body;
-    if (tocEl) spy(main);
+    if (main.querySelector('.spl')) main.querySelector('.spl').innerHTML = '';
+    if (tocEl) { tocEl.innerHTML = ''; tocEl.style.display = 'none'; }
+    const pmain = main.querySelector('.pmain');
+    if (pmain) pmain.innerHTML = bentoHtml(P, secs);
+    CHART_P = P;
+    paintCharts(main, P);
     const lc = main.querySelector('#lockcard');
     if (lc) { lc.hidden = P.open; lc.querySelector('b').textContent = fmt(COPY.lockcard, { n: total, firm }); lc.querySelector('p').textContent = COPY.lockcard_sub; }
     const pu = document.getElementById('puse'); if (pu) pu.textContent = fmt(COPY.use_line, { n: total, firm });
@@ -1261,6 +1283,7 @@
       if (meta) meta.innerHTML = esc(CK.sources[0]) + ' <b>' + esc(CK.sources[1]) + '</b>' + (link ? ' · ' + link : '');
     } else if (meta) meta.innerHTML = metaLine(P);
     paintActivity(main, P);
+    paintThesis(main, P);
     paintSocial(main, P);
     paintChrome(main, P);
     paintTags(main, P);
@@ -1402,7 +1425,8 @@
   // SEC facts from the hero list, as linked pills (not cards). HQ is the plain city text in the meta line.
   function secPills(P) {
     const hero = (Array.isArray(P.hero) ? P.hero : []).filter(h => h && h.value && h.label !== 'HQ');
-    const want = [[/^staff$/i, HCOPY.staff || 'Staff'], [/investment staff/i, HCOPY.investment_staff || 'Investment staff'], [/private funds?/i, HCOPY.private_funds || 'Private funds']];
+    // Staff and investment staff are not shown (Alex). Private funds only, and only with an SEC source and a real count.
+    const want = [[/private funds?/i, HCOPY.private_funds || 'Private funds']];
     const links = [];
     want.forEach(([re, lab]) => {
       if (links.length >= 3) return;
@@ -1530,6 +1554,17 @@
         return '<div class="ad"><b>' + coName(d) + '</b><span>' + esc(roundName(d.round)) + '</span><span>' + esc(fdate(d.date) || '') + '</span>'
           + src(u) + '</div>'; }).join('') + '</div>';
   }
+  function dealCards(ds) {
+    return '<div class="dcards">' + ds.map(d => {
+      const u = safeUrl(d.url);
+      const r = [labRound(d.round) || '—', dealAmt(d.amount, d.currency) || '—', d.lead ? AC.lead : ''].filter(Boolean).join(' · ');
+      const src = u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(hostOf(u)) + '</a>' : '—';
+      const sec = d.sector ? '<b class="arty" style="color:' + (SECTOR_COLORS[String(d.sector).trim()] || 'var(--mute)') + '">' + esc(d.sector) + '</b>' : '<b>—</b>';
+      return '<article class="dcard"><div class="dname">' + coName(d) + '</div><div class="dmeta">'
+        + '<div><span>Sector</span>' + sec + '</div><div><span>Round</span><b>' + esc(r) + '</b></div>'
+        + '<div><span>Date</span><b>' + esc(fdate(d.date) || '—') + '</b></div><div><span>Source</span><b>' + src + '</b></div></div></article>';
+    }).join('') + '</div>';
+  }
   // Sector share (PAGE_DATA_GUIDE B6e.9/A9.17, with Alex's 2026-11-04 change to B6e.9.5): stored sector_12m from firm_page.
   // Top 5 sectors by deal count in color, largest first, then ONE grey "Other N" holding every other sector, the real
   // "Other" tag AND deals with no sector, so the total equals all deals in the last 12 months. Shown at 10+ deals.
@@ -1636,7 +1671,7 @@
       }
     } finally { ov._busy = false; }
   });
-  const fundsLine = (P, n) => '<span class="afl">' + esc(pl(AC.funds_sec, n)) + ' · ' + showAllLink(P.open, 'actfunds', P.open ? ' aria-haspopup="dialog"' : '') + '</span>';
+  const fundsLine = (P, n) => '<span class="afl">' + showAllLink(P.open, 'actfunds', P.open ? ' aria-haspopup="dialog"' : '', 'Show all (' + n + (n === 1 ? ' fund)' : ' funds)')) + '</span>';
   function fundRows(fs) {
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_fund) + '</span><span>' + esc(AC.h_amount) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + fs.map(x => { const u = safeUrl(x.url);
@@ -1708,56 +1743,229 @@
   function activity(P) {
     const A = P.activity, firm = P.firm.name;
     if (!A) return '';
-    const n = A.counts || {}, d0 = A.latest_deal, r0 = A.latest_review, tiles = [];
+    const n = A.counts || {}, d0 = A.latest_deal, tiles = [];
     if (Number(A.deals_12m) > 0 || (A.deals_12m == null && A.active && d0)) {
-      const y = yearOf(d0 && d0.date);
-      const ld = y ? fmt(AC.last_deal, { date: y }) : '';
-      const sub = d0 ? [d0.company, roundName(d0.round)].filter(Boolean).join(', ') : '';
-      tiles.push('<div class="att aon"><i></i><div><b>' + esc(AC.active) + '</b><span>' + esc(ld) + '</span><em>' + esc(sub) + '</em></div></div>');
+      const u = d0 && safeUrl(d0.url);
+      const inner = '<i></i><div><b>' + esc(AC.active) + '</b></div>';
+      tiles.push(u ? '<a class="att aon" href="' + esc(u) + '" target="_blank" rel="noopener">' + inner + '</a>' : '<div class="att aon">' + inner + '</div>');
     }
-    if (A.deals_12m > 0) tiles.push(tile(AC.deals_12m, esc(A.deals_12m), '', 'amt'));
-    // F7.8 / M1.8.3: one money tile. Latest closed fund with an amount, else AUM, else news AUM, else nothing.
+    if (A.deals_12m > 0) {
+      const when = d0 ? (fdate(d0.date) || yearOf(d0.date)) : '';
+      const sub = d0 && d0.company ? 'Last deal: ' + d0.company + (when ? ' · ' + when : '') : '';
+      tiles.push(tile(AC.deals_12m, esc(A.deals_12m), esc(sub), 'amt'));
+    }
+    // One money tile. Latest closed fund with an amount, else AUM, else nothing.
     const picked = pickFund(P);
     if (picked) tiles.push(fundCard(picked));
     else { const a = aumCard(P); if (a) tiles.push(a); }
-    // A9.6: "N funds on SEC record · Show all" inside the fund tile. Show all opens the same popup as Show all deals.
     const fs = A.funds_sec, fsn = fs && Number(fs.n) > 0 ? Number(fs.n) : 0;
     const ti = tiles.findIndex(t => t.indexOf('att afd') > -1);
-    if (fsn && ti > -1) {
-      tiles[ti] = tiles[ti].replace(/<\/div>$/, fundsLine(P, fsn) + '</div>');
-    }
-    // No tile to hang the line under (e.g. accel): the line sits on its own where the tiles would be.
+    if (fsn && ti > -1) tiles[ti] = tiles[ti].replace(/<\/div>$/, fundsLine(P, fsn) + '</div>');
     const lone = fsn && ti < 0 && !tiles.length;
     if (fsn && ti > -1) tiles[ti] = tiles[ti].replace('<div class="att afd', '<div data-fundtile class="att afd');
     if (fsn && (ti > -1 || lone) && P.open && Array.isArray(fs.items)) {
       const an = A.funds_announced, anI = an && Array.isArray(an.items) ? an.items.map(x => Object.assign({}, x, { announced: true })) : [];
       actModal('actfunds', pl(AC.funds_sec, fsn) + (anI.length ? ' · ' + fmt(AC.funds_announced, { n: anI.length }) : '') + ' · ' + firm, fundRows(newestFirst(anI.concat(fs.items))));
     }
-    if (!tiles.length && !d0 && !r0 && !lone) return '';
-    let h = '<section class="actv" aria-label="' + esc(AC.reviews) + '">' + (tiles.length ? '<div class="ats" style="grid-template-columns:repeat(' + tiles.length + ',1fr)">' + tiles.join('') + '</div>'
-      : lone ? '<div class="ats" style="grid-template-columns:1fr">' + fundsLine(P, fsn) + '</div>' : '');
-    // Design A (Alex 2026-11-04): lab firms with a sector share show it borderless on the main page, the latest deal as one
-    // text line, then Show all. No sector data: the unchanged "The latest deal" block.
-    const shA = labFirm(P) ? sectorShare(A) : '';
-    if (shA) { const u0 = d0 && safeUrl(d0.url);
-      const dl = d0 ? '<div class="sdl"><b>' + coName(d0) + '</b>' + [labRound(d0.round), dealAmt(d0.amount, d0.currency), d0.lead ? AC.lead : '', fdate(d0.date) || ''].filter(Boolean).map(t => ' · ' + esc(t)).join('')
-        + (u0 ? ' · <a href="' + esc(u0) + '" target="_blank" rel="noopener"' + fullA(hostOf(u0)) + '>' + esc(capL(hostOf(u0))) + '</a>' : '') + '</div>' : '';
-      h += '<div class="aps ssa">' + shA + dl + (n.deals > 1 ? showAll(P, 'deals', n.deals) : '') + '</div>';
-    } else if (d0) h += '<div class="aps"><b class="apt">' + esc(AC.latest_deal) + '</b>' + dealRows([d0], labFirm(P)) + (n.deals > 1 ? showAll(P, 'deals', n.deals) : '') + '</div>';
-    const revs = (!A.lazy && Array.isArray(A.reviews) && A.reviews.length) ? A.reviews.slice(0, 3) : (r0 ? [r0] : []);
-    if (revs.length) h += '<div class="aps arvs"><h2>' + esc(AC.reviews) + '</h2>' + revs.map(revCard).join('') + (n.reviews > revs.length ? showAll(P, 'revs', n.reviews) : '') + '</div>';
-    // firm_page sends only the first slice (A.lazy); the full list loads once when "Show all" opens (firm_activity_list).
-    const full = (k, list, n) => !A.lazy && Array.isArray(list) && list.length > 1 ? list : (n > 1 ? null : undefined);
-    const fd = full('deals', A.deals, n.deals), fr = full('revs', A.reviews, n.reviews);
-    const lab = labFirm(P), sh = lab ? sectorShare(A) : '';
-    if (P.open && fd !== undefined) actModal('actdeals', fmt(AC.deals_title, { n: fd ? fd.length : n.deals, firm }), fd ? sh + dealRows(fd, lab) : sh, !fd && { slug: P.firm.slug, kind: 'deals', lab, head: sh });
+    // Full lists for Show all. A lazy page loads them on open.
+    const full = (list, nAll) => !A.lazy && Array.isArray(list) && list.length > 1 ? list : (nAll > 1 ? null : undefined);
+    const fd = full(A.deals, n.deals), fr = full(A.reviews, n.reviews);
+    const lab = labFirm(P);
+    if (P.open && fd !== undefined) actModal('actdeals', fmt(AC.deals_title, { n: fd ? fd.length : n.deals, firm }), fd ? dealRows(fd, lab) : '', !fd && { slug: P.firm.slug, kind: 'deals', lab, head: '' });
     if (P.open && fr !== undefined) actModal('actrevs', fmt(AC.reviews_title, { n: fr ? fr.length : n.reviews, firm }), fr ? fr.map(revCard).join('') : '', !fr && { slug: P.firm.slug, kind: 'revs' });
-    return h + '</section>';
+    if (!tiles.length && !lone) return '';
+    return '<div class="ats">' + (tiles.length ? tiles.join('') : fundsLine(P, fsn)) + '</div>';
   }
   function paintActivity(main, P) {
     const box = main.querySelector('.actw'); if (!box) return;
     const h = activity(P); box.innerHTML = h; box.hidden = !h;
   }
+
+  // One time range for Sectors, Rounds and Deals announced. Either control updates all three.
+  let CHART_PERIOD = '12', CHART_P = null;
+  const PAL = ['#2F70F2', '#818B36', '#A16B45', '#D968A0', '#7952D8'];
+  const RC = { 'Series A': '#2F70F2', 'Undisclosed': '#9A97AD', 'Seed': '#1F9D6A', 'Series B': '#D9822B', 'Series C+': '#7952D8', 'Pre-seed': '#D968A0' };
+  const MONS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  function isoDate(d) { const m = String(d || '').match(/(\d{4}-\d{2}-\d{2})/); return m ? m[1] : ''; }
+  function cutoff12() {
+    const n = new Date();
+    const t = new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate() - 365));
+    return t.toISOString().slice(0, 10);
+  }
+  function periodDeals(all, period) {
+    const rows = (all || []).filter(d => isoDate(d && d.date));
+    if (period !== '12') return rows;
+    const c = cutoff12();
+    return rows.filter(d => isoDate(d.date) >= c);
+  }
+  function topSectors(ds) {
+    const c = {};
+    ds.forEach(d => {
+      const s = String(d.sector || '').trim();
+      if (!s || s.toLowerCase() === 'other') return;
+      c[s] = (c[s] || 0) + 1;
+    });
+    return Object.keys(c).sort((a, b) => c[b] - c[a] || a.localeCompare(b)).slice(0, 5);
+  }
+  function bucketOf(d, T) {
+    const s = String(d.sector || '').trim();
+    return T.indexOf(s) >= 0 ? s : 'Other';
+  }
+  function scol(s, T) { const i = T.indexOf(s); return i < 0 ? '#ADB2BD' : PAL[i % PAL.length]; }
+  function roundBucket(r) {
+    const s = labRound(r);
+    if (!s) return 'Undisclosed';
+    if (/^series\s+[c-z]/i.test(s)) return 'Series C+';
+    return s;
+  }
+  function monthsBetween(a, b) {
+    const out = [];
+    let y = +a.slice(0, 4), m = +a.slice(5, 7);
+    const y2 = +b.slice(0, 4), m2 = +b.slice(5, 7);
+    while (y < y2 || (y === y2 && m <= m2)) {
+      out.push(y + '-' + String(m).padStart(2, '0'));
+      m += 1;
+      if (m === 13) { m = 1; y += 1; }
+      if (out.length > 40) break;
+    }
+    return out;
+  }
+  function chartKeys(ds) {
+    const isos = ds.map(d => isoDate(d.date)).sort();
+    if (!isos.length) return [];
+    if (CHART_PERIOD !== '12') {
+      const y0 = +isos[0].slice(0, 4), y1 = +isos[isos.length - 1].slice(0, 4), out = [];
+      for (let y = y0; y <= y1; y++) out.push(String(y));
+      return out;
+    }
+    return monthsBetween(isos[0].slice(0, 7), isos[isos.length - 1].slice(0, 7));
+  }
+  function keyLabel(k) { return CHART_PERIOD === '12' ? (MONS[+k.slice(5, 7) - 1] || k) : "'" + k.slice(2); }
+  function segHtml() {
+    return '<div class="seg" role="group" aria-label="Time range for Sectors, Rounds and Deals announced">'
+      + [['12', '12 months'], ['all', 'All time']].map(([v, l]) => '<button type="button" data-range="' + v + '" aria-pressed="' + (CHART_PERIOD === v ? 'true' : 'false') + '" class="' + (CHART_PERIOD === v ? 'on' : '') + '">' + l + '</button>').join('')
+      + '</div>';
+  }
+  function chartShell(id, title, k) {
+    return '<article class="mod chart" id="' + id + '" data-chart="' + k + '"><div class="mh"><h3>' + esc(title) + '</h3><div class="segw"></div></div><div class="cc"></div>'
+      + (k === 's' ? showAllLink(true, 'actsectors') : '') + '</article>';
+  }
+  function donutHtml(ds) {
+    const T = topSectors(ds), c = {};
+    ds.forEach(d => { const s = bucketOf(d, T); c[s] = (c[s] || 0) + 1; });
+    const L = T.concat(c.Other ? ['Other'] : []), n = ds.length;
+    if (!n) return '<p class="cempty">No deals in this range</p>';
+    let off = 0; const C = 2 * Math.PI * 54;
+    const arcs = L.map(s => {
+      const v = (c[s] || 0) / n * C;
+      const arc = '<circle cx="80" cy="80" r="54" fill="none" stroke="' + scol(s, T) + '" stroke-width="22" stroke-dasharray="' + v + ' ' + (C - v) + '" stroke-dashoffset="' + (-off) + '" transform="rotate(-90 80 80)"/>';
+      off += v;
+      return arc;
+    }).join('');
+    return '<div class="dw"><svg width="150" height="150" viewBox="0 0 160 160" role="img" aria-label="' + n + ' deals">' + arcs
+      + '<text x="80" y="78" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="20">' + n + '</text>'
+      + '<text x="80" y="96" text-anchor="middle" fill="#8C88A3" font-size="11">deals</text></svg><div class="lg">'
+      + L.map(s => '<div><i style="background:' + scol(s, T) + '"></i><span>' + esc(s) + '</span><em>' + (c[s] || 0) + '</em></div>').join('')
+      + '</div></div>';
+  }
+  function roundsHtml(ds) {
+    const c = {};
+    ds.forEach(d => { const r = roundBucket(d.round); c[r] = (c[r] || 0) + 1; });
+    const E = Object.keys(c).sort((a, b) => c[b] - c[a] || a.localeCompare(b));
+    if (!E.length) return '<p class="cempty">No deals in this range</p>';
+    const mx = c[E[0]];
+    return E.map(r => '<div class="rr"><span>' + esc(r) + '</span><div class="t"><div class="f" style="width:' + (c[r] / mx * 100) + '%;background:' + (RC[r] || '#6C3BFF') + '"></div></div><em>' + c[r] + '</em></div>').join('');
+  }
+  function barsHtml(ds) {
+    const T = topSectors(ds), keys = chartKeys(ds);
+    if (!keys.length) return '<p class="cempty">No deals in this range</p>';
+    const keyOf = CHART_PERIOD === '12' ? (d => isoDate(d.date).slice(0, 7)) : (d => isoDate(d.date).slice(0, 4));
+    const buckets = keys.map(k => {
+      const g = ds.filter(d => keyOf(d) === k);
+      return { k, n: g.length, led: g.filter(d => d.lead).length, parts: T.concat(['Other']).map(s => ({ s, n: g.filter(d => bucketOf(d, T) === s).length })).filter(z => z.n) };
+    });
+    const mx = Math.max(1, ...buckets.map(b => b.n));
+    const H = 140, W = 460, bw = W / keys.length, u = H / mx;
+    let svg = '';
+    const step = Math.max(1, Math.ceil(mx / 4));
+    for (let n = 0; n <= mx; n += step) {
+      const y = H + 8 - n * u;
+      svg += '<line x1="0" y1="' + y + '" x2="' + W + '" y2="' + y + '" stroke="#ECE9F5"/>';
+      svg += '<text x="-6" y="' + (y + 3) + '" text-anchor="end" font-size="10" fill="#8C88A3">' + n + '</text>';
+    }
+    const pts = [];
+    buckets.forEach((b, i) => {
+      let y = H + 8;
+      const x = i * bw + bw * 0.22, w = bw * 0.56;
+      b.parts.forEach(z => {
+        const h = z.n * u;
+        y -= h;
+        svg += '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + Math.max(h, 0.5) + '" rx="2" fill="' + scol(z.s, T) + '"><title>' + esc(b.k + ' · ' + z.s + ': ' + z.n) + '</title></rect>';
+      });
+      svg += '<text x="' + (x + w / 2) + '" y="' + (H + 22) + '" text-anchor="middle" font-size="10" fill="#8C88A3">' + esc(keyLabel(b.k)) + '</text>';
+      pts.push([(i * bw + bw / 2), (H + 8 - b.led * u)]);
+    });
+    svg += '<polyline points="' + pts.map(p => p.join(',')).join(' ') + '" fill="none" stroke="#14112B" stroke-width="2"/>';
+    svg += pts.map(p => '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="2.5" fill="#14112B"/>').join('');
+    const legend = T.concat(['Other']).map(s => '<span><i style="background:' + scol(s, T) + '"></i>' + esc(s) + '</span>').join('');
+    return '<svg role="img" aria-label="Announced deals by sector. The line is deals led by the firm." width="100%" viewBox="-28 -8 ' + (W + 36) + ' ' + (H + 40) + '">' + svg + '</svg><div class="ll">' + legend + '<span class="led"><i></i>Led by VC</span></div>';
+  }
+  function sectorDialogHtml(ds) {
+    const T = topSectors(ds), groups = {};
+    T.concat(['Other']).forEach(s => { groups[s] = []; });
+    ds.forEach(d => groups[bucketOf(d, T)].push(d));
+    const parts = T.concat(['Other']).filter(s => groups[s].length).map(s => '<h3 class="sdh">' + esc(s) + ' <em>' + groups[s].length + '</em></h3>' + dealRows(groups[s], true));
+    return parts.join('') || '<p class="cempty">No deals in this range</p>';
+  }
+  function paintCharts(main, P) {
+    if (!main || !main.querySelectorAll) return;
+    const all = (P && P.activity && P.activity.deals) || [];
+    const ds = periodDeals(all, CHART_PERIOD);
+    main.querySelectorAll('[data-chart]').forEach(tile => {
+      const k = tile.getAttribute('data-chart');
+      const sw = tile.querySelector('.segw'), box = tile.querySelector('.cc');
+      if (sw) sw.innerHTML = segHtml();
+      if (box) box.innerHTML = k === 's' ? donutHtml(ds) : k === 'r' ? roundsHtml(ds) : barsHtml(ds);
+    });
+    if (P && P.open && typeof actModal === 'function' && typeof document !== 'undefined' && document.body && main.querySelector('[data-chart="s"]')) {
+      actModal('actsectors', 'All startups by sector', sectorDialogHtml(ds));
+    }
+  }
+  function bentoCard(id, titleHtml, inner, foot) {
+    if (!inner) return '';
+    return '<article class="mod' + (id === 'deals' ? ' span2' : '') + '" id="' + id + '"><div class="mh"><h3>' + titleHtml + '</h3></div>' + inner + (foot || '') + '</article>';
+  }
+  function bentoHtml(P, secs) {
+    const by = {};
+    (secs || []).forEach(s => { by[s.key] = s; });
+    const deals = (P.activity && Array.isArray(P.activity.deals)) ? P.activity.deals : [];
+    let h = '';
+    if (deals.length) {
+      h += chartShell('sectors', 'Sectors', 's') + chartShell('rounds', 'Rounds', 'r') + chartShell('announced', 'Deals announced', 'd');
+    }
+    if (by.videos) h += bentoCard('videos', esc(by.videos.title), R.videos(by.videos.items, P, by.videos));
+    if (by.people) h += bentoCard('team', esc(by.people.title), R.people(by.people.items, P, by.people));
+    if (by.lps) h += bentoCard('lps', esc(by.lps.title) + (by.lps.count ? ' <em class="pc2">' + by.lps.count + '</em>' : ''), R.facts(by.lps.items, P, by.lps));
+    if (by.legal) h += bentoCard('legal', esc(by.legal.title), R.legal(by.legal.items, P, by.legal));
+    if (by.investors) h += bentoCard('investors', esc(by.investors.title), R.investors(by.investors.items, P, by.investors));
+    const revs = (P.activity && Array.isArray(P.activity.reviews)) ? P.activity.reviews : [];
+    if (revs.length) {
+      const nrev = (P.activity.counts && Number(P.activity.counts.reviews)) || revs.length;
+      h += bentoCard('reviews', esc(AC.reviews || 'What founders say'), revs.slice(0, 3).map(revCard).join(''), nrev > 3 ? showAllLink(!!P.open, 'actrevs') : '');
+    }
+    if (by.news) h += bentoCard('news', esc(by.news.title), R.news(by.news.items, P, by.news));
+    if (deals.length) {
+      const shown = deals.slice(0, 10);
+      h += bentoCard('deals', 'Recent deals', '<div class="dtable">' + dealRows(shown, labFirm(P)) + '</div>' + dealCards(shown), deals.length > shown.length ? showAllLink(!!P.open, 'actdeals') : '');
+    }
+    return h ? '<p class="invlab">Investment activity</p><div class="bento">' + h + '</div>' : '';
+  }
+  document.addEventListener('click', (e) => {
+    const b = e.target && e.target.closest && e.target.closest('[data-range]');
+    if (!b || !CHART_P) return;
+    CHART_PERIOD = b.getAttribute('data-range') === 'all' ? 'all' : '12';
+    paintCharts(b.closest('.prof') || b.closest('main'), CHART_P);
+  });
 
   function applyTab(main, which) {
     which = which === 'full' ? 'full' : 'checks';

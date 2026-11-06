@@ -525,3 +525,99 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 
 /* A2 compact founder review cards */
 .arv.ac2{padding:10px 14px;margin-bottom:8px;border-radius:12px}.arv.ac2 .arsm{margin:0;font-size:15px;line-height:1.45}.arv.ac2 .arsm b{font-weight:700}.arv.ac2 .arat{margin:2px 0 0}
+
+/* Approved firm-page bento. One shared time range on the three charts. */
+body:has(main.prof){background:#F7F6FA}
+.prof .ph{display:grid;grid-template-columns:minmax(0,1fr) 240px;column-gap:18px;row-gap:8px;align-items:start;background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:18px 20px;margin-top:8px}
+.prof .ph>*{grid-column:1;min-width:0}
+.prof .ph>.actw{grid-column:2;grid-row:1 / span 8}
+.prof .ph h1{font-size:34px;line-height:1.05;margin:0}
+.prof .ph .m{margin:0;color:var(--ink2);font-size:13.5px}
+.prof .intro{margin:2px 0 0;font-size:14.5px;line-height:1.5;color:var(--ink2);max-width:740px}
+.prof .socp{max-height:none;overflow:visible;flex-wrap:wrap;align-items:center;gap:6px;margin-top:4px}
+.prof .htags{margin-top:6px;gap:8px}
+.prof .actw .ats{grid-template-columns:1fr!important;gap:8px}
+.prof .att{padding:12px 14px}
+.prof .att b{font-size:26px}
+.prof .aon{text-decoration:none;color:inherit}
+.prof .aon:hover{text-decoration:none}
+.prof .rgt-tabs{justify-content:flex-start;align-items:flex-end;background:transparent;border:0;border-bottom:1.5px solid var(--line);border-radius:0;padding:0;gap:22px;width:100%;margin:18px 0 14px}
+.prof .rgt-tab{border-radius:0;background:transparent;box-shadow:none;border-bottom:3px solid transparent;margin-bottom:-1.5px;padding:10px 2px}
+.prof .rgt-tab.on{background:transparent;box-shadow:none;color:var(--vio);border-bottom-color:var(--vio)}
+.prof .spl,.prof .toc{display:none!important}
+.prof .pgrid{display:block;margin-top:0}
+.invlab{margin:4px 2px 10px;font:800 13px 'Bricolage Grotesque';letter-spacing:.06em;text-transform:uppercase;color:var(--vio)}
+.bento{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:stretch}
+.bento .mod{background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:18px 18px 16px;min-width:0;display:flex;flex-direction:column}
+.bento .mod.span2{grid-column:1 / -1}
+.bento .mh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.bento .mh h3{margin:0;font:800 20px/1.15 'Bricolage Grotesque';letter-spacing:-.02em}
+.bento .mh .pc2{font:500 14px 'DM Sans';color:var(--mute)}
+.seg{display:inline-flex;background:#F4F2FA;border-radius:999px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:4px 10px;font:600 12px 'DM Sans';color:var(--ink2);cursor:pointer}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(20,17,43,.12)}
+.dw{display:flex;gap:12px;align-items:center;min-width:0}
+.dw svg{flex:none}
+.lg{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
+.lg div{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2)}
+.lg i{width:10px;height:10px;border-radius:3px;flex:none}
+.lg span{flex:1;min-width:0}
+.lg em{font-style:normal;font-weight:700;color:var(--ink)}
+.rr{display:grid;grid-template-columns:92px 1fr 28px;align-items:center;gap:8px;font-size:13px;padding:4px 0;color:var(--ink2)}
+.rr .t{height:8px;background:#F1F0F5;border-radius:9px}
+.rr .f{height:8px;border-radius:9px}
+.rr em{font-style:normal;font-weight:700;text-align:right;color:var(--ink)}
+.ll{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px;font-size:12px;color:var(--ink2)}
+.ll i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px}
+.ll .led i{width:14px;height:2px;border-radius:1px;background:#14112B;vertical-align:middle}
+.cempty{color:var(--mute);font-size:14px;margin:8px 0}
+.bento #videos .vgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:0}
+.bento #videos .vtile b{font-size:13px}
+.bento #team .tcards{grid-template-columns:1fr;margin-top:0}
+.bento #news .pgr{grid-template-columns:1fr;margin:0}
+.bento #news .pis,.bento #news .scs{display:none}
+.bento #news .pi{padding:12px 14px}
+.lglines .lgline{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #F0EDF5;min-width:0}
+.lglines .lgline:last-child{border-bottom:0}
+.lgt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;font-weight:600}
+.lgm{flex:none;font-size:11.5px;color:var(--mute);white-space:nowrap}
+.lgp{flex:none;display:flex;gap:4px;align-items:center}
+.lgp .cs{font-size:10.5px;padding:1px 6px;margin:0}
+.lgd{padding:12px 0;border-bottom:1px solid var(--line)}
+.lgd:last-child{border-bottom:0}
+.lgnote{margin:8px 0 0;font-size:13px;color:var(--ink2)}
+.bento .ash{margin-top:auto;padding-top:10px}
+.dtable .adl{border:0}
+.dcards{display:none}
+.dcard{background:#F3F2F7;border-radius:14px;padding:12px 14px;margin-bottom:8px}
+.dcard .dname{font-weight:700;font-size:14px}
+.dcard .dname a{color:var(--ink);text-decoration:none}
+.dmeta{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-top:8px}
+.dmeta span{display:block;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--mute)}
+.dmeta b{font-weight:500;font-size:13px;color:var(--ink2)}
+.sdh{margin:14px 0 6px;font:700 15px 'DM Sans'}
+.sdh em{font-style:normal;color:var(--mute);font-weight:500}
+@media (max-width:800px){
+  body:has(main.prof)>nav{padding:12px 14px;flex-wrap:wrap;gap:8px 12px}
+  body:has(main.prof)>nav .r{gap:10px;font-size:13px;flex-wrap:wrap}
+  .prof .ph{grid-template-columns:minmax(0,1fr);padding:16px}
+  .prof .ph>.actw{grid-column:1;grid-row:auto}
+  .prof .ph h1{font-size:28px}
+  .bento{grid-template-columns:minmax(0,1fr)}
+  .bento .mod.span2{grid-column:auto}
+  .bento #videos .vgrid{grid-template-columns:minmax(0,1fr)}
+  .dw{flex-wrap:wrap;justify-content:center}
+  .lg{width:100%;max-width:320px}
+  .dtable{display:none}
+  .dcards{display:block}
+  .lglines .lgline{flex-wrap:wrap;align-items:flex-start}
+  .lgt{white-space:normal;flex-basis:100%}
+  .rr{grid-template-columns:78px 1fr 24px}
+  .seg button{padding:4px 8px}
+  .prof .rgt-tabs{gap:12px;width:100%}
+  .prof .rgt-tab{padding:10px 0;font-size:14px}
+}
+@media (max-width:400px){
+  .prof{padding-left:12px;padding-right:12px}
+  .ps0 input{font-size:18px}
+}
