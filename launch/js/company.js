@@ -654,9 +654,61 @@
     }
     return h;
   }
+  // What investors look for. Five summary rows until Show all. Rows are not controls.
+  // The icon is Phosphor LinkSimple (launch/assets/icons/link-simple.svg), drawn at 12px.
+  const LINK_SIMPLE = 'M165.66,90.34a8,8,0,0,1,0,11.32l-64,64a8,8,0,0,1-11.32-11.32l64-64A8,8,0,0,1,165.66,90.34ZM215.6,40.4a56,56,0,0,0-79.2,0L106.34,70.45a8,8,0,0,0,11.32,11.32l30.06-30a40,40,0,0,1,56.57,56.56l-30.07,30.06a8,8,0,0,0,11.31,11.32L215.6,119.6a56,56,0,0,0,0-79.2ZM138.34,174.22l-30.06,30.06a40,40,0,1,1-56.56-56.57l30.05-30.05a8,8,0,0,0-11.32-11.32L40.4,136.4a56,56,0,0,0,79.2,79.2l30.06-30.07a8,8,0,0,0-11.32-11.31Z';
+  const INVESTORS_SHOWN = 5;
+  function investorYear(v) {
+    const m = String(v == null ? '' : v).match(/^(\d{4})/);
+    return m ? m[1] : '';
+  }
+  function investorQuote(q) {
+    return String(q == null ? '' : q).trim().replace(/^[“"]+|[”"]+$/g, '');
+  }
+  function investorPack(x) {
+    if (!x) return null;
+    const summary = String(x.summary == null ? '' : x.summary).trim();
+    const quote = investorQuote(x.quote);
+    const name = String(x.investor_name == null ? '' : x.investor_name).trim();
+    const url = safeUrl(x.source_url);
+    if (!summary || !quote || !name || summary === quote || !url || !/^https:\/\//i.test(url)) return null;
+    return {
+      investor_name: name,
+      investor_title: String(x.investor_title == null ? '' : x.investor_title).trim(),
+      summary: summary,
+      quote: quote,
+      published_at: String(x.published_at == null ? '' : x.published_at),
+      source_url: url,
+    };
+  }
+  function investorRows(items) {
+    return (items || []).map(investorPack).filter(Boolean);
+  }
+  function investorRow(x, open) {
+    const IV = COPY.investors || {};
+    const year = investorYear(x.published_at);
+    const who = [x.investor_name, x.investor_title, year].filter(Boolean).join(' · ');
+    const icon = '<a class="ipi" href="' + esc(x.source_url) + '" target="_blank" rel="noopener" aria-label="' + esc(IV.source || 'Source') + '"><svg viewBox="0 0 256 256" width="12" height="12" aria-hidden="true" fill="currentColor"><path d="' + LINK_SIMPLE + '"/></svg></a>';
+    const quote = open ? '<p class="ipq">“' + esc(x.quote) + '”</p>' : '';
+    return '<div class="ipr"><p class="ips"><span class="iplab">' + esc(IV.summary || 'Summary:') + '</span> ' + esc(x.summary) + '</p><p class="ipa"><span class="ipwho">' + esc(who) + '</span>' + icon + '</p>' + quote + '</div>';
+  }
+  function investorsHtml(items, open) {
+    const rows = investorRows(items);
+    if (!rows.length) return '';
+    const expanded = !!open && rows.length > INVESTORS_SHOWN;
+    const shown = expanded || rows.length <= INVESTORS_SHOWN ? rows : rows.slice(0, INVESTORS_SHOWN);
+    const body = shown.map(x => investorRow(x, expanded)).join('');
+    if (!expanded && rows.length > INVESTORS_SHOWN) {
+      const label = (COPY.activity && COPY.activity.show_all) || 'Show all';
+      return '<div class="iprs" data-rows="' + esc(JSON.stringify(rows)) + '">' + body
+        + '<button type="button" class="ash" data-investors>' + esc(label) + '</button></div>';
+    }
+    return '<div class="iprs">' + body + '</div>';
+  }
   // Open-state renderers, keyed by copy.json sections[].renderer. The section is the third argument (LP grouping).
   const R = {
     thesis: (items) => '<p class="pth">' + esc(items[0] ? items[0].value : '') + '</p>',
+    investors: (it) => investorsHtml(it, false),
     facts: (it, P, s) => s && s.key === 'lps' ? lpsBlock(it, P) : '<div class="rws">' + it.map(factRow).join('') + '</div>',
     checks: (it, P) => checkRows(P),
     legal: (it, P) => legalHtml(it, P),
@@ -1045,6 +1097,15 @@
       // Videos: at most 3, most views first. None = no section, chip, or nav entry. No count and no source pill.
       if (s.key === 'videos') {
         const rows = videoRows(s.items);
+        if (!rows.length) return null;
+        s.items = rows;
+        s.count = rows.length;
+        s.nocount = true;
+        s.subtitle = '';
+      }
+      // What investors look for: no rows, no section. Heading has no count.
+      if (s.key === 'investors') {
+        const rows = investorRows(s.items);
         if (!rows.length) return null;
         s.items = rows;
         s.count = rows.length;
@@ -1581,6 +1642,19 @@
     const st = (x) => { const v = window.RegretDate && x && x.date ? window.RegretDate.stamp(x.date) : null; return v == null ? null : v; };
     return fs.map((x, i) => ({ x, i, t: st(x) })).sort((a, b) => (a.t == null) - (b.t == null) || (b.t || 0) - (a.t || 0) || a.i - b.i).map(o => o.x);
   }
+  // Show all reveals every principle and the quote under each one. A row is not a control.
+  document.addEventListener('click', (e) => {
+    const b = e.target && e.target.closest && e.target.closest('button[data-investors]');
+    if (!b) return;
+    const box = b.closest('.iprs');
+    if (!box) return;
+    let rows = [];
+    try { rows = JSON.parse(box.getAttribute('data-rows') || '[]'); } catch (err) { rows = []; }
+    if (!rows.length) return;
+    const next = investorsHtml(rows, true);
+    if (box.parentNode) box.outerHTML = next;
+    else box.innerHTML = next;
+  });
   // v4: clicking the Latest fund tile opens the same funds pop-up as its Show all button (links inside keep working).
   document.addEventListener('click', (e) => {
     const t = e.target && e.target.closest && e.target.closest('[data-fundtile]');
@@ -1712,5 +1786,5 @@
     view.total = full.total; view.head = full.head;
     return view;
   }
-  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows, setFirmName, compactCount, socialPills, metaLine, fundRows, aumFigure, teamCard };
+  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows, setFirmName, compactCount, socialPills, metaLine, fundRows, aumFigure, teamCard, investorsHtml };
 })();

@@ -168,6 +168,16 @@ body.ppopen{overflow:hidden}
 .toc{position:sticky;top:20px;border:1.5px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:9px;font-size:14px}.toc a{color:var(--ink2);text-decoration:none}.toc b{font:700 15px 'Bricolage Grotesque'}.toc a.on{color:var(--vio);font-weight:700;background:var(--viobg);box-shadow:inset 3px 0 0 var(--vio)}
 .ps{border:1.5px solid var(--line);border-radius:20px;padding:24px 26px;margin-bottom:20px}.ps h2{font:800 26px 'Bricolage Grotesque'}.ps h3{font:700 16px 'DM Sans';margin:20px 0 4px;color:var(--ink2)}.psub{color:var(--mute);font-size:14px;margin-top:4px}
 .ps .pth{margin-top:12px;color:var(--ink);font-size:15px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:5;line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.iprs{margin-top:4px;min-width:0}.ipr{border-top:1px solid var(--line);padding:14px 0;min-width:0}
+.ips{margin:0;font-weight:400;font-size:15px;line-height:1.45;color:var(--ink);overflow-wrap:anywhere}
+.iplab{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--mute)}
+.ipa{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:4px 0 0;font-size:13px;line-height:1.4;color:var(--mute);min-width:0}
+.ipwho{min-width:0;overflow-wrap:anywhere}
+.ipi{display:inline-flex;flex:none;color:var(--mute);line-height:0;text-decoration:none}
+.ipi:hover{color:var(--ink2)}.ipi:focus-visible{outline:2px solid var(--vio);outline-offset:2px;border-radius:2px}
+.ipi svg{width:12px;height:12px;display:block}
+.ipq{margin:8px 0 0;font-weight:400;font-size:15px;line-height:1.5;color:var(--ink);overflow-wrap:anywhere}
+.iprs .ash{margin-top:2px}
 .it{border-top:1px solid var(--line);padding:12px 0;line-height:1.45;font-size:15px;color:var(--ink2)}.it b{color:var(--ink)}.it.act{background:#FFF6F4;border-left:3px solid #C4281C;padding-left:12px;border-radius:0 8px 8px 0}.it .pill{font-size:12.5px;padding:3px 10px;margin-right:8px}
 .kvs{margin-top:10px}.kv{display:grid;grid-template-columns:200px 1fr;gap:16px;border-top:1px solid var(--line);padding:11px 0;font-size:15px}.kv .k{color:var(--mute)}
 .pcards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}.pcard{border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:3px;font-size:14px;color:var(--ink2)}.pcard b{color:var(--ink);font-size:15px}.pcard .cs{align-self:flex-start}
