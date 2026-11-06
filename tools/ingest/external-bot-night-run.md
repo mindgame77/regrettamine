@@ -65,7 +65,7 @@ curl -s -X POST "$URL" -H "x-ingest-key: $KEY" -H 'content-type: application/jso
 1. Call `claim` with a `count` of up to 300 (only as many firms as you can finish within 6 hours). If `firms` is empty (`none_left: true`), go to Step 4.
 2. Research each claimed firm following **Part B** below. Input for Part B: `firm_id` = `registry_id`, plus `name` and `website` from the claim (also use `sec_crd`, `lei`, `hq_city`, `state`, `country` to confirm identity). The registry website can be wrong (e.g. a social profile or an unrelated site); confirm the official site yourself.
 3. Build the dump-1.2 JSON and call `submit`.
-4. If the response is 422: read every error, fix them all (remove records you cannot source; never invent a source), and resubmit **once** with the same `registry_id` and `bot_id`. If it fails again, call `fail` with a short reason and move on.
+4. Before `submit`, validate each record yourself. The live door does not filter facts one by one: a mixed upload is rejected, and `entry_check` is one 'Accepted' or 'Rejected' whose reasons are deduplicated and may omit record ids. If the response is 422, record the reason for each failed fact and make a separate source-backed correction (never invent a source). Resubmit **once**, a clean batch of only the valid facts, with the same `registry_id` and `bot_id`, so the existing Checker can proceed. If it fails again, call `fail` with a short reason and move on.
 5. If you cannot research the firm at all (cannot identify it, everything blocked), call `fail` with the reason. Do not submit an empty or made-up dump.
 6. Go back to 1. Repeat until `claim` returns no firms.
 
