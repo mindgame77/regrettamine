@@ -86,6 +86,8 @@ test('LP tile has no commitment count, investors and legal drop row rules', () =
   assert.match(css, /\.lgline\.st-dis\{background:#F1F0F5\}/);
   assert.match(css, /\.lgline\.st-set\{background:#E3F8EE\}/);
   assert.match(css, /\.ips \.iplab\{font-weight:700/);
+  assert.match(css, /\.prof \.ips\{font:700 15px/);
+  assert.match(css, /\.prof \.ipa,\.prof \.arat\{font:400/);
   assert.match(css, /\.bento #lps \.lpl \.rt\{[^}]*text-overflow:ellipsis/);
   const legal = css.slice(css.indexOf('.lglines .lgline{'), css.indexOf('}', css.indexOf('.lglines .lgline{')) + 1);
   assert.match(legal, /border-bottom:0/);

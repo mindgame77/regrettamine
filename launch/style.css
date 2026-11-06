@@ -169,7 +169,7 @@ body.ppopen{overflow:hidden}
 .ps{border:1.5px solid var(--line);border-radius:20px;padding:24px 26px;margin-bottom:20px}.ps h2{font:800 26px 'Bricolage Grotesque'}.ps h3{font:700 16px 'DM Sans';margin:20px 0 4px;color:var(--ink2)}.psub{color:var(--mute);font-size:14px;margin-top:4px}
 .ps .pth{margin-top:12px;color:var(--ink);font-size:15px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:5;line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
 .iprs{margin-top:4px;min-width:0}.ipr{border-top:1px solid var(--line);padding:14px 0;min-width:0}
-.ips{margin:0;font-weight:400;font-size:15px;line-height:1.45;color:var(--ink);overflow-wrap:anywhere}
+.ips{margin:0;font-weight:700;font-size:15px;line-height:1.45;color:var(--ink);overflow-wrap:anywhere}
 .iplab{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--mute)}
 .ipa{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:4px 0 0;font-size:13px;line-height:1.4;color:var(--mute);min-width:0}
 .ipwho{min-width:0;overflow-wrap:anywhere}
@@ -497,7 +497,7 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 .tcard{background:#F3F2F7;border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:2px;min-width:0}
 .tcard b{color:var(--ink);font-size:16px;font-weight:700}
 .tcard .trole{color:var(--ink2);font-size:14.5px;margin-top:2px}
-.tcard .tsoc{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.tcard .tsoc{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
 .tcard .tsoc .sc{margin:0}
 @media (max-width:640px){.tcards{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:640px){.socp .sc.soc{padding:4px 10px}}
@@ -615,7 +615,8 @@ body:has(main.prof){background:#F7F6FA}
 .prof .tcard .sc b{font:700 12px/16px 'DM Sans',sans-serif}
 .prof .tcard .trole{font:400 13px/1.4 'DM Sans',sans-serif}
 .prof .arv.ac2,.prof .pi{border-radius:12px;padding:12px 14px}
-.prof .arsm,.prof .ips,.prof .pih{font:400 15px/1.45 'DM Sans',sans-serif}
+.prof .arsm,.prof .pih{font:400 15px/1.45 'DM Sans',sans-serif}
+.prof .ips{font:700 15px/1.45 'DM Sans',sans-serif;color:var(--ink)}
 .prof .arsm b,.prof .pih{font-weight:700}
 .ips .iplab{font-weight:700;color:var(--mute)}
 .prof .pio,.prof .lpl .rt{font:400 13px/1.4 'DM Sans',sans-serif}

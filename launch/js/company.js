@@ -623,8 +623,8 @@
     const pills = [];
     const li = httpsHost(x.linkedin_url, /(^|\.)linkedin\.com$/i);
     const xu = httpsHost(x.x_url, /(^|\.)(x\.com|twitter\.com)$/i);
-    if (li) pills.push(socPill({ platform: 'linkedin', url: li, followers: x.linkedin_followers }, true));
-    if (xu) pills.push(socPill({ platform: 'x', url: xu, followers: x.x_followers }, true));
+    if (li) pills.push(socPill({ platform: 'linkedin', url: li, followers: x.linkedin_followers }));
+    if (xu) pills.push(socPill({ platform: 'x', url: xu, followers: x.x_followers }));
     const links = pills.filter(Boolean);
     const role = String(x.role || '').trim();
     return '<div class="tcard"><b>' + esc(x.head || '') + '</b>'
