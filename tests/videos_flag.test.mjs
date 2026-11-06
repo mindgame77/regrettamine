@@ -52,20 +52,19 @@ test('US flag sits after City, ST and the country name is not written', () => {
       website: 'https://a16z.com', founded_year: 2009,
     },
   });
-  assert.match(m, new RegExp('Menlo Park, CA ' + FLAG_US + ' · a16z · <a href="https://a16z.com"'));
-  assert.match(m, /<\/a> · Founded 2009$/);
+  assert.match(m, new RegExp('Menlo Park, CA ' + FLAG_US + ' · Founded 2009 · <a href="https://a16z.com"'));
   assert.doesNotMatch(m, /United States|USA/);
   assert.equal(copy.company.header.founded, 'Founded {y}');
 });
 
 test('a lowercase code still flags, and an unknown code adds nothing', () => {
-  assert.equal(metaLine({ firm: { hq: 'Menlo Park, CA', short_name: 'a16z', hq_country: 'us' } }), 'Menlo Park, CA ' + FLAG_US + ' · a16z');
+  assert.equal(metaLine({ firm: { hq: 'Menlo Park, CA', short_name: 'a16z', hq_country: 'us' } }), 'Menlo Park, CA ' + FLAG_US);
   for (const code of [null, undefined, '', 'USA', 'U', '12']) {
-    assert.equal(metaLine({ firm: { hq: 'Menlo Park, CA', short_name: 'a16z', hq_country: code } }), 'Menlo Park, CA · a16z');
+    assert.equal(metaLine({ firm: { hq: 'Menlo Park, CA', short_name: 'a16z', hq_country: code } }), 'Menlo Park, CA');
   }
   assert.equal(metaLine({ firm: { hq: 'London', hq_country: 'GB' } }), 'London ' + FLAG_GB);
   assert.doesNotMatch(metaLine({ firm: { hq: 'London', hq_country: 'GB' } }), /United Kingdom|Britain/);
-  assert.equal(metaLine({ firm: { short_name: 'a16z', hq_country: 'US' } }), 'a16z');
+  assert.equal(metaLine({ firm: { short_name: 'a16z', hq_country: 'US' } }), '');
 });
 
 const a16zVideos = [
@@ -86,7 +85,7 @@ function page(extra) {
   };
 }
 
-test('videos sit after Team and before News, three tiles, most views first, no source pill', () => {
+test('videos render before Team and News, three tiles, most views first, no source pill', () => {
   const low = { title: 'A smaller interview', channel: 'Other', url: 'https://www.youtube.com/watch?v=abcdefghijk', date: '2022-01-01', views: 10 };
   const press = { title: 'Not a video', channel: 'Wire', url: 'https://example.com/story', date: '2024-01-01', views: 99999999 };
   const blank = { title: '   ', channel: 'X', url: 'https://www.youtube.com/watch?v=zzzzzzzzzzz', views: 50 };
@@ -109,9 +108,10 @@ test('videos sit after Team and before News, three tiles, most views first, no s
   render(main, P);
   assert.match(meta.innerHTML, new RegExp('Menlo Park, CA ' + FLAG_US));
   const html = main.querySelector('.pmain').innerHTML;
-  const block = html.slice(html.indexOf('id="videos"'), html.indexOf('id="news"'));
-  assert.match(block, /<h2>Videos<\/h2>/);
-  assert.doesNotMatch(block, /<h2>Videos <em/);
+  const videosAt = html.indexOf('id="videos"');
+  const block = html.slice(videosAt, html.indexOf('</article>', videosAt));
+  assert.match(block, /<h3>Videos<\/h3>/);
+  assert.doesNotMatch(block, /<h3>Videos <em/);
   assert.doesNotMatch(block, /class="scs"|Source/);
   assert.doesNotMatch(block, /[↓↑→↗←]/);
   assert.equal((block.match(/class="vtile"/g) || []).length, 3);
@@ -123,10 +123,9 @@ test('videos sit after Team and before News, three tiles, most views first, no s
   assert.match(block, /Lex Fridman · Jun 21, 2023 · 1,590,015 views/);
   assert.match(block, /Lex Fridman · Jan 26, 2025 · 1,547,628 views/);
   assert.doesNotMatch(block, /A smaller interview|Not a video|No views|abcdefghijk/);
-  const peopleAt = html.indexOf('id="people"');
-  const videosAt = html.indexOf('id="videos"');
+  const teamAt = html.indexOf('id="team"');
   const newsAt = html.indexOf('id="news"');
-  assert.ok(peopleAt >= 0 && peopleAt < videosAt && videosAt < newsAt);
+  assert.ok(videosAt >= 0 && videosAt < teamAt && teamAt < newsAt);
 });
 
 test('a firm with no videos renders no Videos section', () => {
@@ -138,7 +137,7 @@ test('a firm with no videos renders no Videos section', () => {
   main.set('.m', el());
   render(main, P);
   assert.doesNotMatch(pmain.innerHTML, /id="videos"|class="vgrid"|Videos/);
-  assert.match(pmain.innerHTML, /id="people"/);
+  assert.match(pmain.innerHTML, /id="team"/);
   assert.match(pmain.innerHTML, /id="news"/);
 });
 

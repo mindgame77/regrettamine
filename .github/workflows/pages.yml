@@ -187,5 +187,6 @@ jobs:
           url=$(grep -oE 'https://[a-z0-9]+\.regretamin\.pages\.dev' /tmp/wrangler-preview.log | head -1)
           echo "PREVIEW_URL=$url"
           test -n "$url"
-          curl -fsS --retry 8 --retry-delay 4 --retry-all-errors "$url/vc/a16z/full/" | grep -q 'data-firm="a16z"'
+          html=$(curl -fsS --retry 8 --retry-delay 4 --retry-all-errors "$url/vc/a16z/full/")
+          grep -q 'data-firm="a16z"' <<<"$html"
           echo "preview served a16z at $url/vc/a16z/full/"

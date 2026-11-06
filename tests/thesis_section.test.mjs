@@ -17,6 +17,7 @@ function node() {
     querySelector(sel) { return kids[sel] || null; },
     querySelectorAll() { return []; },
     set(sel, child) { kids[sel] = child; return child; },
+    insertAdjacentElement(_where, el) { this._next = el; return el; },
   };
 }
 const sandbox = {
@@ -42,10 +43,10 @@ const YC_SITE = 'https://www.ycombinator.com/about';
 
 function draw(sections, checks) {
   const P = { open: true, firm: { name: 'Example', slug: 'example', founded_year: 2009, hq: 'Menlo Park, CA' }, checks: checks || [], sections };
-  const main = node(), pmain = node(), spl = node(), toc = node();
-  main.set('.pmain', pmain); main.set('.spl', spl); main.set('.toc', toc); main.set('.m', node());
+  const main = node(), pmain = node(), spl = node(), toc = node(), meta = node();
+  main.set('.pmain', pmain); main.set('.spl', spl); main.set('.toc', toc); main.set('.m', meta); main.set('.ph .m', meta);
   render(main, P);
-  return { body: pmain.innerHTML, chips: spl.innerHTML, nav: toc.innerHTML, meta: main.querySelector('.m').innerHTML };
+  return { body: pmain.innerHTML, chips: spl.innerHTML, nav: toc.innerHTML, meta: meta.innerHTML, intro: meta._next ? meta._next.textContent : '' };
 }
 const A16Z_OV = [
   { label: 'HQ', value: 'Menlo Park, CA', src: [link(ADV, 'SEC IAPD')] },
@@ -58,25 +59,19 @@ const A16Z_OV = [
 const NEWS = { key: 'press', count: 1, items: [{ head: 'A story', date: '2026-01-01', src: [link('https://www.reuters.com/x', 'Reuters')] }] };
 const CHECKS = [{ n: 1, title: 'Sanctions', state: 'clear' }];
 
-test('no thesis: no Overview, no Thesis section, chip or nav entry; check summary leads', () => {
+test('no thesis: overview facts are not a section', () => {
   const r = draw([{ key: 'overview', count: 6, items: A16Z_OV }, NEWS], CHECKS);
   for (const h of [r.body, r.chips, r.nav]) {
-    assert.doesNotMatch(h, /Overview|Thesis|id="overview"|id="thesis"|Menlo Park|AH Capital|Owners|Registration/);
+    assert.doesNotMatch(h, /Overview|Thesis|id="overview"|id="thesis"|AH Capital|Owners|Registration/);
   }
-  assert.ok(r.body.startsWith('<section id="check-summary"'), 'check summary leads the page');
-  assert.match(r.nav, /Check summary/);
   assert.equal(pageSecs({ sections: [{ key: 'overview', items: A16Z_OV }] }).length, 0);
 });
 
-test('a thesis takes the Overview slot: heading and text only, chip and nav say Thesis without a count', () => {
+test('a thesis is the header text, and stored markup stays text', () => {
   const text = 'We back founders early and stay for the long term. <b>not html</b>';
   const r = draw([{ key: 'overview', count: 7, items: A16Z_OV.concat([{ label: 'Thesis', value: '  ' + text + '  ', src: [] }]) }, NEWS], CHECKS);
-  const sec = r.body.split('<section id="thesis" class="ps">')[1].split('</section>')[0];
-  assert.equal(sec, '<h2>Thesis</h2><p class="pth">We back founders early and stay for the long term. &lt;b&gt;not html&lt;/b&gt;</p>');
-  assert.ok(r.body.indexOf('id="thesis"') < r.body.indexOf('id="check-summary"'), 'check summary follows the thesis');
-  assert.match(r.chips, /^<a class="spp" href="#thesis">Thesis<\/a>/);
-  assert.match(r.nav, /<a href="#thesis">Thesis<\/a><a href="#check-summary">/);
-  assert.doesNotMatch(r.body + r.chips + r.nav, /Overview|Menlo Park|AH Capital/);
+  assert.equal(r.intro, 'We back founders early and stay for the long term. <b>not html</b>');
+  assert.doesNotMatch(r.body, /id="thesis"|id="overview"|Overview|AH Capital/);
 });
 
 test('blank thesis is no thesis; label match is exact, case-insensitive', () => {
