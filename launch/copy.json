@@ -88,7 +88,7 @@
   }
  },
  "sections": {
-  "_note": "Company page sections, in display order. renderer = facts | legal | news | founders | people | videos (js/company.js). Check summary is drawn by the page after Thesis (or first when there is none) and is not a section. The overview key is drawn only as Thesis (its item labelled thesis); other overview rows are not shown (Alex, 2026-10-29). Remove an entry to hide a section. The DB only supplies the data per key. Videos sits after Team and before News.",
+  "_note": "Company page sections, in display order. renderer = facts | legal | news | founders | people | videos | investors (js/company.js). Check summary is drawn by the page after Thesis (or first when there is none) and is not a section. The overview key is drawn only as Thesis (its item labelled thesis); other overview rows are not shown (Alex, 2026-10-29). What investors look for (investors) sits after Thesis and before Team. No rows: no section. Remove an entry to hide a section. The DB only supplies the data per key. Videos sits after Team and before News.",
   "list": [
    {
     "key": "overview",
@@ -97,6 +97,14 @@
     "renderer": "facts",
     "unit_one": "fact",
     "unit_many": "facts"
+   },
+   {
+    "key": "investors",
+    "title": "What investors look for",
+    "subtitle": "",
+    "renderer": "investors",
+    "unit_one": "line",
+    "unit_many": "lines"
    },
    {
     "key": "legal",
@@ -618,6 +626,7 @@
  "company": {
   "toc": "On this page",
   "thesis": { "_note": "Full report Thesis section (replaces Overview, Alex 2026-10-29). Text is the overview item labelled thesis; heading, chip and nav use title.", "title": "Thesis" },
+  "investors": { "_note": "What investors look for (Alex, 2026-11-06). The section title is sections.list. Show all is activity.show_all and appears whenever the section has a row; it reveals the quote under every summary. No count.", "summary": "Summary:", "source": "Source" },
   "gate": {
    "title": "Check with 1 credit",
    "sub": "See all 10 check results and the full record for {firm}. One credit opens both pages.",
