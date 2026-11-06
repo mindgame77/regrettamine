@@ -1,4 +1,5 @@
-// What investors look for: after Thesis, before Team. Five summary rows, then Show all.
+// What investors look for: after Thesis, before Team. Five summary rows.
+// Show all opens the same list popup as the other sections, with every quote.
 // node --test tests/investors_look_for.test.mjs
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -13,9 +14,10 @@ const icon = read('launch/assets/icons/link-simple.svg');
 const iconPath = icon.match(/d="([^"]+)"/)[1];
 
 const clicks = [];
+const made = {};
 function el() {
   return {
-    hidden: false, innerHTML: '', textContent: '', style: {}, className: '', dataset: {},
+    hidden: false, innerHTML: '', textContent: '', style: {}, className: '', id: '', dataset: {},
     classList: { toggle() {}, add() {}, remove() {} },
     querySelector() { return null; },
     querySelectorAll() { return []; },
@@ -23,8 +25,10 @@ function el() {
     setAttribute() {},
     remove() {},
     insertAdjacentElement() { return null; },
+    getAttribute() { return null; },
   };
 }
+function resetModals() { for (const k of Object.keys(made)) delete made[k]; }
 function mainEl() {
   const kids = {};
   const main = el();
@@ -35,9 +39,9 @@ function mainEl() {
 const sandbox = {
   window: { REGRET: { copy } },
   document: {
-    body: null,
+    body: { appendChild(n) { made[n.id] = n; } },
     addEventListener(type, fn) { if (type === 'click') clicks.push(fn); },
-    getElementById() { return null; },
+    getElementById(id) { return made[id] || null; },
     createElement: () => el(),
   },
   console, URL,
@@ -63,15 +67,27 @@ function row(n, extra) {
 const people = { key: 'people', items: [{ head: 'Marc Andreessen', kind: 'team', role: 'Cofounder and General Partner' }] };
 const thesis = { key: 'overview', items: [{ label: 'thesis', value: 'We back technical founders.' }] };
 
-function page(items, checks) {
+function page(items, checks, extra) {
   return {
     open: true,
     checks: checks || [],
     firm: { name: 'Andreessen Horowitz', slug: 'a16z', short_name: 'a16z' },
-    sections: [thesis, { key: 'investors', items }, people],
+    sections: [thesis, { key: 'investors', items }, people].concat(extra || []),
   };
 }
+function popup(id) {
+  const ov = made[id];
+  assert.ok(ov, id + ' popup');
+  assert.equal(ov.className, 'ov tall');
+  assert.equal(ov.hidden, true);
+  assert.match(ov.innerHTML, /class="md w amd" role="dialog" aria-modal="true"/);
+  assert.match(ov.innerHTML, /<button class="x" data-close aria-label="Close">/);
+  assert.match(ov.innerHTML, /<div class="amh">/);
+  assert.match(ov.innerHTML, /<div class="amb">/);
+  return ov.innerHTML;
+}
 function draw(P) {
+  resetModals();
   const main = mainEl();
   main.set('.actw', el());
   const pmain = main.set('.pmain', el());
@@ -108,26 +124,34 @@ test('no rows: no section, chip, or nav entry', () => {
   }
 });
 
-test('one row and five rows: every summary, Show all, quotes only after it', () => {
+const openPage = { open: true, firm: { name: 'Andreessen Horowitz', slug: 'a16z' } };
+function quotesInPopup(items) {
+  resetModals();
+  const pageHtml = investorsHtml(items, openPage);
+  const open = popup('actinvestors');
+  return { pageHtml, open };
+}
+
+test('one row and five rows: summaries on the page, quotes only in the shared popup', () => {
   for (const n of [1, 5]) {
     const items = Array.from({ length: n }, (_, i) => row(i + 1));
-    const closed = investorsHtml(items, false);
-    const visible = closed.replace(/ data-rows="[^"]*"/, '');
-    assert.equal(count(closed, 'class="ipr"'), n);
-    assert.equal(count(closed, 'class="ipq"'), 0);
-    assert.equal(count(closed, 'class="ipi"'), n);
-    assert.equal(count(closed, '<button type="button" class="ash" data-investors>'), 1);
-    assert.match(closed, />Show all</);
-    assert.doesNotMatch(visible, /Exact quote body/);
-    assert.match(closed, /Summary line 1 stays a takeaway/);
-    assert.match(closed, /Investor 1 · General Partner · 2016/);
-    assert.doesNotMatch(closed, /role_source_url|team\/investor/);
-    const open = investorsHtml(items, true);
+    const { pageHtml, open } = quotesInPopup(items);
+    assert.equal(count(pageHtml, 'class="ipr"'), n);
+    assert.equal(count(pageHtml, 'class="ipq"'), 0);
+    assert.equal(count(pageHtml, 'class="ipi"'), n);
+    assert.equal(count(pageHtml, '<button type="button" class="ash" data-open="actinvestors">'), 1);
+    assert.match(pageHtml, />Show all</);
+    assert.doesNotMatch(pageHtml, /Exact quote body|data-rows|data-investors|Show more/);
+    assert.match(pageHtml, /Summary line 1 stays a takeaway/);
+    assert.match(pageHtml, /Investor 1 · General Partner · 2016/);
+    assert.doesNotMatch(pageHtml, /role_source_url|team\/investor/);
     assert.equal(count(open, 'class="ipr"'), n);
     assert.equal(count(open, 'class="ipq"'), n);
     assert.equal(count(open, 'class="ips"'), n);
     assert.equal(count(open, 'class="ipi"'), n);
-    assert.doesNotMatch(open, /<button|Show all|data-rows|data-investors/);
+    assert.match(open, /aria-label="What investors look for"/);
+    assert.match(open, /<b>What investors look for<\/b>/);
+    assert.doesNotMatch(open, /Show all|data-rows|data-investors|<em/);
     assert.match(open, /Summary line 1 stays a takeaway/);
     assert.match(open, /Exact quote body 1 is longer than the summary and is not the summary/);
     const parts = open.split('class="ipr"').slice(1);
@@ -139,79 +163,87 @@ test('one row and five rows: every summary, Show all, quotes only after it', () 
   }
 });
 
-test('more than five: five summary rows and Show all, quotes only after it', () => {
-  const items = Array.from({ length: 6 }, (_, i) => row(i + 1));
-  const closed = investorsHtml(items, false);
-  assert.equal(count(closed, 'class="ipr"'), 5);
-  assert.equal(count(closed, 'class="ipq"'), 0);
-  assert.equal(count(closed, '<button type="button" class="ash" data-investors>'), 1);
-  assert.match(closed, />Show all</);
-  assert.doesNotMatch(closed, /Show more/);
-  const visible = closed.replace(/ data-rows="[^"]*"/, '');
-  assert.doesNotMatch(visible, /Investor 6|Exact quote body/);
-  assert.match(closed, /data-rows="/);
-  const open = investorsHtml(items, true);
-  assert.equal(count(open, 'class="ipr"'), 6);
-  assert.equal(count(open, 'class="ipq"'), 6);
-  assert.equal(count(open, 'class="ipi"'), 6);
-  assert.equal(count(open, 'class="ipa"'), 6);
-  assert.equal(count(open, 'class="ips"'), 6);
-  assert.doesNotMatch(open, /<button|Show all|data-rows|data-investors/);
-  assert.match(open, /Investor 6 · General Partner · 2016/);
-  assert.match(open, /Exact quote body 6 is longer than the summary and is not the summary/);
-  const sixth = open.split('class="ipr"').pop();
-  assert.equal(count(sixth, '<a '), 1);
-  assert.doesNotMatch(sixth, /a16z\.com\/quote-6[\s\S]*a16z\.com\/quote-6/);
-  const quote = sixth.slice(sixth.indexOf('class="ipq"'));
+test('twelve rows: five on the page, all twelve quotes in the popup', () => {
+  const long = 'Word '.repeat(400) + 'tail-of-the-quote';
+  const items = Array.from({ length: 12 }, (_, i) => row(i + 1, i === 11 ? { quote: long } : {}));
+  const { pageHtml, open } = quotesInPopup(items);
+  assert.equal(count(pageHtml, 'class="ipr"'), 5);
+  assert.equal(count(pageHtml, 'class="ipq"'), 0);
+  assert.equal(count(pageHtml, '<button type="button" class="ash" data-open="actinvestors">'), 1);
+  assert.match(pageHtml, />Show all</);
+  assert.doesNotMatch(pageHtml, /Show more|data-rows|data-investors|Investor 6|Exact quote body|tail-of-the-quote/);
+  assert.equal(count(open, 'class="ipr"'), 12);
+  assert.equal(count(open, 'class="ipq"'), 12);
+  assert.equal(count(open, 'class="ipi"'), 12);
+  assert.equal(count(open, 'class="ipa"'), 12);
+  assert.equal(count(open, 'class="ips"'), 12);
+  assert.doesNotMatch(open, /<button type="button" class="ash"|Show all|data-rows|data-investors/);
+  assert.match(open, /Investor 12 · General Partner · 2016/);
+  assert.match(open, /tail-of-the-quote/);
+  const twelfth = open.split('class="ipr"').pop();
+  assert.equal(count(twelfth, '<a '), 1);
+  assert.match(twelfth, /href="https:\/\/a16z\.com\/quote-12" target="_blank" rel="noopener"/);
+  assert.doesNotMatch(twelfth, /a16z\.com\/quote-12[\s\S]*a16z\.com\/quote-12/);
+  const quote = twelfth.slice(twelfth.indexOf('class="ipq"'));
   assert.doesNotMatch(quote, /General Partner|Summary:|2016|https:|class="ipi"|class="ipa"/);
   assert.doesNotMatch(open, /team\/investor/);
 });
 
 test('summary and quote stay different, and the source icon is the only link', () => {
   const same = row(1, { summary: 'Same words.', quote: 'Same words.' });
-  assert.equal(investorsHtml([same], false), '');
-  const html = investorsHtml([row(1, { summary: 'Short takeaway.', quote: '"Short takeaway is not this."' })], false);
-  const visible = html.replace(/ data-rows="[^"]*"/, '');
-  assert.match(visible, /Short takeaway\./);
-  assert.doesNotMatch(visible, /Short takeaway is not this/);
+  assert.equal(investorsHtml([same], openPage), '');
+  resetModals();
+  const html = investorsHtml([row(1, { summary: 'Short takeaway.', quote: '"Short takeaway is not this."' })], openPage);
+  assert.match(html, /Short takeaway\./);
+  assert.doesNotMatch(html, /Short takeaway is not this/);
   assert.match(html, /href="https:\/\/a16z\.com\/quote-1" target="_blank" rel="noopener"/);
   assert.match(html, /aria-label="Source"/);
   assert.match(html, /width="12" height="12"/);
   assert.match(html, new RegExp('d="' + iconPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '"'));
   assert.equal(count(html, '<a '), 1);
-  assert.equal(count(html, '<button type="button" class="ash" data-investors>'), 1);
-  assert.doesNotMatch(html, /tabindex|onclick|role="button"/);
-  assert.match(html, /^<div class="iprs" data-rows="[^"]*"><div class="ipr">/);
+  assert.equal(count(html, '<button type="button" class="ash" data-open="actinvestors">'), 1);
+  assert.doesNotMatch(html, /tabindex|onclick|role="button"|data-rows|data-investors/);
+  assert.match(html, /^<div class="iprs"><div class="ipr">/);
+  const open = popup('actinvestors');
+  assert.match(open, /Short takeaway is not this/);
+  assert.equal(count(open, '<a '), 1);
 });
 
-test('a row click does nothing; Show all is the control that opens quotes', () => {
-  const items = Array.from({ length: 6 }, (_, i) => row(i + 1));
-  const handler = clicks.find(fn => {
+test('nothing on the page expands a row; Show all is the shared popup', () => {
+  assert.doesNotMatch(read('launch/js/company.js'), /data-investors|data-rows/);
+  const caught = clicks.some(fn => {
     let saw = false;
-    fn({ target: { closest(sel) { if (sel === 'button[data-investors]') saw = true; return null; } } });
+    try {
+      fn({ target: { closest(sel) { if (sel === 'button[data-investors]') saw = true; return null; }, classList: {} } });
+    } catch (err) { /* other listeners expect a fuller event */ }
     return saw;
   });
-  assert.ok(handler, 'show-all click handler is registered');
-  let read = false;
-  handler({ target: { closest() { return null; } } });
-  const box = {
-    parentNode: { html: '' },
-    getAttribute(name) { read = true; return name === 'data-rows' ? JSON.stringify(items.map(x => ({
-      investor_name: x.investor_name, investor_title: x.investor_title, summary: x.summary,
-      quote: x.quote, published_at: x.published_at, source_url: x.source_url,
-    }))) : null; },
-    closest(sel) { return sel === '.iprs' ? box : null; },
-    set outerHTML(v) { this.parentNode.html = v; },
-  };
-  const button = { closest(sel) { return sel === 'button[data-investors]' ? button : sel === '.iprs' ? box : null; } };
-  handler({ target: { closest(sel) { return sel === 'button[data-investors]' ? null : null; } } });
-  assert.equal(read, false);
-  handler({ target: button });
-  assert.equal(read, true);
-  const opened = box.parentNode.html;
-  assert.equal(count(opened, 'class="ipq"'), 6);
-  assert.doesNotMatch(opened, /<button|Show all/);
-  assert.match(opened, /Exact quote body 1/);
+  assert.equal(caught, false);
+  const items = Array.from({ length: 6 }, (_, i) => row(i + 1));
+  const drawn = draw(page(items));
+  const block = between(drawn.body, 'id="investors"', 'id="people"');
+  assert.equal(count(block, 'class="ipr"'), 5);
+  assert.equal(count(block, 'class="ipq"'), 0);
+  assert.match(block, /data-open="actinvestors">Show all<\/button>/);
+  assert.doesNotMatch(block, /Exact quote body/);
+  const open = popup('actinvestors');
+  assert.equal(count(open, 'class="ipq"'), 6);
+  assert.match(open, /Exact quote body 1/);
+});
+
+test('investor Show all uses the same popup shell as the other lists', () => {
+  const items = Array.from({ length: 12 }, (_, i) => row(i + 1));
+  const lps = Array.from({ length: 7 }, (_, i) => ({ label: 'Endowment ' + i, value: '$' + (i + 1) + 'M', src: [{ label: 'Report', url: 'https://example.org/' + i + '.pdf' }] }));
+  const press = Array.from({ length: 7 }, (_, i) => ({ head: 'Story ' + i, outlet: 'News', url: 'https://example.org/n' + i, date: '2024-01-0' + ((i % 9) + 1), snippet: 'A line.' }));
+  draw(page(items, [], [{ key: 'lps', items: lps }, { key: 'press', items: press }]));
+  for (const id of ['actinvestors', 'actlps', 'actnews']) {
+    const html = popup(id);
+    assert.match(html, /role="dialog" aria-modal="true"/);
+    assert.match(html, /data-close/);
+  }
+  assert.equal(count(popup('actinvestors'), 'class="ipq"'), 12);
+  assert.equal(count(popup('actlps'), 'class="rw lpl"'), 7);
+  assert.equal(count(popup('actnews'), 'class="pi '), 7);
 });
 
 test('the section sits after Thesis and before Team, with no count', () => {

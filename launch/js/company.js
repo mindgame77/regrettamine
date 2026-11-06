@@ -654,8 +654,9 @@
     }
     return h;
   }
-  // What investors look for. At most five summary rows, then Show all whenever any row exists.
-  // Show all keeps every summary and adds the quote under each one. Rows are not controls.
+  // What investors look for. At most five summary rows on the page. Show all, whenever any row
+  // exists, opens the same list popup as the other sections. The popup has every summary,
+  // attribution, source, and the exact quote. Rows are not controls and never expand in place.
   // The icon is Phosphor LinkSimple (launch/assets/icons/link-simple.svg), drawn at 12px.
   const LINK_SIMPLE = 'M165.66,90.34a8,8,0,0,1,0,11.32l-64,64a8,8,0,0,1-11.32-11.32l64-64A8,8,0,0,1,165.66,90.34ZM215.6,40.4a56,56,0,0,0-79.2,0L106.34,70.45a8,8,0,0,0,11.32,11.32l30.06-30a40,40,0,0,1,56.57,56.56l-30.07,30.06a8,8,0,0,0,11.31,11.32L215.6,119.6a56,56,0,0,0,0-79.2ZM138.34,174.22l-30.06,30.06a40,40,0,1,1-56.56-56.57l30.05-30.05a8,8,0,0,0-11.32-11.32L40.4,136.4a56,56,0,0,0,79.2,79.2l30.06-30.07a8,8,0,0,0-11.32-11.31Z';
   const INVESTORS_SHOWN = 5;
@@ -696,21 +697,24 @@
     const quote = open ? '<p class="ipq">“' + esc(x.quote) + '”</p>' : '';
     return '<div class="ipr"><p class="ips"><span class="iplab">' + esc(IV.summary || 'Summary:') + '</span> ' + esc(x.summary) + '</p><p class="ipa"><span class="ipwho">' + esc(who) + '</span>' + icon + '</p>' + quote + '</div>';
   }
-  function investorsHtml(items, open) {
+  function investorTitle() {
+    const s = (CFG.sections.list || []).find(x => x.key === 'investors');
+    return (s && s.title) || 'What investors look for';
+  }
+  function investorsHtml(items, P) {
     const rows = investorRows(items);
     if (!rows.length) return '';
-    const expanded = !!open;
-    const shown = expanded ? rows : rows.slice(0, INVESTORS_SHOWN);
-    const body = shown.map(x => investorRow(x, expanded)).join('');
-    if (expanded) return '<div class="iprs">' + body + '</div>';
-    const label = (COPY.activity && COPY.activity.show_all) || 'Show all';
-    return '<div class="iprs" data-rows="' + esc(JSON.stringify(rows)) + '">' + body
-      + '<button type="button" class="ash" data-investors>' + esc(label) + '</button></div>';
+    const body = rows.slice(0, INVESTORS_SHOWN).map(x => investorRow(x, false)).join('');
+    const open = !!(P && P.open);
+    if (open && typeof document !== 'undefined' && document.body) {
+      actModal('actinvestors', investorTitle(), '<div class="iprs">' + rows.map(x => investorRow(x, true)).join('') + '</div>');
+    }
+    return '<div class="iprs">' + body + showAllLink(open, 'actinvestors') + '</div>';
   }
   // Open-state renderers, keyed by copy.json sections[].renderer. The section is the third argument (LP grouping).
   const R = {
     thesis: (items) => '<p class="pth">' + esc(items[0] ? items[0].value : '') + '</p>',
-    investors: (it) => investorsHtml(it, false),
+    investors: (it, P) => investorsHtml(it, P),
     facts: (it, P, s) => s && s.key === 'lps' ? lpsBlock(it, P) : '<div class="rws">' + it.map(factRow).join('') + '</div>',
     checks: (it, P) => checkRows(P),
     legal: (it, P) => legalHtml(it, P),
@@ -1644,19 +1648,6 @@
     const st = (x) => { const v = window.RegretDate && x && x.date ? window.RegretDate.stamp(x.date) : null; return v == null ? null : v; };
     return fs.map((x, i) => ({ x, i, t: st(x) })).sort((a, b) => (a.t == null) - (b.t == null) || (b.t || 0) - (a.t || 0) || a.i - b.i).map(o => o.x);
   }
-  // Show all reveals every principle and the quote under each one. A row is not a control.
-  document.addEventListener('click', (e) => {
-    const b = e.target && e.target.closest && e.target.closest('button[data-investors]');
-    if (!b) return;
-    const box = b.closest('.iprs');
-    if (!box) return;
-    let rows = [];
-    try { rows = JSON.parse(box.getAttribute('data-rows') || '[]'); } catch (err) { rows = []; }
-    if (!rows.length) return;
-    const next = investorsHtml(rows, true);
-    if (box.parentNode) box.outerHTML = next;
-    else box.innerHTML = next;
-  });
   // v4: clicking the Latest fund tile opens the same funds pop-up as its Show all button (links inside keep working).
   document.addEventListener('click', (e) => {
     const t = e.target && e.target.closest && e.target.closest('[data-fundtile]');
