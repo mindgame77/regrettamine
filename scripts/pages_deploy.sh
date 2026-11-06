@@ -17,6 +17,44 @@ test -f functions/sitemap.xml.js
 test -f 'functions/sitemaps/[name].js'
 test -d ../site-launch/vc
 
+# An older main run must not publish. PR 339 deployed while PR 340 was already
+# on main, so production served that older company.js (inline Show all) until
+# the newer run finished. Wrangler then reported the bytes "already uploaded".
+if [ -n "${GITHUB_SHA:-}" ]; then
+  git fetch --no-tags --depth=1 origin main
+  tip=$(git rev-parse origin/main)
+  if [ "$tip" != "$GITHUB_SHA" ]; then
+    echo "refusing deploy: this build is ${GITHUB_SHA} but origin/main is ${tip}" >&2
+    exit 1
+  fi
+fi
+
+sha10() { sha1sum "$1" | awk '{print substr($1,1,10)}'; }
+for pair in \
+  'js/company.js:../site-launch/company.js' \
+  'js/app.js:../site-launch/app.js' \
+  'js/search.js:../site-launch/search.js' \
+  'js/dates.js:../site-launch/dates.js' \
+  'style.css:../site-launch/style.css'
+do
+  src=${pair%%:*}
+  dst=${pair#*:}
+  a=$(sha10 "$src")
+  b=$(sha10 "$dst")
+  if [ "$a" != "$b" ]; then
+    echo "refusing: $dst is $b but $src is $a" >&2
+    exit 1
+  fi
+done
+ASSET_HASH=$(sha10 js/company.js)
+for page in ../site-launch/_tpl/full.html ../site-launch/vc/a16z/full/index.html; do
+  if ! grep -q "company.js?v=${ASSET_HASH}" "$page"; then
+    echo "refusing: $page does not reference company.js?v=${ASSET_HASH}" >&2
+    exit 1
+  fi
+done
+echo "site-launch matches this commit ($ASSET_HASH)"
+
 n=$(find ../site-launch/vc -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')
 if [ "$LAB_ONLY" = "0" ]; then
   if [ "$n" -le 10 ]; then
@@ -56,6 +94,22 @@ page_ok() {
   html=$(curl -fsS --retry 5 --retry-delay 3 --retry-all-errors "$url/vc/$slug/" || true)
   grep -q "data-firm=\"$slug\"" <<<"$html"
 }
+# The preview deployment is a new URL, so it is not the cached production file.
+# Production is published only when that URL is serving this commit's company.js.
+preview_matches_source() {
+  local html got
+  html=$(curl -fsS --retry 5 --retry-delay 3 --retry-all-errors "$url/vc/a16z/full/")
+  if ! grep -q "company.js?v=${ASSET_HASH}" <<<"$html"; then
+    echo "refusing production: preview HTML does not reference company.js?v=${ASSET_HASH}" >&2
+    exit 1
+  fi
+  got=$(curl -fsS --retry 5 --retry-delay 3 --retry-all-errors "$url/company.js" | sha1sum | awk '{print substr($1,1,10)}')
+  if [ "$got" != "$ASSET_HASH" ]; then
+    echo "refusing production: preview company.js is $got, source is $ASSET_HASH" >&2
+    exit 1
+  fi
+  echo "preview company.js matches source $ASSET_HASH"
+}
 echo "checking firm page at $url/vc/$PROBE/"
 if page_ok "$PROBE"; then
   echo "preview served $PROBE"
@@ -68,6 +122,7 @@ fi
 sm=$(curl -fsS --retry 5 --retry-delay 3 --retry-all-errors "$url/sitemap.xml" || true)
 if ! grep -q '<sitemapindex' <<<"$sm"; then
   echo "preview sitemap is not the functions index; firm_sitemap is unavailable, continuing because the firm page loaded"
+  preview_matches_source
   deploy main
   echo "production deploy published (sitemap check skipped)"
   exit 0
@@ -93,5 +148,6 @@ if ! grep -q "data-firm=\"$listed\"" <<<"$listed_html"; then
   exit 1
 fi
 
+preview_matches_source
 deploy main
 echo "production deploy kept non-lab pages (preview served $PROBE)"
