@@ -758,7 +758,7 @@
     if (open && typeof document !== 'undefined' && document.body) {
       actModal('actinvestors', investorTitle(), '<div class="iprs">' + rows.map(x => investorRow(x, true)).join('') + '</div>');
     }
-    return '<div class="iprs" data-fit="1">' + body + (rows.length > INVESTORS_SHOWN ? showAllLink(open, 'actinvestors') : '') + '</div>';
+    return '<div class="iprs" data-fit="1">' + body + '</div>' + (rows.length > INVESTORS_SHOWN ? showAllLink(open, 'actinvestors') : '');
   }
   // Open-state renderers, keyed by copy.json sections[].renderer. The section is the third argument (LP grouping).
   const R = {
@@ -1969,7 +1969,7 @@
     const revs = (P.activity && Array.isArray(P.activity.reviews)) ? P.activity.reviews : [];
     if (revs.length) {
       const nrev = (P.activity.counts && Number(P.activity.counts.reviews)) || revs.length;
-      const revHtml = revs.map((r, i) => i < 3 ? revCard(r) : markExtra(revCard(r))).join('');
+      const revHtml = '<div data-fit="1">' + revs.map((r, i) => i < 3 ? revCard(r) : markExtra(revCard(r))).join('') + '</div>';
       h += bentoCard('reviews', esc(AC.reviews || 'What founders say'), revHtml, nrev > 3 ? showAllLink(!!P.open, 'actrevs') : '', true);
     }
     if (by.news) h += bentoCard('news', esc(by.news.title), R.news(by.news.items, P, by.news), '', true);
@@ -1987,22 +1987,35 @@
   });
 
   function fillCard(card) {
-    const rows = Array.from(card.querySelectorAll('[data-extra]'));
-    if (!rows.length || !card.clientHeight) return;
+    const body = card.querySelector('[data-fit]');
+    if (!body || !card.clientHeight) return;
+    const rows = Array.from(body.children).filter(el => !el.classList.contains('ash'));
+    const show = card.querySelector('.ash');
     rows.forEach(row => { row.hidden = true; });
+    if (show) show.hidden = false;
     const budget = card.clientHeight;
+    let shown = 0;
     for (const row of rows) {
       row.hidden = false;
-      if (card.scrollHeight > budget + 2) {
+      const overflows = card.scrollHeight > budget + 2;
+      const foot = show && !show.hidden ? show.getBoundingClientRect().top : 0;
+      const hitsFoot = foot && row.getBoundingClientRect().bottom > foot + 1;
+      if ((overflows || hitsFoot) && shown > 0) {
         row.hidden = true;
         break;
       }
+      if (overflows || hitsFoot) {
+        row.hidden = true;
+        break;
+      }
+      shown++;
     }
-    const show = card.querySelector('.ash');
-    if (show) show.hidden = !rows.some(row => row.hidden);
+    const more = rows.some(row => row.hidden);
+    if (show) show.hidden = !more;
   }
   function fillTiles(root) {
     if (!root || !root.querySelectorAll) return;
+    if (window.matchMedia && !window.matchMedia('(min-width: 801px)').matches) return;
     root.querySelectorAll('[data-fill]').forEach(fillCard);
   }
   if (window.addEventListener) window.addEventListener('resize', () => {

@@ -583,6 +583,7 @@ body:has(main.prof){background:#F7F6FA}
 .bento #news .pis,.bento #news .scs{display:none}
 .bento #news .pi{padding:12px 14px}
 .lglines .lgline{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;row-gap:4px;align-items:start;padding:8px 0;border-bottom:1px solid var(--line);min-width:0}
+.bento [hidden]{display:none !important}
 .lglines .lgline:last-child{border-bottom:0}
 .lgt{grid-column:1;min-width:0;overflow:visible;text-overflow:unset;white-space:normal;overflow-wrap:break-word;font:700 15px/1.3 'DM Sans',sans-serif}
 .lgm{grid-column:2;color:var(--mute);white-space:nowrap;font:400 13px/1.3 'DM Sans',sans-serif;padding-top:1px}
@@ -610,6 +611,11 @@ body:has(main.prof){background:#F7F6FA}
 .prof .pio,.prof .lpl .rt{font:400 13px/1.4 'DM Sans',sans-serif}
 .prof .ipa,.prof .arat{font:400 12px/1.4 'DM Sans',sans-serif}
 #team.mod{align-self:start}
+/* Desktop pair size is the Deals announced / Videos tile: 323px tall, half the two-column row. */
+@media (min-width:801px){
+  .bento .mod:not(.span2){height:323px;overflow:hidden}
+  #team.mod{align-self:stretch}
+}
 .prof .ad{font:400 13px/1.4 'DM Sans',sans-serif}
 .prof .adh{font:700 12px/1.3 'DM Sans',sans-serif}
 .prof .ad b,.prof .ad a{font-weight:700}

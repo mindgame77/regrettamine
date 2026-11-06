@@ -52,3 +52,14 @@ test('legal case titles are not ellipsized', () => {
   assert.match(rule, /white-space:normal/);
   assert.doesNotMatch(rule, /text-overflow:ellipsis|white-space:nowrap/);
 });
+
+test('desktop pairs share the Deals announced / Videos height, recent deals does not', () => {
+  const at = css.indexOf('@media (min-width:801px)');
+  assert.ok(at > 0);
+  const rule = css.slice(at, css.indexOf('}', css.indexOf('.bento .mod:not(.span2)', at)) + 1);
+  assert.match(rule, /height:323px/);
+  assert.match(rule, /:not\(\.span2\)/);
+  const js = fs.readFileSync(new URL('launch/js/company.js', root), 'utf8');
+  assert.match(js, /bentoCard\('lps', esc\(by\.lps\.title\),/);
+  assert.doesNotMatch(js, /by\.lps\.count/);
+});
