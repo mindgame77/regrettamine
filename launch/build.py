@@ -10,7 +10,7 @@ import os, re, json, html, glob, shutil, hashlib, urllib.request
 from legal import privacy, terms
 E = html.escape
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE); OUT = os.path.join(ROOT, 'site-launch')
-def _v(f):  # content hash so browsers never run a stale cached copy (assets are max-age=600)
+def _v(f):  # query on the script/link. The file path does not change, so _headers makes the CDN revalidate.
     return hashlib.sha1(open(os.path.join(HERE, f), 'rb').read()).hexdigest()[:10]
 V = {k: _v(f) for k, f in (('company', 'js/company.js'), ('app', 'js/app.js'), ('search', 'js/search.js'), ('dates', 'js/dates.js'), ('css', 'style.css'))}
 COPY = json.load(open(os.path.join(HERE, 'copy.json')))
@@ -375,6 +375,14 @@ def main():
     urls = [site] + [site + p + '/' for p in ('how-we-check', 'privacy', 'terms') if os.path.exists(os.path.join(OUT, p, 'index.html'))] + [f'{site}vc/{f}/' for f in firms]  # /full/ is noindex
     open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join(f'<url><loc>{u}</loc></url>\n' for u in urls) + '</urlset>\n')
     open(os.path.join(OUT, 'robots.txt'), 'w').write(f'User-agent: *\nAllow: /\nDisallow: /_tpl/\n\nSitemap: {site}sitemap.xml\n')
+    # company.js, app.js, search.js, dates.js and style.css keep one path. ?v= is only a browser
+    # cache buster. Without these headers Cloudflare kept the previous file for four hours.
+    open(os.path.join(OUT, '_headers'), 'w').write(
+        '/company.js\n  Cache-Control: public, max-age=0, must-revalidate\n'
+        '/app.js\n  Cache-Control: public, max-age=0, must-revalidate\n'
+        '/search.js\n  Cache-Control: public, max-age=0, must-revalidate\n'
+        '/dates.js\n  Cache-Control: public, max-age=0, must-revalidate\n'
+        '/style.css\n  Cache-Control: public, max-age=0, must-revalidate\n')
     print('built', len(firms), 'firms', '(lab)' if lab_only() else '(all)', '->', OUT)
 
 if __name__ == '__main__': main()
