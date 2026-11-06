@@ -1863,8 +1863,8 @@
       return arc;
     }).join('');
     return '<div class="dw"><svg width="150" height="150" viewBox="0 0 160 160" role="img" aria-label="' + n + ' deals">' + arcs
-      + '<text x="80" y="78" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="20">' + n + '</text>'
-      + '<text x="80" y="96" text-anchor="middle" fill="#8C88A3" font-size="11">deals</text></svg><div class="lg">'
+      + '<text x="80" y="76" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="22">' + n + '</text>'
+      + '<text x="80" y="94" text-anchor="middle" fill="#8C88A3" font-size="12" font-family="DM Sans, sans-serif">deals</text></svg><div class="lg">'
       + L.map(s => '<div><i style="background:' + scol(s, T) + '"></i><span>' + esc(s) + '</span><em>' + (c[s] || 0) + '</em></div>').join('')
       + '</div></div>';
   }
@@ -1891,7 +1891,7 @@
     for (let n = 0; n <= mx; n += step) {
       const y = H + 8 - n * u;
       svg += '<line x1="0" y1="' + y + '" x2="' + W + '" y2="' + y + '" stroke="#ECE9F5"/>';
-      svg += '<text x="-6" y="' + (y + 3) + '" text-anchor="end" font-size="10" fill="#8C88A3">' + n + '</text>';
+      svg += '<text x="-6" y="' + (y + 3) + '" text-anchor="end" font-size="12" fill="#8C88A3" font-family="DM Sans, sans-serif">' + n + '</text>';
     }
     const pts = [];
     buckets.forEach((b, i) => {
@@ -1902,13 +1902,13 @@
         y -= h;
         svg += '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + Math.max(h, 0.5) + '" rx="2" fill="' + scol(z.s, T) + '"><title>' + esc(b.k + ' · ' + z.s + ': ' + z.n) + '</title></rect>';
       });
-      svg += '<text x="' + (x + w / 2) + '" y="' + (H + 22) + '" text-anchor="middle" font-size="10" fill="#8C88A3">' + esc(keyLabel(b.k)) + '</text>';
+      svg += '<text x="' + (x + w / 2) + '" y="' + (H + 22) + '" text-anchor="middle" font-size="12" fill="#8C88A3" font-family="DM Sans, sans-serif">' + esc(keyLabel(b.k)) + '</text>';
       pts.push([(i * bw + bw / 2), (H + 8 - b.led * u)]);
     });
     svg += '<polyline points="' + pts.map(p => p.join(',')).join(' ') + '" fill="none" stroke="#14112B" stroke-width="2"/>';
     svg += pts.map(p => '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="2.5" fill="#14112B"/>').join('');
     const legend = T.concat(['Other']).map(s => '<span><i style="background:' + scol(s, T) + '"></i>' + esc(s) + '</span>').join('');
-    return '<svg role="img" aria-label="Announced deals by sector. The line is deals led by the firm." width="100%" viewBox="-28 -8 ' + (W + 36) + ' ' + (H + 40) + '">' + svg + '</svg><div class="ll">' + legend + '<span class="led"><i></i>Led by VC</span></div>';
+    return '<svg role="img" aria-label="Announced deals by sector. The line is deals led by the firm." width="100%" viewBox="-32 -16 ' + (W + 40) + ' ' + (H + 52) + '">' + svg + '</svg><div class="ll">' + legend + '<span class="led"><i></i>Led by VC</span></div>';
   }
   function sectorDialogHtml(ds) {
     const T = topSectors(ds), groups = {};
