@@ -103,4 +103,8 @@ test('desktop pairs share the Deals announced / Videos height, recent deals does
   const js = fs.readFileSync(new URL('launch/js/company.js', root), 'utf8');
   assert.match(js, /bentoCard\('lps', esc\(by\.lps\.title\),/);
   assert.doesNotMatch(js, /by\.lps\.count/);
+  const block = css.slice(at, css.indexOf('@media', at + 8) === -1 ? css.length : css.indexOf('@media', at + 8));
+  assert.match(block, /#sectors \.cc,#rounds \.cc\{margin-top:auto;margin-bottom:auto\}/);
+  assert.match(block, /#sectors \.ash\{margin-top:0/);
+  assert.doesNotMatch(block, /#announced \.cc/);
 });
