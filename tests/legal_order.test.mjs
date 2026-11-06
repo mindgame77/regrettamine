@@ -42,8 +42,8 @@ function page(items) {
   render(main, P);
   return pmain.innerHTML;
 }
-const legal = (html) => (html.split('id="legal"')[1] || '').split('<section ')[0];
-const rows = (html) => [...legal(html).matchAll(/<div class="rw lg( lg-act)?"><div class="rt">([^<]*)<\/div>/g)].map(m => ({ t: m[2], act: !!m[1] }));
+const legal = (html) => (html.split('id="legal"')[1] || '').split('<article ')[0];
+const rows = (html) => [...legal(html).matchAll(/class="lgline"><span class="lgt">([^<]*)<\/span>/g)].map(m => m[1]);
 
 test('section is hidden when there are no cases', () => {
   const html = page([row('Lead (allegation, not verified): something', '2025', 'Unverified'), { grp: 'context', title: 'Context only', src }]);
@@ -59,16 +59,16 @@ test('active cases first, then the rest newest first; old status words mapped', 
     row('Active newer', '2025', '', { status: 'open - stayed' }),
     row('Dismissed one', '2023', 'Closed', { status: 'dismissed' }),
   ]);
-  assert.deepEqual(rows(html).map(r => r.t), ['Active newer', 'Active older', 'Closed newer', 'Dismissed one', 'Settled one']);
+  assert.deepEqual(rows(html), ['Active newer', 'Active older', 'Closed newer', 'Dismissed one', 'Settled one']);
   assert.match(legal(html), />Settled</);
   assert.match(legal(html), />Dismissed</);
 });
 
 test('only Active rows are highlighted red', () => {
   const html = page([row('A v. Example Capital', '2025', 'Active', { role: 'Defendant' }), row('Example Capital v. B', '2021', 'Closed', { role: 'Plaintiff' })]);
-  assert.deepEqual(rows(html), [{ t: 'A v. Example Capital', act: true }, { t: 'Example Capital v. B', act: false }]);
-  assert.match(legal(html), /vs\. A /);
-  assert.match(legal(html), /vs\. B /);
+  assert.deepEqual(rows(html), ['A v. Example Capital', 'Example Capital v. B']);
+  assert.match(legal(html), /A v\. Example Capital/);
+  assert.match(legal(html), /Example Capital v\. B/);
   assert.match(legal(html), />Defendant</);
   assert.match(legal(html), />Plaintiff</);
 });
@@ -76,12 +76,14 @@ test('only Active rows are highlighted red', () => {
 test('caps at 10 rows and offers Show all', () => {
   const items = Array.from({ length: 13 }, (_, i) => row('Case ' + i, String(2000 + i), i < 2 ? 'Active' : 'Closed'));
   const html = page(items);
-  assert.equal(rows(html).length, 10);
-  assert.deepEqual(rows(html).slice(0, 2).map(r => r.t), ['Case 1', 'Case 0']);
+  assert.equal(rows(html).length, 13);
+  assert.equal((legal(html).match(/<div class="lgline">/g) || []).length, 3);
+  assert.equal((legal(html).match(/data-extra="1"/g) || []).length, 10);
+  assert.deepEqual(rows(html).slice(0, 2), ['Case 1', 'Case 0']);
   assert.match(legal(html), /class="ash" data-open="actlegal">Show all<\/button>/);
   assert.doesNotMatch(legal(html), /Show all \d/);
-  assert.match(html, /Legal &amp; regulatory <em class="pc2">13<\/em>/);
-  assert.doesNotMatch(legal(page(items.slice(0, 10))), /actlegal/);
+  assert.doesNotMatch(html, /Legal &amp; regulatory <em class="pc2">/);
+  assert.doesNotMatch(legal(page(items.slice(0, 3))), /actlegal/);
   assert.doesNotMatch(legal(html), /<p class="psub">|Cases where the firm itself/);
 });
 

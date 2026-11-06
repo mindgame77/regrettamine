@@ -582,12 +582,13 @@ body:has(main.prof){background:#F7F6FA}
 .bento #news .pgr{grid-template-columns:1fr;margin:0}
 .bento #news .pis,.bento #news .scs{display:none}
 .bento #news .pi{padding:12px 14px}
-.lglines .lgline{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);min-width:0}
+.lglines .lgline{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;row-gap:4px;align-items:start;padding:8px 0;border-bottom:1px solid var(--line);min-width:0}
 .lglines .lgline:last-child{border-bottom:0}
-.lgt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 15px/1.3 'DM Sans',sans-serif}
-.lgm{flex:none;color:var(--mute);white-space:nowrap;font:400 13px/1.3 'DM Sans',sans-serif}
-.lgp{flex:none;display:flex;gap:4px;align-items:center}
+.lgt{grid-column:1;min-width:0;overflow:visible;text-overflow:unset;white-space:normal;overflow-wrap:break-word;font:700 15px/1.3 'DM Sans',sans-serif}
+.lgm{grid-column:2;color:var(--mute);white-space:nowrap;font:400 13px/1.3 'DM Sans',sans-serif;padding-top:1px}
+.lgp{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
 .lgp .cs{font:700 12px/1.3 'DM Sans',sans-serif;padding:1px 8px;margin:0}
+.lg-set{grid-column:1 / -1;margin:0;font:400 13px/1.4 'DM Sans',sans-serif;color:var(--ink2)}
 .lgd{padding:12px 0;border-bottom:1px solid var(--line)}
 .lgd:last-child{border-bottom:0}
 .lgnote{margin:8px 0 0;font-size:13px;color:var(--ink2)}
@@ -606,7 +607,9 @@ body:has(main.prof){background:#F7F6FA}
 .prof .arv.ac2,.prof .pi{border-radius:12px;padding:12px 14px}
 .prof .arsm,.prof .ips,.prof .pih{font:400 15px/1.45 'DM Sans',sans-serif}
 .prof .arsm b,.prof .pih{font-weight:700}
-.prof .arat,.prof .ipa,.prof .pio,.prof .lpl .rt{font:400 13px/1.4 'DM Sans',sans-serif}
+.prof .pio,.prof .lpl .rt{font:400 13px/1.4 'DM Sans',sans-serif}
+.prof .ipa,.prof .arat{font:400 12px/1.4 'DM Sans',sans-serif}
+#team.mod{align-self:start}
 .prof .ad{font:400 13px/1.4 'DM Sans',sans-serif}
 .prof .adh{font:700 12px/1.3 'DM Sans',sans-serif}
 .prof .ad b,.prof .ad a{font-weight:700}

@@ -335,10 +335,26 @@
   }
   function groupLps(it) { return lpRows(it).join(''); }
   // LPs (Alex 2026-11-04 4:54 PM PT): first 5 on the page; above 5, the same Show all button and pop-up as deals and reviews, same rows, same order.
+  const LP_SHOWN = 5;
+  function markExtra(html) {
+    return String(html).replace(/^<([A-Za-z0-9]+)/, '<$1 hidden data-extra="1"');
+  }
+  // How many further whole rows fit in leftover space. A row that would pass the budget is not included.
+  function extraRowsThatFit(heights, space) {
+    let used = 0, n = 0;
+    for (let i = 0; i < heights.length; i++) {
+      const h = Number(heights[i]) || 0;
+      if (h <= 0) continue;
+      if (used + h > space + 0.5) break;
+      used += h;
+      n++;
+    }
+    return n;
+  }
   function lpsBlock(it, P) {
     const rows = lpRows(it);
-    let h = '<div class="rws">' + rows.slice(0, 5).join('') + '</div>';
-    if (rows.length > 5) {
+    let h = '<div class="rws" data-fit="1">' + rows.map((html, i) => i < LP_SHOWN ? html : markExtra(html)).join('') + '</div>';
+    if (rows.length > LP_SHOWN) {
       const LC = COPY.lps || {};
       h += showAllLink(P && P.open, 'actlps');
       if (P && P.open && typeof document !== 'undefined' && document.body) actModal('actlps', fmt(LC.all_title || '{n} LPs · {firm}', { n: rows.length, firm: (P.firm && P.firm.name) || '' }), '<div class="rws">' + rows.join('') + '</div>');
@@ -561,7 +577,8 @@
     const pills = [lpill(c.status, act), lpill(c.side), lpill(c.topic)].filter(Boolean).join('');
     return '<div class="lgline"><span class="lgt">' + esc(c.title) + '</span>'
       + (meta ? '<span class="lgm">' + meta + '</span>' : '')
-      + (pills ? '<span class="lgp">' + pills + '</span>' : '') + '</div>';
+      + (pills ? '<span class="lgp">' + pills + '</span>' : '')
+      + (c.settlement ? '<div class="lg-set">' + esc(c.settlement) + '</div>' : '') + '</div>';
   }
   function legalDetail(c) {
     const bits = [];
@@ -574,8 +591,8 @@
     const cs = legalCases(items);
     if (!cs.length) return '';
     const open = !!(P && P.open);
-    let h = '<div class="lglines">' + cs.slice(0, LEGAL_PREVIEW).map(legalLine).join('') + '</div>';
-    h += showAllLink(open, 'actlegal');
+    let h = '<div class="lglines" data-fit="1">' + cs.map((c, i) => i < LEGAL_PREVIEW ? legalLine(c) : markExtra(legalLine(c))).join('') + '</div>';
+    if (cs.length > LEGAL_PREVIEW) h += showAllLink(open, 'actlegal');
     if (open && typeof actModal === 'function' && typeof document !== 'undefined' && document.body) {
       actModal('actlegal', (LG.title || 'Legal & regulatory'), '<div class="lgds">' + cs.map(legalDetail).join('') + '</div>');
     }
@@ -678,8 +695,8 @@
   // News shows the 6 newest stories. "Show all" only when there are more than 6.
   const NEWS_SHOWN = 3;
   function newsBlock(it, P) {
-    const rows = it || [], shown = rows.slice(0, NEWS_SHOWN);
-    let h = '<div class="pgr">' + shown.map(x => card(x, true)).join('') + '</div>';
+    const rows = it || [];
+    let h = '<div class="pgr" data-fit="1">' + rows.map((x, i) => i < NEWS_SHOWN ? card(x, true) : markExtra(card(x, true))).join('') + '</div>';
     if (rows.length > NEWS_SHOWN) {
       h += showAllLink(P && P.open, 'actnews');
       if (P && P.open) actModal('actnews', pl(AC.all_news, rows.length), '<div class="pgr">' + rows.map(x => card(x, true)).join('') + '</div>');
@@ -736,12 +753,12 @@
   function investorsHtml(items, P) {
     const rows = investorRows(items);
     if (!rows.length) return '';
-    const body = rows.slice(0, INVESTORS_SHOWN).map(x => investorRow(x, false)).join('');
+    const body = rows.map((x, i) => i < INVESTORS_SHOWN ? investorRow(x, false) : markExtra(investorRow(x, false))).join('');
     const open = !!(P && P.open);
     if (open && typeof document !== 'undefined' && document.body) {
       actModal('actinvestors', investorTitle(), '<div class="iprs">' + rows.map(x => investorRow(x, true)).join('') + '</div>');
     }
-    return '<div class="iprs">' + body + showAllLink(open, 'actinvestors') + '</div>';
+    return '<div class="iprs" data-fit="1">' + body + (rows.length > INVESTORS_SHOWN ? showAllLink(open, 'actinvestors') : '') + '</div>';
   }
   // Open-state renderers, keyed by copy.json sections[].renderer. The section is the third argument (LP grouping).
   const R = {
@@ -1200,6 +1217,7 @@
     if (pmain) pmain.innerHTML = bentoHtml(P, secs);
     CHART_P = P;
     paintCharts(main, P);
+    fillTiles(main);
     const lc = main.querySelector('#lockcard');
     if (lc) { lc.hidden = P.open; lc.querySelector('b').textContent = fmt(COPY.lockcard, { n: total, firm }); lc.querySelector('p').textContent = COPY.lockcard_sub; }
     const pu = document.getElementById('puse'); if (pu) pu.textContent = fmt(COPY.use_line, { n: total, firm });
@@ -1931,9 +1949,9 @@
       actModal('actsectors', 'All startups by sector', sectorDialogHtml(ds));
     }
   }
-  function bentoCard(id, titleHtml, inner, foot) {
+  function bentoCard(id, titleHtml, inner, foot, fill) {
     if (!inner) return '';
-    return '<article class="mod' + (id === 'deals' ? ' span2' : '') + '" id="' + id + '"><div class="mh"><h3>' + titleHtml + '</h3></div>' + inner + (foot || '') + '</article>';
+    return '<article class="mod' + (id === 'deals' ? ' span2' : '') + '" id="' + id + '"' + (fill ? ' data-fill="1"' : '') + '><div class="mh"><h3>' + titleHtml + '</h3></div>' + inner + (foot || '') + '</article>';
   }
   function bentoHtml(P, secs) {
     const by = {};
@@ -1945,15 +1963,16 @@
     }
     if (by.videos) h += bentoCard('videos', esc(by.videos.title), R.videos(by.videos.items, P, by.videos));
     if (by.people) h += bentoCard('team', esc(by.people.title), R.people(by.people.items, P, by.people));
-    if (by.lps) h += bentoCard('lps', esc(by.lps.title) + (by.lps.count ? ' <em class="pc2">' + by.lps.count + '</em>' : ''), R.facts(by.lps.items, P, by.lps));
-    if (by.legal) h += bentoCard('legal', esc(by.legal.title), R.legal(by.legal.items, P, by.legal));
-    if (by.investors) h += bentoCard('investors', esc(by.investors.title), R.investors(by.investors.items, P, by.investors));
+    if (by.lps) h += bentoCard('lps', esc(by.lps.title), R.facts(by.lps.items, P, by.lps), '', true);
+    if (by.legal) h += bentoCard('legal', esc(by.legal.title), R.legal(by.legal.items, P, by.legal), '', true);
+    if (by.investors) h += bentoCard('investors', esc(by.investors.title), R.investors(by.investors.items, P, by.investors), '', true);
     const revs = (P.activity && Array.isArray(P.activity.reviews)) ? P.activity.reviews : [];
     if (revs.length) {
       const nrev = (P.activity.counts && Number(P.activity.counts.reviews)) || revs.length;
-      h += bentoCard('reviews', esc(AC.reviews || 'What founders say'), revs.slice(0, 3).map(revCard).join(''), nrev > 3 ? showAllLink(!!P.open, 'actrevs') : '');
+      const revHtml = revs.map((r, i) => i < 3 ? revCard(r) : markExtra(revCard(r))).join('');
+      h += bentoCard('reviews', esc(AC.reviews || 'What founders say'), revHtml, nrev > 3 ? showAllLink(!!P.open, 'actrevs') : '', true);
     }
-    if (by.news) h += bentoCard('news', esc(by.news.title), R.news(by.news.items, P, by.news));
+    if (by.news) h += bentoCard('news', esc(by.news.title), R.news(by.news.items, P, by.news), '', true);
     if (deals.length) {
       const shown = deals.slice(0, 10);
       h += bentoCard('deals', 'Recent deals', '<div class="dtable">' + dealRows(shown, labFirm(P)) + '</div>' + dealCards(shown), deals.length > shown.length ? showAllLink(!!P.open, 'actdeals') : '');
@@ -1967,12 +1986,37 @@
     paintCharts(b.closest('.prof') || b.closest('main'), CHART_P);
   });
 
+  function fillCard(card) {
+    const rows = Array.from(card.querySelectorAll('[data-extra]'));
+    if (!rows.length || !card.clientHeight) return;
+    rows.forEach(row => { row.hidden = true; });
+    const budget = card.clientHeight;
+    for (const row of rows) {
+      row.hidden = false;
+      if (card.scrollHeight > budget + 2) {
+        row.hidden = true;
+        break;
+      }
+    }
+    const show = card.querySelector('.ash');
+    if (show) show.hidden = !rows.some(row => row.hidden);
+  }
+  function fillTiles(root) {
+    if (!root || !root.querySelectorAll) return;
+    root.querySelectorAll('[data-fill]').forEach(fillCard);
+  }
+  if (window.addEventListener) window.addEventListener('resize', () => {
+    const main = document.querySelector && document.querySelector('main.prof');
+    if (main && main.dataset.tab === 'full') fillTiles(main);
+  });
+
   function applyTab(main, which) {
     which = which === 'full' ? 'full' : 'checks';
     main.dataset.tab = which;
     const c = main.querySelector('#panel-checks'), f = main.querySelector('#panel-full');
     if (c) c.hidden = which !== 'checks';
     if (f) f.hidden = which !== 'full';
+    if (which === 'full') fillTiles(main);
     main.querySelectorAll('.rgt-tab[data-tab]').forEach(b => {
       const on = b.dataset.tab === which;
       b.classList.toggle('on', on);
@@ -1987,5 +2031,5 @@
     view.total = full.total; view.head = full.head;
     return view;
   }
-  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows, setFirmName, compactCount, socialPills, metaLine, fundRows, aumFigure, teamCard, investorsHtml };
+  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows, setFirmName, compactCount, socialPills, metaLine, fundRows, aumFigure, teamCard, investorsHtml, extraRowsThatFit };
 })();

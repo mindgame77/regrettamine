@@ -234,21 +234,25 @@ test('obviously different stories are not grouped', () => {
   assert.equal(undated.length, 2);
 });
 
-test('news shows the 6 newest stories and Show all only when there are more', () => {
+test('news keeps every story, previews three, and Show all opens the rest', () => {
+  const countExtra = (block) => (block.match(/data-extra="1"/g) || []).length;
   const six = newsHtml(6);
   assert.equal(six.cards, 6);
+  assert.equal(countExtra(six.block), 3);
   assert.match(six.block, /Story 6/);
   assert.match(six.block, /Story 1/);
   assert.ok(six.block.indexOf('Story 6') < six.block.indexOf('Story 1'));
-  assert.doesNotMatch(six.block, /Show all|data-open="actnews"|data-gate/);
+  assert.match(six.block, /class="ash" data-open="actnews">Show all<\/button>/);
   const five = newsHtml(5);
   assert.equal(five.cards, 5);
-  assert.doesNotMatch(five.block, /Show all/);
+  assert.equal(countExtra(five.block), 2);
+  assert.match(five.block, /Show all/);
   const seven = newsHtml(7);
-  assert.equal(seven.cards, 6);
+  assert.equal(seven.cards, 7);
+  assert.equal(countExtra(seven.block), 4);
   assert.match(seven.block, /class="ash" data-open="actnews">Show all<\/button>/);
   assert.doesNotMatch(seven.block, /Show all \d|stories<\/button>/);
-  assert.doesNotMatch(seven.block, /Story 1/);
+  assert.match(seven.block, /Story 1/);
   assert.match(seven.block, /Story 7/);
   assert.match(seven.block, /Story 2/);
   assert.doesNotMatch(seven.block, /<p class="psub">|Since 2023|Articles, court events/);

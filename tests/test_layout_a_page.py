@@ -47,6 +47,11 @@ def test_page_renders_rows_news_and_a_client_side_toggle():
     assert "news_items" not in RULES and "story_key" not in RULES
 
 
+def test_tile_rows_stay_whole():
+    r = subprocess.run(["node", "--test", "tests/tile_fill.test.mjs"], cwd=ROOT, capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-2000:]
+
+
 def test_news_is_combined_when_the_page_draws():
     r = subprocess.run(["node", "--test", "tests/news_display.test.mjs"], cwd=ROOT, capture_output=True, text=True)
     assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-2000:]
