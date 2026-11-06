@@ -352,16 +352,16 @@
     return n;
   }
   function lpsBlock(it, P) {
-    const rows = lpRows(it);
+    const rows = lpRows(it, true);
     let h = '<div class="rws" data-fit="1">' + rows.map((html, i) => i < LP_SHOWN ? html : markExtra(html)).join('') + '</div>';
     if (rows.length > LP_SHOWN) {
       const LC = COPY.lps || {};
       h += showAllLink(P && P.open, 'actlps');
-      if (P && P.open && typeof document !== 'undefined' && document.body) actModal('actlps', fmt(LC.all_title || '{n} LPs · {firm}', { n: rows.length, firm: (P.firm && P.firm.name) || '' }), '<div class="rws">' + rows.join('') + '</div>');
+      if (P && P.open && typeof document !== 'undefined' && document.body) actModal('actlps', fmt(LC.all_title || '{n} LPs · {firm}', { n: rows.length, firm: (P.firm && P.firm.name) || '' }), '<div class="rws">' + lpRows(it, false).join('') + '</div>');
     }
     return h;
   }
-  function lpRows(it) {
+  function lpRows(it, oneSource) {
     const order = [], map = {};
     it.forEach(x => {
       const k = x.label || '';
@@ -372,13 +372,14 @@
       if (isLeadVal(x.value)) g.lead = true;
     });
     return order.map(k => {
-      const g = map[k], n = g.values.length;
-      const title = nice(g.label) + (n > 1 ? ' · ' + fmt(COPY.commitments || '{n} commitments', { n }) : '');
+      const g = map[k];
       const seen = {}, src = [];
       g.src.forEach(s => { const id = (s.url || '') + '|' + (s.label || ''); if (!seen[id]) { seen[id] = 1; src.push(s); } });
-      // v4 (Alex 2026-11-03): one line per LP, not a card. Name, commitments and amounts, then the source pill.
-      const line = [title].concat(g.values.map(v => nice(cleanLead(v))).filter(Boolean)).join(' · ');
-      return '<div class="rw lpl"><div class="rm">' + '<span class="rt">' + esc(line) + '</span>' + (g.lead ? ' <span class="cs cs-cl">' + esc(NC) + '</span>' : '') + ' ' + chips(src) + '</div></div>';
+      // Name and the stored amounts only. There is no count field, so the row never says "N commitments".
+      // The tile keeps one source. The popup passes every source.
+      const line = [nice(g.label)].concat(g.values.map(v => nice(cleanLead(v))).filter(Boolean)).join(' · ');
+      const shown = oneSource ? src.slice(0, 1) : src;
+      return '<div class="rw lpl"><div class="rm">' + '<span class="rt">' + esc(line) + '</span>' + (g.lead ? ' <span class="cs cs-cl">' + esc(NC) + '</span>' : '') + ' ' + chips(shown) + '</div></div>';
     });
   }
   // Overview is cleaned here, when the page draws. Stored rows are not changed, and no other section uses this.
@@ -1565,7 +1566,7 @@
     const src = (u) => u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(hostOf(u)) + '>' + esc(capL(hostOf(u))) + '</a>' : '<span></span>';
     if (lab) return '<div class="adl"><div class="ad adh s5"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_sector) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + ds.map(d => { const u = safeUrl(d.url), r = [labRound(d.round), dealAmt(d.amount, d.currency), d.lead ? AC.lead : ''].filter(Boolean).join(' · ');
-        return '<div class="ad s5"><b>' + coName(d) + '</b>' + (d.sector ? '<span class="arty"' + ' style="color:' + (SECTOR_COLORS[String(d.sector).trim()] || 'var(--mute)') + '"' + '>' + esc(d.sector) + '</span>' : '<span></span>')
+        return '<div class="ad s5"><b>' + coName(d) + '</b>' + (d.sector ? '<span class="arty"' + ' style="color:' + sectorColor(d.sector) + '"' + '>' + esc(d.sector) + '</span>' : '<span></span>')
           + '<span>' + esc(r) + '</span><span>' + esc(fdate(d.date) || '') + '</span>' + src(u) + '</div>'; }).join('') + '</div>';
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + ds.map(d => { const u = safeUrl(d.url);
@@ -1577,7 +1578,7 @@
       const u = safeUrl(d.url);
       const r = [labRound(d.round) || '—', dealAmt(d.amount, d.currency) || '—', d.lead ? AC.lead : ''].filter(Boolean).join(' · ');
       const src = u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(hostOf(u)) + '</a>' : '—';
-      const sec = d.sector ? '<b class="arty" style="color:' + (SECTOR_COLORS[String(d.sector).trim()] || 'var(--mute)') + '">' + esc(d.sector) + '</b>' : '<b>—</b>';
+      const sec = d.sector ? '<b class="arty" style="color:' + sectorColor(d.sector) + '">' + esc(d.sector) + '</b>' : '<b>—</b>';
       return '<article class="dcard"><div class="dname">' + coName(d) + '</div><div class="dmeta">'
         + '<div><span>Sector</span>' + sec + '</div><div><span>Round</span><b>' + esc(r) + '</b></div>'
         + '<div><span>Date</span><b>' + esc(fdate(d.date) || '—') + '</b></div><div><span>Source</span><b>' + src + '</b></div></div></article>';
@@ -1594,6 +1595,12 @@
     'Security': '#161669', 'Crypto': '#0b50da', 'Hardware & Robotics': '#793606', 'Mobility': '#258cf4', 'Real estate': '#098faa',
     'Education': '#790649', 'Media & Gaming': '#931f8a', 'Food & Agriculture': '#aa8f09', 'Other': 'var(--mute)'
   };
+  // One hue per industry name. Rank changes the order, never the color. Charts, the sector popup and deal rows all use this.
+  function sectorColor(name) {
+    const s = String(name || '').trim();
+    if (s && Object.prototype.hasOwnProperty.call(SECTOR_COLORS, s)) return SECTOR_COLORS[s];
+    return SECTOR_COLORS.Other || 'var(--mute)';
+  }
   // Top-5 color map set by sectorShare. Deal pills use SECTOR_COLORS for every sector (only the real "Other" tag is grey).
   let SEC_MAP = null;
   function sectorShare(A) {
@@ -1604,8 +1611,8 @@
     const named = S.top.map(x => [String((x && x.s) || '').trim(), Number(x && x.n) || 0]).filter(x => x[0] && x[1] > 0 && !isOther(x[0]))
       .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
     const top = named.slice(0, 5), rest = total - top.reduce((t, x) => t + x[1], 0), tagged = total;
-    SEC_MAP = {}; top.forEach((x, i) => { SEC_MAP[x[0]] = SECTOR_COLORS[x[0]] || 'var(--mute)'; });
-    const items = top.map(x => [x[0], x[1], SECTOR_COLORS[x[0]] || 'var(--mute)']).concat(rest > 0 ? [[AC.other, rest, 'var(--mute)']] : []);
+    SEC_MAP = {}; top.forEach((x) => { SEC_MAP[x[0]] = sectorColor(x[0]); });
+    const items = top.map(x => [x[0], x[1], sectorColor(x[0])]).concat(rest > 0 ? [[AC.other, rest, sectorColor(AC.other || 'Other')]] : []);
     return '<div class="ssh"><b class="apt">' + esc(AC.sector_share) + '</b><div class="nd ssn">' + esc(pl(AC.n_deals, tagged)) + '</div><div class="sstk">'
       + items.map(x => '<i style="flex:' + Number(x[1]) + ';background:' + x[2] + '"></i>').join('') + '</div><div class="sleg">'
       + items.map(x => '<span><b style="background:' + x[2] + '"></b>' + esc(x[0]) + ' ' + esc(x[1]) + '</span>').join('') + '</div></div>';
@@ -1801,7 +1808,6 @@
 
   // One time range for Sectors, Rounds and Deals announced. Either control updates all three.
   let CHART_PERIOD = '12', CHART_P = null;
-  const PAL = ['#2F70F2', '#818B36', '#A16B45', '#D968A0', '#7952D8'];
   const RC = { 'Series A': '#2F70F2', 'Undisclosed': '#9A97AD', 'Seed': '#1F9D6A', 'Series B': '#D9822B', 'Series C+': '#7952D8', 'Pre-seed': '#D968A0' };
   const MONS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   function isoDate(d) { const m = String(d || '').match(/(\d{4}-\d{2}-\d{2})/); return m ? m[1] : ''; }
@@ -1829,7 +1835,6 @@
     const s = String(d.sector || '').trim();
     return T.indexOf(s) >= 0 ? s : 'Other';
   }
-  function scol(s, T) { const i = T.indexOf(s); return i < 0 ? '#ADB2BD' : PAL[i % PAL.length]; }
   function roundBucket(r) {
     const s = labRound(r);
     if (!s) return 'Undisclosed';
@@ -1868,22 +1873,37 @@
     return '<article class="mod chart" id="' + id + '" data-chart="' + k + '"><div class="mh"><h3>' + esc(title) + '</h3><div class="segw"></div></div><div class="cc"></div>'
       + (k === 's' ? showAllLink(true, 'actsectors') : '') + '</article>';
   }
+  // A filled ring. Dashed circles used 2πr while the browser's circle length is shorter, and a negative
+  // dash offset puts every segment on the same start in some engines, so the ring breaks open.
+  function ringSlice(a0, a1) {
+    const span = a1 - a0;
+    if (span <= 0.0001) return '';
+    if (span >= Math.PI * 2 - 0.02) {
+      const mid = a0 + Math.PI;
+      return ringSlice(a0, mid) + ringSlice(mid, a0 + Math.PI * 2);
+    }
+    const cx = 80, cy = 80, ro = 65, ri = 43, pad = 0.01;
+    const s0 = a0 - pad, s1 = a1 + pad, large = (s1 - s0) > Math.PI ? 1 : 0;
+    const pt = (r, a) => (cx + r * Math.sin(a)).toFixed(2) + ' ' + (cy - r * Math.cos(a)).toFixed(2);
+    return 'M ' + pt(ro, s0) + ' A ' + ro + ' ' + ro + ' 0 ' + large + ' 1 ' + pt(ro, s1)
+      + ' L ' + pt(ri, s1) + ' A ' + ri + ' ' + ri + ' 0 ' + large + ' 0 ' + pt(ri, s0) + ' Z';
+  }
   function donutHtml(ds) {
     const T = topSectors(ds), c = {};
     ds.forEach(d => { const s = bucketOf(d, T); c[s] = (c[s] || 0) + 1; });
     const L = T.concat(c.Other ? ['Other'] : []), n = ds.length;
     if (!n) return '<p class="cempty">No deals in this range</p>';
-    let off = 0; const C = 2 * Math.PI * 54;
+    let ang = 0;
     const arcs = L.map(s => {
-      const v = (c[s] || 0) / n * C;
-      const arc = '<circle cx="80" cy="80" r="54" fill="none" stroke="' + scol(s, T) + '" stroke-width="22" stroke-dasharray="' + v + ' ' + (C - v) + '" stroke-dashoffset="' + (-off) + '" transform="rotate(-90 80 80)"/>';
-      off += v;
-      return arc;
+      const sweep = (c[s] || 0) / n * Math.PI * 2;
+      const path = '<path d="' + ringSlice(ang, ang + sweep) + '" fill="' + sectorColor(s) + '"><title>' + esc(s + ': ' + (c[s] || 0)) + '</title></path>';
+      ang += sweep;
+      return path;
     }).join('');
     return '<div class="dw"><svg width="150" height="150" viewBox="0 0 160 160" role="img" aria-label="' + n + ' deals">' + arcs
       + '<text x="80" y="76" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="22">' + n + '</text>'
       + '<text x="80" y="94" text-anchor="middle" fill="#8C88A3" font-size="12" font-family="DM Sans, sans-serif">deals</text></svg><div class="lg">'
-      + L.map(s => '<div><i style="background:' + scol(s, T) + '"></i><span>' + esc(s) + '</span><em>' + (c[s] || 0) + '</em></div>').join('')
+      + L.map(s => '<div><i style="background:' + sectorColor(s) + '"></i><span>' + esc(s) + '</span><em>' + (c[s] || 0) + '</em></div>').join('')
       + '</div></div>';
   }
   function roundsHtml(ds) {
@@ -1918,21 +1938,21 @@
       b.parts.forEach(z => {
         const h = z.n * u;
         y -= h;
-        svg += '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + Math.max(h, 0.5) + '" rx="2" fill="' + scol(z.s, T) + '"><title>' + esc(b.k + ' · ' + z.s + ': ' + z.n) + '</title></rect>';
+        svg += '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + Math.max(h, 0.5) + '" rx="2" fill="' + sectorColor(z.s) + '"><title>' + esc(b.k + ' · ' + z.s + ': ' + z.n) + '</title></rect>';
       });
       svg += '<text x="' + (x + w / 2) + '" y="' + (H + 22) + '" text-anchor="middle" font-size="12" fill="#8C88A3" font-family="DM Sans, sans-serif">' + esc(keyLabel(b.k)) + '</text>';
       pts.push([(i * bw + bw / 2), (H + 8 - b.led * u)]);
     });
     svg += '<polyline points="' + pts.map(p => p.join(',')).join(' ') + '" fill="none" stroke="#14112B" stroke-width="2"/>';
     svg += pts.map(p => '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="2.5" fill="#14112B"/>').join('');
-    const legend = T.concat(['Other']).map(s => '<span><i style="background:' + scol(s, T) + '"></i>' + esc(s) + '</span>').join('');
+    const legend = T.concat(['Other']).map(s => '<span><i style="background:' + sectorColor(s) + '"></i>' + esc(s) + '</span>').join('');
     return '<svg role="img" aria-label="Announced deals by sector. The line is deals led by the firm." width="100%" viewBox="-32 -16 ' + (W + 40) + ' ' + (H + 52) + '">' + svg + '</svg><div class="ll">' + legend + '<span class="led"><i></i>Led by VC</span></div>';
   }
   function sectorDialogHtml(ds) {
     const T = topSectors(ds), groups = {};
     T.concat(['Other']).forEach(s => { groups[s] = []; });
     ds.forEach(d => groups[bucketOf(d, T)].push(d));
-    const parts = T.concat(['Other']).filter(s => groups[s].length).map(s => '<h3 class="sdh">' + esc(s) + ' <em>' + groups[s].length + '</em></h3>' + dealRows(groups[s], true));
+    const parts = T.concat(['Other']).filter(s => groups[s].length).map(s => '<h3 class="sdh"><i style="background:' + sectorColor(s) + '"></i>' + esc(s) + ' <em>' + groups[s].length + '</em></h3>' + dealRows(groups[s], true));
     return parts.join('') || '<p class="cempty">No deals in this range</p>';
   }
   function paintCharts(main, P) {
@@ -2044,5 +2064,5 @@
     view.total = full.total; view.head = full.head;
     return view;
   }
-  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows, setFirmName, compactCount, socialPills, metaLine, fundRows, aumFigure, teamCard, investorsHtml, extraRowsThatFit };
+  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows, setFirmName, compactCount, socialPills, metaLine, fundRows, aumFigure, teamCard, investorsHtml, extraRowsThatFit, sectorColor };
 })();

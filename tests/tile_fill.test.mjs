@@ -53,6 +53,30 @@ test('legal case titles are not ellipsized', () => {
   assert.doesNotMatch(rule, /text-overflow:ellipsis|white-space:nowrap/);
 });
 
+test('industry color comes from the name, and the donut is a filled ring', () => {
+  const { sectorColor } = sandbox.window.RegretCompany;
+  assert.equal(sectorColor('Health'), '#f425af');
+  assert.equal(sectorColor('Enterprise software'), '#287fbd');
+  assert.equal(sectorColor('Health'), sectorColor('Health'));
+  assert.equal(sectorColor('Not a real sector'), 'var(--mute)');
+  const js = fs.readFileSync(new URL('launch/js/company.js', root), 'utf8');
+  assert.doesNotMatch(js, /PAL\[/);
+  assert.doesNotMatch(js, /stroke-dashoffset/);
+  assert.match(js, /function ringSlice/);
+  assert.match(js, /fill="' \+ sectorColor/);
+});
+
+test('LP tile has no commitment count, investors and legal drop row rules', () => {
+  const js = fs.readFileSync(new URL('launch/js/company.js', root), 'utf8');
+  assert.doesNotMatch(js, /COPY\.commitments/);
+  assert.match(js, /oneSource \? src\.slice\(0, 1\)/);
+  assert.match(css, /\.bento #investors \.ipr\{border-top:0\}/);
+  assert.match(css, /\.bento #lps \.lpl \.rt\{[^}]*text-overflow:ellipsis/);
+  const legal = css.slice(css.indexOf('.lglines .lgline{'), css.indexOf('}', css.indexOf('.lglines .lgline{')) + 1);
+  assert.match(legal, /border-bottom:0/);
+  assert.doesNotMatch(legal, /border-bottom:1px/);
+});
+
 test('desktop pairs share the Deals announced / Videos height, recent deals does not', () => {
   const at = css.indexOf('@media (min-width:801px)');
   assert.ok(at > 0);

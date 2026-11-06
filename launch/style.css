@@ -582,9 +582,13 @@ body:has(main.prof){background:#F7F6FA}
 .bento #news .pgr{grid-template-columns:1fr;margin:0}
 .bento #news .pis,.bento #news .scs{display:none}
 .bento #news .pi{padding:12px 14px}
-.lglines .lgline{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;row-gap:4px;align-items:start;padding:8px 0;border-bottom:1px solid var(--line);min-width:0}
+.lglines .lgline{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;row-gap:4px;align-items:start;padding:8px 0;border-bottom:0;min-width:0}
 .bento [hidden]{display:none !important}
-.lglines .lgline:last-child{border-bottom:0}
+.bento #investors .ipr{border-top:0}
+.bento #lps .lpl .rm{flex-wrap:nowrap;min-width:0;overflow:hidden}
+.bento #lps .lpl .rt{display:block;flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bento #lps .lpl .scs{display:flex;flex:0 1 auto;min-width:0;max-width:48%;margin:0;overflow:hidden}
+.bento #lps .lpl .sc{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lgt{grid-column:1;min-width:0;overflow:visible;text-overflow:unset;white-space:normal;overflow-wrap:break-word;font:700 15px/1.3 'DM Sans',sans-serif}
 .lgm{grid-column:2;color:var(--mute);white-space:nowrap;font:400 13px/1.3 'DM Sans',sans-serif;padding-top:1px}
 .lgp{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
@@ -631,6 +635,7 @@ body:has(main.prof){background:#F7F6FA}
 .dmeta span{display:block;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--mute)}
 .dmeta b{font-weight:500;font-size:13px;color:var(--ink2)}
 .sdh{margin:14px 0 6px;font:700 15px 'DM Sans'}
+.sdh i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px}
 .sdh em{font-style:normal;color:var(--mute);font-weight:500}
 @media (max-width:800px){
   body:has(main.prof)>nav{padding:12px 14px;flex-wrap:wrap;gap:8px 12px}
