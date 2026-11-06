@@ -1,4 +1,4 @@
-"""v2_investor_principles: table, RLS, and the five verified a16z quotes."""
+"""v2_investor_principles: table, RLS, and the twelve E3-checked a16z quotes."""
 import os
 import pathlib
 import re
@@ -9,21 +9,45 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 MIG = ROOT / "supabase/migrations/20261106010000_v2_investor_principles.sql"
 UNDO = ROOT / "supabase/rollbacks/20261106010000_v2_investor_principles.sql"
 
-# Approved one-line summaries for the five report quotes that are both EXACT and in the mockup.
-SUMMARIES = {
-    "15": "Attract people, capital and customers; know the space\u2019s history; show personal drive.",
-    "16": "Build strong customer retention and get distribution before incumbents copy your innovation.",
-    "2": "We prefer founding CEOs who keep\u2014and ideally created\u2014the product vision.",
-    "8": "Invest in distinctive strength that stands out\u2014not merely a lack of weakness across team, product, and market.",
-    "10": "Look for founder-market fit: the person born to do that idea.",
-}
-QUOTE_START = {
-    "15": "I gotta say, like the best entrepreneurs",
-    "16": "there\u2019s a quote that I use a lot, the best companies have hostages, not customers.",
-    "2": "We prefer founding CEOs. In particular, we think the keeper of the product vision",
-    "8": "We talk a lot in our firm about",
-    "10": "There\u2019s another concept we call founder-market fit",
-}
+# Approved compact summaries, in display order. Quote bodies stay the report wording.
+SUMMARIES = [
+    "You don\u2019t need one standard founder background\u2014know the strengths and gaps of yours.",
+    "Show customers already choose your product first for an important, difficult job.",
+    "Attract people, capital and customers; know the space\u2019s history; show personal drive.",
+    "Lead with founder/product fit and real strengths\u2014not just a lack of weaknesses.",
+    "Show your experience makes you unusually suited to build this product.",
+    "Build strong customer retention and get distribution before incumbents copy your innovation.",
+    "Explain why your infrastructure company can compete directly with the major cloud providers.",
+    "Look for marketplace businesses that create strong multi-sided value and network effects for scale and defensibility.",
+    "Start with a high-velocity, tenacious founder who has lived the problem personally.",
+    "We prefer founding CEOs who keep\u2014and ideally created\u2014the product vision.",
+    "Invest in distinctive strength that stands out\u2014not merely a lack of weakness across team, product, and market.",
+    "Look for founder-market fit: the person born to do that idea.",
+]
+QUOTE_START = [
+    "I think we\u2019ll most certainly see a rapid expansion",
+    "The signal from the market was consistent.",
+    "I gotta say, like the best entrepreneurs",
+    "Beyond the metrics, co-founder and CEO Apoorva Mehta",
+    "At the end of the day, businesses are about the teams",
+    "there\u2019s a quote that I use a lot, the best companies have hostages, not customers.",
+    "The primary question to startups in infrastructure has ironically shifted",
+    "Here are a few of the reasons I like marketplace business:",
+    "Any investment starts and ends with a team",
+    "We prefer founding CEOs. In particular, we think the keeper of the product vision",
+    "We talk a lot in our firm about",
+    "There\u2019s another concept we call founder-market fit",
+]
+NAMES = [
+    "Andrew Chen", "Sarah Wang", "Alex Rampell", "Jeff Jordan", "Anish Acharya",
+    "Alex Rampell", "Martin Casado", "Jeff Jordan", "Seema Amble",
+    "Ben Horowitz", "Marc Andreessen", "Marc Andreessen",
+]
+DATES = [
+    "2026-10-30", "2026-05-20", "2026-01-14", "2023-09-19", "2022-09-15",
+    "2026-01-14", "2022-06-09", "2021-06-02", "2022-10-05",
+    "2010-06-29", "2016-05-30", "2016-05-30",
+]
 
 
 def _seed():
@@ -57,25 +81,30 @@ def test_migration_matches_v2_sibling_rules():
     assert "investors block not found" in undo
 
 
-def test_seed_is_the_five_verified_quotes_only():
+def test_seed_is_the_twelve_e3_quotes():
     seed = _seed()
-    summaries = dict(re.findall(r"\$qQ(\d+)s\$(.*?)\$qQ\1s\$", seed, re.S))
-    quotes = dict(re.findall(r"\$qQ(\d+)\$(.*?)\$qQ\1\$", seed, re.S))
-    assert set(summaries) == set(SUMMARIES)
+    summaries = re.findall(r"\$q(?:C|Q)\d+s\$(.*?)\$q(?:C|Q)\d+s\$", seed, re.S)
+    quotes = re.findall(r"\$q(?:C|Q)\d+\$(.*?)\$q(?:C|Q)\d+\$", seed, re.S)
     assert summaries == SUMMARIES
-    assert set(quotes) == set(SUMMARIES)
-    for n, start in QUOTE_START.items():
-        assert quotes[n].startswith(start)
-        assert quotes[n] != summaries[n]
-        assert len(summaries[n]) <= 200
-    assert re.findall(r"date '(\d{4}-\d{2}-\d{2})'", seed) == [
-        "2026-01-14", "2026-01-14", "2010-06-29", "2016-05-30", "2016-05-30",
-    ]
-    assert seed.count("null::text") == 3
+    assert len(quotes) == 12
+    for quote, summary, start in zip(quotes, summaries, QUOTE_START):
+        assert quote.startswith(start)
+        assert quote != summary
+        assert len(summary) <= 200
+    assert re.findall(r"date '(\d{4}-\d{2}-\d{2})'", seed) == DATES
+    for name in NAMES:
+        assert name in seed
+    assert seed.count("null::text") == 10
     assert seed.count("https://a16z.com/podcast/alex-rampell-on-tbpn-revenge-redemption-and-founder-drive/") == 2
     assert "https://podscripts.co/podcasts/the-a16z-show/alex-rampell-on-tbpn-revenge-redemption-and-founder-drive" in seed
-    assert "https://a16z.com/announcement/why-andreessen-horowitz-invested-in-foursquare/" in seed
-    for banned in ("cdixon.org", "pmarchive.com", "Andrew Chen", "Sarah Wang", "Jeff Jordan", "Anish Acharya", "Martin Casado", "Seema Amble"):
+    for banned in (
+        "cdixon.org", "pmarchive.com", "JYYsXzt1VDc",
+        "opportunities-in-healthcare", "investing-in-deel", "marketplaces-pietra",
+        "investing-in-fishtown", "aligning-startup-metrics", "navigating-the-numbers",
+        "investing-in-cider", "investing-in-sourcegraph", "investing-in-elevenlabs",
+        "why-we-prefer-founding-ceos", "tinycos-big-opportunity",
+        "how-we-picked-our-first-cloud-investment", "picking-a-general-partner",
+    ):
         assert banned not in seed
     assert "where f.slug = 'a16z'" in seed
 
@@ -138,10 +167,10 @@ def test_rls_constraints_and_a16z_seed():
             """
         )
         seeded = cur.fetchall()
-        assert [r[1] for r in seeded] == [1, 2, 3, 4, 5]
-        assert [r[0] for r in seeded] == ["Alex Rampell", "Alex Rampell", "Ben Horowitz", "Marc Andreessen", "Marc Andreessen"]
-        assert [r[2] for r in seeded] == ["2026-01-14", "2026-01-14", "2010-06-29", "2016-05-30", "2016-05-30"]
-        assert [r[3] for r in seeded] == [True, True, False, False, False]
+        assert [r[1] for r in seeded] == list(range(1, 13))
+        assert [r[0] for r in seeded] == NAMES
+        assert [r[2] for r in seeded] == DATES
+        assert [r[3] for r in seeded] == [False, False, True, False, False, True, False, False, False, False, False, False]
         cur.execute(
             """
             select count(*) from public.v2_investor_principles p

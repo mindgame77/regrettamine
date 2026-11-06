@@ -626,7 +626,7 @@
  "company": {
   "toc": "On this page",
   "thesis": { "_note": "Full report Thesis section (replaces Overview, Alex 2026-10-29). Text is the overview item labelled thesis; heading, chip and nav use title.", "title": "Thesis" },
-  "investors": { "_note": "What investors look for (Alex, 2026-11-06). The section title is sections.list. Show all is activity.show_all. No count.", "summary": "Summary:", "source": "Source" },
+  "investors": { "_note": "What investors look for (Alex, 2026-11-06). The section title is sections.list. Show all is activity.show_all and appears whenever the section has a row; it reveals the quote under every summary. No count.", "summary": "Summary:", "source": "Source" },
   "gate": {
    "title": "Check with 1 credit",
    "sub": "See all 10 check results and the full record for {firm}. One credit opens both pages.",

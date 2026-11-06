@@ -654,7 +654,8 @@
     }
     return h;
   }
-  // What investors look for. Five summary rows until Show all. Rows are not controls.
+  // What investors look for. At most five summary rows, then Show all whenever any row exists.
+  // Show all keeps every summary and adds the quote under each one. Rows are not controls.
   // The icon is Phosphor LinkSimple (launch/assets/icons/link-simple.svg), drawn at 12px.
   const LINK_SIMPLE = 'M165.66,90.34a8,8,0,0,1,0,11.32l-64,64a8,8,0,0,1-11.32-11.32l64-64A8,8,0,0,1,165.66,90.34ZM215.6,40.4a56,56,0,0,0-79.2,0L106.34,70.45a8,8,0,0,0,11.32,11.32l30.06-30a40,40,0,0,1,56.57,56.56l-30.07,30.06a8,8,0,0,0,11.31,11.32L215.6,119.6a56,56,0,0,0,0-79.2ZM138.34,174.22l-30.06,30.06a40,40,0,1,1-56.56-56.57l30.05-30.05a8,8,0,0,0-11.32-11.32L40.4,136.4a56,56,0,0,0,79.2,79.2l30.06-30.07a8,8,0,0,0-11.32-11.31Z';
   const INVESTORS_SHOWN = 5;
@@ -663,7 +664,10 @@
     return m ? m[1] : '';
   }
   function investorQuote(q) {
-    return String(q == null ? '' : q).trim().replace(/^[“"]+|[”"]+$/g, '');
+    let s = String(q == null ? '' : q).trim();
+    // Unwrap one stored pair of quotation marks. A quote that only ends with a mark keeps it.
+    if (s.length > 1 && /^[“"]/.test(s) && /[”"]$/.test(s)) s = s.slice(1, -1).trim();
+    return s;
   }
   function investorPack(x) {
     if (!x) return null;
@@ -695,15 +699,13 @@
   function investorsHtml(items, open) {
     const rows = investorRows(items);
     if (!rows.length) return '';
-    const expanded = !!open && rows.length > INVESTORS_SHOWN;
-    const shown = expanded || rows.length <= INVESTORS_SHOWN ? rows : rows.slice(0, INVESTORS_SHOWN);
+    const expanded = !!open;
+    const shown = expanded ? rows : rows.slice(0, INVESTORS_SHOWN);
     const body = shown.map(x => investorRow(x, expanded)).join('');
-    if (!expanded && rows.length > INVESTORS_SHOWN) {
-      const label = (COPY.activity && COPY.activity.show_all) || 'Show all';
-      return '<div class="iprs" data-rows="' + esc(JSON.stringify(rows)) + '">' + body
-        + '<button type="button" class="ash" data-investors>' + esc(label) + '</button></div>';
-    }
-    return '<div class="iprs">' + body + '</div>';
+    if (expanded) return '<div class="iprs">' + body + '</div>';
+    const label = (COPY.activity && COPY.activity.show_all) || 'Show all';
+    return '<div class="iprs" data-rows="' + esc(JSON.stringify(rows)) + '">' + body
+      + '<button type="button" class="ash" data-investors>' + esc(label) + '</button></div>';
   }
   // Open-state renderers, keyed by copy.json sections[].renderer. The section is the third argument (LP grouping).
   const R = {

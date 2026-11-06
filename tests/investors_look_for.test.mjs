@@ -108,17 +108,34 @@ test('no rows: no section, chip, or nav entry', () => {
   }
 });
 
-test('five or fewer: every summary row, no Show all, no quote', () => {
+test('one row and five rows: every summary, Show all, quotes only after it', () => {
   for (const n of [1, 5]) {
     const items = Array.from({ length: n }, (_, i) => row(i + 1));
-    const html = investorsHtml(items, false);
-    assert.equal(count(html, 'class="ipr"'), n);
-    assert.equal(count(html, 'class="ipq"'), 0);
-    assert.equal(count(html, 'class="ipi"'), n);
-    assert.doesNotMatch(html, /Show all|data-investors|Exact quote body/);
-    assert.match(html, /Summary line 1 stays a takeaway/);
-    assert.match(html, /Investor 1 · General Partner · 2016/);
-    assert.doesNotMatch(html, /role_source_url|team\/investor/);
+    const closed = investorsHtml(items, false);
+    const visible = closed.replace(/ data-rows="[^"]*"/, '');
+    assert.equal(count(closed, 'class="ipr"'), n);
+    assert.equal(count(closed, 'class="ipq"'), 0);
+    assert.equal(count(closed, 'class="ipi"'), n);
+    assert.equal(count(closed, '<button type="button" class="ash" data-investors>'), 1);
+    assert.match(closed, />Show all</);
+    assert.doesNotMatch(visible, /Exact quote body/);
+    assert.match(closed, /Summary line 1 stays a takeaway/);
+    assert.match(closed, /Investor 1 · General Partner · 2016/);
+    assert.doesNotMatch(closed, /role_source_url|team\/investor/);
+    const open = investorsHtml(items, true);
+    assert.equal(count(open, 'class="ipr"'), n);
+    assert.equal(count(open, 'class="ipq"'), n);
+    assert.equal(count(open, 'class="ips"'), n);
+    assert.equal(count(open, 'class="ipi"'), n);
+    assert.doesNotMatch(open, /<button|Show all|data-rows|data-investors/);
+    assert.match(open, /Summary line 1 stays a takeaway/);
+    assert.match(open, /Exact quote body 1 is longer than the summary and is not the summary/);
+    const parts = open.split('class="ipr"').slice(1);
+    assert.equal(parts.length, n);
+    const first = parts[0];
+    assert.equal(count(first, '<a '), 1);
+    const quote = first.slice(first.indexOf('class="ipq"'));
+    assert.doesNotMatch(quote, /General Partner|Summary:|2016|https:|class="ipi"|class="ipa"/);
   }
 });
 
@@ -154,15 +171,17 @@ test('summary and quote stay different, and the source icon is the only link', (
   const same = row(1, { summary: 'Same words.', quote: 'Same words.' });
   assert.equal(investorsHtml([same], false), '');
   const html = investorsHtml([row(1, { summary: 'Short takeaway.', quote: '"Short takeaway is not this."' })], false);
-  assert.match(html, /Short takeaway\./);
-  assert.doesNotMatch(html, /Short takeaway is not this/);
+  const visible = html.replace(/ data-rows="[^"]*"/, '');
+  assert.match(visible, /Short takeaway\./);
+  assert.doesNotMatch(visible, /Short takeaway is not this/);
   assert.match(html, /href="https:\/\/a16z\.com\/quote-1" target="_blank" rel="noopener"/);
   assert.match(html, /aria-label="Source"/);
   assert.match(html, /width="12" height="12"/);
   assert.match(html, new RegExp('d="' + iconPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '"'));
   assert.equal(count(html, '<a '), 1);
-  assert.doesNotMatch(html, /<button|tabindex|onclick|role="button"/);
-  assert.match(html, /^<div class="iprs"><div class="ipr">/);
+  assert.equal(count(html, '<button type="button" class="ash" data-investors>'), 1);
+  assert.doesNotMatch(html, /tabindex|onclick|role="button"/);
+  assert.match(html, /^<div class="iprs" data-rows="[^"]*"><div class="ipr">/);
 });
 
 test('a row click does nothing; Show all is the control that opens quotes', () => {
