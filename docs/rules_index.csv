@@ -378,7 +378,7 @@ A4.7,A4 The holding door,"Entry check Layer 1: a trigger marks every upload Acce
 A4.8,A4 The holding door,"A trigger cannot open a link: Accepted rows are flagged for the Checker's opens check. Result and notes cleared after 30 days. Server only (A14.6).",on main
 A6.5,A6 Three marks on every item,"A6 stays as is. Missing checked date, check and level on old items are filled by the new-database rerun (A14.1), not by a backfill now (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
 A9.21,A9 List limits and archiving (the one table),"The archive job for every list in the A9 table is built as part of the new database (A14) (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
-B3.8,B3 Firm header,"Social follower counts (A2.10): a platform logo with its count is shown only for platforms where we have a firm-linked account; platforms without a link are not shown. The design waits for an approved mockup, so the counts are stored and hidden until then (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
+B3.8,B3 Firm header,"Social follower counts (A2.10, F.1): shown only for a firm-linked v2_social_accounts row (source level 2, count read within 12 months). Do not invent a count. The hidden-until-mockup hold is revoked.","on main (Alex, 2026-11-06)"
 B12.9,B12 News,"Any stored news item not yet checked (for example 33 of 65 for the lab firms, as of 2026-10-27) is checked in the new-database rerun (A14.1) and hidden until it passes the news check (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
 B12.10,B12 News,"Timeline events merge into News as one list: one item per normalized link (A7.11), the same news check (B12.6) and the same limits (A9.3). Duplicate links are dropped (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
 A13.1,A13 Dates shown on the page,"Every date shown on the page uses US format MM/DD/YYYY, for example 01/07/2026, for news, timeline, deals, reviews and legal (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
@@ -390,3 +390,20 @@ A14.4,A14 New database move,"Row 49: the remaining founder accounts move into re
 A14.5,A14 New database move,"Every deletion still needs Alex’s explicit 'Yes, delete' on an exact list (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
 A14.6,A14 New database move,"bots.checker_holding is server-only (RLS on, no policies on purpose). Owner-run public functions need a fixed search path; only allowlisted ones are open to logged-out users (Alex, 2026-10-28).",on main
 A14.7,A14 New database move,"In the new database, all old data goes through the entry check (A4.7), and items with no date get the import day's date (Alex, 2026-10-28).",planned (not built)
+P.5,P About this file,Current firm-report fields are section F. What does not fit for the next few firms is section N. Tile layout is not a collect rule.,on main
+F.1,F Firm report collect (v2),Header HQ country website founded year thesis and firm social counts on the v2 tables. No invented count.,on main
+F.2,F Firm report collect (v2),Deals keep stated round date amount lead and source. Sector must be one of the 18 v2_sector names. Other stays Other.,on main
+F.3,F Firm report collect (v2),Each LP commitment is its own row with amount and source. No commitment-count field.,on main
+F.4,F Firm report collect (v2),Legal stores the full case title court filed year status side case type and level-1 source.,on main
+F.5,F Firm report collect (v2),Investor principles need the exact quote attribution and proof the speaker was at the firm on that date.,on main
+F.6,F Firm report collect (v2),Founder reviews store the quote author and source. Role only with a role source.,on main
+F.7,F Firm report collect (v2),Team is current CEO or founder rows with real social URLs and follower counts. Staff labels are refused. Private funds stays.,on main
+F.8,F Firm report collect (v2),Videos are YouTube url title channel date and view count. No thumbnail column.,on main
+F.9,F Firm report collect (v2),News is headline outlet date source url and tone only when the story supports it.,on main
+F.10,F Firm report collect (v2),Do not invent a chart. Sparse periods are flagged not hidden by a new numeric cutoff. A9 caps stay.,on main
+N.1,N Next firms what does not fit,A missing source leaves the field empty. Do not invent it and do not drop the firm.,on main
+N.2,N Next firms what does not fit,Real content that will not fit is still stored. Do not shrink clip or hardcode the layout.,on main
+N.3,N Next firms what does not fit,Record firm slug section and what does not fit for Alex.,on main
+N.4,N Next firms what does not fit,This is not a permanent ignore rule. The temporary ignore default is revoked.,on main
+B4.6,B4 SEC fact pills,Staff and Investment staff are refused. Private funds stays when the SEC source states a non-zero count.,on main
+B9.9,B9 Limited partners,Do not store or print a commitment count. B9.1's fund-count line is not collected.,on main

@@ -1,6 +1,6 @@
 # External bot brief: Regretamin night run (VC research → ingest API)
 
-The only rulebook is [docs/PAGE_DATA_GUIDE.md](../../docs/PAGE_DATA_GUIDE.md). Researchers, list builders, the Enricher, the Checker, the Activity Collector, and portal-night-bot follow that file. This brief is how to call the holding door. It is not a second set of data rules. Where Part B disagrees with the guide, follow the guide.
+The only rulebook is [docs/PAGE_DATA_GUIDE.md](../../docs/PAGE_DATA_GUIDE.md). Researchers, list builders, the Enricher, the Checker, the Activity Collector, and portal-night-bot follow that file. Current firm-report fields are section F. What does not fit, for the next few firms, is section N. This brief is how to call the holding door. It is not a second set of data rules. Where Part B disagrees with the guide, follow the guide.
 
 You will research venture capital firms one at a time and upload one JSON dump per firm into the holding area. Follow the call steps exactly. Do not publish a page yourself.
 

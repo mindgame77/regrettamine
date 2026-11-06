@@ -21,6 +21,8 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
   - [A13. Dates shown on the page](#a13)
   - [A14. New database move](#a14)
   - [A15. Data intake rules (all data types)](#a15)
+- [F. Firm report collect (v2)](#f)
+- [N. Next firms: what does not fit](#n)
 - [B. The page](#b)
   - [B1. Site logo and wordmark](#b1)
   - [B2. Search box and suggestions](#b2)
@@ -70,7 +72,34 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 - **P.1** This is the only rulebook. Researchers, list builders, the Enricher, the Checker, the Activity Collector, and the friend’s portal bots follow this file and no other rules doc. `docs/RULES_AUDIT.md` is a dated record of 2026-10-27. Files in `docs/archive/` are frozen copies of the old rule docs. They are not rules.
 - **P.2** Scope until Alex says “roll out”: the 10 lab firms only (a16z, y-combinator, sequoia, lightspeed, generalcatalyst, plugandplay, accel, greenoaks, khosla-ventures, mio-partners).
 - **P.3** Work order: build the Checker and the one home per kind, test on the lab firms, and only then clean up old bot tables. Cleanup is the last step, not the first.
-- **P.4** The snapshot items (.1 to .6 in Parts B and C) describe what the live site drew on 2026-10-27. Where a snapshot item disagrees with the rules in Part A, the rules in Part A win. The code has not been changed to match yet.
+- **P.4** The snapshot items (.1 to .6 in Parts B and C) describe what the live site drew on 2026-10-27. Where a snapshot item disagrees with the rules in Part A, the rules in Part A win.
+- **P.5** What to collect for the current firm report is [F](#f). What does not fit, for the next few firms, is [N](#n). Where F disagrees with a 2026-10-27 snapshot line about a field, F wins. Tile layout is `.cursor/rules/design.mdc`. That file is not a collect rule.
+
+<a id="f"></a>
+## F. Firm report collect (v2)
+
+The public page reads `v2_firm_page`. Bots write the v2 tables below through `v2_research_submit`. Every value needs the source URL already required for that table. Do not invent a count, a role, a sector, or a person. Do not hardcode one firm's facts into the instructions or the page.
+
+- **F.1 Header.** `v2_firms`: `hq_city`, `hq_state`, `hq_country` (two letters), `website_url`, `founded_year`, each with the source column named in `v2_research_submit` (`hq_source`, `founded_year_source`). Thesis is `thesis_text` from the firm's own site only (B7). Firm social counts are `v2_social_accounts`: `platform`, `account_url`, `follower_count`, `date_read`, `source_url`, source level 2. No count from anywhere else.
+- **F.2 Deals.** `v2_deals` joined to the startup. Collect company, round, date, amount and currency, lead, and source URL only when the source states them. Sector is a name already in `v2_sector` (the 18 ST5 names): AI agents, AI models, Bio, Climate & Energy, Consumer, Crypto, Developer tools, Education, Enterprise software, Fintech, Food & Agriculture, Hardware & Robotics, Health, Media & Gaming, Mobility, Real estate, Security, Other. An unknown name is refused. Do not coin a sector. The same name keeps one color everywhere. Rank does not assign it. Other stays Other.
+- **F.3 Limited partners.** One `v2_lp_commitments` row per commitment: `lp_name`, `commitment_amount`, `commitment_currency`, and that row's `source_url`. Collect every source. There is no commitment-count column. Do not add one. The page shows one source chip. The popup shows the rest.
+- **F.4 Legal.** `v2_legal_items`: full case title (`other_party` or `regulator_name` with the firm), `court`, `filed_year`, `status` (Active, Dismissed, Settled, or Closed when the record says so), `side`, `case_type` (Fraud, Contract, Employment, Securities, Regulator action, IP), and the level-1 court or regulator `source_url`. Do not shorten the title.
+- **F.5 What investors look for.** `v2_investor_principles`: `investor_name`, `investor_title`, `summary`, `quote` (the exact words, not the summary), `published_at`, `source_url`. The source must show that person was at this firm on that date (E3). When the quote URL is not the firm site, `role_source_url` is the firm page that proves the role.
+- **F.6 What founders say.** `v2_reviews`: `quote`, `review_author`, `source_url`. `reviewer_role` and `reviewer_company` only with `reviewer_role_source_url`. A name that replaces a username needs `reviewer_name_source_url`.
+- **F.7 Team.** Current CEO or founder rows only (`v2_person_firm_roles.is_founder`, or a title that is CEO). `v2_people.person_name`, role title, `linkedin_url`, `x_url`, `linkedin_followers`, `x_followers`, each URL a real https link. No filler person, no duplicate, no invented count. Staff and Investment staff are not accepted on `v2_sec_fact_pills`. Private funds stays when the SEC source states a non-zero count.
+- **F.8 Videos.** `v2_interviews`: YouTube `interview_url`, `title`, `channel`, `interview_date`, `view_count`. The page builds the thumbnail from the YouTube id. There is no thumbnail column.
+- **F.9 News.** `v2_news_items`: `headline`, `outlet`, `published_date`, `source_url`, `tone` (`green`, `red`, or `grey` only when the story supports it).
+- **F.10 Empty charts.** Do not invent deals or slices so a chart can draw. No dated deals means no chart. A sparse period is a note for Alex under [N](#n), not a hidden numeric cutoff. Caps already in [A9](#a9) stay as they are. A suggestion, not a rule: fewer than 3 dated deals, or fewer than 2 named sectors in a period, is worth flagging. Real rows are still stored.
+
+<a id="n"></a>
+## N. Next firms: what does not fit
+
+Preliminary, for the next few firms. This is not a permanent ignore rule. The earlier temporary default of ignoring missing data is revoked. Do not copy this section into `.cursor/rules/design.mdc`.
+
+- **N.1** If a field is not in a real source, leave it empty. Do not invent it, and do not drop the firm.
+- **N.2** If real sourced content will not fit the tile without shrinking, clipping, or hardcoding, store the real fields anyway. Keep the layout standard.
+- **N.3** Record it for Alex: firm slug, section, and what does not fit (a name too long, an LP line, a deal list, or anything else). The note is that we will check it out and do our best.
+- **N.4** Missing data is not silently skipped under this rule. N.1 is the empty field. N.3 is the case that needs a person.
 
 <a id="a"></a>
 # A. How data comes in
@@ -296,7 +325,7 @@ Items .1 to .5 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **B3.4** No written rule that HQ must be a city from IAPD. The queue stores `hq_city`, `state`, and `country`.
 - **B3.5** The header shows whenever the page loads. Hero cards (staff, founded, AUM as cards) were removed and are not drawn.
 - **B3.7** Sources for HQ, website and founded year: [A2.13–A2.15](#a2) (Alex, 2026-10-28).
-- **B3.8** Social follower counts ([A2.10](#a2)): a platform logo with its count is shown only for platforms where we have a firm-linked account; platforms without a link are not shown. The design waits for an approved mockup, so the counts are stored and hidden until then (Alex, 2026-10-28).
+- **B3.8** Social follower counts ([A2.10](#a2), [F.1](#f)): a platform logo with its count is shown only for a firm-linked account in `v2_social_accounts` (source level 2, count read within 12 months). Platforms without that row are not shown. Do not invent a count. The "hidden until a mockup" hold is revoked.
 
 <a id="b4"></a>
 ## B4. SEC fact pills
@@ -306,6 +335,7 @@ Items .1 to .5 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **B4.3** The enricher, from a Form ADV on sec.gov / adviserinfo.sec.gov. Item 5F is the assets figure the helper looks for.
 - **B4.4** The fact needs a source or it is not in the hero list. The pill needs the host to be sec.gov.
 - **B4.5** Hidden when the hero list is empty or no source is sec.gov.
+- **B4.6** Staff and Investment staff are not accepted (`v2_sec_fact_pills` rejects those labels, migration `20261106140000_v2_sec_fact_pills_no_staff.sql`). Private funds stays when the SEC source states a non-zero count. Do not send either staff label.
 
 <a id="b5"></a>
 ## B5. Score bar
@@ -414,6 +444,7 @@ Items .1 to .5 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **B9.4** Profile: name required, type optional, source required. Bot table: name, status confirmed or lead, URL, type from a fixed list, cap 100, unique on name plus fund.
 - **B9.5** A lead (an LP named only by a weaker source, held as Unconfirmed) is not shown. No source, or hidden, drops the row. (Alex, 2026-10-28)
 - **B9.8** Shown count, max kept, and archiving: see the list limits table in [A9](#a9). LP sources: [A2](#a2).
+- **B9.9** Do not store or print a commitment count ([F.3](#f)). Each `v2_lp_commitments` row is one amount and its source. The "(N funds)" line in B9.1 is not collected.
 
 <a id="b10"></a>
 ## B10. People and board seats
