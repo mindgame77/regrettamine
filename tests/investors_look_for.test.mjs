@@ -132,6 +132,19 @@ function quotesInPopup(items) {
   return { pageHtml, open };
 }
 
+test('a quote with no date shows no year; a dated quote still shows its year', () => {
+  const { pageHtml, open } = quotesInPopup([
+    row(1, { published_at: null }),
+    row(2, { published_at: '2016-05-30' }),
+  ]);
+  assert.match(pageHtml, /Investor 1 · General Partner</);
+  assert.doesNotMatch(pageHtml, /Investor 1 · General Partner · /);
+  assert.match(pageHtml, /Investor 2 · General Partner · 2016/);
+  assert.match(open, /Investor 1 · General Partner</);
+  assert.doesNotMatch(open, /Investor 1 · General Partner · /);
+  assert.match(open, /Investor 2 · General Partner · 2016/);
+});
+
 test('one row and five rows: summaries on the page, quotes only in the shared popup', () => {
   for (const n of [1, 5]) {
     const items = Array.from({ length: n }, (_, i) => row(i + 1));
