@@ -25,7 +25,7 @@ A2.12,A2 Sources per page part,"Funds | SEC filings (Form D, Form ADV), else an 
 A2.13,A2 Sources per page part,"Header HQ | The firm’s IAPD record, else the firm’s own website.",on main
 A2.14,A2 Sources per page part,"Header website | The firm’s own site, checked that it opens and belongs to the firm.",on main
 A2.15,A2 Sources per page part,"Founded year | The firm’s own site or a company register (a US state registry, Companies House).",on main
-A3.1,A3 One way in,Every bot sends into the holding area bots.research_submissions.,on main
+A3.1,A3 One way in,"Researchers use research-ingest-v2: add_firm, then one fact per submit item, and resend only failed facts.",on main
 A3.2,A3 One way in,bots.research_enrichments can store a bot’s structured result.,on main
 A4.1,A4 The holding door,"Only a known bot gets in, and each bot has its own key. Submissions: see A12.2.",on main
 A4.2,A4 The holding door,A bot may send as many distinct firms in an hour as the hourly limit.,on main
@@ -36,7 +36,7 @@ A5.1,A5 The Checker,The entry check is the only way an item is published.,on mai
 A5.2,A5 The Checker,For each item it checks three things:,on main
 A5.3,A5 The Checker,A register or firm-site item is published with the date and checked-by Checker.,on main
 A5.4,A5 The Checker,The Enricher does not publish (fixes: A12.3); the Activity Collector does not write investments directly (A12.4).,on main
-A5.5,A5 The Checker,"Takes only uploads the entry check Accepted; rejected ones never reach it. Flagged links are opened first: one that does not open sets 'Rejected: link does not open', otherwise the flag is cleared. Then the meaning check as before.",on main
+A5.5,A5 The Checker,"Researchers use research-ingest-v2 (add_firm, then per-fact submit; resend only failed facts). The v1 Checker still takes only Accepted uploads. A link that does not open sets 'Rejected: link does not open'.",on main
 A6.1,A6 Three marks on every item,"The entry check sets these once, on the item itself (The Checker runs this check today; automatic checks, when built, run the same check.) (Alex, 2026-10-28):",on main
 A6.2,A6 Three marks on every item,"The columns are on the item tables: press_item_firms, timeline_events, firm_check_rows, firm_people_roles, firm_profile_facts, firm_legal_items, reviews, and...",on main
 A6.3,A6 Three marks on every item,firm_check_rows.searched_at and the news check_mark stay.,on main
@@ -373,7 +373,7 @@ R5.39,R5 Old notes,From C9.3: Unknown which bot screened them.,on main
 R5.40,R5 Old notes,From C9: Accel’s Schedule A sentences were hidden as people and did not become a check.,on main
 R5.41,R5 Old notes,From C10.3: Unknown bot.,on main
 R5.42,R5 Old notes,From C10.5: a16z is Worth knowing from the hand migration.,on main
-A4.6,A4 The holding door,"Each upload stores an internal door-check result, 'Accepted' or 'Rejected' plus the reason (e.g. 'Rejected: no source link'). It is kept 30 days, the same as uploads (A11.1). Visible only to the bot that sent it; never shown to site users (Alex, 2026-10-28).","on main (Alex, 2026-10-28; applied, research-ingest v31, PR 248)"
+A4.6,A4 The holding door,"On research-ingest-v2, each fact comes back accepted or failed with the reason. Resend only the corrected facts. The result is visible only to the bot that sent it; never shown to site users.",on main
 A4.7,A4 The holding door,"Entry check Layer 1: a trigger marks every upload Accepted or Rejected with reasons (link, level 1-3, duplicate, fixed status words, no firm-site news). Dates are normalized (unreadable ones cleared, noted), items past the A9 limit archived (noted) and a thesis over 1,000 characters cut to 1,000 ending '...' (noted); none of these rejects. No publish, no 10 checks.",on main
 A4.8,A4 The holding door,"A trigger cannot open a link: Accepted rows are flagged for the Checker's opens check. Result and notes cleared after 30 days. Server only (A14.6).",on main
 A6.5,A6 Three marks on every item,"A6 stays as is. Missing checked date, check and level on old items are filled by the new-database rerun (A14.1), not by a backfill now (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
