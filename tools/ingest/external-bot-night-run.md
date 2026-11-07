@@ -43,6 +43,18 @@ curl -s -X POST "$URL" -H "x-ingest-key: $KEY" -H 'content-type: application/jso
 
 Each fact is `{firm_id, box, table, fact:{source_url, source_level, source_date, source_type, ...}}`. The other fact fields are the columns for that table in section F.
 
+A new row stays hidden until the Checker passes it. Do not send display name, page slug, firm status, or founder feedback. One example for each door that was closed. The investor quote is an exact excerpt, 150 characters or less.
+
+```json
+{"firm_id":41,"box":"F5","table":"v2_investor_principles","fact":{"investor_name":"Example Person","investor_title":"General Partner","summary":"Looks for founders who know the customer.","quote":"We back founders who know the customer.","published_at":"2026-01-15","source_url":"https://example.com/quote","source_level":"2","source_date":"2026-11-01","source_type":"Firm website"}}
+{"firm_id":41,"box":"F2","table":"v2_firm_stages","fact":{"stage":"Seed","source_text":"We lead seed rounds.","source_url":"https://example.com/focus","source_level":"2","source_date":"2026-11-01","source_type":"Firm website"}}
+{"firm_id":41,"box":"F2","table":"v2_firm_industries","fact":{"industry_text":"Developer tools","position":1,"source_url":"https://example.com/focus","source_level":"2","source_date":"2026-11-01","source_type":"Firm website"}}
+{"firm_id":41,"box":"F1","table":"v2_firm_types_firms","fact":{"firm_type":"VC","source_url":"https://example.com/about","source_level":"2","source_date":"2026-11-01","source_type":"Firm website"}}
+{"firm_id":41,"box":"F8","table":"firm_fund_announcements","fact":{"name":"Example Fund","amount_usd":100000000,"display":"$100M","announced_on":"2026-01-15","source_url":"https://example.com/fund","source_level":"2","source_date":"2026-11-01","source_type":"Firm website"}}
+{"firm_id":41,"box":"F2","table":"v2_firm_check_sizes","fact":{"program_name":"Seed","amount_text":"$500K to $2M","min_usd":500000,"max_usd":2000000,"source_url":"https://example.com/seed","source_level":"2","source_date":"2026-11-01","source_type":"Firm website"}}
+{"firm_id":41,"box":"F1","table":"v2_firm_former_names","fact":{"name":"Example Old Name","until_year":2010,"source_url":"https://example.com/about","source_level":"2","source_date":"2026-11-01","source_type":"Firm website"}}
+```
+
 ### 3. Failed facts
 
 The reply lists every item. A failed fact has a reason, for example `Rejected: no source link (source_url)`. Fix that fact and resend only the corrected ones. Do not resend facts that were accepted.
