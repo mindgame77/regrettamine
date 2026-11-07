@@ -27,6 +27,15 @@ def test_migration_opens_doors_and_leaves_the_page_header_alone():
     assert "chief executive" not in text
 
 
+def test_quote_date_may_be_empty_and_is_not_filled():
+    text = (ROOT / "supabase/migrations/20261107240000_v2_quote_date_optional.sql").read_text(encoding="utf-8")
+    guide = GUIDE.read_text(encoding="utf-8")
+    assert "alter column published_at drop not null" in text
+    assert "fact := fact - 'published_at'" in text
+    assert "current_date" not in text
+    assert "Quote date: if the source shows a date use it; if not, leave it empty. Never reject for a missing date. Never use dateModified or archive dates." in guide
+
+
 def test_docs_have_one_example_per_new_door():
     for path in (GUIDE, BRIEF):
         text = path.read_text(encoding="utf-8")
