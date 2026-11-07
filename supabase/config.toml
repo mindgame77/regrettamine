@@ -12,3 +12,6 @@ verify_jwt = true
 
 [functions.research-ingest]
 verify_jwt = false
+
+[functions.research-ingest-v2]
+verify_jwt = false
