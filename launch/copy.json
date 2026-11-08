@@ -700,6 +700,7 @@
    "missing": "Not found in public records",
    "founded": "Founded {y}",
    "industries": "Industries",
+   "deal_sectors": "Top sectors from recorded deals",
    "stages": "Stages",
    "social": {
     "_note": "Social pills under the meta line: follower count only, accounts linked from the firm's own website (firm_page.firm.social). No data: no row.",
