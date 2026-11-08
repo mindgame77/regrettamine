@@ -1,4 +1,4 @@
-"""Layout A is one page builder for every firm: rows, one News section, and a client-side tab switch."""
+"""Layout A is one page builder for every firm: rows, and a client-side tab switch."""
 import json
 import pathlib
 import subprocess
@@ -14,16 +14,15 @@ RULES = (ROOT / "docs" / "archive" / "DATA_RULES.md").read_text()
 
 def test_sections_are_layout_a():
     keys = [s["key"] for s in COPY["sections"]["list"]]
-    assert keys == ["overview", "investors", "legal", "people", "videos", "news", "lps"]
-    news = next(s for s in COPY["sections"]["list"] if s["key"] == "news")
+    assert keys == ["overview", "investors", "legal", "people", "videos"]
     videos = next(s for s in COPY["sections"]["list"] if s["key"] == "videos")
     investors = next(s for s in COPY["sections"]["list"] if s["key"] == "investors")
-    assert news["title"] == "News" and news["renderer"] == "news"
     assert videos["title"] == "Videos" and videos["renderer"] == "videos" and videos["subtitle"] == ""
     assert investors["title"] == "What investors look for" and investors["renderer"] == "investors" and investors["subtitle"] == ""
     assert keys.index("overview") < keys.index("investors") < keys.index("people")
-    assert keys.index("people") < keys.index("videos") < keys.index("news")
+    assert keys.index("people") < keys.index("videos")
     assert "founders" not in keys and "checks" not in keys and "press" not in keys and "timeline" not in keys
+    assert "news" not in keys and "lps" not in keys
     assert COPY["company"]["legal"]["case"] == "Cases"
     assert COPY["company"]["legal"]["regulator"] == "Regulators"
     assert COPY["company"]["legal"]["context"] == "Context"

@@ -48,20 +48,6 @@ const story = (n, date) => ({
   head: 'Story ' + n, outlet: 'Outlet', date, url: 'https://example.com/story-' + n,
   snippet: '', logo: '', group: '', src: [{ label: 'Outlet', date, url: 'https://example.com/story-' + n }],
 });
-function newsHtml(n) {
-  const items = [];
-  for (let i = 1; i <= n; i++) items.push(story(i, '2026-01-' + String(i).padStart(2, '0')));
-  const P = { open: true, checks: [], firm: { name: 'Andreessen Horowitz' }, sections: [{ key: 'press', items }] };
-  const main = mainEl();
-  main.set('.actw', el());
-  const pmain = main.set('.pmain', el());
-  main.set('.m', el());
-  render(main, P);
-  const html = pmain.innerHTML;
-  const block = html.slice(html.indexOf('id="news"'));
-  return { block, cards: (block.match(/class="pi /g) || []).length };
-}
-
 const press = (url, head, date, extra) => Object.assign({
   head, outlet: 'Outlet', date, url, snippet: 'snip', logo: '', group: '',
   src: [{ label: 'Outlet', date, url }],
@@ -142,7 +128,7 @@ test('an undated item is shown, and three outlets stay three cards', () => {
   assert.equal(cards[cards.length - 1].head, 'No date on this one');
 });
 
-test('pageSecs draws News from press and timeline and does not draw those sections', () => {
+test('pageSecs does not draw News or LPs', () => {
   const P = {
     sections: [
       { key: 'overview', items: [{ label: 'Founded', value: '2009' }], count: 1 },
@@ -152,10 +138,7 @@ test('pageSecs draws News from press and timeline and does not draw those sectio
     ],
   };
   const secs = pageSecs(P);
-  assert.equal(secs.map(s => s.key).join('|'), 'news|lps');
-  assert.equal(secs[0].count, 1);
-  assert.equal(secs[0].items[0].tag, 'Court');
-  assert.equal(secs[1].count, 1);
+  assert.equal(secs.map(s => s.key).join('|'), '');
 });
 
 const A16Z = { name: 'Andreessen Horowitz', short_name: 'a16z', sec_name: 'AH Capital Management, L.L.C.' };
@@ -234,28 +217,17 @@ test('obviously different stories are not grouped', () => {
   assert.equal(undated.length, 2);
 });
 
-test('news keeps every story, previews three, and Show all opens the rest', () => {
-  const countExtra = (block) => (block.match(/data-extra="1"/g) || []).length;
-  const six = newsHtml(6);
-  assert.equal(six.cards, 6);
-  assert.equal(countExtra(six.block), 3);
-  assert.match(six.block, /Story 6/);
-  assert.match(six.block, /Story 1/);
-  assert.ok(six.block.indexOf('Story 6') < six.block.indexOf('Story 1'));
-  assert.match(six.block, /class="ash" data-open="actnews">Show all<\/button>/);
-  const five = newsHtml(5);
-  assert.equal(five.cards, 5);
-  assert.equal(countExtra(five.block), 2);
-  assert.match(five.block, /Show all/);
-  const seven = newsHtml(7);
-  assert.equal(seven.cards, 7);
-  assert.equal(countExtra(seven.block), 4);
-  assert.match(seven.block, /class="ash" data-open="actnews">Show all<\/button>/);
-  assert.doesNotMatch(seven.block, /Show all \d|stories<\/button>/);
-  assert.match(seven.block, /Story 1/);
-  assert.match(seven.block, /Story 7/);
-  assert.match(seven.block, /Story 2/);
-  assert.doesNotMatch(seven.block, /<p class="psub">|Since 2023|Articles, court events/);
+test('press items do not draw a News tile', () => {
+  const items = [];
+  for (let i = 1; i <= 6; i++) items.push(story(i, '2026-01-' + String(i).padStart(2, '0')));
+  const P = { open: true, checks: [], firm: { name: 'Andreessen Horowitz' }, sections: [{ key: 'press', items }] };
+  const main = mainEl();
+  main.set('.actw', el());
+  const pmain = main.set('.pmain', el());
+  main.set('.m', el());
+  render(main, P);
+  assert.equal(pmain.innerHTML.indexOf('id="news"'), -1);
+  assert.doesNotMatch(pmain.innerHTML, /actnews|class="pi /);
   const css = fs.readFileSync(new URL('launch/style.css', root), 'utf8');
   const at = css.indexOf('\n.ash{');
   const rule = css.slice(at + 1, css.indexOf('}', at) + 1);

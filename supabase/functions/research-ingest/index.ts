@@ -10,9 +10,9 @@ const MAX_BYTES = 2_000_000;
 const TOP_KEYS = ["schema_version", "firm", "coverage", "records", "leads", "search_log"];
 const CERTAINTY = ["adjudicated", "reported", "alleged", "self_reported"];
 const ENTITY_TYPES = ["firm", "fund", "partner", "company", "lp", "gp_entity"];
-const FIELD_PATHS = ["hq", "founded", "aum", "legal_entities", "people", "peopleMoves", "funds", "latestRaise", "limitedPartners",
+const FIELD_PATHS = ["hq", "founded", "aum", "legal_entities", "people", "peopleMoves", "funds", "latestRaise",
   "portfolio", "lawsuits", "regulatoryActions", "sanctions", "controversies", "posts", "reviews", "politicalContext",
-  "news", "thesis", "socialAccounts"];
+  "thesis", "socialAccounts"];
 // Fixed legal words (docs/PAGE_DATA_GUIDE.md A2.4). Old words are mapped on arrival so old uploads keep working.
 const LEGAL_PATHS = ["lawsuits", "regulatoryActions"];
 const LEGAL_STATUS: Record<string, string> = { active: "Active", open: "Active",

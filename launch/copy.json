@@ -129,22 +129,6 @@
     "renderer": "videos",
     "unit_one": "video",
     "unit_many": "videos"
-   },
-   {
-    "key": "news",
-    "title": "News",
-    "subtitle": "",
-    "renderer": "news",
-    "unit_one": "item",
-    "unit_many": "items"
-   },
-   {
-    "key": "lps",
-    "title": "Limited partners",
-    "subtitle": "",
-    "renderer": "facts",
-    "unit_one": "LP",
-    "unit_many": "LPs"
    }
   ]
  },
