@@ -205,7 +205,8 @@
   // Industries and stages sit under the meta line and social row, above the activity cards.
   // One investment-focus rule for every firm (F.11). Website labels are the stored words. The source stays in the database and is not drawn.
   // An empty list draws nothing, including its label. No arrow or chevron.
-  // Check size is not drawn: v2_firm_check_sizes rows are archived.
+  // Average check is firm.check_size: one published amount. It sits on the stages pill line, after those pills,
+  // with a thin divider and the label. No value: no label and no divider. The source stays in the database and is not drawn.
   const STAGE_ORDER = ['Pre-seed', 'Seed', 'Series A', 'Series B', 'Series C and later', 'Growth'];
   function tagBits(list, key) {
     return (list || []).map(x => String(x && typeof x === 'object' ? (x[key] || x.stage || x.text || '') : (x == null ? '' : x)).trim()).filter(Boolean);
@@ -226,6 +227,9 @@
     }).filter(Boolean).sort((a, b) => b.n - a.n || a.name.toLowerCase().localeCompare(b.name.toLowerCase()) || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0))
       .map(x => x.name);
   }
+  function checkSizeText(firm) {
+    return String(firm && firm.check_size != null ? firm.check_size : '').trim();
+  }
   function tagHtml(P) {
     const firm = (P && P.firm) || {};
     const block = (label, xs) => xs.length ? '<div class="htag"><span class="htag-l">' + esc(label) + '</span><div class="secp">' + xs.map(t => '<span class="hp">' + esc(t) + '</span>').join('') + '</div></div>' : '';
@@ -233,7 +237,16 @@
     const focus = web.length
       ? block(HCOPY.industries || 'Sectors', web)
       : block(HCOPY.industries || 'Sectors', dealSectorPills(firm.deal_sectors));
-    return focus + block(HCOPY.stages || 'Stages', orderedStages(firm.stages));
+    const stages = orderedStages(firm.stages);
+    const amount = checkSizeText(firm);
+    const stagePills = stages.map(t => '<span class="hp">' + esc(t) + '</span>').join('');
+    const check = amount
+      ? (stagePills ? '<span class="htag-rule" aria-hidden="true"></span>' : '') + '<span class="htag-k">' + esc(HCOPY.avg_check || 'AVG CHECK') + '</span><span class="hp">' + esc(amount) + '</span>'
+      : '';
+    const stageBlock = (stagePills || check)
+      ? '<div class="htag">' + (stagePills ? '<span class="htag-l">' + esc(HCOPY.stages || 'Stages') + '</span>' : '') + '<div class="secp">' + stagePills + check + '</div></div>'
+      : '';
+    return focus + stageBlock;
   }
   function paintTags(main, P) {
     if (!main || !main.querySelector) return;

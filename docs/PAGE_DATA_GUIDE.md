@@ -348,6 +348,7 @@ Items .1 to .5 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **B3.7** Sources for HQ, website and founded year: [A2.13–A2.15](#a2) (Alex, 2026-10-28).
 - **B3.8** Social follower counts ([A2.10](#a2), [F.1](#f)): a platform logo with its count is shown only for a firm-linked account in `v2_social_accounts` (source level 2, count read within 12 months). Platforms without that row are not shown. Do not invent a count. The "hidden until a mockup" hold is revoked.
 - **B3.9** Investment focus ([F.11](#f)) sits with the header tags, for every firm, under the Sectors label. Website labels are the stored words. The source stays stored and is not drawn. When that list is empty, the same label shows the sector names from recorded deals, with no counts. Fewer than 5 still show. Nothing to show: the field is hidden. No arrow or chevron. The pill type and spacing stay as they are.
+- **B3.10** Average check sits on the same line as the stage pills. After those pills: a thin divider, the label AVG CHECK, then one pill with the amount. The pill matches the stage pills. `v2_firm_page` returns `firm.check_size`, one value, the current published `amount_text` from `v2_firm_check_sizes` (`is_current` and not archived). Several current rows: the latest `read_on`, then the highest id. `min_usd`, `max_usd`, `program_name`, and the source URL stay stored and are not drawn. No current published amount: no label and no divider. No arrow.
 
 <a id="b4"></a>
 ## B4. SEC fact pills

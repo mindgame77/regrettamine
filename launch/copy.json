@@ -689,7 +689,7 @@
   "searched_nf": "Nothing found.",
   "name_only": "A person with the same name appears on {list}; we couldn't confirm it's the same person.",
   "header": {
-    "_note": "Firm header labels (js/company.js). The hero card row is not drawn. The HQ city stays in the meta line. SEC facts with an SEC source stay as linked pills. Regulatory AUM and Fund gross assets are different figures. A stored Assets or AUM label that is not a gross-asset figure reads as Regulatory AUM.",
+    "_note": "Firm header labels (js/company.js). The hero card row is not drawn. The HQ city stays in the meta line. SEC facts with an SEC source stay as linked pills. Regulatory AUM and Fund gross assets are different figures. A stored Assets or AUM label that is not a gross-asset figure reads as Regulatory AUM. Average check is the label on the stages pill line when firm.check_size is set. No value: no label and no divider.",
    "hq": "HQ",
    "staff": "Staff",
    "investment_staff": "Investment staff",
@@ -701,6 +701,7 @@
    "founded": "Founded {y}",
    "industries": "Sectors",
    "stages": "Stages",
+   "avg_check": "AVG CHECK",
    "social": {
     "_note": "Social pills under the meta line: follower count only, accounts linked from the firm's own website (firm_page.firm.social). No data: no row.",
     "row": "Social accounts",
