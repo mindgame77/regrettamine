@@ -754,6 +754,7 @@
    "deals_12m": "Deals, this year",
    "fund": "Latest fund",
    "raised": "{amount} raised",
+   "assets_as_of": "Assets as of {date}",
    "filing": "Filing",
    "src_link": "Source",
    "announced_fund": ["{n} fund announced", "{n} funds announced"],

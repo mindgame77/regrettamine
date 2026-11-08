@@ -1,4 +1,5 @@
-// Fund asset rows: each current fund's 2021-2026 amount and its as-of date.
+// Fund asset rows: each current fund's 2021-2026 amount, only inside the Show all popup,
+// labeled assets as of that date. The same rows must not appear on the page itself.
 // node --test tests/fund_assets.test.mjs
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -80,7 +81,7 @@ const fundsSec = { n: 2, items: [
   { name: 'Other Fund, L.P.', raised_usd: 5000000000, date: '2024-05-01', url: EDGAR },
 ] };
 
-test('each 2021-2026 fund asset shows its amount and as-of date, and replaces the same fund', () => {
+test('each 2021-2026 fund asset is only in the popup, labeled assets as of its date, and replaces the same fund', () => {
   created.length = 0;
   const html = paint({
     activity: {
@@ -93,14 +94,21 @@ test('each 2021-2026 fund asset shows its amount and as-of date, and replaces th
       ] },
     },
   });
-  assert.match(html, /<b>Sequoia Capital Fund<\/b><span>\$27\.2B<\/span><span>Nov 4, 2026<\/span>/);
-  assert.match(html, /<b>Sequoia Capital Growth Fund<\/b><span>\$81M<\/span><span>Mar 30, 2021<\/span>/);
-  assert.doesNotMatch(html, /Old Asset/);
+  assert.match(html, /Latest fund/);
+  assert.match(html, /\$1M raised/);
+  assert.match(html, /Show all \(2 funds\)/);
+  assert.doesNotMatch(html, /class="adl"/);
+  assert.doesNotMatch(html, /\$27\.2B|\$81M|\$9B/);
+  assert.doesNotMatch(html, /Assets as of|Nov 4, 2026|Mar 30, 2021/);
+  assert.doesNotMatch(html, /Sequoia Capital Growth Fund|Old Asset/);
+  assert.doesNotMatch(html, /<b>Sequoia Capital Fund<\/b><span>/);
   const ov = created.find(e => e.id === 'actfunds');
   assert.ok(ov, 'funds popup made');
   const popup = ov.innerHTML;
   assert.equal((popup.match(/Sequoia Capital Fund</g) || []).length, 1);
-  assert.match(popup, /<b>Sequoia Capital Fund<\/b><span>\$27\.2B<\/span><span>Nov 4, 2026<\/span>/);
+  assert.match(popup, /<b>Sequoia Capital Fund<\/b><span>\$27\.2B<\/span><span>Assets as of Nov 4, 2026<\/span>/);
+  assert.match(popup, /<b>Sequoia Capital Growth Fund<\/b><span>\$81M<\/span><span>Assets as of Mar 30, 2021<\/span>/);
+  assert.doesNotMatch(popup, /\$27\.2B raised|\$81M raised/);
   assert.match(popup, /<b>Other Fund<\/b><span>\$5B<\/span><span>2024<\/span>/);
   assert.doesNotMatch(popup, /Old Asset/);
 });

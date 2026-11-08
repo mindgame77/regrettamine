@@ -1807,7 +1807,7 @@
     new MutationObserver(markTaps).observe(document.body, { childList: true, subtree: true }); markTaps();
   }
   const fundsLine = (P, n) => '<span class="afl">' + showAllLink(P.open, 'actfunds', P.open ? ' aria-haspopup="dialog"' : '', 'Show all (' + n + (n === 1 ? ' fund)' : ' funds)')) + '</span>';
-  // Current v2_fund_assets for 2021-2026. Each row is that fund's amount and its as-of date.
+  // Current v2_fund_assets for 2021-2026. Each row is that fund's amount, labeled assets as of its date.
   function fundAssetRows(A) {
     const items = A && A.fund_assets && A.fund_assets.items;
     if (!Array.isArray(items)) return [];
@@ -1826,7 +1826,7 @@
   function fundRows(fs) {
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_fund) + '</span><span>' + esc(AC.h_amount) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + fs.map(x => { const u = safeUrl(x.url);
-        const when = x.asset ? (fdate(x.date) || '') : yearOf(x.date);
+        const when = x.asset ? fmt(AC.assets_as_of || 'Assets as of {date}', { date: fdate(x.date) || '' }) : yearOf(x.date);
         return '<div class="ad"><b>' + esc(fundName(x.name)) + '</b><span>' + esc(x.announced ? x.raised_display : clampMoney(x.raised_display || money(x.raised_usd))) + '</span><span>' + esc(when) + '</span>'
           + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(x.announced ? AC.src_link : AC.filing) + '</a>' : '<span></span>') + '</div>'; }).join('') + '</div>';
   }
@@ -1932,10 +1932,8 @@
     const lab = labFirm(P);
     if (P.open && fd !== undefined) actModal('actdeals', fmt(AC.deals_title, { n: fd ? fd.length : n.deals, firm }), fd ? dealRows(fd, lab) : '', !fd && { slug: P.firm.slug, kind: 'deals', lab, head: '' });
     if (P.open && fr !== undefined) actModal('actrevs', fmt(AC.reviews_title, { n: fr ? fr.length : n.reviews, firm }), fr ? fr.map(revCard).join('') : '', !fr && { slug: P.firm.slug, kind: 'revs' });
-    const assetTable = assets.length ? fundRows(newestFirst(assets)) : '';
-    if (!tiles.length && !lone && !assetTable) return '';
-    const head = tiles.length ? tiles.join('') : (lone ? fundsLine(P, fsn) : '');
-    return (head ? '<div class="ats">' + head + '</div>' : '') + assetTable;
+    if (!tiles.length && !lone) return '';
+    return '<div class="ats">' + (tiles.length ? tiles.join('') : fundsLine(P, fsn)) + '</div>';
   }
   function paintActivity(main, P) {
     const box = main.querySelector('.actw'); if (!box) return;
