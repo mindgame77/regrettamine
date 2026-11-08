@@ -18,6 +18,8 @@ def test_only_the_rejection_freeze_changes():
     new = _block(SQL, "$new$")
     old = _block(SQL, "$old$")
     assert "GROUP BY coalesce(firm_id::text, payload->>'firm_ref')" in new
+    assert "max(firm_rej)" in new and "AS firm_rej" in new
+    assert "max(n)" not in new and " AS n " not in new
     assert "rej_today >= 100 THEN" in new
     assert "rejections today for one firm" in new
     assert "date_trunc('day', now() AT TIME ZONE 'America/Los_Angeles')" in new
@@ -32,6 +34,15 @@ def test_only_the_rejection_freeze_changes():
     assert "create or replace function public.v2_research_submit" not in SQL.lower()
     assert "create table" not in SQL.lower()
     assert "v2_firm_page" not in SQL
+
+
+def test_a_database_that_already_used_the_name_n_is_renamed():
+    fix = (ROOT / "supabase/migrations/20261108195000_v2_bot_key_freeze_count_name.sql").read_text()
+    assert "AS firm_rej" in _block(fix, "$new$")
+    assert "max(n)" in _block(fix, "$old$")
+    assert "firms_hour > 100" in fix
+    assert "bot_key_id=322" not in fix
+    assert "to_regprocedure('public.v2_research_submit(uuid,jsonb,boolean)') is null" in fix
 
 
 def test_undo_restores_the_all_firms_count_and_leaves_the_key():

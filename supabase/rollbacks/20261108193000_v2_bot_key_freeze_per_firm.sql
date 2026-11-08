@@ -17,8 +17,8 @@ begin
     raise notice 'v2_research_submit freeze rule already counts every firm';
     return;
   end if;
-  old := $old$  SELECT coalesce(max(n), 0)::int INTO rej_today FROM (
-    SELECT count(*) AS n FROM public.v2_research_submissions
+  old := $old$  SELECT coalesce(max(firm_rej), 0)::int INTO rej_today FROM (
+    SELECT count(*) AS firm_rej FROM public.v2_research_submissions
     WHERE bot_key_id = bk.bot_key_id AND status LIKE 'Rejected:%'
       AND received_at >= date_trunc('day', now() AT TIME ZONE 'America/Los_Angeles') AT TIME ZONE 'America/Los_Angeles'
     GROUP BY coalesce(firm_id::text, payload->>'firm_ref')
