@@ -75,6 +75,15 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 - **P.4** The snapshot items (.1 to .6 in Parts B and C) describe what the live site drew on 2026-10-27. Where a snapshot item disagrees with the rules in Part A, the rules in Part A win.
 - **P.5** What to collect for the current firm report is [F](#f). What does not fit, for the next few firms, is [N](#n). Where F disagrees with a 2026-10-27 snapshot line about a field, F wins. Tile layout is `.cursor/rules/design.mdc`. That file is not a collect rule.
 
+## Website first
+
+1. Look at the firm's own website first.
+2. Take everything it shows for each company: name, year, stage, website and sector.
+3. What we take from the firm's website is used as it is, with no extra proof.
+4. If the firm's site has no sector, take it from the company's own website.
+5. If a stage name doesn't match our rounds, hold that company and ask Alex.
+6. Information from the firm's website goes live right away; only information that needs checking waits for Alex's confirmation.
+
 <a id="f"></a>
 ## F. Firm report collect (v2)
 
