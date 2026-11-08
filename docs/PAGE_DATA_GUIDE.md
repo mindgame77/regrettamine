@@ -79,10 +79,11 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 
 1. Look at the firm's own website first.
 2. Take everything it shows for each company: name, year, stage, website and sector.
-3. What we take from the firm's website is used as it is, with no extra proof.
+3. From a reliable source (the firm's own site, the company's own site, an official register, or a major news outlet): use the info as-is with one source link; no quote needed.
 4. If the firm's site has no sector, take it from the company's own website.
 5. If a stage name doesn't match our rounds, hold that company and ask Alex.
-6. Information from the firm's website goes live right away; only information that needs checking waits for Alex's confirmation.
+6. TOXY does a quick check (right firm, year range, our round names, our sectors, no duplicates).
+7. Only info from weak or unclear sources waits for Alex's yes.
 
 <a id="f"></a>
 ## F. Firm report collect (v2)
