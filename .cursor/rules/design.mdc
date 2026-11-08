@@ -56,7 +56,7 @@ One layout for every firm. Do not redesign a tile per firm.
 - Sectors, Rounds, and Deals announced share one 12 months / All time control.
 - An industry name keeps one color from the approved 18-color palette in the charts, the sector popup, and deal rows. Rank does not choose the color. Other is always slate `#A7A2C2`.
 - Team is the real people only. No filler. A social pill is the icon and the follower count, with no platform name.
-- Limited partners are one line: the name, the stored amounts, and one source. No commitment count. Show all lists every stored source.
+- Limited partners and News are off. Do not draw those tiles.
 - What investors look for: the Summary label and the summary sentence are bold. The attribution stays regular. Rows alternate soft blue and soft gray.
 - Legal titles are complete, never ellipsized. Active is soft red, Dismissed soft gray, Settled soft green.
 - Every fact comes from the existing database. Do not invent or hardcode a firm's facts.

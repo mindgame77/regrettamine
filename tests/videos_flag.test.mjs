@@ -92,8 +92,9 @@ test('videos render before Team and News, three tiles, most views first, no sour
   const P = page([{ key: 'videos', items: a16zVideos.concat([low, press, blank, { title: 'No views', channel: 'C', url: 'https://youtu.be/yyyyyyyyyyy', date: '2024-05-01', views: null }]) }]);
   const secs = pageSecs(P);
   const keys = secs.map(s => s.key);
-  assert.ok(keys.indexOf('people') < keys.indexOf('videos') && keys.indexOf('videos') < keys.indexOf('news'));
-  assert.ok(keys.indexOf('news') < keys.indexOf('lps'));
+  assert.ok(keys.indexOf('people') < keys.indexOf('videos'));
+  assert.equal(keys.indexOf('news'), -1);
+  assert.equal(keys.indexOf('lps'), -1);
   const v = secs.find(s => s.key === 'videos');
   assert.equal(v.title, 'Videos');
   assert.equal(v.subtitle, '');
@@ -124,8 +125,9 @@ test('videos render before Team and News, three tiles, most views first, no sour
   assert.match(block, /Lex Fridman · Jan 26, 2025 · 1,547,628 views/);
   assert.doesNotMatch(block, /A smaller interview|Not a video|No views|abcdefghijk/);
   const teamAt = html.indexOf('id="team"');
-  const newsAt = html.indexOf('id="news"');
-  assert.ok(videosAt >= 0 && videosAt < teamAt && teamAt < newsAt);
+  assert.ok(videosAt >= 0 && videosAt < teamAt);
+  assert.equal(html.indexOf('id="news"'), -1);
+  assert.equal(html.indexOf('id="lps"'), -1);
 });
 
 test('a firm with no videos renders no Videos section', () => {
@@ -138,7 +140,7 @@ test('a firm with no videos renders no Videos section', () => {
   render(main, P);
   assert.doesNotMatch(pmain.innerHTML, /id="videos"|class="vgrid"|Videos/);
   assert.match(pmain.innerHTML, /id="team"/);
-  assert.match(pmain.innerHTML, /id="news"/);
+  assert.doesNotMatch(pmain.innerHTML, /id="news"|id="lps"/);
 });
 
 test('video tiles use a 3-column grid that stacks on a phone', () => {

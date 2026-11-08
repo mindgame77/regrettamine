@@ -25,7 +25,7 @@ vm.runInContext(fs.readFileSync(new URL('launch/js/dates.js', root), 'utf8'), sa
 vm.runInContext(fs.readFileSync(new URL('launch/js/company.js', root), 'utf8'), sandbox, { filename: 'company.js' });
 const { render } = sandbox.window.RegretCompany;
 
-test('one line per LP name, commitments counted, source pill on the same line', () => {
+test('LP rows in the payload are not drawn', () => {
   const src = [{ label: 'CalPERS', url: 'https://www.calpers.ca.gov/report.pdf' }];
   const items = [
     { label: 'CalPERS', value: '$50M', src },
@@ -35,14 +35,10 @@ test('one line per LP name, commitments counted, source pill on the same line', 
   const P = { open: true, firm: { name: 'Example Capital', slug: 'example' }, checks: [], sections: [{ key: 'lps', count: 3, items }] };
   const main = node(), pmain = node(); main.set('.pmain', pmain); render(main, P);
   const html = pmain.innerHTML;
-  const rows = html.match(/<div class="rw lpl">/g) || [];
-  assert.equal(rows.length, 2);
-  assert.doesNotMatch(html, /class="rn"/);
-  assert.doesNotMatch(html, /commitments/);
-  assert.match(html, /<div class="rw lpl"><div class="rm"><span class="rt">CalPERS · \$50M · \$20M<\/span> <div class="scs"><a class="sc" href="https:\/\/www\.calpers\.ca\.gov\/report\.pdf"/);
+  assert.doesNotMatch(html, /class="rw lpl"|id="lps"|Limited partners|CalPERS/);
 });
 
-test('the tile shows one source and the popup shows every source', () => {
+test('an LP payload does not open the LP popup', () => {
   const made = [];
   sandbox.document.body = { appendChild(el) { made.push(el); } };
   sandbox.document.getElementById = () => null;
@@ -56,14 +52,6 @@ test('the tile shows one source and the popup shows every source', () => {
   ].concat(extras);
   const P = { open: true, firm: { name: 'Example Capital', slug: 'example' }, checks: [], sections: [{ key: 'lps', count: 6, items }] };
   const main = node(), pmain = node(); main.set('.pmain', pmain); render(main, P);
-  const tile = pmain.innerHTML;
-  const calpers = tile.slice(tile.indexOf('CalPERS'), tile.indexOf('CalPERS') + 500);
-  assert.doesNotMatch(tile, /commitments/);
-  assert.match(calpers, /example\.com\/a/);
-  assert.doesNotMatch(calpers, /example\.com\/b|example\.com\/c/);
-  const popup = made.map(el => el.innerHTML).join('');
-  assert.match(popup, /example\.com\/a/);
-  assert.match(popup, /example\.com\/b/);
-  assert.match(popup, /example\.com\/c/);
-  assert.doesNotMatch(popup, /commitments/);
+  assert.doesNotMatch(pmain.innerHTML, /id="lps"|actlps|CalPERS/);
+  assert.equal(made.length, 0);
 });
