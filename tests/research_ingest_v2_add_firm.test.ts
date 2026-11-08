@@ -101,8 +101,8 @@ Deno.test("duplicate domain is refused and a new domain is still accepted", asyn
   const dupBody = await dup.json();
   eq(dup.status, 409, "dup status");
   eq(dupBody.error, "a firm with this website already exists", "dup error");
-  eq(dupBody.slug, "plugandplay", "dup slug");
-  eq(dupBody.id, plugId, "dup id");
+  eq(dupBody.slug, "plug-and-play", "dup slug");
+  eq(dupBody.id, 7, "dup id");
   eq(calls.map((c) => c.name), ["ingest_auth"], "no create");
   eq(reads.map((r) => r.table).sort(), ["firms", "v2_firms"], "both tables");
   const firmsUrl = reads.find((r) => r.table === "firms")?.url ?? "";
@@ -121,6 +121,17 @@ Deno.test("duplicate domain is refused and a new domain is still accepted", asyn
   eq(v2Body.slug, "plug-and-play", "v2 slug");
   eq(v2Body.id, 7, "v2 id");
   eq(calls.some((c) => c.name === "v2_research_add_firm"), false, "v2 no create");
+
+  calls.length = 0;
+  reads.length = 0;
+  firmRows = [{ id: plugId, slug: "plugandplay", primary_domain: "plugandplaytechcenter.com" }];
+  v2Rows = [];
+  const firmsOnly = await h(req({ action: "add_firm", firm: { name: "Plug and Play", website: "https://www.plugandplaytechcenter.com/", registry_id: "vc-999" } }));
+  const firmsBody = await firmsOnly.json();
+  eq(firmsOnly.status, 409, "firms status");
+  eq(firmsBody.slug, "plugandplay", "firms slug");
+  eq(firmsBody.id, plugId, "firms id");
+  eq(calls.some((c) => c.name === "v2_research_add_firm"), false, "firms no create");
 
   calls.length = 0;
   reads.length = 0;

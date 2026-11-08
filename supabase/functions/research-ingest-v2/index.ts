@@ -25,17 +25,17 @@ const domainOr = (column: string, domain: string) =>
   [domain, `www.${domain}`, `*://${domain}`, `*://www.${domain}`, `*://${domain}/*`, `*://www.${domain}/*`, `${domain}/*`, `www.${domain}/*`]
     .map((v) => `${column}.ilike."${v.replace(/"/g, "\"\"")}"`).join(",");
 const sameDomain = (stored: unknown, domain: string) => typeof stored === "string" && firmDomain(stored) === domain;
-// public.firms wins when both tables have the domain: that slug is the one the site uses.
+// v2_firms wins when both tables have the domain: bots submit facts to that firm_id.
 async function existingFirm(domain: string): Promise<{ error?: true; slug?: string; id?: string | number }> {
   const [v1, v2] = await Promise.all([
     db.from("firms").select("id, slug, primary_domain").is("deleted_at", null).or(domainOr("primary_domain", domain)).limit(50),
     db.from("v2_firms").select("firm_id, slug, website_url, archived").or(domainOr("website_url", domain)).limit(50),
   ]);
   if (v1.error || v2.error) return { error: true };
-  const firm = (v1.data ?? []).find((r) => r.slug && sameDomain(r.primary_domain, domain));
-  if (firm) return { slug: String(firm.slug), id: firm.id };
   const row = (v2.data ?? []).find((r) => r.archived !== true && r.slug && sameDomain(r.website_url, domain));
   if (row) return { slug: String(row.slug), id: row.firm_id };
+  const firm = (v1.data ?? []).find((r) => r.slug && sameDomain(r.primary_domain, domain));
+  if (firm) return { slug: String(firm.slug), id: firm.id };
   return {};
 }
 Deno.serve(async (req) => {
