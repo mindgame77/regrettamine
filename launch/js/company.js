@@ -1479,9 +1479,9 @@
     return links.join('');
   }
   const tile = (lab, big, sub, cls) => '<div class="att ' + cls + '"><small>' + esc(lab) + '</small><b>' + big + '</b><span>' + sub + '</span></div>';
-  // The new fund box is live only on these firms. Other pages keep the previous tile.
-  const LAB_FIRMS = { a16z: 1, 'y-combinator': 1, sequoia: 1, lightspeed: 1, generalcatalyst: 1, plugandplay: 1, accel: 1, greenoaks: 1, 'khosla-ventures': 1, 'mio-partners': 1 };
-  const labFirm = (P) => !!(P.firm && LAB_FIRMS[P.firm.slug]);
+  // Sector column for every firm this page loaded. firm_page is v2_firm_page, so a loaded firm is live in v2.
+  // The fund tile is the same path for every loaded firm. No slug list.
+  const labFirm = (P) => !!(P.firm && P.firm.slug);
   // A fund line already on the page: "Name · $22.7B · 2026-02-05". AUM sentences and $0 lines are not funds.
   const amountText = (part) => { const m = String(part || '').trim().match(/^(\$[0-9][0-9,]*(?:\.[0-9]+)?(?:\s*[BMK])?)$/i); return m ? m[1].replace(/\s+/g, '') : ''; };
   const amountNumber = (text) => { const m = String(text || '').replace(/,/g, '').match(/^\$([0-9]*\.?[0-9]+)([BMK])?$/i); if (!m) return 0;

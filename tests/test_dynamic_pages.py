@@ -12,7 +12,10 @@ DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
 
 @pytest.mark.skipif(not shutil.which("node"), reason="node not installed")
 def test_edge_renderer_matches_static_build():
-    subprocess.run(["python3", "launch/build.py"], cwd=ROOT, check=True, capture_output=True)
+    env = os.environ.copy()
+    env.pop("SUPABASE_URL", None)
+    env.pop("SUPABASE_ANON_KEY", None)
+    subprocess.run(["python3", "launch/build.py"], cwd=ROOT, check=True, capture_output=True, env=env)
     r = subprocess.run(["node", "--test", "launch/edge/firm.test.mjs"], cwd=ROOT, capture_output=True, text=True)
     assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-2000:]
 

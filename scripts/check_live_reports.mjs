@@ -5,7 +5,6 @@
 import { chromium } from 'playwright';
 
 const BASE = (process.env.REGRET_BASE || 'https://regretamin.com/').replace(/\/?$/, '/');
-const FIRMS = (process.env.REGRET_FIRMS || 'a16z,y-combinator,sequoia,lightspeed,generalcatalyst,plugandplay,accel,greenoaks,khosla-ventures,mio-partners').split(',');
 const problems = [];
 const fail = (m) => { problems.push(m); console.log('FAIL ' + m); };
 const ok = (m) => console.log('ok   ' + m);
@@ -14,9 +13,33 @@ async function retry(fn, tries = 4) { // Pages can take a minute to serve the ne
   for (let i = 1; ; i++) { try { return await fn(); } catch (e) { if (i >= tries) throw e; await new Promise(r => setTimeout(r, 15000)); } }
 }
 
+// Live firms are whoever the public sitemap lists (firm_sitemap / v2_firm_live). REGRET_FIRMS overrides that for a manual run.
+async function firmSlugs(request) {
+  const fromEnv = (process.env.REGRET_FIRMS || '').split(',').map((s) => s.trim()).filter(Boolean);
+  if (fromEnv.length) return fromEnv;
+  const sm = await request.get(BASE + 'sitemap.xml');
+  if (!sm.ok()) throw new Error('sitemap status ' + sm.status());
+  let xml = await sm.text();
+  if (/<sitemapindex/.test(xml)) {
+    const kids = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname.replace(/^\//, ''));
+    const firmKids = kids.filter((k) => /firms-\d+\.xml$/.test(k));
+    let all = '';
+    for (const k of firmKids) {
+      const r = await request.get(BASE + k);
+      if (!r.ok()) throw new Error('sitemap child ' + k + ' status ' + r.status());
+      all += await r.text();
+    }
+    xml = all;
+  }
+  const slugs = [...new Set([...xml.matchAll(/\/vc\/([a-z0-9-]+)\//g)].map((m) => m[1]))];
+  if (!slugs.length) throw new Error('sitemap listed no firm pages');
+  return slugs;
+}
+
 const browser = await chromium.launch();
 const page = await browser.newPage();
 try {
+  const FIRMS = await firmSlugs(page.request);
   // Home
   await retry(async () => {
     const r = await page.goto(BASE, { waitUntil: 'domcontentloaded', timeout: 45000 });

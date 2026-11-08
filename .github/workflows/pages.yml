@@ -101,7 +101,7 @@ jobs:
           python3 -m pytest -q
 
   # Cloudflare Pages is the live site (regretamin.com). Runs only when CLOUDFLARE_API_TOKEN and
-  # CLOUDFLARE_ACCOUNT_ID secrets exist. A push builds the 10 lab firms. rollout=true builds every firm.
+  # CLOUDFLARE_ACCOUNT_ID secrets exist. A push builds every firm firm_sitemap returns.
   cloudflare-preview:
     if: >-
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
@@ -112,7 +112,6 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       LAB_ONLY: ${{ (github.event_name == 'workflow_dispatch' && (inputs.rollout == true || inputs.rollout == 'true')) && '0' || '1' }}
-      REGRET_FIRMS: a16z,y-combinator,sequoia,lightspeed,generalcatalyst,plugandplay,accel,greenoaks,khosla-ventures,mio-partners
     steps:
       - name: Checkout
         if: env.CLOUDFLARE_API_TOKEN != ''
@@ -148,7 +147,7 @@ jobs:
           # restarts services, which took about 11 minutes on 2026-10-27. The page check is ~10s.
           npx playwright install chromium
           node scripts/check_live_reports.mjs
-      - name: Page speed (anon firm_page, lab firms, limit 2000 ms)
+      - name: Page speed (anon firm_page, live firms, limit 2000 ms)
         if: env.CLOUDFLARE_API_TOKEN != ''
         timeout-minutes: 3
         env:
