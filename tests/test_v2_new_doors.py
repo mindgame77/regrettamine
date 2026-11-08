@@ -50,3 +50,13 @@ def test_docs_have_one_example_per_new_door():
         ):
             assert table in text
         assert "150" in text
+
+
+def test_team_shows_founders_and_current_leader():
+    text = (ROOT / "supabase/migrations/20261108000000_v2_team_current_leader.sql").read_text(encoding="utf-8")
+    guide = GUIDE.read_text(encoding="utf-8")
+    assert "v2_is_leader_title" in text
+    assert "and (is_founder or v2_is_leader_title(title))" in text
+    assert "source_level = 3 and source_type = 'News' and v2_is_leader_title(title)" in text
+    assert "Founders plus whoever runs the firm today, and nobody else" in guide
+    assert "reputable dated news source" in guide
