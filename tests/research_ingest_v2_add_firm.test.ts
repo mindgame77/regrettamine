@@ -93,6 +93,7 @@ Deno.test("no key -> 401", async () => {
 
 Deno.test("duplicate domain is refused and a new domain is still accepted", async () => {
   const plugId = "52752433-ef2f-4fbe-b79b-ea881d8755fa";
+  const noFirms = () => { if (reads.some((r) => r.table === "firms")) throw new Error(`looked at public.firms\n${JSON.stringify(reads)}`); };
   calls.length = 0;
   reads.length = 0;
   firmRows = [{ id: plugId, slug: "plugandplay", primary_domain: "plugandplaytechcenter.com" }];
@@ -104,48 +105,41 @@ Deno.test("duplicate domain is refused and a new domain is still accepted", asyn
   eq(dupBody.slug, "plug-and-play", "dup slug");
   eq(dupBody.id, 7, "dup id");
   eq(calls.map((c) => c.name), ["ingest_auth"], "no create");
-  eq(reads.map((r) => r.table).sort(), ["firms", "v2_firms"], "both tables");
-  const firmsUrl = reads.find((r) => r.table === "firms")?.url ?? "";
-  const v2Url = reads.find((r) => r.table === "v2_firms")?.url ?? "";
-  if (!firmsUrl.includes("deleted_at=is.null")) throw new Error(`firms query missed deleted_at\n${firmsUrl}`);
-  if (!firmsUrl.includes("plugandplaytechcenter.com") || !v2Url.includes("plugandplaytechcenter.com")) throw new Error(`query missed normalized domain\n${firmsUrl}\n${v2Url}`);
-  if (firmsUrl.includes("/about") || firmsUrl.includes("PlugAndPlay") || v2Url.includes("/about")) throw new Error("query kept the path or original case");
+  eq(reads.map((r) => r.table), ["v2_firms"], "v2 only");
+  noFirms();
+  const v2Url = reads[0].url;
+  if (!v2Url.includes("plugandplaytechcenter.com")) throw new Error(`query missed normalized domain\n${v2Url}`);
+  if (v2Url.includes("/about") || v2Url.includes("PlugAndPlay")) throw new Error("query kept the path or original case");
+
+  calls.length = 0;
+  reads.length = 0;
+  firmRows = [{ id: plugId, slug: "plugandplay", primary_domain: "only-on-firms.example" }];
+  v2Rows = [];
+  addReply = { ok: true, bot_id: "bot-a", firm_id: 42, created: true, slug: "only-on-firms" };
+  const firmsOnly = { name: "Only On Firms", website: "https://www.only-on-firms.example/about", registry_id: "vc-firms" };
+  const firmsRes = await h(req({ action: "add_firm", firm: firmsOnly }));
+  const firmsBody = await firmsRes.json();
+  eq(firmsRes.status, 200, "firms-only status");
+  eq(firmsBody.firm_id, 42, "firms-only id");
+  eq(firmsBody.created, true, "firms-only created");
+  eq(calls.map((c) => c.name), ["ingest_auth", "v2_research_add_firm"], "firms-only rpcs");
+  eq(calls[1].args.p_firm, firmsOnly, "firms-only firm");
+  noFirms();
 
   calls.length = 0;
   reads.length = 0;
   firmRows = [];
   v2Rows = [{ firm_id: 7, slug: "plug-and-play", website_url: "https://www.plugandplaytechcenter.com", archived: false }];
-  const v2only = await h(req({ action: "add_firm", firm: { name: "Plug and Play", website: "http://plugandplaytechcenter.com/team", registry_id: "vc-999" } }));
-  const v2Body = await v2only.json();
-  eq(v2only.status, 409, "v2 status");
-  eq(v2Body.slug, "plug-and-play", "v2 slug");
-  eq(v2Body.id, 7, "v2 id");
-  eq(calls.some((c) => c.name === "v2_research_add_firm"), false, "v2 no create");
-
-  calls.length = 0;
-  reads.length = 0;
-  firmRows = [{ id: plugId, slug: "plugandplay", primary_domain: "plugandplaytechcenter.com" }];
-  v2Rows = [];
-  const firmsOnly = await h(req({ action: "add_firm", firm: { name: "Plug and Play", website: "https://www.plugandplaytechcenter.com/", registry_id: "vc-999" } }));
-  const firmsBody = await firmsOnly.json();
-  eq(firmsOnly.status, 409, "firms status");
-  eq(firmsBody.slug, "plugandplay", "firms slug");
-  eq(firmsBody.id, plugId, "firms id");
-  eq(calls.some((c) => c.name === "v2_research_add_firm"), false, "firms no create");
-
-  calls.length = 0;
-  reads.length = 0;
-  firmRows = [{ id: plugId, slug: "plugandplay", primary_domain: "plugandplaytechcenter.com" }];
-  v2Rows = [{ firm_id: 7, slug: "plug-and-play", website_url: "https://www.plugandplaytechcenter.com", archived: true }];
-  addReply = { ok: true, bot_id: "bot-a", firm_id: 42, created: true, slug: "brand-new-firm" };
+  addReply = { ok: true, bot_id: "bot-a", firm_id: 43, created: true, slug: "brand-new-firm" };
   const firm = { name: "Brand New Firm", website: "https://www.brand-new-firm.example/about", registry_id: "vc-new" };
   const created = await h(req({ action: "add_firm", firm }));
   const createdBody = await created.json();
   eq(created.status, 200, "new status");
-  eq(createdBody.firm_id, 42, "new firm_id");
+  eq(createdBody.firm_id, 43, "new firm_id");
   eq(createdBody.created, true, "created");
   eq(calls.map((c) => c.name), ["ingest_auth", "v2_research_add_firm"], "new rpcs");
   eq(calls[1].args.p_firm, firm, "firm unchanged");
+  noFirms();
   firmRows = [];
   v2Rows = [];
 });
