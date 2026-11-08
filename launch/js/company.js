@@ -205,8 +205,9 @@
   // Industries and stages sit under the meta line and social row, above the activity cards.
   // One investment-focus rule for every firm (F.11). Website labels are the stored words. The source stays in the database and is not drawn.
   // An empty list draws nothing, including its label. No arrow or chevron.
-  // Average check is firm.check_size: one published amount. It sits on the stages pill line, after those pills,
-  // with a thin divider and the label. No value: no label and no divider. The source stays in the database and is not drawn.
+  // Average check is firm.check_size: one published amount, the formatted US dollar bounds.
+  // It sits on the stages pill line, after those pills, with a thin divider and the label.
+  // No value: no label and no divider. The source sentence stays in the database and is not drawn.
   const STAGE_ORDER = ['Pre-seed', 'Seed', 'Series A', 'Series B', 'Series C and later', 'Growth'];
   function tagBits(list, key) {
     return (list || []).map(x => String(x && typeof x === 'object' ? (x[key] || x.stage || x.text || '') : (x == null ? '' : x)).trim()).filter(Boolean);

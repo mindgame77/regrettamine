@@ -145,6 +145,25 @@ test('a missing or blank check size draws no label and no divider', () => {
   assert.doesNotMatch(only, /Stages|htag-rule/);
 });
 
+test('formatted check bounds render in the pill and a sentence would only if the page sent it', () => {
+  const bounds = read('supabase/migrations/20261109000100_v2_check_size_bounds.sql');
+  const select = bounds.slice(bounds.indexOf("'check_size',(select case"), bounds.indexOf('limit 1),$new$'));
+  assert.match(select, /public\._money_display\(c\.min_usd,'USD'\) \|\| '–' \|\| public\._money_display\(c\.max_usd,'USD'\)/);
+  assert.match(select, /'Up to ' \|\| public\._money_display\(c\.max_usd,'USD'\)/);
+  assert.match(select, /public\._money_display\(c\.min_usd,'USD'\) \|\| '\+'/);
+  assert.doesNotMatch(select, /amount_text/);
+  for (const amount of ['$25M', '$25M–$75M', 'Up to $25M', '$25M+']) {
+    const html = headerHtml({ name: 'Greenoaks', stages: ['Series B', 'Growth', 'Series C'], check_size: amount });
+    assert.match(html, new RegExp('<span class="hp">' + amount.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '</span>'));
+    assert.match(html, /AVG CHECK/);
+  }
+  const sentence = headerHtml({
+    name: 'Greenoaks', stages: ['Seed'],
+    check_size: 'Initial investments generally range from $25 million to $75 million',
+  });
+  assert.match(sentence, /Initial investments generally range from \$25 million to \$75 million/);
+});
+
 test('check size text is escaped and the page reads one published amount_text', () => {
   const html = headerHtml({ name: 'Example Firm', stages: ['Seed'], check_size: '<b>$250K</b>' });
   assert.match(html, /&lt;b&gt;\$250K&lt;\/b&gt;/);

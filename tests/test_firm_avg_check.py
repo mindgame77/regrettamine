@@ -28,7 +28,7 @@ def test_guide_puts_avg_check_on_the_stages_line():
     guide = GUIDE.read_text(encoding="utf-8")
     assert "B3.10" in guide
     assert "AVG CHECK" in guide
-    assert "No current published amount: no label and no divider." in guide
+    assert "No usable positive whole-dollar bound: no label and no divider." in guide
     assert "source URL stay stored and are not drawn" in guide
 
 

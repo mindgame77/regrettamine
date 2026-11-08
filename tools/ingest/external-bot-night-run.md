@@ -54,9 +54,11 @@ A new row stays hidden until the Checker passes it. Do not send display name, pa
 {"firm_id":41,"box":"F2","table":"v2_firm_industries","fact":{"industry_text":"Developer tools","position":1,"source_url":"https://example.com/focus","source_level":"2","source_date":"2026-11-01","source_type":"Firm website"}}
 {"firm_id":41,"box":"F1","table":"v2_firm_types_firms","fact":{"firm_type":"VC","source_url":"https://example.com/about","source_level":"2","source_date":"2026-11-01","source_type":"Firm website"}}
 {"firm_id":41,"box":"F8","table":"firm_fund_announcements","fact":{"name":"Example Fund","amount_usd":100000000,"display":"$100M","announced_on":"2026-01-15","source_url":"https://example.com/fund","source_level":"2","source_date":"2026-11-01","source_type":"Firm website"}}
-{"firm_id":41,"box":"F2","table":"v2_firm_check_sizes","fact":{"program_name":"Seed","amount_text":"$500K to $2M","min_usd":500000,"max_usd":2000000,"source_url":"https://example.com/seed","source_level":"2","source_date":"2026-11-01","source_type":"Firm website"}}
+{"firm_id":41,"box":"F2","table":"v2_firm_check_sizes","fact":{"program_name":"Seed","amount_text":"Seed checks run from $500,000 to $2 million","min_usd":500000,"max_usd":2000000,"source_url":"https://example.com/seed","source_level":"2","source_date":"2026-11-01","source_type":"Firm website"}}
 {"firm_id":41,"box":"F1","table":"v2_firm_former_names","fact":{"name":"Example Old Name","until_year":2010,"source_url":"https://example.com/about","source_level":"2","source_date":"2026-11-01","source_type":"Firm website"}}
 ```
+
+Check size: `amount_text` is the source excerpt and is not shown. `min_usd` and `max_usd` are positive whole US dollars. Both equal is one exact amount. One side only stays open. Do not copy a single number into the other bound. A missing, invalid, or reversed amount is rejected for that item. A currency other than USD is rejected. The example above is shown as `$500K–$2M`.
 
 ### 3. Failed facts
 
