@@ -486,9 +486,11 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 .ph .socp{max-height:none}
 .sc.soc{display:inline-flex;align-items:center;gap:6px}.sc.soc b{font-weight:700}
 .sc.soc:hover{text-decoration:underline}.sc.soc:focus-visible{outline:2px solid var(--vio);outline-offset:2px}.sc.soc svg{flex:none;display:block}
-/* Industries and stages: grey neutral pills under the social row, above the activity cards. No source. */
+/* Industries and stages: grey neutral pills under the social row, above the activity cards. */
 .htags{display:flex;flex-direction:column;gap:14px;margin-top:16px}
 .htag-l{display:block;color:var(--mute);font-size:13px;font-weight:600;margin:0 0 6px}
+.htag-l .htag-src{text-transform:none;letter-spacing:0;color:var(--vio);text-decoration:none;margin-left:8px}
+.htag-l .htag-src:hover,.htag-l .htag-src:focus-visible{text-decoration:underline}
 .htag .secp{flex-wrap:wrap;max-height:none;overflow:visible;gap:8px;margin-top:0}
 .htag .hp{cursor:default;margin:0;max-width:none}
 .htag .hp:hover{background:#F1F0F5}
