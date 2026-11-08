@@ -162,6 +162,8 @@ Preliminary, for the next few firms. This is not a permanent ignore rule. The ea
   - Fund announcement: `{"firm_id":2,"box":"F8","table":"firm_fund_announcements","fact":{"name":"Example Fund","amount_usd":100000000,"display":"$100M","announced_on":"2026-01-15","source_url":"https://example.com/fund","source_level":"2","source_date":"2026-11-01","source_type":"Firm website"}}`
   - Check size: `{"firm_id":2,"box":"F2","table":"v2_firm_check_sizes","fact":{"program_name":"Seed","amount_text":"$500K to $2M","min_usd":500000,"max_usd":2000000,"source_url":"https://example.com/seed","source_level":"2","source_date":"2026-11-01","source_type":"Firm website"}}`
   - Former name: `{"firm_id":2,"box":"F1","table":"v2_firm_former_names","fact":{"name":"Example Old Name","until_year":2010,"source_url":"https://example.com/about","source_level":"2","source_date":"2026-11-01","source_type":"Firm website"}}`
+- **A3.4** `POST {"action":"claim"}` reserves one free firm for 6 hours and returns its `firm_id`, `slug`, `name`, and `website`. A free firm is unclaimed, or its hold is older than 6 hours, and two claims at once never get the same firm.
+- **A3.5** `POST {"action":"done","firm_id":N}` finishes that bot's own hold. A hold older than 6 hours can be claimed again. `add_firm` and `submit` stay as they are.
 
 <a id="a4"></a>
 ## A4. The holding door

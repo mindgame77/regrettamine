@@ -12,6 +12,8 @@ let firmRows: any[] = [];
 let v2Rows: any[] = [];
 let authReply: any = { ok: true, key_id: "11111111-1111-1111-1111-111111111111" };
 let addReply: any = { ok: true, bot_id: "bot-a", firm_id: 41, created: true, slug: "example-ventures" };
+let claimReply: any = { ok: true, bot_id: "bot-a", firm_id: 7, slug: "plug-and-play", name: "Plug and Play", website: "https://www.plugandplaytechcenter.com" };
+let doneReply: any = { ok: true, bot_id: "bot-a", firm_id: 7, done: true };
 let submitReply: any = { ok: true, bot_id: "bot-a", accepted: 1, rejected: 0, held: 0, results: [{ index: 0, status: "Accepted" }] };
 let verdictReply: any = { ok: true, bot_id: "checker" };
 globalThis.fetch = async (input: any, init?: any) => {
@@ -23,6 +25,8 @@ globalThis.fetch = async (input: any, init?: any) => {
     calls.push({ name: m[1], args: body });
     if (m[1] === "ingest_auth") return ok(authReply);
     if (m[1] === "v2_research_add_firm") return ok(addReply);
+    if (m[1] === "v2_research_claim") return ok(claimReply);
+    if (m[1] === "v2_research_done") return ok(doneReply);
     if (m[1] === "v2_research_submit") return ok(submitReply);
     if (m[1] === "v2_checker_action") return ok(verdictReply);
     return ok(null);
@@ -142,6 +146,43 @@ Deno.test("duplicate domain is refused and a new domain is still accepted", asyn
   noFirms();
   firmRows = [];
   v2Rows = [];
+});
+
+Deno.test("claim returns one firm and does not read firms or submit", async () => {
+  calls.length = 0;
+  reads.length = 0;
+  const r = await h(req({ action: "claim" }));
+  const j = await r.json();
+  eq(r.status, 200, "status");
+  eq(j.firm_id, 7, "firm_id");
+  eq(j.slug, "plug-and-play", "slug");
+  eq(j.name, "Plug and Play", "name");
+  eq(j.website, "https://www.plugandplaytechcenter.com", "website");
+  eq(calls.map((c) => c.name), ["ingest_auth", "v2_research_claim"], "rpcs");
+  eq(calls[1].args.p_key_id, authReply.key_id, "key");
+  eq(reads.length, 0, "no table read");
+});
+
+Deno.test("done finishes the claimed firm and submit is unchanged", async () => {
+  calls.length = 0;
+  reads.length = 0;
+  const missing = await h(req({ action: "done" }));
+  eq(missing.status, 400, "missing firm_id");
+  eq(calls.map((c) => c.name), ["ingest_auth"], "no done rpc");
+  calls.length = 0;
+  const r = await h(req({ action: "done", firm_id: 7 }));
+  const j = await r.json();
+  eq(r.status, 200, "status");
+  eq(j.done, true, "done");
+  eq(j.firm_id, 7, "firm_id");
+  eq(calls.map((c) => c.name), ["ingest_auth", "v2_research_done"], "rpcs");
+  eq(calls[1].args.p_firm_id, 7, "firm");
+  calls.length = 0;
+  const items = [{ firm_id: 7, box: "F5", table: "v2_investor_principles", fact: { source_url: "https://example.com/a" } }];
+  const submitted = await h(req({ action: "submit", items }));
+  eq(submitted.status, 200, "submit status");
+  eq(calls.map((c) => c.name), ["ingest_auth", "v2_research_submit"], "submit rpc");
+  eq(reads.some((row) => row.table === "firms"), false, "firms not read");
 });
 
 Deno.test("frozen key -> 403", async () => {
