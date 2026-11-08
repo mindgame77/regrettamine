@@ -1,17 +1,22 @@
 -- Team = founders plus whoever runs the firm today (CEO, co-steward, managing partner).
 -- A reputable dated news source (level 3, source_type News) may back a current-leader role. Nobody else.
-create or replace function public.v2_is_leader_title(t text) returns boolean
-  language sql immutable set search_path to 'public' as
-$$ select coalesce(t,'') ~* '(\mCEO\M|chief executive officer|\msteward\M|managing partner)' $$;
-
-alter table public.v2_person_firm_roles drop constraint if exists v2_pfr_ceo_or_founder;
-alter table public.v2_person_firm_roles add constraint v2_pfr_ceo_or_founder
-  check (archived or nothing_found or is_founder or v2_is_leader_title(title));
-
-alter table public.v2_person_firm_roles drop constraint if exists v2_person_firm_roles_source_level_check1;
-alter table public.v2_person_firm_roles add constraint v2_person_firm_roles_source_level_check1
-  check (source_level in (1,2) or (source_level = 3 and source_type = 'News' and v2_is_leader_title(title)));
-
+-- The v2 schema is not created by repo migrations; CI skips this.
+do $mig$
+begin
+  if to_regclass('public.v2_person_firm_roles') is null then
+    raise notice 'v2_person_firm_roles missing, skipped';
+    return;
+  end if;
+  execute $s$create or replace function public.v2_is_leader_title(t text) returns boolean
+    language sql immutable set search_path to 'public' as
+    $b$ select coalesce(t,'') ~* '(\mCEO\M|chief executive officer|\msteward\M|managing partner)' $b$$s$;
+  execute 'alter table public.v2_person_firm_roles drop constraint if exists v2_pfr_ceo_or_founder';
+  execute 'alter table public.v2_person_firm_roles add constraint v2_pfr_ceo_or_founder
+    check (archived or nothing_found or is_founder or v2_is_leader_title(title))';
+  execute 'alter table public.v2_person_firm_roles drop constraint if exists v2_person_firm_roles_source_level_check1';
+  execute $s$alter table public.v2_person_firm_roles add constraint v2_person_firm_roles_source_level_check1
+    check (source_level in (1,2) or (source_level = 3 and source_type = 'News' and v2_is_leader_title(title)))$s$;
+  execute $fp$
 CREATE OR REPLACE FUNCTION public.v2_firm_page(p_slug text)
  RETURNS json
  LANGUAGE plpgsql
@@ -152,4 +157,7 @@ begin
        'funds_announced',json_build_object('n',jsonb_array_length(fa),'latest',fal,'items',fa),
        'funds_sec',json_build_object('n',jsonb_array_length(funds),'items',funds),'funds_closed_12m',(select count(*) from jsonb_array_elements(funds) e where e->>'date' >= (current_date-365)::text)));
 end $function$
-;
+
+$fp$;
+end
+$mig$;
