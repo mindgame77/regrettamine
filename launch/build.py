@@ -1,6 +1,7 @@
-"""Regretamin launch build: search page + one static company-page shell per lab firm.
-The default (LAB_ONLY=1) writes the 10 lab firms. LAB_ONLY=0 is the manual all-firms rollout.
-Local runs without SUPABASE_URL fall back to data/launch/*.json, still filtered to those firms.
+"""Regretamin launch build: search page + one static company-page shell per live firm.
+Live firms are whoever firm_sitemap and firm_meta return (v2_firm_live joined to v2_firms). There is no slug list.
+The page body is filled in the browser from firm_page, which is v2_firm_page.
+Local runs without SUPABASE_URL fall back to every data/launch/*.json snapshot.
 The shell holds no firm data beyond the name: every section is filled from the firm_page() RPC (js/company.js).
 All copy, plans and section presentation come from launch/copy.json (also handed to the JS as window.REGRET.copy).
 Output: site-launch/. Deploy to the preview with launch/deploy_preview.sh (see launch/HOW-TO-CHANGE.md).
@@ -288,35 +289,16 @@ def _rpc(fn, args):
         {'apikey': CFG['key'], 'authorization': 'Bearer ' + CFG['key'], 'content-type': 'application/json'})
     with urllib.request.urlopen(req, timeout=30) as r: return json.load(r)
 
-# The only firms a normal build writes. A full walk is LAB_ONLY=0 (the manual rollout).
-LAB_SLUGS = ('a16z', 'y-combinator', 'sequoia', 'lightspeed', 'generalcatalyst', 'plugandplay', 'accel', 'greenoaks', 'khosla-ventures', 'mio-partners')
-
-def lab_only():
-    return os.environ.get('LAB_ONLY', '1').strip().lower() not in ('0', 'false', 'no', 'all')
-
 def launch_firms():
-    """Lab firms by default. With SUPABASE_URL/ANON_KEY, firm_meta for those slugs only (no sitemap walk).
-    LAB_ONLY=0 pages firm_sitemap and loads every published firm. That is the manual rollout.
-    Without the keys, read data/launch/*.json, filtered the same way. An RPC failure fails the build."""
-    only = lab_only()
+    """Firms that get a page. With SUPABASE_URL/ANON_KEY, walk firm_sitemap and load firm_meta
+    for each slug. Those RPCs read v2_firm_live joined to v2_firms, so a firm that goes live
+    is included on the next build. There is no slug list. Without the keys, read every
+    data/launch/*.json snapshot. An RPC failure fails the build."""
     if not (CFG['url'] and CFG['key']):
         firms = []
         for p in sorted(glob.glob(os.path.join(ROOT, 'data', 'launch', '*.json'))):
-            firm = json.load(open(p))['firm']
-            if only and firm.get('slug') not in LAB_SLUGS: continue
-            firms.append(firm)
+            firms.append(json.load(open(p))['firm'])
         if not firms: raise SystemExit('launch build: no firm snapshots in data/launch')
-        return firms
-    if only:
-        firms = []
-        for slug in LAB_SLUGS:
-            rows = _rpc('firm_meta', {'p_slug': slug})
-            if rows: firms.append(rows[0])
-        missing = [s for s in LAB_SLUGS if s not in {f['slug'] for f in firms}]
-        if not firms:
-            raise SystemExit('launch build: firm_meta missing lab firms: ' + ', '.join(missing))
-        if missing:
-            print('launch build: firm_meta has no published row for: ' + ', '.join(missing) + ' (building the firms it returned)')
         return firms
     slugs, page_n = [], 1
     while True:
@@ -328,7 +310,7 @@ def launch_firms():
     for slug in slugs:
         rows = _rpc('firm_meta', {'p_slug': slug})
         if rows: firms.append(rows[0])
-    if not firms: raise SystemExit('launch build: firm_sitemap returned no published firms')
+    if not firms: raise SystemExit('launch build: firm_sitemap returned no firms firm_meta can open')
     return firms
 
 def main():
@@ -352,11 +334,13 @@ def main():
     # Edge cache key version: changes whenever the template or edge renderer changes, so a deploy never serves stale heads.
     import hashlib
     edge = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'edge', 'firm.mjs')).read()
-    # Include the lab slug list (sequoia is already in it) so a firm that just went live is not stuck on a cached 404.
-    # lightspeed was already in that list, so the cached /vc/lightspeed/ 404 needs its own token.
+    # The live slug set is part of the cache key, so a firm that just went live is not stuck on a cached 404.
+    # lightspeed's cached 404 needs its own token: it was already a known slug when that 404 was stored.
     live_token = 'lightspeed'
-    open(os.path.join(OUT, '_tpl', 'version.txt'), 'w').write(hashlib.sha256((edge + tpl['summary'] + tpl['full'] + '\n' + ','.join(LAB_SLUGS) + '\n' + live_token).encode()).hexdigest()[:12])
-    for F in launch_firms():
+    built = launch_firms()
+    live_slugs = ','.join(sorted(F['slug'] for F in built))
+    open(os.path.join(OUT, '_tpl', 'version.txt'), 'w').write(hashlib.sha256((edge + tpl['summary'] + tpl['full'] + '\n' + live_slugs + '\n' + live_token).encode()).hexdigest()[:12])
+    for F in built:
         firms.append(F['slug'])
         for v, sub in (('summary', ''), ('full', 'full')):
             d = os.path.join(OUT, 'vc', F['slug'], sub); os.makedirs(d, exist_ok=True)
@@ -386,6 +370,6 @@ def main():
         '/search.js\n  Cache-Control: public, max-age=0, must-revalidate\n'
         '/dates.js\n  Cache-Control: public, max-age=0, must-revalidate\n'
         '/style.css\n  Cache-Control: public, max-age=0, must-revalidate\n')
-    print('built', len(firms), 'firms', '(lab)' if lab_only() else '(all)', '->', OUT)
+    print('built', len(firms), 'firms', '->', OUT)
 
 if __name__ == '__main__': main()

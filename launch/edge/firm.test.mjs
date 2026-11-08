@@ -24,14 +24,12 @@ const db = (calls = []) => async (url, init) => {
 };
 const get = (path, fetchImpl = db()) => renderFirm({ request: new Request('https://regretamin.com' + path), env, assets, fetchImpl });
 
-test('static pages from a lab build match the edge renderer', () => {
+test('static pages from a build match the edge renderer', () => {
   const src = readFileSync(new URL('../build.py', import.meta.url), 'utf8');
-  const LAB = new Set([...src.match(/LAB_SLUGS = \(([^)]*)\)/s)[1].matchAll(/'([^']+)'/g)].map((m) => m[1]));
-  assert.equal(LAB.size, 10);
+  assert.equal(src.includes('LAB_SLUGS'), false);
   const built = readdirSync(new URL('vc/', OUT), { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
   const snaps = readdirSync(DATA).filter((x) => x.endsWith('.json')).map((x) => x.replace(/\.json$/, ''));
-  for (const slug of snaps) assert.equal(built.includes(slug), LAB.has(slug), slug);
-  assert.deepEqual([...built].sort(), snaps.filter((s) => LAB.has(s)).sort());
+  assert.deepEqual([...built].sort(), [...snaps].sort());
   const tpl = { s: read('_tpl/summary.html'), f: read('_tpl/full.html') };
   for (const slug of built) {
     const F = JSON.parse(readFileSync(new URL(slug + '.json', DATA), 'utf8')).firm;
