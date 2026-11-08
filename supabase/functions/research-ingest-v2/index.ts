@@ -2,6 +2,7 @@
 // Auth: header x-ingest-key (same key as research-ingest; sha256 checked by ingest_auth: active, kill switch, rate limit). verify_jwt = false.
 // v1 research-ingest is untouched. Doc: plans/newdb/21_v2_sender.md
 // add_firm refuses a website whose domain already belongs to a firm, then creates one v2_firms row (or returns the existing firm_id). It does not publish facts.
+// claim reserves one free v2_research_assignments row for 6 hours and returns that v2 firm. done finishes the bot's own row.
 import { createClient } from "npm:@supabase/supabase-js@2";
 const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 const MAX_BYTES = 2_000_000;
@@ -11,7 +12,7 @@ const json = (b: unknown, status = 200, extra: Record<string, string> = {}) =>
   new Response(JSON.stringify(b), { status, headers: { ...CORS, "content-type": "application/json", ...extra } });
 const sha256 = async (s: string) => [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)))]
   .map((b) => b.toString(16).padStart(2, "0")).join("");
-const HINT = "POST {\"action\":\"add_firm\",\"firm\":{\"name\",\"website\",\"registry_id\"}} or {\"action\":\"submit\",\"dry_run\":false,\"items\":[{\"firm_id\":2,\"box\":\"F5\",\"table\":\"v2_investor_principles\",\"fact\":{...}}]}; max 10 firms per batch";
+const HINT = "POST {\"action\":\"claim\"} or {\"action\":\"done\",\"firm_id\":N} or {\"action\":\"add_firm\",\"firm\":{\"name\",\"website\",\"registry_id\"}} or {\"action\":\"submit\",\"dry_run\":false,\"items\":[{\"firm_id\":2,\"box\":\"F5\",\"table\":\"v2_investor_principles\",\"fact\":{...}}]}; max 10 firms per batch";
 // Domain only: lowercase, no scheme, no leading www, no port, no path.
 const firmDomain = (website: string) => {
   let s = website.trim().toLowerCase();
@@ -68,6 +69,24 @@ Deno.serve(async (req) => {
       if (!data.ok) return json({ error: data.error }, String(data.error).startsWith("Key frozen") ? 403 : 400);
       return json(data, 200);
     }
+    if (body.action === "claim") {
+      const { data, error } = await db.rpc("v2_research_claim", { p_key_id: auth.key_id });
+      if (error || !data) return json({ error: "server error" }, 500);
+      bot = data.bot_id ?? "";
+      if (!data.ok) return json({ error: data.error }, String(data.error).startsWith("Key frozen") ? 403 : 400);
+      return json(data, 200);
+    }
+    if (body.action === "done") {
+      const firmId = body.firm_id;
+      if (typeof firmId !== "number" || !Number.isInteger(firmId) || firmId <= 0) {
+        return json({ error: "firm_id must be the firm from claim" }, 400);
+      }
+      const { data, error } = await db.rpc("v2_research_done", { p_key_id: auth.key_id, p_firm_id: firmId });
+      if (error || !data) return json({ error: "server error" }, 500);
+      bot = data.bot_id ?? "";
+      if (!data.ok) return json({ error: data.error }, String(data.error).startsWith("Key frozen") ? 403 : 400);
+      return json(data, 200);
+    }
     if (body.action === "list_queue" || body.action === "verdict") {  // Checker key only (checked in SQL)
       const args = body.action === "verdict" ? { id: body.id, verdict: body.verdict, reason: body.reason, sources: body.sources } : { limit: body.limit };
       const { data, error } = await db.rpc("v2_checker_action", { p_key_id: auth.key_id, p_action: body.action, p_args: args, p_dry_run: body.dry_run === true });
@@ -76,7 +95,7 @@ Deno.serve(async (req) => {
       if (!data.ok) return json({ error: data.error }, String(data.error).startsWith("only the Checker") ? 403 : 400);
       return json(data, 200);
     }
-    if (body.action !== "submit") return json({ error: "action must be submit, add_firm, list_queue or verdict", hint: HINT }, 400);
+    if (body.action !== "submit") return json({ error: "action must be submit, add_firm, claim, done, list_queue or verdict", hint: HINT }, 400);
     if (!Array.isArray(body.items) || body.items.length === 0) return json({ error: "items must be a non-empty array", hint: HINT }, 400);
     if (body.dry_run !== undefined && typeof body.dry_run !== "boolean") return json({ error: "dry_run must be true or false" }, 400);
     const { data, error } = await db.rpc("v2_research_submit", { p_key_id: auth.key_id, p_items: body.items, p_dry_run: body.dry_run === true });
