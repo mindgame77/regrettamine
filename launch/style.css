@@ -489,9 +489,11 @@ html.au-in #signin{display:none!important}html.au-in #acct[hidden]{display:inlin
 /* Industries and stages: grey neutral pills under the social row, above the activity cards. */
 .htags{display:flex;flex-direction:column;gap:14px;margin-top:16px}
 .htag-l{display:block;color:var(--mute);font-size:13px;font-weight:600;margin:0 0 6px}
-.htag .secp{flex-wrap:wrap;max-height:none;overflow:visible;gap:8px;margin-top:0}
+.htag .secp{flex-wrap:wrap;max-height:none;overflow:visible;gap:8px;margin-top:0;align-items:center}
 .htag .hp{cursor:default;margin:0;max-width:none}
 .htag .hp:hover{background:#F1F0F5}
+.htag-rule{flex:none;width:1px;align-self:stretch;margin:3px 4px;background:var(--mute);opacity:.45}
+.htag-k{flex:none;margin:0;color:var(--mute);font:700 12px/1.3 'DM Sans',sans-serif;letter-spacing:.04em;text-transform:uppercase}
 /* Team (E1): CEO and founders only. Same light grey rounded surface as a neutral news card. */
 .tcards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
 .tcard{background:#F3F2F7;border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:2px;min-width:0}
@@ -541,7 +543,7 @@ body:has(main.prof){background:#F7F6FA}
 .prof .att{padding:12px 14px}
 .prof .att b{font:700 30px/1.1 'Bricolage Grotesque',sans-serif}
 .prof .aon b{font:700 15px/1.2 'DM Sans',sans-serif;color:#0F7A3A}
-.prof .att small,.prof .htag-l,.prof .invlab,.prof .iplab{font:700 12px/1.3 'DM Sans',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--mute)}
+.prof .att small,.prof .htag-l,.prof .htag-k,.prof .invlab,.prof .iplab{font:700 12px/1.3 'DM Sans',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--mute)}
 .prof .att span,.prof .att .afl{font:400 13px/1.4 'DM Sans',sans-serif}
 .prof .aon{text-decoration:none;color:inherit}
 .prof .aon:hover{text-decoration:none}
