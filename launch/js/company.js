@@ -1709,8 +1709,11 @@
       if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(v).then(show, function () {});
     } catch (err) {}
   });
-  document.addEventListener('click', async (e) => {
-    const t = e.target.closest('.ash[data-open^="act"]'), ov = t && document.getElementById(t.dataset.open);
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('.ash[data-open^="act"]');
+    if (t) fillLazy(document.getElementById(t.dataset.open));
+  });
+  async function fillLazy(ov) {
     if (!ov || !ov._lazy || ov._busy || !window.RegretActList) return;
     const L = ov._lazy, box = ov.querySelector('.amb'); ov._busy = true;
     try {
@@ -1719,7 +1722,34 @@
         box.innerHTML = L.kind === 'deals' ? (L.head || '') + dealRows(d.items, L.lab) : d.items.map(revCard).join(''); ov._lazy = null;
       }
     } finally { ov._busy = false; }
+  }
+  // Alex 2026-11-07: tapping a grey card in Legal, What investors look for or What founders say opens that tile's Show all popup.
+  // White space and the title do nothing; links and buttons inside a card keep their own behavior.
+  const TAP_POP = { legal: 'actlegal', investors: 'actinvestors', reviews: 'actrevs' };
+  const TAP_SEL = '#legal .lgline, #investors .ipr, #reviews .arv';
+  const tapPop = (card) => { const m = card.closest('.mod'), id = m && TAP_POP[m.id], ov = id && document.getElementById(id); return ov || null; };
+  function tapOpen(card) {
+    const ov = tapPop(card); if (!ov || !window.RegretOpen) return;
+    window.RegretOpen(ov.id); fillLazy(ov);
+  }
+  document.addEventListener('click', (e) => {
+    const card = e.target && e.target.closest && e.target.closest(TAP_SEL);
+    if (!card || card.closest('.ov') || e.target.closest('a,button')) return;
+    tapOpen(card);
   });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' || !e.target || !e.target.matches || !e.target.matches(TAP_SEL)) return;
+    e.preventDefault(); tapOpen(e.target);
+  });
+  function markTaps() {
+    document.querySelectorAll(TAP_SEL).forEach((c) => {
+      if (c.dataset.tap || c.closest('.ov') || !tapPop(c)) return;
+      c.dataset.tap = '1'; c.setAttribute('role', 'button'); c.setAttribute('tabindex', '0');
+    });
+  }
+  if (typeof MutationObserver === 'function' && typeof document !== 'undefined' && document.body) {
+    new MutationObserver(markTaps).observe(document.body, { childList: true, subtree: true }); markTaps();
+  }
   const fundsLine = (P, n) => '<span class="afl">' + showAllLink(P.open, 'actfunds', P.open ? ' aria-haspopup="dialog"' : '', 'Show all (' + n + (n === 1 ? ' fund)' : ' funds)')) + '</span>';
   function fundRows(fs) {
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_fund) + '</span><span>' + esc(AC.h_amount) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'

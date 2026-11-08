@@ -32,6 +32,7 @@
     if (t.dataset.close !== undefined) closeOv(t.closest('.ov'));
     if (t.dataset.buy) buy(t.dataset.buy);
   });
+  window.RegretOpen = open; // shared popup opener (company.js card taps)
   async function balance(ms = 5000) { // null on error or after ms (5s) so callers never hang
     if (!sb) return null;
     let to; const late = new Promise(r => { to = setTimeout(() => r({ error: 'timeout' }), ms); });
