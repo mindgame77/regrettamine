@@ -675,3 +675,14 @@ body:has(main.prof){background:#F7F6FA}
 /* Team person rows (Alex 2026-11-07, approved mockup Option A): one compact row per person, name and role left, social pills right. Card and title unchanged. */
 .bento #team .tcards{gap:8px}#team .tcard{flex-direction:row;flex-wrap:wrap;align-items:center;column-gap:8px;row-gap:0;padding:10px 14px;border-radius:12px}
 #team .tcard b{font-size:15px}#team .tcard .trole{margin:0;font-size:13.5px;flex:1 1 auto}#team .tcard .tsoc{margin:0 0 0 auto;flex-wrap:nowrap}
+/* Show all tiles (Alex 2026-11-07, approved Option 1). Legal: last visible case fades above Show all. */
+#legal [data-fit]>:not([hidden]):has(+[hidden][data-extra]){max-height:56px;overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,#000 10%,transparent 100%);mask-image:linear-gradient(to bottom,#000 10%,transparent 100%)}
+/* What founders say / What investors look for: the list ends cleanly above a white Show all strip. */
+#reviews.mod,#investors.mod{display:flex;flex-direction:column;overflow:hidden}
+#reviews>[data-fit],#investors>[data-fit]{flex:1 1 auto;min-height:0;overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 40px),transparent);mask-image:linear-gradient(to bottom,#000 calc(100% - 40px),transparent)}
+#reviews>.ash,#investors>.ash{flex:none;margin-top:0;padding-top:16px;background:#fff;position:relative;z-index:1;align-self:stretch;text-align:left}
+/* Grey cards open the tile's Show all popup: pointer and a slight darken on hover. */
+#legal .lgline,#investors .ipr,#reviews .arv{cursor:pointer;transition:filter .12s}
+:is(#legal .lgline,#investors .ipr,#reviews .arv):hover{filter:brightness(.96)}
+/* Legal popup: gap between the case title and the Filed date. */
+.md .lgline .lgm{margin-left:12px;display:inline-block}
