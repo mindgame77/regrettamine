@@ -1,5 +1,6 @@
 // Industries and stages: grey pills under the header, word for word, hidden when empty.
-// Team collapses when the firm has no live CEO or founder. Check size is never drawn.
+// Team collapses when the firm has no live CEO or founder.
+// Average check sits on the stages pill line when firm.check_size is set, and is omitted when it is not.
 // node --test tests/firm_header_team.test.mjs
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -11,6 +12,7 @@ const read = (rel) => fs.readFileSync(new URL(rel, root), 'utf8');
 const copy = JSON.parse(read('launch/copy.json'));
 const js = read('launch/js/company.js');
 const mig = read('supabase/migrations/20261105180000_v2_firm_page_industries_stages_team.sql');
+const checkMig = read('supabase/migrations/20261108200000_v2_firm_page_check_size.sql');
 
 function el() {
   const node = {
@@ -92,8 +94,7 @@ test('a firm with no industries, stages or team draws none of those blocks', () 
   assert.doesNotMatch(pmain.innerHTML, /Sectors|Industries|Stages|Team|Check size|class="tcards"/);
 });
 
-test('check size is not a header block', () => {
-  assert.doesNotMatch(js.slice(js.indexOf('function tagHtml'), js.indexOf('function paintTags')), /check_size|check size/i);
+test('industries and stages stay word for word with no source on that migration', () => {
   assert.doesNotMatch(mig, /from v2_firm_check_sizes/);
   assert.match(mig, /v2_firm_industries/);
   assert.match(mig, /v2_firm_stages/);
@@ -104,4 +105,56 @@ test('check size is not a header block', () => {
   assert.doesNotMatch(mig, /industry_text[\s\S]{0,80}source_url/);
   assert.match(mig, /to_regprocedure\('public\.v2_firm_page\(text\)'\) is null/);
   assert.match(mig, /enable row level security/);
+});
+
+function headerHtml(firm) {
+  const main = mainEl();
+  const act = main.set('.actw', el());
+  main.set('.pmain', el());
+  main.set('.ph .m', el());
+  render(main, { open: true, checks: [], firm, sections: [] });
+  return act.placed ? act.placed.child.innerHTML : '';
+}
+
+test('average check sits on the stages line after the pills', () => {
+  const html = headerHtml({
+    name: 'Example Firm', slug: 'example-firm',
+    industries: ['Example sector'],
+    stages: ['Series B', 'Seed'],
+    check_size: '$250K',
+  });
+  const stagesAt = html.indexOf('Stages');
+  const ruleAt = html.indexOf('htag-rule');
+  const labelAt = html.indexOf('AVG CHECK');
+  const amountAt = html.indexOf('>$250K<');
+  assert.ok(stagesAt >= 0 && ruleAt > stagesAt && labelAt > ruleAt && amountAt > labelAt);
+  assert.match(html, /<span class="hp">Seed<\/span><span class="hp">Series B<\/span><span class="htag-rule"/);
+  assert.match(html, /<span class="htag-k">AVG CHECK<\/span><span class="hp">\$250K<\/span>/);
+  assert.doesNotMatch(html, /href=|source_url|program_name/i);
+  assert.doesNotMatch(html, /[↑↓→←]/);
+});
+
+test('a missing or blank check size draws no label and no divider', () => {
+  const none = headerHtml({ name: 'Example Firm', industries: [], stages: ['Seed'], check_size: null });
+  assert.match(none, /<span class="hp">Seed<\/span>/);
+  assert.doesNotMatch(none, /AVG CHECK|htag-rule|htag-k/);
+  const blank = headerHtml({ name: 'Example Firm', industries: [], stages: ['Seed'], check_size: '   ' });
+  assert.doesNotMatch(blank, /AVG CHECK|htag-rule/);
+  const only = headerHtml({ name: 'Example Firm', industries: [], stages: [], check_size: '$250K' });
+  assert.match(only, /<span class="htag-k">AVG CHECK<\/span><span class="hp">\$250K<\/span>/);
+  assert.doesNotMatch(only, /Stages|htag-rule/);
+});
+
+test('check size text is escaped and the page reads one published amount_text', () => {
+  const html = headerHtml({ name: 'Example Firm', stages: ['Seed'], check_size: '<b>$250K</b>' });
+  assert.match(html, /&lt;b&gt;\$250K&lt;\/b&gt;/);
+  assert.doesNotMatch(html, /<b>\$250K<\/b>/);
+  const start = checkMig.indexOf("'check_size',(select nullif(btrim(c.amount_text),'') from v2_firm_check_sizes c where");
+  const select = checkMig.slice(start, checkMig.indexOf('limit 1)', start) + 'limit 1)'.length);
+  assert.match(select, /nullif\(btrim\(c\.amount_text\),''\)/);
+  assert.match(select, /c\.is_current and not c\.archived/);
+  assert.match(select, /order by c\.read_on desc nulls last, c\.id desc limit 1/);
+  assert.doesNotMatch(select, /source_url|min_usd|max_usd|program_name/);
+  assert.match(checkMig, /to_regprocedure\('public\.v2_firm_page\(text\)'\) is null/);
+  assert.match(checkMig, /v2_firm_check_sizes is missing/);
 });
