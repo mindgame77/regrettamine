@@ -7,6 +7,9 @@ type H = (r: Request) => Promise<Response>;
 const handlers: H[] = [];
 (Deno as any).serve = (h: H) => { handlers.push(h); return {} as any; };
 const calls: { name: string; args: any }[] = [];
+const reads: { table: string; url: string }[] = [];
+let firmRows: any[] = [];
+let v2Rows: any[] = [];
 let authReply: any = { ok: true, key_id: "11111111-1111-1111-1111-111111111111" };
 let addReply: any = { ok: true, bot_id: "bot-a", firm_id: 41, created: true, slug: "example-ventures" };
 let submitReply: any = { ok: true, bot_id: "bot-a", accepted: 1, rejected: 0, held: 0, results: [{ index: 0, status: "Accepted" }] };
@@ -23,6 +26,12 @@ globalThis.fetch = async (input: any, init?: any) => {
     if (m[1] === "v2_research_submit") return ok(submitReply);
     if (m[1] === "v2_checker_action") return ok(verdictReply);
     return ok(null);
+  }
+  const table = u.pathname.match(/\/rest\/v1\/([a-z0-9_]+)$/);
+  if (table) {
+    reads.push({ table: table[1], url: u.pathname + u.search });
+    if (table[1] === "v2_firms") return ok(v2Rows);
+    if (table[1] === "firms") return ok(firmRows);
   }
   return ok([]);
 };
@@ -80,6 +89,54 @@ Deno.test("no key -> 401", async () => {
   const r = await h(req({ action: "add_firm", firm: { name: "X", website: "https://x.com", registry_id: "vc-1" } }, null));
   eq(r.status, 401, "status");
   eq(calls.length, 0, "no rpc");
+});
+
+Deno.test("duplicate domain is refused and a new domain is still accepted", async () => {
+  const plugId = "52752433-ef2f-4fbe-b79b-ea881d8755fa";
+  calls.length = 0;
+  reads.length = 0;
+  firmRows = [{ id: plugId, slug: "plugandplay", primary_domain: "plugandplaytechcenter.com" }];
+  v2Rows = [{ firm_id: 7, slug: "plug-and-play", website_url: "https://www.plugandplaytechcenter.com", archived: false }];
+  const dup = await h(req({ action: "add_firm", firm: { name: "Plug and Play", website: "https://www.PlugAndPlayTechCenter.com/about", registry_id: "vc-999" } }));
+  const dupBody = await dup.json();
+  eq(dup.status, 409, "dup status");
+  eq(dupBody.error, "a firm with this website already exists", "dup error");
+  eq(dupBody.slug, "plugandplay", "dup slug");
+  eq(dupBody.id, plugId, "dup id");
+  eq(calls.map((c) => c.name), ["ingest_auth"], "no create");
+  eq(reads.map((r) => r.table).sort(), ["firms", "v2_firms"], "both tables");
+  const firmsUrl = reads.find((r) => r.table === "firms")?.url ?? "";
+  const v2Url = reads.find((r) => r.table === "v2_firms")?.url ?? "";
+  if (!firmsUrl.includes("deleted_at=is.null")) throw new Error(`firms query missed deleted_at\n${firmsUrl}`);
+  if (!firmsUrl.includes("plugandplaytechcenter.com") || !v2Url.includes("plugandplaytechcenter.com")) throw new Error(`query missed normalized domain\n${firmsUrl}\n${v2Url}`);
+  if (firmsUrl.includes("/about") || firmsUrl.includes("PlugAndPlay") || v2Url.includes("/about")) throw new Error("query kept the path or original case");
+
+  calls.length = 0;
+  reads.length = 0;
+  firmRows = [];
+  v2Rows = [{ firm_id: 7, slug: "plug-and-play", website_url: "https://www.plugandplaytechcenter.com", archived: false }];
+  const v2only = await h(req({ action: "add_firm", firm: { name: "Plug and Play", website: "http://plugandplaytechcenter.com/team", registry_id: "vc-999" } }));
+  const v2Body = await v2only.json();
+  eq(v2only.status, 409, "v2 status");
+  eq(v2Body.slug, "plug-and-play", "v2 slug");
+  eq(v2Body.id, 7, "v2 id");
+  eq(calls.some((c) => c.name === "v2_research_add_firm"), false, "v2 no create");
+
+  calls.length = 0;
+  reads.length = 0;
+  firmRows = [{ id: plugId, slug: "plugandplay", primary_domain: "plugandplaytechcenter.com" }];
+  v2Rows = [{ firm_id: 7, slug: "plug-and-play", website_url: "https://www.plugandplaytechcenter.com", archived: true }];
+  addReply = { ok: true, bot_id: "bot-a", firm_id: 42, created: true, slug: "brand-new-firm" };
+  const firm = { name: "Brand New Firm", website: "https://www.brand-new-firm.example/about", registry_id: "vc-new" };
+  const created = await h(req({ action: "add_firm", firm }));
+  const createdBody = await created.json();
+  eq(created.status, 200, "new status");
+  eq(createdBody.firm_id, 42, "new firm_id");
+  eq(createdBody.created, true, "created");
+  eq(calls.map((c) => c.name), ["ingest_auth", "v2_research_add_firm"], "new rpcs");
+  eq(calls[1].args.p_firm, firm, "firm unchanged");
+  firmRows = [];
+  v2Rows = [];
 });
 
 Deno.test("frozen key -> 403", async () => {

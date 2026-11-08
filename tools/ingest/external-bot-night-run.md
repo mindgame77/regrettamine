@@ -28,9 +28,10 @@ curl -s -X POST "$URL" -H "x-ingest-key: $KEY" -H 'content-type: application/jso
   -d '{"action":"add_firm","firm":{"name":"Example Ventures","website":"https://example-ventures.com","registry_id":"vc-000123"}}'
 # -> {"ok":true,"firm_id":41,"created":true,"slug":"example-ventures"}
 # same registry_id or slug again -> the same firm_id, "created":false
+# a website domain that already belongs to a firm -> {"error":"a firm with this website already exists","slug":"...","id":"..."}
 ```
 
-This inserts one `v2_firms` row, or returns the firm that already matches that registry id or slug. It does not publish facts.
+This inserts one `v2_firms` row, or returns the firm that already matches that registry id or slug. It does not publish facts. Before that, the website is reduced to its domain. If that domain is already a `v2_firms` website or a `firms` primary_domain, the call is refused and returns that firm's slug and id. No row is created.
 
 ### 2. Submit facts
 
