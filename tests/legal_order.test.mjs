@@ -110,3 +110,52 @@ test('a lone "D." is not shown as a court', () => {
   const L = legal(page([row('X v. Example Capital', '2020', 'Closed', { role: 'Defendant', note: 'Court: D. something' })]));
   assert.doesNotMatch(L, /· D\. ·|>D\.</);
 });
+
+test('a regulator action with a source and no status is shown, with no status label', () => {
+  const html = page([row('U.S. Treasury fine', '2026', '', {
+    grp: 'regulator',
+    src: [{ label: 'CourtListener', url: 'https://home.treasury.gov/news/press-releases/sb0652' }],
+  })]);
+  const L = legal(html);
+  assert.match(L, /class="lgline"><span class="lgt">U\.S\. Treasury fine/);
+  assert.doesNotMatch(L, /class="cs /);
+  assert.doesNotMatch(L, /st-act|st-set|st-dis/);
+});
+
+test('a regulator register summary stays hidden, and so does one with no source', () => {
+  const sec = [{ label: 'SEC', url: 'https://www.sec.gov/x' }];
+  assert.doesNotMatch(page([row('None found', '2024', '', { grp: 'regulator', src: sec })]), /id="legal"/);
+  assert.doesNotMatch(page([row('disclosure flag 2', '2024', '', { grp: 'regulator', src: sec })]), /id="legal"/);
+  assert.doesNotMatch(page([row('U.S. Treasury fine', '2026', '', { grp: 'regulator', src: [] })]), /id="legal"/);
+});
+
+test('the legal source label comes from the URL host', () => {
+  const made = [];
+  const body = node();
+  body.appendChild = (el) => { made.push(el); };
+  const prevCreate = sandbox.document.createElement;
+  const prevGet = sandbox.document.getElementById;
+  sandbox.document.body = body;
+  sandbox.document.createElement = () => node();
+  sandbox.document.getElementById = (id) => made.find(e => e.id === id) || null;
+  try {
+    page([
+      row('Treasury matter', '2026', 'Closed', { src: [{ label: 'CourtListener', url: 'https://home.treasury.gov/news/press-releases/sb0652' }] }),
+      row('SEC matter', '2025', 'Closed', { src: [{ label: 'CourtListener', url: 'https://www.sec.gov/news/x' }] }),
+      row('Docket matter', '2024', 'Closed', { src: [{ label: 'Somewhere', url: 'https://storage.courtlistener.com/recap/x.pdf' }] }),
+      row('Archive matter', '2023', 'Closed', { src: [{ label: 'CourtListener', url: 'https://archive.org/download/x.pdf' }] }),
+    ]);
+    const modal = made.find(e => e.id === 'actlegal');
+    assert.ok(modal, 'legal popup made');
+    const html = modal.innerHTML;
+    assert.match(html, /home\.treasury\.gov[^>]*>Treasury</);
+    assert.match(html, /www\.sec\.gov[^>]*>SEC</);
+    assert.match(html, /storage\.courtlistener\.com[^>]*>CourtListener</);
+    assert.match(html, /archive\.org[^>]*>archive\.org</);
+    assert.doesNotMatch(html.split('Treasury matter')[1].split('SEC matter')[0], /CourtListener/);
+  } finally {
+    sandbox.document.body = undefined;
+    sandbox.document.createElement = prevCreate;
+    sandbox.document.getElementById = prevGet;
+  }
+});

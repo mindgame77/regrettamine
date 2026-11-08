@@ -550,13 +550,35 @@
     if (st === 'Closed' || /\b(closed|terminated|adjudicated|judgment|resolved|affirmed)\b/.test(lab)) return 'Closed';
     return '';
   }
+  // Legal source chip: the host of the source URL, not a fixed CourtListener label.
+  function legalHost(url) {
+    const u = safeUrl(url);
+    if (!u) return '';
+    try { return new URL(u).hostname.replace(/^www\./i, '').toLowerCase(); }
+    catch (e) { return ''; }
+  }
+  function legalSrcLabel(url) {
+    const h = legalHost(url);
+    if (!h) return '';
+    if (/(^|\.)courtlistener\.com$/.test(h)) return 'CourtListener';
+    if (/(^|\.)sec\.gov$/.test(h)) return 'SEC';
+    if (h === 'home.treasury.gov' || /(^|\.)treasury\.gov$/.test(h)) return 'Treasury';
+    return h;
+  }
+  // A register summary ("disclosure flag N", "None found") is not an action.
+  function registerSummary(x) {
+    const blob = [x && x.title, x && x.head, x && x.note, x && x.summary].filter(v => v != null && String(v).trim() !== '').join(' ');
+    return /disclosure flag|\bnone found\b/i.test(blob);
+  }
   function legalCase(x) {
     if (x.grp !== 'case' && x.grp !== 'regulator') return null;
     const title = String(x.title || x.head || '');
     if (!title || x.state === 'Unverified' || isLeadTag(x.status) || LEAD_PRE.test(title)) return null;
     if (/non-party|not a party|non-defendant/i.test(title + ' ' + (x.status || ''))) return null;
     const status = legalWord(x);
-    if (x.grp === 'regulator' && !status) return null; // a register summary ("disclosure flag N", "None found") is not an action
+    // A regulator action with a source stays, even with no status. No status draws no status label.
+    // A register summary, or a regulator row with no source, stays hidden.
+    if (x.grp === 'regulator' && (registerSummary(x) || (!status && !(x.src || []).some(s => safeUrl(s.url))))) return null;
     const all = title + ' ' + (x.note || '');
     const r = String(x.role || '').trim().toLowerCase(), rm = all.match(/\brole:\s*(defendant|plaintiff)\b/i);
     const side = r === 'defendant' || r === 'plaintiff' ? r[0].toUpperCase() + r.slice(1) : rm ? rm[1][0].toUpperCase() + rm[1].slice(1).toLowerCase() : '';
@@ -572,7 +594,11 @@
     const sm = status === 'Settled' ? String(x.note || '').match(/[^.]*\bsettle[^.]*\$\s?[\d.,]+\s*(?:[MBK]\b|million|billion)?[^.]*\.?/i) : null;
     const su = safeUrl(x.summary_url), sx = String(x.summary || '').replace(/\s+/g, ' ').trim();
     const summary = su && sx ? { text: sx.length > 300 ? sx.slice(0, 300).trimEnd() : sx, date: x.summary_date || '', url: su } : null;
-    return { title: nice(title), status, side, topic, other, court, filed: filedY, closed: closedY, settlement: sm ? sm[0].trim() : '', src: x.src || [], summary, note: String(x.note || '').trim() };
+    const src = (x.src || []).map(s => {
+      const label = legalSrcLabel(s && s.url);
+      return label ? Object.assign({}, s, { label: label }) : s;
+    });
+    return { title: nice(title), status, side, topic, other, court, filed: filedY, closed: closedY, settlement: sm ? sm[0].trim() : '', src: src, summary, note: String(x.note || '').trim() };
   }
   function legalCases(items) {
     return (items || []).map(legalCase).filter(c => c && (c.src || []).some(s => safeUrl(s.url)))
@@ -1781,10 +1807,27 @@
     new MutationObserver(markTaps).observe(document.body, { childList: true, subtree: true }); markTaps();
   }
   const fundsLine = (P, n) => '<span class="afl">' + showAllLink(P.open, 'actfunds', P.open ? ' aria-haspopup="dialog"' : '', 'Show all (' + n + (n === 1 ? ' fund)' : ' funds)')) + '</span>';
+  // Current v2_fund_assets for 2021-2026. Each row is that fund's amount and its as-of date.
+  function fundAssetRows(A) {
+    const items = A && A.fund_assets && A.fund_assets.items;
+    if (!Array.isArray(items)) return [];
+    const out = [];
+    items.forEach(x => {
+      if (!x || !x.name) return;
+      const date = x.date || x.as_of || '';
+      const y = Number(yearOf(date));
+      if (!(y >= 2021 && y <= 2026)) return;
+      const display = x.raised_display || x.display || '';
+      if (!display && !(Number(x.raised_usd) > 0)) return;
+      out.push({ name: x.name, raised_display: display, raised_usd: x.raised_usd, date: date, url: x.url || '', asset: true });
+    });
+    return out;
+  }
   function fundRows(fs) {
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_fund) + '</span><span>' + esc(AC.h_amount) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + fs.map(x => { const u = safeUrl(x.url);
-        return '<div class="ad"><b>' + esc(fundName(x.name)) + '</b><span>' + esc(x.announced ? x.raised_display : clampMoney(x.raised_display || money(x.raised_usd))) + '</span><span>' + esc(yearOf(x.date)) + '</span>'
+        const when = x.asset ? (fdate(x.date) || '') : yearOf(x.date);
+        return '<div class="ad"><b>' + esc(fundName(x.name)) + '</b><span>' + esc(x.announced ? x.raised_display : clampMoney(x.raised_display || money(x.raised_usd))) + '</span><span>' + esc(when) + '</span>'
           + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(x.announced ? AC.src_link : AC.filing) + '</a>' : '<span></span>') + '</div>'; }).join('') + '</div>';
   }
   // v4: the funds pop-up lists newest first; undated funds keep their order at the end.
@@ -1870,13 +1913,18 @@
     if (picked) tiles.push(fundCard(picked));
     else { const a = aumCard(P); if (a) tiles.push(a); }
     const fs = A.funds_sec, fsn = fs && Number(fs.n) > 0 ? Number(fs.n) : 0;
+    const assets = fundAssetRows(A);
     const ti = tiles.findIndex(t => t.indexOf('att afd') > -1);
     if (fsn && ti > -1) tiles[ti] = tiles[ti].replace(/<\/div>$/, fundsLine(P, fsn) + '</div>');
     const lone = fsn && ti < 0 && !tiles.length;
     if (fsn && ti > -1) tiles[ti] = tiles[ti].replace('<div class="att afd', '<div data-fundtile class="att afd');
-    if (fsn && (ti > -1 || lone) && P.open && Array.isArray(fs.items)) {
+    if (P.open && (assets.length || (fsn && (ti > -1 || lone) && Array.isArray(fs.items)))) {
       const an = A.funds_announced, anI = an && Array.isArray(an.items) ? an.items.map(x => Object.assign({}, x, { announced: true })) : [];
-      actModal('actfunds', pl(AC.funds_sec, fsn) + (anI.length ? ' · ' + fmt(AC.funds_announced, { n: anI.length }) : '') + ' · ' + firm, fundRows(newestFirst(anI.concat(fs.items))));
+      const taken = {};
+      assets.forEach(x => { taken[fundName(x.name).toLowerCase()] = 1; });
+      const secItems = Array.isArray(fs && fs.items) ? fs.items.filter(x => !taken[fundName(x && x.name).toLowerCase()]) : [];
+      const title = fsn ? pl(AC.funds_sec, fsn) + (anI.length ? ' · ' + fmt(AC.funds_announced, { n: anI.length }) : '') + ' · ' + firm : firm;
+      actModal('actfunds', title, fundRows(newestFirst(anI.concat(assets).concat(secItems))));
     }
     // Full lists for Show all. A lazy page loads them on open.
     const full = (list, nAll, min = 2) => !A.lazy && Array.isArray(list) && list.length >= min ? list : (nAll >= min ? null : undefined);
@@ -1884,8 +1932,10 @@
     const lab = labFirm(P);
     if (P.open && fd !== undefined) actModal('actdeals', fmt(AC.deals_title, { n: fd ? fd.length : n.deals, firm }), fd ? dealRows(fd, lab) : '', !fd && { slug: P.firm.slug, kind: 'deals', lab, head: '' });
     if (P.open && fr !== undefined) actModal('actrevs', fmt(AC.reviews_title, { n: fr ? fr.length : n.reviews, firm }), fr ? fr.map(revCard).join('') : '', !fr && { slug: P.firm.slug, kind: 'revs' });
-    if (!tiles.length && !lone) return '';
-    return '<div class="ats">' + (tiles.length ? tiles.join('') : fundsLine(P, fsn)) + '</div>';
+    const assetTable = assets.length ? fundRows(newestFirst(assets)) : '';
+    if (!tiles.length && !lone && !assetTable) return '';
+    const head = tiles.length ? tiles.join('') : (lone ? fundsLine(P, fsn) : '');
+    return (head ? '<div class="ats">' + head + '</div>' : '') + assetTable;
   }
   function paintActivity(main, P) {
     const box = main.querySelector('.actw'); if (!box) return;
