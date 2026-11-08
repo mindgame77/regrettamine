@@ -672,3 +672,6 @@ body:has(main.prof){background:#F7F6FA}
   .prof{padding-left:12px;padding-right:12px}
   .ps0 input{font-size:18px}
 }
+/* Team person rows (Alex 2026-11-07, approved mockup Option A): one compact row per person, name and role left, social pills right. Card and title unchanged. */
+.bento #team .tcards{gap:8px}#team .tcard{flex-direction:row;flex-wrap:wrap;align-items:center;column-gap:8px;row-gap:0;padding:10px 14px;border-radius:12px}
+#team .tcard b{font-size:15px}#team .tcard .trole{margin:0;font-size:13.5px;flex:1 1 auto}#team .tcard .tsoc{margin:0 0 0 auto;flex-wrap:nowrap}
