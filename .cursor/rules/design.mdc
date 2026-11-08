@@ -53,7 +53,7 @@ One layout for every firm. Do not redesign a tile per firm.
 - Keep the approved type and spacing. Desktop is two columns. Leave the phone layout as the natural stack.
 - Paired desktop tiles use the Deals announced / Videos size. Recent deals stays full width. The hero stays as it is.
 - Use normal type and row padding. Do not shrink, squeeze, clip, or overlap a row. Show only whole rows that fit. The rest stay in the existing Show all dialog. One Show all area stays reserved at the bottom.
-- Sectors, Rounds, and Deals announced share one 12 months / All time control.
+- Sectors and Rounds share one This year / All time control. Deals announced has no toggle and shows all time, one bar per year.
 - An industry name keeps one color from the approved 18-color palette in the charts, the sector popup, and deal rows. Rank does not choose the color. Other is always slate `#A7A2C2`.
 - Team is the real people only. No filler. A social pill is the icon and the follower count, with no platform name.
 - Limited partners and News are off. Do not draw those tiles.

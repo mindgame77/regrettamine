@@ -750,7 +750,7 @@
    "active": "Active",
    "last_deal": "Last deal {date}",
    "fund_closed": "Fund closed {date}",
-   "deals_12m": "Deals, last 12 mo",
+   "deals_12m": "Deals, this year",
    "fund": "Latest fund",
    "raised": "{amount} raised",
    "filing": "Filing",

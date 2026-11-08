@@ -1586,10 +1586,10 @@
     if (lab) return '<div class="adl"><div class="ad adh s5"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_sector) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + ds.map(d => { const u = safeUrl(d.url), r = [labRound(d.round), dealAmt(d.amount, d.currency), d.lead ? AC.lead : ''].filter(Boolean).join(' · ');
         return '<div class="ad s5"><b>' + coName(d) + '</b>' + (d.sector ? '<span class="arty"' + ' style="color:' + sectorColor(d.sector) + '"' + '>' + esc(d.sector) + '</span>' : '<span></span>')
-          + '<span>' + esc(r) + '</span><span>' + esc(fdate(d.date) || '') + '</span>' + src(u) + '</div>'; }).join('') + '</div>';
+          + '<span>' + esc(r) + '</span><span>' + esc(dealWhen(d)) + '</span>' + src(u) + '</div>'; }).join('') + '</div>';
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + ds.map(d => { const u = safeUrl(d.url);
-        return '<div class="ad"><b>' + coName(d) + '</b><span>' + esc(roundName(d.round)) + '</span><span>' + esc(fdate(d.date) || '') + '</span>'
+        return '<div class="ad"><b>' + coName(d) + '</b><span>' + esc(roundName(d.round)) + '</span><span>' + esc(dealWhen(d)) + '</span>'
           + src(u) + '</div>'; }).join('') + '</div>';
   }
   function dealCards(ds) {
@@ -1600,7 +1600,7 @@
       const sec = d.sector ? '<b class="arty" style="color:' + sectorColor(d.sector) + '">' + esc(d.sector) + '</b>' : '<b>—</b>';
       return '<article class="dcard"><div class="dname">' + coName(d) + '</div><div class="dmeta">'
         + '<div><span>Sector</span>' + sec + '</div><div><span>Round</span><b>' + esc(r) + '</b></div>'
-        + '<div><span>Date</span><b>' + esc(fdate(d.date) || '—') + '</b></div><div><span>Source</span><b>' + src + '</b></div></div></article>';
+        + '<div><span>Date</span><b>' + esc(dealWhen(d) || '—') + '</b></div><div><span>Source</span><b>' + src + '</b></div></div></article>';
     }).join('') + '</div>';
   }
   // Sector share (PAGE_DATA_GUIDE B6e.9/A9.17, with Alex's 2026-11-04 change to B6e.9.5): stored sector_12m from firm_page.
@@ -1845,10 +1845,12 @@
       const inner = '<i></i><div><b>' + esc(AC.active) + '</b></div>';
       tiles.push(u ? '<a class="att aon" href="' + esc(u) + '" target="_blank" rel="noopener">' + inner + '</a>' : '<div class="att aon">' + inner + '</div>');
     }
-    if (A.deals_12m > 0) {
-      const when = d0 ? (fdate(d0.date) || yearOf(d0.date)) : '';
+    const yearKnown = Array.isArray(A.deals);
+    const yearCount = yearKnown ? countThisYear(A.deals) : Number(A.deals_12m) || 0;
+    if (yearKnown ? yearCount > 0 : A.deals_12m > 0) {
+      const when = d0 ? (dealWhen(d0) || yearOf(d0.date)) : '';
       const sub = d0 && d0.company ? 'Last deal: ' + d0.company + (when ? ' · ' + when : '') : '';
-      tiles.push(tile(AC.deals_12m, esc(A.deals_12m), esc(sub), 'amt'));
+      tiles.push(tile(AC.deals_12m, esc(yearCount), esc(sub), 'amt'));
     }
     // One money tile. Latest closed fund with an amount, else AUM, else nothing.
     const picked = pickFund(P);
@@ -1877,21 +1879,35 @@
     const h = activity(P); box.innerHTML = h; box.hidden = !h;
   }
 
-  // One time range for Sectors, Rounds and Deals announced. Either control updates all three.
-  let CHART_PERIOD = '12', CHART_P = null;
+  // Sectors and Rounds share This year / All time. Deals announced is all time, one bar per year.
+  let CHART_PERIOD = 'year', CHART_P = null;
   const RC = { 'Series A': '#2F70F2', 'Undisclosed': '#9A97AD', 'Seed': '#1F9D6A', 'Series B': '#D9822B', 'Series C+': '#7952D8', 'Pre-seed': '#D968A0' };
-  const MONS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  function isoDate(d) { const m = String(d || '').match(/(\d{4}-\d{2}-\d{2})/); return m ? m[1] : ''; }
-  function cutoff12() {
-    const n = new Date();
-    const t = new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate() - 365));
-    return t.toISOString().slice(0, 10);
+  function pacificYear() {
+    try { return new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', year: 'numeric' }).format(new Date()); }
+    catch (e) { return String(new Date().getFullYear()); }
+  }
+  function dealYear(d) {
+    const y = String(d && d.date || '').match(/(\d{4})/);
+    return y ? y[1] : '';
+  }
+  function yearOnly(d) {
+    const p = String(d && d.date_precision || '').toLowerCase();
+    return p === 'year' || /^\d{4}$/.test(String(d && d.date || '').trim());
+  }
+  function dealWhen(d) {
+    if (!d) return '';
+    if (yearOnly(d)) return dealYear(d);
+    return fdate(d.date) || '';
+  }
+  function countThisYear(deals) {
+    const y = pacificYear();
+    return (deals || []).filter(d => dealYear(d) === y).length;
   }
   function periodDeals(all, period) {
-    const rows = (all || []).filter(d => isoDate(d && d.date));
-    if (period !== '12') return rows;
-    const c = cutoff12();
-    return rows.filter(d => isoDate(d.date) >= c);
+    const rows = (all || []).filter(d => dealYear(d));
+    if (period === 'all') return rows;
+    const y = pacificYear();
+    return rows.filter(d => dealYear(d) === y);
   }
   function topSectors(ds) {
     const c = {};
@@ -1912,32 +1928,16 @@
     if (/^series\s+[c-z]/i.test(s)) return 'Series C+';
     return s;
   }
-  function monthsBetween(a, b) {
-    const out = [];
-    let y = +a.slice(0, 4), m = +a.slice(5, 7);
-    const y2 = +b.slice(0, 4), m2 = +b.slice(5, 7);
-    while (y < y2 || (y === y2 && m <= m2)) {
-      out.push(y + '-' + String(m).padStart(2, '0'));
-      m += 1;
-      if (m === 13) { m = 1; y += 1; }
-      if (out.length > 40) break;
-    }
+  function yearKeys(ds) {
+    const years = ds.map(dealYear).filter(Boolean).sort();
+    if (!years.length) return [];
+    const y0 = +years[0], y1 = +years[years.length - 1], out = [];
+    for (let y = y0; y <= y1; y++) out.push(String(y));
     return out;
   }
-  function chartKeys(ds) {
-    const isos = ds.map(d => isoDate(d.date)).sort();
-    if (!isos.length) return [];
-    if (CHART_PERIOD !== '12') {
-      const y0 = +isos[0].slice(0, 4), y1 = +isos[isos.length - 1].slice(0, 4), out = [];
-      for (let y = y0; y <= y1; y++) out.push(String(y));
-      return out;
-    }
-    return monthsBetween(isos[0].slice(0, 7), isos[isos.length - 1].slice(0, 7));
-  }
-  function keyLabel(k) { return CHART_PERIOD === '12' ? (MONS[+k.slice(5, 7) - 1] || k) : "'" + k.slice(2); }
   function segHtml() {
-    return '<div class="seg" role="group" aria-label="Time range for Sectors, Rounds and Deals announced">'
-      + [['12', '12 months'], ['all', 'All time']].map(([v, l]) => '<button type="button" data-range="' + v + '" aria-pressed="' + (CHART_PERIOD === v ? 'true' : 'false') + '" class="' + (CHART_PERIOD === v ? 'on' : '') + '">' + l + '</button>').join('')
+    return '<div class="seg" role="group" aria-label="Time range for Sectors and Rounds">'
+      + [['year', 'This year'], ['all', 'All time']].map(([v, l]) => '<button type="button" data-range="' + v + '" aria-pressed="' + (CHART_PERIOD === v ? 'true' : 'false') + '" class="' + (CHART_PERIOD === v ? 'on' : '') + '">' + l + '</button>').join('')
       + '</div>';
   }
   function chartShell(id, title, k) {
@@ -1986,9 +1986,9 @@
     return E.map(r => '<div class="rr"><span>' + esc(r) + '</span><div class="t"><div class="f" style="width:' + (c[r] / mx * 100) + '%;background:' + (RC[r] || '#6C3BFF') + '"></div></div><em>' + c[r] + '</em></div>').join('');
   }
   function barsHtml(ds) {
-    const T = topSectors(ds), keys = chartKeys(ds);
+    const T = topSectors(ds), keys = yearKeys(ds);
     if (!keys.length) return '<p class="cempty">No deals in this range</p>';
-    const keyOf = CHART_PERIOD === '12' ? (d => isoDate(d.date).slice(0, 7)) : (d => isoDate(d.date).slice(0, 4));
+    const keyOf = dealYear;
     const buckets = keys.map(k => {
       const g = ds.filter(d => keyOf(d) === k);
       return { k, n: g.length, led: g.filter(d => d.lead).length, parts: T.concat(['Other']).map(s => ({ s, n: g.filter(d => bucketOf(d, T) === s).length })).filter(z => z.n) };
@@ -2011,7 +2011,7 @@
         y -= h;
         svg += '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + Math.max(h, 0.5) + '" rx="2" fill="' + sectorColor(z.s) + '"><title>' + esc(b.k + ' · ' + z.s + ': ' + z.n) + '</title></rect>';
       });
-      svg += '<text x="' + (x + w / 2) + '" y="' + (H + 22) + '" text-anchor="middle" font-size="12" fill="#8C88A3" font-family="DM Sans, sans-serif">' + esc(keyLabel(b.k)) + '</text>';
+      svg += '<text x="' + (x + w / 2) + '" y="' + (H + 22) + '" text-anchor="middle" font-size="12" fill="#8C88A3" font-family="DM Sans, sans-serif">' + esc("'" + b.k.slice(2)) + '</text>';
       pts.push([(i * bw + bw / 2), (H + 8 - b.led * u)]);
     });
     svg += '<polyline points="' + pts.map(p => p.join(',')).join(' ') + '" fill="none" stroke="#14112B" stroke-width="2"/>';
@@ -2029,15 +2029,17 @@
   function paintCharts(main, P) {
     if (!main || !main.querySelectorAll) return;
     const all = (P && P.activity && P.activity.deals) || [];
-    const ds = periodDeals(all, CHART_PERIOD);
+    const ranged = periodDeals(all, CHART_PERIOD);
+    const allTime = periodDeals(all, 'all');
     main.querySelectorAll('[data-chart]').forEach(tile => {
       const k = tile.getAttribute('data-chart');
+      const ds = k === 'd' ? allTime : ranged;
       const sw = tile.querySelector('.segw'), box = tile.querySelector('.cc');
-      if (sw) sw.innerHTML = segHtml();
+      if (sw) sw.innerHTML = k === 'd' ? '' : segHtml();
       if (box) box.innerHTML = k === 's' ? donutHtml(ds) : k === 'r' ? roundsHtml(ds) : barsHtml(ds);
     });
     if (P && P.open && typeof actModal === 'function' && typeof document !== 'undefined' && document.body && main.querySelector('[data-chart="s"]')) {
-      actModal('actsectors', 'All startups by sector', sectorDialogHtml(ds));
+      actModal('actsectors', 'All startups by sector', sectorDialogHtml(ranged));
     }
   }
   function bentoCard(id, titleHtml, inner, foot, fill) {
@@ -2073,7 +2075,7 @@
   document.addEventListener('click', (e) => {
     const b = e.target && e.target.closest && e.target.closest('[data-range]');
     if (!b || !CHART_P) return;
-    CHART_PERIOD = b.getAttribute('data-range') === 'all' ? 'all' : '12';
+    CHART_PERIOD = b.getAttribute('data-range') === 'all' ? 'all' : 'year';
     paintCharts(b.closest('.prof') || b.closest('main'), CHART_P);
   });
 
