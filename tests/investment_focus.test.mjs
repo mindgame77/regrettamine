@@ -1,4 +1,4 @@
-// Investment focus (F.11): website labels keep the source link. Empty industries use recorded-deal sectors.
+// Investment focus (F.11): website labels are the stored words, with no source link. Empty industries use recorded-deal sectors.
 // node --test tests/investment_focus.test.mjs
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -52,7 +52,7 @@ function tags(firm) {
 }
 const pills = (html) => [...html.matchAll(/<span class="hp">([^<]*)<\/span>/g)].map(m => m[1]);
 
-test('website focus shows the stored labels and one source link', () => {
+test('website focus shows the stored labels and no source link', () => {
   const html = tags({
     name: 'Andreessen Horowitz', slug: 'a16z',
     industries: [
@@ -62,11 +62,10 @@ test('website focus shows the stored labels and one source link', () => {
     stages: [],
     deal_sectors: [{ sector: 'Security', n: 9 }],
   });
-  assert.match(html, /Industries/);
+  assert.match(html, /Sectors/);
   assert.doesNotMatch(html, /Top sectors from recorded deals/);
   assert.deepEqual(pills(html), ['AI', 'Fintech']);
-  assert.match(html, /<a class="htag-src" href="https:\/\/a16z\.com\/about\/" target="_blank" rel="noopener">a16z\.com<\/a>/);
-  assert.equal((html.match(/htag-src/g) || []).length, 1);
+  assert.doesNotMatch(html, /href=|htag-src|a16z\.com/);
   assert.doesNotMatch(html, /[↑↓→←▶◀▸▹›»]/);
 });
 
@@ -76,7 +75,7 @@ test('plain industry strings stay labels with no link', () => {
   assert.doesNotMatch(html, /href=|htag-src/);
 });
 
-test('an empty industry list shows the recorded-deal sectors that exist, with counts', () => {
+test('an empty industry list shows recorded-deal sector names under Sectors, with no counts', () => {
   const html = tags({
     industries: [],
     stages: ['Growth'],
@@ -86,10 +85,10 @@ test('an empty industry list shows the recorded-deal sectors that exist, with co
       { sector: 'Security', n: 13 },
     ],
   });
-  assert.match(html, /Top sectors from recorded deals/);
-  assert.doesNotMatch(html, />Industries</);
-  assert.deepEqual(pills(html), ['Security · 13', 'AI agents · 12', 'Fintech · 10', 'Growth']);
-  assert.doesNotMatch(html, /href=|htag-src|Other/);
+  assert.match(html, /Sectors/);
+  assert.doesNotMatch(html, /Top sectors from recorded deals/);
+  assert.deepEqual(pills(html), ['Security', 'AI agents', 'Fintech', 'Growth']);
+  assert.doesNotMatch(html, /href=|htag-src|Other|·/);
 });
 
 test('equal deal counts break alphabetically and a blank sector is dropped', () => {
@@ -102,7 +101,7 @@ test('equal deal counts break alphabetically and a blank sector is dropped', () 
       { sector: 'Health', n: 0 },
     ],
   });
-  assert.deepEqual(pills(html), ['Bio · 4', 'Security · 4']);
+  assert.deepEqual(pills(html), ['Bio', 'Security']);
 });
 
 test('no website focus and no recorded sectors hides the field', () => {
