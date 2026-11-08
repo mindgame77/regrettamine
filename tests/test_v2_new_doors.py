@@ -1,4 +1,5 @@
 """The door migration names the new shelves and does not put registration on the page."""
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -60,3 +61,21 @@ def test_team_shows_founders_and_current_leader():
     assert "source_level = 3 and source_type = 'News' and v2_is_leader_title(title)" in text
     assert "Founders plus whoever runs the firm today, and nobody else" in guide
     assert "reputable dated news source" in guide
+
+
+def test_fund_announcement_total_keeps_a_tilde_and_skips_without_v2():
+    text = (ROOT / "supabase/migrations/20261108020000_v2_fund_announcement_display.sql").read_text(encoding="utf-8")
+    assert "to_regclass('public.firm_fund_announcements') is null" in text
+    assert "to_regprocedure('public.v2_firm_page(text)') is null" in text
+    assert "raise notice 'v2 schema missing, skipped'" in text
+    assert "when count(*)=1 then max(a.display)" in text
+    assert "bool_or(left(btrim(a.display),1)='~')" in text
+    assert "'~'||public._money_display(sum(a.amount_usd),'USD')" in text
+    assert "else public._money_display(sum(a.amount_usd),'USD')" in text
+    assert "Rows from other dates are not added" in text
+    assert "announced_on desc" not in text
+    rendered = subprocess.run(
+        ["node", "--test", "--test-name-pattern", "keeps the tilde", "tests/funds_line.test.mjs"],
+        cwd=ROOT, capture_output=True, text=True,
+    )
+    assert rendered.returncode == 0, rendered.stdout[-2000:] + rendered.stderr[-2000:]
