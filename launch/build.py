@@ -353,7 +353,9 @@ def main():
     import hashlib
     edge = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'edge', 'firm.mjs')).read()
     # Include the lab slug list (sequoia is already in it) so a firm that just went live is not stuck on a cached 404.
-    open(os.path.join(OUT, '_tpl', 'version.txt'), 'w').write(hashlib.sha256((edge + tpl['summary'] + tpl['full'] + '\n' + ','.join(LAB_SLUGS)).encode()).hexdigest()[:12])
+    # lightspeed was already in that list, so the cached /vc/lightspeed/ 404 needs its own token.
+    live_token = 'lightspeed'
+    open(os.path.join(OUT, '_tpl', 'version.txt'), 'w').write(hashlib.sha256((edge + tpl['summary'] + tpl['full'] + '\n' + ','.join(LAB_SLUGS) + '\n' + live_token).encode()).hexdigest()[:12])
     for F in launch_firms():
         firms.append(F['slug'])
         for v, sub in (('summary', ''), ('full', 'full')):
