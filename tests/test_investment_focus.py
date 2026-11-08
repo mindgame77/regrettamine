@@ -36,7 +36,9 @@ def test_guide_states_the_one_rule():
     guide = GUIDE.read_text(encoding="utf-8")
     assert "F.11 Investment focus" in guide
     assert "No per-firm exception" in guide
-    assert "Top sectors from recorded deals" in guide
+    assert "under the same Industries label, with no counts" in guide
+    assert "The source stays stored and is not drawn" in guide
+    assert "Top sectors from recorded deals" not in guide
     assert "Eligible archived history is included" in guide
     assert "B3.9" in guide
     js = JS.read_text(encoding="utf-8")
@@ -44,8 +46,8 @@ def test_guide_states_the_one_rule():
     end = js.index("function paintTags")
     body = js[start:end]
     assert "deal_sectors" in body
-    assert "htag-src" in body
-    assert "Top sectors from recorded deals" in body
+    assert "htag-src" not in body
+    assert "Top sectors from recorded deals" not in body
 
 
 def test_header_renders_website_focus_and_derived_sectors():

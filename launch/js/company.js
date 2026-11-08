@@ -203,7 +203,7 @@
     if (old && old.remove) old.remove();
   }
   // Industries and stages sit under the meta line and social row, above the activity cards.
-  // One investment-focus rule for every firm (F.11). Website labels keep the source link.
+  // One investment-focus rule for every firm (F.11). Website labels are the stored words. The source stays in the database and is not drawn.
   // An empty list draws nothing, including its label. No arrow or chevron.
   // Check size is not drawn: v2_firm_check_sizes rows are archived.
   const STAGE_ORDER = ['Pre-seed', 'Seed', 'Series A', 'Series B', 'Series C and later', 'Growth'];
@@ -215,21 +215,8 @@
     const rank = (s) => { const i = STAGE_ORDER.findIndex(x => x.toLowerCase() === s.toLowerCase()); return i < 0 ? STAGE_ORDER.length : i; };
     return items.map((s, i) => ({ s, i, r: rank(s) })).sort((a, b) => a.r - b.r || a.i - b.i).map(x => x.s);
   }
-  function focusHost(u) {
-    try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return ''; }
-  }
   function industryFocus(list) {
-    const seen = [];
-    const items = [];
-    (list || []).forEach(x => {
-      const text = String(x && typeof x === 'object' ? (x.industry_text || x.text || '') : (x == null ? '' : x)).trim();
-      const url = safeUrl(x && typeof x === 'object' ? (x.source_url || x.url || '') : '');
-      if (!text) return;
-      items.push(text);
-      if (url && seen.indexOf(url) < 0) seen.push(url);
-    });
-    const links = seen.map(u => '<a class="htag-src" href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(focusHost(u) || u) + '</a>').join('');
-    return { items, links };
+    return (list || []).map(x => String(x && typeof x === 'object' ? (x.industry_text || x.text || '') : (x == null ? '' : x)).trim()).filter(Boolean);
   }
   function dealSectorPills(list) {
     return (list || []).map(x => {
@@ -237,16 +224,16 @@
       const n = Number(x && x.n);
       return name && Number.isFinite(n) && n >= 1 ? { name, n } : null;
     }).filter(Boolean).sort((a, b) => b.n - a.n || a.name.toLowerCase().localeCompare(b.name.toLowerCase()) || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0))
-      .map(x => x.name + ' · ' + x.n);
+      .map(x => x.name);
   }
   function tagHtml(P) {
     const firm = (P && P.firm) || {};
-    const block = (label, xs, links) => xs.length ? '<div class="htag"><span class="htag-l">' + esc(label) + (links || '') + '</span><div class="secp">' + xs.map(t => '<span class="hp">' + esc(t) + '</span>').join('') + '</div></div>' : '';
+    const block = (label, xs) => xs.length ? '<div class="htag"><span class="htag-l">' + esc(label) + '</span><div class="secp">' + xs.map(t => '<span class="hp">' + esc(t) + '</span>').join('') + '</div></div>' : '';
     const web = industryFocus(firm.industries);
-    const focus = web.items.length
-      ? block(HCOPY.industries || 'Industries', web.items, web.links)
-      : block(HCOPY.deal_sectors || 'Top sectors from recorded deals', dealSectorPills(firm.deal_sectors), '');
-    return focus + block(HCOPY.stages || 'Stages', orderedStages(firm.stages), '');
+    const focus = web.length
+      ? block(HCOPY.industries || 'Industries', web)
+      : block(HCOPY.industries || 'Industries', dealSectorPills(firm.deal_sectors));
+    return focus + block(HCOPY.stages || 'Stages', orderedStages(firm.stages));
   }
   function paintTags(main, P) {
     if (!main || !main.querySelector) return;

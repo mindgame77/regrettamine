@@ -379,7 +379,7 @@ A4.8,A4 The holding door,"A trigger cannot open a link: Accepted rows are flagge
 A6.5,A6 Three marks on every item,"A6 stays as is. Missing checked date, check and level on old items are filled by the new-database rerun (A14.1), not by a backfill now (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
 A9.21,A9 List limits and archiving (the one table),"The archive job for every list in the A9 table is built as part of the new database (A14) (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
 B3.8,B3 Firm header,"Social follower counts (A2.10, F.1): shown only for a firm-linked v2_social_accounts row (source level 2, count read within 12 months). Do not invent a count. The hidden-until-mockup hold is revoked.","on main (Alex, 2026-11-06)"
-B3.9,B3 Firm header,"Investment focus (F.11) for every firm. Website labels keep the source link. Otherwise the top recorded-deal sectors show with counts. Empty stays hidden.","on main (Alex, 2026-11-08)"
+B3.9,B3 Firm header,"Investment focus (F.11) for every firm uses the Industries label. Website words only, no source link. Otherwise sector names, no counts. Empty stays hidden.","on main (Alex, 2026-11-08)"
 B12.9,B12 News,"Any stored news item not yet checked (for example 33 of 65 for the lab firms, as of 2026-10-27) is checked in the new-database rerun (A14.1) and hidden until it passes the news check (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
 B12.10,B12 News,"Timeline events merge into News as one list: one item per normalized link (A7.11), the same news check (B12.6) and the same limits (A9.3). Duplicate links are dropped (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
 A13.1,A13 Dates shown on the page,"Every date shown on the page uses US format MM/DD/YYYY, for example 01/07/2026, for news, timeline, deals, reviews and legal (Alex, 2026-10-28).","on main (Alex, 2026-10-28)"
@@ -402,7 +402,7 @@ F.7,F Firm report collect (v2),Team is current CEO or founder rows with real soc
 F.8,F Firm report collect (v2),Videos are YouTube url title channel date and view count. No thumbnail column.,on main
 F.9,F Firm report collect (v2),News is headline outlet date source url and tone only when the story supports it.,on main
 F.10,F Firm report collect (v2),Do not invent a chart. Sparse periods are flagged not hidden by a new numeric cutoff. A9 caps stay.,on main
-F.11,F Firm report collect (v2),"One investment focus rule for every firm. Website labels from v2_firm_industries, else the top 5 recorded-deal sectors with counts. Empty stays hidden.","on main (Alex, 2026-11-08)"
+F.11,F Firm report collect (v2),"One investment focus rule for every firm. Industries label. Website words, source stored not shown. Else up to 5 sector names, no counts. Empty stays hidden.","on main (Alex, 2026-11-08)"
 N.1,N Next firms what does not fit,A missing source leaves the field empty. Do not invent it and do not drop the firm.,on main
 N.2,N Next firms what does not fit,Real content that will not fit is still stored. Do not shrink clip or hardcode the layout.,on main
 N.3,N Next firms what does not fit,Record firm slug section and what does not fit for Alex.,on main
