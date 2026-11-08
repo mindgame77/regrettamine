@@ -118,7 +118,7 @@ B6a.2,B6a “Active” tile,"investments.invested_on and funds.closed_on, both d
 B6a.3,B6a “Active” tile,Sequoia’s deals were copied from timeline lines (sequoia_timeline_deals).,on main
 B6a.4,B6a “Active” tile,"The 365-day window is display math, not a collect rule.",on main
 B6a.5,B6a “Active” tile,The tile is absent when both counts are zero.,on main
-B6b.1,B6b Deals in the last 12 months,A count.,on main
+B6b.1,B6b Deals this year,"Tile reads Deals, this year. Browser count of the current calendar year, including year-only deals. Last deal line stays.",on main
 B6b.2,B6b Deals in the last 12 months,investments where invested_on is within 365 days and data_status = real.,on main
 B6b.3,B6b Deals in the last 12 months,Same as B6a.3 (now an old note in R5).,on main
 B6b.4,B6b Deals in the last 12 months,No required fields beyond the row existing.,on main
@@ -151,7 +151,7 @@ B6e.9.4,"B6e Latest deal, and “Show all”","Counts only, no percentages.",on 
 B6e.9.5,"B6e Latest deal, and “Show all”",Deals with no sector are not counted and get no pill.,on main
 B6e.9.6,"B6e Latest deal, and “Show all”","Pills count all of the firm's deals, not only the last 12 months.",on main
 B6e.9.7,"B6e Latest deal, and “Show all”","Summary shows only with 10 or more deals in total, on the page and in the pop-up.",on main
-B6e.9.8,"B6e Latest deal, and “Show all”","""Deals, last 12 mo"" is a separate count of deals in the last 12 months.",on main
+B6e.9.8,"B6e Latest deal, and “Show all”","Deals, this year is the calendar-year count. Sectors and Rounds toggle This year / All time. Deals announced is all time, one bar per year.",on main
 B6e.9.9,"B6e Latest deal, and “Show all”","A sector name is at most 2 words and 25 characters (Alex, 2026-10-28).",on main
 B6e.10,"B6e Latest deal, and “Show all”","Sector pills: no data that has passed its check means the block is hidden from users (no empty box, no ""No data"" text).",on main
 B7.1,"B7 Thesis (replaces Overview; Alex, 2026-10-28)",New block “Thesis”.,on main

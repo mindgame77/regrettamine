@@ -31,7 +31,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
   - [B5. Score bar](#b5)
   - [B6. Activity strip](#b6)
     - [B6a. “Active” tile](#b6a)
-    - [B6b. Deals in the last 12 months](#b6b)
+    - [B6b. Deals, this year](#b6b)
     - [B6c. Latest fund tile](#b6c)
     - [B6d. Assets under management tile](#b6d)
     - [B6e. Latest deal, and “Show all”](#b6e)
@@ -81,7 +81,7 @@ Rule ids (A1.2, B6c.3, C8.4) are stable. `docs/rules_index.csv` lists every rule
 The public page reads `v2_firm_page`. Create the firm first with `add_firm` ([A3.1](#a3)). Bots then write the v2 tables below through `v2_research_submit`. Every value needs the source URL already required for that table. Do not invent a count, a role, a sector, or a person. Do not hardcode one firm's facts into the instructions or the page.
 
 - **F.1 Header.** `v2_firms`: `hq_city`, `hq_state`, `hq_country` (two letters), `website_url`, `founded_year`, each with the source column named in `v2_research_submit` (`hq_source`, `founded_year_source`). Thesis is `thesis_text` from the firm's own site only (B7). Firm social counts are `v2_social_accounts`: `platform`, `account_url`, `follower_count`, `date_read`, `source_url`, source level 2. No count from anywhere else.
-- **F.2 Deals.** `v2_deals` joined to the startup. Collect company, round, date, amount and currency, lead, and source URL only when the source states them. Sector is a name already in `v2_sector` (the 18 ST5 names): AI agents, AI models, Bio, Climate & Energy, Consumer, Crypto, Developer tools, Education, Enterprise software, Fintech, Food & Agriculture, Hardware & Robotics, Health, Media & Gaming, Mobility, Real estate, Security, Other. An unknown name is refused. Do not coin a sector. The same name keeps one color everywhere. Rank does not assign it. Other stays Other.
+- **F.2 Deals.** `v2_deals` joined to the startup. Collect company, round, date, amount and currency, lead, and source URL only when the source states them. A date may be a bare year (`2026`). The door stores it as January 1 of that year with `deal_date_precision` `year`. The page shows the year only. Do not invent a month. (Alex, t4679s14391) Sector is a name already in `v2_sector` (the 18 ST5 names): AI agents, AI models, Bio, Climate & Energy, Consumer, Crypto, Developer tools, Education, Enterprise software, Fintech, Food & Agriculture, Hardware & Robotics, Health, Media & Gaming, Mobility, Real estate, Security, Other. An unknown name is refused. Do not coin a sector. The same name keeps one color everywhere. Rank does not assign it. Other stays Other.
 - **F.3 Limited partners.** Off for now (Alex, 2026-11-08). Do not research limited partners. Do not send `v2_lp_commitments`. The door rejects that table. Rows already stored stay. Nothing is deleted. The page does not show them.
 - **F.4 Legal.** `v2_legal_items`: full case title (`other_party` or `regulator_name` with the firm), `court`, `filed_year`, `status` (Active, Dismissed, Settled, or Closed when the record says so), `side`, `case_type` (Fraud, Contract, Employment, Securities, Regulator action, IP), and the level-1 court or regulator `source_url`. Do not shorten the title.
 - **F.5 What investors look for.** `v2_investor_principles`: `investor_name`, `investor_title`, `summary`, `quote` (the exact words, not the summary, 150 characters or less), `published_at`, `source_url`. The source must show that person was at this firm on that date (E3). When the quote URL is not the firm site, `role_source_url` is the firm page that proves the role. Quote date: if the source shows a date use it; if not, leave it empty. Never reject for a missing date. Never use dateModified or archive dates.
@@ -371,12 +371,12 @@ Items .1 to .5 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 - **B6a.5** The tile is absent when both counts are zero.
 
 <a id="b6b"></a>
-### B6b. Deals in the last 12 months
+### B6b. Deals, this year
 
-- **B6b.1** A count.
-- **B6b.2** `investments` where `invested_on` is within 365 days and `data_status = real`.
+- **B6b.1** The tile reads "Deals, this year". The number is deals in the current calendar year, counted in the browser from the deals already on the page. A year-only deal in that year counts. The Last deal line stays, and it is the latest deal, not only one from this year. (Alex, t4679s14391)
+- **B6b.2** The page reads `v2_firm_page` activity deals. `v2_firm_page` itself is not changed for this count.
 - **B6b.3** Same as B6a.3, now an old note in [R5](#r5).
-- **B6b.4** No required fields beyond the row existing. Amount can be empty.
+- **B6b.4** No required fields beyond the row existing. Amount can be empty. A year-only date is enough.
 - **B6b.5** The tile is omitted when the count is 0.
 
 <a id="b6c"></a>
@@ -419,7 +419,7 @@ Items .1 to .5 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
   - **B6e.9.5** Deals with no sector are not counted and get no pill.
   - **B6e.9.6** The pills count all of the firm's deals, not only the last 12 months.
   - **B6e.9.7** The summary shows only when the firm has 10 or more deals in total; with fewer, it is hidden on the page and in the pop-up. The same rules apply to the pop-up header.
-  - **B6e.9.8** "Deals, last 12 mo" is a separate number on the page: just the count of deals in the last 12 months.
+  - **B6e.9.8** "Deals, this year" is a separate number on the page: deals in the current calendar year, including year-only deals ([B6b](#b6b)). Sectors and Rounds use This year / All time. Deals announced has no toggle and shows all time, one bar per calendar year. A year-only deal sits in that year's bar. (Alex, t4679s14391)
   - **B6e.9.9** A sector name is at most 2 words and 25 characters (Alex, 2026-10-28). Longer names are mapped to a short standard name.
 - **B6e.10** Sector pills: no data that has passed its check means the block is hidden from users (no empty box, no "No data" text). It appears by itself once data passes. (Alex, 2026-10-28)
 
