@@ -1847,8 +1847,8 @@
       actModal('actfunds', pl(AC.funds_sec, fsn) + (anI.length ? ' · ' + fmt(AC.funds_announced, { n: anI.length }) : '') + ' · ' + firm, fundRows(newestFirst(anI.concat(fs.items))));
     }
     // Full lists for Show all. A lazy page loads them on open.
-    const full = (list, nAll) => !A.lazy && Array.isArray(list) && list.length > 1 ? list : (nAll > 1 ? null : undefined);
-    const fd = full(A.deals, n.deals), fr = full(A.reviews, n.reviews);
+    const full = (list, nAll, min = 2) => !A.lazy && Array.isArray(list) && list.length >= min ? list : (nAll >= min ? null : undefined);
+    const fd = full(A.deals, n.deals), fr = full(A.reviews, n.reviews, 1); // a single review still gets its popup so tapping the card opens it
     const lab = labFirm(P);
     if (P.open && fd !== undefined) actModal('actdeals', fmt(AC.deals_title, { n: fd ? fd.length : n.deals, firm }), fd ? dealRows(fd, lab) : '', !fd && { slug: P.firm.slug, kind: 'deals', lab, head: '' });
     if (P.open && fr !== undefined) actModal('actrevs', fmt(AC.reviews_title, { n: fr ? fr.length : n.reviews, firm }), fr ? fr.map(revCard).join('') : '', !fr && { slug: P.firm.slug, kind: 'revs' });
