@@ -5,6 +5,7 @@
 -- public.firms is not read or written. Nothing is deleted.
 -- CI has no v2 schema: this is a no-op there.
 -- Undo: supabase/rollbacks/20261108180000_v2_firms_live_on_insert.sql
+-- https://github.com/mindgame77/regrettamine/pull/367
 -- The undo drops the trigger and function only. Live rows stay.
 do $mig$
 begin
