@@ -68,7 +68,7 @@ test('industries and stages render word for word, stages in the fixed order, no 
   render(main, a16z);
   const html = act.placed.child.innerHTML;
   assert.equal(act.placed.where, 'beforebegin');
-  assert.match(html, /Industries/);
+  assert.match(html, /Sectors/);
   assert.match(html, /Stages/);
   const texts = [...html.matchAll(/<span class="hp">([^<]*)<\/span>/g)].map(m => m[1]);
   assert.deepEqual(texts, [
@@ -89,7 +89,7 @@ test('a firm with no industries, stages or team draws none of those blocks', () 
   render(main, P);
   assert.equal(act.placed, undefined);
   assert.equal(pageSecs(P).find(s => s.key === 'people'), undefined);
-  assert.doesNotMatch(pmain.innerHTML, /Industries|Stages|Team|Check size|class="tcards"/);
+  assert.doesNotMatch(pmain.innerHTML, /Sectors|Industries|Stages|Team|Check size|class="tcards"/);
 });
 
 test('check size is not a header block', () => {

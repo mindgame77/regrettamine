@@ -231,8 +231,8 @@
     const block = (label, xs) => xs.length ? '<div class="htag"><span class="htag-l">' + esc(label) + '</span><div class="secp">' + xs.map(t => '<span class="hp">' + esc(t) + '</span>').join('') + '</div></div>' : '';
     const web = industryFocus(firm.industries);
     const focus = web.length
-      ? block(HCOPY.industries || 'Industries', web)
-      : block(HCOPY.industries || 'Industries', dealSectorPills(firm.deal_sectors));
+      ? block(HCOPY.industries || 'Sectors', web)
+      : block(HCOPY.industries || 'Sectors', dealSectorPills(firm.deal_sectors));
     return focus + block(HCOPY.stages || 'Stages', orderedStages(firm.stages));
   }
   function paintTags(main, P) {

@@ -36,7 +36,7 @@ def test_guide_states_the_one_rule():
     guide = GUIDE.read_text(encoding="utf-8")
     assert "F.11 Investment focus" in guide
     assert "No per-firm exception" in guide
-    assert "under the same Industries label, with no counts" in guide
+    assert "under the same Sectors label, with no counts" in guide
     assert "The source stays stored and is not drawn" in guide
     assert "Top sectors from recorded deals" not in guide
     assert "Eligible archived history is included" in guide

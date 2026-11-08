@@ -62,7 +62,7 @@ test('website focus shows the stored labels and no source link', () => {
     stages: [],
     deal_sectors: [{ sector: 'Security', n: 9 }],
   });
-  assert.match(html, /Industries/);
+  assert.match(html, /Sectors/);
   assert.doesNotMatch(html, /Top sectors from recorded deals/);
   assert.deepEqual(pills(html), ['AI', 'Fintech']);
   assert.doesNotMatch(html, /href=|htag-src|a16z\.com/);
@@ -75,7 +75,7 @@ test('plain industry strings stay labels with no link', () => {
   assert.doesNotMatch(html, /href=|htag-src/);
 });
 
-test('an empty industry list shows recorded-deal sector names under Industries, with no counts', () => {
+test('an empty industry list shows recorded-deal sector names under Sectors, with no counts', () => {
   const html = tags({
     industries: [],
     stages: ['Growth'],
@@ -85,7 +85,7 @@ test('an empty industry list shows recorded-deal sector names under Industries, 
       { sector: 'Security', n: 13 },
     ],
   });
-  assert.match(html, /Industries/);
+  assert.match(html, /Sectors/);
   assert.doesNotMatch(html, /Top sectors from recorded deals/);
   assert.deepEqual(pills(html), ['Security', 'AI agents', 'Fintech', 'Growth']);
   assert.doesNotMatch(html, /href=|htag-src|Other|·/);
