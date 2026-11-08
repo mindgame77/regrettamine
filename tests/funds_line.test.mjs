@@ -149,3 +149,25 @@ test('v4: the fund tile opens the funds pop-up on click, and the pop-up lists ne
 test('v4: no Firm & funds section in the page config', () => {
   assert.ok(!copy.sections.list.some(s => s.key === 'funds'));
 });
+
+test('an announced row shows its display string, and a single latest total keeps the tilde', () => {
+  created.length = 0;
+  const html = paint({
+    activity: {
+      funds_announced: {
+        n: 2,
+        latest: { n: 1, total_usd: 10000000000, total_display: '~$10B', date: '2026-11-04', url: 'https://techcrunch.com/2026/11/04/sequoia/' },
+        items: [
+          { name: 'New funds (not itemized)', raised_usd: 10000000000, raised_display: '~$10B', date: '2026-11-04', url: 'https://techcrunch.com/2026/11/04/sequoia/' },
+          { name: 'Sequoia Expansion fund (2026)', raised_usd: 7000000000, raised_display: '~$7B', date: '2026-04-16', url: 'https://techcrunch.com/2026/04/16/sequoia/' },
+        ],
+      },
+      funds_sec: fundsSec,
+    },
+  });
+  assert.match(tile(html), /<b>~\$10B<\/b>/);
+  assert.doesNotMatch(tile(html), /\$17B|~\$17B/);
+  const ov = created.find(e => e.id === 'actfunds');
+  assert.match(ov.innerHTML, /New funds \(not itemized\)<\/b><span>~\$10B<\/span>/);
+  assert.match(ov.innerHTML, /Sequoia Expansion fund \(2026\)<\/b><span>~\$7B<\/span>/);
+});
