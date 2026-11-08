@@ -85,7 +85,8 @@ test('caps at 10 rows and offers Show all', () => {
   assert.match(legal(html), /class="ash" data-open="actlegal">Show all<\/button>/);
   assert.doesNotMatch(legal(html), /Show all \d/);
   assert.doesNotMatch(html, /Legal &amp; regulatory <em class="pc2">/);
-  assert.doesNotMatch(legal(page(items.slice(0, 3))), /actlegal/);
+  assert.match(legal(page(items.slice(0, 1))), /class="ash" data-open="actlegal">Show all<\/button>/);
+  assert.match(legal(page(items.slice(0, 3))), /class="ash" data-open="actlegal">Show all<\/button>/);
   assert.doesNotMatch(legal(html), /<p class="psub">|Cases where the firm itself/);
 });
 
