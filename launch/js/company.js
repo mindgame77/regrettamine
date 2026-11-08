@@ -594,7 +594,8 @@
     if (!cs.length) return '';
     const open = !!(P && P.open);
     let h = '<div class="lglines" data-fit="1">' + cs.map((c, i) => i < LEGAL_PREVIEW ? legalLine(c) : markExtra(legalLine(c))).join('') + '</div>';
-    if (cs.length > LEGAL_PREVIEW) h += showAllLink(open, 'actlegal');
+    // One case still gets Show all. The popup is what a tap on the grey card opens, on every firm.
+    h += showAllLink(open, 'actlegal');
     if (open && typeof actModal === 'function' && typeof document !== 'undefined' && document.body) {
       actModal('actlegal', (LG.title || 'Legal & regulatory'), '<div class="lgds">' + cs.map(legalDetail).join('') + '</div>');
     }
@@ -761,7 +762,7 @@
     if (open && typeof document !== 'undefined' && document.body) {
       actModal('actinvestors', investorTitle(), '<div class="iprs">' + rows.map((x, i) => investorRow(x, true, i)).join('') + '</div>');
     }
-    return '<div class="iprs" data-fit="1">' + body + '</div>' + (rows.length > INVESTORS_SHOWN ? showAllLink(open, 'actinvestors') : '');
+    return '<div class="iprs" data-fit="1">' + body + '</div>' + showAllLink(open, 'actinvestors');
   }
   // Open-state renderers, keyed by copy.json sections[].renderer. The section is the third argument (LP grouping).
   const R = {
@@ -2044,7 +2045,7 @@
     if (revs.length) {
       const nrev = (P.activity.counts && Number(P.activity.counts.reviews)) || revs.length;
       const revHtml = '<div data-fit="1">' + revs.map((r, i) => i < 3 ? revCard(r) : markExtra(revCard(r))).join('') + '</div>';
-      h += bentoCard('reviews', esc(AC.reviews || 'What founders say'), revHtml, nrev > 3 ? showAllLink(!!P.open, 'actrevs') : '', true);
+      h += bentoCard('reviews', esc(AC.reviews || 'What founders say'), revHtml, nrev >= 1 ? showAllLink(!!P.open, 'actrevs') : '', true);
     }
     if (by.news) h += bentoCard('news', esc(by.news.title), R.news(by.news.items, P, by.news), '', true);
     if (deals.length) {
@@ -2085,7 +2086,9 @@
       shown++;
     }
     const more = rows.some(row => row.hidden);
-    if (show) show.hidden = !more;
+    // Legal, What investors look for, and What founders say keep Show all even when the one row fits.
+    const keepShow = card.id === 'legal' || card.id === 'investors' || card.id === 'reviews';
+    if (show) show.hidden = keepShow ? false : !more;
   }
   function fillTiles(root) {
     if (!root || !root.querySelectorAll) return;

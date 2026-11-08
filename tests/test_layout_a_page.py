@@ -67,6 +67,11 @@ def test_legal_rows_put_active_first():
     assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-2000:]
 
 
+def test_one_item_still_has_show_all():
+    r = subprocess.run(["node", "--test", "tests/one_item_show_all.test.mjs"], cwd=ROOT, capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-2000:]
+
+
 def test_fund_tile_uses_an_earlier_amount_then_aum():
     r = subprocess.run(["node", "--test", "tests/fund_tile.test.mjs"], cwd=ROOT, capture_output=True, text=True)
     assert r.returncode == 0, r.stdout[-3000:] + r.stderr[-2000:]
