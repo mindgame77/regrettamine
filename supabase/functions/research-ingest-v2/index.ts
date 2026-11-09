@@ -88,7 +88,7 @@ Deno.serve(async (req) => {
       return json(data, 200);
     }
     if (body.action === "list_queue" || body.action === "verdict") {  // Checker key only (checked in SQL)
-      const args = body.action === "verdict" ? { id: body.id, verdict: body.verdict, reason: body.reason, sources: body.sources } : { limit: body.limit };
+      const args = body.action === "verdict" ? { id: body.id, verdict: body.verdict, reason: body.reason, sources: body.sources, drop_fields: body.drop_fields } : { limit: body.limit };
       const { data, error } = await db.rpc("v2_checker_action", { p_key_id: auth.key_id, p_action: body.action, p_args: args, p_dry_run: body.dry_run === true });
       if (error || !data) return json({ error: "server error" }, 500);
       bot = data.bot_id ?? "";
