@@ -401,13 +401,13 @@ Items .1 to .5 in each block follow the 2026-10-27 snapshot layout: 1 what is dr
 <a id="b6c"></a>
 ### B6c. Latest fund tile
 
-- **B6c.1** The newest fund that has a raised amount, with the name, the amount, and a source link: the filing, or the news or trusted page the amount came from (see B6c.8) (Alex, 2026-10-28).
-- **B6c.2** First choice: `funds.raised_usd` or `funds.size_usd`, `funds.name`, `funds.closed_on`, `funds.filing_url` (the source link: the filing, or the news or trusted page the amount came from; see B6c.8 (Alex, 2026-10-28)). On the 10 lab firms, if that amount is missing, `earlierFund` reads a Funds section line shaped “Name · $amount · date.” If that is also missing, the assets tile is used.
+- **B6c.1** The newest fund that has a raised amount, with the name and the amount. The source shows only in the Show all pop-up, never on the tile: the filing, or the news or trusted page the amount came from (see B6c.8) (Alex, 2026-11-09).
+- **B6c.2** First choice: `funds.raised_usd` or `funds.size_usd`, `funds.name`, `funds.closed_on`, `funds.filing_url` (the source shows only in the Show all pop-up, never on the tile: the filing, or the news or trusted page the amount came from; see B6c.8 (Alex, 2026-11-09)). On the 10 lab firms, if that amount is missing, `earlierFund` reads a Funds section line shaped “Name · $amount · date.” If that is also missing, the assets tile is used.
 - **B6c.3** Profile-fact fund lines: the enricher, from Form D or Form ADV.
 - **B6c.4** The tile skips a $0 amount. It skips lines that look like AUM or gross assets.
 - **B6c.5** Other firms, outside the 10, still show a fund with no amount.
 - **B6c.7** Latest fund tile rule (Alex, Oct 27 2026 design note): A latest fund with an amount stays. A $0 or missing amount uses the most recent earlier fund that raised money (name, amount, date, filing link). If none did, the tile is AUM from the SEC/ADV figure already on the page. Neither shows nothing.
-- **B6c.8** Rule (Alex, 2026-10-28): amount source: see [A1.8](#a1). The tile link is the sec.gov filing when the source is sec.gov. When the amount or date comes from an approved news outlet or trusted site, that page is the link instead.
+- **B6c.8** Rule (Alex, 2026-10-28): amount source: see [A1.8](#a1). The source shows only in the Show all pop-up, never on the tile (Alex, 2026-11-09). A pop-up row still links the filing, or the news or trusted page the amount came from.
 - **B6c.9** Shown count, max kept, and archiving for funds: see [A9.6](#a9). Amount source: [A1.8](#a1).
 
 <a id="b6d"></a>

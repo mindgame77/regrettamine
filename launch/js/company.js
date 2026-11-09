@@ -1564,9 +1564,9 @@
   }
   function raisedFundTile(fund) {
     const when = fund.date ? (fdate(fund.date) || fund.date) : '';
+    // Alex 2026-11-09: the source link stays in the Show all pop-up, never on this tile.
     const sub = esc(fund.name) + ' · ' + esc(fmt(AC.raised, { amount: fund.amount }))
-      + (when ? ' · ' + esc(when) : '')
-      + (fund.url ? ' · <a href="' + esc(fund.url) + '" target="_blank" rel="noopener"' + fullA(srcName(fund.url)) + '>' + esc(capL(srcName(fund.url))) + '</a>' : '');
+      + (when ? ' · ' + esc(when) : '');
     return tile(AC.fund, esc(fund.amount), sub, 'afd');
   }
   function aumFigure(raw) {
@@ -1868,9 +1868,8 @@
   function fundCard(fund) {
     const year = yearOf(fund.date);
     const fresh = underYears(fund.date, 3);
-    const u = fund.announced ? '' : fund.url; // announced total: no link on the tile (rows in the pop-up keep Source)
-    const link = u ? ' · <a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(srcName(u, fund.label)) + '>' + esc(capL(srcName(u, fund.label))) + '</a>' : '';
-    const sub = esc(fund.name) + ' · ' + esc(fmt(AC.raised, { amount: fund.amount })) + (year ? ' · ' + esc(year) : '') + link;
+    // Alex 2026-11-09: no source link on the tile, for an announced total and for an SEC or activity fund. Pop-up rows keep Source / Filing.
+    const sub = esc(fund.name) + ' · ' + esc(fmt(AC.raised, { amount: fund.amount })) + (year ? ' · ' + esc(year) : '');
     return tile(AC.fund, esc(fund.amount), sub, fresh === false ? 'afd afr' : 'afd afg');
   }
   function moneyDate(m) {

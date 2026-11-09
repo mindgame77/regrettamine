@@ -119,6 +119,7 @@ test('announcements alone open Show all with the item count, not latest.n', () =
   assert.match(html, /1 fund announced/);
   assert.match(html, /2026/);
   assert.match(html, /data-fundtile class="att afd/);
+  assert.doesNotMatch(html, /<a[\s>]/);
   assert.match(html, /Show all \(5 funds\)/);
   assert.doesNotMatch(html, /Show all \(1 fund\)/);
   assert.doesNotMatch(html, /class="adl"/);
@@ -144,6 +145,7 @@ test('SEC-only funds keep the SEC count and do not invent an announcement title'
   const html = paint({ activity: { latest_fund: { name: 'Filed Fund I, L.P.', raised_usd: 1000000000, date: '2024-02-01', url: EDGAR }, funds_sec: sec } });
   assert.match(html, /Show all \(2 funds\)/);
   assert.match(html, /<b>\$1B<\/b>/);
+  assert.doesNotMatch(html, /<a[\s>]|Filing/);
   assert.doesNotMatch(html, /announced/);
   assert.doesNotMatch(html, /class="adl"/);
   const ov = popup();
