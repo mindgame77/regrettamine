@@ -396,7 +396,7 @@ F.1,F Firm report collect (v2),Header HQ country website founded year thesis and
 F.2,F Firm report collect (v2),Deals keep stated round date amount lead and source. Sector must be one of the 18 v2_sector names. Other stays Other.,on main
 F.3,F Firm report collect (v2),Each LP commitment is its own row with amount and source. No commitment-count field.,on main
 F.4,F Firm report collect (v2),Legal stores the full case title court filed year status side case type and level-1 source.,on main
-F.5,F Firm report collect (v2),Investor principles need the exact quote attribution and proof the speaker was at the firm on that date.,on main
+F.5,F Firm report collect (v2),"Quote: named person or firm, any public source, ≤150 chars. Summary: one plain sentence 40–90 chars from the quote only; no headings. Date/E3 role proof as in F.5.",on main
 F.6,F Firm report collect (v2),Founder reviews store the quote author and source. Role only with a role source.,on main
 F.7,F Firm report collect (v2),Team is current CEO or founder rows with real social URLs and follower counts. Staff labels are refused. Private funds stays.,on main
 F.8,F Firm report collect (v2),Videos are YouTube url title channel date and view count. No thumbnail column.,on main

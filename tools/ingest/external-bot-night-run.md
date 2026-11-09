@@ -39,7 +39,7 @@ One item per fact. `firm_id` is the number from add_firm.
 
 ```bash
 curl -s -X POST "$URL" -H "x-ingest-key: $KEY" -H 'content-type: application/json' \
-  -d '{"action":"submit","items":[{"firm_id":41,"box":"F5","table":"v2_investor_principles","fact":{"investor_name":"Example Person","investor_title":"General Partner","summary":"Looks for founders who know the customer.","quote":"We back founders who know the customer.","published_at":"2026-01-15","source_url":"https://example.com/quote","source_level":"2","source_date":"2026-11-01","source_type":"Firm website"}}]}'
+  -d '{"action":"submit","items":[{"firm_id":41,"box":"F5","table":"v2_investor_principles","fact":{"investor_name":"Example Person","investor_title":"General Partner","summary":"Quantify product risks and prove readiness with milestones.","quote":"Understand and quantify your major risks and know what you have to prove to get your product to market.","published_at":"2026-01-15","source_url":"https://example.com/quote","source_level":"2","source_date":"2026-11-01","source_type":"Firm website"}}]}'
 ```
 
 Do not send `v2_lp_commitments` or `v2_news_items`.
