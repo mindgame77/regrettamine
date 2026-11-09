@@ -1915,16 +1915,20 @@
     else { const a = aumCard(P); if (a) tiles.push(a); }
     const fs = A.funds_sec, fsn = fs && Number(fs.n) > 0 ? Number(fs.n) : 0;
     const assets = fundAssetRows(A);
+    const an = A.funds_announced;
+    const anI = an && Array.isArray(an.items) ? an.items.map(x => Object.assign({}, x, { announced: true })) : [];
+    // SEC rows keep the existing count. Announcements alone use the current item list, not latest.n.
+    const showN = fsn || anI.length;
     const ti = tiles.findIndex(t => t.indexOf('att afd') > -1);
-    if (fsn && ti > -1) tiles[ti] = tiles[ti].replace(/<\/div>$/, fundsLine(P, fsn) + '</div>');
-    const lone = fsn && ti < 0 && !tiles.length;
-    if (fsn && ti > -1) tiles[ti] = tiles[ti].replace('<div class="att afd', '<div data-fundtile class="att afd');
-    if (P.open && (assets.length || (fsn && (ti > -1 || lone) && Array.isArray(fs.items)))) {
-      const an = A.funds_announced, anI = an && Array.isArray(an.items) ? an.items.map(x => Object.assign({}, x, { announced: true })) : [];
+    if (showN && ti > -1) tiles[ti] = tiles[ti].replace(/<\/div>$/, fundsLine(P, showN) + '</div>');
+    const lone = showN && ti < 0 && !tiles.length;
+    if (showN && ti > -1) tiles[ti] = tiles[ti].replace('<div class="att afd', '<div data-fundtile class="att afd');
+    if (P.open && (assets.length || anI.length || (fsn && (ti > -1 || lone) && Array.isArray(fs.items)))) {
       const taken = {};
       assets.forEach(x => { taken[fundName(x.name).toLowerCase()] = 1; });
       const secItems = Array.isArray(fs && fs.items) ? fs.items.filter(x => !taken[fundName(x && x.name).toLowerCase()]) : [];
-      const title = fsn ? pl(AC.funds_sec, fsn) + (anI.length ? ' · ' + fmt(AC.funds_announced, { n: anI.length }) : '') + ' · ' + firm : firm;
+      const title = fsn ? pl(AC.funds_sec, fsn) + (anI.length ? ' · ' + fmt(AC.funds_announced, { n: anI.length }) : '') + ' · ' + firm
+        : (anI.length ? fmt(AC.funds_announced, { n: anI.length }) + ' · ' + firm : firm);
       actModal('actfunds', title, fundRows(newestFirst(anI.concat(assets).concat(secItems))));
     }
     // Full lists for Show all. A lazy page loads them on open.
@@ -1934,7 +1938,7 @@
     if (P.open && fd !== undefined) actModal('actdeals', fmt(AC.deals_title, { n: fd ? fd.length : n.deals, firm }), fd ? dealRows(fd, lab) : '', !fd && { slug: P.firm.slug, kind: 'deals', lab, head: '' });
     if (P.open && fr !== undefined) actModal('actrevs', fmt(AC.reviews_title, { n: fr ? fr.length : n.reviews, firm }), fr ? fr.map(revCard).join('') : '', !fr && { slug: P.firm.slug, kind: 'revs' });
     if (!tiles.length && !lone) return '';
-    return '<div class="ats">' + (tiles.length ? tiles.join('') : fundsLine(P, fsn)) + '</div>';
+    return '<div class="ats">' + (tiles.length ? tiles.join('') : fundsLine(P, showN)) + '</div>';
   }
   function paintActivity(main, P) {
     const box = main.querySelector('.actw'); if (!box) return;
