@@ -100,8 +100,8 @@ test('a latest fund that raised money stays the Latest fund tile', () => {
   const fund = tile(html);
   assert.match(fund, /class="att afd afg"/);
   assert.match(fund, /<small>Latest fund<\/small><b>\$8\.5B<\/b>/);
-  assert.match(fund, /a16z Growth Fund V · \$8\.5B raised · 2026 · <a href="https:\/\/a16z\.com\/expanding-the-a16z-growth-fund-and-platform\/"/);
-  assert.match(fund, />a16z\.com<\/a>/);
+  assert.match(fund, /a16z Growth Fund V · \$8\.5B raised · 2026<\/span>/);
+  assert.doesNotMatch(fund, /<a[\s>]|a16z\.com|Filing/);
   assert.doesNotMatch(html, /Assets under management|Fund assets|<small>AUM<\/small>/);
   assert.doesNotMatch(fund, /Feb 5, 2026|Aug 31, 2026|Sequoia Capital Fund/);
 });
@@ -115,8 +115,8 @@ test('a $0 or missing latest fund uses the most recent earlier fund that raised 
     });
     const fund = tile(html);
     assert.match(fund, /<small>Latest fund<\/small><b>\$22\.7B<\/b>/);
-    assert.match(fund, /Sequoia Capital Fund, L\.P\. · \$22\.7B raised · 2026 · <a href="https:\/\/www\.sec\.gov\/Archives\/edgar\/data\/1906948\/000206235726000016\/0002062357-26-000016-index\.htm"/);
-    assert.match(fund, />Filing<\/a>/);
+    assert.match(fund, /Sequoia Capital Fund, L\.P\. · \$22\.7B raised · 2026<\/span>/);
+    assert.doesNotMatch(fund, /<a[\s>]|Filing|sec\.gov/);
     assert.doesNotMatch(fund, /DIV-2026|\$7\.0B|Assets under management|class="asm"/);
     assert.doesNotMatch(fund, /<b>[^<]*Sequoia Capital Fund/);
   }
@@ -138,14 +138,14 @@ test('F7.8: one money tile, fund first, else AUM, never Fund assets or a second 
   const order = [...all.matchAll(/<small>([^<]+)<\/small>/g)].map(m => m[1]);
   assert.deepEqual(order.filter(x => /Latest fund|AUM|Fund assets|Assets under management/.test(x)), ['Latest fund']);
   assert.match(all, /class="att afd afg"/);
-  assert.match(all, /· 2026 ·/);
+  assert.match(all, /\$1B raised · 2026<\/span>/);
   assert.doesNotMatch(all, /Fund assets|No SEC filings|Assets under management/);
   const oldFund = paint({
     firm: { name: 'Sequoia Capital', slug: 'sequoia', money },
     activity: { latest_fund: { name: 'Sequoia Fund X, L.P.', raised_usd: 8500000000, date: '2022-02-05', url: ADV } },
   });
   assert.match(oldFund, /class="att afd afr"/);
-  assert.match(oldFund, /\$8\.5B raised · 2022 ·/);
+  assert.match(oldFund, /\$8\.5B raised · 2022<\/span>/);
   const old = paint({
     firm: { name: 'Lightspeed', slug: 'lightspeed', assets: '$82,165,771,068' },
     hero: [{ label: 'Regulatory AUM', value: '$82.2B', src: [{ label: 'SEC IAPD', url: ADV }] }],

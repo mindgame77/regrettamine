@@ -1,4 +1,4 @@
-// B6c.1/B6c.8/A1.8: the fund tile link names its real source: Filing for sec.gov, else the stored outlet name, else the host.
+// B6c.1/B6c.8 (Alex, 2026-11-09): the Latest fund tile never shows a source link. The Show all pop-up keeps it.
 // node --test tests/funds_line.test.mjs
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -42,7 +42,6 @@ vm.runInContext(read('launch/js/company.js'), sandbox, { filename: 'company.js' 
 const { render } = sandbox.window.RegretCompany;
 
 const EDGAR = 'https://www.sec.gov/Archives/edgar/data/1906948/000206235726000016/0002062357-26-000016-index.htm';
-const ADV = 'https://reports.adviserinfo.sec.gov/reports/ADV/157373/PDF/157373.pdf';
 
 function paint(extra) {
   const main = mainEl();
@@ -78,19 +77,20 @@ function tile(html) {
   return m ? m[0] : '';
 }
 
-const link = (html) => (tile(html).match(/<a [^>]*>([^<]*)<\/a>/) || [])[1];
 const fund = (url, label) => ({ activity: { latest_fund: { name: 'ZZ Fund', raised_usd: 9000000000, date: '2026-01-01', url, url_label: label } } });
 
-test('sec.gov is a Filing even with a label', () => {
-  assert.equal(link(paint(fund(EDGAR, 'SEC'))), 'Filing');
-  assert.equal(link(paint(fund('https://reports.adviserinfo.sec.gov/x.pdf'))), 'Filing');
-});
-test('a news link names the outlet', () => {
-  assert.equal(link(paint(fund('https://www.reuters.com/x', 'Reuters'))), 'Reuters');
-});
-test('no stored name falls back to the host, never to Filing', () => {
-  assert.equal(link(paint(fund('https://www.davispolk.com/x', null))), 'davispolk.com');
-  assert.equal(link(paint(fund('https://evilsec.gov.example/x', '  '))), 'evilsec.gov.example');
+test('the Latest fund tile shows no source link', () => {
+  for (const extra of [
+    fund(EDGAR, 'SEC'),
+    fund('https://reports.adviserinfo.sec.gov/x.pdf'),
+    fund('https://www.reuters.com/x', 'Reuters'),
+    fund('https://www.davispolk.com/x', null),
+    fund('https://evilsec.gov.example/x', '  '),
+  ]) {
+    const box = tile(paint(extra));
+    assert.match(box, /ZZ Fund · \$9B raised · 2026<\/span>/);
+    assert.doesNotMatch(box, /<a[\s>]|Filing|Reuters|davispolk|evilsec/);
+  }
 });
 test('a fund with no amount is not drawn', () => {
   const html = paint({ firm: { name: 'ZZ', slug: 'zz-not-lab' }, activity: { latest_fund: { name: 'ZZ Fund', url: 'https://fintechobserver.com/x', url_label: 'Fintech Observer' } } });

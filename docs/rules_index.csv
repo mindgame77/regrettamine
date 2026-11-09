@@ -123,13 +123,13 @@ B6b.2,B6b Deals in the last 12 months,investments where invested_on is within 36
 B6b.3,B6b Deals in the last 12 months,Same as B6a.3 (now an old note in R5).,on main
 B6b.4,B6b Deals in the last 12 months,No required fields beyond the row existing.,on main
 B6b.5,B6b Deals in the last 12 months,The tile is omitted when the count is 0.,on main
-B6c.1,B6c Latest fund tile,"The newest fund that has a raised amount, with the name, the amount, and a source link: the filing, or the news or trusted page the amount came from (see B6c...",on main
-B6c.2,B6c Latest fund tile,"First choice: funds.raised_usd or funds.size_usd, funds.name, funds.closed_on, funds.filing_url (the source link: the filing, or the news or trusted page the...",on main
+B6c.1,B6c Latest fund tile,"The newest fund that has a raised amount, with the name and the amount. The source shows only in the Show all pop-up, never on the tile: the filing, or the n...",on main
+B6c.2,B6c Latest fund tile,"First choice: funds.raised_usd or funds.size_usd, funds.name, funds.closed_on, funds.filing_url (the source shows only in the Show all pop-up, never on the t...",on main
 B6c.3,B6c Latest fund tile,"Profile-fact fund lines: the enricher, from Form D or Form ADV.",on main
 B6c.4,B6c Latest fund tile,The tile skips a $0 amount.,on main
 B6c.5,B6c Latest fund tile,"Other firms, outside the 10, still show a fund with no amount.",on main
 B6c.7,B6c Latest fund tile,"Latest fund tile rule (Alex, Oct 27 2026 design note): A latest fund with an amount stays.",on main
-B6c.8,B6c Latest fund tile,"Latest fund tile link is the filing, or the news/trusted page the amount came from; amount source: A1.8.",on main
+B6c.8,B6c Latest fund tile,"The source shows only in the Show all pop-up, never on the tile; amount source: A1.8.",on main
 B6c.9,B6c Latest fund tile,Funds shown/max/archiving: see A9.6; amount source A1.8.,on main
 B6d.1,B6d Assets under management tile,"Shown on the 10 lab firms only when there is no fund amount at all, including no earlier fund that raised money (see the latest fund tile rule in 6c).",on main
 B6d.2,B6d Assets under management tile,"AUM source order per A7.3 (Alex, 2026-10-28): the SEC Form ADV figure first (hero fact whose label maps to Regulatory AUM, or a profile fact that cites Item ...","on main"
