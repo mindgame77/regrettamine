@@ -1,6 +1,7 @@
 Update this file after every change.
 
 One line per change: date/time PT | what changed | PR link | how to roll back.
+PL/pgSQL variables start with v_ so they never clash with table aliases.
 
 2026-11-08 3:54 PM PT | An approved bot applies at bot-key-apply with a proof it keeps. The owner approves once. The function returns that bot's existing research key once, then deletes the pickup copy. The URL has no secret. bots.ingest_keys is not altered. portal-night-bot is refused. Conductor (external-research-bot-1) and PortalOne (external-portal-one-bot) are not sealed here. No rows change until seal and approve run after deploy. Not applied yet. | https://github.com/mindgame77/regrettamine/pull/375 | Run supabase/rollbacks/20261109020000_bot_key_pickup.sql and remove the bot-key-apply function. Key hashes stay. A key the bot already saved still works.
 2026-11-08 3:20 PM PT | Average check is formatted from the stored US dollar bounds, the same way for every firm. Both bounds equal is one amount, such as $25M. Min below max is $25M–$75M. Max only is Up to $25M. Min only is $25M+. A single number is not copied into the other bound. amount_text stays the source sentence and is not shown. A missing, invalid, or reversed amount, or a currency other than USD, rejects that item only. Source level is unchanged. No rows are written. Not applied yet. | https://github.com/mindgame77/regrettamine/pull/374 | Run supabase/rollbacks/20261109000100_v2_check_size_bounds.sql, then revert the pull request. Check-size rows stay.

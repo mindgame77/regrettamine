@@ -34,7 +34,7 @@ def test_quote_date_may_be_empty_and_is_not_filled():
     assert "alter column published_at drop not null" in text
     assert "fact := fact - 'published_at'" in text
     assert "current_date" not in text
-    assert "Quote date: if the source shows a date use it; if not, leave it empty. Never reject for a missing date. Never use dateModified or archive dates." in guide
+    assert "Date: use the date the source shows, else leave empty. Never reject for a missing date. Never use dateModified or archive dates." in guide
 
 
 def test_docs_have_one_example_per_new_door():
