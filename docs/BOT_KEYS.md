@@ -16,7 +16,7 @@ The old shared key (`night-run-1`, linked to portal-night-bot) still works and i
 4. To retire a key: `update bots.ingest_keys set active = false where name = 'bot-<bot_id>-<stamp>';`
 
 ## Pickup
-Not live until this migration is applied and the `bot-key-apply` function is deployed. Until then, do not send the address to a bot.
+Live. Migration `bot_key_pickup` version `20261109000238` is applied. `bot-key-apply` version 1 is deployed with `verify_jwt` false. Send the address only to a bot you are about to approve.
 
 The address has no secret in it:
 
