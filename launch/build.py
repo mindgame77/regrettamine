@@ -295,9 +295,7 @@ def how_we_check():
         '</svg>'
     )
     url = (H.get('video_url') or '').strip()
-    media = (
-        f'<div class="vspot-ph" role="img" aria-label="Video placeholder">{play}</div>'
-    )
+    media = f'<div class="vspot-ph" role="img" aria-label="Video placeholder">{play}</div>'
     if url:
         if not re.match(r'https://', url, re.I):
             url = ''
@@ -319,12 +317,19 @@ def how_we_check():
                 )
     cap = H.get('video_caption') or ''
     cap_html = f'<figcaption>{cap}</figcaption>' if cap else ''
+
     video = f'<figure class="vspot"><div class="vspot-frame">{media}</div>{cap_html}</figure>'
-    return f'''<main class="hwc hwc-a">
+    return f'''<main class="hwc hwc-a hwc-a1">
 <div class="wash"><div class="inner">
+<div class="hero">
+{video}
+<div class="hero-copy">
 <span class="ey">{H["eyebrow"]}</span>
 <h1>{H["h1"]}<br><span>{H["h1_accent"]}</span></h1>
 <p class="lead">{H["lead"]}</p>
+</div>
+</div>
+
 <div class="stage">
 <ol class="tl">{steps}</ol>
 <aside class="sample">
@@ -345,7 +350,6 @@ def how_we_check():
   <div class="cks">{checks}</div>
 </aside>
 </div>
-{video}
 </div></div>
 <div class="inner rest">
 <h2>{H["what_h2"]}</h2>
