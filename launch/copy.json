@@ -460,26 +460,14 @@
   "how_we_check": {
    "title": "How we check",
    "eyebrow": "How we check",
-   "h1": "From public record",
-   "h1_accent": "to the pill you see.",
-   "lead": "We check how a VC fund deals with founders, using the firm’s own website and public records you can open yourself.",
+   "h1": "Don't regret",
+   "h1_accent": "your investor.",
+   "lead": "Don't make the costly mistakes early.",
    "steps": [
-    [
-     "We pull the public record",
-     "Government lists, SEC filings, court dockets and named press for the fund, its advisers and its partners."
-    ],
-    [
-     "We confirm the match",
-     "An exact identity match, never name-only. Copycat names are left out."
-    ],
-    [
-     "We verify every source",
-     "A fact counts only if it names the fund, shows its role, and points to a record you can open."
-    ],
-    [
-     "You check before you sign",
-     "Open each check, follow the link to the original, save the fund and draw your own conclusions."
-    ]
+    "We pull the public records",
+    "We confirm the match",
+    "We verify every source",
+    "You decide"
    ],
    "what_h2": "What we check",
    "areas": [
@@ -626,7 +614,55 @@
    "founder_h2": "A note from the founder",
    "founder_note": "[Founder’s note goes here]",
    "founder_name": "[Name]",
-   "founder_role": "[Role]"
+   "founder_role": "[Role]",
+   "stat_figure": "88%",
+   "stat_text": "of U.S. venture-backed founders receive zero exit value.",
+   "stat_source": "Azevedo, Scheuer, Smetters & Yang, July 2026.",
+   "stat_url": "https://eduardomazevedo.github.io/papers/azevedo-scheuer-smetters-yang%202025.pdf",
+   "checks10_h2": "10 background checks",
+   "checks10_p": "Each firm is run through these ten checks, using public records you can open yourself.",
+   "checks10": [
+    {
+     "name": "Sanctions",
+     "sources": "OFAC SDN, UK sanctions list, EU Sanctions Map, UN Security Council consolidated list"
+    },
+    {
+     "name": "Terrorism financing lists",
+     "sources": "OFAC SDN (SDGT), U.S. State Department FTO list, UN 1267 list, UK proscribed groups, EU terrorist list"
+    },
+    {
+     "name": "Export and investment restrictions",
+     "sources": "U.S. Consolidated Screening List (trade.gov)"
+    },
+    {
+     "name": "Financial regulator actions",
+     "sources": "SEC, FINRA, FCA, CFTC, and DOJ records"
+    },
+    {
+     "name": "Money laundering penalties",
+     "sources": "FinCEN, OFAC civil penalties, SEC, FINRA, and FCA enforcement"
+    },
+    {
+     "name": "US court records",
+     "sources": "PACER, CourtListener, uscourts.gov, and state courts such as Delaware"
+    },
+    {
+     "name": "Court records worldwide",
+     "sources": "UK Find Case Law, EU courts (CURIA), and other official national court records"
+    },
+    {
+     "name": "Registration check",
+     "sources": "SEC Investment Adviser Public Disclosure (IAPD) / Form ADV"
+    },
+    {
+     "name": "People behind the fund",
+     "sources": "SEC IAPD (Form ADV), EDGAR Form D, UK Companies House, FINRA BrokerCheck"
+    },
+    {
+     "name": "Political ties",
+     "sources": "FEC contributions, U.S. lobbying disclosures (LDA), and official parliamentary records"
+    }
+   ]
   },
   "my_firms": {
    "_note": "My firms page (/account/firms/, js/app.js drawFirms). Results = firm_check_rows display labels: Clear (clear, nf), Review (review, red), Worth knowing (wk).",

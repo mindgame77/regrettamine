@@ -274,10 +274,14 @@ def pending():
 def how_we_check():
     H, SM = S['how_we_check'], S['how_we_check']['sample']
     li = lambda xs: '<ul>' + ''.join(f'<li><span>{x}</span></li>' for x in xs) + '</ul>'
-    steps = ''.join(
-        f'<li class="tl-step"><b class="n">{i + 1}</b><div><h3>{t}</h3><p>{p}</p></div></li>'
-        for i, (t, p) in enumerate(H['steps'])
-    )
+    step_items = []
+    for i, step in enumerate(H['steps']):
+        title, body = (step[0], step[1]) if isinstance(step, (list, tuple)) else (step, '')
+        body_html = f'<p>{body}</p>' if body else ''
+        step_items.append(
+            f'<li class="tl-step"><b class="n">{i + 1}</b><div><h3>{title}</h3>{body_html}</div></li>'
+        )
+    steps = ''.join(step_items)
     areas = ''.join(
         f'<div class="card area"><h3>{t}</h3><p>{p}</p><span class="tag">{g}</span></div>'
         for t, p, g in H['areas']
@@ -319,6 +323,38 @@ def how_we_check():
     cap_html = f'<figcaption>{cap}</figcaption>' if cap else ''
 
     video = f'<figure class="vspot"><div class="vspot-frame">{media}</div>{cap_html}</figure>'
+    stat_url = (H.get('stat_url') or '').strip()
+    stat_src = H.get('stat_source') or ''
+    if stat_url and re.match(r'https://', stat_url, re.I):
+        stat_cite = (
+            f'<cite><a href="{E(stat_url, True)}" target="_blank" rel="noopener">{E(stat_src)}</a></cite>'
+            if stat_src else ''
+        )
+    else:
+        stat_cite = f'<cite>{E(stat_src)}</cite>' if stat_src else ''
+    stat = ''
+    if H.get('stat_figure') or H.get('stat_text'):
+        stat = (
+            '<div class="stat">'
+            f'<b class="stat-n">{E(H.get("stat_figure") or "")}</b>'
+            f'<p class="stat-t">{E(H.get("stat_text") or "")}</p>'
+            f'{stat_cite}'
+            '</div>'
+        )
+    checks10 = ''.join(
+        f'<article class="c10"><b class="c10-n">{i:02d}</b><div><h3>{E(item["name"])}</h3>'
+        f'<p>{E(item["sources"])}</p></div></article>'
+        for i, item in enumerate(H.get('checks10') or [], 1)
+    )
+    checks10_p = H.get('checks10_p') or ''
+    checks10_intro = f'<p class="checks10-p">{E(checks10_p)}</p>' if checks10_p else ''
+    checks10_block = ''
+    if checks10:
+        checks10_block = (
+            f'<h2>{E(H.get("checks10_h2") or "10 background checks")}</h2>'
+            f'{checks10_intro}'
+            f'<div class="checks10">{checks10}</div>'
+        )
     return f'''<main class="hwc hwc-a hwc-a1">
 <div class="wash"><div class="inner">
 <div class="hero">
@@ -327,6 +363,7 @@ def how_we_check():
 <span class="ey">{H["eyebrow"]}</span>
 <h1>{H["h1"]}<br><span>{H["h1_accent"]}</span></h1>
 <p class="lead">{H["lead"]}</p>
+{stat}
 </div>
 </div>
 
@@ -352,6 +389,7 @@ def how_we_check():
 </div>
 </div></div>
 <div class="inner rest">
+{checks10_block}
 <h2>{H["what_h2"]}</h2>
 <div class="areas">{areas}</div>
 <div class="read-grid">
