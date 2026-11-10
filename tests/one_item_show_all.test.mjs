@@ -90,6 +90,9 @@ const person = { head: 'Ravi Mhatre', kind: 'team', role: 'Partner & Co-Founder'
 test('Option A team rows are one shared rule, not a firm list', () => {
   const rule = css.slice(css.indexOf('#team .tcard{'));
   assert.match(rule, /#team \.tcard\{flex-direction:row/);
+  assert.match(css, /#actteam \.tcard\{flex-direction:row/);
+  assert.match(css, /#actteam \.tcard \.tsoc\{[^}]*margin:0 0 0 auto/);
+  assert.match(css, /#actteam \.tcard \.sc\.soc/);
   assert.doesNotMatch(css, /lightspeed|sequoia|a16z/);
   assert.doesNotMatch(src, /slug === ['"]lightspeed|slug === ['"]sequoia|slug === ['"]a16z/);
 });
@@ -121,7 +124,61 @@ test('one investor row and one legal case get Show all on a non-Sequoia firm', (
 });
 
 test('the row fitter does not hide Show all on those three tiles', () => {
-  const fn = src.slice(src.indexOf('function fillCard'), src.indexOf('function fillTiles'));
+  const fn = src.slice(src.indexOf('function fillCard'), src.indexOf('function fitTeam'));
   assert.match(fn, /card\.id === 'legal' && card\.id === 'investors' && card\.id === 'reviews'|card\.id === 'legal' \|\| card\.id === 'investors' \|\| card\.id === 'reviews'/);
   assert.match(fn, /keepShow \? false : !more/);
+  assert.doesNotMatch(fn, /=== 'team'/);
+});
+
+test('team Show all is the shared control, and a phone shows every row with the control hidden', () => {
+  const fit = src.slice(src.indexOf('function fitTeam'), src.indexOf('function fillTiles'));
+  assert.match(fit, /querySelector\('#team'\)/);
+  assert.match(fit, /row\.hidden = false/);
+  assert.match(fit, /show\.hidden = true/);
+  assert.match(fit, /fillCard\(card\)/);
+  const tiles = src.slice(src.indexOf('function fillTiles'), src.indexOf('function applyTab'));
+  assert.match(tiles, /fitTeam\(root\)/);
+});
+
+test('a team longer than the box gets Show all, and the popup repeats every row including social pills', () => {
+  const people = [
+    { head: 'David B. Miller', kind: 'team', role: 'Managing Partner' },
+    { head: 'Gary R. Petersen', kind: 'team', role: 'Managing Partner' },
+    { head: 'D. Martin Phillips', kind: 'team', role: 'Managing Partner' },
+    { head: 'Robert L. Zorich', kind: 'team', role: 'Managing Partner' },
+    { head: 'Jason M. DeLorenzo', kind: 'team', role: 'Managing Partner' },
+    { head: 'Douglas E. Swanson', kind: 'team', role: 'Managing Partner' },
+    { head: 'Vinod Khosla', kind: 'team', role: 'Founder', x_url: 'https://x.com/vkhosla', x_followers: 780318 },
+  ];
+  const html = draw('encap-investments', { sections: [{ key: 'people', items: people }] });
+  const at = html.indexOf('id="team"');
+  const block = html.slice(at, html.indexOf('</article>', at));
+  assert.match(block, /data-fit="1"/);
+  assert.match(block, /data-open="actteam">Show all<\/button>/);
+  assert.match(block, /Douglas E\. Swanson/);
+  const pill = block.match(/<a class="sc soc" href="https:\/\/x\.com\/vkhosla"[^>]*>[\s\S]*?<\/a>/);
+  assert.ok(pill, 'row keeps the X pill');
+  assert.match(pill[0], /780K/);
+  const ov = made.actteam;
+  assert.ok(ov, 'team popup');
+  for (const name of ['David B. Miller', 'Douglas E. Swanson', 'Vinod Khosla']) {
+    assert.match(ov.innerHTML, new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+  }
+  assert.ok(ov.innerHTML.includes(pill[0]), 'popup uses the same X pill');
+});
+
+test('one teammate has no Show all; two keep the social pill that is already on the row', () => {
+  const one = draw('khosla-ventures', { sections: [{ key: 'people', items: [
+    { head: 'Vinod Khosla', kind: 'team', role: 'Founder', x_url: 'https://x.com/vkhosla', x_followers: 780318 },
+  ] }] });
+  assert.match(one, /x\.com\/vkhosla/);
+  assert.doesNotMatch(one, /actteam/);
+  const two = draw('khosla-ventures', { sections: [{ key: 'people', items: [
+    { head: 'David Weiden', kind: 'team', role: 'Founding Partner and Managing Director', linkedin_url: 'https://www.linkedin.com/in/davidweiden' },
+    { head: 'Vinod Khosla', kind: 'team', role: 'Founder', x_url: 'https://x.com/vkhosla', x_followers: 780318, linkedin_url: 'https://www.linkedin.com/in/vkhosla' },
+  ] }] });
+  assert.match(two, /Vinod Khosla[\s\S]*x\.com\/vkhosla[\s\S]*780K/);
+  assert.doesNotMatch(two, /linkedin\.com\/in\/davidweiden|linkedin\.com\/in\/vkhosla/);
+  assert.match(two, /data-open="actteam">Show all<\/button>/);
+  assert.ok(made.actteam.innerHTML.includes('https://x.com/vkhosla'));
 });

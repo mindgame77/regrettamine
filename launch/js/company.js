@@ -688,10 +688,21 @@
       + (role ? '<span class="trole">' + esc(role) + '</span>' : '')
       + (links.length ? '<div class="tsoc">' + links.join('') + '</div>' : '') + '</div>';
   }
-  function personSection(it) {
+  function personSection(it, P) {
     const xs = teamPeople(it);
     if (!xs.length) return '';
-    return '<div class="tcards">' + xs.map(teamCard).join('') + '</div>';
+    const open = !!(P && P.open);
+    // Same compact row in the tile and in Show all, social pills included.
+    const cards = xs.map(teamCard).join('');
+    let h = '<div class="tcards" data-fit="1">' + cards + '</div>';
+    if (xs.length > 1) {
+      h += showAllLink(open, 'actteam');
+      const sec = (CFG.sections.list || []).find(x => x.key === 'people');
+      if (open && typeof actModal === 'function' && typeof document !== 'undefined' && document.body) {
+        actModal('actteam', (sec && sec.title) || 'Team', '<div class="tcards">' + cards + '</div>');
+      }
+    }
+    return h;
   }
   // Videos: up to 3 YouTube interviews for the firm, most views first. No YouTube id, or no rows: nothing.
   function youtubeId(url) {
@@ -2173,10 +2184,26 @@
     const keepShow = card.id === 'legal' || card.id === 'investors' || card.id === 'reviews';
     if (show) show.hidden = keepShow ? false : !more;
   }
+  // Team keeps the shared row fitter. On a phone the card grows, so every person shows and Show all stays off.
+  function fitTeam(root) {
+    const card = root && root.querySelector && root.querySelector('#team');
+    if (!card) return;
+    const narrow = window.matchMedia && !window.matchMedia('(min-width: 801px)').matches;
+    if (narrow) {
+      const body = card.querySelector('[data-fit]');
+      if (body) Array.from(body.children).forEach(row => { row.hidden = false; });
+      const show = card.querySelector('.ash');
+      if (show) show.hidden = true;
+      return;
+    }
+    fillCard(card);
+  }
   function fillTiles(root) {
     if (!root || !root.querySelectorAll) return;
-    if (window.matchMedia && !window.matchMedia('(min-width: 801px)').matches) return;
-    root.querySelectorAll('[data-fill]').forEach(fillCard);
+    if (!(window.matchMedia && !window.matchMedia('(min-width: 801px)').matches)) {
+      root.querySelectorAll('[data-fill]').forEach(fillCard);
+    }
+    fitTeam(root);
   }
   if (window.addEventListener) window.addEventListener('resize', () => {
     const main = document.querySelector && document.querySelector('main.prof');

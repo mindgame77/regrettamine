@@ -50,9 +50,12 @@ test('LinkedIn then X, icon and count only when the https url and a count are st
   assert.doesNotMatch(bare, /class="sc soc"|tsoc-a/);
   assert.match(bare, /CEO\/President/);
 });
-test('team section has no show-all popup and no source chips', () => {
-  const ps = js.slice(js.indexOf('function personSection'), js.indexOf('function newsBlock'));
-  assert.doesNotMatch(ps, /chips\(|actpeople|data-open|Board seat/);
-  assert.match(ps, /teamCard/);
+test('team Show all reuses the tile popup and the same person rows, with no source chips', () => {
+  const ps = js.slice(js.indexOf('function personSection'), js.indexOf('function youtubeId'));
+  assert.match(ps, /const cards = xs\.map\(teamCard\)\.join\(''\)/);
+  assert.match(ps, /showAllLink\(open, 'actteam'\)/);
+  assert.match(ps, /actModal\('actteam'/);
+  assert.match(ps, /<div class="tcards">' \+ cards/);
+  assert.doesNotMatch(ps, /chips\(|actpeople|Board seat/);
   assert.ok((js.match(/chips\(/g) || []).length > 2, 'other sections still render chips');
 });
