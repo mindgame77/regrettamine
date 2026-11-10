@@ -12,7 +12,7 @@ const json = (b: unknown, status = 200, extra: Record<string, string> = {}) =>
   new Response(JSON.stringify(b), { status, headers: { ...CORS, "content-type": "application/json", ...extra } });
 const sha256 = async (s: string) => [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)))]
   .map((b) => b.toString(16).padStart(2, "0")).join("");
-const HINT = "POST {\"action\":\"claim\"} or {\"action\":\"done\",\"firm_id\":N} or {\"action\":\"add_firm\",\"firm\":{\"name\",\"website\",\"registry_id\"}} or {\"action\":\"submit\",\"dry_run\":false,\"items\":[{\"firm_id\":2,\"box\":\"F5\",\"table\":\"v2_investor_principles\",\"fact\":{...}}]}; max 10 firms per batch";
+const HINT = "POST {\"action\":\"claim\"} or {\"action\":\"done\",\"firm_id\":N} or {\"action\":\"add_firm\",\"firm\":{\"name\",\"website\",\"registry_id\"}} or {\"action\":\"submit\",\"dry_run\":false,\"items\":[{\"firm_id\":2,\"box\":\"F5\",\"table\":\"v2_investor_principles\",\"fact\":{...}}]} or {\"action\":\"results\",\"days\":30,\"limit\":100,\"firm_id\":N}; max 10 firms per batch";
 // Domain only: lowercase, no scheme, no leading www, no port, no path.
 const firmDomain = (website: string) => {
   let s = website.trim().toLowerCase();
@@ -95,7 +95,31 @@ Deno.serve(async (req) => {
       if (!data.ok) return json({ error: data.error }, String(data.error).startsWith("only the Checker") ? 403 : 400);
       return json(data, 200);
     }
-    if (body.action !== "submit") return json({ error: "action must be submit, add_firm, claim, done, list_queue or verdict", hint: HINT }, 400);
+    if (body.action === "results") {
+      const days = body.days === undefined ? 30 : body.days;
+      const limit = body.limit === undefined ? 100 : body.limit;
+      if (!Number.isInteger(days) || days < 1 || days > 30) {
+        return json({ error: "days must be 1-30", hint: "omit days (defaults to 30) or send an integer 1-30" }, 400);
+      }
+      if (!Number.isInteger(limit) || limit < 1 || limit > 200) {
+        return json({ error: "limit must be 1-200", hint: "omit limit (defaults to 100) or send an integer 1-200" }, 400);
+      }
+      let firmId: number | null = null;
+      if (body.firm_id !== undefined && body.firm_id !== null) {
+        if (typeof body.firm_id !== "number" || !Number.isInteger(body.firm_id) || body.firm_id <= 0) {
+          return json({ error: "firm_id must be a positive integer" }, 400);
+        }
+        firmId = body.firm_id;
+      }
+      const { data, error } = await db.rpc("v2_research_my_results", { p_key: auth.key_id, p_days: days, p_limit: limit, p_firm_id: firmId });
+      if (error || !data) return json({ error: "server error" }, 500);
+      bot = data.bot_id ?? "";
+      if (!data.ok) return json({ error: data.error }, 403);
+      const items = Array.isArray(data.items) ? data.items : [];
+      const firms = Array.isArray(data.firms) ? data.firms : [];
+      return json({ ok: true, bot_id: data.bot_id, days: data.days, counts: data.counts, items, firms }, 200);
+    }
+    if (body.action !== "submit") return json({ error: "action must be submit, add_firm, claim, done, results, list_queue or verdict", hint: HINT }, 400);
     if (!Array.isArray(body.items) || body.items.length === 0) return json({ error: "items must be a non-empty array", hint: HINT }, 400);
     if (body.dry_run !== undefined && typeof body.dry_run !== "boolean") return json({ error: "dry_run must be true or false" }, 400);
     const { data, error } = await db.rpc("v2_research_submit", { p_key_id: auth.key_id, p_items: body.items, p_dry_run: body.dry_run === true });
