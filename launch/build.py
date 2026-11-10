@@ -274,14 +274,6 @@ def pending():
 def how_we_check():
     H, SM = S['how_we_check'], S['how_we_check']['sample']
     li = lambda xs: '<ul>' + ''.join(f'<li><span>{x}</span></li>' for x in xs) + '</ul>'
-    step_items = []
-    for i, step in enumerate(H['steps']):
-        title, body = (step[0], step[1]) if isinstance(step, (list, tuple)) else (step, '')
-        body_html = f'<p>{body}</p>' if body else ''
-        step_items.append(
-            f'<li class="tl-step"><b class="n">{i + 1}</b><div><h3>{title}</h3>{body_html}</div></li>'
-        )
-    steps = ''.join(step_items)
     areas = ''.join(
         f'<div class="card area"><h3>{t}</h3><p>{p}</p><span class="tag">{g}</span></div>'
         for t, p, g in H['areas']
@@ -355,7 +347,92 @@ def how_we_check():
             f'{checks10_intro}'
             f'<div class="checks10">{checks10}</div>'
         )
-    return f'''<main class="hwc hwc-a hwc-a1">
+
+    ICONS = {
+        'records': (
+            '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" '
+            'stroke="#6C3BFF" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">'
+            '<path d="M7 7V5.8A1.8 1.8 0 0 1 8.8 4h8.4A1.8 1.8 0 0 1 19 5.8v10.4a1.8 1.8 0 0 1-1.8 1.8H16"/>'
+            '<rect x="5" y="7" width="11" height="13" rx="1.8"/>'
+            '<path d="M8 11h5M8 14h5M8 17h3"/></svg>'
+        ),
+        'match': (
+            '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" '
+            'stroke="#6C3BFF" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">'
+            '<circle cx="10" cy="8" r="3.2"/>'
+            '<path d="M4.8 19c.6-3.1 2.7-4.7 5.2-4.7 1 0 1.9.3 2.7.8"/>'
+            '<circle cx="17" cy="16.2" r="3.3"/>'
+            '<path d="M15.6 16.2l1 1.1 1.8-2"/></svg>'
+        ),
+        'link': (
+            '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" '
+            'stroke="#6C3BFF" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">'
+            '<path d="M10 13.5 8.6 14.9a3 3 0 0 1-4.2-4.2l2.5-2.5a3 3 0 0 1 4.2 0L12 9"/>'
+            '<path d="M14 10.5l1.4-1.4a3 3 0 0 1 4.2 4.2l-2.5 2.5a3 3 0 0 1-4.2 0L12 15"/>'
+            '<path d="M9.8 14.2l4.4-4.4"/></svg>'
+        ),
+        'decide': (
+            '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" '
+            'stroke="#6C3BFF" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">'
+            '<rect x="3.5" y="6.5" width="7.5" height="5" rx="2.5"/>'
+            '<rect x="13" y="12.5" width="7.5" height="5" rx="2.5"/>'
+            '<path d="M8 14.5c0 2.2 1.8 3.5 4 3.5h1M16 9.5c0-2.2-1.8-3.5-4-3.5h-1"/></svg>'
+        ),
+    }
+    step_titles = [(s[0] if isinstance(s, (list, tuple)) else s) for s in H['steps']]
+    chips = H.get('step_chips') or []
+    icons = H.get('step_icons') or []
+    badges = H.get('step_badges') or []
+    heading = H.get('steps_h2') or ''
+    heading_html = f'<p class="stage-kicker">{E(heading)}</p>' if heading else ''
+
+    sample = (
+        "<aside class=\"sample\">"
+        f"<div class=\"sample-head\"><span class=\"badge\">{H['sample_label']}</span><p class=\"cap\">{H['sample_caption']}</p></div>"
+        f"<b class=\"fname\">{SM['name']}</b>"
+        f"<p class=\"meta\">{SM['meta']}</p>"
+        "<div class=\"tiles\" data-part=\"tiles\">"
+        f"<div class=\"tile mint\"><small>{SM['deals_label']}</small><b>{SM['deals_n']}</b><span>{SM['deals_last']}</span></div>"
+        f"<div class=\"tile mint\"><small>{SM['fund_label']}</small><b>{SM['fund_n']}</b><span>{SM['fund_sub']}</span></div>"
+        "</div>"
+        f"<p class=\"sl\" data-part=\"team\">{SM['team_label']}</p>"
+        f"<div class=\"team\" data-part=\"team\">{team}</div>"
+        f"<p class=\"sl\" data-part=\"quote\">{SM['quote_label']}</p>"
+        f"<blockquote data-part=\"quote\"><p>\u201c{SM['quote']}\u201d</p><cite>\u2014 {SM['quote_by']}</cite></blockquote>"
+        f"<p class=\"sl\">{SM['look_label']}</p>"
+        f"<p class=\"look\">{SM['look']}</p>"
+        f"<p class=\"sl\" data-part=\"checks\">{SM['checks_label']}</p>"
+        f"<div class=\"cks\" data-part=\"checks\">{checks}</div>"
+        "</aside>"
+    )
+
+    step_items = []
+    for i, title in enumerate(step_titles):
+        icon = ICONS.get(icons[i] if i < len(icons) else "", ICONS["records"])
+        chip = chips[i] if i < len(chips) else ""
+        chip_html = f'<span class="exchip">{E(chip)}</span>' if chip else ""
+        step_items.append(
+            '<li class="tl-step">'
+            f'<span class="ic">{icon}</span>'
+            f'<b class="n">{i + 1}</b>'
+            f'<h3>{E(title)}</h3>'
+            f"{chip_html}"
+            "</li>"
+        )
+    steps = "".join(step_items)
+    left, right = [], []
+    for c in (H.get("callouts") or []):
+        item = (
+            f'<p class="callout {E(c.get("side") or "left")}" data-target="{E(c.get("target") or "")}">'
+            f'<span>{E(c.get("label") or "")}</span></p>'
+        )
+        (left if c.get("side") == "left" else right).append(item)
+    stage = (
+        "<div class=\"stage\">" + heading_html + "<ol class=\"tl\">" + steps + "</ol>"
+        + "<div class=\"anatomy\"><div class=\"callouts callouts-l\">" + "".join(left) + "</div>"
+        + sample + "<div class=\"callouts callouts-r\">" + "".join(right) + "</div></div></div>"
+    )
+    return f'''<main class="hwc hwc-a hwc-a1 hwc-a1b">
 <div class="wash"><div class="inner">
 <div class="hero">
 {video}
@@ -367,26 +444,8 @@ def how_we_check():
 </div>
 </div>
 
-<div class="stage">
-<ol class="tl">{steps}</ol>
-<aside class="sample">
-  <div class="sample-head"><span class="badge">{H["sample_label"]}</span><p class="cap">{H["sample_caption"]}</p></div>
-  <b class="fname">{SM["name"]}</b>
-  <p class="meta">{SM["meta"]}</p>
-  <div class="tiles">
-    <div class="tile mint"><small>{SM["deals_label"]}</small><b>{SM["deals_n"]}</b><span>{SM["deals_last"]}</span></div>
-    <div class="tile mint"><small>{SM["fund_label"]}</small><b>{SM["fund_n"]}</b><span>{SM["fund_sub"]}</span></div>
-  </div>
-  <p class="sl">{SM["team_label"]}</p>
-  <div class="team">{team}</div>
-  <p class="sl">{SM["quote_label"]}</p>
-  <blockquote><p>\u201c{SM["quote"]}\u201d</p><cite>\u2014 {SM["quote_by"]}</cite></blockquote>
-  <p class="sl">{SM["look_label"]}</p>
-  <p class="look">{SM["look"]}</p>
-  <p class="sl">{SM["checks_label"]}</p>
-  <div class="cks">{checks}</div>
-</aside>
-</div>
+{stage}
+
 </div></div>
 <div class="inner rest">
 {checks10_block}

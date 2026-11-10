@@ -662,6 +662,58 @@
      "name": "Political ties",
      "sources": "FEC contributions, U.S. lobbying disclosures (LDA), and official parliamentary records"
     }
+   ],
+   "step_chips": [
+    "OFAC · SEC · PACER",
+    "Exact name + adviser ID",
+    "Link to the record",
+    "Clear / Review"
+   ],
+   "step_icons": [
+    "records",
+    "match",
+    "link",
+    "decide"
+   ],
+   "step_badges": [
+    {
+     "kicker": "Illustrative",
+     "value": "4 deals · $220M fund"
+    },
+    {
+     "kicker": "Illustrative",
+     "value": "2 partners named"
+    },
+    {
+     "kicker": "Illustrative",
+     "value": "Quote and thesis"
+    },
+    {
+     "kicker": "Illustrative",
+     "value": "2 Clear · 1 Review"
+    }
+   ],
+   "callouts": [
+    {
+     "side": "left",
+     "label": "Deals & latest fund",
+     "target": "tiles"
+    },
+    {
+     "side": "left",
+     "label": "Team on record",
+     "target": "team"
+    },
+    {
+     "side": "right",
+     "label": "What founders say",
+     "target": "quote"
+    },
+    {
+     "side": "right",
+     "label": "Pills you read",
+     "target": "checks"
+    }
    ]
   },
   "my_firms": {
