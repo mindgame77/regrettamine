@@ -288,6 +288,38 @@ def how_we_check():
         for n, c, l in SM['checks']
     )
     pills = ''.join(f'<span class="pl {c}">{t}</span>' for c, t in H['read_pills'])
+    play = (
+        '<svg viewBox="0 0 64 64" width="28" height="28" focusable="false">'
+        '<circle cx="32" cy="32" r="32" fill="#fff"/>'
+        '<path d="M26 18.5v27L46 32z" fill="#6C3BFF"/>'
+        '</svg>'
+    )
+    url = (H.get('video_url') or '').strip()
+    media = (
+        f'<div class="vspot-ph" role="img" aria-label="Video placeholder">{play}</div>'
+    )
+    if url:
+        if not re.match(r'https://', url, re.I):
+            url = ''
+        else:
+            yt = re.search(r'(?:youtube\.com/watch\?[^#]*v=|youtu\.be/|youtube\.com/embed/)([A-Za-z0-9_-]{6,})', url)
+            if yt:
+                media = (
+                    f'<iframe class="vspot-media" src="https://www.youtube.com/embed/{yt.group(1)}" '
+                    f'title="{E(H.get("video_caption") or "Video")}" '
+                    'allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture;web-share" '
+                    'allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>'
+                )
+            elif re.search(r'\.mp4(\?|$)', url, re.I):
+                media = f'<video class="vspot-media" controls preload="metadata" src="{E(url, True)}"></video>'
+            else:
+                media = (
+                    f'<iframe class="vspot-media" src="{E(url, True)}" '
+                    f'title="{E(H.get("video_caption") or "Video")}" allowfullscreen loading="lazy"></iframe>'
+                )
+    cap = H.get('video_caption') or ''
+    cap_html = f'<figcaption>{cap}</figcaption>' if cap else ''
+    video = f'<figure class="vspot"><div class="vspot-frame">{media}</div>{cap_html}</figure>'
     return f'''<main class="hwc hwc-a">
 <div class="wash"><div class="inner">
 <span class="ey">{H["eyebrow"]}</span>
@@ -313,6 +345,7 @@ def how_we_check():
   <div class="cks">{checks}</div>
 </aside>
 </div>
+{video}
 </div></div>
 <div class="inner rest">
 <h2>{H["what_h2"]}</h2>
@@ -329,6 +362,13 @@ def how_we_check():
     {li(H["principles"])}
   </div>
 </div>
+<section class="fnote">
+  <h2>{H["founder_h2"]}</h2>
+  <div class="fnote-card">
+    <p class="fnote-body">{H["founder_note"]}</p>
+    <p class="fnote-sign"><b>{H["founder_name"]}</b><span>{H["founder_role"]}</span></p>
+  </div>
+</section>
 <h2>{H["corr_h2"]}</h2>
 <div class="card corr"><p>{H["corr_p"]}</p><a class="btn w" href="mailto:{H["corr_email"]}?subject={H["corr_subject"]}">{H["corr_button"]}</a></div>
 <p class="dis">{H["disclaimer"]}</p>

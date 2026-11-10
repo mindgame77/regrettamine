@@ -619,7 +619,14 @@
      "Named, dated reporting from established outlets. Anonymous-only claims don’t count."
     ]
    ],
-   "steps_h2": "How a check is made"
+   "steps_h2": "How a check is made",
+   "_video": "Leave video_url empty for the placeholder frame. A YouTube or .mp4 URL replaces it.",
+   "video_url": "",
+   "video_caption": "A short look at how we check a firm.",
+   "founder_h2": "A note from the founder",
+   "founder_note": "[Founder’s note goes here]",
+   "founder_name": "[Name]",
+   "founder_role": "[Role]"
   },
   "my_firms": {
    "_note": "My firms page (/account/firms/, js/app.js drawFirms). Results = firm_check_rows display labels: Clear (clear, nf), Review (review, red), Worth knowing (wk).",
