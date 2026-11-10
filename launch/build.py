@@ -272,14 +272,68 @@ def pending():
 <form id="notify"><input class="in" type="email" name="email" required maxlength="200" placeholder="{P["email_placeholder"]}"><input class="in" type="text" name="website" maxlength="300" placeholder="{P["website_placeholder"]}"><button class="btn">{P["button"]}</button></form><p class="msg" id="pmsg"></p><p class="note">{P["note"]}</p></div></main>'''
 
 def how_we_check():
-    H = S['how_we_check']
+    H, SM = S['how_we_check'], S['how_we_check']['sample']
     li = lambda xs: '<ul>' + ''.join(f'<li><span>{x}</span></li>' for x in xs) + '</ul>'
-    return f'''<main class="hwc"><h1>{H["h1"]}</h1><p class="lead">{H["lead"]}</p>
-<div class="steps">{"".join(f'<div class="card"><b class="n">{i + 1}</b><h3>{t}</h3><p>{p}</p></div>' for i, (t, p) in enumerate(H["steps"]))}</div>
-<h2>{H["what_h2"]}</h2><ul class="areas">{"".join(f'<li><span>{x}</span></li>' for x in H["areas"])}</ul>
-<h2>{H["read_h2"]}</h2><div class="card"><p style="margin-bottom:10px">{H["read_p"]}</p><div class="pills">{"".join(f'<span class="pl {c}">{t}</span>' for c, t in H["read_pills"])}</div>{li(H["read_list"])}</div>
-<h2>{H["corr_h2"]}</h2><div class="card corr"><p>{H["corr_p"]}</p><a class="btn w" href="mailto:{H["corr_email"]}?subject={H["corr_subject"]}">{H["corr_button"]}</a></div>
-<p class="dis">{H["disclaimer"]}</p></main>'''
+    steps = ''.join(
+        f'<li class="tl-step"><b class="n">{i + 1}</b><div><h3>{t}</h3><p>{p}</p></div></li>'
+        for i, (t, p) in enumerate(H['steps'])
+    )
+    areas = ''.join(
+        f'<div class="card area"><h3>{t}</h3><p>{p}</p><span class="tag">{g}</span></div>'
+        for t, p, g in H['areas']
+    )
+    team = ''.join(f'<div class="who"><b>{n}</b><span>{r}</span></div>' for n, r in SM['team'])
+    checks = ''.join(
+        f'<div class="ck"><span>{n}</span><span class="pl {c}">{l}</span></div>'
+        for n, c, l in SM['checks']
+    )
+    pills = ''.join(f'<span class="pl {c}">{t}</span>' for c, t in H['read_pills'])
+    return f'''<main class="hwc hwc-a">
+<div class="wash"><div class="inner">
+<span class="ey">{H["eyebrow"]}</span>
+<h1>{H["h1"]}<br><span>{H["h1_accent"]}</span></h1>
+<p class="lead">{H["lead"]}</p>
+<div class="stage">
+<ol class="tl">{steps}</ol>
+<aside class="sample">
+  <div class="sample-head"><span class="badge">{H["sample_label"]}</span><p class="cap">{H["sample_caption"]}</p></div>
+  <b class="fname">{SM["name"]}</b>
+  <p class="meta">{SM["meta"]}</p>
+  <div class="tiles">
+    <div class="tile mint"><small>{SM["deals_label"]}</small><b>{SM["deals_n"]}</b><span>{SM["deals_last"]}</span></div>
+    <div class="tile mint"><small>{SM["fund_label"]}</small><b>{SM["fund_n"]}</b><span>{SM["fund_sub"]}</span></div>
+  </div>
+  <p class="sl">{SM["team_label"]}</p>
+  <div class="team">{team}</div>
+  <p class="sl">{SM["quote_label"]}</p>
+  <blockquote><p>\u201c{SM["quote"]}\u201d</p><cite>\u2014 {SM["quote_by"]}</cite></blockquote>
+  <p class="sl">{SM["look_label"]}</p>
+  <p class="look">{SM["look"]}</p>
+  <p class="sl">{SM["checks_label"]}</p>
+  <div class="cks">{checks}</div>
+</aside>
+</div>
+</div></div>
+<div class="inner rest">
+<h2>{H["what_h2"]}</h2>
+<div class="areas">{areas}</div>
+<div class="read-grid">
+  <div class="card">
+    <h2 class="in">{H["read_h2"]}</h2>
+    <p class="read-p">{H["read_p"]}</p>
+    <div class="pills">{pills}</div>
+    {li(H["read_list"])}
+  </div>
+  <div class="card">
+    <h2 class="in">{H["principles_h3"]}</h2>
+    {li(H["principles"])}
+  </div>
+</div>
+<h2>{H["corr_h2"]}</h2>
+<div class="card corr"><p>{H["corr_p"]}</p><a class="btn w" href="mailto:{H["corr_email"]}?subject={H["corr_subject"]}">{H["corr_button"]}</a></div>
+<p class="dis">{H["disclaimer"]}</p>
+</div>
+</main>'''
 
 def _rpc(fn, args):
     req = urllib.request.Request(f"{CFG['url']}/rest/v1/rpc/{fn}", json.dumps(args).encode(),

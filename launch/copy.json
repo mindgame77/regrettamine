@@ -459,33 +459,53 @@
   },
   "how_we_check": {
    "title": "How we check",
-   "h1": "How we check",
-   "lead": "We read the firm’s own website and public records, then show what we found on the firm page.",
+   "eyebrow": "How we check",
+   "h1": "From public record",
+   "h1_accent": "to the pill you see.",
+   "lead": "We check how a VC fund deals with founders, using the firm’s own website and public records you can open yourself.",
    "steps": [
     [
-     "We read",
-     "The firm’s own website and public records."
+     "We pull the public record",
+     "Government lists, SEC filings, court dockets and named press for the fund, its advisers and its partners."
     ],
     [
-     "We put it on the firm page",
-     "Deals, funds, team and checks."
+     "We confirm the match",
+     "An exact identity match, never name-only. Copycat names are left out."
     ],
     [
-     "You decide",
-     "Open the sources and decide for yourself."
+     "We verify every source",
+     "A fact counts only if it names the fund, shows its role, and points to a record you can open."
+    ],
+    [
+     "You check before you sign",
+     "Open each check, follow the link to the original, save the fund and draw your own conclusions."
     ]
    ],
-   "what_h2": "What’s on a firm page",
+   "what_h2": "What we check",
    "areas": [
-    "Deals",
-    "Funds",
-    "Team",
-    "What founders say",
-    "What the firm looks for",
-    "Legal, sanctions and press checks"
+    [
+     "Legal records",
+     "Lawsuits by or against the fund, and its partners as directors, in US federal and state courts.",
+     "Court records"
+    ],
+    [
+     "Regulators &amp; sanctions",
+     "Registration filings, enforcement actions, and government sanctions and restriction lists.",
+     "Government filings &amp; lists"
+    ],
+    [
+     "Press",
+     "Named, dated reporting from established outlets. Anonymous-only claims don’t count.",
+     "News reporting"
+    ],
+    [
+     "People behind the fund",
+     "Partners and advisers named in filings, checked against the same records.",
+     "Filings"
+    ]
    ],
-   "read_h2": "How to read it",
-   "read_p": "Pills show what we found, not a grade.",
+   "read_h2": "How to read a pill",
+   "read_p": "Each check shows a pill, not a grade. A pill tells you what we found, then you open the source.",
    "read_pills": [
     [
      "c",
@@ -498,14 +518,108 @@
    ],
    "read_list": [
     "<b>Clear</b> means we found nothing in the sources we checked. It is not a guarantee.",
-    "<b>Review</b> means there is a record worth reading."
+    "<b>Review</b> means there is a record worth reading. Counts show how many."
+   ],
+   "principles_h3": "Principles",
+   "principles": [
+    "Exact matches only. Copycat names are excluded.",
+    "A suit the fund brought is shown differently from one brought against it.",
+    "A lawsuit or probe is not a finding of wrongdoing.",
+    "Where a source has no data, we say so instead of guessing."
    ],
    "corr_h2": "Corrections",
-   "corr_p": "Send the page, what’s wrong and a source.",
+   "corr_p": "Spotted a wrong fact? Send the page, what’s wrong and a source. We review every request.",
    "corr_button": "Request a correction",
    "corr_email": "malytskyyo@gmail.com",
    "corr_subject": "Correction%20request",
-   "disclaimer": "Public-record information, not legal or investment advice. Records can be incomplete or out of date."
+   "disclaimer": "Public-record information, not legal or investment advice. Records can be incomplete or out of date.",
+   "sample_label": "Illustrative sample",
+   "sample_caption": "A made-up firm page, so you can see how the pieces fit. Not a real check.",
+   "sample": {
+    "name": "Field &amp; Oak",
+    "meta": "Oakland, CA · Founded 2016",
+    "deals_label": "Deals, this year",
+    "deals_n": "4",
+    "deals_last": "Last deal: Riverpane · Mar 2026",
+    "fund_label": "Latest fund",
+    "fund_n": "$220M",
+    "fund_sub": "Field &amp; Oak III · 2025",
+    "team_label": "Team",
+    "team": [
+     [
+      "Priya Raman",
+      "Founder &amp; Managing Partner"
+     ],
+     [
+      "Eli Navarro",
+      "Partner"
+     ]
+    ],
+    "quote_label": "What founders say",
+    "quote": "They asked hard questions and then actually helped us hire.",
+    "quote_by": "A founder",
+    "look_label": "What they look for",
+    "look": "Early teams in climate, health, and the future of work.",
+    "checks_label": "Checks",
+    "checks": [
+     [
+      "Legal records",
+      "c",
+      "Clear"
+     ],
+     [
+      "Sanctions",
+      "c",
+      "Clear"
+     ],
+     [
+      "Press",
+      "r",
+      "Review"
+     ]
+    ]
+   },
+   "b_h1": "Inside a firm page",
+   "b_lead": "We read the firm’s own website and public records, then put what we found on the firm page. This sample shows how to read one.",
+   "from_site_h": "From the firm’s website",
+   "from_records_h": "From public records",
+   "site_items": [
+    [
+     "Deals",
+     "Recent investments, with the round and date when we have them."
+    ],
+    [
+     "Funds",
+     "The latest fund we can show, and earlier ones behind Show all."
+    ],
+    [
+     "Team",
+     "Founders, CEOs and managing partners named on the firm’s site."
+    ],
+    [
+     "What founders say",
+     "Public comments from founders about working with the firm."
+    ],
+    [
+     "What they look for",
+     "The firm’s own words about the companies they want."
+    ]
+   ],
+   "record_items": [
+    [
+     "Legal records",
+     "Lawsuits by or against the fund, and its partners as directors, in US federal and state courts."
+    ],
+    [
+     "Regulators &amp; sanctions",
+     "Registration filings, enforcement actions, and government sanctions and restriction lists."
+    ],
+    [
+     "Press",
+     "Named, dated reporting from established outlets. Anonymous-only claims don’t count."
+    ]
+   ],
+   "steps_h2": "How a check is made"
   },
   "my_firms": {
    "_note": "My firms page (/account/firms/, js/app.js drawFirms). Results = firm_check_rows display labels: Clear (clear, nf), Review (review, red), Worth knowing (wk).",
