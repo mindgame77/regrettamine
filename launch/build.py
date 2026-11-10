@@ -273,14 +273,11 @@ def pending():
 
 def how_we_check():
     H = S['how_we_check']
-    card = lambda t, p, extra='': f'<div class="card"><h3>{t}</h3><p>{p}</p>{extra}</div>'
     li = lambda xs: '<ul>' + ''.join(f'<li><span>{x}</span></li>' for x in xs) + '</ul>'
-    return f'''<main class="hp"><span class="ey">{H["eyebrow"]}</span><h1>{H["h1"]} <span>{H["h1_accent"]}</span></h1><p class="lead">{H["lead"]}</p>
-<div class="strip">{"".join(f'<span class="st{" big" if i == 0 else ""}"><b>{b}</b>{t}</span>' for i, (b, t) in enumerate(H["strip"]))}</div>
+    return f'''<main class="hwc"><h1>{H["h1"]}</h1><p class="lead">{H["lead"]}</p>
 <div class="steps">{"".join(f'<div class="card"><b class="n">{i + 1}</b><h3>{t}</h3><p>{p}</p></div>' for i, (t, p) in enumerate(H["steps"]))}</div>
-<h2>{H["what_h2"]}</h2><div class="areas">{"".join(card(t, p, f'<span class="tag">{g}</span>') for t, p, g in H["areas"])}</div>
-<h2>{H["read_h2"]}</h2><div class="two"><div class="card"><p style="margin-bottom:10px">{H["read_p"]}</p><div class="pills">{"".join(f'<span class="pl {c}">{t}</span>' for c, t in H["read_pills"])}</div>{li(H["read_list"])}</div>
-<div class="card"><h3 style="margin-top:0">{H["principles_h3"]}</h3>{li(H["principles"])}</div></div>
+<h2>{H["what_h2"]}</h2><ul class="areas">{"".join(f'<li><span>{x}</span></li>' for x in H["areas"])}</ul>
+<h2>{H["read_h2"]}</h2><div class="card"><p style="margin-bottom:10px">{H["read_p"]}</p><div class="pills">{"".join(f'<span class="pl {c}">{t}</span>' for c, t in H["read_pills"])}</div>{li(H["read_list"])}</div>
 <h2>{H["corr_h2"]}</h2><div class="card corr"><p>{H["corr_p"]}</p><a class="btn w" href="mailto:{H["corr_email"]}?subject={H["corr_subject"]}">{H["corr_button"]}</a></div>
 <p class="dis">{H["disclaimer"]}</p></main>'''
 
