@@ -1,10 +1,10 @@
 """Privacy Policy (/privacy/) and Terms of Service (/terms/).
 
-The words live in launch/legal/privacy.md and launch/legal/terms.md. This module
-turns those files into the existing legal page: kicker, title, lead, effective
+The words live in copy.json -> site.legal (Markdown strings). This module
+turns that copy into the existing legal page: kicker, title, lead, effective
 date, a table of contents from the headings, then one section per heading.
 Plan names and prices come from copy.json through {{plan.starter.price}} style
-placeholders. Editing a markdown file and deploying rebuilds the page.
+placeholders. Editing site.legal and rebuilding updates the page.
 """
 import html
 import json
@@ -97,8 +97,10 @@ def _blocks(lines):
     return ''.join(out)
 
 
-def _render(filename):
-    raw = open(os.path.join(HERE, filename), encoding='utf-8').read().replace('\r\n', '\n')
+def _render(filename, raw=None):
+    if raw is None:
+        raw = json.load(open(os.path.join(HERE, "..", "copy.json")))["site"]["legal"][filename.removesuffix(".md")]
+    raw = raw.replace("\r\n", "\n")
     lines = raw.split('\n')
     i = 0
     while i < len(lines) and not lines[i].strip():
