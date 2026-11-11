@@ -8,7 +8,8 @@ Output: site-launch/. Deploy to the preview with launch/deploy_preview.sh (see l
 Refresh a snapshot (read-only): run launch/firm_snapshot.sql with :slug, save the JSON as data/launch/<slug>.json;
 then python3 launch/sync_checks.py data/launch/*.json > a new migration to update the 10 check rows."""
 import os, re, json, html, glob, shutil, hashlib, urllib.request
-from legal import privacy, terms
+from types import SimpleNamespace
+from pages.registry import PAGES, page_head, nav_links, footer_links
 E = html.escape
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE); OUT = os.path.join(ROOT, 'site-launch')
 def _v(f):  # query on the script/link. The file path does not change, so _headers makes the CDN revalidate.
@@ -17,7 +18,7 @@ V = {k: _v(f) for k, f in (('company', 'js/company.js'), ('app', 'js/app.js'), (
 COPY = json.load(open(os.path.join(HERE, 'copy.json')))
 S = COPY['site']
 NOINDEX = os.environ.get('REGRET_NOINDEX') == '1'
-CFG = {'url': os.environ.get('SUPABASE_URL', ''), 'key': os.environ.get('SUPABASE_ANON_KEY', ''), 'copy': COPY}
+CFG = {'url': os.environ.get('SUPABASE_URL', ''), 'key': os.environ.get('SUPABASE_ANON_KEY', ''), 'copy': {**COPY, 'site': {k: v for k, v in S.items() if k not in ('legal', 'pages')}}}
 GLOGO = '''<svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>'''
 
 def billing():  # Monthly|Yearly toggle for both pricing popups; their plan cards are drawn by js/app.js (drawPlans) from copy.json plans
@@ -58,21 +59,15 @@ def outcredits_modal():  # signed-out purchase (approved out-of-credits popup). 
 <input class="in" id="outem" type="email" placeholder="{o["email_placeholder"]}" aria-label="{o["email_aria"]}" autocomplete="email">
 <button type="button" class="btn y" id="outgo">{o["checkout"]}</button><p class="fine2">{o["fine"]}</p><p class="msg" id="outmsg"></p></div></div></div>'''
 
-def plans_page():
-    return f'<main class="wrap" style="display:flex;justify-content:center;padding:48px 16px 80px"><div class="md w">{pricing_inner(False)}</div></main>'
-
-def login_page():
-    return f'<main class="wrap" style="display:flex;justify-content:center;padding:48px 16px 80px"><div class="md sgm">{signup_inner(False)}</div></main>'
 
 def page(path, body, root, title=S['brand'], company=False, active='', head='', modals='both'):
     n = S['nav']
-    hon = ' class="on" aria-current="page"' if active == 'hwc' else ''
     scripts = f'<script defer src="{root}dates.js?v={V["dates"]}"></script>' + (f'<script defer src="{root}company.js?v={V["company"]}"></script>' if company else '') + f'<script defer src="{root}search.js?v={V["search"]}"></script><script defer src="{root}app.js?v={V["app"]}"></script>'
     nav = (f'<nav><a class="logo" href="{root}"><img src="{root}logo.svg" alt="">{S["brand"]}</a><div class="r">'
-           f'<a href="{root}how-we-check/"{hon}>{n["how_we_check"]}</a><a href="{root}plans/" data-open="paywall">{n["pricing"]}</a><span class="left" id="left"></span><a href="{root}login/" data-open="signup" id="signin">{n["sign_in"]}</a>'
+           f'{nav_links(S, root, "main", active)}'
            f'<span class="navr" id="acct" hidden><button type="button" class="ab" id="acctbtn" aria-haspopup="true" aria-expanded="false"><span class="av" id="av"></span><span class="nm">{n["account_btn"]}</span></button>'
            f'<div class="dd" id="acctdd" hidden><div class="hd2"><div class="em" id="ddem"></div><div class="pl2" id="ddplan"></div><div class="bal"><span>{n["checks_left"]}</span><b id="ddleft"></b></div></div>'
-           f'<a href="{root}account/">{n["account"]}</a><a href="{root}account/firms/">{n["my_checks"]}</a><a href="#" data-open="paywall">{n["buy_more"]}</a><div class="sep"></div><a class="so" href="#" id="signout">{n["sign_out"]}</a></div></span></div></nav>')
+           f'{nav_links(S, root, "account", active)}<a href="#" data-open="paywall">{n["buy_more"]}</a><div class="sep"></div><a class="so" href="#" id="signout">{n["sign_out"]}</a></div></span></div></nav>')
     modals = (signup_modal() if modals in ('both', 'signup') else '') + (pricing_modal() if modals in ('both', 'pricing') else '') + outcredits_modal()
     os.makedirs(os.path.dirname(path), exist_ok=True)
     open(path, 'w').write(f'''<!doctype html><html lang="en"><head>{'<meta name="robots" content="noindex">' if NOINDEX else ''}<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{E(title)}</title>{head}
@@ -151,13 +146,8 @@ def sec_title(s):
 def fill(tpl, F, full=False):  # header and search use the common name; legalName in the page head stays the SEC name
     return tpl.replace(T_HEAD, firm_head(F, full)).replace(T_NAME, E(F['name'])).replace(T_SLUG, E(F['slug']))
 
-FOOT = lambda root: f'<footer class="ft"><span>© 2026 Know Your Group INC.</span><a href="{root}privacy/">Privacy</a><a href="{root}terms/">Terms</a></footer>'
+FOOT = lambda root: '<footer class="ft"><span>' + E(S["footer"]["copyright"]) + '</span>' + footer_links(S, root) + '</footer>'
 
-def press():
-    L = S['landing']
-    wm = lambda o: f'<span class="wm{" s" if o in L["press_small_wordmarks"] else ""}">{E(o)}</span>'
-    li = ''.join(f'<li><a href="{E(u)}" target="_blank" rel="noopener">{wm(o)}<span>{E(h)}</span><em>{d}</em></a></li>' for o, h, d, u in L['press'])
-    return f'<section class="press"><h2>{L["press_h2"]}</h2><div class="logos">{"".join(wm(o) for o, *_ in L["press"])}</div><ul>{li}</ul></section>'
 
 def SB(sm=False):
     return f'<form class="sb{" sm" if sm else ""}" data-search><input name="q" placeholder="{S["search_placeholder"]}" autocomplete="off" aria-label="{S["search_aria"]}"><button class="btn">{S["search_button"]}</button></form>'
@@ -234,247 +224,9 @@ def why(k, q):  # optional exit question; values match exit_reasons.reason
     return f'<fieldset class="why" id="{k}why"><legend class="q">{E(q)}<small>{A["why_optional"]}</small></legend>{r}<textarea id="{k}other" maxlength="500" placeholder="{A["why_more"]}" aria-label="{A["why_more_aria"]}"></textarea></fieldset>'
 def signed_out(k):  # centered prompt shown by js/app.js when there is no session
     return f'<div class="emp" data-out hidden><h2>{SO[k + "_h2"]}</h2><p>{SO[k + "_p"]}</p><button class="btn" data-open="signup" style="margin-top:20px">{SO["button"]}</button></div>'
-ACCOUNT = f'''<main class="ac" id="account"><h1>{A["h1"]}</h1><p class="sub" id="aem"></p>{signed_out("account")}<div data-in hidden>
-<div class="sum"><div><small>{A["plan"]}</small><b id="aplan"></b><span id="aplan2"></span></div><div><small>{A["checks_left"]}</small><b class="v" id="aleft"></b><span id="aleft2"></span></div><div><small id="arenl">{A["renews"]}</small><b id="aren"></b><span id="aren2"></span></div></div>
-<div class="banner" id="cban" hidden></div><div class="acts"><button class="btn" id="resume" hidden>{A["resume"]}</button><button class="btn o" id="manage" hidden>{A["manage"]}</button><button class="btn o" data-open="cancelsub" id="cancel" hidden>{A["cancel"]}</button><button class="btn o" data-open="paywall" id="pick" hidden>{A["pick"]}</button><button class="btn" data-open="paywall" id="buymore">{A["buy_more"]}</button></div><p class="msg err" id="amsg"></p>
-<section class="sec"><h2>{A["my_checks_h2"]}</h2><div class="card mck"><div><b id="mcn"></b><p id="mcl"></p></div><a class="btn o" href="firms/">{A["view_all"]}</a></div></section>
-<section class="sec"><h2>{A["email_h2"]}</h2><p class="d">{A["email_d"]}</p><form class="card" id="emform"><label for="nem">{A["email_label"]}</label><div class="frm"><input class="in" id="nem" name="email" type="email" required placeholder="{A["email_placeholder"]}"><button class="btn o">{A["email_button"]}</button></div><p class="hint" id="emmsg">{A["email_hint"]}</p></form></section>
-<section class="sec"><h2>{A["danger_h2"]}</h2><div class="dz"><div><b>{A["delete_b"]}</b><p id="dzp">{A["delete_p"]}</p></div><button class="btn dg" data-open="delacct">{A["delete_button"]}</button></div></section></div></main>
-<div class="ov tall" id="delacct" hidden><div class="md" role="dialog" aria-modal="true" aria-labelledby="delh"><button class="x" data-close>×</button><h2 id="delh">{A["del_h2"]}</h2><p class="s">{A["del_s"]}</p><ul class="cons" id="cons"></ul>
-{why('del', A['del_why'])}<div class="row2"><button class="btn o" data-close>{A["del_keep"]}</button><button class="btn dgs" id="delgo">{A["del_go"]}</button></div><p class="msg err" id="delmsg"></p></div></div>
-<div class="ov tall" id="cancelsub" hidden><div class="md" role="dialog" aria-modal="true" aria-labelledby="canh"><button class="x" data-close>×</button><h2 id="canh"></h2><p class="s" id="cans"></p>
-{why('can', A['can_why'])}<div class="row2"><button class="btn o" data-close>{A["can_keep"]}</button><button class="btn dgs" id="cango">{A["can_go"]}</button></div><p class="msg err" id="canmsg"></p></div></div>'''
-MYCHECKS = f'''<main class="ac mc" id="mychecks"><h1>{M["h1"]}</h1><p class="sub">{M["sub"]}</p>{signed_out("checks")}<div data-in hidden><div class="bal2" id="mbal"></div>
-<div id="mlist" hidden><div class="tb"><label class="srch">⌕<input id="mq" type="search" placeholder="{M["search"]}" aria-label="{M["search"]}"></label><select class="sort" id="msort" aria-label="{M["sort_aria"]}">{"".join(f'<option value="{v}">{t}</option>' for v, t in M["sort"])}</select></div>
-<div class="ck" style="margin-top:16px"><div class="mr h">{"".join(f"<span>{c}</span>" for c in M["cols"])}</div><div id="mrows"></div></div><p class="hint" id="mnone" hidden>{M["none"]}</p></div>
-<div class="emp" id="mempty" hidden><h2>{M["empty_h2"]}</h2><p>{M["empty_p"]}</p>{SB()}</div></div></main>'''
 
 F_ = S['my_firms']
-MYFIRMS = f'''<main class="ac mf" id="myfirms"><h1>{F_["h1"]}</h1><p class="sub">{F_["sub"]}</p><div class="emp" data-out hidden><h2>{F_["signed_out_h2"]}</h2><p>{F_["signed_out_p"]}</p><button class="btn" data-open="signup" style="margin-top:20px">{SO["button"]}</button></div><div data-in hidden>
-<div id="flist" hidden><div class="tabs"><div class="tg" role="tablist" aria-label="{F_["tabs_aria"]}">{"".join(f'<button type="button" role="tab" data-tab="{k}"{' class="on" aria-selected="true"' if k == 'all' else ' aria-selected="false"'}>{t} <em id="fn-{k}"></em></button>' for k, t in F_["tabs"])}</div>
-<label class="srch">⌕<input id="fq" type="search" placeholder="{F_["search"]}" aria-label="{F_["search"]}"></label></div>
-<div class="ftab"><div class="mfr h">{"".join(f"<span>{c}</span>" for c in F_["cols"])}</div><div id="frows"></div></div><p class="hint" id="fnone" hidden></p></div>
-<div class="emp" id="fempty" hidden><h2>{F_["empty_h2"]}</h2><p>{F_["empty_p"]}</p>{SB()}</div></div></main>'''
-# /my-checks/ moved to /account/firms/ (My firms); keep old links working
-REDIRECT = lambda to, t: f'<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0;url={to}"><script>location.replace("{to}"+location.search+location.hash)</script><title>{t}</title><a href="{to}">{t}</a>'
 
-def landing():
-    L, PILL = S['landing'], S['pills']
-    cnt = lambda st, c: f"<span class='cnt {'ca' if st == 'review' else 'cg'}'>{E(c)}</span>" if c else ''
-    demo = ''.join(f'<div class="dr"><span>{E(t)}</span><span class="pc"><span class="pill {PILL[st][0]}"><i></i>{PILL[st][1]}</span>{cnt(st, c)}</span></div>' for t, st, c in L['demo_rows'])
-    return f'''<main class="wrap"><div class="hero"><h1>{L["h1"]}<br><span>{L["h1_accent"]}</span></h1>
-{SB()}<div class="chips">{"".join(f"<span>{c}</span>" for c in L["chips"])}</div></div>
-<div class="demo" aria-hidden="true"><div class="dh"><b>{L["demo_firm"]}</b><em>{L["demo_tag"]}</em></div>{demo}<div class="dr fade"><span>{L["demo_more"]}</span></div></div><div style="height:64px"></div></main>{press()}<div style="height:80px"></div>'''
-
-def pending():
-    P = S['pending']
-    return f'''<main class="wrap"><div class="pend"><div class="sp"></div><h1>{P["h1"]}</h1><p style="color:var(--ink2);font-size:18px"><b id="pq"></b> {P["body"]}</p>
-<form id="notify"><input class="in" type="email" name="email" required maxlength="200" placeholder="{P["email_placeholder"]}"><input class="in" type="text" name="website" maxlength="300" placeholder="{P["website_placeholder"]}"><button class="btn">{P["button"]}</button></form><p class="msg" id="pmsg"></p><p class="note">{P["note"]}</p></div></main>'''
-
-def how_we_check():
-    H, SM = S['how_we_check'], S['how_we_check']['sample']
-    li = lambda xs: '<ul>' + ''.join(f'<li><span>{x}</span></li>' for x in xs) + '</ul>'
-    areas = ''.join(
-        f'<div class="card area"><h3>{t}</h3><p>{p}</p><span class="tag">{g}</span></div>'
-        for t, p, g in H['areas']
-    )
-    team = ''.join(f'<div class="who"><b>{n}</b><span>{r}</span></div>' for n, r in SM['team'])
-    checks = ''.join(
-        f'<div class="ck"><span>{n}</span><span class="pl {c}">{l}</span></div>'
-        for n, c, l in SM['checks']
-    )
-    pills = ''.join(f'<span class="pl {c}">{t}</span>' for c, t in H['read_pills'])
-    play = (
-        '<svg viewBox="0 0 64 64" width="28" height="28" focusable="false">'
-        '<circle cx="32" cy="32" r="32" fill="#fff"/>'
-        '<path d="M26 18.5v27L46 32z" fill="#6C3BFF"/>'
-        '</svg>'
-    )
-    url = (H.get('video_url') or '').strip()
-    media = f'<div class="vspot-ph" role="img" aria-label="Video placeholder">{play}</div>'
-    if url:
-        if not re.match(r'https://', url, re.I):
-            url = ''
-        else:
-            yt = re.search(r'(?:youtube\.com/watch\?[^#]*v=|youtu\.be/|youtube\.com/embed/)([A-Za-z0-9_-]{6,})', url)
-            if yt:
-                media = (
-                    f'<iframe class="vspot-media" src="https://www.youtube.com/embed/{yt.group(1)}" '
-                    f'title="{E(H.get("video_caption") or "Video")}" '
-                    'allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture;web-share" '
-                    'allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>'
-                )
-            elif re.search(r'\.mp4(\?|$)', url, re.I):
-                media = f'<video class="vspot-media" controls preload="metadata" src="{E(url, True)}"></video>'
-            else:
-                media = (
-                    f'<iframe class="vspot-media" src="{E(url, True)}" '
-                    f'title="{E(H.get("video_caption") or "Video")}" allowfullscreen loading="lazy"></iframe>'
-                )
-    cap = H.get('video_caption') or ''
-    cap_html = f'<figcaption>{cap}</figcaption>' if cap else ''
-
-    video = f'<figure class="vspot"><div class="vspot-frame">{media}</div>{cap_html}</figure>'
-    stat_url = (H.get('stat_url') or '').strip()
-    stat_src = H.get('stat_source') or ''
-    if stat_url and re.match(r'https://', stat_url, re.I):
-        stat_cite = (
-            f'<cite><a href="{E(stat_url, True)}" target="_blank" rel="noopener">{E(stat_src)}</a></cite>'
-            if stat_src else ''
-        )
-    else:
-        stat_cite = f'<cite>{E(stat_src)}</cite>' if stat_src else ''
-    stat = ''
-    if H.get('stat_figure') or H.get('stat_text'):
-        stat = (
-            '<div class="stat">'
-            f'<b class="stat-n">{E(H.get("stat_figure") or "")}</b>'
-            f'<p class="stat-t">{E(H.get("stat_text") or "")}</p>'
-            f'{stat_cite}'
-            '</div>'
-        )
-    checks10 = ''.join(
-        f'<article class="c10"><b class="c10-n">{i:02d}</b><div><h3>{E(item["name"])}</h3>'
-        f'<p>{E(item["sources"])}</p></div></article>'
-        for i, item in enumerate(H.get('checks10') or [], 1)
-    )
-    checks10_p = H.get('checks10_p') or ''
-    checks10_intro = f'<p class="checks10-p">{E(checks10_p)}</p>' if checks10_p else ''
-    checks10_block = ''
-    if checks10:
-        checks10_block = (
-            f'<h2>{E(H.get("checks10_h2") or "10 background checks")}</h2>'
-            f'{checks10_intro}'
-            f'<div class="checks10">{checks10}</div>'
-        )
-
-    ICONS = {
-        'records': (
-            '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" '
-            'stroke="#6C3BFF" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">'
-            '<path d="M7 7V5.8A1.8 1.8 0 0 1 8.8 4h8.4A1.8 1.8 0 0 1 19 5.8v10.4a1.8 1.8 0 0 1-1.8 1.8H16"/>'
-            '<rect x="5" y="7" width="11" height="13" rx="1.8"/>'
-            '<path d="M8 11h5M8 14h5M8 17h3"/></svg>'
-        ),
-        'match': (
-            '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" '
-            'stroke="#6C3BFF" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">'
-            '<circle cx="10" cy="8" r="3.2"/>'
-            '<path d="M4.8 19c.6-3.1 2.7-4.7 5.2-4.7 1 0 1.9.3 2.7.8"/>'
-            '<circle cx="17" cy="16.2" r="3.3"/>'
-            '<path d="M15.6 16.2l1 1.1 1.8-2"/></svg>'
-        ),
-        'link': (
-            '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" '
-            'stroke="#6C3BFF" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">'
-            '<path d="M10 13.5 8.6 14.9a3 3 0 0 1-4.2-4.2l2.5-2.5a3 3 0 0 1 4.2 0L12 9"/>'
-            '<path d="M14 10.5l1.4-1.4a3 3 0 0 1 4.2 4.2l-2.5 2.5a3 3 0 0 1-4.2 0L12 15"/>'
-            '<path d="M9.8 14.2l4.4-4.4"/></svg>'
-        ),
-        'decide': (
-            '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" '
-            'stroke="#6C3BFF" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">'
-            '<rect x="3.5" y="6.5" width="7.5" height="5" rx="2.5"/>'
-            '<rect x="13" y="12.5" width="7.5" height="5" rx="2.5"/>'
-            '<path d="M8 14.5c0 2.2 1.8 3.5 4 3.5h1M16 9.5c0-2.2-1.8-3.5-4-3.5h-1"/></svg>'
-        ),
-    }
-    step_titles = [(s[0] if isinstance(s, (list, tuple)) else s) for s in H['steps']]
-    chips = H.get('step_chips') or []
-    icons = H.get('step_icons') or []
-    badges = H.get('step_badges') or []
-    heading = H.get('steps_h2') or ''
-    heading_html = f'<p class="stage-kicker">{E(heading)}</p>' if heading else ''
-
-    sample = (
-        "<aside class=\"sample\">"
-        f"<div class=\"sample-head\"><span class=\"badge\">{H['sample_label']}</span><p class=\"cap\">{H['sample_caption']}</p></div>"
-        f"<b class=\"fname\">{SM['name']}</b>"
-        f"<p class=\"meta\">{SM['meta']}</p>"
-        "<div class=\"tiles\" data-part=\"tiles\">"
-        f"<div class=\"tile mint\"><small>{SM['deals_label']}</small><b>{SM['deals_n']}</b><span>{SM['deals_last']}</span></div>"
-        f"<div class=\"tile mint\"><small>{SM['fund_label']}</small><b>{SM['fund_n']}</b><span>{SM['fund_sub']}</span></div>"
-        "</div>"
-        f"<p class=\"sl\" data-part=\"team\">{SM['team_label']}</p>"
-        f"<div class=\"team\" data-part=\"team\">{team}</div>"
-        f"<p class=\"sl\" data-part=\"quote\">{SM['quote_label']}</p>"
-        f"<blockquote data-part=\"quote\"><p>\u201c{SM['quote']}\u201d</p><cite>\u2014 {SM['quote_by']}</cite></blockquote>"
-        f"<p class=\"sl\">{SM['look_label']}</p>"
-        f"<p class=\"look\">{SM['look']}</p>"
-        f"<p class=\"sl\" data-part=\"checks\">{SM['checks_label']}</p>"
-        f"<div class=\"cks\" data-part=\"checks\">{checks}</div>"
-        "</aside>"
-    )
-
-    step_items = []
-    for i, title in enumerate(step_titles):
-        icon = ICONS.get(icons[i] if i < len(icons) else "", ICONS["records"])
-        chip = chips[i] if i < len(chips) else ""
-        chip_html = f'<span class="exchip">{E(chip)}</span>' if chip else ""
-        step_items.append(
-            '<li class="tl-step">'
-            f'<span class="ic">{icon}</span>'
-            f'<b class="n">{i + 1}</b>'
-            f'<h3>{E(title)}</h3>'
-            f"{chip_html}"
-            "</li>"
-        )
-    steps = "".join(step_items)
-    left, right = [], []
-    for c in (H.get("callouts") or []):
-        item = (
-            f'<p class="callout {E(c.get("side") or "left")}" data-target="{E(c.get("target") or "")}">'
-            f'<span>{E(c.get("label") or "")}</span></p>'
-        )
-        (left if c.get("side") == "left" else right).append(item)
-    stage = (
-        "<div class=\"stage\">" + heading_html + "<ol class=\"tl\">" + steps + "</ol>"
-        + "<div class=\"anatomy\"><div class=\"callouts callouts-l\">" + "".join(left) + "</div>"
-        + sample + "<div class=\"callouts callouts-r\">" + "".join(right) + "</div></div></div>"
-    )
-    return f'''<main class="hwc hwc-a hwc-a1 hwc-a1b">
-<div class="wash"><div class="inner">
-<div class="hero">
-{video}
-<div class="hero-copy">
-<span class="ey">{H["eyebrow"]}</span>
-<h1>{H["h1"]}<br><span>{H["h1_accent"]}</span></h1>
-<p class="lead">{H["lead"]}</p>
-{stat}
-</div>
-</div>
-
-{stage}
-
-</div></div>
-<div class="inner rest">
-{checks10_block}
-<h2>{H["what_h2"]}</h2>
-<div class="areas">{areas}</div>
-<div class="read-grid">
-  <div class="card">
-    <h2 class="in">{H["read_h2"]}</h2>
-    <p class="read-p">{H["read_p"]}</p>
-    <div class="pills">{pills}</div>
-    {li(H["read_list"])}
-  </div>
-  <div class="card">
-    <h2 class="in">{H["principles_h3"]}</h2>
-    {li(H["principles"])}
-  </div>
-</div>
-<section class="fnote">
-  <h2>{H["founder_h2"]}</h2>
-  <div class="fnote-card">
-    <p class="fnote-body">{H["founder_note"]}</p>
-    <p class="fnote-sign"><b>{H["founder_name"]}</b><span>{H["founder_role"]}</span></p>
-  </div>
-</section>
-<h2>{H["corr_h2"]}</h2>
-<div class="card corr"><p>{H["corr_p"]}</p><a class="btn w" href="mailto:{H["corr_email"]}?subject={H["corr_subject"]}">{H["corr_button"]}</a></div>
-<p class="dis">{H["disclaimer"]}</p>
-</div>
-</main>'''
 
 def _rpc(fn, args):
     req = urllib.request.Request(f"{CFG['url']}/rest/v1/rpc/{fn}", json.dumps(args).encode(),
@@ -509,6 +261,7 @@ def main():
     shutil.rmtree(OUT, ignore_errors=True); os.makedirs(OUT)
     for f in ('style.css', 'logo.svg', 'js/app.js', 'js/company.js', 'js/search.js', 'js/dates.js'): shutil.copy(os.path.join(HERE, f), OUT)
     shutil.copytree(os.path.join(HERE, 'fav'), os.path.join(OUT, 'fav'))
+    shutil.copytree(os.path.join(HERE, 'assets', 'video'), os.path.join(OUT, 'assets', 'video'))
     # Email templates load this from https://regretamin.com/assets/logo/lockup-light@2x.png
     logo_dir = os.path.join(OUT, 'assets', 'logo')
     os.makedirs(logo_dir, exist_ok=True)
@@ -521,7 +274,6 @@ def main():
     nf = COPY.get('not_found', {'h1': 'We could not find that firm', 'p': 'It may not be checked yet. Search for it and we will start a check.'})
     page(os.path.join(OUT, '_tpl', '404.html'), f'<main class="wrap"><div class="hero"><h1>{E(nf["h1"])}</h1><p>{E(nf["p"])}</p>{SB()}</div></main>', '/', 'Not found' + S['title_suffix'], head='<meta name="robots" content="noindex">')
     # Site-wide 404: Cloudflare Pages serves /404.html with status 404 for unknown paths (no soft-404 SPA fallback).
-    page(os.path.join(OUT, '404.html'), f'<main class="wrap"><div class="hero"><h1>Page not found</h1><p>This page does not exist. Search for a firm instead.</p>{SB()}</div></main>', '/', 'Not found' + S['title_suffix'], head='<meta name="robots" content="noindex">')
     tpl = {v: open(os.path.join(OUT, '_tpl', v + '.html')).read() for v in ('summary', 'full')}
     # Edge cache key version: changes whenever the template or edge renderer changes, so a deploy never serves stale heads.
     import hashlib
@@ -537,21 +289,20 @@ def main():
         for v, sub in (('summary', ''), ('full', 'full')):
             d = os.path.join(OUT, 'vc', F['slug'], sub); os.makedirs(d, exist_ok=True)
             open(os.path.join(d, 'index.html'), 'w').write(fill(tpl[v], F, v == 'full'))
-    page(os.path.join(OUT, 'index.html'), landing(), '')
-    page(os.path.join(OUT, 'pending', 'index.html'), pending(), '../')
-    page(os.path.join(OUT, 'how-we-check', 'index.html'), how_we_check(), '../', S['how_we_check']['title'] + S['title_suffix'], active='hwc')
-    page(os.path.join(OUT, 'account', 'index.html'), ACCOUNT, '../', A['h1'] + S['title_suffix'])
-    page(os.path.join(OUT, 'account', 'firms', 'index.html'), MYFIRMS, '../../', F_['title'] + S['title_suffix'])
-    os.makedirs(os.path.join(OUT, 'my-checks'), exist_ok=True)
-    open(os.path.join(OUT, 'my-checks', 'index.html'), 'w').write(REDIRECT('../account/firms/', F_['title']))
-    page(os.path.join(OUT, 'privacy', 'index.html'), privacy(), '../', 'Privacy Policy' + S['title_suffix'])
-    page(os.path.join(OUT, 'terms', 'index.html'), terms(), '../', 'Terms of Service' + S['title_suffix'])
-    page(os.path.join(OUT, 'plans', 'index.html'), plans_page(), '../', S['pricing']['title'] + S['title_suffix'], head='<meta name="robots" content="noindex">', modals='signup')
-    page(os.path.join(OUT, 'login', 'index.html'), login_page(), '../', S['signup']['title'] + S['title_suffix'], head='<meta name="robots" content="noindex">', modals='pricing')
-    os.makedirs(os.path.join(OUT, 'pricing'), exist_ok=True)  # /pricing/ has no page of its own: send it to the home page Pricing popup (no 404); kept out of the sitemap
-    open(os.path.join(OUT, 'pricing', 'index.html'), 'w').write('<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex"><link rel="canonical" href="/"><meta http-equiv="refresh" content="0;url=../?pricing=1"><script>location.replace("../?pricing=1"+location.hash)</script><title>Pricing</title><a href="../?pricing=1">Pricing</a>')
+    context = SimpleNamespace(**globals())
+    for spec in PAGES:
+        root = '../' * len(spec.slug.split('/')) if spec.slug else ''
+        if spec.slug == '404': root = '/'
+        dest = os.path.join(OUT, spec.slug, 'index.html') if spec.slug != '404' else os.path.join(OUT, '404.html')
+        meta = S['pages'][spec.slug or 'home']
+        page(dest, spec.builder(context), root, meta['title'], active=spec.active,
+             head=page_head(spec, S, SITE), modals=spec.modals)
+    # Edge and static hosts consume the exact same registered sitemap paths.
+    static_paths = [spec.slug + '/' if spec.slug else '' for spec in PAGES if spec.sitemap]
+    open(os.path.join(HERE, 'edge', 'static-pages.mjs'), 'w').write(
+        '// Generated by launch/build.py from pages/registry.py. Do not edit.\nexport default ' + json.dumps(static_paths) + ';\n')
     site = SITE  # sitemap + robots (account and my-checks are left out)
-    urls = [site] + [site + p + '/' for p in ('how-we-check', 'privacy', 'terms') if os.path.exists(os.path.join(OUT, p, 'index.html'))] + [f'{site}vc/{f}/' for f in firms]  # /full/ is noindex
+    urls = [site + path for path in static_paths] + [f'{site}vc/{f}/' for f in firms]
     open(os.path.join(OUT, 'sitemap.xml'), 'w').write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + ''.join(f'<url><loc>{u}</loc></url>\n' for u in urls) + '</urlset>\n')
     open(os.path.join(OUT, 'robots.txt'), 'w').write(f'User-agent: *\nAllow: /\nDisallow: /_tpl/\n\nSitemap: {site}sitemap.xml\n')
     # company.js, app.js, search.js, dates.js and style.css keep one path. ?v= is only a browser

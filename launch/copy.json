@@ -459,14 +459,14 @@
   },
   "how_we_check": {
    "title": "How we check",
-   "eyebrow": "How we check",
-   "h1": "Don't regret",
-   "h1_accent": "your investor.",
-   "lead": "Don't make the costly mistakes early.",
+   "eyebrow": "",
+   "h1": "88% of founders walk away with nothing.",
+   "h1_accent": "Check your investor first.",
+   "lead": "",
    "steps": [
-    "We pull the public records",
-    "We confirm the match",
-    "We verify every source",
+    "We search 99+ databases",
+    "We match the right firm",
+    "We link every finding",
     "You decide"
    ],
    "what_h2": "What we check",
@@ -608,59 +608,208 @@
     ]
    ],
    "steps_h2": "How a check is made",
-   "_video": "Leave video_url empty for the placeholder frame. A YouTube or .mp4 URL replaces it.",
-   "video_url": "",
-   "video_caption": "A short look at how we check a firm.",
+   "_video": "Set video.src to a hosted .mp4 or a YouTube URL. For MP4 set video.poster and video.type; see assets/video/SOURCE.md.",
+   "video_caption": "",
    "founder_h2": "A note from the founder",
    "founder_note": "[Founder’s note goes here]",
    "founder_name": "[Name]",
    "founder_role": "[Role]",
-   "stat_figure": "88%",
-   "stat_text": "of U.S. venture-backed founders receive zero exit value.",
+   "stat_figure": "",
+   "stat_text": "",
    "stat_source": "Azevedo, Scheuer, Smetters & Yang, July 2026.",
    "stat_url": "https://eduardomazevedo.github.io/papers/azevedo-scheuer-smetters-yang%202025.pdf",
    "checks10_h2": "10 background checks",
-   "checks10_p": "Each firm is run through these ten checks, using public records you can open yourself.",
+   "checks10_p": "Each firm is run through these ten checks.",
    "checks10": [
     {
      "name": "Sanctions",
-     "sources": "OFAC SDN, UK sanctions list, EU Sanctions Map, UN Security Council consolidated list"
+     "sources": [
+      {
+       "name": "OFAC SDN",
+       "why": "US Treasury list of sanctioned people and companies"
+      },
+      {
+       "name": "UK sanctions list",
+       "why": "UK government list of sanctioned people and companies"
+      },
+      {
+       "name": "EU Sanctions Map",
+       "why": "European Union list of sanctioned people, companies and countries"
+      },
+      {
+       "name": "UN Security Council consolidated list",
+       "why": "UN list of people and groups under Security Council sanctions"
+      }
+     ]
     },
     {
      "name": "Terrorism financing lists",
-     "sources": "OFAC SDN (SDGT), U.S. State Department FTO list, UN 1267 list, UK proscribed groups, EU terrorist list"
+     "sources": [
+      {
+       "name": "OFAC SDN (SDGT)",
+       "why": "US Treasury list of people and groups designated as global terrorists"
+      },
+      {
+       "name": "U.S. State Department FTO list",
+       "why": "US list of designated Foreign Terrorist Organizations"
+      },
+      {
+       "name": "UN 1267 list",
+       "why": "UN sanctions list for ISIL (Da'esh), al-Qaida and related groups"
+      },
+      {
+       "name": "UK proscribed groups",
+       "why": "UK Home Office list of banned terrorist organizations"
+      },
+      {
+       "name": "EU terrorist list",
+       "why": "EU list of people and groups under terrorism sanctions"
+      }
+     ]
     },
     {
      "name": "Export and investment restrictions",
-     "sources": "U.S. Consolidated Screening List (trade.gov)"
+     "sources": [
+      {
+       "name": "U.S. Consolidated Screening List (trade.gov)",
+       "why": "Combined US government lists of parties restricted for export, trade or investment"
+      }
+     ]
     },
     {
      "name": "Financial regulator actions",
-     "sources": "SEC, FINRA, FCA, CFTC, and DOJ records"
+     "sources": [
+      {
+       "name": "SEC",
+       "why": "US Securities and Exchange Commission filings and enforcement actions"
+      },
+      {
+       "name": "FINRA",
+       "why": "US regulator for broker-dealers, including disciplinary records"
+      },
+      {
+       "name": "FCA",
+       "why": "UK Financial Conduct Authority enforcement against financial firms"
+      },
+      {
+       "name": "CFTC",
+       "why": "US Commodity Futures Trading Commission enforcement on derivatives and commodities"
+      },
+      {
+       "name": "DOJ",
+       "why": "US Department of Justice criminal and civil cases"
+      }
+     ]
     },
     {
      "name": "Money laundering penalties",
-     "sources": "FinCEN, OFAC civil penalties, SEC, FINRA, and FCA enforcement"
+     "sources": [
+      {
+       "name": "FinCEN",
+       "why": "US Treasury bureau that issues anti-money-laundering penalties and advisories"
+      },
+      {
+       "name": "OFAC civil penalties",
+       "why": "US Treasury fines for breaking sanctions rules"
+      },
+      {
+       "name": "SEC",
+       "why": "US Securities and Exchange Commission filings and enforcement actions"
+      },
+      {
+       "name": "FINRA",
+       "why": "US regulator for broker-dealers, including disciplinary records"
+      },
+      {
+       "name": "FCA",
+       "why": "UK Financial Conduct Authority enforcement against financial firms"
+      }
+     ]
     },
     {
      "name": "US court records",
-     "sources": "PACER, CourtListener, uscourts.gov, and state courts such as Delaware"
+     "sources": [
+      {
+       "name": "PACER",
+       "why": "Official electronic records of US federal court cases"
+      },
+      {
+       "name": "CourtListener",
+       "why": "Public archive of US court opinions and dockets"
+      },
+      {
+       "name": "uscourts.gov",
+       "why": "Official website of the US federal courts"
+      },
+      {
+       "name": "State courts (e.g. Delaware)",
+       "why": "State court records, including Delaware, where many companies are incorporated"
+      }
+     ]
     },
     {
      "name": "Court records worldwide",
-     "sources": "UK Find Case Law, EU courts (CURIA), and other official national court records"
+     "sources": [
+      {
+       "name": "UK Find Case Law",
+       "why": "Official published judgments of the UK courts"
+      },
+      {
+       "name": "EU courts (CURIA)",
+       "why": "Official case law of the Court of Justice of the European Union"
+      },
+      {
+       "name": "Other official national courts",
+       "why": "Official court records published by other countries"
+      }
+     ]
     },
     {
      "name": "Registration check",
-     "sources": "SEC Investment Adviser Public Disclosure (IAPD) / Form ADV"
+     "sources": [
+      {
+       "name": "SEC IAPD / Form ADV",
+       "why": "Official SEC register of investment advisers and their Form ADV filings"
+      }
+     ]
     },
     {
      "name": "People behind the fund",
-     "sources": "SEC IAPD (Form ADV), EDGAR Form D, UK Companies House, FINRA BrokerCheck"
+     "sources": [
+      {
+       "name": "SEC IAPD (Form ADV)",
+       "why": "SEC filings that name a firm’s owners, officers and advisers"
+      },
+      {
+       "name": "EDGAR Form D",
+       "why": "SEC notice of a private securities offering, including related people"
+      },
+      {
+       "name": "UK Companies House",
+       "why": "Official UK register of companies and their officers"
+      },
+      {
+       "name": "FINRA BrokerCheck",
+       "why": "Public records on US brokers and investment advisers"
+      }
+     ]
     },
     {
      "name": "Political ties",
-     "sources": "FEC contributions, U.S. lobbying disclosures (LDA), and official parliamentary records"
+     "sources": [
+      {
+       "name": "FEC contributions",
+       "why": "US Federal Election Commission records of political donations"
+      },
+      {
+       "name": "U.S. lobbying disclosures (LDA)",
+       "why": "Official US filings of federal lobbying activity"
+      },
+      {
+       "name": "Official parliamentary records",
+       "why": "Official records of members and activity in national parliaments"
+      }
+     ]
     }
    ],
    "step_chips": [
@@ -701,8 +850,8 @@
     },
     {
      "side": "left",
-     "label": "Team on record",
-     "target": "team"
+     "label": "What investors look for",
+     "target": "look"
     },
     {
      "side": "right",
@@ -711,10 +860,15 @@
     },
     {
      "side": "right",
-     "label": "Pills you read",
+     "label": "Background checks",
      "target": "checks"
     }
-   ]
+   ],
+   "video": {
+    "src": "/assets/video/startup-team.mp4",
+    "poster": "/assets/video/startup-team.jpg",
+    "type": "video/mp4"
+   }
   },
   "my_firms": {
    "_note": "My firms page (/account/firms/, js/app.js drawFirms). Results = firm_check_rows display labels: Clear (clear, nf), Review (review, red), Worth knowing (wk).",
@@ -757,12 +911,87 @@
    "empty_p": "Search a firm to check it, or save it for later.",
    "signed_out_h2": "Sign in to see your firms",
    "signed_out_p": "Firms you save or check are listed here once you sign in."
+  },
+  "legal": {
+   "privacy": "# Privacy Policy\n\nWhat we collect, why, and what you can do about it.\nEffective October 25, 2026 · See also [Terms of Service](../terms/)\n\n## 1. Who we are\nRegretamin (regretamin.com) shows founders information about venture capital, private equity and hedge fund firms from public sources. It is operated by **Know Your Group INC.**, a Delaware corporation (\"we\", \"us\"), which is responsible for the personal data described here. Questions or requests: **malytskyyo@gmail.com**.\n\nThis policy covers two groups of people: **users** of the site (sections 2–7) and **people named on firm pages** (section 8).\n\n## 2. What we collect from users\n- **Account.** Your email address, or, if you sign in with Google, the name, email address and profile picture Google shares with us. Used to create and secure your account.\n- **Saved firms.** The firms you save and the firms you have unlocked, so you can find them again under My firms.\n- **Credits.** Your credit balance and a record of each credit used or added (which firm, when).\n- **Firm requests.** If you search for a firm we don't have yet, the name you typed and, if you give it, your email so we can tell you when it's ready.\n- **Submissions.** If you send us information about a firm, we collect what you send, any evidence (such as documents or emails, including proof of your relationship with the firm), your contact details, and the date. See section 7.\n- **Correction requests.** Your message, contact details and any documents you send.\n- **Payment records.** Stripe handles payments; we never see or store card numbers. We keep your Stripe customer and subscription IDs, your plan and its renewal date.\n- **Abuse prevention.** When a free credit is used, or information is submitted, we store a one-way hash of your IP address (not the address itself).\n\n## 3. Free searches and your device\nWithout an account you get 2 free credits on your device. To count them, your browser stores a random ID in its local storage (`regretamin.anon`), and our database keeps the count against that ID. It does not contain your name or email. A new account gets its own 4 credits. Device credits are not transferred. Signing in also stores a session token in your browser, and starting a purchase stores a short-lived note of the plan you picked. Clearing your browser storage removes all of these.\n\nWe don't use advertising cookies, ad trackers or analytics tools.\n\n## 4. How we use user data\n- To run the service: sign-in, credits, unlocking firms, saved firms and purchases.\n- To send sign-in links and, if you asked, an email when a firm you requested is ready.\n- To review, verify and publish submissions, and to handle correction requests and replies.\n- To keep the service secure and prevent abuse.\n- To keep records we need to comply with the law and to defend legal claims.\n\nWe don't sell your personal data, don't share it for advertising, and don't show ads.\n\n## 5. Services we use\n- **Supabase:** our database and sign-in (accounts, credits, saved firms). Sign-in link emails are sent through Supabase.\n- **Stripe:** payments, subscriptions and promo codes.\n- **Google:** only if you choose Google sign-in. Our pages also load fonts from Google Fonts, which receives your IP address.\n- **Resend:** sends the email telling you a firm you requested is ready.\n- **GitHub Pages:** hosts the website. Page code also loads from the jsDelivr content network.\n\nThese providers process data on our behalf under their own terms. Most are in the United States, so your data may be processed outside your country. Where required, we rely on the transfer safeguards these providers offer (such as Standard Contractual Clauses or the EU-U.S. Data Privacy Framework).\n\n## 6. Legal requests\nWe may keep and disclose information when we must respond to valid legal process (such as a court order or subpoena), to protect our rights, or to defend legal claims. We share with authorities only when the law requires it.\n\n## 7. Information you submit about firms\n- **Your identity stays private.** We don't publish your name or contact details unless you agree. We may have to disclose them if a court or law requires it.\n- **Verification.** We use your evidence to check the information. We publish a submission only after verifying it against an independent source (which we then cite), or as a clearly labeled, attributed unconfirmed report with a named public source.\n- **Anonymity is not guaranteed.** Details you include can sometimes identify you, even if we never publish your name.\n- **Subpoenas and court orders.** We disclose a contributor's identity only in response to a valid subpoena or court order in an active lawsuit. Where the law allows, we will try to tell you first (using the email you gave us) so you can object or get legal help. We may choose to oppose requests we believe are improper, but we can't promise we will or that we'll succeed.\n- **Retention.** We keep submissions, evidence and our review notes for up to 6 years so we can show where information came from and defend legal claims, unless the law requires otherwise.\n\n## 8. People named on firm pages\nIf you are a partner, executive, limited partner or other person connected with a firm, we may show limited information about you.\n\n- **What we show:** your name, role, and firm affiliation, and what public records and published sources say about you, such as court and regulatory records, sanctions listings and press coverage. Unconfirmed reports are shown only with a named public source, attributed to it, and labeled \"Not confirmed by official records.\"\n- **Sources:** court dockets, SEC EDGAR and IAPD, OFAC and other government sanctions lists, company registries, published press, and verified user submissions. Each entry shows its source and the date we last checked it.\n- **What we don't show:** home addresses, personal phone numbers or email, family details, ID numbers, or your nationality or ethnicity. The one exception is when nationality is part of an official listing, such as a sanctions designation. We never present nationality, on its own, as a sign of wrongdoing.\n- **Sanctions matches:** a \"possible name match\" means only that a name looks like one on an official list. We keep it labeled that way unless the official listing confirms it.\n- **Why:** to help founders understand who they take money from, a matter of public interest. Where the EU or UK GDPR applies, our legal basis is legitimate interests (Article 6(1)(f)), which we have balanced against your rights, together with applicable freedom-of-expression exemptions. Information about legal proceedings is shown only as it appears in official or published records.\n- **Your choices:** you can ask to access, correct or delete information about you, object to its use, or add a reply, free, at malytskyyo@gmail.com. We will respond within 30 days. We correct or remove what is inaccurate and remove items shown to be false. For accurate information, we weigh your request against the public interest in accurate information about investors. **We never charge to change or remove information.**\n\n## 9. How long we keep it\n- Account data, saved firms and credit records: while your account exists.\n- Payment records: longer where tax or accounting law requires.\n- Submissions, correction requests, and the source copies and edit history behind each firm page: up to 6 years, to show where information came from and to defend legal claims.\n- Hosting providers keep their own logs for their own periods.\n\n## 10. Your rights\nYou can ask us to access, correct, export or delete your data, or to stop using it, by emailing malytskyyo@gmail.com. We may need to confirm it's you, and we won't treat you differently for asking.\n\nDepending on where you live (for example the EU, UK, California or other U.S. states), you may have more rights, including complaining to your local data protection authority. **California and other U.S. states:** we do not sell or share personal information for cross-context behavioral advertising, about users or people named on firm pages.\n\n## 11. Children\nRegretamin is not for anyone under 18, and we don't knowingly collect data from children. If you believe a child has an account, contact us and we'll delete it.\n\n## 12. Security\nData is encrypted in transit and access to our database is restricted. No system is perfectly secure.\n\n## 13. Changes\nIf we change this policy, we'll update the date above. For significant changes we'll also tell people on the site.\n\n## 14. Contact\nKnow Your Group INC. · malytskyyo@gmail.com\n\nThis policy is governed by the laws of the State of Delaware, without limiting any rights you have under the law where you live.\n",
+   "terms": "# Terms of Service\n\nThe rules for using Regretamin, in plain English.\nEffective October 25, 2026 · See also [Privacy Policy](../privacy/)\n\n## 1. Agreement\nThese terms are an agreement between you and **Know Your Group INC.**, a Delaware corporation that operates Regretamin at regretamin.com (\"we\", \"us\"). By using the site you accept these terms and our Privacy Policy. You must be at least 18.\n\n## 2. What the site is, and is not\nRegretamin helps founders and their advisers learn about venture capital, private equity and hedge fund firms before taking their money.\n\n- **It is not legal, investment or financial advice.** Do your own diligence before you take or turn down money.\n- **It gives no verdicts.** We don't rate firms or people as good or bad.\n- **It is not a consumer reporting agency.** Know Your Group INC. is not a \"consumer reporting agency,\" and Regretamin does not provide \"consumer reports,\" under the Fair Credit Reporting Act (15 U.S.C. §1681 et seq.) or similar laws. You must not use Regretamin to decide anyone's eligibility for credit, insurance, employment, housing, or any other purpose covered by those laws.\n\n## 3. Where our information comes from\nWe compile information from public sources: court dockets, government and regulatory databases (such as SEC EDGAR and IAPD, and the OFAC and other government sanctions lists), company registries, and published press. Where clearly marked, we also show unconfirmed reports from public sources (section 5) and information submitted by users (section 6).\n\nEach entry shows its source and the date we last checked it. We report what those sources say. We do not independently confirm every underlying allegation, and an entry reflects its source as of the date shown. Records can be incomplete, out of date or wrong.\n\n## 4. No findings of wrongdoing\nA lawsuit, complaint, regulatory filing, news article, report or list entry is not proof that anyone did anything wrong. Allegations in lawsuits are only allegations; many are dismissed or settled with no admission. We describe court and government records as what they are (for example, \"according to a complaint filed in [court] on [date]\") and show the outcome when we know it.\n\nLabels such as \"flag\" or \"check\" describe the type of public record under our published methodology (see \"How we check\"). They are not statements about anyone's character or conduct, and they are not recommendations to take or refuse an investment.\n\n## 5. Unconfirmed reports\nSome entries are reports found publicly online that are not official records, for example press stories, published interviews, or public posts. We show an unconfirmed report only when:\n\n- it links to a **named public source** that anyone can check;\n- it is **attributed** to that source (\"According to [source], …\"), not stated by us as fact;\n- it is **clearly labeled \"Not confirmed by official records\"**; and\n- it is dated.\n\nWe do not publish anonymous gossip, rumors without a public source, or private information. Showing a report means only that the source said it. It does not mean we believe or endorse it. The firm or person named can reply (section 9), and we remove any item shown to be false.\n\n## 6. Sanctions and watchlist data\nSanctions entries come from official government lists (such as the U.S. Treasury OFAC Specially Designated Nationals (SDN) List, the EU Consolidated List and the UK sanctions list) and from services that collect those lists. We show each entry with its official source and listing date.\n\n- A **confirmed match** means the official listing identifies that person or entity.\n- A **possible name match** means a name (and any identifiers shown) looks like a listed party. It does **not** mean they are the listed party.\n- **Nationality, citizenship, residence or place of business is never, on its own, a sign of sanctions status or wrongdoing**, and we don't present it as one.\n\nAlways check the official list before you rely on a sanctions entry.\n\n## 7. Submitting information\nYou may send us information about a firm or the people connected to it. By submitting, you confirm that:\n\n- it is true, accurate and not misleading to the best of your knowledge;\n- you have personal knowledge of it, or you give us a source for it;\n- when we ask, you will give supporting evidence, which can include proof that you have or had a relationship with the firm (for example, a term sheet, emails, or proof you are a founder it invested in or spoke with);\n- you have the right to share it, and sharing it doesn't break a confidentiality agreement or the law; and\n- you are not submitting it to harass, retaliate against, or compete with anyone.\n\nWe may verify, edit for accuracy, label, decline or remove any submission. We publish a submission only after we verify it against an independent source (and then we cite that source), or as a clearly labeled, attributed unconfirmed report under section 5. We don't publish your name unless you agree. You keep ownership of what you submit and give us a non-exclusive, worldwide, royalty-free licence to use, verify, display and keep it to run Regretamin.\n\n## 7a. Content standards for submissions\nSubmissions must be about a firm's conduct as an investor and must not:\n- accuse anyone of a crime, fraud or sanctions violation unless an official record or named public source says so (cite it);\n- state as fact something you know is false or misleading, or present rumor as fact;\n- include private personal information (home addresses, personal phone numbers or emails, family members, health, ID numbers) or anyone's nationality or ethnicity as a criticism;\n- disclose information you are bound by contract or law to keep confidential; or\n- be submitted by someone with a conflict of interest (for example a competitor, or a current employee of the firm) without saying so.\n\nWe may decide in our discretion whether a submission meets these standards. Reviewing, editing for accuracy, labeling, declining or removing submissions is an editorial choice that does not make us the author of user-provided information.\n\n## 7b. Anonymity of contributors\nWe try to keep contributors' identities private, but we cannot guarantee anonymity: details in a submission can sometimes identify the person who sent it. Please consider that before you submit. You may expose yourself to legal liability if your submission is false or breaks the law.\n\n## 8. Credits\n1 firm = 1 credit. Using a credit unlocks one firm's full page. Reopening a firm you already unlocked is free. Without an account you get 2 free credits on your device; creating a free account adds 4 more. We may change free amounts with notice on the site. A single credit costs {{plan.single.price}}. Credits have no cash value and can't be transferred.\n\n## 9. Corrections and replies\nAnyone named on Regretamin, including firms, partners and limited partners, can ask for a correction, add context, or send a response, free, at **malytskyyo@gmail.com** (or our corrections form when available). Tell us the page and entry, what is wrong, and include any supporting documents.\n\n- We acknowledge requests within 5 business days and aim to resolve them within 30 days.\n- If an entry is inaccurate, we correct or remove it. If it is accurate but incomplete (for example, a case was dismissed), we update it.\n- On request, we may publish a short factual reply from the named party next to the entry.\n- **We never charge to change or remove information, and no one can pay us to add, keep or remove an entry.**\n\n## 9a. Reporting content\nEvery entry has a \"Report\" link (or email malytskyyo@gmail.com). Once notified, we review the entry against these terms and its source. Flagged entries stay visible while we review, unless they appear to break the law or reveal private information. We do not remove accurate, sourced information just because a firm or person disagrees with it, and paying customers get no say in what is shown about others.\n\n## 10. Subscriptions and promo codes\nPlans: {{plan.starter.name}} is {{plan.starter.price}}/month for {{plan.starter.checks}} credits a month, or {{plan.starter.yearly.price}}/year. {{plan.pro.name}} is {{plan.pro.price}}/month for {{plan.pro.checks}} credits a month, or {{plan.pro.yearly.price}}/year. Prices are shown before you pay. Stripe handles payments, subscriptions and promo codes.\n\nA subscription renews automatically until you cancel. Plan credits refill each month, and unused plan credits don't carry over. You can cancel any time from your Account page; your plan stays active until the end of the paid period. Promo codes apply only as described when you enter them, can't be exchanged for cash, and may expire or be withdrawn. If you think you were charged in error, email us and we'll look at it. This doesn't limit any refund rights you have under law.\n\n## 11. Acceptable use\nDon't:\n\n- scrape or bulk-download the site, or use bots;\n- get around credit limits (for example with many accounts or by resetting device storage);\n- interfere with the service or access other people's accounts;\n- resell or republish our pages without permission; or\n- show Regretamin information without its source, date and labels, or in a way that changes its meaning.\n\n## 12. Accounts and termination\nSign in with Google or an email link. You are responsible for activity on your account. You can stop using the site at any time and ask us to delete your account. We may suspend or close accounts that break these terms.\n\n## 13. Our content and links\nThe site design and the way we compile and present information belong to us. You may share links and quote short excerpts with attribution. Underlying public records belong to their sources. We link to sources we don't control and aren't responsible for their content or availability.\n\n## 14. Matters of public concern\nRegretamin publishes information on matters of public concern: who funds companies, and the public legal and regulatory record of investors. We will defend that publication, including under applicable anti-SLAPP laws such as Delaware's Uniform Public Expression Protection Act (10 Del. C. §6001 et seq.).\n\n## 15. Disclaimers and liability\n**REGRETAMIN IS PROVIDED \"AS IS\" AND \"AS AVAILABLE.\" TO THE EXTENT THE LAW ALLOWS, WE DISCLAIM ALL WARRANTIES, INCLUDING ACCURACY, COMPLETENESS AND FITNESS FOR A PARTICULAR PURPOSE. WE ARE NOT LIABLE FOR ERRORS OR OMISSIONS IN GOVERNMENT OR THIRD-PARTY SOURCES, FOR INDIRECT OR CONSEQUENTIAL LOSSES, OR FOR DECISIONS YOU MAKE BASED ON THE SITE, INCLUDING DECISIONS TO ACCEPT OR DECLINE AN INVESTMENT. OUR TOTAL LIABILITY FOR ANY CLAIM IS LIMITED TO THE GREATER OF USD 100 OR WHAT YOU PAID US IN THE 12 MONTHS BEFORE THE CLAIM.** Some places don't allow these limits, so they may not apply to you.\n\n## 16. Indemnity\nYou agree to defend, indemnify and hold harmless Know Your Group INC. and its officers, employees and agents from claims, losses and costs (including reasonable attorneys' fees) arising from information you submit, your breach of these terms, or your misuse of the site.\n\n## 17. Disputes\n**Talk to us first.** Before filing any claim, email malytskyyo@gmail.com with a description, and give us 30 days to try to resolve it.\n\n**Arbitration and class waiver.** If we can't resolve it, any dispute between you and us about Regretamin or these terms will be settled by binding individual arbitration administered by the American Arbitration Association under its Consumer Arbitration Rules, not in court. Either of us may instead bring an individual claim in small claims court. **You and we each give up the right to a jury trial and to take part in a class or representative action.** You can opt out of this arbitration section by emailing us within 30 days of first accepting these terms. Claims for intellectual property infringement or misuse of the site may go to court.\n\n**Governing law and courts.** These terms are governed by the laws of the State of Delaware. Any matter not subject to arbitration goes to the state or federal courts located in Delaware, unless consumer law where you live says otherwise. Where the law allows, a claim must be brought within one year after it arises.\n\n## 17a. Requests for contributor identity\nYou agree not to file a pre-suit discovery proceeding (or a similar procedure anywhere) to obtain a contributor's identity from us. Any request for a contributor's identifying information must be made by a valid subpoena or court order issued in an active lawsuit and served on Know Your Group INC. through its registered agent in Delaware. Where the law allows, we may notify the contributor before responding so they can object, and we may (but are not obliged to) oppose requests we believe are improper. Firm content published by Regretamin itself is attributed to its cited source.\n\n## 18. Changes\nWe may update these terms. We'll change the date above and, for significant changes, tell people on the site. If you keep using the site after that, the new terms apply.\n\n## 19. Contact\nKnow Your Group INC. · malytskyyo@gmail.com\n"
+  },
+  "footer": {
+   "copyright": "© 2026 Know Your Group INC."
+  },
+  "pages": {
+   "home": {
+    "title": "Regretamin",
+    "description": "Research venture capital firms before you take the meeting or the money."
+   },
+   "pending": {
+    "title": "Regretamin",
+    "description": "Request a background check on a venture capital firm."
+   },
+   "how-we-check": {
+    "title": "How we check · Regretamin",
+    "description": "How Regretamin searches public records and checks venture capital firms.",
+    "nav_label": "How we check"
+   },
+   "account": {
+    "title": "Account · Regretamin",
+    "description": "Manage your Regretamin account, plan and checks.",
+    "nav_label": "Account"
+   },
+   "account/firms": {
+    "title": "My firms · Regretamin",
+    "description": "Your saved venture capital firms and background checks.",
+    "nav_label": "My firms"
+   },
+   "my-checks": {
+    "title": "My firms · Regretamin",
+    "description": "Your saved venture capital firms and background checks.",
+    "redirect_label": "My firms"
+   },
+   "privacy": {
+    "title": "Privacy Policy · Regretamin",
+    "description": "How Regretamin collects, uses and protects your information.",
+    "nav_label": "Privacy"
+   },
+   "terms": {
+    "title": "Terms of Service · Regretamin",
+    "description": "Terms for using Regretamin venture capital background checks.",
+    "nav_label": "Terms"
+   },
+   "plans": {
+    "title": "Pricing · Regretamin",
+    "description": "Compare Regretamin plans and background check credits.",
+    "nav_label": "Pricing"
+   },
+   "login": {
+    "title": "New here? Get 4 free credits · Regretamin",
+    "description": "Sign in to your Regretamin account.",
+    "nav_label": "Sign in"
+   },
+   "pricing": {
+    "title": "Pricing",
+    "description": "Compare Regretamin plans and background check credits.",
+    "redirect_label": "Pricing"
+   },
+   "404": {
+    "title": "Not found · Regretamin",
+    "description": "The requested Regretamin page could not be found.",
+    "h1": "Page not found",
+    "body": "This page does not exist. Search for a firm instead."
+   }
   }
  },
  "company": {
   "toc": "On this page",
-  "thesis": { "_note": "Full report Thesis section (replaces Overview, Alex 2026-10-29). Text is the overview item labelled thesis; heading, chip and nav use title.", "title": "Thesis" },
-  "investors": { "_note": "What investors look for (Alex, 2026-11-06). The section title is sections.list. Show all is activity.show_all and appears whenever the section has a row; it reveals the quote under every summary. No count.", "summary": "Summary:", "source": "Source" },
+  "thesis": {
+   "_note": "Full report Thesis section (replaces Overview, Alex 2026-10-29). Text is the overview item labelled thesis; heading, chip and nav use title.",
+   "title": "Thesis"
+  },
+  "investors": {
+   "_note": "What investors look for (Alex, 2026-11-06). The section title is sections.list. Show all is activity.show_all and appears whenever the section has a row; it reveals the quote under every summary. No count.",
+   "summary": "Summary:",
+   "source": "Source"
+  },
   "gate": {
    "title": "Check with 1 credit",
    "sub": "See all 10 check results and the full record for {firm}. One credit opens both pages.",
@@ -785,7 +1014,10 @@
    "regulator": "Regulators",
    "context": "Context",
    "contextSub": "The firm itself is not a party in these.",
-   "all": ["Show all {n} legal item", "Show all {n} legal items"],
+   "all": [
+    "Show all {n} legal item",
+    "Show all {n} legal items"
+   ],
    "all_title": "{n} legal items · {firm}",
    "vs": "vs. ",
    "filed": "Filed {y}",
@@ -795,11 +1027,17 @@
    "summary_source": "Source: {site}"
   },
   "lps": {
-   "all": ["Show all {n} LP", "Show all {n} LPs"],
+   "all": [
+    "Show all {n} LP",
+    "Show all {n} LPs"
+   ],
    "all_title": "{n} LPs · {firm}"
   },
   "commitments": "{n} commitments",
-  "outlets": ["{n} outlet", "{n} outlets"],
+  "outlets": [
+   "{n} outlet",
+   "{n} outlets"
+  ],
   "no_facts": "No sourced facts on file for this check yet.",
   "retrieved": "retrieved ",
   "source": "Source",
@@ -815,16 +1053,46 @@
    "Unverified": "cs-cl"
   },
   "checks_list": [
-   ["Sanctions", "Government lists of people and companies you can't do business with."],
-   ["Terrorism financing lists", "Lists of people and groups linked to funding terrorism."],
-   ["Export and investment restrictions", "Trade or investment bans, e.g. deals with military-linked firms."],
-   ["Financial regulator actions", "Fines, bans and charges from financial regulators."],
-   ["Money laundering penalties", "Anti-money-laundering fines and enforcement."],
-   ["US court records", "Federal and state cases, civil and criminal."],
-   ["Court records worldwide", "Cases outside the U.S."],
-   ["Registration check", "Registered with the regulator as an investment adviser, and active."],
-   ["People behind the fund", "Partners and owners, each checked against the lists above."],
-   ["Political ties", "People at the firm who held government or political roles."]
+   [
+    "Sanctions",
+    "Government lists of people and companies you can't do business with."
+   ],
+   [
+    "Terrorism financing lists",
+    "Lists of people and groups linked to funding terrorism."
+   ],
+   [
+    "Export and investment restrictions",
+    "Trade or investment bans, e.g. deals with military-linked firms."
+   ],
+   [
+    "Financial regulator actions",
+    "Fines, bans and charges from financial regulators."
+   ],
+   [
+    "Money laundering penalties",
+    "Anti-money-laundering fines and enforcement."
+   ],
+   [
+    "US court records",
+    "Federal and state cases, civil and criminal."
+   ],
+   [
+    "Court records worldwide",
+    "Cases outside the U.S."
+   ],
+   [
+    "Registration check",
+    "Registered with the regulator as an investment adviser, and active."
+   ],
+   [
+    "People behind the fund",
+    "Partners and owners, each checked against the lists above."
+   ],
+   [
+    "Political ties",
+    "People at the firm who held government or political roles."
+   ]
   ],
   "searched": {
    "1": "Searched government sanctions lists.",
@@ -841,7 +1109,7 @@
   "searched_nf": "Nothing found.",
   "name_only": "A person with the same name appears on {list}; we couldn't confirm it's the same person.",
   "header": {
-    "_note": "Firm header labels (js/company.js). The hero card row is not drawn. The HQ city stays in the meta line. SEC facts with an SEC source stay as linked pills. Regulatory AUM and Fund gross assets are different figures. A stored Assets or AUM label that is not a gross-asset figure reads as Regulatory AUM. Average check is the label on the stages pill line when firm.check_size is set. The amount is the formatted US dollar bounds. The stored source sentence is not the pill. No value: no label and no divider.",
+   "_note": "Firm header labels (js/company.js). The hero card row is not drawn. The HQ city stays in the meta line. SEC facts with an SEC source stay as linked pills. Regulatory AUM and Fund gross assets are different figures. A stored Assets or AUM label that is not a gross-asset figure reads as Regulatory AUM. Average check is the label on the stages pill line when firm.check_size is set. The amount is the formatted US dollar bounds. The stored source sentence is not the pill. No value: no label and no divider.",
    "hq": "HQ",
    "staff": "Staff",
    "investment_staff": "Investment staff",
@@ -859,12 +1127,19 @@
     "row": "Social accounts",
     "aria": "{platform}: {count}",
     "regional": "{platform} · {region}",
-    "names": {"linkedin": "LinkedIn", "x": "X", "instagram": "Instagram", "youtube": "YouTube", "tiktok": "TikTok", "substack": "Substack"}
+    "names": {
+     "linkedin": "LinkedIn",
+     "x": "X",
+     "instagram": "Instagram",
+     "youtube": "YouTube",
+     "tiktok": "TikTok",
+     "substack": "Substack"
+    }
    }
   },
   "videos": {
-    "_note": "Videos section under Team. Up to 3 YouTube interviews, most views first. Grey line is channel, date, and view count. No source pill. No rows: no section.",
-    "views": "{n} views"
+   "_note": "Videos section under Team. Up to 3 YouTube interviews, most views first. Grey line is channel, date, and view count. No source pill. No rows: no section.",
+   "views": "{n} views"
   },
   "searched_on": "Searched {date}",
   "searched_nc": "Not checked yet.",
@@ -909,7 +1184,10 @@
    "assets_as_of": "Assets as of {date}",
    "filing": "Filing",
    "src_link": "Source",
-   "announced_fund": ["{n} fund announced", "{n} funds announced"],
+   "announced_fund": [
+    "{n} fund announced",
+    "{n} funds announced"
+   ],
    "aum": "AUM",
    "aum_sec": "SEC Form ADV",
    "reported_by_news": "Reported by news",
@@ -979,10 +1257,22 @@
    "_note": "Checks table on /vc/<slug>/ and /full/ (js/company.js ctable). {count} is firm_check_rows.count_label, {n}/{m} are numbers. active_h and coming are [one, many]. An opened Review row lists each named case or action. A count with nothing itemized uses coming plus search_courts.",
    "_legend_note": "C4.4: one grey legend under the Checks table, once. [pill key in site.pills, text]; label = live pill word. No Red flag line.",
    "legend": [
-    ["clear", "We found nothing in the sources we checked on this date. It's not a guarantee."],
-    ["review", "We found a possible match that we're still confirming."],
-    ["wk", "We found something that isn't a problem but is useful to know."],
-    ["nc", "Run this check to see the result."]
+    [
+     "clear",
+     "We found nothing in the sources we checked on this date. It's not a guarantee."
+    ],
+    [
+     "review",
+     "We found a possible match that we're still confirming."
+    ],
+    [
+     "wk",
+     "We found something that isn't a problem but is useful to know."
+    ],
+    [
+     "nc",
+     "Run this check to see the result."
+    ]
    ],
    "h_check": "Check",
    "h_result": "Result",
@@ -994,8 +1284,14 @@
    "more": "+{n} more",
    "partial": "{n} on record; {m} itemized below.",
    "none_itemized": "Not itemized in this table yet.",
-   "active_h": ["{n} active case:", "{n} active cases:"],
-   "coming": ["{n} active case, details coming soon", "{n} active cases, details coming soon"],
+   "active_h": [
+    "{n} active case:",
+    "{n} active cases:"
+   ],
+   "coming": [
+    "{n} active case, details coming soon",
+    "{n} active cases, details coming soon"
+   ],
    "search_courts": "Search court records",
    "source": "Source:",
    "docket": "CourtListener docket",

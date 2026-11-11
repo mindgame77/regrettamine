@@ -1,3 +1,4 @@
+import STATIC from './static-pages.mjs';
 // Edge rendering for firm pages (Cloudflare Pages Functions). Mirrors launch/build.py firm_desc/firm_head/fill:
 // keep the two identical (tests/test_dynamic_pages.py renders both and compares byte for byte).
 export const SITE = 'https://regretamin.com/';
@@ -124,7 +125,8 @@ export async function renderFirm({ request, env, assets, fetchImpl = fetch }) {
   return new Response(fillFirm(tpl, F, p.full), { status: 200, headers });
 }
 
-const STATIC = ['', 'how-we-check/', 'privacy/', 'terms/'];
+// Generated from the same registry as navigation and page heads.
+// Rebuilt by python3 launch/build.py before every deployment.
 const XML = 'application/xml; charset=utf-8';
 const xmlEsc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
