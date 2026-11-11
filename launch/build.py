@@ -14,7 +14,7 @@ E = html.escape
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE); OUT = os.path.join(ROOT, 'site-launch')
 def _v(f):  # query on the script/link. The file path does not change, so _headers makes the CDN revalidate.
     return hashlib.sha1(open(os.path.join(HERE, f), 'rb').read()).hexdigest()[:10]
-V = {k: _v(f) for k, f in (('company', 'js/company.js'), ('app', 'js/app.js'), ('search', 'js/search.js'), ('dates', 'js/dates.js'), ('css', 'style.css'))}
+V = {k: _v(f) for k, f in (('company', 'js/company.js'), ('app', 'js/app.js'), ('search', 'js/search.js'), ('dates', 'js/dates.js'), ('firms', 'js/firms.js'), ('css', 'style.css'))}
 COPY = json.load(open(os.path.join(HERE, 'copy.json')))
 S = COPY['site']
 NOINDEX = os.environ.get('REGRET_NOINDEX') == '1'
@@ -60,9 +60,9 @@ def outcredits_modal():  # signed-out purchase (approved out-of-credits popup). 
 <button type="button" class="btn y" id="outgo">{o["checkout"]}</button><p class="fine2">{o["fine"]}</p><p class="msg" id="outmsg"></p></div></div></div>'''
 
 
-def page(path, body, root, title=S['brand'], company=False, active='', head='', modals='both'):
+def page(path, body, root, title=S['brand'], company=False, active='', head='', modals='both', firms=False):
     n = S['nav']
-    scripts = f'<script defer src="{root}dates.js?v={V["dates"]}"></script>' + (f'<script defer src="{root}company.js?v={V["company"]}"></script>' if company else '') + f'<script defer src="{root}search.js?v={V["search"]}"></script><script defer src="{root}app.js?v={V["app"]}"></script>'
+    scripts = f'<script defer src="{root}dates.js?v={V["dates"]}"></script>' + (f'<script defer src="{root}company.js?v={V["company"]}"></script>' if company else '') + f'<script defer src="{root}search.js?v={V["search"]}"></script><script defer src="{root}app.js?v={V["app"]}"></script>' + (f'<script defer src="{root}firms.js?v={V["firms"]}"></script>' if firms else '')
     nav = (f'<nav><a class="logo" href="{root}"><img src="{root}logo.svg" alt="">{S["brand"]}</a><div class="r">'
            f'{nav_links(S, root, "main", active)}'
            f'<span class="navr" id="acct" hidden><button type="button" class="ab" id="acctbtn" aria-haspopup="true" aria-expanded="false"><span class="av" id="av"></span><span class="nm">{n["account_btn"]}</span></button>'
@@ -247,19 +247,24 @@ def launch_firms():
     slugs, page_n = [], 1
     while True:
         rows = _rpc('firm_sitemap', {'p_page': page_n, 'p_size': 1000})
-        slugs += [r['slug'] for r in rows]
+        slugs += [(r['slug'], r.get('updated_at')) for r in rows]
         if len(rows) < 1000: break
         page_n += 1
     firms = []
-    for slug in slugs:
+    for slug, added in slugs:
         rows = _rpc('firm_meta', {'p_slug': slug})
-        if rows: firms.append(rows[0])
+        if rows:
+            row = rows[0]
+            # firm_sitemap.updated_at is v2_firm_live.live_since, the date the public page appeared.
+            # firm_meta.updated_at is greatest(live_since, last_checked_date) and is not the added date.
+            row['added'] = added
+            firms.append(row)
     if not firms: raise SystemExit('launch build: firm_sitemap returned no firms firm_meta can open')
     return firms
 
 def main():
     shutil.rmtree(OUT, ignore_errors=True); os.makedirs(OUT)
-    for f in ('style.css', 'logo.svg', 'js/app.js', 'js/company.js', 'js/search.js', 'js/dates.js'): shutil.copy(os.path.join(HERE, f), OUT)
+    for f in ('style.css', 'logo.svg', 'js/app.js', 'js/company.js', 'js/search.js', 'js/dates.js', 'js/firms.js'): shutil.copy(os.path.join(HERE, f), OUT)
     shutil.copytree(os.path.join(HERE, 'fav'), os.path.join(OUT, 'fav'))
     shutil.copytree(os.path.join(HERE, 'assets', 'video'), os.path.join(OUT, 'assets', 'video'))
     # Email templates load this from https://regretamin.com/assets/logo/lockup-light@2x.png
@@ -282,6 +287,11 @@ def main():
     # lightspeed's cached 404 needs its own token: it was already a known slug when that 404 was stored.
     live_token = 'lightspeed'
     built = launch_firms()
+    open(os.path.join(OUT, 'firms.json'), 'w').write(json.dumps({
+        'firms': [{'slug': F['slug'], 'name': F.get('name'), 'short_name': F.get('short_name') or None,
+                   'hq': F.get('hq') or None, 'added': F.get('added')}
+                  for F in built if F.get('slug') and F.get('name')]
+    }, ensure_ascii=False, separators=(',', ':')))
     live_slugs = ','.join(sorted(F['slug'] for F in built))
     open(os.path.join(OUT, '_tpl', 'version.txt'), 'w').write(hashlib.sha256((edge + tpl['summary'] + tpl['full'] + '\n' + live_slugs + '\n' + live_token).encode()).hexdigest()[:12])
     for F in built:
@@ -296,7 +306,7 @@ def main():
         dest = os.path.join(OUT, spec.slug, 'index.html') if spec.slug != '404' else os.path.join(OUT, '404.html')
         meta = S['pages'][spec.slug or 'home']
         page(dest, spec.builder(context), root, meta['title'], active=spec.active,
-             head=page_head(spec, S, SITE), modals=spec.modals)
+             head=page_head(spec, S, SITE), modals=spec.modals, firms=spec.slug == 'investors')
     # Edge and static hosts consume the exact same registered sitemap paths.
     static_paths = [spec.slug + '/' if spec.slug else '' for spec in PAGES if spec.sitemap]
     open(os.path.join(HERE, 'edge', 'static-pages.mjs'), 'w').write(
@@ -312,6 +322,8 @@ def main():
         '/app.js\n  Cache-Control: public, max-age=0, must-revalidate\n'
         '/search.js\n  Cache-Control: public, max-age=0, must-revalidate\n'
         '/dates.js\n  Cache-Control: public, max-age=0, must-revalidate\n'
+        '/firms.js\n  Cache-Control: public, max-age=0, must-revalidate\n'
+        '/firms.json\n  Cache-Control: public, max-age=0, must-revalidate\n'
         '/style.css\n  Cache-Control: public, max-age=0, must-revalidate\n')
     print('built', len(firms), 'firms', '->', OUT)
 
