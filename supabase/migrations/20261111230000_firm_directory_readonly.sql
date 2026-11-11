@@ -1,3 +1,8 @@
+-- CI has no v2 tables, so the function is created only where they exist.
+do $mig$
+begin
+  if to_regclass('public.v2_auto_published') is not null and to_regclass('public.v2_deals') is not null and to_regclass('public.v2_firm_industries') is not null and to_regclass('public.v2_firm_live') is not null and to_regclass('public.v2_firm_stages') is not null and to_regclass('public.v2_firms') is not null and to_regclass('public.v2_legal_items') is not null and to_regclass('public.v2_sector') is not null and to_regclass('public.v2_startup_sectors') is not null and to_regclass('public.v2_startups') is not null then
+    execute $fn$
 create or replace function public.firm_directory()
 returns json
 language sql
@@ -77,6 +82,10 @@ as $$
     left join stg st on st.firm_id = l.firm_id
     left join leg lg on lg.firm_id = l.firm_id
     left join pub p on p.firm_id = l.firm_id
-$$;
-revoke all on function public.firm_directory() from public;
-grant execute on function public.firm_directory() to anon, authenticated;
+$$
+$fn$;
+    execute 'revoke all on function public.firm_directory() from public';
+    execute 'grant execute on function public.firm_directory() to anon, authenticated';
+  end if;
+end
+$mig$;
