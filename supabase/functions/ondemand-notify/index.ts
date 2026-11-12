@@ -1,7 +1,8 @@
 // On-demand research emails (docs/ON_DEMAND.md, docs/FIRM_REQUESTS.md). Called by pg_cron (public.ondemand_tick via pg_net) when the outbox has mail.
 // Auth: header x-ondemand-key must match the Vault secret 'ondemand_cron_key' (checked in the database; never leaves it).
 // Kinds: 'ready' (paid research done), 'ready_request' (a requested firm is now on the site), 'refund' (not done within 24 h,
-// credit returned), 'received' (firm request stored). All mail is plain text from support@regretamin.com via Resend.
+// credit returned), 'received' (firm request stored), 'search_live' (a firm someone searched for now has a page).
+// All mail is plain text from support@regretamin.com via Resend.
 // Secrets: RESEND_API_KEY. TEST_ONLY_TO is not a send gate: a leftover test address
 // used to skip every other recipient without ondemand_mark_notified, so notified_at
 // and notify_error stayed empty and every tick retried the skip.
@@ -20,6 +21,8 @@ function mail(kind: string, name: string, link: string): { subject: string; text
       return { subject: `${name} is now on Regretamin`, text: `Hi,\n\nYou asked us to add ${name}. It is now on Regretamin and the checks are done:\n${link}${FOOT}` };
     case "refund":
       return { subject: `Your Regretamin check for ${name}: credit refunded`, text: `Hi,\n\nWe could not finish the research on ${name} within 24 hours, so your credit is back in your account.\n${link}${FOOT}` };
+    case "search_live":
+      return { subject: `${name} is now on Regretamin`, text: `Hi,\n\nYou asked us to tell you when ${name} is on Regretamin. Its page is ready:\n${link}${FOOT}` };
     default: // received
       return { subject: `We got your request for ${name}`, text: `Hi,\n\nThanks. We got your request to add ${name} to Regretamin. We will email you when its page is ready.${FOOT}` };
   }

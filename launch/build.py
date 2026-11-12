@@ -7,7 +7,7 @@ All copy, plans and section presentation come from launch/copy.json (also handed
 Output: site-launch/. Deploy to the preview with launch/deploy_preview.sh (see launch/HOW-TO-CHANGE.md).
 Refresh a snapshot (read-only): run launch/firm_snapshot.sql with :slug, save the JSON as data/launch/<slug>.json;
 then python3 launch/sync_checks.py data/launch/*.json > a new migration to update the 10 check rows."""
-import os, re, json, html, glob, shutil, hashlib, urllib.request
+import os, re, json, html, glob, shutil, hashlib, time, urllib.request, urllib.error
 from types import SimpleNamespace
 from pages.registry import PAGES, page_head, nav_links, footer_links
 E = html.escape
@@ -231,7 +231,15 @@ F_ = S['my_firms']
 def _rpc(fn, args):
     req = urllib.request.Request(f"{CFG['url']}/rest/v1/rpc/{fn}", json.dumps(args).encode(),
         {'apikey': CFG['key'], 'authorization': 'Bearer ' + CFG['key'], 'content-type': 'application/json'})
-    with urllib.request.urlopen(req, timeout=30) as r: return json.load(r)
+    # A free-plan database can return 500 while two builds read firm_meta at once. Retry that read.
+    for attempt in range(4):
+        try:
+            with urllib.request.urlopen(req, timeout=30) as r:
+                return json.load(r)
+        except urllib.error.HTTPError as e:
+            if e.code < 500 or attempt == 3:
+                raise
+            time.sleep(2 * (attempt + 1))
 
 def launch_firms():
     """Firms that get a page. With SUPABASE_URL/ANON_KEY, walk firm_sitemap and load firm_meta
