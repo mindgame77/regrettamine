@@ -26,6 +26,7 @@ ANON_ALLOWED = {
     "firm_suggest",
     "is_admin",
     "is_paid",
+    "log_search",
     "my_billing",
     "notify_when_checked",
     "public_site_bundle",
