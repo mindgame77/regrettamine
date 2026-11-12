@@ -50,7 +50,7 @@ function tags(firm) {
   render(main, { open: true, checks: [], firm, sections: [] });
   return act.placed ? act.placed.child.innerHTML : '';
 }
-const pills = (html) => [...html.matchAll(/<span class="hp">([^<]*)<\/span>/g)].map(m => m[1]);
+const pills = (html) => [...html.matchAll(/<span class="hp"(?: style="color:#[0-9A-Fa-f]{6}")?>([^<]*)<\/span>/g)].map(m => m[1]);
 
 test('website focus shows the stored labels and no source link', () => {
   const html = tags({

@@ -3,6 +3,49 @@
    Industries, Investment stages, Legal records, Recorded information,
    Firm status) from /workspace/regretamin-design/firm-directory. */
 (function () {
+  // Same parent hues as launch/js/company.js. A sub-industry uses its parent. Other stays slate.
+  const SECTOR_PALETTE = ['#4B2BD6', '#14D9A5', '#FFB020', '#FF5C8A', '#2EA8FF', '#8A63F5', '#18BBD4', '#FF9566', '#9EDB51', '#788BFF', '#F26C68', '#42CFC3', '#D781EF', '#E6BE45', '#3773DB', '#EC7DA8', '#77C9A1', '#A7A2C2'];
+  const SECTOR_COLORS = {
+    'AI agents': '#4B2BD6', 'AI models': '#14D9A5', 'Bio': '#FFB020', 'Climate & Energy': '#FF5C8A',
+    'Consumer': '#2EA8FF', 'Crypto': '#8A63F5', 'Developer tools': '#18BBD4', 'Education': '#FF9566',
+    'Enterprise software': '#9EDB51', 'Fintech': '#788BFF', 'Food & Agriculture': '#F26C68',
+    'Hardware & Robotics': '#42CFC3', 'Health': '#D781EF', 'Media & Gaming': '#E6BE45',
+    'Mobility': '#3773DB', 'Real estate': '#EC7DA8', 'Security': '#77C9A1', 'Other': '#A7A2C2',
+    'Defense': '#C4622D', 'Space': '#3A4FBF', 'Govtech': '#0E8A6A'
+  };
+  const SUB_PARENT = {
+    'AI infrastructure': 'AI models', 'Payments': 'Fintech', 'Insurtech': 'Fintech', 'Wealth': 'Fintech',
+    'Digital health': 'Health', 'Medtech': 'Health', 'Wellness': 'Health', 'Biotech': 'Bio',
+    'Commerce': 'Consumer', 'Travel': 'Consumer', 'Sports': 'Consumer',
+    'HR Tech': 'Enterprise software', 'Legal Tech': 'Enterprise software', 'Marketing': 'Enterprise software',
+    'Cloud & Data': 'Developer tools', 'Cybersecurity': 'Security',
+    'Hardware': 'Hardware & Robotics', 'Robotics': 'Hardware & Robotics', 'Semiconductors': 'Hardware & Robotics',
+    'Manufacturing': 'Hardware & Robotics', 'Materials': 'Hardware & Robotics', 'Deep tech': 'Hardware & Robotics',
+    'Telecom': 'Hardware & Robotics', 'Logistics': 'Mobility', 'Construction': 'Real estate',
+    'Media': 'Media & Gaming', 'Gaming': 'Media & Gaming', 'Food': 'Food & Agriculture', 'Agriculture': 'Food & Agriculture'
+  };
+  const PARENT_OF = {};
+  Object.keys(SECTOR_COLORS).forEach(function (name) { PARENT_OF[name.toLowerCase()] = name; });
+  Object.keys(SUB_PARENT).forEach(function (name) { PARENT_OF[name.toLowerCase()] = SUB_PARENT[name]; });
+  function parentIndustry(name) {
+    const s = String(name || '').trim();
+    if (!s) return '';
+    return PARENT_OF[s.toLowerCase()] || s;
+  }
+  function sectorColor(name) {
+    const s = parentIndustry(name);
+    if (!s || /^other$/i.test(s)) return SECTOR_COLORS.Other;
+    if (Object.prototype.hasOwnProperty.call(SECTOR_COLORS, s)) return SECTOR_COLORS[s];
+    const found = Object.keys(SECTOR_COLORS).find(function (k) { return k.toLowerCase() === s.toLowerCase(); });
+    if (found) return SECTOR_COLORS[found];
+    const hues = SECTOR_PALETTE.slice(0, 17);
+    let h = 2166136261;
+    const n = s.toLowerCase();
+    for (let i = 0; i < n.length; i++) h = Math.imul(h ^ n.charCodeAt(i), 16777619);
+    return hues[(h >>> 0) % hues.length];
+  }
+  window.RegretSectors = { parentIndustry: parentIndustry, sectorColor: sectorColor };
+
   const list = document.getElementById('firms-list');
   if (!list) return;
 
@@ -75,7 +118,9 @@
     const n = max || 2;
     const shown = rows.slice(0, n);
     const more = rows.length - shown.length;
-    return shown.join(', ') + (more > 0 ? ' +' + more : '');
+    return shown.map(function (name) {
+      return '<span style="color:' + sectorColor(name) + '">' + esc(name) + '</span>';
+    }).join(', ') + (more > 0 ? ' +' + more : '');
   }
   function row(f) {
     const date = fmtDate(f.added);
@@ -90,7 +135,7 @@
     return '<a class="frow" href="' + href(f.slug) + '">'
       + '<span class="fnm"><b>' + esc(f.name) + '</b></span>'
       + '<span class="fcity">' + esc(city) + '</span>'
-      + '<span class="finds">' + esc(inds) + '</span>'
+      + '<span class="finds">' + inds + '</span>'
       + '<span class="fdeal">' + dealHtml + '</span>'
       + (date ? '<span class="rdt">' + esc(date) + '</span>' : '<span class="rdt"></span>')
       + '</a>';
@@ -216,9 +261,10 @@
       }
       function facetOption(o, key, inPanel) {
         const checked = (inPanel ? draft : active[key]).indexOf(o.value) !== -1;
+        const color = key === 'industry' ? sectorColor(o.label) : '';
         return '<label class="' + (checked ? 'checked' : '') + '" data-facet="' + esc(key) + '" data-value="' + esc(o.value) + '">'
           + '<input type="checkbox"' + (checked ? ' checked' : '') + (inPanel ? ' data-draft="1"' : '') + '>'
-          + '<span class="optlabel" title="' + esc(o.label) + '">' + esc(o.label) + '</span>'
+          + '<span class="optlabel"' + (color ? ' style="color:' + color + '"' : '') + ' title="' + esc(o.label) + '">' + esc(o.label) + '</span>'
           + '<span class="optcount">' + o.count + '</span></label>';
       }
       function renderFacets() {
