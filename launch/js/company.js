@@ -222,7 +222,9 @@
   }
   function dealSectorPills(list) {
     return (list || []).map(x => {
-      const name = String(x && (x.sector || x.s) || '').trim();
+      const parent = String(x && (x.sector || x.s) || '').trim();
+      const sub = String(x && x.industry_name || '').trim();
+      const name = sub || parent;
       const n = Number(x && x.n);
       return name && Number.isFinite(n) && n >= 1 ? { name, n } : null;
     }).filter(Boolean).sort((a, b) => b.n - a.n || a.name.toLowerCase().localeCompare(b.name.toLowerCase()) || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0))
@@ -233,11 +235,11 @@
   }
   function tagHtml(P) {
     const firm = (P && P.firm) || {};
-    const block = (label, xs) => xs.length ? '<div class="htag"><span class="htag-l">' + esc(label) + '</span><div class="secp">' + xs.map(t => '<span class="hp">' + esc(t) + '</span>').join('') + '</div></div>' : '';
+    const block = (label, xs, colored) => xs.length ? '<div class="htag"><span class="htag-l">' + esc(label) + '</span><div class="secp">' + xs.map(t => colored ? '<span class="hp" style="color:' + sectorColor(t) + '">' + esc(t) + '</span>' : '<span class="hp">' + esc(t) + '</span>').join('') + '</div></div>' : '';
     const web = industryFocus(firm.industries);
     const focus = web.length
-      ? block(HCOPY.industries || 'Sectors', web)
-      : block(HCOPY.industries || 'Sectors', dealSectorPills(firm.deal_sectors));
+      ? block(HCOPY.industries || 'Sectors', web, true)
+      : block(HCOPY.industries || 'Sectors', dealSectorPills(firm.deal_sectors), true);
     const stages = orderedStages(firm.stages);
     const amount = checkSizeText(firm);
     const stagePills = stages.map(t => '<span class="hp">' + esc(t) + '</span>').join('');
@@ -1636,7 +1638,7 @@
     const src = (u) => u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener"' + fullA(hostOf(u)) + '>' + esc(capL(hostOf(u))) + '</a>' : '<span></span>';
     if (lab) return '<div class="adl"><div class="ad adh s5"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_sector) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + ds.map(d => { const u = safeUrl(d.url), r = [labRound(d.round), dealAmt(d.amount, d.currency), d.lead ? AC.lead : ''].filter(Boolean).join(' · ');
-        return '<div class="ad s5"><b>' + coName(d) + '</b>' + (d.sector ? '<span class="arty"' + ' style="color:' + sectorColor(d.sector) + '"' + '>' + esc(d.sector) + '</span>' : '<span></span>')
+        return '<div class="ad s5"><b>' + coName(d) + '</b>' + sectorMark(d, 'span')
           + '<span>' + esc(r) + '</span><span>' + esc(dealWhen(d)) + '</span>' + src(u) + '</div>'; }).join('') + '</div>';
     return '<div class="adl"><div class="ad adh"><span>' + esc(AC.h_company) + '</span><span>' + esc(AC.h_round) + '</span><span>' + esc(AC.h_date) + '</span><span>' + esc(AC.h_source) + '</span></div>'
       + ds.map(d => { const u = safeUrl(d.url);
@@ -1648,18 +1650,18 @@
       const u = safeUrl(d.url);
       const r = [labRound(d.round) || '—', dealAmt(d.amount, d.currency) || '—', d.lead ? AC.lead : ''].filter(Boolean).join(' · ');
       const src = u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(hostOf(u)) + '</a>' : '—';
-      const sec = d.sector ? '<b class="arty" style="color:' + sectorColor(d.sector) + '">' + esc(d.sector) + '</b>' : '<b>—</b>';
+      const sec = sectorMark(d, 'b');
       return '<article class="dcard"><div class="dname">' + coName(d) + '</div><div class="dmeta">'
         + '<div><span>Sector</span>' + sec + '</div><div><span>Round</span><b>' + esc(r) + '</b></div>'
         + '<div><span>Date</span><b>' + esc(dealWhen(d) || '—') + '</b></div><div><span>Source</span><b>' + src + '</b></div></div></article>';
     }).join('') + '</div>';
   }
   // Sector share (PAGE_DATA_GUIDE B6e.9/A9.17, with Alex's 2026-11-04 change to B6e.9.5): stored sector_12m from firm_page.
-  // Top 5 sectors by deal count, largest first, then ONE "Other" holding every other sector, the real
+  // Top 5 parent industries by deal count, largest first, then ONE "Other" holding every other parent, the real
   // "Other" tag AND deals with no sector, so the total equals all deals in the last 12 months. Shown at 10+ deals.
-  // A1 palette. One hue per industry name, the same on every firm, range, chart, popup and deal row.
-  // Known v2 names are listed alphabetically against the palette order. Other is always slate.
-  // A future name uses a hash of that name only, into the 17 hues, so it does not depend on rank or firm.
+  // One hue per parent industry (21: the original 18 plus Defense, Space, Govtech). A sub-industry uses its parent's hue.
+  // The same hue on every firm, range, chart, popup and deal row. Other is always slate.
+  // A future name uses a hash of that name only, into the original 17 hues, so it does not depend on rank or firm.
   const SECTOR_PALETTE = ['#4B2BD6', '#14D9A5', '#FFB020', '#FF5C8A', '#2EA8FF', '#8A63F5', '#18BBD4', '#FF9566', '#9EDB51', '#788BFF', '#F26C68', '#42CFC3', '#D781EF', '#E6BE45', '#3773DB', '#EC7DA8', '#77C9A1', '#A7A2C2'];
   const SECTOR_COLORS = {
     'AI agents': '#4B2BD6',
@@ -1679,10 +1681,53 @@
     'Mobility': '#3773DB',
     'Real estate': '#EC7DA8',
     'Security': '#77C9A1',
-    'Other': '#A7A2C2'
+    'Other': '#A7A2C2',
+    'Defense': '#C4622D',
+    'Space': '#3A4FBF',
+    'Govtech': '#0E8A6A'
   };
-  function sectorColor(name) {
+  // Sub-industry name -> parent. Names that are themselves parents are not listed.
+  const SUB_PARENT = {
+    'AI infrastructure': 'AI models',
+    'Payments': 'Fintech',
+    'Insurtech': 'Fintech',
+    'Wealth': 'Fintech',
+    'Digital health': 'Health',
+    'Medtech': 'Health',
+    'Wellness': 'Health',
+    'Biotech': 'Bio',
+    'Commerce': 'Consumer',
+    'Travel': 'Consumer',
+    'Sports': 'Consumer',
+    'HR Tech': 'Enterprise software',
+    'Legal Tech': 'Enterprise software',
+    'Marketing': 'Enterprise software',
+    'Cloud & Data': 'Developer tools',
+    'Cybersecurity': 'Security',
+    'Hardware': 'Hardware & Robotics',
+    'Robotics': 'Hardware & Robotics',
+    'Semiconductors': 'Hardware & Robotics',
+    'Manufacturing': 'Hardware & Robotics',
+    'Materials': 'Hardware & Robotics',
+    'Deep tech': 'Hardware & Robotics',
+    'Telecom': 'Hardware & Robotics',
+    'Logistics': 'Mobility',
+    'Construction': 'Real estate',
+    'Media': 'Media & Gaming',
+    'Gaming': 'Media & Gaming',
+    'Food': 'Food & Agriculture',
+    'Agriculture': 'Food & Agriculture'
+  };
+  const PARENT_OF = {};
+  Object.keys(SECTOR_COLORS).forEach(name => { PARENT_OF[name.toLowerCase()] = name; });
+  Object.keys(SUB_PARENT).forEach(name => { PARENT_OF[name.toLowerCase()] = SUB_PARENT[name]; });
+  function parentIndustry(name) {
     const s = String(name || '').trim();
+    if (!s) return '';
+    return PARENT_OF[s.toLowerCase()] || s;
+  }
+  function sectorColor(name) {
+    const s = parentIndustry(name);
     if (!s || /^other$/i.test(s)) return SECTOR_COLORS.Other;
     if (Object.prototype.hasOwnProperty.call(SECTOR_COLORS, s)) return SECTOR_COLORS[s];
     const found = Object.keys(SECTOR_COLORS).find(k => k.toLowerCase() === s.toLowerCase());
@@ -1692,6 +1737,32 @@
     const n = s.toLowerCase();
     for (let i = 0; i < n.length; i++) h = Math.imul(h ^ n.charCodeAt(i), 16777619);
     return hues[(h >>> 0) % hues.length];
+  }
+  // A deal row label is the sub-industry. A null industry_name keeps the parent name already in sector.
+  function dealLabel(d) {
+    if (d && typeof d === 'object') {
+      const sub = String(d.industry_name == null ? '' : d.industry_name).trim();
+      return sub || String(d.sector || '').trim();
+    }
+    return String(d || '').trim();
+  }
+  // Charts and colors group on the parent. sector from the page is that parent when it is one of the 21.
+  function dealParent(d) {
+    if (d && typeof d === 'object') {
+      const sector = String(d.sector || '').trim();
+      const sub = String(d.industry_name == null ? '' : d.industry_name).trim();
+      const namedParent = sector && Object.keys(SECTOR_COLORS).some(k => k.toLowerCase() === sector.toLowerCase());
+      if (namedParent) return parentIndustry(sector);
+      return parentIndustry(sub || sector);
+    }
+    return parentIndustry(d);
+  }
+  function sectorMark(d, tag) {
+    const label = dealLabel(d);
+    if (!label) return tag === 'b' ? '<b>—</b>' : '<span></span>';
+    const color = sectorColor(dealParent(d) || label);
+    const el = tag === 'b' ? 'b' : 'span';
+    return '<' + el + ' class="arty" style="color:' + color + '">' + esc(label) + '</' + el + '>';
   }
   // sectorShare reads the same named colors. It does not assign a second palette.
   let SEC_MAP = null;
@@ -1988,14 +2059,14 @@
   function topSectors(ds) {
     const c = {};
     ds.forEach(d => {
-      const s = String(d.sector || '').trim();
+      const s = dealParent(d);
       if (!s || s.toLowerCase() === 'other') return;
       c[s] = (c[s] || 0) + 1;
     });
     return Object.keys(c).sort((a, b) => c[b] - c[a] || a.localeCompare(b)).slice(0, 5);
   }
   function bucketOf(d, T) {
-    const s = String(d.sector || '').trim();
+    const s = dealParent(d);
     return T.indexOf(s) >= 0 ? s : 'Other';
   }
   function roundBucket(r) {
@@ -2231,5 +2302,5 @@
     view.total = full.total; view.head = full.head;
     return view;
   }
-  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows, setFirmName, compactCount, socialPills, metaLine, fundRows, aumFigure, teamCard, investorsHtml, extraRowsThatFit, sectorColor };
+  window.RegretCompany = { render, summary, paint, applyTab, buildNews, pageSecs, overviewRows, setFirmName, compactCount, socialPills, metaLine, fundRows, aumFigure, teamCard, investorsHtml, extraRowsThatFit, sectorColor, parentIndustry, dealLabel, dealParent };
 })();

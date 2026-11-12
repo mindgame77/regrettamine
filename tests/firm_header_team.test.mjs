@@ -72,7 +72,7 @@ test('industries and stages render word for word, stages in the fixed order, no 
   assert.equal(act.placed.where, 'beforebegin');
   assert.match(html, /Sectors/);
   assert.match(html, /Stages/);
-  const texts = [...html.matchAll(/<span class="hp">([^<]*)<\/span>/g)].map(m => m[1]);
+  const texts = [...html.matchAll(/<span class="hp"(?: style="color:#[0-9A-Fa-f]{6}")?>([^<]*)<\/span>/g)].map(m => m[1]);
   assert.deepEqual(texts, [
     'AI', 'bio + healthcare', 'consumer', 'crypto', 'enterprise', 'fintech', 'games', 'infrastructure',
     'companies building toward American dynamism',
