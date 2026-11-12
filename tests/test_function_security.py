@@ -17,6 +17,7 @@ ANON_ALLOWED = {
     "claim_anon_checks",
     "firm_activity_list",
     "firm_check_status",
+    "firm_directory_cached",
     "firm_is_public",
     "firm_meta",
     "firm_page",

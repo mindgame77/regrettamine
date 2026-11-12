@@ -183,17 +183,28 @@
     }).sort(function (a, b) { return (b.count - a.count) || a.label.localeCompare(b.label); });
   }
 
-  // Live data: one call to the read-only firm_directory() RPC with the public anon key.
+  // Live data: the stored firm_directory_cached() row, with the public anon key.
+  // A missing row or an error uses firm_directory(), which returns the same list.
   // Builds without Supabase config fall back to the build-time firms.json.
   const C = window.REGRET || {};
+  function rpc(name) {
+    return fetch(C.url + '/rest/v1/rpc/' + name, {
+      method: 'POST',
+      headers: { apikey: C.key, Authorization: 'Bearer ' + C.key, 'Content-Type': 'application/json' },
+      body: '{}'
+    }).then(function (r) { if (!r.ok) throw new Error(name); return r.json(); });
+  }
   function loadFirms() {
     if (C.url && C.key) {
-      return fetch(C.url + '/rest/v1/rpc/firm_directory', {
-        method: 'POST',
-        headers: { apikey: C.key, Authorization: 'Bearer ' + C.key, 'Content-Type': 'application/json' },
-        body: '{}'
-      }).then(function (r) { if (!r.ok) throw new Error('firm_directory'); return r.json(); })
-        .then(function (rows) { return { firms: Array.isArray(rows) ? rows : [] }; });
+      return rpc('firm_directory_cached').then(function (body) {
+        const rows = body && body.payload;
+        if (!Array.isArray(rows)) throw new Error('firm_directory_cached');
+        return { firms: rows };
+      }).catch(function () {
+        return rpc('firm_directory').then(function (rows) {
+          return { firms: Array.isArray(rows) ? rows : [] };
+        });
+      });
     }
     return fetch(root + 'firms.json', { cache: 'no-store' })
       .then(function (r) { if (!r.ok) throw new Error('firms.json'); return r.json(); });
