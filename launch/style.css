@@ -1010,6 +1010,10 @@ main.wrap.firms-pg{max-width:1320px}
 .frow .fdeal .dwhen{white-space:nowrap}
 .frow .rdt{color:var(--mute);font-size:14px;text-align:right;white-space:nowrap}
 #firms-none{margin:14px 4px;color:var(--ink2)}
+#firms-miss{max-width:560px;margin:0 4px 14px}
+#firms-miss[hidden]{display:none}
+#firms-miss-form[hidden]{display:none}
+#firms-miss .frm{margin-top:10px}
 .facet-panel{position:fixed;z-index:12;width:594px;background:#fff;border:1px solid #DAD0ED;border-radius:20px;box-shadow:0 24px 70px #28114924,0 3px 12px #2811490A;padding:0;overflow:visible}
 .facet-panel[hidden]{display:none}
 .facet-panel:before{content:'';position:absolute;left:-7px;top:28px;width:12px;height:12px;background:#fff;border:1px solid #DAD0ED;border-right:0;border-top:0;transform:rotate(45deg)}

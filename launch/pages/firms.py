@@ -15,6 +15,10 @@ def render(c):
 </div>
 <div class="flist" id="firms-list"></div>
 <p class="hint" id="firms-none" hidden>{E(F["none"])}</p>
+<div id="firms-miss" hidden data-out="{E(F["miss_out"])}" data-in="{E(F["miss_in"])}">
+<form class="frm" id="firms-miss-form"><input class="in" type="email" name="email" required maxlength="200" placeholder="{E(F["miss_placeholder"])}" aria-label="{E(F["miss_placeholder"])}" autocomplete="email"><button class="btn" type="submit">{E(F["miss_button"])}</button></form>
+<p class="msg" id="firms-miss-msg"></p>
+</div>
 </div>
 </div>
 <div class="filters-backdrop" id="filters-backdrop" hidden></div>
