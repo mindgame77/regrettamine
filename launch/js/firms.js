@@ -373,12 +373,55 @@
         chips.push(t);
         if (q) q.value = '';
         renderChips();
+        try { noteSearch(t); } catch (e) {}
         return true;
       }
       function removeChip(i) {
         if (i < 0 || i >= chips.length) return;
         chips.splice(i, 1);
         renderChips();
+      }
+      let searchLogTimer = 0;
+      const seenSearch = Object.create(null);
+      // Directory order is newest first. Prefer an exact name, then a name that starts with the term.
+      function noteSearch(raw) {
+        try {
+          const t = String(raw || '').replace(/\s+/g, ' ').trim();
+          const log = window.RegretSearch && window.RegretSearch.log;
+          if (t.length < 2 || typeof log !== 'function') return;
+          const k = t.toLowerCase();
+          if (seenSearch[k]) return;
+          seenSearch[k] = 1;
+          let n = 0, top = null, rank = 9;
+          for (let i = 0; i < firms.length; i++) {
+            const f = firms[i];
+            if (!searchMatch(f, k)) continue;
+            n++;
+            const name = String(f.name || '').toLowerCase();
+            const short = String(f.short_name || '').toLowerCase();
+            const slug = String(f.slug || '').toLowerCase();
+            let r = 3;
+            if (name === k || short === k || slug === k) r = 0;
+            else if (name.indexOf(k) === 0 || (short && short.indexOf(k) === 0) || slug.indexOf(k) === 0) r = 1;
+            else if (name.indexOf(k) !== -1 || (short && short.indexOf(k) !== -1)) r = 2;
+            if (r < rank && f.slug) { rank = r; top = f.slug; }
+          }
+          log(t, 'investors', n, top);
+        } catch (e) {}
+      }
+      function armSearchLog() {
+        try {
+          clearTimeout(searchLogTimer);
+          if (!q) return;
+          const typed = String(q.value || '').replace(/\s+/g, ' ').trim();
+          if (typed.length < 2) return;
+          searchLogTimer = setTimeout(function () {
+            try {
+              if (!q || String(q.value || '').replace(/\s+/g, ' ').trim().toLowerCase() !== typed.toLowerCase()) return;
+              noteSearch(typed);
+            } catch (e) {}
+          }, 1500);
+        } catch (e) {}
       }
       function commitTyped() {
         if (!q) return;
@@ -548,11 +591,13 @@
             if (added) renderChips();
           }
           draw();
+          try { armSearchLog(); } catch (e) {}
         });
         q.addEventListener('keydown', function (e) {
           if (e.isComposing || e.keyCode === 229) return;
           if (e.key === 'Enter') {
             e.preventDefault();
+            try { clearTimeout(searchLogTimer); } catch (e2) {}
             if (q.value.trim()) { commitTyped(); draw(); }
           } else if (e.key === 'Backspace' && !q.value && chips.length) {
             e.preventDefault();
